@@ -47,16 +47,16 @@ class TreeController extends OrderAbstractController {
     public function getTreeByParentAction(Request $request) {
        
         
-        $userid = trim( $request->get('userid') );
-        $opt = trim( $request->get('opt') );
-        $thisid = trim( $request->get('thisid') );
-        $pid = trim( $request->get('id') );
-        $className = trim( $request->get('classname') );
-        $bundleName = trim( $request->get('bundlename') );
-        $type = trim( $request->get('type') ); //user-added or default or undefined
-        $entityIds = trim( $request->get('entityIds') );
-        $orderformtype = trim( $request->get('orderformtype') ); //similar to sitename (calllog, crn, single, multi, transres ...)
-        //$level = trim( $request->get('pid') );
+        $userid = trim((string)$request->get('userid') );
+        $opt = trim((string)$request->get('opt') );
+        $thisid = trim((string)$request->get('thisid') );
+        $pid = trim((string)$request->get('id') );
+        $className = trim((string)$request->get('classname') );
+        $bundleName = trim((string)$request->get('bundlename') );
+        $type = trim((string)$request->get('type') ); //user-added or default or undefined
+        $entityIds = trim((string)$request->get('entityIds') );
+        $orderformtype = trim((string)$request->get('orderformtype') ); //similar to sitename (calllog, crn, single, multi, transres ...)
+        //$level = trim((string)$request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
@@ -64,7 +64,7 @@ class TreeController extends OrderAbstractController {
         //echo "bundleName=".$bundleName."<br>";
 
         //get filter params
-        //$filter = trim( $request->get('types') );
+        //$filter = trim((string)$request->get('types') );
         $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
 
         $formname = $filterform->getName();
@@ -81,11 +81,11 @@ class TreeController extends OrderAbstractController {
         $combobox = false;
         //$userpositions = false;
 
-        if (strpos($opt,'combobox') !== false) {
+        if (strpos((string)$opt,'combobox') !== false) {
             $combobox = true;
         }
 
-//        if (strpos($opt,'userpositions') !== false) {
+//        if (strpos((string)$opt,'userpositions') !== false) {
 //            $userpositions = true;
 //        }
 
@@ -404,21 +404,21 @@ class TreeController extends OrderAbstractController {
      */
     public function setTreeAction(Request $request) {
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
-        $pid = trim( $request->get('pid') );
-        $position = trim( $request->get('position') );
+        $pid = trim((string)$request->get('pid') );
+        $position = trim((string)$request->get('position') );
 
-        $oldpid = trim( $request->get('oldpid') );
-        $oldposition = trim( $request->get('oldposition') );
+        $oldpid = trim((string)$request->get('oldpid') );
+        $oldposition = trim((string)$request->get('oldposition') );
 
-        $nodeid = trim( $request->get('nodeid') );
-        $nodetext = trim( $request->get('nodetext') );
+        $nodeid = trim((string)$request->get('nodeid') );
+        $nodetext = trim((string)$request->get('nodetext') );
 
-        $action = trim( $request->get('action') );
+        $action = trim((string)$request->get('action') );
         //$action = 'none'; //testing
-        $className = trim( $request->get('classname') );
-        $bundleName = trim( $request->get('bundlename') );
+        $className = trim((string)$request->get('classname') );
+        $bundleName = trim((string)$request->get('bundlename') );
         //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
         //echo "action=".$action."<br>";
@@ -434,11 +434,11 @@ class TreeController extends OrderAbstractController {
         $combobox = false;
         //$userpositions = false;
 
-        if (strpos($opt,'combobox') !== false) {
+        if (strpos((string)$opt,'combobox') !== false) {
             $combobox = true;
         }
 
-//        if (strpos($opt,'userpositions') !== false) {
+//        if (strpos((string)$opt,'userpositions') !== false) {
 //            $userpositions = true;
 //        }
 

@@ -121,10 +121,10 @@ class ExceptionListener {
         }
 
         //Ignore: Unable to create the storage directory (/srv/order-lab/orderflex/var/cache/prod/profiler)
-        if (strpos($exception->getMessage(), 'Unable to create the storage directory') !== false) {
+        if (strpos((string)$exception->getMessage(), 'Unable to create the storage directory') !== false) {
             return false;
         }
-        if (strpos($exception->getMessage(), 'var/cache/') !== false) {
+        if (strpos((string)$exception->getMessage(), 'var/cache/') !== false) {
             return false;
         }
 
@@ -255,34 +255,34 @@ class ExceptionListener {
     }
 
     public function getSiteName($controller) {
-        if( strpos($controller,'App\UserdirectoryBundle') !== false ) {
+        if( strpos((string)$controller,'App\UserdirectoryBundle') !== false ) {
             return "employees";
         }
-        if( strpos($controller,'App\OrderformBundle') !== false ) {
+        if( strpos((string)$controller,'App\OrderformBundle') !== false ) {
             return "scan";
         }
-        if( strpos($controller,'App\FellAppBundle') !== false ) {
+        if( strpos((string)$controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
-        if( strpos($controller,'App\ResAppBundle') !== false ) {
+        if( strpos((string)$controller,'App\ResAppBundle') !== false ) {
             return "resapp";
         }
-        if( strpos($controller,'App\DeidentifierBundle') !== false ) {
+        if( strpos((string)$controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
-        if( strpos($controller,'App\VacReqBundle') !== false ) {
+        if( strpos((string)$controller,'App\VacReqBundle') !== false ) {
             return "vacreq";
         }
-        if( strpos($controller,'App\CallLogBundle') !== false ) {
+        if( strpos((string)$controller,'App\CallLogBundle') !== false ) {
             return "calllog";
         }
-        if( strpos($controller,'App\CrnBundle') !== false ) {
+        if( strpos((string)$controller,'App\CrnBundle') !== false ) {
             return "crn";
         }
-        if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
+        if( strpos((string)$controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }
-        if( strpos($controller,'App\DashboardBundle') !== false ) {
+        if( strpos((string)$controller,'App\DashboardBundle') !== false ) {
             return "dashboard";
         }
 

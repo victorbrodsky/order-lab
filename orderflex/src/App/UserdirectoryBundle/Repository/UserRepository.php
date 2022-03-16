@@ -108,8 +108,8 @@ class UserRepository extends EntityRepository {
 
         $nameStrArr = explode(",",$nameStr);
 
-        $lastName = trim($nameStrArr[0]);
-        $firstName = trim($nameStrArr[1]);
+        $lastName = trim((string)$nameStrArr[0]);
+        $firstName = trim((string)$nameStrArr[1]);
 
         $query = $this->_em->createQueryBuilder()
             ->from('AppUserdirectoryBundle:User', 'user')
@@ -134,11 +134,11 @@ class UserRepository extends EntityRepository {
 
         $user = null;
 
-        $nameStr = trim($nameStr);
+        $nameStr = trim((string)$nameStr);
         $nameStrArr = explode(" ",$nameStr);
 
-        $firstName = trim($nameStrArr[0]);
-        $lastName = trim($nameStrArr[1]);
+        $firstName = trim((string)$nameStrArr[0]);
+        $lastName = trim((string)$nameStrArr[1]);
 
         $user = $this->findOneByFirstOrLastNameStr($lastName);
 

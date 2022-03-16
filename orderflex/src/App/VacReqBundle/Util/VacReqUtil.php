@@ -1108,7 +1108,7 @@ class VacReqUtil
         if( !$yearRangeStr ) {
             throw new \InvalidArgumentException('Year Range of the Academic year is not defined: yearRangeStr='.$yearRangeStr);
         }
-        if( strpos($yearRangeStr, '-') === false ) {
+        if( strpos((string)$yearRangeStr, '-') === false ) {
             //echo "no '-' in ".$yearRangeStr."<br>";
             $yearRangeArr = array($yearRangeStr);
             return $yearRangeArr;

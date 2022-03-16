@@ -490,7 +490,7 @@ class ResAppManagement extends OrderAbstractController {
         $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
             //echo "assignResAppAccessRoles: $role ?= $roleSubstr <br>";
-            if( strpos($role,$roleSubstr) !== false ) {
+            if( strpos((string)$role,$roleSubstr) !== false ) {
                 $interviewerRoleResType = $role;
                 break;
             }
@@ -708,19 +708,19 @@ class ResAppManagement extends OrderAbstractController {
 
             //$userObjects[] = $user;
 
-            if( strpos($roleStr,'INTERVIEWER') !== false ) {
+            if( strpos((string)$roleStr,'INTERVIEWER') !== false ) {
                 if( !$residencyTrack->isUserExistByMethodStr($user, 'getInterviewers') ) {
                     $residencyTrack->addInterviewer($user);
                 }
             }
 
-            if( strpos($roleStr,'COORDINATOR') !== false ) {
+            if( strpos((string)$roleStr,'COORDINATOR') !== false ) {
                 if( !$residencyTrack->isUserExistByMethodStr($user, 'getCoordinators') ) {
                     $residencyTrack->addCoordinator($user);
                 }
             }
 
-            if( strpos($roleStr,'DIRECTOR') !== false ) {
+            if( strpos((string)$roleStr,'DIRECTOR') !== false ) {
                 if( !$residencyTrack->isUserExistByMethodStr($user, 'getDirectors') ) {
                     $residencyTrack->addDirector($user);
                 }
@@ -729,11 +729,11 @@ class ResAppManagement extends OrderAbstractController {
         } //foreach
 
 
-        if( strpos($roleStr,'COORDINATOR') !== false ) {
+        if( strpos((string)$roleStr,'COORDINATOR') !== false ) {
             $this->assignResAppAccessRoles($residencyTrack,$residencyTrack->getCoordinators(),"COORDINATOR");
         }
 
-        if( strpos($roleStr,'DIRECTOR') !== false ) {
+        if( strpos((string)$roleStr,'DIRECTOR') !== false ) {
             $this->assignResAppAccessRoles($residencyTrack,$residencyTrack->getDirectors(),"DIRECTOR");
         }
 
@@ -814,7 +814,7 @@ class ResAppManagement extends OrderAbstractController {
             foreach ($users as $user) {
 
                 foreach ($user->getRoles() as $role) {
-                    if (strpos($role, '_WCMC_') !== false) {
+                    if (strpos((string)$role, '_WCMC_') !== false) {
                         echo $user.": role=" . $role . "<br>";
                         $roleNew = str_replace("_WCMC_", "_WCM_", $role);
                         echo $user.": roleNew=" . $roleNew . "<br>";

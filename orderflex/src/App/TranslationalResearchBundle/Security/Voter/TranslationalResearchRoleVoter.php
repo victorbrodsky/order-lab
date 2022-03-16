@@ -57,7 +57,7 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
         //echo 'subject='.$subject."<br>";
 
         //does not support UNAPPROVED and BANNED roles for this voter
-        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
+        if( strpos((string)$attribute, '_UNAPPROVED') !== false || strpos((string)$attribute, '_BANNED') !== false ) {
             //exit('do not support _UNAPPROVED or _BANNED roles');
             return false;
         }

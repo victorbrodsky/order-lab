@@ -2099,7 +2099,7 @@ class CallLogUtil
 
     //$messageCategoryIdStr: Microbiology_48
     public function getMessageCategoryEntityByIdStr( $messageCategoryIdStr ) {
-        if( strpos($messageCategoryIdStr, '_') !== false ) {
+        if( strpos((string)$messageCategoryIdStr, '_') !== false ) {
             list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategoryIdStr);
             //echo "search messageCategoryId=".$messageCategoryId."<br>";
             $messageCategoryEntity = $this->em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
@@ -3005,7 +3005,7 @@ class CallLogUtil
 ////                foreach ($snapshotArrChunks as $snapshotArrChunk) {
 ////                    //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
 ////                    foreach ($snapshotArrChunk as $snapshotRow) {
-////                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+////                        if (strpos((string)$snapshotRow, "[###excel_section_flag###]") === false) {
 ////                            //$objRichText->createText($snapshotRow."\n");
 ////                        } else {
 ////                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
@@ -3018,7 +3018,7 @@ class CallLogUtil
 //                $snapshotRowArr = array();
 //                foreach ($snapshotArrChunks as $snapshotArrChunk) {
 //                    foreach ($snapshotArrChunk as $snapshotRow) {
-//                        if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+//                        if (strpos((string)$snapshotRow, "[###excel_section_flag###]") === false) {
 //                            //
 //                        } else {
 //                            $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
@@ -4409,8 +4409,8 @@ class CallLogUtil
         $parameters['keytype'] = $accessiontype->getId();
 
         if( $exactMatch ) {
-            $accessionnumberLtrim = ltrim($accessionnumber, '0');
-            //$accessionnumberRtrim = rtrim($accessionnumber, '0');
+            $accessionnumberLtrim = ltrim((string)$accessionnumber, '0');
+            //$accessionnumberRtrim = rtrim((string)$accessionnumber, '0');
 
             //$dql->andWhere("LOWER(accessionaccession.field) = :accessionnumber OR LOWER(accessionaccession.field) = :accessionnumberLtrim OR LOWER(accessionaccession.field) = :accessionnumberRtrim");
 //            $dql->andWhere("LOWER(accessionaccession.field) = :accessionnumber OR LOWER(accessionaccession.field) = :accessionnumberLtrim");
@@ -4597,16 +4597,16 @@ class CallLogUtil
         $userServiceUtil = $this->container->get('user_service_utility');
         $calllogUtil = $this->container->get('calllog_util');
 
-//        $mrntype = trim($request->get('mrntype')); //ID of mrn type
-//        $mrn = trim($request->get('mrn'));
-//        $accessionnumber = trim($request->get('accessionnumber'));
-//        $accessiontype = trim($request->get('accessiontype'));
-//        $dob = trim($request->get('dob'));
-//        $lastname = trim($request->get('lastname'));
-//        $firstname = trim($request->get('firstname'));
-//        $phone = trim($request->get('phone'));
-//        $email = trim($request->get('email'));
-//        $metaphone = trim($request->get('metaphone'));
+//        $mrntype = trim((string)$request->get('mrntype')); //ID of mrn type
+//        $mrn = trim((string)$request->get('mrn'));
+//        $accessionnumber = trim((string)$request->get('accessionnumber'));
+//        $accessiontype = trim((string)$request->get('accessiontype'));
+//        $dob = trim((string)$request->get('dob'));
+//        $lastname = trim((string)$request->get('lastname'));
+//        $firstname = trim((string)$request->get('firstname'));
+//        $phone = trim((string)$request->get('phone'));
+//        $email = trim((string)$request->get('email'));
+//        $metaphone = trim((string)$request->get('metaphone'));
 //        //echo "phone=".$phone.", email=".$email."<br>";
 //        //print_r($allgets);
 //        //echo "metaphone=".$metaphone."<br>";
@@ -4675,7 +4675,7 @@ class CallLogUtil
             $parameters['keytype'] = $mrntype->getId();
 
             if( $exactMatch ) {
-                $mrnClean = ltrim($mrn, '0');
+                $mrnClean = ltrim((string)$mrn, '0');
                 //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
                 if( $mrn === $mrnClean ) {
                     //echo "equal <br>";
@@ -4968,7 +4968,7 @@ class CallLogUtil
         $parameters['keytype'] = $accessionType->getId();
 
         $accessionNumber = strtolower($accessionNumber);
-        $accessionNumberClean = ltrim($accessionNumber, '0');
+        $accessionNumberClean = ltrim((string)$accessionNumber, '0');
 
         //echo "accessionnumber: ".$accessionNumber."?=".$accessionNumberClean."<br>";
         if( $accessionNumber === $accessionNumberClean ) {

@@ -51,7 +51,7 @@ class GrantType extends AbstractType
 
         //echo "cycle=".$this->params['cycle']."<br>";
 
-        if( strpos($this->params['cycle'],'_standalone') === false ) {
+        if( strpos((string)$this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
             $standalone = false;
         } else {
@@ -151,7 +151,7 @@ class GrantType extends AbstractType
 
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
-        //if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
+        //if( strpos((string)$this->params['cycle'],'_standalone') !== false && strpos((string)$this->params['cycle'],'new') === false ) {
         if( $standalone ) {
             //list attributes
             $params = array();

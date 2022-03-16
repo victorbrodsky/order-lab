@@ -549,7 +549,7 @@ class UserSecurityUtil {
     //$params: array('type'=>'Medical')
     public function getObjectByNameTransformer( $author, $nameStr, $bundleName, $className, $params=null) {
         $transformer = new GenericTreeTransformer($this->em, $author, $className, $bundleName, $params);
-        $nameStr = trim($nameStr);
+        $nameStr = trim((string)$nameStr);
         return $transformer->reverseTransform($nameStr);
     }
 
@@ -763,22 +763,22 @@ class UserSecurityUtil {
         //$subdomain = "/order";
         $subdomain = "";
 
-        if( strpos($url, $subdomain.'/call-log-book/') !== false ) {
+        if( strpos((string)$url, $subdomain.'/call-log-book/') !== false ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
         }
-        if( strpos($url, $subdomain.'/critical-result-notifications/') !== false ) {
+        if( strpos((string)$url, $subdomain.'/critical-result-notifications/') !== false ) {
             $defaultSourceSystemName = 'ORDER Critical Result Notifications';
         }
-//        if( strpos($url, '/order/deidentifier/') !== false ) {
+//        if( strpos((string)$url, '/order/deidentifier/') !== false ) {
 //            $defaultSourceSystemName = 'ORDER Deidentifier';
 //        }
-        if( strpos($url, $subdomain.'/deidentifier/') !== false ) {
+        if( strpos((string)$url, $subdomain.'/deidentifier/') !== false ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
-        if( strpos($url, $subdomain.'/scan/') !== false ) {
+        if( strpos((string)$url, $subdomain.'/scan/') !== false ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
-        if( strpos($url, $subdomain.'/dashboards/') !== false ) {
+        if( strpos((string)$url, $subdomain.'/dashboards/') !== false ) {
             $defaultSourceSystemName = 'ORDER Dashboards';
         }
 
@@ -885,12 +885,12 @@ class UserSecurityUtil {
 
         $cwid = NULL;
 
-        if( strpos($username, '@') !== false ) {
+        if( strpos((string)$username, '@') !== false ) {
             $cwidArr = explode("@",$username);
             if( count($cwidArr) > 1 ) {
                 $cwid = $cwidArr[0];
                 if( $cwid ) {
-                    $cwid = trim($cwid);
+                    $cwid = trim((string)$cwid);
                 }
             }
         }
@@ -930,7 +930,7 @@ class UserSecurityUtil {
         $cwid = null;
 
         if( $name ) {
-            $name = trim($name);
+            $name = trim((string)$name);
         }
 
         if( !$name ) {
@@ -989,7 +989,7 @@ class UserSecurityUtil {
             $strArr = explode("-",$name);
 
             if( count($strArr) > 0 ) {
-                $displayName = trim($strArr[0]);
+                $displayName = trim((string)$strArr[0]);
 
                 $query = $this->em->createQueryBuilder()
                     ->from('AppUserdirectoryBundle:User', 'user')
@@ -1007,7 +1007,7 @@ class UserSecurityUtil {
 
                     if( count($strArr) > 1 ) {
                         //echo "strArr[1]=".$strArr[1]."<br>";
-                        $strArr2 = explode(" ",trim($strArr[1]));
+                        $strArr2 = explode(" ",trim((string)$strArr[1]));
 
                         if( count($strArr2) > 0 ) {
                             $cwid = $strArr2[0];
@@ -1698,7 +1698,7 @@ class UserSecurityUtil {
         if( !$datestr ) {
             return $date;
         }
-        $datestr = trim($datestr);
+        $datestr = trim((string)$datestr);
         //echo "###datestr=".$datestr."<br>";
 
         if( strtotime($datestr) === false ) {
@@ -2300,7 +2300,7 @@ class UserSecurityUtil {
         $entity->setCreatedate( new \DateTime() );
         $entity->setType('user-added');
         if( $name ) {
-            $entity->setName( trim($name) );
+            $entity->setName( trim((string)$name) );
         }
         return $entity;
     }
@@ -3041,8 +3041,8 @@ class UserSecurityUtil {
 //            }
 //
 //            $entity->setName( $role );
-//            $entity->setAlias( trim($alias) );
-//            $entity->setDescription( trim($description) );
+//            $entity->setAlias( trim((string)$alias) );
+//            $entity->setDescription( trim((string)$description) );
 //            $entity->setLevel($level);
 //
 //            //set sitename
@@ -3085,11 +3085,11 @@ class UserSecurityUtil {
 
         //$alias - human readable role name
         if( $alias ) {
-            $entity->setAlias(trim($alias));
+            $entity->setAlias(trim((string)$alias));
         }
 
         if( $description ) {
-            $entity->setDescription(trim($description));
+            $entity->setDescription(trim((string)$description));
         }
 
         if( $level ) {

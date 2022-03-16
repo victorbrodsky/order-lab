@@ -319,7 +319,7 @@ class DashboardController extends OrderAbstractController
     }
 
     public function tokenTruncate($string, $your_desired_width) {
-        $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/([\s\n\r]+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
 
         $postfix = null;
@@ -334,7 +334,7 @@ class DashboardController extends OrderAbstractController
         }
 
         $res = implode(array_slice($parts, 0, $last_part));
-        $res = trim($res) . $postfix;
+        $res = trim((string)$res) . $postfix;
         //$res = $res . $postfix;
         //echo "res=[".$res."]<br>";
 
@@ -498,7 +498,7 @@ class DashboardController extends OrderAbstractController
                         $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
+                    if( strpos((string)$id, $this->otherSearchStr) !== false && is_array($objectid) ) {
                         $userIndex = 0;
                         foreach($objectid as $thisObjectid) {
                             $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisObjectid;
@@ -549,7 +549,7 @@ class DashboardController extends OrderAbstractController
                         $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( strpos($id, $this->otherSearchStr) !== false ) {
+                    if( strpos((string)$id, $this->otherSearchStr) !== false ) {
                         $linkFilterArr = null;
                     } else {
                         if( is_array($pi) ) {
@@ -881,7 +881,7 @@ class DashboardController extends OrderAbstractController
         return $projects;
     }
 
-    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType) {
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType=null) {
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 

@@ -536,7 +536,7 @@ class LoggerController extends OrderAbstractController
 
         if( $objectId ) {
             //echo "objectId=$objectId<br>";
-            if( strpos($objectId, ',') !== false ) {
+            if( strpos((string)$objectId, ',') !== false ) {
                 $objectIdArr = explode(",",$objectId);
                 $dql->andWhere("logger.entityId IN (:objectId)");
                 $dqlParameters['objectId'] = $objectIdArr;

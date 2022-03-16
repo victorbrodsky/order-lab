@@ -900,7 +900,7 @@ class DashboardUtil
                     } else {
                         $valueLabel = $value;
                     }
-                    if( strpos($valuePrefix,'$') !== false ) {
+                    if( strpos((string)$valuePrefix,'$') !== false ) {
                         $valueLabel = $this->getNumberFormat($valueLabel);
                     } else {
                         $valueLabel = $valueLabel;
@@ -1045,7 +1045,7 @@ class DashboardUtil
         return $piProjectCountTopArr;
     }
     public function tokenTruncate($string, $your_desired_width) {
-        $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/([\s\n\r]+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
 
         $postfix = null;
@@ -1060,7 +1060,7 @@ class DashboardUtil
         }
 
         $res = implode(array_slice($parts, 0, $last_part));
-        $res = trim($res) . $postfix;
+        $res = trim((string)$res) . $postfix;
         //$res = $res . $postfix;
         //echo "res=[".$res."]<br>";
 
@@ -1071,7 +1071,7 @@ class DashboardUtil
     public function addValueToOther($arrTop,$prefix=": $",$arrayValueKey='value') {
         $newArrTop = array();
         foreach($arrTop as $label => $value) {
-            if( strpos($label, $this->otherSearchStr) !== false ) {
+            if( strpos((string)$label, $this->otherSearchStr) !== false ) {
                 if( is_array($value) ) {
                     print_r($value);
                     //exit('111');
@@ -1162,7 +1162,7 @@ class DashboardUtil
             //value
             if ($type == "bar" || ($value && $value != 0)) {
                 if( ($valuePrefixLabel || $valuePostfixLabel) && $value ) {
-                    if (strpos($valuePrefixLabel, '$') !== false) {
+                    if (strpos((string)$valuePrefixLabel, '$') !== false) {
                         $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value) . $valuePostfixLabel;
                     } else {
                         $label = $label . " " . $valuePrefixLabel . $value . $valuePostfixLabel;
@@ -1305,7 +1305,7 @@ class DashboardUtil
 
             if( $type == "bar" || ($value && $value != 0) ) {
                 if( $valuePrefixLabel && $value ) {
-                    if( strpos($valuePrefixLabel,'$') !== false ) {
+                    if( strpos((string)$valuePrefixLabel,'$') !== false ) {
                         $label = $label . " " . $valuePrefixLabel . $this->getNumberFormat($value);
                     } else {
                         $label = $label . " " . $valuePrefixLabel . $value;
@@ -1334,7 +1334,7 @@ class DashboardUtil
                         $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( strpos($id, $this->otherSearchStr) !== false && is_array($objectid) ) {
+                    if( strpos((string)$id, $this->otherSearchStr) !== false && is_array($objectid) ) {
                         $userIndex = 0;
                         foreach($objectid as $thisObjectid) {
                             $linkFilterArr['filter[principalInvestigators]['.$userIndex.']'] = $thisObjectid;
@@ -1386,7 +1386,7 @@ class DashboardUtil
                         $linkFilterArr['filter[projectSpecialty][]'] = $projectSpecialtyObject->getId();
                     }
 
-                    if( strpos($id, $this->otherSearchStr) !== false ) {
+                    if( strpos((string)$id, $this->otherSearchStr) !== false ) {
                         $linkFilterArr = null;
                     } else {
                         if( is_array($pi) ) {
@@ -1651,7 +1651,7 @@ class DashboardUtil
         foreach($firstArr as $index=>$value) {
             //$index = $index . " " . $prefix . $secondArr[$index];
             if( isset($secondArr[$index]) ) {
-                if (strpos($prefix, '$') !== false) {
+                if (strpos((string)$prefix, '$') !== false) {
                     //echo "index=$index, prefix=" . $prefix . "<br>"; //testing
                     //echo "secondArr[index]=" . $secondArr[$index] . "<br>";
                     $index = $index . " " . $prefix . $this->getNumberFormat($secondArr[$index]);
@@ -1951,16 +1951,16 @@ class DashboardUtil
 //            $quantityLimit = 10;
 //        }
         if(0) {
-            if (strpos($chartName, "Top 10") !== false) {
+            if (strpos((string)$chartName, "Top 10") !== false) {
                 $chartNameModified = str_replace("Top 10", "Top " . $quantityLimit, $chartName);
             }
-            if (strpos($chartName, "Top 25") !== false) {
+            if (strpos((string)$chartName, "Top 25") !== false) {
                 $chartNameModified = str_replace("Top 25", "Top " . $quantityLimit, $chartName);
             }
-            if (strpos($chartName, "Top 35") !== false) {
+            if (strpos((string)$chartName, "Top 35") !== false) {
                 $chartNameModified = str_replace("Top 35", "Top " . $quantityLimit, $chartName);
             }
-            if (strpos($chartName, "Top 50") !== false) {
+            if (strpos((string)$chartName, "Top 50") !== false) {
                 $chartNameModified = str_replace("Top 50", "Top " . $quantityLimit, $chartName);
             }
         }
@@ -1970,10 +1970,10 @@ class DashboardUtil
         } else {
             $quantityLimitStr = "Top ".$quantityLimit."";
         }
-        if (strpos($chartName, "(Top)") !== false) {
+        if (strpos((string)$chartName, "(Top)") !== false) {
             $chartNameModified = str_replace("(Top)","(".$quantityLimitStr.")",$chartName);
         }
-        if (strpos($chartName, "Top ") !== false) {
+        if (strpos((string)$chartName, "Top ") !== false) {
             $chartNameModified = str_replace("Top ","".$quantityLimitStr." ",$chartName);
         }
 
@@ -2690,7 +2690,7 @@ class DashboardUtil
 
 //        //TODO: add project specialty types according to the enabled specialties.
 //        // Replace [[projectSpecialties]] by $transresUtil->getAllowedProjectSpecialty($user)
-//        if( strpos($chartName, "[[projectSpecialties]]") !== false ) {
+//        if( strpos((string)$chartName, "[[projectSpecialties]]") !== false ) {
 //            $transresUtil = $this->container->get('transres_util');
 //            $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty();
 //            $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
@@ -3211,7 +3211,7 @@ class DashboardUtil
                 $project = $transRequest->getProject();
                 $projectId = $project->getId();
                 $fundedAccountNumber = $transRequest->getFundedAccountNumber();
-                $fundedAccountNumber = trim($fundedAccountNumber);
+                $fundedAccountNumber = trim((string)$fundedAccountNumber);
 
                 if($testing) {
                     //echo $transRequest->getOid().": fundedAccountNumber=[$fundedAccountNumber] <br>";

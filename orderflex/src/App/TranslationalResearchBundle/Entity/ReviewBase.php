@@ -313,16 +313,16 @@ class ReviewBase
         //irb_review_resubmit => IRB Review Resubmit
         $decision = null;
 
-        if( strpos($transitionName, "_approved") !== false ) {
+        if( strpos((string)$transitionName, "_approved") !== false ) {
             $decision = "approved";
         }
-        if( strpos($transitionName, "_missinginfo") !== false ) {
+        if( strpos((string)$transitionName, "_missinginfo") !== false ) {
             $decision = "missinginfo";
         }
-        if( strpos($transitionName, "_rejected") !== false ) {
+        if( strpos((string)$transitionName, "_rejected") !== false ) {
             $decision = "rejected";
         }
-        if( strpos($transitionName, "_resubmit") !== false ) {
+        if( strpos((string)$transitionName, "_resubmit") !== false ) {
             $decision = null;
         }
 

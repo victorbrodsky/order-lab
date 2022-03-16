@@ -45,7 +45,7 @@ class UserRoleVoter extends BaseRoleVoter {
 //    protected function supports($attribute, $subject) {
 //
 //        //support USERDIRECTORY roles only
-//        if( strpos($attribute, 'ROLE_'.self::SiteRoleBase.'_') === false ) {
+//        if( strpos((string)$attribute, 'ROLE_'.self::SiteRoleBase.'_') === false ) {
 //            return false;
 //        }
 //

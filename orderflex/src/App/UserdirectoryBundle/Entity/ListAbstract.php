@@ -493,7 +493,7 @@ abstract class ListAbstract
     {
         //remove "Proxies\__CG__\" if $entityNamespace="Proxies\__CG__\App\UserdirectoryBundle\Entity"
         $proxyStr = "Proxies\__CG__\\";
-        if( strpos($entityNamespace, $proxyStr) !== false ) {
+        if( strpos((string)$entityNamespace, $proxyStr) !== false ) {
             //echo "remove=".$proxyStr."<br>";
             $entityNamespace = str_replace($proxyStr, "", $entityNamespace);
         }

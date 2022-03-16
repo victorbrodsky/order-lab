@@ -203,8 +203,8 @@ class PDFService
 
             $o = array();
             for ($j = 0; $j < @count($options); $j++) {
-                $options[$j] = preg_replace("#\s+#", " ", trim($options[$j]));
-                if (strpos($options[$j], " ") !== false) {
+                $options[$j] = preg_replace("#\s+#", " ", trim((string)$options[$j]));
+                if (strpos((string)$options[$j], " ") !== false) {
                     $parts = explode(" ", $options[$j]);
                     $o[$parts[0]] = $parts[1];
                 } else {
@@ -258,18 +258,18 @@ class PDFService
 
         for ($j = 0; $j < count($chars); $j++) {
             $count = $chars[$j][1];
-            $current = explode("\n", trim($chars[$j][2]));
+            $current = explode("\n", trim((string)$chars[$j][2]));
             for ($k = 0; $k < $count && $k < count($current); $k++) {
-                if (preg_match("#<([0-9a-f]{2,4})>\s+<([0-9a-f]{4,512})>#is", trim($current[$k]), $map)) {
+                if (preg_match("#<([0-9a-f]{2,4})>\s+<([0-9a-f]{4,512})>#is", trim((string)$current[$k]), $map)) {
                     $transformations[str_pad($map[1], 4, "0")] = $map[2];
                 }
             }
         }
         for ($j = 0; $j < count($ranges); $j++) {
             $count = $ranges[$j][1];
-            $current = explode("\n", trim($ranges[$j][2]));
+            $current = explode("\n", trim((string)$ranges[$j][2]));
             for ($k = 0; $k < $count && $k < count($current); $k++) {
-                if (preg_match("#<([0-9a-f]{4})>\s+<([0-9a-f]{4})>\s+<([0-9a-f]{4})>#is", trim($current[$k]), $map)) {
+                if (preg_match("#<([0-9a-f]{4})>\s+<([0-9a-f]{4})>\s+<([0-9a-f]{4})>#is", trim((string)$current[$k]), $map)) {
                     $from = hexdec($map[1]);
                     $to = hexdec($map[2]);
                     $_from = hexdec($map[3]);
@@ -277,10 +277,10 @@ class PDFService
                     for ($m = $from, $n = 0; $m <= $to; $m++, $n++) {
                         $transformations[sprintf("%04X", $m)] = sprintf("%04X", $_from + $n);
                     }
-                } elseif (preg_match("#<([0-9a-f]{4})>\s+<([0-9a-f]{4})>\s+\[(.*)\]#ismU", trim($current[$k]), $map)) {
+                } elseif (preg_match("#<([0-9a-f]{4})>\s+<([0-9a-f]{4})>\s+\[(.*)\]#ismU", trim((string)$current[$k]), $map)) {
                     $from = hexdec($map[1]);
                     $to = hexdec($map[2]);
-                    $parts = preg_split("#\s+#", trim($map[3]));
+                    $parts = preg_split("#\s+#", trim((string)$map[3]));
 
                     for ($m = $from, $n = 0; $m <= $to && $n < count($parts); $m++, $n++) {
                         $transformations[sprintf("%04X", $m)] = sprintf("%04X", hexdec($parts[$n]));
@@ -380,7 +380,7 @@ class PDFService
             $currentObject = $objects[$i];
 
             if (preg_match("#stream(.*)endstream#ismU", $currentObject, $stream)) {
-                $stream = ltrim($stream[1]);
+                $stream = ltrim((string)$stream[1]);
 
                 $options = $this->getObjectOptions($currentObject);
                 if (!(empty($options["Length1"]) && empty($options["Type"]) && empty($options["Subtype"]))) {

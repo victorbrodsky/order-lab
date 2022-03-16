@@ -391,7 +391,7 @@ class ProjectController extends OrderAbstractController
             $preroute = $filterform['preroute']->getData();
         }
 
-        $filterTitle = trim($request->get('title'));
+        $filterTitle = trim((string)$request->get('title'));
 
         if( $filterTitle ) {
             $title = $filterTitle;
@@ -2336,7 +2336,7 @@ class ProjectController extends OrderAbstractController
                 $params['updateProject'] = true;
             }
 
-            if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
+            if( $project->getState() && strpos((string)$project->getState(),"_missinginfo") !== false ) {
                 $params['reSubmitReview'] = true;
                 //in the missing info stage, allow update project only by admin
                 if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {

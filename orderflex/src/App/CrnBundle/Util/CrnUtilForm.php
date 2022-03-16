@@ -122,7 +122,7 @@ class CrnUtilForm
                 //echo "dateTime=" . $dateTime->format("h:i (T)") . "<br>";
                 //echo "dateField=" . $dateField->format("m/d/Y (T)") . "<br>";
 
-                $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                $newDateTime = new \DateTime("now", new \DateTimeZone($user_tz));
 
                 //1) construct DateTime with $dateField and $dateTime
                 $newDateTime->setDate($dateField->format('Y'), $dateField->format('m'), $dateField->format('d'));
@@ -206,11 +206,11 @@ class CrnUtilForm
         }
 
         //Update Patient Info
-        $lastname = trim($encounter->obtainValidField('patlastname'));
-        $firstname = trim($encounter->obtainValidField('patfirstname'));
-        $middlename = trim($encounter->obtainValidField('patmiddlename'));
-        $suffix = trim($encounter->obtainValidField('patsuffix'));
-        $sex = trim($encounter->obtainValidField('patsex'));
+        $lastname = trim((string)$encounter->obtainValidField('patlastname'));
+        $firstname = trim((string)$encounter->obtainValidField('patfirstname'));
+        $middlename = trim((string)$encounter->obtainValidField('patmiddlename'));
+        $suffix = trim((string)$encounter->obtainValidField('patsuffix'));
+        $sex = trim((string)$encounter->obtainValidField('patsex'));
         //echo "### [$lastname] || [$firstname] || [$middlename] || [$suffix] || [$sex] <br>";
         if( $lastname || $firstname || $middlename || $suffix || $sex ) {
             $html .= $this->getTrSection("Update Patient Info");
@@ -414,7 +414,7 @@ class CrnUtilForm
 
         //Signed
         $messageSigneeInfo = $message->getSigneeInfo();
-        if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
+        if( strpos((string)$messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
             if ($messageSigneeInfo->getModifiedBy()) {
                 $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
                 $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';

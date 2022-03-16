@@ -101,12 +101,12 @@ class ProjectChangeStatusController extends OrderAbstractController
         $res["flag"] = "NOTOK";
 
         //translationalresearch_project_close translationalresearch_project_close_without_notifications
-        $routename = trim( $request->get('routename') );
-        $reason = trim( $request->get('reason') );
+        $routename = trim((string)$request->get('routename') );
+        $reason = trim((string)$request->get('reason') );
 
         $res = NULL;
         $project = NULL;
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         if( $projectId ) {
             $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
         }
@@ -297,18 +297,18 @@ class ProjectChangeStatusController extends OrderAbstractController
         /////////////// Replace [[...]]] /////////////////////
         //<br>[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
         if( $reason ) {
-            if (strpos($subject, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
+            if (strpos((string)$subject, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
                 $subject = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reason, $subject);
             }
         }
         //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
         if( $targetStatus ) {
-            if (strpos($subject, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
+            if (strpos((string)$subject, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
                 $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
                 $subject = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $subject);
             }
         }
-        if (strpos($subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
+        if (strpos((string)$subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
             $subject = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $user->getUsernameShortest(), $subject);
         }
         $subject = $transresUtil->replaceTextByNamingConvention($subject,$project,null,null);
@@ -346,18 +346,18 @@ class ProjectChangeStatusController extends OrderAbstractController
         /////////////// Replace [[...]]] /////////////////////
         //<br>[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
         if( $reason ) {
-            if (strpos($body, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
+            if (strpos((string)$body, '[[LATEST PROJECT REACTIVATION REASON]]') !== false) {
                 $body = str_replace("[[LATEST PROJECT REACTIVATION REASON]]", $reason, $body);
             }
         }
         //<br>[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function),
         if( $targetStatus ) {
-            if (strpos($body, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
+            if (strpos((string)$body, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false) {
                 $targetStatusStr = $transresUtil->getStateSimpleLabelByName($targetStatus);
                 $body = str_replace("[[PROJECT TARGET REACTIVATION STATUS]]", $targetStatusStr, $body);
             }
         }
-        if (strpos($subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
+        if (strpos((string)$subject, '[[PROJECT REACTIVATION REQUESTER]]') !== false) {
             $subject = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $user->getUsernameShortest(), $subject);
         }
         $body = $transresUtil->replaceTextByNamingConvention($body,$project,null,null);

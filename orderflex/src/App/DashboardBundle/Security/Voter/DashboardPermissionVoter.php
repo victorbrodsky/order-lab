@@ -74,9 +74,9 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         //attribute is action (read, edit ...) or role ROLE_DASHBOARD_...
         //check if attribute is dashboard role. if yes => support true
-        if( strpos($attribute, 'ROLE_') !== false ) {
+        if( strpos((string)$attribute, 'ROLE_') !== false ) {
             //echo 'true';
-            if( strpos($attribute, '_DASHBOARD_') !== false ) {
+            if( strpos((string)$attribute, '_DASHBOARD_') !== false ) {
                 //echo 'true';
                 return true;
             } else {

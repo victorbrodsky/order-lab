@@ -163,12 +163,35 @@ abstract class UserBase implements UserInterface #, GroupableInterface
         return $this;
     }
 
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function serialize()
+//    {
+//        return serialize(array(
+//            $this->password,
+//            $this->salt,
+//            $this->usernameCanonical,
+//            $this->username,
+//            $this->enabled,
+//            $this->id,
+//            $this->email,
+//            $this->emailCanonical,
+//        ));
+//    }
     /**
-     * {@inheritdoc}
+     * @return string
+     *
+     * @final
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize($this->__serialize());
+    }
+    //implements the Serializable interface, which is deprecated. Implement __serialize() and __unserialize()
+    //public function __serialize(): array {}
+    public function __serialize() {
+        return array(
             $this->password,
             $this->salt,
             $this->usernameCanonical,
@@ -177,15 +200,52 @@ abstract class UserBase implements UserInterface #, GroupableInterface
             $this->id,
             $this->email,
             $this->emailCanonical,
-        ));
+        );
     }
 
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function unserialize($serialized)
+//    {
+//        $data = unserialize($serialized);
+//
+//        if (13 === count($data)) {
+//            // Unserializing a User object from 1.3.x
+//            unset($data[4], $data[5], $data[6], $data[9], $data[10]);
+//            $data = array_values($data);
+//        } elseif (11 === count($data)) {
+//            // Unserializing a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
+//            unset($data[4], $data[7], $data[8]);
+//            $data = array_values($data);
+//        }
+//
+//        list(
+//            $this->password,
+//            $this->salt,
+//            $this->usernameCanonical,
+//            $this->username,
+//            $this->enabled,
+//            $this->id,
+//            $this->email,
+//            $this->emailCanonical
+//        ) = $data;
+//    }
     /**
-     * {@inheritdoc}
+     * @param string $serialized
+     *
+     * @return void
+     *
+     * @final
      */
     public function unserialize($serialized)
     {
-        $data = unserialize($serialized);
+        $this->__unserialize(unserialize($serialized));
+    }
+    //public function __unserialize(array $data): void {}
+    public function __unserialize($data) {
+        //$this->unserialize($data);
+        //$data = unserialize($serialized);
 
         if (13 === count($data)) {
             // Unserializing a User object from 1.3.x
@@ -206,7 +266,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
             $this->id,
             $this->email,
             $this->emailCanonical
-        ) = $data;
+            ) = $data;
     }
 
     /**

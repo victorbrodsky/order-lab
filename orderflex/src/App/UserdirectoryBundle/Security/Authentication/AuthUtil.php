@@ -431,7 +431,7 @@ class AuthUtil {
 //                $user = $this->findUserByUsername($token->getUsername());
 //                if( $user ) {
 //                    $userEmail = $user->getSingleEmail();
-//                    if (strpos($userEmail, '@nyp.org') !== false) {
+//                    if (strpos((string)$userEmail, '@nyp.org') !== false) {
 //                        $this->logger->error("LdapAuthentication: NYP user found by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
 //                    }
 //                }
@@ -784,7 +784,7 @@ class AuthUtil {
     public function findUserByUsername($username) {
         //$userManager = $this->container->get('fos_user.user_manager');
         $userManager = $this->container->get('user_manager');
-        $username = trim($username);
+        $username = trim((string)$username);
         $username = strtolower($username);
         $user = $userManager->findUserByUsername($username);
         return $user;
@@ -792,12 +792,12 @@ class AuthUtil {
 
 //    public function findUserByUsernameAsEmail($username) {
 //
-//        if( strpos($username, '@') !== false ) {
+//        if( strpos((string)$username, '@') !== false ) {
 //            $cwidArr = explode("@",$username);
 //            if( count($cwidArr) > 1 ) {
 //                $cwid = $cwidArr[0];
 //                if( $cwid ) {
-//                    $cwid = trim($cwid);
+//                    $cwid = trim((string)$cwid);
 //                }
 //            }
 //        }

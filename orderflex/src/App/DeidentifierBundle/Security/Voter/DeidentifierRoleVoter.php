@@ -63,7 +63,7 @@ class DeidentifierRoleVoter extends BaseRoleVoter {
 //        //echo 'subject='.$subject."<br>";
 //
 //        //does not support UNAPPROVED and BANNED roles for this voter
-//        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
+//        if( strpos((string)$attribute, '_UNAPPROVED') !== false || strpos((string)$attribute, '_BANNED') !== false ) {
 //            //exit('do not support _UNAPPROVED roles');
 //            return false;
 //        }
@@ -74,7 +74,7 @@ class DeidentifierRoleVoter extends BaseRoleVoter {
 //        }
 //
 //        //support DEIDENTIFICATOR roles only
-//        if( strpos($attribute, 'ROLE_DEIDENTIFICATOR_') !== false ) {
+//        if( strpos((string)$attribute, 'ROLE_DEIDENTIFICATOR_') !== false ) {
 //            return true;
 //        }
 //

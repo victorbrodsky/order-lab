@@ -46,7 +46,7 @@ class BuildingType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $standAloneLocation = false;
-        if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
+        if( strpos((string)$this->params['cycle'],'_standalone') !== false && strpos((string)$this->params['cycle'],'new') === false ) {
             $standAloneLocation = true;
         }
 

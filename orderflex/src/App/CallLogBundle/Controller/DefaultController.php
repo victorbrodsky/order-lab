@@ -175,20 +175,20 @@ class DefaultController extends OrderAbstractController
             //var_dump($rowData);
             //echo "<br>";
 
-            $attendingUserStr = trim($rowData[0][0]);
-            $attendingUserCwid = trim($rowData[0][1]);
+            $attendingUserStr = trim((string)$rowData[0][0]);
+            $attendingUserCwid = trim((string)$rowData[0][1]);
             //echo "attendingUserStr=".$attendingUserStr."<br>";
             //echo "attendingUserCwid=".$attendingUserCwid."<br>";
             $attendingCount = $this->assignRoleToUser($attendingUserStr,$attendingUserCwid,"ROLE_CALLLOG_PATHOLOGY_ATTENDING",$attendingCount);
 
-            $residentUserStr = trim($rowData[0][2]);
-            $residentUserCwid = trim($rowData[0][3]);
+            $residentUserStr = trim((string)$rowData[0][2]);
+            $residentUserCwid = trim((string)$rowData[0][3]);
             //echo "residentUserStr=".$residentUserStr."<br>";
             //echo "residentUserCwid=".$residentUserCwid."<br>";
             $residentCount = $this->assignRoleToUser($residentUserStr,$residentUserCwid,"ROLE_CALLLOG_PATHOLOGY_RESIDENT",$residentCount);
 
-            $fellowUserStr = trim($rowData[0][4]);
-            $fellowUserCwid = trim($rowData[0][5]);
+            $fellowUserStr = trim((string)$rowData[0][4]);
+            $fellowUserCwid = trim((string)$rowData[0][5]);
             //echo "fellowUserStr=".$fellowUserStr."<br>";
             //echo "fellowUserCwid=".$fellowUserCwid."<br>";
             $fellowCount = $this->assignRoleToUser($fellowUserStr,$fellowUserCwid,"ROLE_CALLLOG_PATHOLOGY_FELLOW",$fellowCount);
@@ -881,7 +881,7 @@ class DefaultController extends OrderAbstractController
                 FALSE
             );
 
-//            $newMrnNumber = trim($rowData[0][1]);
+//            $newMrnNumber = trim((string)$rowData[0][1]);
 //            if( !$newMrnNumber ) {
 //                echo "New MRN is empty => exit <br>";
 //                break;
@@ -891,12 +891,12 @@ class DefaultController extends OrderAbstractController
             //var_dump($rowData);
             //echo "<br>";
 
-//            $oldMrnValue = trim($rowData[0][0]);
-//            $newMrnValue = trim($rowData[0][1]);
+//            $oldMrnValue = trim((string)$rowData[0][0]);
+//            $newMrnValue = trim((string)$rowData[0][1]);
 //
-//            $lastName = trim($rowData[0][2]);
-//            $firstName = trim($rowData[0][3]);
-//            $dob = trim($rowData[0][4]);
+//            $lastName = trim((string)$rowData[0][2]);
+//            $firstName = trim((string)$rowData[0][3]);
+//            $dob = trim((string)$rowData[0][4]);
 
             //$res = $this->findAndupdateSinglePatient($oldMrnValue,$oldMrnType,$newMrnValue,$newMrnType);
             $res = $this->findAndUpdateSinglePatient($rowData,$oldMrnType,$newMrnType,$row);
@@ -917,12 +917,12 @@ class DefaultController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $invalidStatus = 'invalid';
 
-        $oldMrnNumber = trim($rowData[0][0]);
-        $newMrnNumber = trim($rowData[0][1]);
+        $oldMrnNumber = trim((string)$rowData[0][0]);
+        $newMrnNumber = trim((string)$rowData[0][1]);
 
-        $lastName = trim($rowData[0][2]);
-        $firstName = trim($rowData[0][3]);
-        $dob = trim($rowData[0][4]);
+        $lastName = trim((string)$rowData[0][2]);
+        $firstName = trim((string)$rowData[0][3]);
+        $dob = trim((string)$rowData[0][4]);
 
         if ( filter_var($oldMrnNumber, FILTER_VALIDATE_INT) === false ) {
             //echo "$oldMrnNumber is not an integer <br>";

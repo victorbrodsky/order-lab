@@ -149,10 +149,10 @@ class DefaultController extends OrderAbstractController
 //        foreach($allFees as $fee) {
 //            $exist = false;
 //            $productId = $fee->getProductId();
-//            if( $productId && strpos($productId, 'TRP-') !== false ) {
+//            if( $productId && strpos((string)$productId, 'TRP-') !== false ) {
 //                $exist = true;
 //            }
-//            if( $productId && strpos($productId, 'MISI-') !== false ) {
+//            if( $productId && strpos((string)$productId, 'MISI-') !== false ) {
 //                $exist = true;
 //            }
 //            if( !$exist ) {

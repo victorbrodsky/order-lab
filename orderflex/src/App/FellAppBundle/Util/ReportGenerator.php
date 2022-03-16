@@ -1151,7 +1151,7 @@ class ReportGenerator {
         //echo "Header=".$data."<br>";
         //$logger->notice("Header=".$data);
         //if(strcmp($data,"%PDF-")==0) {
-        if( strpos($data, '%PDF-') !== false ) {
+        if( strpos((string)$data, '%PDF-') !== false ) {
             //echo "The PDF File is not Corrupted.<br>";
         } else {
             //echo "The PDF File is  Corrupted.<br>";
@@ -1164,12 +1164,12 @@ class ReportGenerator {
         ///////////// checking footer "%%EOF" ///////////////
         if(1) {
             $file = file($filePath);
-            $endfile = trim($file[count($file) - 1]);
+            $endfile = trim((string)$file[count($file) - 1]);
             //echo "endfile=".$endfile."<br>";
             //$logger->notice("endfile=" . $endfile);
             $n = "%%EOF";
             //if( $endfile === $n ) {
-            if( strpos($endfile, $n) !== false ) {
+            if( strpos((string)$endfile, $n) !== false ) {
                 //echo "good <br>";
             } else {
                 //echo "corrupted <br>";
@@ -1636,7 +1636,7 @@ class ReportGenerator {
         $object->setSize($filesize);
 
         $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-        $documentType = trim($documentType);
+        $documentType = trim((string)$documentType);
         $documentTypeObject = $transformer->reverseTransform($documentType);
         if( $documentTypeObject ) {
             $object->setType($documentTypeObject);

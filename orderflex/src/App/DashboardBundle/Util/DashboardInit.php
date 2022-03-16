@@ -1168,7 +1168,7 @@ class DashboardInit
 
             ///////////// 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
             foreach( $exceptionTrpStrArr as $exceptionTrpStr ) {
-                //if (strpos($chartName, $exceptionTrpStr) !== false) {
+                //if (strpos((string)$chartName, $exceptionTrpStr) !== false) {
                 if( $this->compareChartName($chartName,$exceptionTrpStr) ) {
                     //echo 'true';
                     $processFlag = false;
@@ -1197,7 +1197,7 @@ class DashboardInit
 
             //////////// 5 - Set charts 57, 58, 59 to 'Pathology Informatics' ////////////
             foreach( $pathInformaticsArr as $pathInformaticsPartName ) {
-                //if (strpos($chartName, $pathInformaticsPartName) !== false) {
+                //if (strpos((string)$chartName, $pathInformaticsPartName) !== false) {
                 if( $this->compareChartName($chartName,$pathInformaticsPartName) ) {
                     //echo 'true';
                     if ($informatics && !$chartInstitutions->contains($informatics)) {
@@ -1215,7 +1215,7 @@ class DashboardInit
 
             //////////// 6- Set charts 62, 63 to Pathology and Laboratory Medicine ////////////
             foreach( $pathologyArr as $pathologyPartName ) {
-                //if (strpos($chartName, $pathologyPartName) !== false) {
+                //if (strpos((string)$chartName, $pathologyPartName) !== false) {
                 if( $this->compareChartName($chartName,$pathologyPartName) ) {
                     //echo 'true';
                     if ($pathology && !$chartInstitutions->contains($pathology)) {

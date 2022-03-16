@@ -108,7 +108,7 @@ class StateLicenseType extends AbstractType
             $form = $event->getForm();
 
             $createCycle = false;
-            if (strpos($this->params['cycle'], 'create') !== false) {
+            if (strpos((string)$this->params['cycle'], 'create') !== false) {
                 $createCycle = true;
             }
 

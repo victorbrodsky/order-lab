@@ -1477,7 +1477,7 @@ class ScanOrderController extends OrderAbstractController {
 
             //show chosen collaboration institution
             $institution = false;
-            if( strpos($service,'collaborationkey') !== false ) {
+            if( strpos((string)$service,'collaborationkey') !== false ) {
                 $pieces = explode("-", $service);
                 $institutionId = $pieces[1];
                 //echo "collaboration institutionId=".$institutionId."<br>";

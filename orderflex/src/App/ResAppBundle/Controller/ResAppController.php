@@ -1898,7 +1898,7 @@ class ResAppController extends OrderAbstractController {
         //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
-            if( strpos($role,'INTERVIEWER') !== false ) {
+            if( strpos((string)$role,'INTERVIEWER') !== false ) {
                 $interviewerRoleResType = $role;
                 break;
             }
@@ -2028,7 +2028,7 @@ class ResAppController extends OrderAbstractController {
 
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
         $sendEmail = true;
-        if( strpos($status, "-noemail") !== false ) {
+        if( strpos((string)$status, "-noemail") !== false ) {
             $sendEmail = false;
             $status = str_replace("-noemail","",$status);
         }

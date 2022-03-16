@@ -412,7 +412,7 @@ class TransResPermissionUtil
             //}
 
             $state = $project->getState();
-            if( strpos($state, '_rejected') !== false || $state == 'draft' ) {
+            if( strpos((string)$state, '_rejected') !== false || $state == 'draft' ) {
                 if( $transresUtil->isProjectRequester($project,false) === true ) {
                     return true;
                 }

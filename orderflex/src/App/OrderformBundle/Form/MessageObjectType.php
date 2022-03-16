@@ -622,7 +622,7 @@ if( 1 ) {
                     $showReportRecipients = true;
                 }
 
-                if( strpos($messageCategory,'Report') !== false ) {
+                if( strpos((string)$messageCategory,'Report') !== false ) {
                     $showOrderRecipients = false;
                     $showReportRecipients = true;
                     //echo $messageCategory.": showReportRecipients=".$showReportRecipients."<br>";
@@ -1023,7 +1023,7 @@ if( 1 ) {
 //                    $showReportRecipients = true;
 //                }
 //
-//                if( strpos($messageCategory,'Report') !== false ) {
+//                if( strpos((string)$messageCategory,'Report') !== false ) {
 //                    $showOrderRecipients = false;
 //                    $showReportRecipients = true;
 //                }
@@ -1063,7 +1063,7 @@ if( 1 ) {
     public function hasSpecificOrders( $message, $substring ) {
         $category = $message->getType();
         //echo "category=".$category."<br>";
-        if( strpos($category,$substring) !== false ) {
+        if( strpos((string)$category,$substring) !== false ) {
             //echo "has <br>";
             return true;
         }

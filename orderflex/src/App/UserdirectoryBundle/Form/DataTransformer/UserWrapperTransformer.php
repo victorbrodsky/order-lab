@@ -160,7 +160,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         //return $newListArr;
 
         //TODO: this assumes that entered text does not have comma!
-        if( strpos($text,',') !== false ) {
+        if( strpos((string)$text,',') !== false ) {
 
             //echo "text array<br>";
             //exit();

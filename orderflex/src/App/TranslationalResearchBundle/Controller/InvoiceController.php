@@ -123,10 +123,10 @@ class InvoiceController extends OrderAbstractController
 
         $filterform->handleRequest($request);
 
-        $filterTitle = trim($request->get('title'));
-        //$filterwell = trim( $request->get('filterwell') );
+        $filterTitle = trim((string)$request->get('title'));
+        //$filterwell = trim((string)$request->get('filterwell') );
 
-        //$filterType = trim( $request->get('type') );
+        //$filterType = trim((string)$request->get('type') );
         $invoicetype = str_replace("-", " ", $invoicetype);
         $invoicetypeLowerCase = strtolower($invoicetype);
         //echo "invoicetype=$invoicetype<br>";
@@ -768,7 +768,7 @@ class InvoiceController extends OrderAbstractController
             if ($idSearch) {
                 $exportUnpaidSummary = 1;
 //                //$idSearch does not have '-REQ'
-//                if (strpos($idSearch, '-REQ') === false) {
+//                if (strpos((string)$idSearch, '-REQ') === false) {
 //                    $exportUnpaidSummary = 1;
 //                }
             }
@@ -1541,7 +1541,7 @@ class InvoiceController extends OrderAbstractController
         $newline = "\n";
         $res = "NotOK";
 
-        $userId = trim( $request->get('userId') );
+        $userId = trim((string)$request->get('userId') );
         $billToUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
 
         if( $billToUser ) {
@@ -1709,7 +1709,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $status = trim( $request->get('status') );
+        $status = trim((string)$request->get('status') );
 
         $msg = "Invoice's (ID ".$invoice->getOid().") status has not been updated to '" . $status . "'";
 
@@ -1766,15 +1766,15 @@ class InvoiceController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $res = "NotOK";
 
-        $invoiceId = trim( $request->get('invoiceId') );
-        $paid = trim( $request->get('paid') );
-        $total = trim( $request->get('total') );
-        $discountNumeric = trim( $request->get('discountNumeric') );
-        $discountPercent = trim( $request->get('discountPercent') );
-        $administrativeFee = trim( $request->get('administrativeFee') );
-        $due = trim( $request->get('due') );
-        $comment = trim( $request->get('comment') );
-        $status = trim( $request->get('status') );
+        $invoiceId = trim((string)$request->get('invoiceId') );
+        $paid = trim((string)$request->get('paid') );
+        $total = trim((string)$request->get('total') );
+        $discountNumeric = trim((string)$request->get('discountNumeric') );
+        $discountPercent = trim((string)$request->get('discountPercent') );
+        $administrativeFee = trim((string)$request->get('administrativeFee') );
+        $due = trim((string)$request->get('due') );
+        $comment = trim((string)$request->get('comment') );
+        $status = trim((string)$request->get('status') );
 
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
         if( !$invoice ) {

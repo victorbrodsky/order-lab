@@ -833,7 +833,7 @@ class VacReqRequest
 
 
     public function convertYearRangeToYear($yearRangeStr) {
-        if( strpos($yearRangeStr, '-') === false ) {
+        if( strpos((string)$yearRangeStr, '-') === false ) {
             return $yearRangeStr;
         }
         $yearRangeArr = explode("-",$yearRangeStr);

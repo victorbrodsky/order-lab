@@ -140,7 +140,7 @@ class LargeFileDownloader {
         }
 
         //if( $viewType == 'snapshot' ) {
-        if( strpos($viewType, 'snapshot') !== false ) {
+        if( strpos((string)$viewType, 'snapshot') !== false ) {
             //TODO: fix image resize
             //we will need at least two thumbnails for each avatar -
             // one big image for the application view/edit page and

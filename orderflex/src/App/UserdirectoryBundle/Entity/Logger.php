@@ -456,7 +456,7 @@ class Logger
         $proxyStr = "Proxies\__CG__\\";
         //$proxyStr = "App\UserdirectoryBundle\\";
         //echo "proxyStr=".$proxyStr."<br>";
-        if( strpos($entityNamespace, $proxyStr) !== false ) {
+        if( strpos((string)$entityNamespace, $proxyStr) !== false ) {
             //echo "remove=".$proxyStr."<br>";
             $entityNamespace = str_replace($proxyStr, "", $entityNamespace);
         }

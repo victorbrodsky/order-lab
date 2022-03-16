@@ -198,15 +198,15 @@ class CrnEditController extends CrnEntryController
         $formtype = "crn-entry";
 
         $route = $request->get('_route');
-        if( strpos($route, "crn_crnentry_edit") !== false ) {
+        if( strpos((string)$route, "crn_crnentry_edit") !== false ) {
             $cycle = "edit";
         }
-        if( strpos($route, "crn_crnentry_amend") !== false ) {
+        if( strpos((string)$route, "crn_crnentry_amend") !== false ) {
             $cycle = "amend";
         }
 
-        //$patientId = trim($request->get('patientId'));
-        //$nowStr = trim($request->get('nowStr'));
+        //$patientId = trim((string)$request->get('patientId'));
+        //$nowStr = trim((string)$request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
         //$messageId = 142; //154; //testing
@@ -236,7 +236,7 @@ class CrnEditController extends CrnEntryController
 
         //Replace encounter with the latest encounter.
         //Used replaced encounter for latest url only to show message's encounter, not patient's encounter!.
-        if( strpos($route, "_latest_encounter") !== false ) {
+        if( strpos((string)$route, "_latest_encounter") !== false ) {
             $encounter = $message->getEncounter()->first();
             if( !$crnUtil->isLatestEncounterVersion($encounter) ) {
                 $latestEncounter = $em->getRepository('AppOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
@@ -938,9 +938,9 @@ class CrnEditController extends CrnEntryController
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
 
-        $messageId = trim($request->get('messageId'));
-        $latestNextMessageVersion = trim($request->get('latestNextMessageVersion')); //next message version, that message will have after submit
-        $latestNextEncounterVersion = trim($request->get('latestNextEncounterVersion'));
+        $messageId = trim((string)$request->get('messageId'));
+        $latestNextMessageVersion = trim((string)$request->get('latestNextMessageVersion')); //next message version, that message will have after submit
+        $latestNextEncounterVersion = trim((string)$request->get('latestNextEncounterVersion'));
         //echo "latestNextMessageVersion=$latestNextMessageVersion<br>";
 
         $encounter = null;

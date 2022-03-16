@@ -162,20 +162,20 @@ class DefaultController extends OrderAbstractController
             //var_dump($rowData);
             //echo "<br>";
 
-            $attendingUserStr = trim($rowData[0][0]);
-            $attendingUserCwid = trim($rowData[0][1]);
+            $attendingUserStr = trim((string)$rowData[0][0]);
+            $attendingUserCwid = trim((string)$rowData[0][1]);
             //echo "attendingUserStr=".$attendingUserStr."<br>";
             //echo "attendingUserCwid=".$attendingUserCwid."<br>";
             $attendingCount = $this->assignRoleToUser($attendingUserStr,$attendingUserCwid,"ROLE_CRN_PATHOLOGY_ATTENDING",$attendingCount);
 
-            $residentUserStr = trim($rowData[0][2]);
-            $residentUserCwid = trim($rowData[0][3]);
+            $residentUserStr = trim((string)$rowData[0][2]);
+            $residentUserCwid = trim((string)$rowData[0][3]);
             //echo "residentUserStr=".$residentUserStr."<br>";
             //echo "residentUserCwid=".$residentUserCwid."<br>";
             $residentCount = $this->assignRoleToUser($residentUserStr,$residentUserCwid,"ROLE_CRN_PATHOLOGY_RESIDENT",$residentCount);
 
-            $fellowUserStr = trim($rowData[0][4]);
-            $fellowUserCwid = trim($rowData[0][5]);
+            $fellowUserStr = trim((string)$rowData[0][4]);
+            $fellowUserCwid = trim((string)$rowData[0][5]);
             //echo "fellowUserStr=".$fellowUserStr."<br>";
             //echo "fellowUserCwid=".$fellowUserCwid."<br>";
             $fellowCount = $this->assignRoleToUser($fellowUserStr,$fellowUserCwid,"ROLE_CRN_PATHOLOGY_FELLOW",$fellowCount);

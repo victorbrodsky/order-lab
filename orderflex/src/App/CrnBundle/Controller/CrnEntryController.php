@@ -640,7 +640,7 @@ class CrnEntryController extends OrderAbstractController
                     //search can be both: lastname or mrn number
                     //$dql->andWhere("lastname.field LIKE :search");
                     //$queryParameters['search'] = "%".$searchFilter."%";
-                    if( strpos($searchFilter, ',') === false ) {
+                    if( strpos((string)$searchFilter, ',') === false ) {
                         //echo "no commas in search <br>";
                         $lastnameOrMrn = "LOWER(lastname.field) LIKE LOWER(:search) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                         //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
@@ -660,8 +660,8 @@ class CrnEntryController extends OrderAbstractController
                             $latentFirstname = $namesArr[1];
                             //echo "0: [$latentLastname] [$latentFirstname]<br>";
                             if( $latentLastname && $latentFirstname ) {
-                                $latentLastname = trim($latentLastname);
-                                $latentFirstname = trim($latentFirstname);
+                                $latentLastname = trim((string)$latentLastname);
+                                $latentFirstname = trim((string)$latentFirstname);
                                 //echo "1: [$latentLastname] [$latentFirstname]<br>";
                                 $lastnameOrMrn = "(LOWER(lastname.field) LIKE LOWER(:searchLastname) AND LOWER(firstname.field) LIKE LOWER(:searchFirstname)) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                                 $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
@@ -1242,12 +1242,12 @@ class CrnEntryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $sitename = $this->getParameter('crn.sitename');
 
-        $mrn = trim($request->get('mrn'));
-        $mrntype = trim($request->get('mrntype'));
-        $encounterNumber = trim($request->get('encounter-number'));
-        $encounterTypeId = trim($request->get('encounter-type'));
-        //$encounterVersion = trim($request->get('encounter-version'));
-        $messageTypeId = trim($request->get('message-type'));
+        $mrn = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->get('mrntype'));
+        $encounterNumber = trim((string)$request->get('encounter-number'));
+        $encounterTypeId = trim((string)$request->get('encounter-type'));
+        //$encounterVersion = trim((string)$request->get('encounter-version'));
+        $messageTypeId = trim((string)$request->get('message-type'));
 
         //check if user has at least one institution
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -1547,8 +1547,8 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('crn_home') );
         }
 
-//        $mrn = trim($request->get('mrn'));
-//        $mrntype = trim($request->get('mrntype'));
+//        $mrn = trim((string)$request->get('mrn'));
+//        $mrntype = trim((string)$request->get('mrntype'));
         $mrn = null;
         $mrntype = null;
         $accession = null;
@@ -2094,7 +2094,7 @@ class CrnEntryController extends OrderAbstractController
         );
     }//save
 
-    public function createCrnEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false, $showPreviousEncounters=false) {
+    public function createCrnEntryForm($message, $mrntype=null, $mrn=null, $cycle='show', $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
@@ -2293,7 +2293,7 @@ class CrnEntryController extends OrderAbstractController
         $entities = null;
 
         $allgets = $request->query->all();
-        //$patientid = trim( $request->get('patientid') );
+        //$patientid = trim((string)$request->get('patientid') );
         //print_r($allgets);
         //echo "<br>";
 
@@ -2308,8 +2308,8 @@ class CrnEntryController extends OrderAbstractController
 
         $searchtype = str_replace("_"," ",$searchtype);
 
-        //$searchtype = trim( $request->get('searchtype') );
-        //$search = trim( $request->get('search') );
+        //$searchtype = trim((string)$request->get('searchtype') );
+        //$search = trim((string)$request->get('search') );
         //echo "searchtype=".$searchtype."<br>";
         //echo "search=".$search."<br>";
 
@@ -2348,10 +2348,10 @@ class CrnEntryController extends OrderAbstractController
         //$crnUtil = $this->crnUtil;
         $searchedArr = array();
 
-        //$currentUrl = trim($request->get('currentUrl'));
+        //$currentUrl = trim((string)$request->get('currentUrl'));
         //echo "currentUrl=".$currentUrl."<br>";
 
-        //$formtype = trim($request->get('formtype'));
+        //$formtype = trim((string)$request->get('formtype'));
 
         //$patientsData = $this->searchPatient( $request, true, null, false ); //testing
         $patientsData = $this->searchPatient( $request, true);
@@ -2371,8 +2371,8 @@ class CrnEntryController extends OrderAbstractController
         if( count($patients) == 0 ) {
             //search again, but only by mrn
             $params = array();
-            $mrntype = trim($request->get('mrntype'));
-            $mrn = trim($request->get('mrn'));
+            $mrntype = trim((string)$request->get('mrntype'));
+            $mrn = trim((string)$request->get('mrn'));
             $params['mrntype'] = $mrntype;
             $params['mrn'] = $mrn;
             $patientsDataStrict = $this->searchPatient( $request, true, $params );
@@ -2392,8 +2392,8 @@ class CrnEntryController extends OrderAbstractController
         if( count($patients) == 0 ) {
             //search again, but only by accession
             $params = array();
-            $accessiontype = trim($request->get('accessiontype'));
-            $accessionnumber = trim($request->get('accessionnumber'));
+            $accessiontype = trim((string)$request->get('accessiontype'));
+            $accessionnumber = trim((string)$request->get('accessionnumber'));
             if( $accessionnumber && $accessiontype ) {
                 $params['accessiontype'] = $accessiontype;
                 $params['accessionnumber'] = $accessionnumber;
@@ -2527,28 +2527,28 @@ class CrnEntryController extends OrderAbstractController
 //        }
 
         if( !$params ) {
-//            $mrntype = trim($request->get('mrntype')); //ID of mrn type
-//            $mrn = trim($request->get('mrn'));
-//            $accessionnumber = trim($request->get('accessionnumber'));
-//            $accessiontype = trim($request->get('accessiontype'));
-//            $dob = trim($request->get('dob'));
-//            $lastname = trim($request->get('lastname'));
-//            $firstname = trim($request->get('firstname'));
-//            $phone = trim($request->get('phone'));
-//            $email = trim($request->get('email'));
-//            $metaphone = trim($request->get('metaphone'));
+//            $mrntype = trim((string)$request->get('mrntype')); //ID of mrn type
+//            $mrn = trim((string)$request->get('mrn'));
+//            $accessionnumber = trim((string)$request->get('accessionnumber'));
+//            $accessiontype = trim((string)$request->get('accessiontype'));
+//            $dob = trim((string)$request->get('dob'));
+//            $lastname = trim((string)$request->get('lastname'));
+//            $firstname = trim((string)$request->get('firstname'));
+//            $phone = trim((string)$request->get('phone'));
+//            $email = trim((string)$request->get('email'));
+//            $metaphone = trim((string)$request->get('metaphone'));
 
             $params = array(
-                'mrntype' => trim($request->get('mrntype')),
-                'mrn' => trim($request->get('mrn')),
-                'accessionnumber' => trim($request->get('accessionnumber')),
-                'accessiontype' => trim($request->get('accessiontype')),
-                'dob' => trim($request->get('dob')),
-                'lastname' => trim($request->get('lastname')),
-                'firstname' => trim($request->get('firstname')),
-                'phone' => trim($request->get('phone')),
-                'email' => trim($request->get('email')),
-                'metaphone' => trim($request->get('metaphone'))
+                'mrntype' => trim((string)$request->get('mrntype')),
+                'mrn' => trim((string)$request->get('mrn')),
+                'accessionnumber' => trim((string)$request->get('accessionnumber')),
+                'accessiontype' => trim((string)$request->get('accessiontype')),
+                'dob' => trim((string)$request->get('dob')),
+                'lastname' => trim((string)$request->get('lastname')),
+                'firstname' => trim((string)$request->get('firstname')),
+                'phone' => trim((string)$request->get('phone')),
+                'email' => trim((string)$request->get('email')),
+                'metaphone' => trim((string)$request->get('metaphone'))
             );
         }
 
@@ -2612,18 +2612,18 @@ class CrnEntryController extends OrderAbstractController
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
 
-        $mrn = trim($request->get('mrn'));
-        $mrntype = trim($request->get('mrntype')); //ID
-        $dob = trim($request->get('dob'));
-        $lastname = trim($request->get('lastname'));
-        $firstname = trim($request->get('firstname'));
-        $middlename = trim($request->get('middlename'));
-        $suffix = trim($request->get('suffix'));
-        $sex = trim($request->get('sex'));
-        $phone = trim($request->get('phone'));
-        $email = trim($request->get('email'));
-        $accessionnumber = trim($request->get('accessionnumber'));
-        $accessiontype = trim($request->get('accessiontype'));
+        $mrn = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->get('mrntype')); //ID
+        $dob = trim((string)$request->get('dob'));
+        $lastname = trim((string)$request->get('lastname'));
+        $firstname = trim((string)$request->get('firstname'));
+        $middlename = trim((string)$request->get('middlename'));
+        $suffix = trim((string)$request->get('suffix'));
+        $sex = trim((string)$request->get('sex'));
+        $phone = trim((string)$request->get('phone'));
+        $email = trim((string)$request->get('email'));
+        $accessionnumber = trim((string)$request->get('accessionnumber'));
+        $accessiontype = trim((string)$request->get('accessiontype'));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
         //echo "mrntype=".$mrntype."<br>";
@@ -2897,7 +2897,7 @@ class CrnEntryController extends OrderAbstractController
         ////0 should be maintained and not deleted out when the patient is registered
         //if(0) {
             if( $mrn ) {    //mrn with leading zeros
-                $mrnClean = ltrim($mrn, '0');
+                $mrnClean = ltrim((string)$mrn, '0');
                 //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
                 if ($mrn !== $mrnClean) {
                     //create additional valid patient MRN: "00123456" and "123456".
@@ -3085,8 +3085,8 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        $patientId = trim($request->get('patientId'));
-        $nowStr = trim($request->get('nowStr'));
+        $patientId = trim((string)$request->get('patientId'));
+        $nowStr = trim((string)$request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
 
@@ -3148,8 +3148,8 @@ class CrnEntryController extends OrderAbstractController
         $formbased = false;
         //$formbased = true;
 
-        //$patientId = trim($request->get('patientId'));
-        //$nowStr = trim($request->get('nowStr'));
+        //$patientId = trim((string)$request->get('patientId'));
+        //$nowStr = trim((string)$request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
         //$messageId = 142; //154; //testing
@@ -3771,7 +3771,7 @@ class CrnEntryController extends OrderAbstractController
                 $objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                 foreach( $snapshotArrChunk as $snapshotRow ) {
 //                    $snapshotRow = "snapshotRow=$snapshotRow<br>";
-                    if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
+                    if( strpos((string)$snapshotRow, "[###excel_section_flag###]") === false ) {
                         $objRichText->createText($snapshotRow."\n");
                     } else {
                         $snapshotRow = str_replace("[###excel_section_flag###]","",$snapshotRow);
@@ -3784,7 +3784,7 @@ class CrnEntryController extends OrderAbstractController
                 //$ews->setCellValue($aRow, "".$snapshot);
                 $ews->setCellValue($aRow, $objRichText);
 
-//                if( strpos($snapshot, '[Form Section]') !== false ) {
+//                if( strpos((string)$snapshot, '[Form Section]') !== false ) {
 //                    $ews->getStyle($aRow)->getFont()->setItalic(true);
 //                }
 
@@ -4100,7 +4100,7 @@ class CrnEntryController extends OrderAbstractController
 
                         //$objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                         foreach ($snapshotArrChunk as $snapshotRow) {
-                            if (strpos($snapshotRow, "[###excel_section_flag###]") === false) {
+                            if (strpos((string)$snapshotRow, "[###excel_section_flag###]") === false) {
                                 //$objRichText->createText($snapshotRow."\n");
                             } else {
                                 $snapshotRow = str_replace("[###excel_section_flag###]", "", $snapshotRow);
@@ -4116,7 +4116,7 @@ class CrnEntryController extends OrderAbstractController
                         $spoutRow = WriterEntityFactory::createRowFromArray($data, $rowStyle);
                         $writer->addRow($spoutRow);
 
-//                if( strpos($snapshot, '[Form Section]') !== false ) {
+//                if( strpos((string)$snapshot, '[Form Section]') !== false ) {
 //                    $ews->getStyle($aRow)->getFont()->setItalic(true);
 //                }
 

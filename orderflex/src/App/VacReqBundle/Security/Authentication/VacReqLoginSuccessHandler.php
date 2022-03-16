@@ -79,7 +79,7 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
             $roleStr = $role."";
             $findStr = "_OBSERVER_";
             //echo "roleStr = ".$roleStr."; findStr=".$findStr."<br>";
-            if( strpos($roleStr,$findStr) === false ) {
+            if( strpos((string)$roleStr,$findStr) === false ) {
                 //echo "The string $findStr was not found in the string $roleStr <br>";
                 return $redirectResponse;
             } else {

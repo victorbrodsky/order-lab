@@ -236,4 +236,9 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
     public function isAccountNonLocked();
     public function isCredentialsNonExpired();
     public function isEnabled();
+
+    //implements the Serializable interface, which is deprecated. Implement __serialize() and __unserialize()
+    public function __serialize();
+    public function __unserialize($data);
+    
 }

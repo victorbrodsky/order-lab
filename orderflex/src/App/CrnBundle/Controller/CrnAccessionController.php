@@ -266,8 +266,8 @@ class CrnAccessionController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        $accessionNumber = trim($request->get('accessionnumber'));
-        $accessionType = trim($request->get('accessiontype'));
+        $accessionNumber = trim((string)$request->get('accessionnumber'));
+        $accessionType = trim((string)$request->get('accessiontype'));
 
         $crnUtil = $this->get('crn_util');
         $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);

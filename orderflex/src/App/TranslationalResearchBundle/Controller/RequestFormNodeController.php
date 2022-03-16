@@ -845,7 +845,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $res = "NotOK";
 
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         if(
@@ -858,7 +858,7 @@ class RequestFormNodeController extends OrderAbstractController
         }
 
         if( $project ) {
-            $value = trim($request->get('value'));
+            $value = trim((string)$request->get('value'));
 
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
 

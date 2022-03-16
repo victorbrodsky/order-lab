@@ -1209,7 +1209,7 @@ class FloatingDayController extends OrderAbstractController
         //exit('url='.$url);
 
         //when status is changed from email, then the url is a system home page
-        if( $url && strpos($url, 'vacreq_floatingrequests') !== false ) {
+        if( $url && strpos((string)$url, 'vacreq_floatingrequests') !== false ) {
             return $this->redirect($url);
         }
 
@@ -1710,7 +1710,7 @@ class FloatingDayController extends OrderAbstractController
         $url = $request->headers->get('referer');
 
         //when status is changed from email, then the url is a system home page
-        if( $url && strpos($url, 'incoming-requests') !== false ) {
+        if( $url && strpos((string)$url, 'incoming-requests') !== false ) {
             return $this->redirect($url);
         }
 

@@ -98,7 +98,7 @@ class UploadListener {
         if( $documentType ) {
             //$documentTypeObject = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($documentType);
             $transformer = new GenericTreeTransformer($this->em, $authUser, "DocumentTypeList", "UserdirectoryBundle");
-            $documentType = trim($documentType);
+            $documentType = trim((string)$documentType);
             $documentTypeObject = $transformer->reverseTransform($documentType);
             if( $documentTypeObject ) {
                 $object->setType($documentTypeObject);

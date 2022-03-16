@@ -131,7 +131,8 @@ class CallLogUtilForm
                 //echo "dateTime=" . $dateTime->format("h:i (T)") . "<br>";
                 //echo "dateField=" . $dateField->format("m/d/Y (T)") . "<br>";
 
-                $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                //$newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                $newDateTime = new \DateTime("now", new \DateTimeZone($user_tz));
                 //echo "1newDateTime=".$newDateTime->format("d-m-Y")."<br>";
 
                 //1) construct DateTime with $dateField and $dateTime
@@ -142,7 +143,7 @@ class CallLogUtilForm
 
                 //$dateField = new \DateTime($newDateTime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
 
-                $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+                $newDateTime = new \DateTime("now", new \DateTimeZone($user_tz));
                 //echo "2newDateTime=".$newDateTime->format("d-m-Y")."<br>";
                 //exit ("user_tz=$user_tz <br>"); //testing
 
@@ -220,11 +221,11 @@ class CallLogUtilForm
         }
 
         //Update Patient Info
-        $lastname = trim($encounter->obtainValidField('patlastname'));
-        $firstname = trim($encounter->obtainValidField('patfirstname'));
-        $middlename = trim($encounter->obtainValidField('patmiddlename'));
-        $suffix = trim($encounter->obtainValidField('patsuffix'));
-        $sex = trim($encounter->obtainValidField('patsex'));
+        $lastname = trim((string)$encounter->obtainValidField('patlastname'));
+        $firstname = trim((string)$encounter->obtainValidField('patfirstname'));
+        $middlename = trim((string)$encounter->obtainValidField('patmiddlename'));
+        $suffix = trim((string)$encounter->obtainValidField('patsuffix'));
+        $sex = trim((string)$encounter->obtainValidField('patsex'));
         //echo "### [$lastname] || [$firstname] || [$middlename] || [$suffix] || [$sex] <br>";
         if( $lastname || $firstname || $middlename || $suffix || $sex ) {
             $html .= $this->getTrSection("Update Patient Info");
@@ -494,7 +495,7 @@ class CallLogUtilForm
 
             //Signed
             $messageSigneeInfo = $message->getSigneeInfo();
-            if (strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo) {
+            if (strpos((string)$messageStatus, 'Signed') !== false && $messageSigneeInfo) {
                 if ($messageSigneeInfo->getModifiedBy()) {
                     $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
                     $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
@@ -591,7 +592,7 @@ class CallLogUtilForm
 
         //Signed
         $messageSigneeInfo = $message->getSigneeInfo();
-        if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
+        if( strpos((string)$messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
             if ($messageSigneeInfo->getModifiedBy()) {
                 $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
                 $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';

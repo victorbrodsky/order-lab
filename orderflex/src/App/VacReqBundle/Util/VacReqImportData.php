@@ -130,7 +130,7 @@ class VacReqImportData
             //echo "<br>";
 
             $exportId = $this->getValueByHeaderName('FACULTY_REQUEST_ID', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
             //echo "exportId=".$exportId."<br>";
 
             //if( $exportId != 1840 ) {continue;} //testing

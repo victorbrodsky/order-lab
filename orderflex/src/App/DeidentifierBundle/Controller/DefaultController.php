@@ -68,9 +68,9 @@ class DefaultController extends OrderAbstractController
         $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
 
-        $accessionTypeStr = trim($accessionTypeStr);
-        $accessionTypeId = trim($accessionTypeId);
-        $accessionNumber = trim($accessionNumber);
+        $accessionTypeStr = trim((string)$accessionTypeStr);
+        $accessionTypeId = trim((string)$accessionTypeId);
+        $accessionNumber = trim((string)$accessionNumber);
 
         //echo "accessionNumber=".$accessionNumber."<br>";
         //echo "accessionTypeStr=".$accessionTypeStr."<br>";
@@ -205,8 +205,8 @@ class DefaultController extends OrderAbstractController
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionType = $request->query->get('accessionType');
 
-        $accessionNumber = trim($accessionNumber);
-        $accessionType = trim($accessionType);
+        $accessionNumber = trim((string)$accessionNumber);
+        $accessionType = trim((string)$accessionType);
 
         //echo "accessionNumber=".$accessionNumber."<br>";
         //echo "accessionType=".$accessionType."<br>";
@@ -305,9 +305,9 @@ class DefaultController extends OrderAbstractController
         $accessionNumber = $request->query->get('accessionNumber');
         $accessionTypeId = $request->query->get('accessionType');
 
-        $institution = trim($institution);
-        $accessionNumber = trim($accessionNumber);
-        $accessionTypeId = trim($accessionTypeId);
+        $institution = trim((string)$institution);
+        $accessionNumber = trim((string)$accessionNumber);
+        $accessionTypeId = trim((string)$accessionTypeId);
 
         //echo "institution=".$institution."<br>";
         //echo "accessionNumber=(".$accessionNumber.")<br>";
@@ -326,9 +326,9 @@ class DefaultController extends OrderAbstractController
 
 //        if(
 //            $accessionTypeObj->getName() != "Deidentifier ID" &&
-//            strpos($accessionTypeObj->getName(),'De-Identified') === false
+//            strpos((string)$accessionTypeObj->getName(),'De-Identified') === false
 //        )
-         if( strpos($accessionTypeObj->getName(),'CoPath Anatomic Pathology Accession Number') !== false ) {
+         if( strpos((string)$accessionTypeObj->getName(),'CoPath Anatomic Pathology Accession Number') !== false ) {
             //check if accession number is not empty containing only something like "-"
             //echo "accessionNumber=".$accessionNumber."<br>";
             //$accessMaskValid = preg_match('/[A-Za-z]{2,}[1-9]{2,}-[1-9]/',$accessionNumber);

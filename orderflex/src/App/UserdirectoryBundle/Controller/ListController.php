@@ -2659,12 +2659,12 @@ class ListController extends OrderAbstractController
         $bundleName = "UserdirectoryBundle";
 
         //regular lists
-        if (strpos($route, "-") !== false) {
+        if (strpos((string)$route, "-") !== false) {
             //sites-list
             $pieces = explode("-", $route);
             $route = $pieces[0];
         }
-        if (strpos($route, "_") !== false) {
+        if (strpos((string)$route, "_") !== false) {
             //sites_show
             $pieces = explode("_", $route);
             $route = $pieces[0];
@@ -4052,7 +4052,7 @@ class ListController extends OrderAbstractController
 
             $request->attributes->set('_route',$listRootName);
 
-            if( strpos($listRootName, "_pathaction") === false ) {
+            if( strpos((string)$listRootName, "_pathaction") === false ) {
                 //echo "ListController::indexAction, listRootName=$listRootName<br>";
                 return $this->forward('App\UserdirectoryBundle\Controller\ListController::indexAction', array('request' => $request));
             } else {

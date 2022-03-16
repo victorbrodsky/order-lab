@@ -2216,7 +2216,7 @@ class AdminController extends OrderAbstractController
             $description = $aliasDescription[1];
             $level = $aliasDescription[2];
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($role));
+            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim((string)$role));
 
             if( $entity ) {
                 if( !$entity->getLevel() ) {
@@ -2257,8 +2257,8 @@ class AdminController extends OrderAbstractController
             }
 
             $entity->setName( $role );
-            $entity->setAlias( trim($alias) );
-            $entity->setDescription( trim($description) );
+            $entity->setAlias( trim((string)$alias) );
+            $entity->setDescription( trim((string)$description) );
             $entity->setLevel($level);
 
             //set sitename
@@ -2331,11 +2331,11 @@ class AdminController extends OrderAbstractController
     //role - role string
     public function setInstitutionFellowship($entity,$role) {
 
-        if( strpos($role,'_WCM_') === false ) {
+        if( strpos((string)$role,'_WCM_') === false ) {
             return;
         }
 
-        if( strpos($role,'_FELLAPP_') === false ) {
+        if( strpos((string)$role,'_FELLAPP_') === false ) {
             return;
         }
 
@@ -2351,43 +2351,43 @@ class AdminController extends OrderAbstractController
         $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
-        if( strpos($role,'BREASTPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'BREASTPATHOLOGY') !== false ) {
             $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
             $entity->setFellowshipSubspecialty($BREASTPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'CYTOPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'CYTOPATHOLOGY') !== false ) {
             $CYTOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
             $entity->setFellowshipSubspecialty($CYTOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'GYNECOLOGICPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'GYNECOLOGICPATHOLOGY') !== false ) {
             $GYNECOLOGICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
             $entity->setFellowshipSubspecialty($GYNECOLOGICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'GASTROINTESTINALPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'GASTROINTESTINALPATHOLOGY') !== false ) {
             $GASTROINTESTINALPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
             $entity->setFellowshipSubspecialty($GASTROINTESTINALPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'GENITOURINARYPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'GENITOURINARYPATHOLOGY') !== false ) {
             $GENITOURINARYPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
             $entity->setFellowshipSubspecialty($GENITOURINARYPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'HEMATOPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'HEMATOPATHOLOGY') !== false ) {
             $HEMATOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
             $entity->setFellowshipSubspecialty($HEMATOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos($role,'MOLECULARGENETICPATHOLOGY') !== false ) {
+        if( strpos((string)$role,'MOLECULARGENETICPATHOLOGY') !== false ) {
             $MOLECULARGENETICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
@@ -2399,11 +2399,11 @@ class AdminController extends OrderAbstractController
     //role - role string
     public function setInstitutionResidency($entity,$role) {
 
-        if( strpos($role,'_WCM_') === false ) {
+        if( strpos((string)$role,'_WCM_') === false ) {
             return;
         }
 
-        if( strpos($role,'_RESAPP_') === false ) {
+        if( strpos((string)$role,'_RESAPP_') === false ) {
             return;
         }
 
@@ -2412,7 +2412,7 @@ class AdminController extends OrderAbstractController
         $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
-        if( strpos($role,'AP') !== false ) {
+        if( strpos((string)$role,'AP') !== false ) {
             $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
             $entity->setResidencyTrack($residencyAP);
 
@@ -2420,7 +2420,7 @@ class AdminController extends OrderAbstractController
             $this->addResAppPermission($entity);
         }
 
-        if( strpos($role,'CP') !== false ) {
+        if( strpos((string)$role,'CP') !== false ) {
             $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
             $entity->setResidencyTrack($residencyCP);
 
@@ -2428,7 +2428,7 @@ class AdminController extends OrderAbstractController
             $this->addResAppPermission($entity);
         }
 
-        if( strpos($role,'APCP') !== false ) {
+        if( strpos((string)$role,'APCP') !== false ) {
             $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
             $entity->setResidencyTrack($residencyAPCP);
 
@@ -2436,7 +2436,7 @@ class AdminController extends OrderAbstractController
             $this->addResAppPermission($entity);
         }
 
-        if( strpos($role,'APEXP') !== false ) {
+        if( strpos((string)$role,'APEXP') !== false ) {
             $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
             $entity->setResidencyTrack($residencyAPEXP);
 
@@ -2444,7 +2444,7 @@ class AdminController extends OrderAbstractController
             $this->addResAppPermission($entity);
         }
 
-        if( strpos($role,'CPEXP') !== false ) {
+        if( strpos((string)$role,'CPEXP') !== false ) {
             $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
             $entity->setResidencyTrack($residencyCPEXP);
 
@@ -2465,11 +2465,11 @@ class AdminController extends OrderAbstractController
             return NULL;
         }
         
-        if( strpos($role,'_WCM_') === false ) {
+        if( strpos((string)$role,'_WCM_') === false ) {
             return NULL;
         }
 
-        if( strpos($role,'_RESAPP_') === false ) {
+        if( strpos((string)$role,'_RESAPP_') === false ) {
             return NULL;
         }
 
@@ -2480,7 +2480,7 @@ class AdminController extends OrderAbstractController
         //echo "role=$role<br>";
         //exit('111');
 
-        if( strpos($role,'_APCP') !== false ) {
+        if( strpos((string)$role,'_APCP') !== false ) {
             $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
             if( !$residencyAPCP ) {
                 exit("ResidencyTrackList not found: AP/CP");
@@ -2490,7 +2490,7 @@ class AdminController extends OrderAbstractController
             return $entity;
         }
 
-        if( strpos($role,'_APEXP') !== false ) {
+        if( strpos((string)$role,'_APEXP') !== false ) {
             $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
             if( !$residencyAPEXP ) {
                 exit("ResidencyTrackList not found: AP/EXP");
@@ -2499,7 +2499,7 @@ class AdminController extends OrderAbstractController
             return $entity;
         }
 
-        if( strpos($role,'_CPEXP') !== false ) {
+        if( strpos((string)$role,'_CPEXP') !== false ) {
             $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
             if( !$residencyCPEXP ) {
                 exit("ResidencyTrackList not found: CP/EXP");
@@ -2508,7 +2508,7 @@ class AdminController extends OrderAbstractController
             return $entity;
         }
 
-        if( strpos($role,'_AP') !== false ) {
+        if( strpos((string)$role,'_AP') !== false ) {
             $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
             if( !$residencyAP ) {
                 exit("ResidencyTrackList not found: AP");
@@ -2517,7 +2517,7 @@ class AdminController extends OrderAbstractController
             return $entity;
         }
 
-        if( strpos($role,'_CP') !== false ) {
+        if( strpos((string)$role,'_CP') !== false ) {
             $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
             if( !$residencyCP ) {
                 exit("ResidencyTrackList not found: CP");
@@ -2535,7 +2535,7 @@ class AdminController extends OrderAbstractController
         //role - role string
         $role = $entity->getName()."";
 
-        if( strpos($role,'_VACREQ_') === false ) {
+        if( strpos((string)$role,'_VACREQ_') === false ) {
             return;
         }
 
@@ -2589,7 +2589,7 @@ class AdminController extends OrderAbstractController
         $role = $entity->getName()."";
         //echo "role=".$role."<br>";
         //DERMATOPATHOLOGY: ?
-        if( strpos($role,$VacReqGroupStr) !== false ) {
+        if( strpos((string)$role,$VacReqGroupStr) !== false ) {
             $groupObject = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
             if( !$groupObject ) {
                 echo "vacreqRoleSetSingleUserInstitution: ".$root." (ID ".$root->getId()."): no child found with name=".$instName."<br>";
@@ -2600,7 +2600,7 @@ class AdminController extends OrderAbstractController
 
             //assign approver APPROVER
             //echo "cwid=".$cwid."<br>";
-            if( $cwid && strpos($role,"ROLE_VACREQ_APPROVER") !== false ) {
+            if( $cwid && strpos((string)$role,"ROLE_VACREQ_APPROVER") !== false ) {
                 $approver = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
                 //echo "approver=".$approver."<br>";
                 if( $approver ) {
@@ -2614,7 +2614,7 @@ class AdminController extends OrderAbstractController
             }
 
             //assign SUPERVISOR
-            if( $cwid && strpos($role,"ROLE_VACREQ_SUPERVISOR") !== false ) {
+            if( $cwid && strpos((string)$role,"ROLE_VACREQ_SUPERVISOR") !== false ) {
                 $supervisor = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
                 //echo "supervisor=".$supervisor."<br>";
                 if( $supervisor ) {
@@ -3201,7 +3201,7 @@ class AdminController extends OrderAbstractController
             $institution = new Institution();
             $this->setDefaultList($institution,$treeCount,$username,$institutionname);
             $treeCount = $treeCount + 10;
-            $institution->setAbbreviation( trim($infos['abbreviation']) );
+            $institution->setAbbreviation( trim((string)$infos['abbreviation']) );
 
             $institution->addType($medicalType);
             $institution->setOrganizationalGroupType($levelInstitution);
@@ -3461,8 +3461,8 @@ class AdminController extends OrderAbstractController
 
             $entity = new States();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
-            $entity->setAbbreviation( trim($key) );
+            $entity->setName( trim((string)$value) );
+            $entity->setAbbreviation( trim((string)$key) );
 
             $em->persist($entity);
             $em->flush();
@@ -3527,7 +3527,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new Countries();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -3584,8 +3584,8 @@ class AdminController extends OrderAbstractController
             //$countryPersisted = false;
             //$cityPersisted = false;
 
-            $country = trim($rowData[0][0]);
-            $city = trim($rowData[0][1]);
+            $country = trim((string)$rowData[0][0]);
+            $city = trim((string)$rowData[0][1]);
 
             //country
             //echo "country=".$country."<br>";
@@ -3691,8 +3691,8 @@ class AdminController extends OrderAbstractController
             if( !$entity ) {
                 $entity = new LanguageList();
                 $this->setDefaultList($entity,$count,$username,null);
-                $entity->setName( trim($name) );
-                $entity->setAbbreviation( trim($abbreviation) );
+                $entity->setName( trim((string)$name) );
+                $entity->setAbbreviation( trim((string)$abbreviation) );
                 $logger->notice("Created LanguageList: name=".$name.", abbreviation=".$abbreviation);
             }
 
@@ -3775,8 +3775,8 @@ class AdminController extends OrderAbstractController
                 $this->setDefaultList($entity,$count,$username,null);
             }
 
-            $entity->setName( trim($locale) );
-            $entity->setDescription( trim($description) );
+            $entity->setName( trim((string)$locale) );
+            $entity->setDescription( trim((string)$description) );
 
             $em->persist($entity);
             $em->flush();
@@ -3823,7 +3823,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new BoardCertifiedSpecialties();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -4088,7 +4088,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new EmploymentTerminationType();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -4168,7 +4168,7 @@ class AdminController extends OrderAbstractController
             //echo 'AppUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
             $entity = new EventTypeList();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -4210,7 +4210,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new IdentifierTypeList();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -4261,7 +4261,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new FellowshipTypeList();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -4313,7 +4313,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new ResidencyTrackList();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $entity->setDuration($duration);
 
@@ -4344,7 +4344,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            $value = trim($value);
+            $value = trim((string)$value);
 
             if( $em->getRepository('AppUserdirectoryBundle:MedicalTitleList')->findOneByName($value) ) {
                 continue;
@@ -4396,7 +4396,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            $value = trim($value);
+            $value = trim((string)$value);
 
             if( $em->getRepository('AppUserdirectoryBundle:MedicalSpecialties')->findOneByName($value) ) {
                 continue;
@@ -4457,7 +4457,7 @@ class AdminController extends OrderAbstractController
 
             $entity = new LocationTypeList();
             $this->setDefaultList($entity,$count,$username,null);
-            $entity->setName( trim($value) );
+            $entity->setName( trim((string)$value) );
 
             $em->persist($entity);
             $em->flush();
@@ -5033,14 +5033,14 @@ class AdminController extends OrderAbstractController
                 TRUE,
                 FALSE);
 
-            $name = trim($rowData[0][0]);
-            $locationTypeName = trim($rowData[0][1]);
-            $locationPhone = trim($rowData[0][2]);
-            $locationRoom = trim($rowData[0][3]);
-            $locationSuite = trim($rowData[0][4]);
-            $locationFloor = trim($rowData[0][5]);
-            $locationFloorSide = trim($rowData[0][6]);
-            $locationBuildingName = trim($rowData[0][7]);
+            $name = trim((string)$rowData[0][0]);
+            $locationTypeName = trim((string)$rowData[0][1]);
+            $locationPhone = trim((string)$rowData[0][2]);
+            $locationRoom = trim((string)$rowData[0][3]);
+            $locationSuite = trim((string)$rowData[0][4]);
+            $locationFloor = trim((string)$rowData[0][5]);
+            $locationFloorSide = trim((string)$rowData[0][6]);
+            $locationBuildingName = trim((string)$rowData[0][7]);
 
 //            print "<pre>";
 //            print_r($rowData);
@@ -5447,7 +5447,7 @@ class AdminController extends OrderAbstractController
 
             if( $residencySpecialty ) {
 
-                $residencySpecialty = trim($residencySpecialty);
+                $residencySpecialty = trim((string)$residencySpecialty);
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
                 $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
@@ -5475,7 +5475,7 @@ class AdminController extends OrderAbstractController
 
             if( $fellowshipSubspecialty ) {
 
-                $fellowshipSubspecialty = trim($fellowshipSubspecialty);
+                $fellowshipSubspecialty = trim((string)$fellowshipSubspecialty);
                 //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
                 $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
 
@@ -8196,7 +8196,7 @@ class AdminController extends OrderAbstractController
 
         foreach( $roles as $role ) {
 
-//            if( strpos($role, '_DEIDENTIFICATOR_') !== false ) {
+//            if( strpos((string)$role, '_DEIDENTIFICATOR_') !== false ) {
 //                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName('deidentifier');
 //                if( $role->getSites() && !$role->getSites()->contains($site) ) {
 //                    $role->addSite($site);
@@ -8262,7 +8262,7 @@ class AdminController extends OrderAbstractController
     }
     public function addSites( $role, $roleStr, $sitename ) {
         $count = 0;
-        if( strpos($role, $roleStr) !== false ) {
+        if( strpos((string)$role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
             $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
             if( !$site ) {
@@ -8285,7 +8285,7 @@ class AdminController extends OrderAbstractController
     }
     public function addSingleSite( $role, $roleStr, $sitename ) {
         $count = 0;
-        if( strpos($role, $roleStr) !== false ) {
+        if( strpos((string)$role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
             $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
             if( !$site ) {
@@ -8315,7 +8315,7 @@ class AdminController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         //ROLE_FELLAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
-        if( strpos($role, "ROLE_FELLAPP_INTERVIEWER") !== false ) {
+        if( strpos((string)$role, "ROLE_FELLAPP_INTERVIEWER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
         }
 
@@ -8323,13 +8323,13 @@ class AdminController extends OrderAbstractController
         //ROLE_FELLAPP_COORDINATOR:
         // permission="Create a New Fellowship Application", object="FellowshipApplication", action="create"
         // permission="Modify a Fellowship Application", object="FellowshipApplication", action="update"
-        if( strpos($role, "ROLE_FELLAPP_COORDINATOR") !== false || strpos($role, "ROLE_FELLAPP_DIRECTOR") !== false ) {
+        if( strpos((string)$role, "ROLE_FELLAPP_COORDINATOR") !== false || strpos((string)$role, "ROLE_FELLAPP_DIRECTOR") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
         }
 
         //ROLE_FELLAPP_OBSERVER: permission="View a Fellowship Application", object="FellowshipApplication", action="read"
-        if( strpos($role, "ROLE_FELLAPP_OBSERVER") !== false ) {
+        if( strpos((string)$role, "ROLE_FELLAPP_OBSERVER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"View a Fellowship Application","FellowshipApplication","read");
         }
 
@@ -8345,7 +8345,7 @@ class AdminController extends OrderAbstractController
         //checkAndAddPermissionToRole($role, "Submit an interview evaluation",  "Interview",                "create")
 
         //ROLE_RESAPP_INTERVIEWER: permission="Submit an interview evaluation", object="Interview", action="create"
-        if( strpos($role, "ROLE_RESAPP_INTERVIEWER") !== false ) {
+        if( strpos((string)$role, "ROLE_RESAPP_INTERVIEWER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
         }
 
@@ -8353,13 +8353,13 @@ class AdminController extends OrderAbstractController
         //ROLE_RESAPP_COORDINATOR:
         // permission="Create a New Residency Application", object="ResidencyApplication", action="create"
         // permission="Modify a Residency Application", object="ResidencyApplication", action="update"
-        if( strpos($role, "ROLE_RESAPP_COORDINATOR") !== false || strpos($role, "ROLE_RESAPP_DIRECTOR") !== false ) {
+        if( strpos((string)$role, "ROLE_RESAPP_COORDINATOR") !== false || strpos((string)$role, "ROLE_RESAPP_DIRECTOR") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Residency Application","ResidencyApplication","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Residency Application","ResidencyApplication","update");
         }
 
         //ROLE_FELLAPP_OBSERVER: permission="View a Residency Application", object="ResidencyApplication", action="read"
-        if( strpos($role, "ROLE_RESAPP_OBSERVER") !== false ) {
+        if( strpos((string)$role, "ROLE_RESAPP_OBSERVER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"View a Residency Application","ResidencyApplication","read");
         }
 
@@ -8372,20 +8372,20 @@ class AdminController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="changestatus"
-        if( strpos($role, "ROLE_VACREQ_APPROVER") !== false ) {
+        if( strpos((string)$role, "ROLE_VACREQ_APPROVER") !== false ) {
             //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Floating Day Request","VacReqRequestFloating","changestatus");
         }
 
         //ROLE_VACREQ_APPROVER: permission="Approve a Vacation Request", object="VacReqRequest", action="create"
-        if( strpos($role, "ROLE_VACREQ_SUBMITTER") !== false ) {
+        if( strpos((string)$role, "ROLE_VACREQ_SUBMITTER") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Floating Day Request","VacReqRequestFloating","create");
         }
 
         //ROLE_VACREQ_SUPERVISOR: permission="Approve a Carry Over Request", object="VacReqRequest", action="changestatus-carryover"
-        if( strpos($role, "ROLE_VACREQ_SUPERVISOR") !== false ) {
+        if( strpos((string)$role, "ROLE_VACREQ_SUPERVISOR") !== false ) {
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Vacation Request","VacReqRequest","changestatus");
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Carry Over Request","VacReqRequest","changestatus-carryover");
@@ -8487,7 +8487,7 @@ class AdminController extends OrderAbstractController
         }
 
         //$filterList = array('default','user-added','disabled','draft');
-        //$filters = trim( $request->get('filters') );
+        //$filters = trim((string)$request->get('filters') );
 //        $filter = null;
 //        if( $filters ) {
 //            $filter = implode(",", $filters);
@@ -10068,15 +10068,15 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $role => $aliasDescription ) {
 
-            $alias = trim($aliasDescription[0]);
-            $description = trim($aliasDescription[1]);
-            $level = trim($aliasDescription[2]);
+            $alias = trim((string)$aliasDescription[0]);
+            $description = trim((string)$aliasDescription[1]);
+            $level = trim((string)$aliasDescription[2]);
 
             //Ignore not finished roles
             if( $alias == "Dashboards alias" ) {
                 continue;
             }
-            if( strpos($alias, 'alias') !== false ) {
+            if( strpos((string)$alias, 'alias') !== false ) {
                 continue;
             }
 
@@ -10104,7 +10104,7 @@ class AdminController extends OrderAbstractController
 
             //set abbreviation
             if( isset($aliasDescription[4]) ) {
-                $entity->setAbbreviation(trim($aliasDescription[4]));
+                $entity->setAbbreviation(trim((string)$aliasDescription[4]));
             }
 
             $em->persist($entity);
@@ -10911,12 +10911,12 @@ class AdminController extends OrderAbstractController
 
             //TODO: assign CTP or MISI Work Queues according to the $productId: all 'TRP' -> CTP Work Queue, all 'MISI' -> MISI Work Queue.
             if( $misiWorkQueue ) {
-                if( strpos($productId, 'MISI-') !== false ) {
+                if( strpos((string)$productId, 'MISI-') !== false ) {
                     $listEntity->addWorkQueue($misiWorkQueue);
                 }
             }
             if( $ctpWorkQueue ) {
-                if( strpos($productId, 'TRP-') !== false ) {
+                if( strpos((string)$productId, 'TRP-') !== false ) {
                     $listEntity->addWorkQueue($ctpWorkQueue);
                 }
             }

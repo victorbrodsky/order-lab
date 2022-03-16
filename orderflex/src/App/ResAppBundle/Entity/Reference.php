@@ -425,11 +425,11 @@ class Reference
         $nameArr = array();
         $firstName = $this->getFirstName();
         if( $firstName ) {
-            $nameArr[] = trim($firstName);
+            $nameArr[] = trim((string)$firstName);
         }
         $lastName = $this->getName();
         if( $lastName ) {
-            $nameArr[] = trim($lastName);
+            $nameArr[] = trim((string)$lastName);
         }
 
         return implode(" ",$nameArr);

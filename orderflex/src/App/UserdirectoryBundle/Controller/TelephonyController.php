@@ -283,10 +283,10 @@ class TelephonyController extends OrderAbstractController {
             // Get data from session
             //$data = $this->get('session')->get('user');
             $verificationCode = $request->query->get('verify_code');
-            $verificationCode = trim($verificationCode);
+            $verificationCode = trim((string)$verificationCode);
 
             $phoneNumber = $request->query->get('phoneNumber');
-            $phoneNumber = trim($phoneNumber);
+            $phoneNumber = trim((string)$phoneNumber);
 
             if( $phoneNumber ) {
                 //strip '-' and ' '
@@ -295,7 +295,7 @@ class TelephonyController extends OrderAbstractController {
             }
 
             $siteName = $request->query->get('siteName');
-            $siteName = trim($siteName);
+            $siteName = trim((string)$siteName);
 
             if( !$siteName ) {
                 $siteName = $this->siteName;
@@ -508,11 +508,11 @@ class TelephonyController extends OrderAbstractController {
         // Get data
         //$verificationCode = $request->query->get('verificationCode');
         $verificationCode = $request->request->get('verificationCode');
-        $verificationCode = trim($verificationCode);
+        $verificationCode = trim((string)$verificationCode);
 
         //$phoneNumber = $request->query->get('phoneNumber');
         $phoneNumber = $request->request->get('phoneNumber');
-        $phoneNumber = trim($phoneNumber);
+        $phoneNumber = trim((string)$phoneNumber);
 
         //testing
 //        $res = "phoneNumber=$phoneNumber, verificationCode=$verificationCode";
@@ -708,7 +708,7 @@ class TelephonyController extends OrderAbstractController {
         // Get data
         //$verificationCode = $request->query->get('verificationCode');
         $userRequestId = $request->request->get('userRequestId');
-        $userRequestId = trim($userRequestId);
+        $userRequestId = trim((string)$userRequestId);
         $objectName = $request->get('objectName');
 
         if( $userRequestId ) {
@@ -727,7 +727,7 @@ class TelephonyController extends OrderAbstractController {
 
         //$phoneNumber = $request->query->get('phoneNumber');
         $verificationCode = $request->request->get('verificationCode');
-        $verificationCode = trim($verificationCode);
+        $verificationCode = trim((string)$verificationCode);
 
         $res = "Phone number is not verified";
 

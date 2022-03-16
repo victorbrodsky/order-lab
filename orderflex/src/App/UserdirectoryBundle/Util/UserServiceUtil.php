@@ -709,16 +709,16 @@ class UserServiceUtil {
         }
 
         if( $inst1 && !$inst2 ) {
-            if( strpos($name, '[inst1]') !== false ) {
-                if( strpos($name, '[inst1]') !== false && strpos($name, '[inst2]') === false ) {
+            if( strpos((string)$name, '[inst1]') !== false ) {
+                if( strpos((string)$name, '[inst1]') !== false && strpos((string)$name, '[inst2]') === false ) {
                     $nameInst = str_replace('[inst1]',$inst1,$name);
                 }
             }
         }
 
         if( $inst2 && !$inst1 ) {
-            if( strpos($name, '[inst2]') !== false ) {
-                if( strpos($name, '[inst2]') !== false && strpos($name, '[inst1]') === false ) {
+            if( strpos((string)$name, '[inst2]') !== false ) {
+                if( strpos((string)$name, '[inst2]') !== false && strpos((string)$name, '[inst1]') === false ) {
                     $nameInst = str_replace('[inst2]',$inst2,$name);
                 }
             }
@@ -1440,7 +1440,7 @@ Pathology and Laboratory Medicine",
                 if( $entry != "." && $entry != ".." ) {
 
                     //echo "$entry\n";
-                    $branch = trim($entry);
+                    $branch = trim((string)$entry);
                     $resArr[] = $this->getBranchGitCommit($branch,$path);
                 }
             }
@@ -1480,7 +1480,7 @@ Pathology and Laboratory Medicine",
 
         //$filename = sprintf('.git/refs/heads/%s',$branch);
         $hash = file_get_contents($filename);
-        $hash = trim($hash);
+        $hash = trim((string)$hash);
 
         $timestamp = filemtime($filename);
         if( $timestamp ) {
@@ -1605,8 +1605,8 @@ Pathology and Laboratory Medicine",
 //        print_r($version_mini_hash);
 //        exec('git rev-list HEAD | wc -l',$version_number);
 //        exec('git log -1',$line);
-//        $version['short'] = "v1.".trim($version_number[0]).".".$version_mini_hash[0];
-//        $version['full'] = "v1.".trim($version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
+//        $version['short'] = "v1.".trim((string)$version_number[0]).".".$version_mini_hash[0];
+//        $version['full'] = "v1.".trim((string)$version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
 //        return $version;
 //    }
     public function runProcess($command) {
@@ -1753,7 +1753,7 @@ Pathology and Laboratory Medicine",
             //echo "The file $dest does not exists <br>";
         }
 
-        if( strpos($src, '.jpg') !== false || strpos($src, '.jpeg') !== false ) {
+        if( strpos((string)$src, '.jpg') !== false || strpos((string)$src, '.jpeg') !== false ) {
             //ok, file is jpeg
         } else {
             return null;
@@ -2129,7 +2129,7 @@ Pathology and Laboratory Medicine",
         if( isset($jobs) && is_array($jobs) ) {
 
             foreach ($jobs as $job) {
-                if (strpos($job, $cronJobName) !== false) {
+                if (strpos((string)$job, $cronJobName) !== false) {
                     return $job."";
                     break;
                 }
@@ -2341,7 +2341,7 @@ Pathology and Laboratory Medicine",
 
             //employees_siteparameters_edit
             //@Route("/{id}/edit", name="employees_siteparameters_edit", methods={"GET"})
-            //$param = trim( $request->get('param') );
+            //$param = trim((string)$request->get('param') );
 
             $router = $userSecUtil->getRequestContextRouter();
 

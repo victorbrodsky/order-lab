@@ -42,8 +42,8 @@ class ResAppUtilController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        $resappId = trim($request->get('id'));
-        $emailType = trim($request->get('emailType')); //accepted, rejected
+        $resappId = trim((string)$request->get('id'));
+        $emailType = trim((string)$request->get('emailType')); //accepted, rejected
         
         $resapp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($resappId);
         if( !$resapp ) {
@@ -208,7 +208,7 @@ class ResAppUtilController extends OrderAbstractController
 
             $actionArr = $resappPdfUtil->getValueByHeaderName('Action',$row,$headers);
             $actionValue = $actionArr['val'];
-            $actionValue = trim($actionValue);
+            $actionValue = trim((string)$actionValue);
             //$actionId = $actionArr['id'];
             //echo "actionId=".$actionId." <br>";
             //echo "checkDuplicateAction: actionValue=[".$actionValue."]<br>";

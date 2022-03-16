@@ -49,7 +49,7 @@ class ScanUserController extends UserController
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
-        $filter = trim( $request->get('filter') );
+        $filter = trim((string)$request->get('filter') );
 
         $time = 'current_only';
         $routeName = $request->get('_route');

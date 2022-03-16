@@ -495,12 +495,12 @@ class ResAppBulkUploadController extends OrderAbstractController
         $instPathologyResidencyProgram = null;
         $localInstitutionResApp = $userSecUtil->getSiteSettingParameter('localInstitutionResApp',$this->getParameter('resapp.sitename'));
 
-        if( strpos($localInstitutionResApp, " (") !== false ) {
+        if( strpos((string)$localInstitutionResApp, " (") !== false ) {
             //Case 1: get string from SiteParameters - "Pathology and Laboratory Medicine (WCM)" "Pathology Residency Programs (WCMC)"
             $localInstitutionResAppArr = explode(" (", $localInstitutionResApp);
             if (count($localInstitutionResAppArr) == 2 && $localInstitutionResAppArr[0] != "" && $localInstitutionResAppArr[1] != "") {
-                $localInst = trim($localInstitutionResAppArr[0]); //"Pathology and Laboratory Medicine" "Pathology Residency Programs"
-                $rootInst = trim($localInstitutionResAppArr[1]);  //"(WCMC)"
+                $localInst = trim((string)$localInstitutionResAppArr[0]); //"Pathology and Laboratory Medicine" "Pathology Residency Programs"
+                $rootInst = trim((string)$localInstitutionResAppArr[1]);  //"(WCMC)"
                 $rootInst = str_replace("(", "", $rootInst);
                 $rootInst = str_replace(")", "", $rootInst);
                 //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
@@ -791,7 +791,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             } //action != Add
 
             //Get $actionId from 'Action' string: 'Add to FirstNAme LastName (ID 123)'
-            if( strpos($actionValue, 'Add to ') !== false ) {
+            if( strpos((string)$actionValue, 'Add to ') !== false ) {
                 echo "actionId=".$actionId." <br>";
                 echo "actionValue=".$actionValue." <br>";
                 if( !$actionId ) {
@@ -800,12 +800,12 @@ class ResAppBulkUploadController extends OrderAbstractController
                     if (count($actionIdArr) == 2) {
                         $actionId = $actionIdArr[1];
                         $actionId = str_replace(")", "", $actionId);
-                        $actionId = trim($actionId);
+                        $actionId = trim((string)$actionId);
                     }
                 }
             }
 
-            if( strpos($actionValue, 'Add to ') !== false && $actionId ) {
+            if( strpos((string)$actionValue, 'Add to ') !== false && $actionId ) {
                 echo "actionId=".$actionId." <br>";
                 echo "actionValue=".$actionValue." <br>";
                 //Add PDF to this resapp by id $actionId
@@ -1087,7 +1087,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if( $medSchoolNameValue ) {
                     $params = array('type'=>'Educational');
-                    $medSchool = trim($medSchoolNameValue);
+                    $medSchool = trim((string)$medSchoolNameValue);
                     //$medSchool = $this->capitalizeIfNotAllCapital($medSchool);
                     if( !$testing ) {
                         $transformer = new GenericTreeTransformer($em, $user, 'Institution', null, $params);
@@ -1159,7 +1159,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 if( $countryCitizenshipValue ) {
                     //$countryCitizenshipStr = $resappImportFromOldSystemUtil->getCitizenshipMapping($countryCitizenshipValue);
-                    $countryCitizenshipValue = trim($countryCitizenshipValue);
+                    $countryCitizenshipValue = trim((string)$countryCitizenshipValue);
                     $transformer = new GenericTreeTransformer($em, $user, 'Countries');
                     if( !$testing ) {
                         $citizenshipCountryEntity = $transformer->reverseTransform($countryCitizenshipValue);
@@ -1317,7 +1317,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
         //$res['val'] = $row[$key]['value'];
         if( array_key_exists('value',$row[$key]) ) {
-            $res['val'] = trim($row[$key]['value']);
+            $res['val'] = trim((string)$row[$key]['value']);
         } else {
             $res['val'] = null;
         }
@@ -1325,7 +1325,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $id = null;
 
         if( array_key_exists('id', $row[$key]) ) {
-            $id = trim($row[$key]['id']);
+            $id = trim((string)$row[$key]['id']);
             //echo "id=".$id.", val=".$res['val']."<br>";
         }
 
@@ -1594,8 +1594,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             $fullName = $parsedData["Name:"];
             $fullNameArr = explode(",",$fullName);
             if( count($fullNameArr) > 1) {
-                $lastName = trim($fullNameArr[0]);
-                $firstName = trim($fullNameArr[1]);
+                $lastName = trim((string)$fullNameArr[0]);
+                $firstName = trim((string)$fullNameArr[1]);
             } else {
                 $lastName = $fullName;
                 $firstName = NULL;
@@ -1688,7 +1688,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             }
 
-            if( strpos($erasFile, '.pdf') !== false ) {
+            if( strpos((string)$erasFile, '.pdf') !== false ) {
                 //PDF
             } else {
                 echo "Skip: File is not PDF <br>";
@@ -1746,7 +1746,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                 continue;
             }
 
-            if( strpos($erasFile, '.pdf') !== false ) {
+            if( strpos((string)$erasFile, '.pdf') !== false ) {
                 //PDF
             } else {
                 echo "Skip: File is not PDF <br>";
@@ -1850,7 +1850,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        $pdfService = new PDFService();
 //        $text = $pdfService->pdf2text($path);
 //
-//        if('' == trim($text)) {
+//        if('' == trim((string)$text)) {
 //            //echo "Use parseFile:<br>";
 //            $text = $pdfService->parseFile($path);
 //        }
@@ -1894,7 +1894,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 ////                $applicationId = $this->string_between_two_string2($pdfTextPage, $startStr, $endStr);
 ////                //echo "applicationId=[".$applicationId ."]<br>";
 ////                if ($applicationId) {
-////                    $applicationId = trim($applicationId);
+////                    $applicationId = trim((string)$applicationId);
 ////                    //$applicationId = str_replace(" ","",$applicationId);
 ////                    //$applicationId = str_replace("\t","",$applicationId);
 ////                    //$applicationId = str_replace("\t\n","",$applicationId);
@@ -2191,7 +2191,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //                if( $key == "Email:" ) {
 //                    $emailStrArr = explode(" ",$field);
 //                    foreach($emailStrArr as $emailStr) {
-//                        if (strpos($emailStr, '@') !== false) {
+//                        if (strpos((string)$emailStr, '@') !== false) {
 //                            //echo 'true';
 //                            $field = $emailStr;
 //                            break;
@@ -2210,7 +2210,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        $field = $this->string_between_two_string2($text, $startStr, $endStr);
 //        //echo "field=[".$field ."]<br>";
 //        if ($field) {
-//            $field = trim($field);
+//            $field = trim((string)$field);
 //            //$field = str_replace(" ","",$field);
 //            //$field = str_replace("\t","",$field);
 //            //$field = str_replace("\t\n","",$field);
@@ -2228,12 +2228,12 @@ class ResAppBulkUploadController extends OrderAbstractController
 //    }
 //    public function string_between_two_string($str, $starting_word, $ending_word)
 //    {
-//        $subtring_start = strpos($str, $starting_word);
+//        $subtring_start = strpos((string)$str, $starting_word);
 //        //Adding the strating index of the strating word to
 //        //its length would give its ending index
 //        $subtring_start += strlen($starting_word);
 //        //Length of our required sub string
-//        $size = strpos($str, $ending_word, $subtring_start) - $subtring_start;
+//        $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
 //        // Return the substring from the index substring_start of length size
 //        return substr($str, $subtring_start, $size);
 //    }

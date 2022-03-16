@@ -100,7 +100,7 @@ class FellAppUtil {
         $dql->leftJoin("fellapp.appStatus", "appStatus");
 
         if( $status ) {
-            if (strpos($status, "-") !== false) {
+            if (strpos((string)$status, "-") !== false) {
                 $statusArr = explode("-", $status);
                 $statusStr = $statusArr[0];
                 $statusNot = $statusArr[1];
@@ -127,7 +127,7 @@ class FellAppUtil {
         }
 
         if( $year ) {
-            if( strpos( $year, "," ) !== false) {
+            if( strpos((string)$year, "," ) !== false) {
                 //multiple years
                 $yearArr = explode(",",$year);
                 $criterions = array();
@@ -564,7 +564,7 @@ class FellAppUtil {
 //
 //        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
 //        foreach( $roles as $role ) {
-//            if( strpos($role,$roleName) !== false ) {
+//            if( strpos((string)$role,$roleName) !== false ) {
 //                $coordinatorFellTypeRole = $role;
 //                break;
 //            }
@@ -583,7 +583,7 @@ class FellAppUtil {
 //        $coordinatorFellTypeRole = null;
 //        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
 //        foreach( $roles as $role ) {
-//            if( strpos($role,$roleName) !== false ) {
+//            if( strpos((string)$role,$roleName) !== false ) {
 //                $coordinatorFellTypeRole = $role;
 //                break;
 //            }
@@ -597,7 +597,7 @@ class FellAppUtil {
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
         $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
-            if( strpos($role,$roleName) !== false ) {
+            if( strpos((string)$role,$roleName) !== false ) {
                 return $role;
                 break;
             }
@@ -2061,7 +2061,7 @@ class FellAppUtil {
     public function getProgramDirectorStr( $fellowshipSubspecialty, $str=NULL ) {
         $directorsStr = "Program Director";
 
-        if( $str && strpos($str, "[[DIRECTOR]]") === false ) {
+        if( $str && strpos((string)$str, "[[DIRECTOR]]") === false ) {
             return $directorsStr;
         }
 

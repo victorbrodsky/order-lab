@@ -330,7 +330,7 @@ class InvoiceItem {
         //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
         //if value is "" convert it to NULL
         if( $unitPrice ) {
-            $unitPrice = trim($unitPrice);
+            $unitPrice = trim((string)$unitPrice);
             if( !$unitPrice ) {
                 $unitPrice = NULL;
             }
@@ -363,7 +363,7 @@ class InvoiceItem {
         //if value is "" convert it to NULL
         //echo "1set  AdditionalUnitPrice=".$additionalUnitPrice."<br>";
         if( $additionalUnitPrice ) {
-            $additionalUnitPrice = trim($additionalUnitPrice);
+            $additionalUnitPrice = trim((string)$additionalUnitPrice);
             if( !$additionalUnitPrice ) {
                 $additionalUnitPrice = NULL;
             }
@@ -392,7 +392,7 @@ class InvoiceItem {
         //fix SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for type numeric: "" with code0
         //if value is "" convert it to NULL
         if( $total ) {
-            $total = trim($total);
+            $total = trim((string)$total);
             if( !$total ) {
                 $total = NULL;
             }

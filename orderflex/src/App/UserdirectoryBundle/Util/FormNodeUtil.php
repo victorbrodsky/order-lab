@@ -118,7 +118,7 @@ class FormNodeUtil
         $formnodeData = $data['formnode'];
 
         foreach( $formnodeData as $formNodeId => $formValue ) {
-            //if( strpos($key, 'formnode-') !== false ) {
+            //if( strpos((string)$key, 'formnode-') !== false ) {
                 //$formNodeId = str_replace('formnode-','',$key);
                 //$keyArr = explode("-",$key);
                 //id is second element
@@ -1938,7 +1938,7 @@ class FormNodeUtil
         }
 
         //this method is for SINGLE ID only
-        if( strpos($formNodeValueId, ',') !== false ) {
+        if( strpos((string)$formNodeValueId, ',') !== false ) {
             //echo 'true';
             return $formNodeValueId;
         }

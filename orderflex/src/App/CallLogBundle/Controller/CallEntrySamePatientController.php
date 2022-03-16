@@ -79,12 +79,12 @@ class CallEntrySamePatientController extends CallEntryController
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrn = trim($request->get('mrn'));
-        $mrntype = trim($request->get('mrntype'));
-        $encounterNumber = trim($request->get('encounter-number'));
-        $encounterTypeId = trim($request->get('encounter-type'));
-        //$encounterVersion = trim($request->get('encounter-version'));
-        $messageTypeId = trim($request->get('message-type'));
+        $mrn = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->get('mrntype'));
+        $encounterNumber = trim((string)$request->get('encounter-number'));
+        $encounterTypeId = trim((string)$request->get('encounter-type'));
+        //$encounterVersion = trim((string)$request->get('encounter-version'));
+        $messageTypeId = trim((string)$request->get('message-type'));
         //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution
@@ -318,8 +318,8 @@ class CallEntrySamePatientController extends CallEntryController
         $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        //$readonlyPatient = trim($request->get('readonlyPatient'));
-        //$readonlyEncounter = trim($request->get('readonlyEncounter'));
+        //$readonlyPatient = trim((string)$request->get('readonlyPatient'));
+        //$readonlyEncounter = trim((string)$request->get('readonlyEncounter'));
 
         $testing = false;
         //$testing = true;
@@ -336,8 +336,8 @@ class CallEntrySamePatientController extends CallEntryController
             return $this->redirect( $this->generateUrl('calllog_home') );
         }
 
-//        $mrn = trim($request->get('mrn'));
-//        $mrntype = trim($request->get('mrntype'));
+//        $mrn = trim((string)$request->get('mrn'));
+//        $mrntype = trim((string)$request->get('mrntype'));
         $mrn = null;
         $mrntype = null;
 

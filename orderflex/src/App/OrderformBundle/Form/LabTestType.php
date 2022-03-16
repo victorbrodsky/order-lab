@@ -40,7 +40,7 @@ class LabTestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        if( strpos($this->params['cycle'],'_standalone') === false ) {
+        if( strpos((string)$this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
             $standalone = false;
         } else {

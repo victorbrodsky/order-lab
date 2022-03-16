@@ -57,7 +57,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //strip zeros and record original
         $originalKey = $key->getField();
         $key->setOriginal($originalKey);
-        $stripedKey = ltrim($originalKey, '0');
+        $stripedKey = ltrim((string)$originalKey, '0');
         $key->setField($stripedKey);
 
 //        echo $entity;
@@ -140,7 +140,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
                 continue;   //remove and skip this dataquality
             }
 
-            if( $mrn == $accmrn && trim($mrntype) == trim($accmrntype) ) {
+            if( $mrn == $accmrn && trim((string)$mrntype) == trim((string)$accmrntype) ) {
                 $patientConflict = true;   //was true?
                 //echo "patientConflict=".$patientConflict."<br>";
                 //break;

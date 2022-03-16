@@ -41,8 +41,8 @@ class FellAppUtilController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $fellappId = trim($request->get('id'));
-        $emailType = trim($request->get('emailType')); //accepted, rejected
+        $fellappId = trim((string)$request->get('id'));
+        $emailType = trim((string)$request->get('emailType')); //accepted, rejected
         
         $fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
         if( !$fellapp ) {

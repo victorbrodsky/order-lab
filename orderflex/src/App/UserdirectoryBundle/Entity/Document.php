@@ -548,7 +548,7 @@ class Document {
         //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
         $fullPath = getcwd();
 
-        if( strpos($fullPath, 'public') !== false ) {
+        if( strpos((string)$fullPath, 'public') !== false ) {
             //web exists
         } else {
             //web does not exist

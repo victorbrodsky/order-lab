@@ -639,7 +639,7 @@ class DashboardController extends OrderAbstractController
             //'title' => $title
         );
 
-        if( strpos($id, 'all-favorites-') !== false ) {
+        if( strpos((string)$id, 'all-favorites-') !== false ) {
             //multiple charts
             $id = str_replace('all-favorites-','',$id); //now id=1-2-4-7
             $idsArr = explode('-',$id);
@@ -751,7 +751,7 @@ class DashboardController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $chartId = trim( $request->get('chartId') );
+        $chartId = trim((string)$request->get('chartId') );
 
         $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
         if( !$chart ) {

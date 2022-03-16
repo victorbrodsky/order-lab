@@ -101,7 +101,7 @@ class GoogleSheetManagement {
             //4.a) foreach file in the row => delete this file from Google Drive
             foreach( $values as $cellValue ) {
 
-                if( strpos($cellValue, $fileStrFlag) !== false ) {
+                if( strpos((string)$cellValue, $fileStrFlag) !== false ) {
                     //echo 'this is file = '.$cellValue." => ";
                     //get Google Drive file ID from https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eWGJQQ29CbjVvNms/view?usp=drivesdk
                     $fileID = $this->getFileId($cellValue);
@@ -302,7 +302,7 @@ class GoogleSheetManagement {
 
         if( $file ) {
 
-            $documentType = trim($documentType);
+            $documentType = trim((string)$documentType);
 
             //check if file already exists by file id
             $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
@@ -332,7 +332,7 @@ class GoogleSheetManagement {
             $currentDatetime = new \DateTime();
             $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
 
-            //$fileTitle = trim($file->getTitle());
+            //$fileTitle = trim((string)$file->getTitle());
             //$fileTitle = str_replace(" ","",$fileTitle);
             //$fileTitle = str_replace("-","_",$fileTitle);
             //$fileTitle = 'testfile.jpg';
@@ -372,7 +372,7 @@ class GoogleSheetManagement {
 //                $fellappSpreadsheetType = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Document');
 //            }
             $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-            //$documentType = trim($documentType);
+            //$documentType = trim((string)$documentType);
             $documentTypeObject = $transformer->reverseTransform($documentType);
             if( $documentTypeObject ) {
                 $object->setType($documentTypeObject);

@@ -212,12 +212,12 @@ class TransResImportData
             //exit("exit");
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
             echo $exportId."<br>";
 
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
-            $requestID = trim($requestID);
+            $requestID = trim((string)$requestID);
             //$requestID = $requestID."0000000"; //test
             echo "<br>" . $count . ": Project ID " . $exportId . ", RS ID " . $requestID . "<br>";
 
@@ -851,7 +851,7 @@ class TransResImportData
                 FALSE);
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
-            $requestID = trim($requestID);
+            $requestID = trim((string)$requestID);
             //$requestID = $requestID."0000000"; //test
             echo "<br>" . $count . ": RS ID " . $requestID . "<br>";
 
@@ -927,7 +927,7 @@ class TransResImportData
     }
     public function getUserBySingleEmail($email) {
         $logger = $this->container->get('logger');
-        $email = trim($email);
+        $email = trim((string)$email);
         $email = strtolower($email);
         $emailParts = explode("@", $email);
 
@@ -994,7 +994,7 @@ class TransResImportData
 
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
             echo $exportId.", ";
 
             $comment = $this->getValueByHeaderName('COMMITTEE_COMMENT', $rowData, $headers);
@@ -1105,7 +1105,7 @@ class TransResImportData
             //REVIEWER_REQUEST_ID	USER_NAME	PROJECT_ID	REVIEWER	PI_RESPONSE	CREATED_DATE
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
 
             $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( !$project ) {
@@ -1255,7 +1255,7 @@ class TransResImportData
             //echo "<br>";
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
             echo "<br>########## exportId=".$exportId."#############<br>";
             //exit('$project OID='.$exportId);
 
@@ -2038,7 +2038,7 @@ class TransResImportData
 
         $emailStr = strtolower($emailStr);
         $emailStr = str_replace(";",",",$emailStr);
-        //if( strpos($emailStr,",") !== false ) {
+        //if( strpos((string)$emailStr,",") !== false ) {
             $emails = explode(",",$emailStr);
         //} else {
         //    $emails = array($emailStr);
@@ -2046,7 +2046,7 @@ class TransResImportData
 
         $users = array();
         foreach($emails as $email) {
-            $email = trim($email);
+            $email = trim((string)$email);
             $emailParts = explode("@", $email);
 
             if( count($emailParts) == 0 || count($emailParts) == 1 ) {
@@ -2281,7 +2281,7 @@ class TransResImportData
         }
 
         if( $res ) {
-            $res = trim($res);
+            $res = trim((string)$res);
         }
 
         //echo "res=".$res."<br>";
@@ -2573,7 +2573,7 @@ class TransResImportData
             //echo "<br>";
 
             $exportId = $this->getValueByHeaderName('REQUEST', $rowData, $headers);
-            $exportId = trim($exportId);
+            $exportId = trim((string)$exportId);
             //echo "<br>########## Request exportId=" . $exportId . "#############<br>";
 
             $transresRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($exportId);
@@ -2616,7 +2616,7 @@ class TransResImportData
             if( $comment ) {
                 $requestComment = $transresRequest->getComment();
                 if( $requestComment ) {
-                    if( strpos($requestComment, $comment) === false ) {
+                    if( strpos((string)$requestComment, $comment) === false ) {
                         //Append to the Comment
                         $requestComment = $requestComment . "\r\n \r\n" .
                             "### Updated comment: ###" . "\r\n" . $comment . "\r\n" . "#########";
@@ -2629,7 +2629,7 @@ class TransResImportData
             if( $price ) {
                 $requestComment = $transresRequest->getComment();
                 if( $requestComment ) {
-                    if( strpos($requestComment, $price) === false ) {
+                    if( strpos((string)$requestComment, $price) === false ) {
                         //Append to the Comment
                         $requestComment = $requestComment . "\r\n \r\n" .
                             "### Updated price: ###" . "\r\n" . $price . "\r\n" . "#########";
@@ -2803,7 +2803,7 @@ class TransResImportData
 
             //id
             $antibodyId = $this->getValueByHeaderName('id', $rowData, $headers);
-            $antibodyId = trim($antibodyId);
+            $antibodyId = trim((string)$antibodyId);
             //echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
 
             $antibody = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->find($antibodyId);
@@ -3128,17 +3128,17 @@ class TransResImportData
             //Section:
             //Vectra Polaris
             //Starts with MISI-1XXX
-            if( strpos($code, 'MISI-1') !== false ) {
+            if( strpos((string)$code, 'MISI-1') !== false ) {
                 $section = 'Vectra Polaris';
             }
             //CODEX
             //Starts with MISI-2XXX
-            if( strpos($code, 'MISI-2') !== false ) {
+            if( strpos((string)$code, 'MISI-2') !== false ) {
                 $section = 'CODEX';
             }
             //GeoMX
             //Starts with MISI-3XXX
-            if( strpos($code, 'MISI-3') !== false ) {
+            if( strpos((string)$code, 'MISI-3') !== false ) {
                 $section = 'GeoMX';
             }
             if( $section ) {
@@ -3502,7 +3502,7 @@ class TransResImportData
             }
 
             //convert APCP41 (10880) to APCP41
-            if( strpos($projectId, " (") !== false ) {
+            if( strpos((string)$projectId, " (") !== false ) {
                 $projectIdSplit = explode(" (", $projectId);
                 $projectId = $projectIdSplit[0];
             }

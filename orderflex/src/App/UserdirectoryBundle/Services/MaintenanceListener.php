@@ -83,10 +83,10 @@ class MaintenanceListener {
 
         //site check accessibility
         if(
-            strpos($uri, '/common') === false &&
-            strpos($uri, '/util') === false &&
-            strpos($uri, '/check/') === false &&
-            strpos($uri, '/admin/') === false
+            strpos((string)$uri, '/common') === false &&
+            strpos((string)$uri, '/util') === false &&
+            strpos((string)$uri, '/check/') === false &&
+            strpos((string)$uri, '/admin/') === false
         ) {
             $sitename = $this->getSiteName($controller);
             if( $sitename && $userSecUtil->isSiteAccessible($sitename) === false ) {
@@ -109,15 +109,15 @@ class MaintenanceListener {
 
 
         if( 
-                strpos($controller,'App\UserdirectoryBundle') !== false || 
-                strpos($controller,'App\OrderformBundle') !== false ||
-                strpos($controller,'App\FellAppBundle') !== false ||
-                strpos($controller,'App\ResAppBundle') !== false ||
-                strpos($controller,'App\DeidentifierBundle') !== false ||
-                strpos($controller,'App\VacReqBundle') !== false ||
-                strpos($controller,'App\CallLogBundle') !== false ||
-                strpos($controller,'App\CrnBundle') !== false ||
-                strpos($controller,'App\TranslationalResearchBundle') !== false
+                strpos((string)$controller,'App\UserdirectoryBundle') !== false || 
+                strpos((string)$controller,'App\OrderformBundle') !== false ||
+                strpos((string)$controller,'App\FellAppBundle') !== false ||
+                strpos((string)$controller,'App\ResAppBundle') !== false ||
+                strpos((string)$controller,'App\DeidentifierBundle') !== false ||
+                strpos((string)$controller,'App\VacReqBundle') !== false ||
+                strpos((string)$controller,'App\CallLogBundle') !== false ||
+                strpos((string)$controller,'App\CrnBundle') !== false ||
+                strpos((string)$controller,'App\TranslationalResearchBundle') !== false
         ) {
             // fire custom event e.g. My.db.lookup
             //echo "Sites controller! <br>";
@@ -193,8 +193,8 @@ class MaintenanceListener {
                 //exit('token set');
             }
 
-//            if( strpos($event->getRequest()->get('_route'),'login_check') !== false ) {
-            if( strpos($event->getRequest()->get('_route'),'login') !== false && $event->getRequest()->isMethod('POST') ) {
+//            if( strpos((string)$event->getRequest()->get('_route'),'login_check') !== false ) {
+            if( strpos((string)$event->getRequest()->get('_route'),'login') !== false && $event->getRequest()->isMethod('POST') ) {
                 //exit('login check');
                 $url = $this->container->get('router')->generate($maintenanceRoute);
                 $response = new RedirectResponse($url);
@@ -202,7 +202,7 @@ class MaintenanceListener {
                 return;
             }
 
-            if( strpos($event->getRequest()->get('_route'),'_login') !== false || strpos($event->getRequest()->get('_route'),'_logout') !== false ) {
+            if( strpos((string)$event->getRequest()->get('_route'),'_login') !== false || strpos((string)$event->getRequest()->get('_route'),'_logout') !== false ) {
                 //exit('login or logout page. route='.$event->getRequest()->get('_route'));
                 return;
             }
@@ -223,34 +223,34 @@ class MaintenanceListener {
     }
 
     public function getSiteName($controller) {
-        if( strpos($controller,'App\UserdirectoryBundle') !== false ) {
+        if( strpos((string)$controller,'App\UserdirectoryBundle') !== false ) {
             return "employees";
         }
-        if( strpos($controller,'App\OrderformBundle') !== false ) {
+        if( strpos((string)$controller,'App\OrderformBundle') !== false ) {
             return "scan";
         }
-        if( strpos($controller,'App\FellAppBundle') !== false ) {
+        if( strpos((string)$controller,'App\FellAppBundle') !== false ) {
             return "fellapp";
         }
-        if( strpos($controller,'App\ResAppBundle') !== false ) {
+        if( strpos((string)$controller,'App\ResAppBundle') !== false ) {
             return "resapp";
         }
-        if( strpos($controller,'App\DeidentifierBundle') !== false ) {
+        if( strpos((string)$controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
-        if( strpos($controller,'App\VacReqBundle') !== false ) {
+        if( strpos((string)$controller,'App\VacReqBundle') !== false ) {
             return "vacreq";
         }
-        if( strpos($controller,'App\CallLogBundle') !== false ) {
+        if( strpos((string)$controller,'App\CallLogBundle') !== false ) {
             return "calllog";
         }
-        if( strpos($controller,'App\CrnBundle') !== false ) {
+        if( strpos((string)$controller,'App\CrnBundle') !== false ) {
             return "crn";
         }
-        if( strpos($controller,'App\TranslationalResearchBundle') !== false ) {
+        if( strpos((string)$controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }
-        if( strpos($controller,'App\DashboardBundle') !== false ) {
+        if( strpos((string)$controller,'App\DashboardBundle') !== false ) {
             return "dashboard";
         }
 

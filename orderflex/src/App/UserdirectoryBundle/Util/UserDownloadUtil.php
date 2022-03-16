@@ -430,7 +430,7 @@ class UserDownloadUtil {
 //        $phoneArr = array();
 //        foreach( $user->getAllPhones() as $phone ) {
 //            $comment = "";
-//            if( strpos($phone['prefix'], "Pager") !== false ) {
+//            if( strpos((string)$phone['prefix'], "Pager") !== false ) {
 //                $comment = "*";
 //            }
 //            $phoneArr[] = $phone['prefix'] . $phone['phone'].$comment;
@@ -614,7 +614,7 @@ class UserDownloadUtil {
         $newUsers = array();
         foreach( $users as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
-            $pos = strpos($administrativeTitleNameStr, "Chairman of ");
+            $pos = strpos((string)$administrativeTitleNameStr, "Chairman of ");
             if( $pos !== false ) {
                 if( !$this->hasUser($newUsers, $user) ) {
                     //echo "Chairman $user<br>";
@@ -625,7 +625,7 @@ class UserDownloadUtil {
         }
         foreach( $users as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
-            $pos = strpos($administrativeTitleNameStr, "Vice Chairman");
+            $pos = strpos((string)$administrativeTitleNameStr, "Vice Chairman");
             if( $pos !== false ) {
                 if( !$this->hasUser($newUsers, $user) ) {
                     //echo "Vice Chairman $user<br>";
@@ -638,8 +638,8 @@ class UserDownloadUtil {
         //all others
         foreach( $users as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
-            $pos1 = strpos($administrativeTitleNameStr, "Chairman of ");
-            $pos2 = strpos($administrativeTitleNameStr, "Vice Chairman");
+            $pos1 = strpos((string)$administrativeTitleNameStr, "Chairman of ");
+            $pos2 = strpos((string)$administrativeTitleNameStr, "Vice Chairman");
             if( $pos1 === false && $pos2 === false ) {
                 if( !$this->hasUser($newUsers, $user) ) {
                     //echo "other $user<br>";
@@ -669,7 +669,7 @@ class UserDownloadUtil {
         //"Chairman of "
         foreach( $leftOverUsers as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
-            $pos = strpos($administrativeTitleNameStr, "Chairman of ");
+            $pos = strpos((string)$administrativeTitleNameStr, "Chairman of ");
             if( $pos !== false ) {
                 if( !$this->hasUser($sortedUsers, $user) ) {
                     //$sortedUsers[] = $user;
@@ -683,7 +683,7 @@ class UserDownloadUtil {
         //"Vice Chairman"
         foreach( $leftOverUsers as $user ) {
             $administrativeTitleNameStr = $this->getUserTitleStr($user);
-            $pos = strpos($administrativeTitleNameStr, "Vice Chairman");
+            $pos = strpos((string)$administrativeTitleNameStr, "Vice Chairman");
             if( $pos !== false ) {
                 if( !$this->hasUser($sortedUsers, $user) ) {
                     //$sortedUsers[] = $user;
@@ -792,7 +792,7 @@ class UserDownloadUtil {
 
         //Title
         $administrativeTitleNameStr = $this->getUniqueFirstTitleStr($subjectUser);
-        $administrativeTitleNameStr = trim($administrativeTitleNameStr);
+        $administrativeTitleNameStr = trim((string)$administrativeTitleNameStr);
         //echo "title=[$administrativeTitleNameStr]<br>";
 
         //Room

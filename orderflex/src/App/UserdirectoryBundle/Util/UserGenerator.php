@@ -970,10 +970,10 @@ class UserGenerator {
         $objects = array();
 
         $separator = null;
-        if( strpos($string,";") !== false ) {
+        if( strpos((string)$string,";") !== false ) {
             $separator = ";";
         }
-        if( strpos($string,",") !== false ) {
+        if( strpos((string)$string,",") !== false ) {
             $separator = ",";
         }
 
@@ -1293,7 +1293,7 @@ class UserGenerator {
 
                 $degreeArr = explode(";",$degreeStr);
                 foreach( $degreeArr as $degree ) {
-                    $degree = trim($degree);
+                    $degree = trim((string)$degree);
                     if( $degree ) {
                         $training = new Training($systemuser);
                         $training->setStatus($training::STATUS_VERIFIED);
@@ -1439,7 +1439,7 @@ class UserGenerator {
                 $facultyTrackStrMulti = $this->getValueByHeaderName('Academic Appointment - Faculty Track', $rowData, $headers);
                 $facultyTrackStrArr = explode(";",$facultyTrackStrMulti);
                 foreach( $facultyTrackStrArr as $facultyTrackStr ) {
-                    $facultyTrackStr = trim($facultyTrackStr);
+                    $facultyTrackStr = trim((string)$facultyTrackStr);
                     $facultyTrackObj = $this->getObjectByNameTransformer('PositionTrackTypeList',$facultyTrackStr,$systemuser);
                     $facultyTrackObjArr[] = $facultyTrackObj;
                 }
@@ -1556,7 +1556,7 @@ class UserGenerator {
             $AdministrativeCommentCategory = $this->getValueByHeaderName('Administrative Comment - Category', $rowData, $headers);
             if( $AdministrativeCommentCategory ) {
 
-                $AdministrativeCommentCategory = trim($AdministrativeCommentCategory);
+                $AdministrativeCommentCategory = trim((string)$AdministrativeCommentCategory);
 
                 $comment = new AdminComment($systemuser);
 
@@ -1642,9 +1642,9 @@ class UserGenerator {
                     $Identifier = new Identifier();
                     $Identifier->setStatus($Identifier::STATUS_VERIFIED);
 
-                    $IdentifierTypeStr = trim($IdentifierTypeStr);
-                    $IdentifierLinkStr = trim($IdentifierLinkStr);
-                    $IdentifierStr = trim($IdentifierStr);
+                    $IdentifierTypeStr = trim((string)$IdentifierTypeStr);
+                    $IdentifierLinkStr = trim((string)$IdentifierLinkStr);
+                    $IdentifierStr = trim((string)$IdentifierStr);
 
                     //Identifier
                     $Identifier->setField($IdentifierStr);
@@ -1958,7 +1958,7 @@ class UserGenerator {
             return $res;
         }
 
-        $header = trim($header);
+        $header = trim((string)$header);
 
         if( !$range ) {
             return $this->getValueByHeaderName($header,$row,$headers);
@@ -1981,8 +1981,8 @@ class UserGenerator {
         $found = false;
         $sectionKey = 1;
         foreach( $headers[0] as $thisHeader ) {
-            $thisHeader = trim($thisHeader);
-            $thisHeader = trim($thisHeader,chr(0xC2).chr(0xA0)); //remove non-breaking spaces
+            $thisHeader = trim((string)$thisHeader);
+            $thisHeader = trim((string)$thisHeader,chr(0xC2).chr(0xA0)); //remove non-breaking spaces
             //echo "?match thisHeader=[".$thisHeader."]<br>";
             if( $header == $thisHeader ) {
                 //echo "match sectionKey=".$sectionKey."<br>"; //52, 80
@@ -2005,7 +2005,7 @@ class UserGenerator {
 
         if( array_key_exists($sectionKey, $row[0]) ) {
             $res = $row[0][$sectionKey];
-            $res = trim($res);
+            $res = trim((string)$res);
         }
         //echo $header.": res=[".$res."]<br>";
         return $res;
@@ -2035,7 +2035,7 @@ class UserGenerator {
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
-            $res = trim($res);
+            $res = trim((string)$res);
         }
 
         //echo "res=".$res."<br>";
@@ -2082,14 +2082,14 @@ class UserGenerator {
     public function getObjectByNameTransformer($className,$nameStr,$systemuser,$params=null) {
         $bundleName = null;
         $transformer = new GenericTreeTransformer($this->em, $systemuser, $className, $bundleName, $params);
-        $nameStr = trim($nameStr);
+        $nameStr = trim((string)$nameStr);
         return $transformer->reverseTransform($nameStr);
     }
 
     public function getObjectByNameTransformerWithoutCreating($className,$nameStr,$systemuser,$params=null) {
         $bundleName = null;
         $transformer = new GenericSelectTransformer($this->em, $systemuser, $className, $bundleName, $params);
-        $nameStr = trim($nameStr);
+        $nameStr = trim((string)$nameStr);
         $object = $transformer->reverseTransform($nameStr);
         if( !$object ) {
             exit("Error: Not found object [$className] by [$nameStr].");
@@ -2120,13 +2120,13 @@ class UserGenerator {
         //remove empty from array
         for( $i=0; $i<count($titleArr); $i++ ) {
             echo "el=".$titleArr[$i]."<br>";
-            if( trim($titleArr[$i]) == "" ) {
+            if( trim((string)$titleArr[$i]) == "" ) {
                 unset($titleArr[$i]);
             }
         }
         for( $i=0; $i<count($InstitutionArr); $i++ ) {
             echo "el=(".$InstitutionArr[$i].")<br>";
-            if( trim($InstitutionArr[$i]) == "" ) {
+            if( trim((string)$InstitutionArr[$i]) == "" ) {
                 //echo "remove el=".$InstitutionArr[$i]."<br>";
                 unset($InstitutionArr[$i]);
             }
@@ -2162,7 +2162,7 @@ class UserGenerator {
 
             //echo "index=".$index."<br>";
 
-            $titleStr = trim($titleStr);
+            $titleStr = trim((string)$titleStr);
 
             if( !$titleStr ) {
                 continue;
@@ -2172,7 +2172,7 @@ class UserGenerator {
 //            $titleStr = null;
 //            if( $leadInst ) {
 //                if( array_key_exists($index, $titleArr) ) {
-//                    $titleStr = trim($titleArr[$index]);
+//                    $titleStr = trim((string)$titleArr[$index]);
 //                    $lastTitleStr = $titleStr;
 //                } else {
 //                    $titleStr = $lastTitleStr;
@@ -2180,7 +2180,7 @@ class UserGenerator {
 //                $InstitutionStr = $leadStr;
 //            } else {
 //                if( array_key_exists($index, $InstitutionArr) ) {
-//                    $InstitutionStr = trim($InstitutionArr[$index]);
+//                    $InstitutionStr = trim((string)$InstitutionArr[$index]);
 //                    $lastInstitutionStr = $InstitutionStr;
 //                } else {
 //                    $InstitutionStr = $lastInstitutionStr;
@@ -2200,38 +2200,38 @@ class UserGenerator {
 
 
             if( array_key_exists($index, $InstitutionArr) ) {
-                $InstitutionStr = trim($InstitutionArr[$index]);
+                $InstitutionStr = trim((string)$InstitutionArr[$index]);
             }
 
             if( array_key_exists($index, $DepartmentArr) ) {
-                $DepartmentStr = trim($DepartmentArr[$index]);
+                $DepartmentStr = trim((string)$DepartmentArr[$index]);
                 //$lastDepartmentStr = $DepartmentStr;
             } else {
                 //$DepartmentStr = $lastDepartmentStr;
             }
 
             if( array_key_exists($index, $DivisionArr) ) {
-                $DivisionStr = trim($DivisionArr[$index]);
+                $DivisionStr = trim((string)$DivisionArr[$index]);
                 //$lastDivisionStr = $DivisionStr;
             } else {
                 //$DivisionStr = $lastDivisionStr;
             }
 
             if( array_key_exists($index, $ServiceArr) ) {
-                $ServiceStr = trim($ServiceArr[$index]);
+                $ServiceStr = trim((string)$ServiceArr[$index]);
                 //$lastServiceStr = $ServiceStr;
             } else {
                 //$ServiceStr = $lastServiceStr;
             }
 
             if( array_key_exists($index, $HeadDepartmentArr) ) {
-                $HeadDepartmentStr = trim($HeadDepartmentArr[$index]);
+                $HeadDepartmentStr = trim((string)$HeadDepartmentArr[$index]);
             }
             if( array_key_exists($index, $HeadDivisionArr) ) {
-                $HeadDivisionStr = trim($HeadDivisionArr[$index]);
+                $HeadDivisionStr = trim((string)$HeadDivisionArr[$index]);
             }
             if( array_key_exists($index, $HeadServiceArr) ) {
-                $HeadServiceStr = trim($HeadServiceArr[$index]);
+                $HeadServiceStr = trim((string)$HeadServiceArr[$index]);
             }
 
             $holder = $this->addSingleInstitutinalTree( $holderClassName,$systemuser,$InstitutionStr,$DepartmentStr,$HeadDepartmentStr,$DivisionStr,$HeadDivisionStr,$ServiceStr,$HeadServiceStr );
@@ -2281,14 +2281,14 @@ class UserGenerator {
 
         $holder = null;
 
-        $Institution = trim($Institution);
-        $Department = trim($Department);
-        $Division = trim($Division);
-        $Service = trim($Service);
+        $Institution = trim((string)$Institution);
+        $Department = trim((string)$Department);
+        $Division = trim((string)$Division);
+        $Service = trim((string)$Service);
 
-        $HeadDepartment = trim($HeadDepartment);
-        $HeadDivision = trim($HeadDivision);
-        $HeadService = trim($HeadService);
+        $HeadDepartment = trim((string)$HeadDepartment);
+        $HeadDivision = trim((string)$HeadDivision);
+        $HeadService = trim((string)$HeadService);
 
         //echo "Institution=(".$Institution.")<br>";
         if( !$Institution ) {
@@ -2524,7 +2524,7 @@ class UserGenerator {
 //        if( !$datestr ) {
 //            return $date;
 //        }
-//        $datestr = trim($datestr);
+//        $datestr = trim((string)$datestr);
 //        //echo "###datestr=".$datestr."<br>";
 //
 //        if( strtotime($datestr) === false ) {

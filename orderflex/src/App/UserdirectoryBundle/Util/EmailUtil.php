@@ -83,44 +83,44 @@ class EmailUtil {
         }
 
         if( $url ) {
-            if (strpos($url, "/translational-research/") !== false) {
+            if (strpos((string)$url, "/translational-research/") !== false) {
                 $sitenameAbbreviation = "translationalresearch";
                 //adding “[TRP] “ in front of every notifications’ subject line
                 $subject = "[TRP] " . $subject;
             }
-            if (strpos($url, "/directory/") !== false) {
+            if (strpos((string)$url, "/directory/") !== false) {
                 $sitenameAbbreviation = "employees";
                 $subject = "[EMPLOYEE DIRECTORY] " . $subject;
             }
-            if (strpos($url, "/fellowship-applications/") !== false) {
+            if (strpos((string)$url, "/fellowship-applications/") !== false) {
                 $sitenameAbbreviation = "fellapp";
                 $subject = "[Fellowship Applications] " . $subject;
             }
-            if (strpos($url, "/residency-applications/") !== false) {
+            if (strpos((string)$url, "/residency-applications/") !== false) {
                 $sitenameAbbreviation = "resapp";
                 $subject = "[Residency Applications] " . $subject;
             }
-            if (strpos($url, "/call-log-book/") !== false) {
+            if (strpos((string)$url, "/call-log-book/") !== false) {
                 $sitenameAbbreviation = "calllog";
                 $subject = "[Call Log Book] " . $subject;
             }
-            if (strpos($url, "/critical-result-notifications/") !== false) {
+            if (strpos((string)$url, "/critical-result-notifications/") !== false) {
                 $sitenameAbbreviation = "crn";
                 $subject = "[Critical Result Notifications] " . $subject;
             }
-            if (strpos($url, "/vacation-request/") !== false) {
+            if (strpos((string)$url, "/vacation-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
                 $subject = "[Vacation Request] " . $subject;
             }
-            if (strpos($url, "/scan/") !== false) {
+            if (strpos((string)$url, "/scan/") !== false) {
                 $sitenameAbbreviation = "scan";
                 $subject = "[Scan Order] " . $subject;
             }
-            if (strpos($url, "/deidentifier/") !== false) {
+            if (strpos((string)$url, "/deidentifier/") !== false) {
                 $sitenameAbbreviation = "deidentifier";
                 $subject = "[Deidentifier] " . $subject;
             }
-            if (strpos($url, "/dashboard/") !== false) {
+            if (strpos((string)$url, "/dashboard/") !== false) {
                 $sitenameAbbreviation = "dashboard";
                 $subject = "[Dashboard] " . $subject;
             }
@@ -205,7 +205,7 @@ class EmailUtil {
             //'text/plain'
         );
 
-        $mailerDeliveryAddresses = trim($userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+        $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         if( $mailerDeliveryAddresses ) {
             $mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
             $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
@@ -307,7 +307,7 @@ class EmailUtil {
 
         //$logger = $this->container->get('logger');
         //$logger->notice("checkEmails: input emails=".print_r($emails));
-        if( strpos($emails, ',') !== false ) {
+        if( strpos((string)$emails, ',') !== false ) {
             $emails = str_replace(" ","",$emails);
             //return explode(',', $emails);
             return $this->validateEmailsArr(explode(',', $emails));

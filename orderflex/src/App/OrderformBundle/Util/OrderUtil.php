@@ -89,8 +89,8 @@ class OrderUtil {
         //if order Filled or Canceled by Processor or Canceled by Submitter or Superseded with amend url => change url to show
         if(
             $routeName == $amend && (
-                strpos($order->getStatus()."",'Filled') !== false ||
-                strpos($order->getStatus()."",'Canceled') !== false ||
+                strpos((string)$order->getStatus()."",'Filled') !== false ||
+                strpos((string)$order->getStatus()."",'Canceled') !== false ||
                 $order->getStatus()."" == "Superseded"
             )
         ) {

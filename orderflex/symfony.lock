@@ -243,9 +243,6 @@
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
     },
-    "phpoffice/phpexcel": {
-        "version": "1.8.2"
-    },
     "phpoffice/phpspreadsheet": {
         "version": "1.10.1"
     },

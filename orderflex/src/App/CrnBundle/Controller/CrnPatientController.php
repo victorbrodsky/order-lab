@@ -106,9 +106,9 @@ class CrnPatientController extends PatientController {
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrntype = trim($request->get('mrntype'));
-        $mrn = trim($request->get('mrn'));
-        $showtreedepth = trim($request->get('show-tree-depth'));
+        $mrntype = trim((string)$request->get('mrntype'));
+        $mrn = trim((string)$request->get('mrn'));
+        $showtreedepth = trim((string)$request->get('show-tree-depth'));
 
         $extra = array();
         $extra["keytype"] = $mrntype;
@@ -223,9 +223,9 @@ class CrnPatientController extends PatientController {
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrntype = trim($request->get('mrntype'));
-        $mrn = trim($request->get('mrn'));
-        $showtreedepth = trim($request->get('show-tree-depth'));
+        $mrntype = trim((string)$request->get('mrntype'));
+        $mrn = trim((string)$request->get('mrn'));
+        $showtreedepth = trim((string)$request->get('show-tree-depth'));
 
         $extra = array();
         $extra["keytype"] = $mrntype;
@@ -1629,7 +1629,7 @@ class CrnPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
 
-        $patientId = trim($request->get('patientId'));
+        $patientId = trim((string)$request->get('patientId'));
         //echo "patientId=$patientId<br>";
 
         $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
@@ -1668,7 +1668,7 @@ class CrnPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         //$crnUtil = $this->get('crn_util');
 
-        $encounterId = trim($request->get('encounterId'));
+        $encounterId = trim((string)$request->get('encounterId'));
         //echo "encounterId=$encounterId<br>";
 
         $encounter = $em->getRepository('AppOrderformBundle:Encounter')->find($encounterId);

@@ -176,8 +176,8 @@ class WorkQueueController extends OrderAbstractController
         $endDate = $filterform['endDate']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
-        //$filterType = trim($request->get('type'));
-        $filterTitle = trim($request->get('title'));
+        //$filterType = trim((string)$request->get('type'));
+        $filterTitle = trim((string)$request->get('title'));
 
         //replace - with space
         //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
@@ -231,7 +231,7 @@ class WorkQueueController extends OrderAbstractController
             }
 
             //Case 'incomplete'
-            if( strpos($workqueue, '-pending') !== false ) {
+            if( strpos((string)$workqueue, '-pending') !== false ) {
                 //echo "Case incomplete = [$workqueue]<br>";
                 //status NOT equal to “Completed”
                 $workqueueName = str_replace('-pending', '', $workqueue);
@@ -431,7 +431,7 @@ class WorkQueueController extends OrderAbstractController
 
         if( $projectSearch ) {
             $projectId = null;
-            if (strpos($projectSearch, ', ') !== false) {
+            if (strpos((string)$projectSearch, ', ') !== false) {
                 //get id
                 $projectSearchArr = explode(", ",$projectSearch);
                 if( count($projectSearchArr) > 1 ) {

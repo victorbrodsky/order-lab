@@ -235,7 +235,7 @@ class UserController extends OrderAbstractController
      */
     public function listCommonLocationsAction(Request $request) {
 
-        $filter = trim( $request->get('filter') );
+        $filter = trim((string)$request->get('filter') );
 
         //location search
         $userUtil = new UserUtil();
@@ -349,9 +349,9 @@ class UserController extends OrderAbstractController
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
-        $search = trim( $request->get('search') );
-        $userid = trim( $request->get('userid') );
-        $all = trim($request->get('all'));
+        $search = trim((string)$request->get('search') );
+        $userid = trim((string)$request->get('userid') );
+        $all = trim((string)$request->get('all'));
 
         //echo "all=".$all."<br>";
 
@@ -451,7 +451,7 @@ class UserController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $filter = trim( $request->get('filter') );
+        $filter = trim((string)$request->get('filter') );
 
         $prefix =  "";
         $time = 'current_only';
@@ -520,8 +520,8 @@ class UserController extends OrderAbstractController
         $sort = null;
         if( isset($postData['sort']) ) {
             //check for location sort
-            //if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'heads.') === false ) {
-            if( strpos($postData['sort'],'location.') === false && strpos($postData['sort'],'administrativeTitle') === false ) {
+            //if( strpos((string)$postData['sort'],'location.') === false && strpos((string)$postData['sort'],'heads.') === false ) {
+            if( strpos((string)$postData['sort'],'location.') === false && strpos((string)$postData['sort'],'administrativeTitle') === false ) {
                 $sort = $postData['sort'];
             }
         }
@@ -1961,7 +1961,7 @@ class UserController extends OrderAbstractController
             //$title = "Software Engineer";
             if( $title ) {
                 $transformer = new GenericSelectTransformer($em, null, "AdminTitleList", "UserdirectoryBundle");
-                $title = trim($title);
+                $title = trim((string)$title);
                 $titleObject = $transformer->reverseTransform($title);
                 //echo "titleObject=".$titleObject."<br>";
                 if( $titleObject ) {

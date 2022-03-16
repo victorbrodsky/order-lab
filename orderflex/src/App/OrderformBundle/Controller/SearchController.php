@@ -56,7 +56,7 @@ class SearchController extends OrderAbstractController {
         $entities = null;
 
         $allgets = $request->query->all();;
-        //$patientid = trim( $request->get('patientid') );
+        //$patientid = trim((string)$request->get('patientid') );
         //print_r($allgets);
         //echo "<br>";
 
@@ -71,8 +71,8 @@ class SearchController extends OrderAbstractController {
 
         $searchtype = str_replace("_"," ",$searchtype);
 
-        //$searchtype = trim( $request->get('searchtype') );
-        //$search = trim( $request->get('search') );
+        //$searchtype = trim((string)$request->get('searchtype') );
+        //$search = trim((string)$request->get('search') );
         //echo "searchtype=".$searchtype."<br>";
         //echo "search=".$search."<br>";
 

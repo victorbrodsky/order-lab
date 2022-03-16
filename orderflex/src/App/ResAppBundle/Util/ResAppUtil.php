@@ -103,7 +103,7 @@ class ResAppUtil {
         $dql->select('resapp');
         $dql->leftJoin("resapp.appStatus", "appStatus");
 
-        if( strpos($status, "-") !== false ) {
+        if( strpos((string)$status, "-") !== false ) {
             $statusArr = explode("-", $status);
             $statusStr = $statusArr[0];
             $statusNot = $statusArr[1];
@@ -131,7 +131,7 @@ class ResAppUtil {
         //application Season Start Year ($applicationSeasonStartDate)
         if( $year ) {
             //echo "year=$year<br>";
-            if( strpos( $year, "," ) !== false) {
+            if( strpos((string)$year, "," ) !== false) {
                 //multiple years
                 $yearArr = explode(",",$year);
                 $criterions = array();
@@ -497,7 +497,7 @@ class ResAppUtil {
 
         foreach( $userRoles as $rolename ) {
 
-            if (strpos($rolename, 'ROLE_RESAPP_') === false) {
+            if (strpos((string)$rolename, 'ROLE_RESAPP_') === false) {
                 //Skip other, not related to resapp roles
                 continue;
             }
@@ -562,7 +562,7 @@ class ResAppUtil {
 //
 //        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
 //        foreach( $roles as $role ) {
-//            if( strpos($role,$roleName) !== false ) {
+//            if( strpos((string)$role,$roleName) !== false ) {
 //                $coordinatorResTypeRole = $role;
 //                break;
 //            }
@@ -581,7 +581,7 @@ class ResAppUtil {
 //        $coordinatorResTypeRole = null;
 //        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
 //        foreach( $roles as $role ) {
-//            if( strpos($role,$roleName) !== false ) {
+//            if( strpos((string)$role,$roleName) !== false ) {
 //                $coordinatorResTypeRole = $role;
 //                break;
 //            }
@@ -596,7 +596,7 @@ class ResAppUtil {
         //$roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
         foreach( $roles as $role ) {
-            if( strpos($role,$roleName) !== false ) {
+            if( strpos((string)$role,$roleName) !== false ) {
                 return $role;
                 break;
             }
@@ -2203,7 +2203,7 @@ class ResAppUtil {
     public function getProgramDirectorStr( $residencyTrack, $str=NULL ) {
         $directorsStr = "Program Director";
 
-        if( $str && strpos($str, "[[DIRECTOR]]") === false ) {
+        if( $str && strpos((string)$str, "[[DIRECTOR]]") === false ) {
             return $directorsStr;
         }
 

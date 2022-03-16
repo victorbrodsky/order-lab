@@ -208,7 +208,7 @@ class SiteParametersController extends OrderAbstractController
 
     public function editParameters( Request $request, $id, $role=null )
     {
-        $param = trim( $request->get('param') );
+        $param = trim((string)$request->get('param') );
 
         $routeName = $request->get('_route');
         $routeArr = explode("_", $routeName);
@@ -260,7 +260,7 @@ class SiteParametersController extends OrderAbstractController
     public function updateParameters(Request $request, $id, $role=null)
     {
 
-        $param = trim( $request->get('param') );
+        $param = trim((string)$request->get('param') );
         //echo "param=".$param."<br>";
 
         $routeName = $request->get('_route');

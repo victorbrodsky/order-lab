@@ -105,7 +105,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //CREATE SEQUENCE transres_committeereview_id_seq
-        if( strpos($sql, 'CREATE SEQUENCE ') !== false ) {
+        if( strpos((string)$sql, 'CREATE SEQUENCE ') !== false ) {
             //echo $this->counter.":###Ignore2 ".$sql.$newline;
             //return FALSE;
             $sqlArr = explode(" ",$sql);
@@ -119,7 +119,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         }
 
         //Case: DROP INDEX idx_d267b39c33f7837
-        if( strpos($sql, 'DROP INDEX ') !== false ) {
+        if( strpos((string)$sql, 'DROP INDEX ') !== false ) {
             $sqlArr = explode(" ",$sql);
             if( count($sqlArr) == 3 ) {
                 //We need the index 3
@@ -132,14 +132,14 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //ALTER TABLE calllog_calllogentrymessage_document ADD PRIMARY KEY (message_id, document_id)
         //Always skip: Primary keys are already exists
-        if( strpos($sql, ' ADD PRIMARY KEY ') !== FALSE ) {
+        if( strpos((string)$sql, ' ADD PRIMARY KEY ') !== FALSE ) {
             echo $this->counter.":###Ignore3 ".$sql.$newline;
             return FALSE;
         }
 
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
         //ALTER INDEX uniq_821d2431c161af2500000 RENAME TO UNIQ_821D2431C161AF25
-        if( strpos($sql, 'ALTER INDEX ') !== false && strpos($sql, ' RENAME TO ') !== false ) {
+        if( strpos((string)$sql, 'ALTER INDEX ') !== false && strpos((string)$sql, ' RENAME TO ') !== false ) {
             $sqlArr = explode(" ",$sql);
             //if( count($sqlArr) == 6 ) {
                 //We need the index 3
@@ -153,7 +153,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
 
         //ALTER INDEX idx_7ecb11f7378898f400000 RENAME TO IDX_7ECB11F7378898F4
 
-        //if( strpos($sql, 'idx_7ecb11f7378898f400000') !== false ) {
+        //if( strpos((string)$sql, 'idx_7ecb11f7378898f400000') !== false ) {
         //    exit("exit: ".$sql);
         //}
 
@@ -167,23 +167,23 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         $processArr = array();
         $name = 'undefined key/index';
 
-        $sqlIndex = trim($sqlIndex);
+        $sqlIndex = trim((string)$sqlIndex);
 
         if(
-            strpos($sqlIndex, 'IDX_') !== false     ||
-            strpos($sqlIndex, 'idx_') !== false     ||  //idx_15b668721aca1422
-            strpos($sqlIndex, '_idx') !== false     ||    //CREATE INDEX oid_idx ON scan_message (oid)
-            strpos($sqlIndex, 'uniq_') !== false    ||
-            strpos($sqlIndex, 'UNIQ_') !== false
+            strpos((string)$sqlIndex, 'IDX_') !== false     ||
+            strpos((string)$sqlIndex, 'idx_') !== false     ||  //idx_15b668721aca1422
+            strpos((string)$sqlIndex, '_idx') !== false     ||    //CREATE INDEX oid_idx ON scan_message (oid)
+            strpos((string)$sqlIndex, 'uniq_') !== false    ||
+            strpos((string)$sqlIndex, 'UNIQ_') !== false
         ) {
             $processArr = $this->indexArr;
             $name = "index";
         }
-        if( strpos($sqlIndex, 'FK_') !== false || strpos($sqlIndex, 'fk_') !== false ) {
+        if( strpos((string)$sqlIndex, 'FK_') !== false || strpos((string)$sqlIndex, 'fk_') !== false ) {
             $processArr = $this->foreignkeyArr;
             $name = "foreign key";
         }
-        if( strpos($sqlIndex, '_id_seq') !== false ) {
+        if( strpos((string)$sqlIndex, '_id_seq') !== false ) {
             $processArr = $this->sequenceArr;
             $name = "sequence";
         }
@@ -191,7 +191,7 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
         //echo "processArr count=".count($processArr).$newline;
 
         foreach( $processArr as $index => $table ) {
-            $index = trim($index);
+            $index = trim((string)$index);
             //echo $index->getName() . ': ' . ($index->isUnique() ? 'unique' : 'not unique') . "\n";
             if (strtolower($sqlIndex) == strtolower($index)) {
                 echo $this->counter . ": Found $name=" . $sqlIndex . " (" . $table . ")." . $newline;

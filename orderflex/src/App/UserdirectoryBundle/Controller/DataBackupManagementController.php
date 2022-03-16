@@ -155,7 +155,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $hostname = $request->getSchemeAndHttpHost();
         echo "hostname=$hostname<br>";
-        if( strpos($hostname, 'med.cornell.edu') !== false ) {
+        if( strpos((string)$hostname, 'med.cornell.edu') !== false ) {
             exit("Under construction!!!");
         }
         exit('Under construction!!!');

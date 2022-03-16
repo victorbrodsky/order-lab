@@ -118,11 +118,11 @@ class ScanLoginSuccessHandler extends LoginSuccessHandler {
 //        $lastRoute = $request->getSession()->get($indexLastRoute);
 //        //exit("lastRoute=".$lastRoute."<br>");
 //
-//        $loginpos = strpos($lastRoute, '/login');
-//        $nopermpos = strpos($lastRoute, '/no-permission');
-//        $nocheck = strpos($lastRoute, '/check/');
-//        $keepalive = strpos($lastRoute, '/keepalive');
-//        $idlelogout = strpos($lastRoute, '/idlelogout');
+//        $loginpos = strpos((string)$lastRoute, '/login');
+//        $nopermpos = strpos((string)$lastRoute, '/no-permission');
+//        $nocheck = strpos((string)$lastRoute, '/check/');
+//        $keepalive = strpos((string)$lastRoute, '/keepalive');
+//        $idlelogout = strpos((string)$lastRoute, '/idlelogout');
 //
 //        if( $lastRoute && $lastRoute != '' && $loginpos === false && $nopermpos === false && $nocheck === false && $keepalive === false && $idlelogout === false ) {
 //            $referer_url = $lastRoute;

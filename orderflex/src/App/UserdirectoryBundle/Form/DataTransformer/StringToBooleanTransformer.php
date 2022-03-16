@@ -46,7 +46,7 @@ class StringToBooleanTransformer implements DataTransformerInterface
      */
     public function transform($string)
     {
-        if( strpos($string,'Yes') !== false || strpos($string,'yes') !== false ) {
+        if( strpos((string)$string,'Yes') !== false || strpos((string)$string,'yes') !== false ) {
             return true;
         } else {
             return false;

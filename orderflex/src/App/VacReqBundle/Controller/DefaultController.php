@@ -157,13 +157,13 @@ class DefaultController extends OrderAbstractController
 //
 //            //event log
 //            //if( $viewType != 'snapshot' ) {
-//            if( strpos($viewType, 'snapshot') === false ) {
+//            if( strpos((string)$viewType, 'snapshot') === false ) {
 //                $user = $this->get('security.token_storage')->getToken()->getUser();
 //                $eventDescription = "Document has been viewed by " . $user;
 //                $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 //            }
 //
-//            if( strpos($viewType, 'snapshot') === false ) {
+//            if( strpos((string)$viewType, 'snapshot') === false ) {
 //                $originalname = $document->getOriginalnameClean();
 //                $abspath = $document->getAbsoluteUploadFullPath();
 //                $size = $document->getSize();
@@ -194,7 +194,7 @@ class DefaultController extends OrderAbstractController
 //                    } else {
 //                        //echo "The file $abspath does not exists <br>";
 //                        //try to re-generate thumbnails for jpg and jpeg
-//                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+//                        if( strpos((string)$originalname, '.jpg') !== false || strpos((string)$originalname, '.jpeg') !== false ) {
 //                            $userServiceUtil = $this->container->get('user_service_utility');
 //                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
 //                            if( $destRes ) {
@@ -221,7 +221,7 @@ class DefaultController extends OrderAbstractController
 //                    } else {
 //                        //echo "The file $abspath does not exists <br>";
 //                        //try to re-generate thumbnails
-//                        if( strpos($originalname, '.jpg') !== false || strpos($originalname, '.jpeg') !== false ) {
+//                        if( strpos((string)$originalname, '.jpg') !== false || strpos((string)$originalname, '.jpeg') !== false ) {
 //                            $userServiceUtil = $this->container->get('user_service_utility');
 //                            $destRes = $userServiceUtil->generateTwoThumbnails($document);
 //                            if( $destRes ) {

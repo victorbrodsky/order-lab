@@ -468,7 +468,7 @@ class ImportFromOldSystem {
             $fileName = basename($imagePath);
             //echo "fileName1=".$fileName."<br>";
 
-            if( strpos($fileName, ":") !== false ) {
+            if( strpos((string)$fileName, ":") !== false ) {
                 //C:\Users\ccc\Documents\MyDocs\WCMC\Residency\DB2\files\PRA_APPLICANT_CV_INFO.csv-1.data
                 //echo "Get basename from fileName=$fileName <br>";
                 //$pathinfoArr = pathinfo($fileName);
@@ -959,7 +959,7 @@ class ImportFromOldSystem {
             //fellowshipType
             if( $residencyType ) {
                 //$logger->notice("fellowshipType=[".$fellowshipType."]");
-                $residencyType = trim($residencyType);
+                $residencyType = trim((string)$residencyType);
                 //$residencyType = $this->capitalizeIfNotAllCapital($residencyType);
                 $residencyType = strtoupper($residencyType);
                 //$transformer = new GenericTreeTransformer($em, $systemUser, 'ResidencySpecialty');
@@ -1102,7 +1102,7 @@ class ImportFromOldSystem {
 
         if( $medSchool ) {
             $params = array('type'=>'Educational');
-            $medSchool = trim($medSchool);
+            $medSchool = trim((string)$medSchool);
             //$medSchool = $this->capitalizeIfNotAllCapital($medSchool);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $schoolNameEntity = $transformer->reverseTransform($medSchool);
@@ -1229,7 +1229,7 @@ class ImportFromOldSystem {
         //don’t lose data
         return $countryCitizenshipStr;
         
-//        if( strpos($countryCitizenshipValue, 'Foreign') !== false ) {
+//        if( strpos((string)$countryCitizenshipValue, 'Foreign') !== false ) {
 //            $countryCitizenshipStr = $countryCitizenshipValue;
 //        }
 //        if ( $countryCitizenshipValue == "Foreign National Currently in the U.S. with Valid Visa Status" ) {
@@ -1609,7 +1609,7 @@ class ImportFromOldSystem {
 
                         if( array_key_exists('telephonenumber', $searchRes) ) {
                             $ldapPhone = $searchRes['telephoneNumber'];
-                            $ldapPhone = trim($ldapPhone);
+                            $ldapPhone = trim((string)$ldapPhone);
                             if( $PHONE != $ldapPhone ) {
                                 $PHONE = $ldapPhone;
                             }
@@ -1620,7 +1620,7 @@ class ImportFromOldSystem {
 
                         if (array_key_exists('mail', $searchRes)) {
                             $ldapEmail = $searchRes['mail'];
-                            $ldapEmail = trim($ldapEmail);
+                            $ldapEmail = trim((string)$ldapEmail);
                             if( $EMAIL != $ldapEmail ) {
                                 $EMAIL = $ldapEmail;
                             }
@@ -1726,7 +1726,7 @@ class ImportFromOldSystem {
         }
 
         if( $res ) {
-            $res = trim($res);
+            $res = trim((string)$res);
         }
 
         //echo "res=".$res."<br>";

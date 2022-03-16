@@ -1713,7 +1713,7 @@ class FellAppController extends OrderAbstractController {
         $interviewerRoleFellType = null;
         $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
-            if( strpos($role,'INTERVIEWER') !== false ) {
+            if( strpos((string)$role,'INTERVIEWER') !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
             }
@@ -1842,7 +1842,7 @@ class FellAppController extends OrderAbstractController {
 
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
         $sendEmail = true;
-        if( strpos($status, "-noemail") !== false ) {
+        if( strpos((string)$status, "-noemail") !== false ) {
             $sendEmail = false;
             $status = str_replace("-noemail","",$status);
         }

@@ -177,14 +177,14 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //$response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
         //return $response;
 
-        $loginpos = strpos($lastRoute, '/login');
-        $nopermpos = strpos($lastRoute, '/no-permission');
-        $nocheck = strpos($lastRoute, '/check/');
-        $keepalive = strpos($lastRoute, '/keepalive');
-        $idlelogout = strpos($lastRoute, '/idle-log-out');
-        $common = strpos($lastRoute, '/common/');
+        $loginpos = strpos((string)$lastRoute, '/login');
+        $nopermpos = strpos((string)$lastRoute, '/no-permission');
+        $nocheck = strpos((string)$lastRoute, '/check/');
+        $keepalive = strpos((string)$lastRoute, '/keepalive');
+        $idlelogout = strpos((string)$lastRoute, '/idle-log-out');
+        $common = strpos((string)$lastRoute, '/common/');
 
-        $filedownload = strpos($lastRoute, '/file-download');
+        $filedownload = strpos((string)$lastRoute, '/file-download');
         if( $filedownload ) {
             $lastRouteArr = explode("/", $lastRoute);
             $fileid = $lastRouteArr[count($lastRouteArr)-1];

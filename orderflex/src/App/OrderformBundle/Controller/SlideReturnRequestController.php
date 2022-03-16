@@ -579,7 +579,7 @@ class SlideReturnRequestController extends OrderAbstractController
     {
 
         $url = $request->headers->get('referer');
-        if( strpos($url,'my-slide-return-requests') ) {
+        if( strpos((string)$url,'my-slide-return-requests') ) {
             if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
                 return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
@@ -640,7 +640,7 @@ class SlideReturnRequestController extends OrderAbstractController
         }
 
         $url = $request->headers->get('referer');
-        if( strpos($url,'my-slide-return-requests') ) {
+        if( strpos((string)$url,'my-slide-return-requests') ) {
             return $this->redirect( $this->generateUrl( 'my-slide-return-requests',$paramUrl ) );
         } else {
             return $this->redirect( $this->generateUrl( 'incoming-slide-return-requests',$paramUrl ) );

@@ -307,7 +307,7 @@ class PdfUtil {
                         if( isset($cells[$column]) ) {
                             $cell = $cells[$column];
                             $cellValue = $cell->getValue();
-                            $cellValue = trim($cellValue);
+                            $cellValue = trim((string)$cellValue);
 
                             //echo $headerTitle." ($handsomTitle)"."( col=".$column."): cellValue=".$cellValue."<br>";
 
@@ -373,11 +373,11 @@ class PdfUtil {
                                     $medSchoolGradDateValueArr = explode("-",$cellValue);
                                     if( count($medSchoolGradDateValueArr) == 2 ) {
                                         $medSchoolGradDateMY = $medSchoolGradDateValueArr[1]; //"5/2019"
-                                        $medSchoolGradDateMY = trim($medSchoolGradDateMY);
+                                        $medSchoolGradDateMY = trim((string)$medSchoolGradDateMY);
                                         //$medSchoolGradDateFull = "01/".$medSchoolGradDateMY;
                                         $splitGradDate=explode('/',$medSchoolGradDateMY);
                                         if( count($splitGradDate) == 2 ) {
-                                            $medSchoolGradDateFull = trim($splitGradDate[0]) . "/01/" . trim($splitGradDate[1]);
+                                            $medSchoolGradDateFull = trim((string)$splitGradDate[0]) . "/01/" . trim((string)$splitGradDate[1]);
                                         }
                                     }
                                     $cellValue = $medSchoolGradDateFull;
@@ -397,16 +397,16 @@ class PdfUtil {
                                 //2020: Jan-06
                                 if( $handsomTitle == "Previous Residency Start Date" ) {
                                     $resStartDateFull = NULL;
-                                    if( strpos($cellValue, '-') !== false ) {
+                                    if( strpos((string)$cellValue, '-') !== false ) {
                                         $splitResStartDate=explode('-',$cellValue);
                                     } else {
                                         $splitResStartDate=explode('/',$cellValue);
                                     }
                                     if( count($splitResStartDate) == 2 ) {
-                                        //$resStartDateYear = trim($splitResStartDate[0]);
-                                        //$resStartDateMonth = trim($splitResStartDate[1]);
-                                        $resStartDateYear = trim($splitResStartDate[1]);
-                                        $resStartDateMonth = trim($splitResStartDate[0]);
+                                        //$resStartDateYear = trim((string)$splitResStartDate[0]);
+                                        //$resStartDateMonth = trim((string)$splitResStartDate[1]);
+                                        $resStartDateYear = trim((string)$splitResStartDate[1]);
+                                        $resStartDateMonth = trim((string)$splitResStartDate[0]);
                                         if (is_numeric($resStartDateMonth)) {
                                             $nmonth = $resStartDateMonth;
                                         } else {
@@ -423,16 +423,16 @@ class PdfUtil {
                                 if( $handsomTitle == "Previous Residency Graduation/Departure Date" ) {
                                     $resEndDateFull = NULL;
                                     //$splitResEndDate=explode('-',$cellValue);
-                                    if( strpos($cellValue, '-') !== false ) {
+                                    if( strpos((string)$cellValue, '-') !== false ) {
                                         $splitResEndDate=explode('-',$cellValue);
                                     } else {
                                         $splitResEndDate=explode('/',$cellValue);
                                     }
                                     if( count($splitResEndDate) == 2 ) {
-                                        //$resEndDateYear = trim($splitResEndDate[0]);
-                                        //$resEndDateMonth = trim($splitResEndDate[1]);
-                                        $resEndDateYear = trim($splitResEndDate[1]);
-                                        $resEndDateMonth = trim($splitResEndDate[0]);
+                                        //$resEndDateYear = trim((string)$splitResEndDate[0]);
+                                        //$resEndDateMonth = trim((string)$splitResEndDate[1]);
+                                        $resEndDateYear = trim((string)$splitResEndDate[1]);
+                                        $resEndDateMonth = trim((string)$splitResEndDate[0]);
                                         if (is_numeric($resEndDateMonth)) {
                                             $nmonth = $resEndDateMonth;
                                         } else {
@@ -1121,7 +1121,7 @@ class PdfUtil {
 //                    $pdfText = $pdfInfoArr[$resappId]['text'];
 //                    $email = $resappInfoArr['email'];
 //                    if( $email ) {
-//                        if( strpos($pdfText, $email) !== false ) {
+//                        if( strpos((string)$pdfText, $email) !== false ) {
 //                            //Found by email
 //                        }
 //                    }
@@ -1358,7 +1358,7 @@ class PdfUtil {
             //Search by "AAMC ID"
             $aamcId = $thisResappInfoArr['aamcId'];
             if( $aamcId ) {
-                if( strpos($pdfText, $aamcId) !== false ) {
+                if( strpos((string)$pdfText, $aamcId) !== false ) {
                     $foundResappId = $resappId;
                     break;
                 }
@@ -1367,7 +1367,7 @@ class PdfUtil {
             //Search by "ERAS Application ID"
             $erasApplicantId = $thisResappInfoArr['erasApplicantId'];
             if( $erasApplicantId ) {
-                if( strpos($pdfText, $erasApplicantId) !== false ) {
+                if( strpos((string)$pdfText, $erasApplicantId) !== false ) {
                     $foundResappId = $resappId;
                     break;
                 }
@@ -1376,7 +1376,7 @@ class PdfUtil {
             //Search by email
             $email = $thisResappInfoArr['email'];
             if( $email ) {
-                if( strpos($pdfText, $email) !== false ) {
+                if( strpos((string)$pdfText, $email) !== false ) {
                     //Found by email
                     $foundResappId = $resappId;
                     break;
@@ -1386,11 +1386,11 @@ class PdfUtil {
             //Search by lastname and firstname
             $lastname = $thisResappInfoArr['lastname'];
             if( $lastname ) {
-                if( strpos($pdfText, $lastname) !== false ) {
+                if( strpos((string)$pdfText, $lastname) !== false ) {
                     //Search by firstname
                     $firstname = $thisResappInfoArr['firstname'];
                     if( $firstname ) {
-                        if( strpos($pdfText, $firstname) !== false ) {
+                        if( strpos((string)$pdfText, $firstname) !== false ) {
                             //Found by firstname
                             $foundResappId = $resappId;
                             break;
@@ -1494,8 +1494,8 @@ class PdfUtil {
         if( $fullName ) {
             $fullNameArr = explode(",", $fullName);
             if (count($fullNameArr) > 1) {
-                $lastName = trim($fullNameArr[0]);
-                $firstName = trim($fullNameArr[1]);
+                $lastName = trim((string)$fullNameArr[0]);
+                $firstName = trim((string)$fullNameArr[1]);
             } else {
                 $lastName = $fullName;
                 $firstName = NULL;
@@ -1591,9 +1591,9 @@ class PdfUtil {
             return NULL;
         }
         if(
-            //strpos($originalFileName, 'ApplicantID=') !== false ||
-            //strpos($originalFileName, 'AID=') !== false ||
-            strpos($originalFileName, 'aid') !== false
+            //strpos((string)$originalFileName, 'ApplicantID=') !== false ||
+            //strpos((string)$originalFileName, 'AID=') !== false ||
+            strpos((string)$originalFileName, 'aid') !== false
         ) {
             $originalFileNameSplit = explode('aid',$originalFileName);
             if( count($originalFileNameSplit) > 0 ) {
@@ -1686,7 +1686,7 @@ class PdfUtil {
             if( $pdfText ) {
                 foreach ($keysArr as $keyStr) {
                     if( $keyStr ) {
-                        if( strpos($pdfText, $keyStr) !== false ) {
+                        if( strpos((string)$pdfText, $keyStr) !== false ) {
                             //echo $pdfOriginalName. ": " . $keyStr." found<br>";
                             return $pdfFile;
                         }
@@ -1707,7 +1707,7 @@ class PdfUtil {
             $totalCount = 0;
             foreach($keysArr as $keyStr) {
                 if( $pdfText && $keyStr ) {
-                    if( strpos($pdfText, $keyStr) !== false ) {
+                    if( strpos((string)$pdfText, $keyStr) !== false ) {
                         //echo $pdfOriginalName. ": " . $keyStr." found<br>";
                         $keyExistCount++;
                     } else {
@@ -1731,7 +1731,7 @@ class PdfUtil {
             $totalCount = 0;
             foreach($keysArr as $keyStr) {
                 if( $pdfText && $keyStr ) {
-                    if( strpos($pdfText, $keyStr) !== false ) {
+                    if( strpos((string)$pdfText, $keyStr) !== false ) {
                         //echo $pdfFilePath. ": " . $keyStr." found<br>";
                         $keyExistCount++;
                     } else {
@@ -2096,7 +2096,7 @@ class PdfUtil {
         $pdfService = new PDFService();
         $text = $pdfService->pdf2text($path);
 
-        if('' == trim($text)) {
+        if('' == trim((string)$text)) {
             //echo "Use parseFile:<br>";
             $text = $pdfService->parseFile($path);
         }
@@ -2237,7 +2237,7 @@ class PdfUtil {
                 if( $key == "Email:" ) {
                     $emailStrArr = explode(" ",$field);
                     foreach($emailStrArr as $emailStr) {
-                        if (strpos($emailStr, '@') !== false) {
+                        if (strpos((string)$emailStr, '@') !== false) {
                             //echo 'true';
                             $field = $emailStr;
                             break;
@@ -2395,7 +2395,7 @@ class PdfUtil {
 
         //multiple startAnchor are supported only with checkIfStartAnchorPresent=true
         if( $checkIfStartAnchorPresent ) {
-            $subtring_start = strpos($text, $startAnchor);
+            $subtring_start = strpos((string)$text, $startAnchor);
             if( $subtring_start !== false ) {
                 //echo "String found: [$startAnchor] <br>"; //testing
                 return true;
@@ -2441,7 +2441,7 @@ class PdfUtil {
                     $fieldArr = explode(" ", $field);
                     if (count($fieldArr) >= 2) {
                         $field = $fieldArr[1];
-                        if (strpos($field, '@') !== false) {
+                        if (strpos((string)$field, '@') !== false) {
                             return $field;
                         }
                     }
@@ -2477,7 +2477,7 @@ class PdfUtil {
         //$endStr = "AAMC ID:";
 
         //if startStr does not exists => return NULL
-        if( strpos($text, $startStr) === false ) {
+        if( strpos((string)$text, $startStr) === false ) {
             return NULL;
         }
 
@@ -2486,7 +2486,7 @@ class PdfUtil {
             //$field = NULL; //testing
             //echo "field=[".$field ."]<br>";
             if( $field ) {
-                $field = trim($field);
+                $field = trim((string)$field);
                 //$field = str_replace(" ","",$field);
                 //$field = str_replace("\t","",$field);
                 //$field = str_replace("\t\n","",$field);
@@ -2498,7 +2498,7 @@ class PdfUtil {
                 //echo "Page=[".$text."]<br>";
                 //exit("string found $startStr");
                 //exit();
-                $field = trim($field);
+                $field = trim((string)$field);
                 return $field;
             }
         }
@@ -2508,13 +2508,13 @@ class PdfUtil {
             //echo "length=[$length]<br>";
             //dump($text);
             //echo "text=".$text."<br>";
-            $subtring_start = strpos($text, $startStr);
+            $subtring_start = strpos((string)$text, $startStr);
             //echo "1subtring_start=$subtring_start <br>";
             //echo "strlen($startStr)=".strlen($startStr)."<br>";
             $subtring_start = $subtring_start + strlen($startStr);
             //echo "2subtring_start=$subtring_start <br>";
             $field = substr($text, $subtring_start, $length);
-            $field = trim($field);
+            $field = trim((string)$field);
             //echo "field=[$field]<br>";
             //exit("EOF getPdfField");
             return $field;
@@ -2524,12 +2524,12 @@ class PdfUtil {
     }
     public function string_between_two_string($str, $starting_word, $ending_word)
     {
-        $subtring_start = strpos($str, $starting_word);
+        $subtring_start = strpos((string)$str, $starting_word);
         //Adding the strating index of the strating word to
         //its length would give its ending index
         $subtring_start += strlen($starting_word);
         //Length of our required sub string
-        $size = strpos($str, $ending_word, $subtring_start) - $subtring_start;
+        $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
         // Return the substring from the index substring_start of length size
         return substr($str, $subtring_start, $size);
     }
@@ -2775,7 +2775,7 @@ class PdfUtil {
 
         //$res['val'] = $row[$key]['value'];
         if( array_key_exists('value',$row[$key]) ) {
-            $res['val'] = trim($row[$key]['value']);
+            $res['val'] = trim((string)$row[$key]['value']);
         } else {
             $res['val'] = null;
         }
@@ -2783,7 +2783,7 @@ class PdfUtil {
         $id = null;
 
         if( array_key_exists('id', $row[$key]) ) {
-            $id = trim($row[$key]['id']);
+            $id = trim((string)$row[$key]['id']);
             //echo "id=".$id.", val=".$res['val']."<br>";
         }
 
@@ -2806,7 +2806,7 @@ class PdfUtil {
 //                if( $key == "Email:" ) {
 //                    $emailStrArr = explode(" ",$field);
 //                    foreach($emailStrArr as $emailStr) {
-//                        if (strpos($emailStr, '@') !== false) {
+//                        if (strpos((string)$emailStr, '@') !== false) {
 //                            //echo 'true';
 //                            $field = $emailStr;
 //                            break;

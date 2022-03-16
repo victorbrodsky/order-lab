@@ -472,7 +472,7 @@ class FellAppManagement extends OrderAbstractController {
         $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
-            if( strpos($role,$roleSubstr) !== false ) {
+            if( strpos((string)$role,$roleSubstr) !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
             }
@@ -685,19 +685,19 @@ class FellAppManagement extends OrderAbstractController {
 
             //$userObjects[] = $user;
 
-            if( strpos($roleStr,'INTERVIEWER') !== false ) {
+            if( strpos((string)$roleStr,'INTERVIEWER') !== false ) {
                 if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getInterviewers') ) {
                     $fellowshipSubspecialty->addInterviewer($user);
                 }
             }
 
-            if( strpos($roleStr,'COORDINATOR') !== false ) {
+            if( strpos((string)$roleStr,'COORDINATOR') !== false ) {
                 if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getCoordinators') ) {
                     $fellowshipSubspecialty->addCoordinator($user);
                 }
             }
 
-            if( strpos($roleStr,'DIRECTOR') !== false ) {
+            if( strpos((string)$roleStr,'DIRECTOR') !== false ) {
                 if( !$fellowshipSubspecialty->isUserExistByMethodStr($user, 'getDirectors') ) {
                     $fellowshipSubspecialty->addDirector($user);
                 }
@@ -706,11 +706,11 @@ class FellAppManagement extends OrderAbstractController {
         } //foreach
 
 
-        if( strpos($roleStr,'COORDINATOR') !== false ) {
+        if( strpos((string)$roleStr,'COORDINATOR') !== false ) {
             $this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getCoordinators(),"COORDINATOR");
         }
 
-        if( strpos($roleStr,'DIRECTOR') !== false ) {
+        if( strpos((string)$roleStr,'DIRECTOR') !== false ) {
             $this->assignFellAppAccessRoles($fellowshipSubspecialty,$fellowshipSubspecialty->getDirectors(),"DIRECTOR");
         }
 
@@ -791,7 +791,7 @@ class FellAppManagement extends OrderAbstractController {
             foreach ($users as $user) {
 
                 foreach ($user->getRoles() as $role) {
-                    if (strpos($role, '_WCMC_') !== false) {
+                    if (strpos((string)$role, '_WCMC_') !== false) {
                         echo $user.": role=" . $role . "<br>";
                         $roleNew = str_replace("_WCMC_", "_WCM_", $role);
                         echo $user.": roleNew=" . $roleNew . "<br>";

@@ -48,7 +48,7 @@ class ResearchLabType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-        if( strpos($this->params['cycle'],'_standalone') === false ) {
+        if( strpos((string)$this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
             $standalone = false;
         } else {
@@ -107,7 +107,7 @@ class ResearchLabType extends AbstractType
         ));
 
         //Consider stanAlone for all cycles with _standalone, except new_standalone. Cycle new_standalone is exception because we don't show list attributes in creation page
-        if( $standalone && strpos($this->params['cycle'],'new') === false ) {
+        if( $standalone && strpos((string)$this->params['cycle'],'new') === false ) {
             //list attributes
             $params = array();
             $mapper = array();

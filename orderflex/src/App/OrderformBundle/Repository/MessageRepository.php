@@ -320,12 +320,12 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             return $message;
         }
 
-        if( strpos($categoryName,'Scan Order') !== false ) {
+        if( strpos((string)$categoryName,'Scan Order') !== false ) {
             //$message->setScanorder(null);
             $message->setLaborder(null);
             $message->setSlideReturnRequest(null);
         } else
-        if( strpos($categoryName,'Lab Order') !== false ) {
+        if( strpos((string)$categoryName,'Lab Order') !== false ) {
             $message->setScanorder(null);
             //$message->setLaborder(null);
             $message->setSlideReturnRequest(null);

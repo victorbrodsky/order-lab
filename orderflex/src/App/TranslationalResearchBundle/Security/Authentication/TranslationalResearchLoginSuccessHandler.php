@@ -73,7 +73,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         //THEN: from confirmation page redirect to new project page
         //$subdomain = "order/";
         $subdomain = "";
-        if( $targetUrl == $url && strpos($url,$subdomain."translational-research/project/new") !== false ) {
+        if( $targetUrl == $url && strpos((string)$url,$subdomain."translational-research/project/new") !== false ) {
 
             //get specialty
             $transresUtil = $this->container->get('transres_util');
@@ -122,7 +122,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
     public function checkBasicRole($user,$targetUrl=null) {
         //$subdomain = "order/";
         $subdomain = "";
-        if( strpos($targetUrl,$subdomain."translational-research/project/new") !== false ) {
+        if( strpos((string)$targetUrl,$subdomain."translational-research/project/new") !== false ) {
             //allow new users to continue to the new project page
             return;
         }

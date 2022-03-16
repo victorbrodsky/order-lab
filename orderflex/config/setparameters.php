@@ -27,14 +27,14 @@ if( $useDb ) {
             //1) try as it is
             if (array_key_exists($name, $row)) {
                 //echo "1 parameter=".$row[$name]."<br>";
-                return trim($row[$name]);
+                return trim((string)$row[$name]);
             }
 
             //2) try with lowercase for postgresql
             $name = strtolower($name);
             if (array_key_exists($name, $row)) {
                 //echo "2 parameter=".$row[$name]."<br>";
-                return trim($row[$name]);
+                return trim((string)$row[$name]);
             }
 
             return $originalParam;

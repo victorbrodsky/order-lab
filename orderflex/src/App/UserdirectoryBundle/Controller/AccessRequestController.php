@@ -203,7 +203,7 @@ class AccessRequestController extends OrderAbstractController
     {
         //look for the referer route
         $referer = $request->headers->get('referer');
-        $lastPath = substr($referer, strpos($referer, $request->getBaseUrl()));
+        $lastPath = substr($referer, strpos((string)$referer, $request->getBaseUrl()));
         $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
 
         $matcher = $this->get('router')->getMatcher();
@@ -1500,13 +1500,13 @@ class AccessRequestController extends OrderAbstractController
         }
 
         $keytype = $request->query->get('keytype');
-        $keytype = trim($keytype);
+        $keytype = trim((string)$keytype);
 
         $primaryPublicUserIdStr = $request->query->get('primaryPublicUserId');
-        $primaryPublicUserIdStr = trim($primaryPublicUserIdStr);
+        $primaryPublicUserIdStr = trim((string)$primaryPublicUserIdStr);
         //echo "primaryPublicUserIdStr=$primaryPublicUserIdStr <br>";
 
-        if (strpos($primaryPublicUserIdStr, '@') !== false) {
+        if (strpos((string)$primaryPublicUserIdStr, '@') !== false) {
             //the string should be silently cut at the @ character to get cwid in case email was entered with @
             list($primaryPublicUserId, $email) = explode('@', $primaryPublicUserIdStr);
         } else {

@@ -55,7 +55,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
         //if(0) {
             //strip zeros and record original
             $originalKey = $key->getField();
-            $stripedKey = ltrim($originalKey, '0');
+            $stripedKey = ltrim((string)$originalKey, '0');
             $key->setField($stripedKey);
             $key->setOriginal($originalKey);
         //}

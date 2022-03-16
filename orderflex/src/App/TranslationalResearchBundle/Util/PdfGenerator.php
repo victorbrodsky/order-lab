@@ -292,7 +292,7 @@ class PdfGenerator
         $object->setSize($filesize);
 
         $transformer = new GenericTreeTransformer($this->em, $author, "DocumentTypeList", "UserdirectoryBundle");
-        $documentType = trim($documentType);
+        $documentType = trim((string)$documentType);
         $documentTypeObject = $transformer->reverseTransform($documentType);
         if( $documentTypeObject ) {
             $object->setType($documentTypeObject);
@@ -564,7 +564,7 @@ class PdfGenerator
             //$replaceContext = false;
             $schemeAndHttpHost = $request->getSchemeAndHttpHost();
             //exit("schemeAndHttpHost=$schemeAndHttpHost");
-            if ($replaceContext && strpos($schemeAndHttpHost, "localhost") === false && strpos($schemeAndHttpHost, "127.0.0.1") === false) {
+            if ($replaceContext && strpos((string)$schemeAndHttpHost, "localhost") === false && strpos((string)$schemeAndHttpHost, "127.0.0.1") === false) {
                 //exit('use localhost');
                 $context = $router->getContext();
 

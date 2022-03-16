@@ -339,11 +339,11 @@ class RecLetterUtilV1 {
         $degreeStr = "";
         $degreeReference = strtolower($reference->getDegree());
         if(
-            strpos($degreeReference, 'md') !== false
-            || strpos($degreeReference, 'm.d.') !== false
-            || strpos($degreeReference, 'phd') !== false
-            || strpos($degreeReference, 'ph.d') !== false
-            || strpos($degreeReference, 'dr.') !== false
+            strpos((string)$degreeReference, 'md') !== false
+            || strpos((string)$degreeReference, 'm.d.') !== false
+            || strpos((string)$degreeReference, 'phd') !== false
+            || strpos((string)$degreeReference, 'ph.d') !== false
+            || strpos((string)$degreeReference, 'dr.') !== false
         ) {
             $degreeStr = "Dr. ";
         }

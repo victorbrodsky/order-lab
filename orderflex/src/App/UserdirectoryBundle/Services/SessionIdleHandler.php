@@ -132,7 +132,7 @@ class SessionIdleHandler
         //Skipping duplicates, logins and logout
         $thisRoute = $session->get('this_route', array());
 
-        $pos = strpos( $routeName, "scan-order" );
+        $pos = strpos((string)$routeName, "scan-order" );
         if( $pos === false ) {
             //$dontSetRedirect++;
         }
@@ -143,8 +143,8 @@ class SessionIdleHandler
             //$routeName == 'scan-nopermission' ||
             //$routeName == 'scan_setloginvisit' ||
             //$routeName == 'employees_setloginvisit' ||
-            strpos( $routeName, "login" ) === false ||    
-            strpos( $routeName, "_setloginvisit" ) === false ||
+            strpos((string)$routeName, "login" ) === false ||
+            strpos((string)$routeName, "_setloginvisit" ) === false ||
             //$routeName == 'logout' ||
             $routeName == 'getmaxidletime' ||
             $routeName == 'isserveractive' ||
@@ -152,13 +152,13 @@ class SessionIdleHandler
             $routeName == '_wdt' ||
             $routeName == 'keepalive' ||
             $routeName == 'idlelogout' ||
-            strpos( $routeName, "logout" ) === false
+            strpos((string)$routeName, "logout" ) === false
             
         ) {
             $dontSetRedirect++;
         }
 
-        $idlelogout = strpos($routeName, 'idlelogout');
+        $idlelogout = strpos((string)$routeName, 'idlelogout');
         if( $idlelogout ) {
             $dontSetRedirect++;
         }

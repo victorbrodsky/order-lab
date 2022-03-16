@@ -139,9 +139,9 @@ class ReminderUtil
             return "maxReminderCount is not set. Invoice reminder emails are not sent.";
         }
 
-        $invoiceDueDateMax = trim($invoiceDueDateMax);
-        $reminderInterval = trim($reminderInterval);
-        $maxReminderCount = trim($maxReminderCount);
+        $invoiceDueDateMax = trim((string)$invoiceDueDateMax);
+        $reminderInterval = trim((string)$reminderInterval);
+        $maxReminderCount = trim((string)$maxReminderCount);
 
         $params = array();
 
@@ -404,7 +404,7 @@ class ReminderUtil
         //$testing = true;
 
         //review or missinginfo
-        if( strpos($state,'review') !== false ) {
+        if( strpos((string)$state,'review') !== false ) {
             $reviewShortState = "Review";
         } else {
             $reviewShortState = "Missinginfo";
@@ -425,7 +425,7 @@ class ReminderUtil
             //return "$projectReminderDelayField is not set. Project reminder emails are not sent.";
         }
 
-        $projectReminderDelay = trim($projectReminderDelay);
+        $projectReminderDelay = trim((string)$projectReminderDelay);
 
         $params = array();
 
@@ -584,7 +584,7 @@ class ReminderUtil
             $ccs = $transresUtil->getTransResAdminEmails($project,true,true); //send reminder email
 
             //replace comments
-            if( strpos($projectReminderBody, '[[PROJECT STATUS COMMENTS]]') !== false ) {
+            if( strpos((string)$projectReminderBody, '[[PROJECT STATUS COMMENTS]]') !== false ) {
                 $reviewComments = $transresUtil->getReviewComments($project,"<hr>",$state);
                 if( $reviewComments ) {
                     $reviewComments = "<hr>" . $reviewComments;
@@ -727,7 +727,7 @@ class ReminderUtil
             if (!$reminderDelay) {
                 $reminderDelay = 4; //default 4 days
             }
-            $reminderDelay = trim($reminderDelay);
+            $reminderDelay = trim((string)$reminderDelay);
 
             $reminderSubject = $transresUtil->getTransresSiteProjectParameter("completedRequestReminderSubject", null, $projectSpecialty);
             if (!$reminderSubject) {
@@ -751,7 +751,7 @@ class ReminderUtil
             if (!$reminderDelay) {
                 $reminderDelay = 7; //default 7 days
             }
-            $reminderDelay = trim($reminderDelay);
+            $reminderDelay = trim((string)$reminderDelay);
 
             $reminderSubject = $transresUtil->getTransresSiteProjectParameter("completedNoInvoiceRequestReminderSubject", null, $projectSpecialty);
             if (!$reminderSubject) {
@@ -777,7 +777,7 @@ class ReminderUtil
             if (!$reminderDelay) {
                 $reminderDelay = 28; //default 28 days
             }
-            $reminderDelay = trim($reminderDelay);
+            $reminderDelay = trim((string)$reminderDelay);
 
             $reminderSubject = $transresUtil->getTransresSiteProjectParameter("pendingRequestReminderSubject", null, $projectSpecialty);
             if (!$reminderSubject) {

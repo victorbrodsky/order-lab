@@ -90,7 +90,7 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
         //$addwhere = "";
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
         //echo "opt=".$opt."<br>";
 
@@ -144,7 +144,7 @@ class ScanUtilController extends UtilController {
 //        $output = $query->getResult();
 //        //array_unshift($output, $empty);
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
             ->from('AppOrderformBundle:ProcedureList', 'list')
@@ -183,7 +183,7 @@ class ScanUtilController extends UtilController {
 //        $output = $query->getResult();
 //        //array_unshift($output, $empty);
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
             ->from('AppOrderformBundle:OrganList', 'list')
@@ -263,7 +263,7 @@ class ScanUtilController extends UtilController {
 //        }
 
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
-        $id = trim( $request->get('opt') );
+        $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
             $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
@@ -363,7 +363,7 @@ class ScanUtilController extends UtilController {
         //////////////////////////////////// END OF 2 ///////////////////////////////////////////
 
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
-        $id = trim( $request->get('opt') );
+        $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
             $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
@@ -420,7 +420,7 @@ class ScanUtilController extends UtilController {
         $arr = $formHelper->getPart();
 
         //add custom added values by order id
-        $id = trim( $request->get('opt') );
+        $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
             $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
@@ -456,7 +456,7 @@ class ScanUtilController extends UtilController {
         $arr = $formHelper->getBlock();
 
         //add custom added values by order id
-        $id = trim( $request->get('opt') );
+        $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
             $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
@@ -490,8 +490,8 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $opt = trim( $request->get('opt') );
-        $type = trim( $request->get('type') );
+        $opt = trim((string)$request->get('opt') );
+        $type = trim((string)$request->get('type') );
 
         //echo "opt=".$opt."<br>";
 
@@ -534,9 +534,9 @@ class ScanUtilController extends UtilController {
         $simple = false;
         $em = $this->getDoctrine()->getManager();
 
-        $opt = trim( $request->get('opt') );
-        $type = trim( $request->get('type') );
-        $exception = trim( $request->get('exception') );
+        $opt = trim((string)$request->get('opt') );
+        $type = trim((string)$request->get('type') );
+        $exception = trim((string)$request->get('exception') );
 
         //echo "opt=".$opt."<br>";
 
@@ -619,7 +619,7 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $holderId = trim( $request->get('opt') ); //associated object ProjectTitleTree id
+        $holderId = trim((string)$request->get('opt') ); //associated object ProjectTitleTree id
         $routeName = $request->get('_route');
 
         if( $routeName == "get-optionalusereducational" ) {
@@ -705,7 +705,7 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
             ->from('AppOrderformBundle:Account', 'list')
@@ -737,7 +737,7 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $opt = trim( $request->get('opt') );
+        $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
             ->from('AppOrderformBundle:Urgency', 'list')
@@ -769,8 +769,8 @@ class ScanUtilController extends UtilController {
      */
     public function getReturnLocationAction(Request $request) {
 
-        $providerid = trim( $request->get('providerid') );
-        $proxyid = trim( $request->get('proxyid') );
+        $providerid = trim((string)$request->get('providerid') );
+        $proxyid = trim((string)$request->get('proxyid') );
 
         if( $providerid == 'undefined' ) {
             $providerid = null;
@@ -1058,7 +1058,7 @@ class ScanUtilController extends UtilController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $providerId = trim($request->get('providerId'));
+        $providerId = trim((string)$request->get('providerId'));
         //echo "providerId=".$providerId."<br>";
 
         $output = array();
@@ -1118,7 +1118,7 @@ class ScanUtilController extends UtilController {
         } else {
             //echo "Case2: providerId is string=$providerId<br>";
 
-            if( strpos($providerId, '_@_') !== false ) {
+            if( strpos((string)$providerId, '_@_') !== false ) {
                 //cwid_@_ldap-user
                 $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
             } else {

@@ -97,7 +97,7 @@ class SectionUserController extends UserController
         $cycle = $request->query->get('cycle');
         //echo "userid=".$userid."<br>";
 
-        if( strpos($cycle, 'show') !== false ) {
+        if( strpos((string)$cycle, 'show') !== false ) {
             $userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findByUser($userid);
 
             //find patients by patient's encounter's provider: patient->encounters->provider

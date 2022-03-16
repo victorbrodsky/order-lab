@@ -456,13 +456,13 @@ class TransResRequestUtil
         //echo "transitionName=$transitionName<br>"; //canceled_active
         //return "btn btn-success transres-review-submit";
 
-        if( strpos($transitionName, "_cancel") !== false ) {
+        if( strpos((string)$transitionName, "_cancel") !== false ) {
             return "btn btn-danger transres-review-submit"; //btn-primary
         }
-        if( strpos($transitionName, "_pending") !== false ) {
+        if( strpos((string)$transitionName, "_pending") !== false ) {
             return "btn btn-warning transres-review-submit";
         }
-        if( strpos($transitionName, "_completed") !== false ) {
+        if( strpos((string)$transitionName, "_completed") !== false ) {
             return "btn btn-success transres-review-submit";
         }
 
@@ -867,7 +867,7 @@ class TransResRequestUtil
                     $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
 
                     //don't show confirmation modal
-//                if( strpos($transitionName, "missinginfo") !== false ) {
+//                if( strpos((string)$transitionName, "missinginfo") !== false ) {
 //                    $generalDataConfirmation = "";
 //                }
 
@@ -5119,7 +5119,7 @@ class TransResRequestUtil
 //            $category = NULL;
 //
 //            //remove -i from itemCode "TRP-0001-i"
-//            if( strpos($itemCode, '-') !== false ) {
+//            if( strpos((string)$itemCode, '-') !== false ) {
 //                $itemCodeArr = explode('-',$itemCode);
 //                if( count($itemCodeArr) > 2 ) {
 //                    $itemCode = $itemCodeArr[0].$itemCodeArr[1];
@@ -5218,7 +5218,7 @@ class TransResRequestUtil
             $category = NULL;
 
             //remove -i from itemCode "TRP-0001-i"
-            if( strpos($itemCode, '-') !== false ) {
+            if( strpos((string)$itemCode, '-') !== false ) {
                 $itemCodeArr = explode('-',$itemCode);
                 if( count($itemCodeArr) > 2 ) {
                     $itemCode = $itemCodeArr[0].$itemCodeArr[1];
@@ -6443,9 +6443,9 @@ class TransResRequestUtil
         foreach( $transitions as $transition ) {
             //echo "compare [".$transition->getName()."] ?= [".$transitionName."<br>";
             $transtionName = $transition->getName();
-            if( strpos($transtionName, '_completed') !== false ) {
+            if( strpos((string)$transtionName, '_completed') !== false ) {
                 //echo 'transtionName='.$transtionName."<br>";
-                if( strpos($transtionName, '_completedNotified') === false ) {
+                if( strpos((string)$transtionName, '_completedNotified') === false ) {
                     return $transtionName;
                 }
             }

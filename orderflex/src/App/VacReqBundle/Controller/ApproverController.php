@@ -646,7 +646,7 @@ class ApproverController extends OrderAbstractController
         //exit('111');
 
         //$users = $request->query->get('users');
-        //$users = trim($users);
+        //$users = trim((string)$users);
 
         $em->flush();
 
@@ -998,7 +998,7 @@ class ApproverController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
 //        $keytype = $request->query->get('keytype');
-//        $keytype = trim($keytype);
+//        $keytype = trim((string)$keytype);
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {

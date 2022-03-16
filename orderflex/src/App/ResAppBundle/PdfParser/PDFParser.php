@@ -88,14 +88,14 @@ class PDFParser
             // Look at each chunk decide if we can decode it by looking at the contents of the filter
             if (isset($chunk['data'])) {
                 // look at the filter to find out which encoding has been used
-                if (strpos($chunk['filter'], 'FlateDecode') !== false) {
+                if (strpos((string)$chunk['filter'], 'FlateDecode') !== false) {
                     // Use gzuncompress but suppress error messages.
                     $data =@ gzuncompress($chunk['data']);
                 } else {
                     $data = $chunk['data'];
                 }
 
-                if (trim($data) != '') {
+                if (trim((string)$data) != '') {
                     // If we got data then attempt to extract it.
                     $result_data .= ' '.self::extractTextElements($data);
                 }
@@ -107,7 +107,7 @@ class PDFParser
          * our string. Also extract alphanumerical information to reduce
          * redundant data.
          */
-        if (trim($result_data) == '') {
+        if (trim((string)$result_data) == '') {
             return null;
         } else {
             // Optimize hyphened words
@@ -120,7 +120,7 @@ class PDFParser
 
     protected static function extractTextElements($content)
     {
-        if (strpos($content, '/CIDInit') === 0) {
+        if (strpos((string)$content, '/CIDInit') === 0) {
             return '';
         }
 
@@ -128,12 +128,12 @@ class PDFParser
         $lines = explode("\n", $content);
 
         foreach ($lines as $line) {
-            $line = trim($line);
+            $line = trim((string)$line);
             $matches = array();
 
             // Parse each lines to extract command and operator values
             if (preg_match('/^(?<command>.*[\)\] ])(?<operator>[a-z]+[\*]?)$/i', $line, $matches)) {
-                $command = trim($matches['command']);
+                $command = trim((string)$matches['command']);
 
                 // Convert octal encoding
                 $found_octal_values = array();
@@ -160,7 +160,7 @@ class PDFParser
                     }
                 }
                 // Removes leading spaces
-                $operator = trim($matches['operator']);
+                $operator = trim((string)$matches['operator']);
             } else {
                 $command = $line;
                 $operator = '';
@@ -201,14 +201,14 @@ class PDFParser
 
                 // Display text, allowing individual character positioning
                 case 'TJ':
-                    $start = mb_strpos($command, '[', null, 'UTF-8') + 1;
+                    $start = mb_strpos((string)$command, '[', null, 'UTF-8') + 1;
                     $end   = mb_strrpos($command, ']', null, 'UTF-8');
                     $text.= self::parseTextCommand(mb_substr($command, $start, $end - $start, 'UTF-8'));
                     break;
 
                 // Display text.
                 case 'Tj':
-                    $start = mb_strpos($command, '(', null, 'UTF-8') + 1;
+                    $start = mb_strpos((string)$command, '(', null, 'UTF-8') + 1;
                     $end   = mb_strrpos($command, ')', null, 'UTF-8');
                     $text.= mb_substr($command, $start, $end - $start, 'UTF-8'); // Removes round brackets
                     break;
@@ -278,7 +278,7 @@ class PDFParser
         $result = '';
         $cur_start_pos = 0;
 
-        while (($cur_start_text = mb_strpos($text, '(', $cur_start_pos, 'UTF-8')) !== false) {
+        while (($cur_start_text = mb_strpos((string)$text, '(', $cur_start_pos, 'UTF-8')) !== false) {
             // New text element found
             if ($cur_start_text - $cur_start_pos > 8) {
                 $spacing = ' ';
@@ -294,7 +294,7 @@ class PDFParser
             $cur_start_text++;
 
             $start_search_end = $cur_start_text;
-            while (($cur_start_pos = mb_strpos($text, ')', $start_search_end, 'UTF-8')) !== false) {
+            while (($cur_start_pos = mb_strpos((string)$text, ')', $start_search_end, 'UTF-8')) !== false) {
                 if (mb_substr($text, $cur_start_pos - 1, 1, 'UTF-8') != '\\') {
                     break;
                 }
@@ -329,8 +329,8 @@ class PDFParser
         $a_results = array();
 
         while ($start !== false && $end !== false) {
-            $start = strpos($data, $start_word, $end);
-            $end   = strpos($data, $end_word, $start);
+            $start = strpos((string)$data, $start_word, $end);
+            $end   = strpos((string)$data, $end_word, $start);
 
             if ($end !== false && $start !== false) {
                 // data is between start and end

@@ -137,7 +137,7 @@ class SignUpController extends OrderAbstractController
                 $emailHasError = false;
                 //echo "email=".$signUp->getEmail()."<br>";
                 //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
-                if( strpos($signUp->getEmail(), "@med.cornell.edu") !== false || strpos($signUp->getEmail(), "@nyp.org") !== false ) {
+                if( strpos((string)$signUp->getEmail(), "@med.cornell.edu") !== false || strpos((string)$signUp->getEmail(), "@nyp.org") !== false ) {
                     $cwid = "CWID";
                     $emailArr = explode("@",$signUp->getEmail());
                     if( count($emailArr)>0 ) {
@@ -971,7 +971,7 @@ class SignUpController extends OrderAbstractController
                 //$form->get('email')->addError(new FormError('The email value should not be blank.'));
             } else {
                 //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
-                if( strpos($resetPassword->getEmail(), "@med.cornell.edu") !== false || strpos($resetPassword->getEmail(), "@nyp.org") !== false ) {
+                if( strpos((string)$resetPassword->getEmail(), "@med.cornell.edu") !== false || strpos((string)$resetPassword->getEmail(), "@nyp.org") !== false ) {
                     $cwid = "CWID";
                     $emailArr = explode("@",$resetPassword->getEmail());
                     if( count($emailArr)>0 ) {

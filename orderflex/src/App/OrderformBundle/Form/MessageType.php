@@ -422,7 +422,7 @@ class MessageType extends AbstractType
 
         $category = $message->getMessageCategory();
         //echo "category=".$category."<br>";
-        if( strpos($category,$substring) !== false ) {
+        if( strpos((string)$category,$substring) !== false ) {
             //echo "has <br>";
             return true;
         }

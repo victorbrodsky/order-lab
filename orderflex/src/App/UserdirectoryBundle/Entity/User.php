@@ -459,7 +459,7 @@ class User extends UserBase {
     public function setPrimaryPublicUserId($primaryPublicUserId)
     {
         if( $primaryPublicUserId ) {
-            //$primaryPublicUserId = trim($primaryPublicUserId);
+            //$primaryPublicUserId = trim((string)$primaryPublicUserId);
             //$primaryPublicUserId = strtolower($primaryPublicUserId);
             $primaryPublicUserId = $this->canonicalize($primaryPublicUserId);
         }
@@ -596,7 +596,7 @@ class User extends UserBase {
     public function hasPartialRole($partialRoleStr)
     {
         foreach( $this->getRoles() as $role ) {
-            if( strpos($role, $partialRoleStr) !== false ) {
+            if( strpos((string)$role, $partialRoleStr) !== false ) {
                 return true;
             }
         }
@@ -1088,7 +1088,7 @@ class User extends UserBase {
     public function setUsernameForce($username)
     {
         if( $username ) {
-            //$username = trim($username);
+            //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
@@ -1107,7 +1107,7 @@ class User extends UserBase {
         }
 
         if( $username ) {
-            //$username = trim($username);
+            //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
@@ -1120,7 +1120,7 @@ class User extends UserBase {
     public function setUsernameCanonicalForce($usernameCanonical)
     {
         if( $usernameCanonical ) {
-            //$usernameCanonical = trim($usernameCanonical);
+            //$usernameCanonical = trim((string)$usernameCanonical);
             //$usernameCanonical = strtolower($usernameCanonical);
             $usernameCanonical = $this->canonicalize($usernameCanonical);
         }
@@ -1149,7 +1149,7 @@ class User extends UserBase {
     public function createUniqueUsername() {
         $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
         if( $uniqueUsername ) {
-            //$uniqueUsername = trim($uniqueUsername);
+            //$uniqueUsername = trim((string)$uniqueUsername);
             //$uniqueUsername = strtolower($uniqueUsername);
             $uniqueUsername = $this->canonicalize($uniqueUsername);
         }
@@ -1158,7 +1158,7 @@ class User extends UserBase {
 
     public function createUniqueUsernameByKeyKeytype($keytype,$key) {
         if( $key ) {
-            //$key = trim($key);
+            //$key = trim((string)$key);
             //$key = strtolower($key);
             $key = $this->canonicalize($key);
         }
@@ -1170,7 +1170,7 @@ class User extends UserBase {
     //Get CWID
     public function createCleanUsername($username) {
         if( $username ) {
-            //$username = trim($username);
+            //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
@@ -1184,7 +1184,7 @@ class User extends UserBase {
         }
 
         if( $username ) {
-            //$username = trim($username);
+            //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
@@ -1203,7 +1203,7 @@ class User extends UserBase {
         if( !$username ) {
             $username = $this->getUsername();
         }
-        if( strpos($username,"_@_") !== false ) {
+        if( strpos((string)$username,"_@_") !== false ) {
             return true;
         }
         return false;

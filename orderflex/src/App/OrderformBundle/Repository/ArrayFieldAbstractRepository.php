@@ -591,7 +591,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $methodShortName = $method_name->getShortName();    //getMrn
 
-            if( strpos($methodShortName,'get') !== false && strpos($methodShortName,'__') === false ) {    //filter in only "get" methods
+            if( strpos((string)$methodShortName,'get') !== false && strpos((string)$methodShortName,'__') === false ) {    //filter in only "get" methods
 
                 //echo "methodShortName=".$methodShortName."<br>";
 
@@ -731,7 +731,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //echo "?valid field= ".$validField."<br>";
 
         //if similar field is already set and provided field is empty => don't add provided field
-        if( !$field || trim($field) == "" ) {
+        if( !$field || trim((string)$field) == "" ) {
             if( $validField && $validField->getProvider()->getId() == $field->getProvider()->getId() ) {
                 //echo $methodName.": field is empty and non empty valid field exists => don't add provided field => return!!!<br>";
                 return $entity;
@@ -1147,7 +1147,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //strip zeros and record original
             $originalKey = $field->getField();
             $field->setOriginal($originalKey);
-            $stripedKey = ltrim($originalKey, '0');
+            $stripedKey = ltrim((string)$originalKey, '0');
             $field->setField($stripedKey);
         }
 
@@ -1324,8 +1324,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "fieldIndex=".$fieldIndex."<br>";
 
-        //$fieldIndex = ltrim($fieldIndex,'0') + 1;
-        $fieldIndex = ltrim($fieldIndex,'0');
+        //$fieldIndex = ltrim((string)$fieldIndex,'0') + 1;
+        $fieldIndex = ltrim((string)$fieldIndex,'0');
         $fieldIndex = (int)$fieldIndex + 1;
         $paddedfield = str_pad($fieldIndex,13,'0',STR_PAD_LEFT);
         //echo "paddedfield=".$paddedfield."<br>";
@@ -1340,7 +1340,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "get bigger key:".$keyDb." == ".$key.", name=".$name."<br>";
 
-        if( strpos($keyDb,$name) === false || strpos($key,$name) === false ) {
+        if( strpos((string)$keyDb,$name) === false || strpos((string)$key,$name) === false ) {
             //echo "keys are not generated<br>";
             return -1;
         }

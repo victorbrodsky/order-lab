@@ -41,7 +41,7 @@ class UserPositionType extends AbstractType
 
 //        echo 'cycle='.$this->params['cycle']."<br>";
 //        $readonly = '';
-//        if( strpos($this->params['cycle'],'show') !== false ) {
+//        if( strpos((string)$this->params['cycle'],'show') !== false ) {
 //            $readonly = 'readonly';
 //        }
 //        echo 'readonly='.$readonly."<br>";
@@ -119,7 +119,7 @@ class UserPositionType extends AbstractType
         ));
 
         $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
-        if( strpos($this->params['cycle'],'show') !== false ) {
+        if( strpos((string)$this->params['cycle'],'show') !== false ) {
             $attr['readonly'] = 'readonly';
         }
 
@@ -164,7 +164,7 @@ class UserPositionType extends AbstractType
 
             //visible as positionType combobox attached to an institution node
 //            $attr = array('class'=>'combobox combobox-width userposition-positiontypes');
-//            if( strpos($this->params['cycle'],'show') !== false ) {
+//            if( strpos((string)$this->params['cycle'],'show') !== false ) {
 //                $attr['readonly'] = 'readonly';
 //            }
 //            $form->add( 'positionTypes', 'entity', array(

@@ -64,7 +64,7 @@ abstract class BaseRoleVoter extends Voter {
         //echo "Supported voter?: attribute=".$attribute."; subject=".$subject."<br>";
 
         //support USERDIRECTORY roles only
-        if( strpos($attribute, 'ROLE_'.$siteRoleBase.'_') === false ) {
+        if( strpos((string)$attribute, 'ROLE_'.$siteRoleBase.'_') === false ) {
             //echo("no support $siteRoleBase <br>");
             return false;
         }
@@ -96,7 +96,7 @@ abstract class BaseRoleVoter extends Voter {
         //echo 'subject='.$subject."<br>";
 
         //does not support UNAPPROVED and BANNED roles for this voter
-        if( strpos($attribute, '_UNAPPROVED') !== false || strpos($attribute, '_BANNED') !== false ) {
+        if( strpos((string)$attribute, '_UNAPPROVED') !== false || strpos((string)$attribute, '_BANNED') !== false ) {
             //exit('do not support _UNAPPROVED or _BANNED roles');
             return false;
         }

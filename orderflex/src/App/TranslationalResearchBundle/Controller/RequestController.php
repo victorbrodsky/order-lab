@@ -1298,8 +1298,8 @@ class RequestController extends OrderAbstractController
             //$billingContact = $filterform['billingContact']->getData();
             $fundingNumber = $filterform['fundingNumber']->getData();
             $fundingType = $filterform['fundingType']->getData();
-            $filterType = trim($request->get('type'));
-            $filterTitle = trim($request->get('title'));
+            $filterType = trim((string)$request->get('type'));
+            $filterTitle = trim((string)$request->get('title'));
 
             //replace - with space
             //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
@@ -1562,13 +1562,13 @@ class RequestController extends OrderAbstractController
             //echo "filterTypeLowerCase=$filterTypeLowerCase<br>";
             $filterTypeLowerCaseArr = explode(' ',$filterTypeLowerCase);
             if( count($filterTypeLowerCaseArr) == 3 &&
-                strpos($filterTypeLowerCase, strtolower('All')) !== false &&
-                strpos($filterTypeLowerCase, strtolower('Requests')) !== false
+                strpos((string)$filterTypeLowerCase, strtolower('All')) !== false &&
+                strpos((string)$filterTypeLowerCase, strtolower('Requests')) !== false
             ) {
 
                 $specialtyName = str_replace('Requests','',$filterType); //All MISI
                 $specialtyName = str_replace('All','',$specialtyName); //MISI
-                $specialtyName = trim($specialtyName);
+                $specialtyName = trim((string)$specialtyName);
                 //echo "specialtyName=$specialtyName<br>";
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
@@ -1651,10 +1651,10 @@ class RequestController extends OrderAbstractController
                     $pendingRequestArr
                 );
             }
-            if( strpos($filterTypeLowerCase, strtolower('Pending Requests')) !== false ) {
+            if( strpos((string)$filterTypeLowerCase, strtolower('Pending Requests')) !== false ) {
                 $specialtyName = str_replace('Pending Requests','',$filterType); //All MISI
                 $specialtyName = str_replace('All','',$specialtyName); //MISI
-                $specialtyName = trim($specialtyName);
+                $specialtyName = trim((string)$specialtyName);
                 //echo "specialtyName=$specialtyName<br>";
 
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
@@ -1721,10 +1721,10 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
-            if( strpos($filterTypeLowerCase, strtolower('Active Requests')) !== false ) {
+            if( strpos((string)$filterTypeLowerCase, strtolower('Active Requests')) !== false ) {
                 $specialtyName = str_replace('Active Requests','',$filterType); //All MISI
                 $specialtyName = str_replace('All','',$specialtyName); //MISI
-                $specialtyName = trim($specialtyName);
+                $specialtyName = trim((string)$specialtyName);
                 //echo "specialtyName=$specialtyName<br>";
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
                 if( $projectSpecialtyObject ) {
@@ -1792,10 +1792,10 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
-            if( strpos($filterTypeLowerCase, strtolower('Completed Requests')) !== false ) {
+            if( strpos((string)$filterTypeLowerCase, strtolower('Completed Requests')) !== false ) {
                 $specialtyName = str_replace('Completed Requests','',$filterType); //All MISI
                 $specialtyName = str_replace('All','',$specialtyName); //MISI
-                $specialtyName = trim($specialtyName);
+                $specialtyName = trim((string)$specialtyName);
                 //echo "specialtyName=$specialtyName<br>";
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
                 if( $projectSpecialtyObject ) {
@@ -1863,10 +1863,10 @@ class RequestController extends OrderAbstractController
                     )
                 );
             }
-            if( strpos($filterTypeLowerCase, strtolower('Completed and Notified Requests')) !== false ) {
+            if( strpos((string)$filterTypeLowerCase, strtolower('Completed and Notified Requests')) !== false ) {
                 $specialtyName = str_replace('Completed and Notified Requests','',$filterType); //All MISI
                 $specialtyName = str_replace('All','',$specialtyName); //MISI
-                $specialtyName = trim($specialtyName);
+                $specialtyName = trim((string)$specialtyName);
                 //echo "specialtyName=$specialtyName<br>";
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject($specialtyName);
                 if( $projectSpecialtyObject ) {
@@ -1908,11 +1908,11 @@ class RequestController extends OrderAbstractController
             }
             //Generic work queues with substring "Work Queue"
             //if( $filterTypeLowerCase == strtolower("CTP Lab Work Queue") ) {
-            if( strpos($filterTypeLowerCase, strtolower('Work Queue')) !== false ) {
+            if( strpos((string)$filterTypeLowerCase, strtolower('Work Queue')) !== false ) {
                 //echo "filterTypeLowerCase=$filterTypeLowerCase<br>";
                 //echo "filterType=$filterType<br>";
                 $workQueueName = str_replace('Work Queue','',$filterType); //CTP Lab
-                $workQueueName = trim($workQueueName);
+                $workQueueName = trim((string)$workQueueName);
                 //echo "workQueueName=$workQueueName<br>";
                 $workQueueObject = $transresUtil->getWorkQueueObject($workQueueName);
                 //echo "workQueueObject=$workQueueObject<br>";
@@ -2033,7 +2033,7 @@ class RequestController extends OrderAbstractController
         //echo "projectSearch=[".$projectSearch."] <br>";
         if( $projectSearch ) {
             $projectId = null;
-            if (strpos($projectSearch, ', ') !== false) {
+            if (strpos((string)$projectSearch, ', ') !== false) {
                 //get id
                 $projectSearchArr = explode(", ",$projectSearch);
                 if( count($projectSearchArr) > 1 ) {
@@ -2831,7 +2831,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
 
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -2874,7 +2874,7 @@ class RequestController extends OrderAbstractController
                 $originalIrbExpDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
             }
 
-            $value = trim($request->get('value'));
+            $value = trim((string)$request->get('value'));
             //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
             //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
@@ -2914,7 +2914,7 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -2942,7 +2942,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $pricelistid = trim($request->get('pricelistid'));
+            $pricelistid = trim((string)$request->get('pricelistid'));
             //echo "pricelistid=".$pricelistid."<br>";
 
             if( !$pricelistid ) {
@@ -3011,7 +3011,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3039,7 +3039,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $approvedProjectBudget = trim($request->get('approvedProjectBudget'));
+            $approvedProjectBudget = trim((string)$request->get('approvedProjectBudget'));
             //echo "approvedProjectBudget=".$approvedProjectBudget."<br>";
 
             $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
@@ -3080,7 +3080,7 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim( $request->get('projectId') );
+        $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3108,7 +3108,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $noBudgetLimit = trim($request->get('noBudgetLimit'));
+            $noBudgetLimit = trim((string)$request->get('noBudgetLimit'));
             //echo "noBudgetLimit=".$noBudgetLimit."<br>";
 
             $originalNoBudgetLimit = $project->getNoBudgetLimit();
@@ -3316,9 +3316,9 @@ class RequestController extends OrderAbstractController
 
         $transresUtil = $this->get('transres_util');
 
-        $type = trim( $request->get('type') );
-        $search = trim( $request->get('search') );
-        $limit = trim( $request->get('limit') );
+        $type = trim((string)$request->get('type') );
+        $search = trim((string)$request->get('search') );
+        $limit = trim((string)$request->get('limit') );
 
         //echo "type=".$type."<br>";
         //echo "search=".$search."<br>";

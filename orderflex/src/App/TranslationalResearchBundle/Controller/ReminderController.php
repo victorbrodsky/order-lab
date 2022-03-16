@@ -242,7 +242,7 @@ class ReminderController extends OrderAbstractController
         $reminderDelayByStateProjectSpecialtyArr = array();
         $projectSpecialties = $transresUtil->getTransResProjectSpecialties(false);
 
-        if( strpos($routeName, "translationalresearch_request_pending_reminder") !== false ) {
+        if( strpos((string)$routeName, "translationalresearch_request_pending_reminder") !== false ) {
             //$title = "Delayed Pending Work Requests";
 
             //The following work requests are pending completion for over X days:
@@ -274,7 +274,7 @@ class ReminderController extends OrderAbstractController
             }
         }
 
-        if( strpos($routeName, "translationalresearch_request_completed_reminder") !== false ) {
+        if( strpos((string)$routeName, "translationalresearch_request_completed_reminder") !== false ) {
             //0 AP/CP work requests have been completed for over 4 days without the submitter being notified.
             $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] work requests have been completed for over [[REMINDER_DELAY]] days without the submitter being notified.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
@@ -296,7 +296,7 @@ class ReminderController extends OrderAbstractController
             }
         }
 
-        if( strpos($routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
+        if( strpos((string)$routeName, "translationalresearch_request_completed_no_invoice_issued_reminder") !== false ) {
             //0 AP/CP work requests have been completed for over 7 days without any invoices.
             $title = "[[REQUEST_COUNTER]] [[PROJECT_SPECIALTY]] following work requests have been completed for over [[REMINDER_DELAY]] days without any invoices.";
             foreach($projectSpecialties as $projectSpecialtyObject) {
@@ -341,7 +341,7 @@ class ReminderController extends OrderAbstractController
                     //count project specialty reminders
                     foreach($reminderDelayArr as $projectSpecialtyShortName=>$reminderDays) {
                         foreach($transResRequests as $transResRequest) {
-                            if (strpos($transResRequest->getOid(), $projectSpecialtyShortName) !== false) {
+                            if (strpos((string)$transResRequest->getOid(), $projectSpecialtyShortName) !== false) {
                                 //echo "index=".$projectSpecialtyShortName."<br>";
                                 if( array_key_exists($projectSpecialtyShortName,$projectSpecialtyCounter) ) {
                                     //echo "Array Key exists...";

@@ -375,7 +375,7 @@ class CarryOverController extends OrderAbstractController
         //exit('url='.$url);
 
         //when status is changed from email, then the url is a system home page
-        if( $url && strpos($url, 'incoming-requests') !== false ) {
+        if( $url && strpos((string)$url, 'incoming-requests') !== false ) {
             return $this->redirect($url);
         }
 

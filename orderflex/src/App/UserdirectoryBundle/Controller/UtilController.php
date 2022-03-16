@@ -55,7 +55,7 @@ class UtilController extends OrderAbstractController {
 
         $cycle = $request->get('cycle');
         $newCycle = false;
-        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+        if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
         }
 
@@ -133,8 +133,8 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $id = trim( $request->get('id') );
-        $pid = trim( $request->get('pid') );
+        $id = trim((string)$request->get('id') );
+        $pid = trim((string)$request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "id=".$id."<br>";
 
@@ -194,7 +194,7 @@ class UtilController extends OrderAbstractController {
 
         $cycle = $request->get('cycle');
         $newCycle = false;
-        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+        if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
         }
         //echo "cycle=".$cycle." => newCycle=".$newCycle."<br>";
@@ -260,7 +260,7 @@ class UtilController extends OrderAbstractController {
      */
     public function getInstitutionAction(Request $request) {
 
-        $id = trim( $request->get('id') );
+        $id = trim((string)$request->get('id') );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -433,7 +433,7 @@ class UtilController extends OrderAbstractController {
         $cycle = $request->get('cycle');
         //echo "cycle=".$cycle."<br>";
         $newCycle = false;
-        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+        if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
         }
 
@@ -490,7 +490,7 @@ class UtilController extends OrderAbstractController {
 
         $cycle = $request->get('cycle');
         $newCycle = false;
-        if( $cycle && (strpos($cycle, 'new') !== false || strpos($cycle, 'create') !== false) ) {
+        if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
         }
 
@@ -652,7 +652,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $locationId = trim($request->get('locationId'));
+        $locationId = trim((string)$request->get('locationId'));
 
         if( strval($locationId) == strval(intval($locationId)) ) {
             //echo "locationId is integer<br>";
@@ -1091,7 +1091,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $cwid = trim( $request->get('number') );
+        $cwid = trim((string)$request->get('number') );
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($cwid);
@@ -1118,7 +1118,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $ssn = trim( $request->get('number') );
+        $ssn = trim((string)$request->get('number') );
         $em = $this->getDoctrine()->getManager();
 
         $users = null;
@@ -1159,7 +1159,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $ein = trim( $request->get('number') );
+        $ein = trim((string)$request->get('number') );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1200,8 +1200,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $userType = trim( $request->get('userType') );
-        $userId = trim( $request->get('userId') );
+        $userType = trim((string)$request->get('userType') );
+        $userId = trim((string)$request->get('userId') );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1232,8 +1232,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
        
-        $userId = trim( $request->get('userId') );
-        //$userTypeText = trim( $request->get('userTypeText') );
+        $userId = trim((string)$request->get('userId') );
+        //$userTypeText = trim((string)$request->get('userTypeText') );
 
         $output = "ok";
         
@@ -1266,9 +1266,9 @@ class UtilController extends OrderAbstractController {
      */
     public function getUserDataSearchAction(Request $request) {
 
-        $type = trim( $request->get('type') );
-        $search = trim( $request->get('search') );
-        $limit = trim( $request->get('limit') );
+        $type = trim((string)$request->get('type') );
+        $search = trim((string)$request->get('search') );
+        $limit = trim((string)$request->get('limit') );
 
         //echo "type=".$type."<br>";
         //echo "search=".$search."<br>";
@@ -1505,8 +1505,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $userid = trim( $request->get('userid') );
-        $userpassword = trim( $request->get('userpassword') );
+        $userid = trim((string)$request->get('userid') );
+        $userpassword = trim((string)$request->get('userpassword') );
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $userid != $user->getId() ) {

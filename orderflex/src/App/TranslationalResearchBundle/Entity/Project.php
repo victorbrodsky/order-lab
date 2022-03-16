@@ -883,7 +883,7 @@ class Project {
         return $this->description;
 
 //        $description = $this->description;
-//        if( strpos($description, 'Previously used in the project fields (currently hidden)') === false ) {
+//        if( strpos((string)$description, 'Previously used in the project fields (currently hidden)') === false ) {
 //            $mergeInfo = $this->mergeHiddenFields();
 //            if( $mergeInfo ) {
 //                $newline = "\n";

@@ -569,16 +569,16 @@ class ScanAdminController extends AdminController
             //print_r($rowData);
             //echo "<br>";
 
-            $stainId = trim($rowData[0][0]);
-            $stainName = trim($rowData[0][1]);
-            $stainShortName = trim($rowData[0][2]);
-            $stainAbbr = trim($rowData[0][3]);
-            $stainDescription = trim($rowData[0][4]);
+            $stainId = trim((string)$rowData[0][0]);
+            $stainName = trim((string)$rowData[0][1]);
+            $stainShortName = trim((string)$rowData[0][2]);
+            $stainAbbr = trim((string)$rowData[0][3]);
+            $stainDescription = trim((string)$rowData[0][4]);
             //Original 5
-            $synonym = trim($rowData[0][6]);
+            $synonym = trim((string)$rowData[0][6]);
             //LIS Name 7
-            $type = trim($rowData[0][8]);
-            $order = trim($rowData[0][9]);
+            $type = trim((string)$rowData[0][8]);
+            $order = trim((string)$rowData[0][9]);
 
 //            echo "stainId=".$stainId."<br>";
 //            echo "stainName=".$stainName."<br>";
@@ -795,13 +795,13 @@ class ScanAdminController extends AdminController
             //echo "<br>";
 
             //ResidencySpecialty	FellowshipSubspecialty	BoardCertificationAvailable
-            //$oldStainName = trim($rowData[0][0]);
-            $stainName = trim($rowData[0][1]);
-            $stainShortName = trim($rowData[0][2]);
-            $stainAbbr = trim($rowData[0][3]);
+            //$oldStainName = trim((string)$rowData[0][0]);
+            $stainName = trim((string)$rowData[0][1]);
+            $stainShortName = trim((string)$rowData[0][2]);
+            $stainAbbr = trim((string)$rowData[0][3]);
             //$stainLISName = $rowData[0][4];
             //$stainLISAbbr = $rowData[0][5];
-            $synonyms = trim($rowData[0][6]);
+            $synonyms = trim((string)$rowData[0][6]);
 
 
             //echo "stainName=".$stainName."<br>";
@@ -833,7 +833,7 @@ class ScanAdminController extends AdminController
             //synonyms
             $synonymsArr = explode(",", $synonyms);
             foreach( $synonymsArr as $synonym ) {
-                $synonym = trim($synonym);
+                $synonym = trim((string)$synonym);
 
                 if( !$synonym || $synonym == "" ) {
                     continue;
@@ -989,13 +989,13 @@ class ScanAdminController extends AdminController
             }
 
             //Filled
-            if( strpos($statusStr,'Filled') !== false ) {
+            if( strpos((string)$statusStr,'Filled') !== false ) {
                 $status->setName($statusStr);
                 $status->setAction($statusStr);
             }
 
             //On Hold
-            if( strpos($statusStr,'On Hold') !== false ) {
+            if( strpos((string)$statusStr,'On Hold') !== false ) {
                 $status->setName($statusStr);
                 $status->setAction($statusStr);
             }

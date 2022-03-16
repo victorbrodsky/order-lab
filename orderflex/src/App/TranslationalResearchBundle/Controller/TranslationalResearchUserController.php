@@ -127,16 +127,16 @@ class TranslationalResearchUserController extends UserController
 //            $user->addRole("ROLE_TRANSRES_REQUESTER_MISI");
 //        }
 
-        if( strpos($otherUserParam, 'hematopathology') !== false ) {
+        if( strpos((string)$otherUserParam, 'hematopathology') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
         }
-        if( strpos($otherUserParam, 'ap-cp') !== false ) {
+        if( strpos((string)$otherUserParam, 'ap-cp') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
         }
-        if( strpos($otherUserParam, 'covid19') !== false ) {
+        if( strpos((string)$otherUserParam, 'covid19') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_COVID19");
         }
-        if( strpos($otherUserParam, 'misi') !== false ) {
+        if( strpos((string)$otherUserParam, 'misi') !== false ) {
             $user->addRole("ROLE_TRANSRES_REQUESTER_MISI");
         }
 

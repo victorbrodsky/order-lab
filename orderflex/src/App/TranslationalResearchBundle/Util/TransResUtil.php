@@ -95,7 +95,7 @@ class TransResUtil
             //echo "transitionName=".$transitionName."<br>";
 
             if( $review->getStateStr() === "committee_review" ) {
-                if( strpos($transitionName, "missinginfo") !== false ) {
+                if( strpos((string)$transitionName, "missinginfo") !== false ) {
                     continue;
                 }
 
@@ -188,7 +188,7 @@ class TransResUtil
                 }
 
                 //don't show confirmation modal for missinginfo, because missinginfo has JS alert for empty comment
-                //if( strpos($transitionName, "missinginfo") !== false ) {
+                //if( strpos((string)$transitionName, "missinginfo") !== false ) {
                     //$generalDataConfirmation = "";
                 //}
 
@@ -226,7 +226,7 @@ class TransResUtil
             //echo "transitionName=".$transitionName."<br>";
 
             //quick fix: only for missinginfo state
-            if( strpos($transitionName, "missinginfo") !== false ) {
+            if( strpos((string)$transitionName, "missinginfo") !== false ) {
                 return;
             }
 
@@ -238,7 +238,7 @@ class TransResUtil
                 //only if transitionName=irb_review_resubmit == irb class
                 $statePrefixArr= explode("_", $transitionName); //irb
                 $statePrefix = $statePrefixArr[0];
-                if( strpos($review->getStateStr(), $statePrefix) === false ) {
+                if( strpos((string)$review->getStateStr(), $statePrefix) === false ) {
                     continue;
                 }
 
@@ -392,7 +392,7 @@ class TransResUtil
 //        }
 
         $state = $project->getState();
-        if( strpos($state, '_rejected') !== false || $state == 'draft' ) { //|| strpos($state, "_missinginfo") !== false
+        if( strpos((string)$state, '_rejected') !== false || $state == 'draft' ) { //|| strpos((string)$state, "_missinginfo") !== false
             if( $this->isProjectRequester($project,$checkProjectSpecialty) === true ) {
                 return true;
             }
@@ -1101,7 +1101,7 @@ class TransResUtil
         if(
             $projectState == 'start' || $projectState == 'draft' ||
             $projectState == 'closed' || $projectState == 'canceled' ||
-            strpos($projectState, '_rejected') !== false
+            strpos((string)$projectState, '_rejected') !== false
         ) {
             //don't send email
             //exit('exit: getState='.$projectState);
@@ -1638,7 +1638,7 @@ class TransResUtil
         $approved = "approved";
         $reset = false;
 
-        if( $state == "irb_review" || $state == "draft" ) { //strpos($state, "irb_") !== false
+        if( $state == "irb_review" || $state == "draft" ) { //strpos((string)$state, "irb_") !== false
             //set before stages
             //set after stages
             $this->setProjectDecision($project->getIrbReviews(),$pending);
@@ -1888,7 +1888,7 @@ class TransResUtil
         //if not the actual reviewer show name "(as Mister John)"
         //if( $transitionName != "committee_finalreview_approved" ) {
         //TODO: to diffirentiate, add if actual user can not use this $transitionName
-        if( strpos($transitionName, "finalreview_approved") === false ) {
+        if( strpos((string)$transitionName, "finalreview_approved") === false ) {
             $user = $this->secTokenStorage->getToken()->getUser();
             $showReviewer = false;
             if( $review ) {
@@ -1902,7 +1902,7 @@ class TransResUtil
                 }
             }
             if( $showReviewer ) {
-                if (strpos($returnLabel, "(as ") === false) {
+                if (strpos((string)$returnLabel, "(as ") === false) {
                     $userInfo = $this->getReviewerInfo($review);
                     $returnLabel = $returnLabel . $userInfo;
                 }
@@ -2073,28 +2073,28 @@ class TransResUtil
 
     public function getReviewClassNameByState($state, $asClassName=true) {
         //echo "state=".$state."<br>";
-        if( strpos($state, "irb_") !== false ) {
+        if( strpos((string)$state, "irb_") !== false ) {
             if( $asClassName ) {
                 return "IrbReview";
             } else {
                 return "irb_review";
             }
         }
-        if( strpos($state, "admin_") !== false ) {
+        if( strpos((string)$state, "admin_") !== false ) {
             if( $asClassName ) {
                 return "AdminReview";
             } else {
                 return "admin_review";
             }
         }
-        if( strpos($state, "committee_") !== false ) {
+        if( strpos((string)$state, "committee_") !== false ) {
             if( $asClassName ) {
                 return "CommitteeReview";
             } else {
                 return "committee_review";
             }
         }
-        if( strpos($state, "final_") !== false ) {
+        if( strpos((string)$state, "final_") !== false ) {
             if( $asClassName ) {
                 return "FinalReview";
             } else {
@@ -2162,19 +2162,19 @@ class TransResUtil
         //irb_review_rejected => IRB Review Rejected
         //irb_review_missinginfo => IRB Review Missinginfo
         //irb_review_resubmit => IRB Review Resubmit
-        if( strpos($transitionName, "_approved") !== false ) {
-            if( strpos($transitionName, "finalreview_approved") !== false ) {
+        if( strpos((string)$transitionName, "_approved") !== false ) {
+            if( strpos((string)$transitionName, "finalreview_approved") !== false ) {
                 return "btn btn-warning transres-review-submit"; //btn-primary
             }
             return "btn btn-success transres-review-submit";
         }
-        if( strpos($transitionName, "_missinginfo") !== false ) {
+        if( strpos((string)$transitionName, "_missinginfo") !== false ) {
             return "btn btn-warning transres-review-submit transres-missinginfo";
         }
-        if( strpos($transitionName, "_rejected") !== false ) {
+        if( strpos((string)$transitionName, "_rejected") !== false ) {
             return "btn btn-danger transres-review-submit";
         }
-        if( strpos($transitionName, "_resubmit") !== false ) {
+        if( strpos((string)$transitionName, "_resubmit") !== false ) {
             return "btn btn-success transres-review-submit";
         }
 
@@ -2188,16 +2188,16 @@ class TransResUtil
 //        //irb_review_rejected => IRB Review Rejected
 //        //irb_review_missinginfo => IRB Review Missinginfo
 //        //irb_review_resubmit => IRB Review Resubmit
-//        if( strpos($transitionName, "_approved") !== false ) {
+//        if( strpos((string)$transitionName, "_approved") !== false ) {
 //            return "approved";
 //        }
-//        if( strpos($transitionName, "_missinginfo") !== false ) {
+//        if( strpos((string)$transitionName, "_missinginfo") !== false ) {
 //            return "missinginfo";
 //        }
-//        if( strpos($transitionName, "_rejected") !== false ) {
+//        if( strpos((string)$transitionName, "_rejected") !== false ) {
 //            return "rejected";
 //        }
-//        if( strpos($transitionName, "_resubmit") !== false ) {
+//        if( strpos((string)$transitionName, "_resubmit") !== false ) {
 //            return null;
 //        }
 //
@@ -2464,7 +2464,7 @@ class TransResUtil
 //        }
 //
 //        //check if submitter and project state has _missinginfo
-////        if( strpos($stateStr, "_missinginfo") !== false ) {
+////        if( strpos((string)$stateStr, "_missinginfo") !== false ) {
 ////            if( $this->isProjectRequester($project) ) {
 ////                return true;
 ////            }
@@ -2555,7 +2555,7 @@ class TransResUtil
             return false;
         }
 
-        if( strpos($stateStr, "_missinginfo") !== false ) {
+        if( strpos((string)$stateStr, "_missinginfo") !== false ) {
             if ($this->isAdminReviewer($project)) {
                 return true;
             }
@@ -2669,7 +2669,7 @@ class TransResUtil
         $prefix = "unknown";
         $state = $project->getState(); //"irb_missinginfo" or "admin_missinginfo"
         //echo "state=$state <br>";
-        if( strpos($state,"_") !== false ) {
+        if( strpos((string)$state,"_") !== false ) {
             $stateArr = explode("_",$state);
             //echo "stateArr=".count($stateArr)."<br>";
             if( count($stateArr) == 2 ) {
@@ -2716,7 +2716,7 @@ class TransResUtil
         //only if transitionName=irb_review_resubmit == irb class
         $statePrefixArr= explode("_", $projectState); //irb,review
         $statePrefix = $statePrefixArr[0]; //irb
-        if( strpos($review->getStateStr(), $statePrefix) !== false ) {
+        if( strpos((string)$review->getStateStr(), $statePrefix) !== false ) {
             return true;
         }
 
@@ -2808,7 +2808,7 @@ class TransResUtil
             $transitionName = $transition->getName();
             echo "transitionName=".$transitionName."<br>"; //"irb_review_no" or "to_admin_review"
 
-            if( strpos($transitionName, '_rejected') !== false ) {
+            if( strpos((string)$transitionName, '_rejected') !== false ) {
                 echo "to: No<br>";
                 $transitionNameNo = $transitionName;
                 $tos = $transition->getTos();
@@ -2818,7 +2818,7 @@ class TransResUtil
                 $toNo = $tos[0];
             }
 
-            if (strpos($transitionName, '_approved') !== false ) {
+            if (strpos((string)$transitionName, '_approved') !== false ) {
                 echo "to: Yes<br>";
                 $transitionNameYes = $transitionName;
                 $tos = $transition->getTos();
@@ -2828,7 +2828,7 @@ class TransResUtil
                 $toYes = $tos[0];
             }
 
-            if (strpos($transitionName, '_missinginfo') !== false ) {
+            if (strpos((string)$transitionName, '_missinginfo') !== false ) {
                 echo "to: missinginfo<br>";
                 $transitionNameMissinginfo = $transitionName;
                 $tos = $transition->getTos();
@@ -4331,7 +4331,7 @@ class TransResUtil
                 //$text = str_replace("[[PROJECT UPDATER]]", $projectUpdater."", $text);
             }
 
-            if( strpos($text, '[[PROJECT UPDATE DATE]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT UPDATE DATE]]') !== false ) {
                 $projectUpdateDate = $project->getUpdateDate();
                 if( $projectUpdateDate ) {
                     $user = $this->secTokenStorage->getToken()->getUser();
@@ -4342,12 +4342,12 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[PROJECT TITLE SHORT]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT TITLE SHORT]]') !== false ) {
                 $title = $this->tokenTruncate($project->getTitle(), 15);
                 $text = str_replace("[[PROJECT TITLE SHORT]]", $title, $text);
             }
 
-            if( strpos($text, '[[PROJECT PIS]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT PIS]]') !== false ) {
                 $pisArr = array();
                 $pis = $project->getPrincipalInvestigators();
                 foreach($pis as $pi) {
@@ -4364,12 +4364,12 @@ class TransResUtil
                 $text = str_replace("[[PROJECT SUBMISSION DATE]]", $createDateStr, $text);
             }
 
-            if( strpos($text, '[[PROJECT STATUS]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT STATUS]]') !== false ) {
                 $state = $this->getStateLabelByProject($project);
                 $text = str_replace("[[PROJECT STATUS]]", $state, $text);
             }
 
-            if( strpos($text, '[[PROJECT STATUS COMMENTS]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT STATUS COMMENTS]]') !== false ) {
                 //$project,$newline="<br>",$state=null,$user=null
                 $reviewComments = $this->getReviewComments($project,"<hr>");
                 if( $reviewComments ) {
@@ -4380,7 +4380,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT STATUS COMMENTS]]", $reviewComments, $text);
             }
 
-            if( strpos($text, '[[PROJECT SHOW URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT SHOW URL]]') !== false ) {
                 $projectShowUrl = $this->getProjectShowUrl($project);
                 if ($projectShowUrl) {
                     //echo "Project URL=".$projectShowUrl."\n";
@@ -4388,14 +4388,14 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[PROJECT EDIT URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT EDIT URL]]') !== false ) {
                 $projectEditUrl = $this->getProjectEditUrl($project);
                 if ($projectEditUrl) {
                     $text = str_replace("[[PROJECT EDIT URL]]", $projectEditUrl, $text);
                 }
             }
 
-            if( strpos($text, '[[PROJECT PATHOLOGIST LIST]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT PATHOLOGIST LIST]]') !== false ) {
                 $pisArr = array();
                 $pis = $project->getPathologists();
                 foreach($pis as $pi) {
@@ -4412,7 +4412,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT PATHOLOGIST LIST]]", $pathologists, $text);
             }
 
-            if( strpos($text, '[[PROJECT BILLING CONTACT LIST]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT BILLING CONTACT LIST]]') !== false ) {
                 $billingContact = $project->getBillingContact();
 
                 if( !$billingContact ) {
@@ -4422,7 +4422,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT BILLING CONTACT LIST]]", $billingContact."", $text);
             }
 
-            if( strpos($text, '[[PROJECT REQUESTS URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT REQUESTS URL]]') !== false ) {
                 $linkRequestsForThisProject = $this->container->get('router')->generate(
                     'translationalresearch_request_index',
                     array(
@@ -4435,7 +4435,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT REQUESTS URL]]", $linkRequestsForThisProject, $text);
             }
 
-            if( strpos($text, '[[PROJECT NON-CANCELED INVOICES URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT NON-CANCELED INVOICES URL]]') !== false ) {
 //                $linkMyInvoices = $this->container->get('router')->generate(
 //                    'translationalresearch_invoice_index_type',
 //                    array(
@@ -4462,7 +4462,7 @@ class TransResUtil
             }
 
             //Budget
-            if( strpos($text, '[[PROJECT PRICE LIST]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT PRICE LIST]]') !== false ) {
                 $priceList = $project->getPriceList();
                 if( $priceList ) {
                     $priceListStr = "'".$priceList->getName()."'";
@@ -4473,7 +4473,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT PRICE LIST]]", $priceListStr, $text);
             }
 
-            if( strpos($text, '[[PROJECT APPROVED BUDGET]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT APPROVED BUDGET]]') !== false ) {
                 $approvedBudget = $project->getApprovedProjectBudget();
                 if( !$approvedBudget ) {
                     $approvedBudget = 0;
@@ -4482,7 +4482,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT APPROVED BUDGET]]", $approvedBudgetStr, $text);
             }
 
-            if( strpos($text, '[[PROJECT REMAINING BUDGET]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT REMAINING BUDGET]]') !== false ) {
                 $remainingBudget = $project->getRemainingBudget();
                 if( !$remainingBudget ) {
                     $remainingBudget = 0;
@@ -4492,7 +4492,7 @@ class TransResUtil
             }
 
             //[[PROJECT OVER BUDGET]] the same as negative project remaining budget
-            if( strpos($text, '[[PROJECT OVER BUDGET]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT OVER BUDGET]]') !== false ) {
                 $remainingBudget = $project->getRemainingBudget();
                 if( $remainingBudget < 0 ) {
                     $remainingBudgetStr = $this->dollarSignValue($remainingBudget);
@@ -4502,7 +4502,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT OVER BUDGET]]", $remainingBudgetStr, $text);
             }
 
-            if( strpos($text, '[[PROJECT SUBSIDY]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT SUBSIDY]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true);
                 $subsidy = $invoicesInfos['subsidy'];
                 if( !$subsidy ) {
@@ -4512,7 +4512,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT SUBSIDY]]", $subsidy, $text);
             }
 
-            if( strpos($text, '[[PROJECT VALUE]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT VALUE]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true);
                 $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
                 if( !$grandTotal ) {
@@ -4522,13 +4522,13 @@ class TransResUtil
                 $text = str_replace("[[PROJECT VALUE]]", $grandTotal, $text);
             }
 
-            if( strpos($text, '[[PROJECT FUNDED]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT FUNDED]]') !== false ) {
                 $isFunded = $project->isFunded(); //"Funded" or "Non-funded"
                 $isFunded = strtolower($isFunded);
                 $text = str_replace("[[PROJECT FUNDED]]", $isFunded, $text);
             }
 
-            if( strpos($text, '[[PROJECT NUMBER INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT NUMBER INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.count
                 $invoiceCount = $invoicesInfos['count'];
                 if( !$invoiceCount ) {
@@ -4537,7 +4537,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT NUMBER INVOICES]]", $invoiceCount, $text);
             }
 
-            if( strpos($text, '[[PROJECT NUMBER PAID INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT NUMBER PAID INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidCount
                 $invoiceCount = $invoicesInfos['paidCount'];
                 if( !$invoiceCount ) {
@@ -4546,7 +4546,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT NUMBER PAID INVOICES]]", $invoiceCount, $text);
             }
 
-            if( strpos($text, '[[PROJECT AMOUNT PAID INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT AMOUNT PAID INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidAmount
                 $paidAmount = $invoicesInfos['paidAmount'];
                 if( !$paidAmount ) {
@@ -4556,7 +4556,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT AMOUNT PAID INVOICES]]", $paidAmount, $text);
             }
 
-            if( strpos($text, '[[PROJECT NUMBER OUTSTANDING INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT NUMBER OUTSTANDING INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.outstandingCount
                 $invoiceCount = $invoicesInfos['outstandingCount'];
                 if( !$invoiceCount ) {
@@ -4565,7 +4565,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT NUMBER OUTSTANDING INVOICES]]", $invoiceCount, $text);
             }
 
-            if( strpos($text, '[[PROJECT AMOUNT OUTSTANDING INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT AMOUNT OUTSTANDING INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.paidAmount
                 $outstandingAmount = $invoicesInfos['outstandingAmount'];
                 if( !$outstandingAmount ) {
@@ -4575,7 +4575,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT AMOUNT OUTSTANDING INVOICES]]", $outstandingAmount, $text);
             }
 
-            if( strpos($text, '[[PROJECT VALUE WITHOUT INVOICES]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT VALUE WITHOUT INVOICES]]') !== false ) {
                 $invoicesInfos = $project->getInvoicesInfosByProject(true); //invoicesInfos.grandTotalWithoutInvoices
                 $grandTotalWithoutInvoices = $invoicesInfos['grandTotalWithoutInvoices'];
                 if( !$grandTotalWithoutInvoices ) {
@@ -4585,7 +4585,7 @@ class TransResUtil
                 $text = str_replace("[[PROJECT VALUE WITHOUT INVOICES]]", $grandTotalWithoutInvoices, $text);
             }
 
-            if( strpos($text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
                 $expectedExpirationDate = $project->getExpectedExpirationDate();
                 if( $expectedExpirationDate ) {
                     //$user = $this->secTokenStorage->getToken()->getUser();
@@ -4597,21 +4597,21 @@ class TransResUtil
             }
 
             //Reactivation
-            if( strpos($text, '[[PROJECT REACTIVATION REQUESTER]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT REACTIVATION REQUESTER]]') !== false ) {
                 $projectReactivationRequester = $project->getTargetStateRequester();
                 if( $projectReactivationRequester ) {
                     $text = str_replace("[[PROJECT REACTIVATION REQUESTER]]", $projectReactivationRequester->getUsernameShortest(), $text);
                 }
             }
 
-            if( strpos($text, '[[CURRENT DATETIME]]') !== false ) {
+            if( strpos((string)$text, '[[CURRENT DATETIME]]') !== false ) {
                 $date = new \DateTime();
                 $dateStr = $date->format('m/d/Y \a\t H:i');
                 $text = str_replace("[[CURRENT DATETIME]]", $dateStr, $text);
             }
 
             //[[PROJECT CLOSURE REASON]]
-            if( strpos($text, '[[PROJECT CLOSURE REASON]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT CLOSURE REASON]]') !== false ) {
                 $closureReason = $project->getClosureReason();
                 if( $closureReason ) {
                     $closureReason = str_replace("\n\n","<br>",$closureReason);
@@ -4620,7 +4620,7 @@ class TransResUtil
             }
 
             //[[LATEST PROJECT REACTIVATION REASON]] - latest project reactivation reason (replace inside the sender function),
-            if( strpos($text, '[[LATEST PROJECT REACTIVATION REASON]]') !== false ) {
+            if( strpos((string)$text, '[[LATEST PROJECT REACTIVATION REASON]]') !== false ) {
                 $reactivationReason = $project->getReactivationReason();
                 if( $reactivationReason ) {
                     $reactivationReason = str_replace("\n\n","<br>",$reactivationReason);
@@ -4629,7 +4629,7 @@ class TransResUtil
             }
 
             //[[PROJECT TARGET REACTIVATION STATUS]] - project reactivation target status (replace inside the sender function)
-            if( strpos($text, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT TARGET REACTIVATION STATUS]]') !== false ) {
                 $reactivationTargetState = $project->getTargetState();
                 if( $reactivationTargetState ) {
                     $reactivationTargetState = $this->getStateSimpleLabelByName($reactivationTargetState);
@@ -4638,7 +4638,7 @@ class TransResUtil
             }
 
             //[[PREVIOS PROJECT REACTIVATION REASON]] - previous project reactivation reason(s)
-            if( strpos($text, '[[PREVIOS PROJECT REACTIVATION REASON]]') !== false ) {
+            if( strpos((string)$text, '[[PREVIOS PROJECT REACTIVATION REASON]]') !== false ) {
                 $reactivationReason = $project->getReactivationReason();
                 if( $reactivationReason ) {
                     $reactivationReason = str_replace("\n\n","<br>",$reactivationReason);
@@ -4647,7 +4647,7 @@ class TransResUtil
             }
 
             //[[PROJECT REACTIVATION APPROVE URL]]
-            if( strpos($text, '[[PROJECT REACTIVATION APPROVE URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT REACTIVATION APPROVE URL]]') !== false ) {
                 $reactivationLink = $this->container->get('router')->generate(
                     'translationalresearch_project_reactivation_approve',
                     array(
@@ -4661,7 +4661,7 @@ class TransResUtil
             }
 
             //[[PROJECT REACTIVATION DENY URL]]
-            if( strpos($text, '[[PROJECT REACTIVATION DENY URL]]') !== false ) {
+            if( strpos((string)$text, '[[PROJECT REACTIVATION DENY URL]]') !== false ) {
                 $reactivationLink = $this->container->get('router')->generate(
                     'translationalresearch_project_reactivation_deny',
                     array(
@@ -4690,28 +4690,28 @@ class TransResUtil
                 $text = str_replace("[[REQUEST SUBMITTER]]", $submitter->getUsernameShortest(), $text);
             }
 
-            if( strpos($text, '[[REQUEST UPDATE DATE]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST UPDATE DATE]]') !== false ) {
                 $updateDate = $transresRequest->getUpdateDate();
                 if ($updateDate) {
                     $text = str_replace("[[REQUEST UPDATE DATE]]", $updateDate->format("m/d/Y"), $text);
                 }
             }
 
-            if( strpos($text, '[[REQUEST PROGRESS STATUS]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST PROGRESS STATUS]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $state = $transresRequest->getProgressState();
                 $state = $transresRequestUtil->getProgressStateLabelByName($state);
                 $text = str_replace("[[REQUEST PROGRESS STATUS]]", $state, $text);
             }
 
-            if( strpos($text, '[[REQUEST BILLING STATUS]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST BILLING STATUS]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $state = $transresRequest->getBillingState();
                 $state = $transresRequestUtil->getBillingStateLabelByName($state);
                 $text = str_replace("[[REQUEST BILLING STATUS]]", $state, $text);
             }
 
-            if( strpos($text, '[[REQUEST SHOW URL]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST SHOW URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 if ($requestShowUrl) {
@@ -4719,7 +4719,7 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[REQUEST CHANGE PROGRESS STATUS URL]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST CHANGE PROGRESS STATUS URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestChangeProgressStatusUrl = $transresRequestUtil->getRequestChangeProgressStateUrl($transresRequest);
                 if ($requestChangeProgressStatusUrl) {
@@ -4727,7 +4727,7 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[REQUEST NEW INVOICE URL]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST NEW INVOICE URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $requestNewInvoiceUrl = $transresRequestUtil->getRequestNewInvoiceUrl($transresRequest);
                 if ($requestNewInvoiceUrl) {
@@ -4735,7 +4735,7 @@ class TransResUtil
                 }
             }
 
-            if( strpos($text, '[[REQUEST VALUE]]') !== false ) {
+            if( strpos((string)$text, '[[REQUEST VALUE]]') !== false ) {
                 $invoicesInfos = $transresRequest->getInvoicesInfosByRequest(true);
                 $grandTotal = $invoicesInfos['grandTotal']; //grand total including subsidy
                 if( !$grandTotal ) {
@@ -4760,7 +4760,7 @@ class TransResUtil
             //[[INVOICE AMOUNT DUE]]
             $text = str_replace("[[INVOICE AMOUNT DUE]]", $invoice->getDue(), $text);
 
-            if( strpos($text, '[[INVOICE SHOW URL]]') !== false ) {
+            if( strpos((string)$text, '[[INVOICE SHOW URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
                 $invoiceShowUrl = $transresRequestUtil->getInvoiceShowUrl($invoice);
                 if ($invoiceShowUrl) {
@@ -6278,28 +6278,28 @@ class TransResUtil
 
         //Case1: irb_review -> admin_review
         //Project request [xxx] "[project title]" has successfully passed the "IRB review" stage and is now awaiting "Admin review".
-        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_review") !== false ) {
+        if( strpos((string)$fromStateStr, "_review") !== false && strpos((string)$toStateStr, "_review") !== false ) {
             $msg = "Project request $id '".$title."' has successfully passed the '".$fromLabel."' stage and is now awaiting '".$toLabel."'.";
         }
 
         //Case2: final_review -> final_approved
         //Project request [xxx] "[project title]" has successfully passed all stages of review and received final approval.
-        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_approved") !== false ) {
+        if( strpos((string)$fromStateStr, "_review") !== false && strpos((string)$toStateStr, "_approved") !== false ) {
             $msg = "Project request $id '".$title."' has successfully passed all stages of review and has received final approval.";
         }
 
         //Case3: irb_review -> irb_rejected
-        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_rejected") !== false ) {
+        if( strpos((string)$fromStateStr, "_review") !== false && strpos((string)$toStateStr, "_rejected") !== false ) {
             $msg = "Project request $id '".$title."' has been rejected as a result of '".$fromLabel."'.";
         }
 
         //Case4: irb_review -> irb_missinginfo
-        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_missinginfo") !== false ) {
+        if( strpos((string)$fromStateStr, "_review") !== false && strpos((string)$toStateStr, "_missinginfo") !== false ) {
             $msg = "Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
         }
 
         //Case5: irb_missinginfo -> irb_review
-        if( strpos($fromStateStr, "_missinginfo") !== false && strpos($toStateStr, "_review") !== false ) {
+        if( strpos((string)$fromStateStr, "_missinginfo") !== false && strpos((string)$toStateStr, "_review") !== false ) {
             $msg = "Project request $id '".$title."' has been re-submitted for '".$toLabel."' stage.";
         }
 
@@ -6927,7 +6927,8 @@ class TransResUtil
         if( !$string ) {
             return "";
         }
-        $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        //$parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/([\s\n\r]+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE);
         $parts_count = count($parts);
 
         $postfix = null;
@@ -6942,7 +6943,7 @@ class TransResUtil
         }
 
         $res = implode(array_slice($parts, 0, $last_part));
-        $res = trim($res) . $postfix;
+        $res = trim((string)$res) . $postfix;
         //$res = $res . $postfix;
         //echo "res=[".$res."]<br>";
 
@@ -7443,8 +7444,8 @@ class TransResUtil
 //            }
 //
 //            $entity->setName( $role );
-//            $entity->setAlias( trim($alias) );
-//            $entity->setDescription( trim($description) );
+//            $entity->setAlias( trim((string)$alias) );
+//            $entity->setDescription( trim((string)$description) );
 //            $entity->setLevel($level);
 //
 //            //set sitename
@@ -7463,8 +7464,8 @@ class TransResUtil
                 $description = str_replace('[[ROLENAME]]',$rolename,$description);
             }
 
-            $alias = trim($alias);
-            $description = trim($description);
+            $alias = trim((string)$alias);
+            $description = trim((string)$description);
 
             //$roleName, $sitenameAbbreviation=NULL, $alias=NULL, $description=NULL, $level=NULL
             $entity = $userSecUtil->createNewRole(
@@ -7535,7 +7536,7 @@ class TransResUtil
         foreach($trpRoles as $trpRole) {
             //echo "<br><br>$trpRole <br>";
 
-            if( strpos($trpRole, 'QUEUE') !== false ) {
+            if( strpos((string)$trpRole, 'QUEUE') !== false ) {
                 continue; //skip: already QUEUE role
             }
 
@@ -7551,7 +7552,7 @@ class TransResUtil
                 $workQueueRoleName = $trpRole . "_" . $workQueueAbbreviation;
 
                 //echo "workQueueRoleName=[$workQueueRoleName] <br>";
-                $workQueueRoleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim($workQueueRoleName));
+                $workQueueRoleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim((string)$workQueueRoleName));
                 if( $workQueueRoleEntity ) {
                     continue; //skip: already exists
                 }

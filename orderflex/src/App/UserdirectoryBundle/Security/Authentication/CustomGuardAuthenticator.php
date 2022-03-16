@@ -109,7 +109,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 //        }
 
         //No need auth on login page with GET
-        if( strpos($route, 'login') !== false ) {
+        if( strpos((string)$route, 'login') !== false ) {
             if( $request->isMethod('POST') ) {
                 //exit('true');
                 return true;
@@ -175,41 +175,41 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         //echo "route=$route <br>";
         //exit('111');
 
-        if( strpos($route,'translationalresearch') !== false ) {
+        if( strpos((string)$route,'translationalresearch') !== false ) {
             return "translationalresearch";
         }
-        if( strpos($route,'vacreq') !== false ) {
+        if( strpos((string)$route,'vacreq') !== false ) {
             return "vacreq";
         }
-        if( strpos($route,'calllog') !== false ) {
+        if( strpos((string)$route,'calllog') !== false ) {
             return "calllog";
         }
-        if( strpos($route,'crn') !== false ) {
+        if( strpos((string)$route,'crn') !== false ) {
             return "crn";
         }
 
-        if( strpos($route,'fellapp') !== false ) {
+        if( strpos((string)$route,'fellapp') !== false ) {
             return "fellapp";
         }
-        if( strpos($route,'resapp') !== false ) {
+        if( strpos((string)$route,'resapp') !== false ) {
             return "resapp";
         }
 
-        if( strpos($route,'employees') !== false ) {
+        if( strpos((string)$route,'employees') !== false ) {
             return "employees";
         }
-        if( strpos($route,'deidentifier') !== false ) {
+        if( strpos((string)$route,'deidentifier') !== false ) {
             return "deidentifier";
         }
-        if( strpos($route,'scan') !== false ) {
+        if( strpos((string)$route,'scan') !== false ) {
             return "scan";
         }
-        if( strpos($route,'dashboard') !== false ) {
+        if( strpos((string)$route,'dashboard') !== false ) {
             return "dashboard";
         }
 
         //get first element before '_'
-        if( strpos($route,'_') !== false ) {
+        if( strpos((string)$route,'_') !== false ) {
             $routeArr = explode('_',$route);
             if( count($routeArr) > 0 ) {
                 return $routeArr[0];

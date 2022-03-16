@@ -289,8 +289,8 @@ class UserUtil {
 
             $entity = new UsernameType();
             $this->setDefaultList($entity,$count,$user,null);
-            $entity->setName( trim($value) );
-            $entity->setAbbreviation( trim($key) );
+            $entity->setName( trim((string)$value) );
+            $entity->setAbbreviation( trim((string)$key) );
 
             $em->persist($entity);
             $em->flush();
@@ -307,7 +307,7 @@ class UserUtil {
         $entity->setCreatedate( new \DateTime() );
         $entity->setType('default');
         if( $name ) {
-            $entity->setName( trim($name) );
+            $entity->setName( trim((string)$name) );
         }
         return $entity;
     }
@@ -494,9 +494,9 @@ class UserUtil {
         if( isset($postData['sort']) ) {
             //check for location sort
             if(
-                strpos($postData['sort'],'location.') !== false ||
-                //strpos($postData['sort'],'heads.') !== false
-                strpos($postData['sort'],'administrativeTitle') !== false
+                strpos((string)$postData['sort'],'location.') !== false ||
+                //strpos((string)$postData['sort'],'heads.') !== false
+                strpos((string)$postData['sort'],'administrativeTitle') !== false
             ) {
                 $sort = $postData['sort'];
             }

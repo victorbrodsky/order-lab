@@ -700,14 +700,14 @@ class AntibodyList extends ListAbstract
         //Antibody Name
         $name = $this->getName();
         if( $name ) {
-            //$name = trim($name);
+            //$name = trim((string)$name);
             $res = $res . " " . $name;
         }
 
         //Antibody Name
         $altName = $this->getAltname();
         if( $altName ) {
-            //$altName = trim($altName);
+            //$altName = trim((string)$altName);
             $res = $res . " (" . $altName . ")";
         }
 
