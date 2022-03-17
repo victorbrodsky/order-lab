@@ -1573,10 +1573,11 @@ class UserController extends OrderAbstractController
         $query = $em->createQuery($dql);
 
         //$pending = 0;
-        $pending = $query->getSingleScalarResult();
+        //$pending = $query->getSingleScalarResult();
+        //$pending = $query->getOneOrNullResult();
         //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
-        //$pendings = $query->getResult();
-        //$pending = count($pendings);
+        $pendings = $query->getResult();
+        $pending = count($pendings);
         //dump($pending);
         //exit('111');
         

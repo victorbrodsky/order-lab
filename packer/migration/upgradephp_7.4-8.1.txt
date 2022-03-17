@@ -1,0 +1,82 @@
+https://computingforgeeks.com/how-to-install-php-centos-rhel-linux/
+
+Install PHP 8.1 alongside other PHP versions on CentOS 7 | RHEL 7:
+### RHEL 7 ###
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo yum install yum-utils
+sudo subscription-manager repos --enable=rhel-7-server-optional-rpms
+sudo yum-config-manager --disable 'remi-php*'
+sudo yum-config-manager --enable remi-safe
+sudo yum repolist
+sudo yum install php81
+
+Use the command below to install additional PHP extensions:
+sudo yum install php81-php-xxx
+sudo yum install php81-php-{cli,fpm,mysqlnd,zip,devel,gd,mbstring,curl,xml,pear,bcmath,json,opcache}
+
+Check:
+php81 --version
+php81 --modules
+
+
+https://blog.remirepo.net/post/2021/12/18/PHP-version-7.4.27-8.0.14-and-8.1.1
+yum-config-manager --enable remi-php81
+yum update php\*
+
+
+sudo yum-config-manager --disable 'remi-php*'
+sudo yum-config-manager --enable   remi-php81
+sudo yum repolist
+sudo yum update
+sudo yum install php81
+
+### sudo yum install php81-php-{cli,fpm,mysqlnd,zip,devel,gd,mbstring,curl,xml,pear,bcmath,json,opcache}
+sudo yum -y install php81-php-mcrypt php81-php-cli php81-php-gd php81-curl php81-php-ldap php81-php-zip 
+sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
+sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
+sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
+
+### When a single version is installed, command in default path (/usr/bin/php) can be installed:
+yum install php81-syspaths
+
+### Replacement of default PHP by version 7.4 installation (simplest):
+#yum-config-manager --enable remi-php81
+#yum update
+
+#Set new PHP path: 
+export PATH=/opt/remi/php81/root/bin:$PATH
+export PATH=/usr/bin/php:/etc/php.d:/etc/php.ini:/opt/remi/php81/root/usr/bin/php:/usr/share/man/man1/php.1.gz
+
+[root@xits-po-order-dev1 ~]# whereis php
+php: /usr/bin/php /etc/php.d /etc/php.ini /opt/remi/php81/root/usr/bin/php /opt/remi/php74/root/usr/bin/php /usr/share/man/man1/php.1.gz
+
+Live PATH:
+[oli2002@xits-po-order-prd1 ~]$ echo "$PATH"
+/opt/remi/php74/root/usr/bin:/opt/remi/php74/root/usr/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/oli2002/.local/bin:/home/oli2002/bin
+
+Test PATH:
+[root@xits-po-order-dev1 ~]# echo "$PATH"
+/opt/remi/php81/root/bin:/usr/bin/php:/etc/php.d:/etc/php.ini:/opt/remi/php81/root/usr/bin/php:/usr/share/man/man1/php.1.gz
+
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/oli2002/.local/bin:/home/oli2002/bin
+
+
+#Use https://github.com/owncloud/documentation/issues/3149
+#Enable PHP 8.1 system-wide:
+cp /opt/remi/php81/enable /etc/profile.d/rh-php81.sh
+source /opt/remi/php81/enable
+
+#Disable loading the old PHP 5.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/rh-php56-php.off
+mv /etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/10-rh-php56-php.off
+
+#update php.ini
+/etc/opt/remi/php74/php.ini
+systemctl restart httpd.service
+
+
+
+
+
+

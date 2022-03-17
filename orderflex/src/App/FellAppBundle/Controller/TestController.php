@@ -72,6 +72,11 @@ class TestController extends OrderAbstractController
 //        $fellowshipDbApplications = $fellappUtil->getFellAppByStatusAndYear(null,null,$currentYear);
 //        echo "fellowshipDbApplications count=".count($fellowshipDbApplications)."<br>";
 
+//        $testvar = null;
+//        echo "testvar=[$testvar]<br>";
+//        $testvar2 = trim((string)$testvar);
+//        echo "testvar2=[$testvar2]<br>";
+//        exit();
 
         //Testing google drive
         $userSecUtil = $this->container->get('user_security_utility');
