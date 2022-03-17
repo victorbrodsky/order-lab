@@ -36,6 +36,7 @@ sudo yum -y install php81-php-mcrypt php81-php-cli php81-php-gd php81-curl php81
 sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
 sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
 sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
+sudo yum -y install php81-php-common
 
 ### When a single version is installed, command in default path (/usr/bin/php) can be installed:
 yum install php81-syspaths
