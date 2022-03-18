@@ -924,3 +924,9 @@ cd /opt/order-lab/orderflex/
 git pull
 bash deploy.sh
 php vendor/bin/phpunit
+
+Live server:
+cd /srv/order-lab/orderflex/
+git pull origin master
+bash deploy.sh
+php vendor/bin/phpunit
