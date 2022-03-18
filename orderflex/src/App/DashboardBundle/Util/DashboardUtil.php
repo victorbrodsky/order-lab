@@ -1052,7 +1052,7 @@ class DashboardUtil
         $length = 0;
         $last_part = 0;
         for (; $last_part < $parts_count; ++$last_part) {
-            $length += strlen($parts[$last_part]);
+            $length += strlen((string)$parts[$last_part]);
             if ($length > $your_desired_width) {
                 $postfix = "...";
                 break;
@@ -1103,7 +1103,7 @@ class DashboardUtil
 
         // Normalize into a six character long hex string
         $hex = str_replace('#', '', $hex);
-        if (strlen($hex) == 3) {
+        if (strlen((string)$hex) == 3) {
             $hex = str_repeat(substr((string)$hex,0,1), 2).str_repeat(substr((string)$hex,1,1), 2).str_repeat(substr((string)$hex,2,1), 2);
         }
 

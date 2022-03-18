@@ -82,7 +82,7 @@ class PDFService
         $isOdd = true;
         $isComment = false;
 
-        for ($i = 0, $codeHigh = -1; $i < strlen($input) && $input[$i] != '>'; $i++) {
+        for ($i = 0, $codeHigh = -1; $i < strlen((string)$input) && $input[$i] != '>'; $i++) {
             $c = $input[$i];
 
             if ($isComment) {
@@ -138,7 +138,7 @@ class PDFService
         $isComment = false;
         $ords = array();
 
-        for ($i = 0, $state = 0; $i < strlen($input) && $input[$i] != '~'; $i++) {
+        for ($i = 0, $state = 0; $i < strlen((string)$input) && $input[$i] != '~'; $i++) {
             $c = $input[$i];
 
             if ($isComment) {
@@ -223,7 +223,7 @@ class PDFService
         if (empty($options["Filter"])) {
             $data = $stream;
         } else {
-            $length = !empty($options["Length"]) ? $options["Length"] : strlen($stream);
+            $length = !empty($options["Length"]) ? $options["Length"] : strlen((string)$stream);
             $_stream = substr((string)$stream, 0, $length);
 
             foreach ($options as $key => $value) {
@@ -298,7 +298,7 @@ class PDFService
 
             $hex = "";
             $plain = "";
-            for ($j = 0; $j < strlen($texts[$i]); $j++) {
+            for ($j = 0; $j < strlen((string)$texts[$i]); $j++) {
                 $c = $texts[$i][$j];
                 switch ($c) {
                     case "<":
@@ -340,7 +340,7 @@ class PDFService
                             $plain .= '\f';
                         } elseif ($c2 >= '0' && $c2 <= '9') {
                             $oct = preg_replace("#[^0-9]#", "", substr((string)$texts[$i], $j + 1, 3));
-                            $j += strlen($oct) - 1;
+                            $j += strlen((string)$oct) - 1;
                             $plain .= html_entity_decode("&#".octdec($oct).";");
                         }
                             $j++;
@@ -388,7 +388,7 @@ class PDFService
                 }
 
                 $data = $this->getDecodedStream($stream, $options);
-                if (strlen($data)) {
+                if (strlen((string)$data)) {
                     if (preg_match_all("#BT(.*)ET#ismU", $data, $textContainers)) {
                         $textContainers = @$textContainers[1];
                         $this->getDirtyTexts($texts, $textContainers);

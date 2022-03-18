@@ -70,7 +70,7 @@ class ReCaptcha
             $req .= $key . '=' . urlencode(stripslashes($value)) . '&';
         }
         // Cut the last '&'
-        $req=substr((string)$req, 0, strlen($req)-1);
+        $req=substr((string)$req, 0, strlen((string)$req)-1);
         return $req;
     }
     /**
@@ -100,7 +100,7 @@ class ReCaptcha
     {
         $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
-        if ($response == null || strlen($response) == 0) {
+        if ($response == null || strlen((string)$response) == 0) {
             //$recaptchaResponse = new ReCaptchaResponse();
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = 'missing-input';

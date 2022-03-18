@@ -1593,10 +1593,10 @@ class ReportGenerator {
             //throw new \InvalidArgumentException("$dirPath must be a directory");
             return false;
         }
-        //if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != '/') {
+        //if (substr((string)$dirPath, strlen((string)$dirPath) - 1, 1) != '/') {
         //    $dirPath .= '/';
         //}
-        if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
+        if (substr((string)$dirPath, strlen((string)$dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
             $dirPath .= DIRECTORY_SEPARATOR;
         }
         $files = glob($dirPath . '*', GLOB_MARK);

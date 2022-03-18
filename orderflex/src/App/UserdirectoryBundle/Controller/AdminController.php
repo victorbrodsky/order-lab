@@ -7814,14 +7814,14 @@ class AdminController extends OrderAbstractController
                 foreach ($nameArr as $thisName) {
                     //Countries => Country
                     if (substr((string)$thisName, -3) == "ies") {
-                        //$len = strlen($thisName);
+                        //$len = strlen((string)$thisName);
                         //$thisName = substr_replace("ies", "y", $len-3, $len);
                         $thisName = $this->str_lreplace("ies", "y", $thisName);
                     }
 
                     //Roles => Role
                     if (substr((string)$thisName, -2) == "es") {
-                        //$len = strlen($thisName);
+                        //$len = strlen((string)$thisName);
                         //$thisName = substr_replace("es", "e", $len-2, $len);
                         $thisName = $this->str_lreplace("es", "e", $thisName);
                     }
@@ -7884,7 +7884,7 @@ class AdminController extends OrderAbstractController
 
         if($pos !== false)
         {
-            $subject = substr_replace($subject, $replace, $pos, strlen($search));
+            $subject = substr_replace($subject, $replace, $pos, strlen((string)$search));
         }
 
         return $subject;

@@ -4674,8 +4674,8 @@ class CrnUtil
         if( $dob && ($where == false || $matchAnd == true) ) {
             //echo "dob=".$dob."<br>";
             $searchArr[] = "DOB: " . $dob;
-            //echo "doblen=".strlen($dob);
-            if( strlen($dob) == 10 ) {
+            //echo "doblen=".strlen((string)$dob);
+            if( strlen((string)$dob) == 10 ) {
                 $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
                 //return $d && $d->format($format) === $date;
                 //echo "dob=".$dob." => ".$dobDateTime."<br>";

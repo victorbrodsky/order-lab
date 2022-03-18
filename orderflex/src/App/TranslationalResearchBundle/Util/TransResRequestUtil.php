@@ -3899,7 +3899,7 @@ class TransResRequestUtil
         $sign = ($n < 0) ? '-' : '';
         $i = $n=number_format(abs($n),$r);
         //$j = (($j = $i.length) > 3) ? $j % 3 : 0;
-        $j = (($j = strlen($i)) > 3) ? $j % 3 : 0;
+        $j = (($j = strlen((string)$i)) > 3) ? $j % 3 : 0;
 
         return  $symbol.$sign .($j ? substr((string)$i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr((string)$i,$j)) ;
     }
@@ -4839,7 +4839,7 @@ class TransResRequestUtil
         //description
         $maxLen = 60;
         $descriptionStr = $invoiceItem->getDescription();
-        if( $descriptionStr && strlen($descriptionStr) > $maxLen ) {
+        if( $descriptionStr && strlen((string)$descriptionStr) > $maxLen ) {
             $descriptionStr = $transresUtil->tokenTruncate($descriptionStr,$maxLen)."...";
         }
         //$row1 = $row1 . "<td>" . $descriptionStr . "</td>";
@@ -4849,7 +4849,7 @@ class TransResRequestUtil
         $itemCode = $invoiceItem->getItemCodeWithPriceListAbbreviation(); //getItemCode();
 
         //limit item code length
-        if (strlen($itemCode) > 30) {
+        if (strlen((string)$itemCode) > 30) {
             $itemCode = substr((string)$itemCode, 0, 27) . '...';
         }
 
@@ -5556,7 +5556,7 @@ class TransResRequestUtil
             //If the fund number length is 8 => F column (Fund), if 10 => G column (WBS)
             $accountNumber = $invoice->getFundedAccountNumber();
             if( $accountNumber ) {
-                $accountNumberLength = strlen($accountNumber);
+                $accountNumberLength = strlen((string)$accountNumber);
                 if( $accountNumberLength == 8 ) {
                     $col = $colIndexArr['Fund'];
                     $cell = $sheet->getCellByColumnAndRow($col, $row);

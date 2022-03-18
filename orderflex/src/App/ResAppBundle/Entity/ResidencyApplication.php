@@ -1685,7 +1685,7 @@ class ResidencyApplication extends BaseUserAttributes {
         return implode(' ',$resArr);
     }
 //    function capitalizeIfNotAllCapital($s) {
-//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen((string)$s) ) {
 //            $s = ucfirst(strtolower($s));
 //        }
 //        return $s;

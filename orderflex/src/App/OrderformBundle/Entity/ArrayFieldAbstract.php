@@ -393,7 +393,7 @@ abstract class ArrayFieldAbstract {
 //        if( !$s ) {
 //            return $s;
 //        }
-//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen((string)$s) ) {
 //            $s = ucfirst(strtolower($s));
 //        }
 //        return ucwords($s);

@@ -2231,7 +2231,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        $subtring_start = strpos((string)$str, $starting_word);
 //        //Adding the strating index of the strating word to
 //        //its length would give its ending index
-//        $subtring_start += strlen($starting_word);
+//        $subtring_start += strlen((string)$starting_word);
 //        //Length of our required sub string
 //        $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
 //        // Return the substring from the index substring_start of length size

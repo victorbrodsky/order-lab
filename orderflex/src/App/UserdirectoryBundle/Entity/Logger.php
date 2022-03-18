@@ -372,7 +372,7 @@ class Logger
      */
     public function setUseragent($useragent)
     {
-        if( strlen($useragent) > 255 ) {
+        if( strlen((string)$useragent) > 255 ) {
             $useragent = substr((string)$useragent,0,255); //varchar type has 255 max chars
         }
         $this->useragent = $useragent;

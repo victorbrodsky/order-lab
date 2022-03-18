@@ -348,7 +348,7 @@ class GoogleSheetManagement {
             //$filesize = $file->getFileSize();
             $filesize = $file->getSize();
             if( !$filesize ) {
-                $filesize = mb_strlen($response) / 1024; //KBs,
+                $filesize = mb_strlen((string)$response) / 1024; //KBs,
             }
 
             //exit('file ok: filesize='.$filesize);

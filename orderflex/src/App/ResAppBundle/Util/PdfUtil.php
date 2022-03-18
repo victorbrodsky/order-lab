@@ -2407,7 +2407,7 @@ class PdfUtil {
             $thisMinField = NULL;
             foreach($endAnchorArr as $endAnchorStr) {
                 $field = $this->getPdfField($text,$startAnchor,$endAnchorStr,$length);
-                $fieldLen = strlen($field);
+                $fieldLen = strlen((string)$field);
                 if( $thisMinLength === NULL || $fieldLen <= $thisMinLength ) {
                     $thisMinLength = $fieldLen;
                     $thisMinField = $field;
@@ -2453,7 +2453,7 @@ class PdfUtil {
     }
     public function isValidFieldLength( $field, $minLength, $maxLength ) {
         $valid = true;
-        $len = strlen($field);
+        $len = strlen((string)$field);
         if( $minLength ) {
             if( $len >= $minLength ) {
                 $valid = true;
@@ -2510,8 +2510,8 @@ class PdfUtil {
             //echo "text=".$text."<br>";
             $subtring_start = strpos((string)$text, $startStr);
             //echo "1subtring_start=$subtring_start <br>";
-            //echo "strlen($startStr)=".strlen($startStr)."<br>";
-            $subtring_start = $subtring_start + strlen($startStr);
+            //echo "strlen((string)$startStr)=".strlen((string)$startStr)."<br>";
+            $subtring_start = $subtring_start + strlen((string)$startStr);
             //echo "2subtring_start=$subtring_start <br>";
             $field = substr((string)$text, $subtring_start, $length);
             $field = trim((string)$field);
@@ -2527,7 +2527,7 @@ class PdfUtil {
         $subtring_start = strpos((string)$str, $starting_word);
         //Adding the strating index of the strating word to
         //its length would give its ending index
-        $subtring_start += strlen($starting_word);
+        $subtring_start += strlen((string)$starting_word);
         //Length of our required sub string
         $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
         // Return the substring from the index substring_start of length size
@@ -2547,10 +2547,10 @@ class PdfUtil {
             //throw new \InvalidArgumentException("$dirPath must be a directory");
             return false;
         }
-        //if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != '/') {
+        //if (substr((string)$dirPath, strlen((string)$dirPath) - 1, 1) != '/') {
         //    $dirPath .= '/';
         //}
-        if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
+        if (substr((string)$dirPath, strlen((string)$dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
             $dirPath .= DIRECTORY_SEPARATOR;
         }
         $files = glob($dirPath . '*', GLOB_MARK);

@@ -1509,7 +1509,7 @@ Pathology and Laboratory Medicine",
         $apacheVersion = NULL;
 //        if(!function_exists('apache_get_version')){
 //            function apache_get_version(){
-//                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0){
+//                if(!isset($_SERVER['SERVER_SOFTWARE']) || strlen((string)$_SERVER['SERVER_SOFTWARE']) == 0){
 //                    return false;
 //                }
 //                return $_SERVER["SERVER_SOFTWARE"];
@@ -1524,7 +1524,7 @@ Pathology and Laboratory Medicine",
             }
         }
         if( !$apacheVersion ) {
-            if (!isset($_SERVER['SERVER_SOFTWARE']) || strlen($_SERVER['SERVER_SOFTWARE']) == 0) {
+            if (!isset($_SERVER['SERVER_SOFTWARE']) || strlen((string)$_SERVER['SERVER_SOFTWARE']) == 0) {
             } else {
                 $apacheVersion = $_SERVER["SERVER_SOFTWARE"];
             }

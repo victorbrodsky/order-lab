@@ -247,7 +247,7 @@ class LargeFileDownloader {
             ob_flush();
             flush();
             if ($retbytes) {
-                $cnt += strlen($buffer);
+                $cnt += strlen((string)$buffer);
             }
         }
         $status = fclose($handle);

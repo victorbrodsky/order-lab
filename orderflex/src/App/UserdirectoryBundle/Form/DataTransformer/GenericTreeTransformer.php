@@ -181,7 +181,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         
         //trancate length to 255 char
         $origName = null;
-        if( strlen($name) > 255 ) {
+        if( strlen((string)$name) > 255 ) {
             $origName = $name;
             $name = substr((string)$name,0,252).'...';         
         }

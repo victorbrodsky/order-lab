@@ -372,7 +372,7 @@ class GoogleSheetManagementModified {
 
             $filesize = $file->getFileSize();
             if( !$filesize ) {
-                $filesize = mb_strlen($response) / 1024; //KBs,
+                $filesize = mb_strlen((string)$response) / 1024; //KBs,
             }
 
             exit("filesize=$filesize".", path=".$path); //testing

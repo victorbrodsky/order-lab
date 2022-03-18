@@ -1402,7 +1402,7 @@ class User extends UserBase {
     }
 //    function capitalizeIfNotAllCapitalOrig($s) {
 //        //echo "1s=".$s."<br>";
-//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen((string)$s) ) {
 //            $s = ucfirst(strtolower($s));
 //        }
 //        //echo "2s=".$s."<br>";
@@ -1427,7 +1427,7 @@ class User extends UserBase {
         return $s;
     }
 //    function isAllCapital($s) {
-//        if( $this->count_capitals($s) == strlen($s) ) {
+//        if( $this->count_capitals($s) == strlen((string)$s) ) {
 //            return true;
 //        }
 //        return false;

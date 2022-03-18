@@ -74,7 +74,7 @@ class PDFParser
                 $a_data = self::getDataArray($obj, 'stream', 'endstream');
 
                 if (is_array($a_data) && isset($a_data[0])) {
-                    $a_chunks[$j]['data'] = trim(substr((string)$a_data[0], strlen('stream'), strlen($a_data[0]) - strlen('stream') - strlen('endstream')));
+                    $a_chunks[$j]['data'] = trim(substr((string)$a_data[0], strlen('stream'), strlen((string)$a_data[0]) - strlen('stream') - strlen('endstream')));
                 }
 
                 $j++;
@@ -334,7 +334,7 @@ class PDFParser
 
             if ($end !== false && $start !== false) {
                 // data is between start and end
-                $a_results[] = substr((string)$data, $start, $end - $start + strlen($end_word));
+                $a_results[] = substr((string)$data, $start, $end - $start + strlen((string)$end_word));
             }
         }
 

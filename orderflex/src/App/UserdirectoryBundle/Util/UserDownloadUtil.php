@@ -581,7 +581,7 @@ class UserDownloadUtil {
 
         //Director, Transfusion Medicine and the Cellular Therapy Service
         $maxlen = 45; //53
-        if( strlen($titleStr) > $maxlen ) {
+        if( strlen((string)$titleStr) > $maxlen ) {
             $titleStr = substr((string)$titleStr, 0, $maxlen);
             $titleStr = $titleStr . "...";
         }

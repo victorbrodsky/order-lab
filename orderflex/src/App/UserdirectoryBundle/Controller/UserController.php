@@ -4037,7 +4037,7 @@ class UserController extends OrderAbstractController
     function isEncodedPassword($password) {
         //return preg_match('/^[a-f0-9]{32}$/', $password);
         //check the length of the password
-        if( strlen($password) >= 32 ) {
+        if( strlen((string)$password) >= 32 ) {
             return true;
         }
         return false;

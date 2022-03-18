@@ -326,7 +326,7 @@ class DashboardController extends OrderAbstractController
         $length = 0;
         $last_part = 0;
         for (; $last_part < $parts_count; ++$last_part) {
-            $length += strlen($parts[$last_part]);
+            $length += strlen((string)$parts[$last_part]);
             if ($length > $your_desired_width) {
                 $postfix = "...";
                 break;

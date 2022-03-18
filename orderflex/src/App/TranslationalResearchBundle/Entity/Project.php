@@ -1085,7 +1085,7 @@ class Project {
         $cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
         $onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
 
-        $separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
+        $separatorsCountToBeErased = strlen((string)$cleanString) - strlen((string)$onlyNumbersString) - 1;
 
         $stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
         $removedThousandSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
@@ -2617,7 +2617,7 @@ class Project {
         $title = $this->getTitle();
         if( $title ) {
             $limit = 20;
-            if( strlen($title) > $limit ) {
+            if( strlen((string)$title) > $limit ) {
                 $title = substr((string)$title, 0, $limit) . '...';
             }
             $info = $info . ", " . $title;
@@ -2638,7 +2638,7 @@ class Project {
         //}
 
         $limit = 70;
-        if( strlen($info) > $limit ) {
+        if( strlen((string)$info) > $limit ) {
             $info = substr((string)$info, 0, $limit) . '...';
         }
 

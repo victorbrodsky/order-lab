@@ -101,7 +101,7 @@ class SignUpController extends OrderAbstractController
                 $passwordErrorCount++;
             } else {
                 //length
-                if( strlen($password) < '8' || strlen($password) > '25' ) {
+                if( strlen((string)$password) < '8' || strlen((string)$password) > '25' ) {
                     $passwordErrorCount++;
                 }
                 if( preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password) ) {
@@ -122,7 +122,7 @@ class SignUpController extends OrderAbstractController
             if( !$signUp->getUserName() ) {
                 $usernameErrorCount++;
             } else {
-                if( strlen($signUp->getUserName()) < '4' || strlen($signUp->getUserName()) > '25' ) {
+                if( strlen((string)$signUp->getUserName()) < '4' || strlen((string)$signUp->getUserName()) > '25' ) {
                     $usernameErrorCount++;
                 }
             }
@@ -1308,7 +1308,7 @@ class SignUpController extends OrderAbstractController
                 $passwordErrorCount++;
             } else {
                 //length
-                if( strlen($password) < '8' || strlen($password) > '25' ) {
+                if( strlen((string)$password) < '8' || strlen((string)$password) > '25' ) {
                     $passwordErrorCount++;
                 }
                 if( preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password) ) {
