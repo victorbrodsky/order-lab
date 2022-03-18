@@ -1585,7 +1585,10 @@ Pathology and Laboratory Medicine",
 //                throw new ProcessFailedException($process);
 //            }
 //            $phpPath = $process->getOutput();
-            $phpPath = "/opt/remi/php74/root/usr/bin/php";
+            //$phpPath = "/opt/remi/php74/root/usr/bin/php";
+            $phpPath = "/opt/remi/php81/root/usr/bin/php";
+            $phpPath = "php";
+
             if( !file_exists($phpPath) ) {
                 $phpPath = "/bin/php";
             }

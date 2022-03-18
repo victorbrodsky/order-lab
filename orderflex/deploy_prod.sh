@@ -126,6 +126,7 @@ function prep(){
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/log
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
 
+    #chown -R apache:apache cache
     chown -R apache:apache $PROJECT_LOCAL_PATH/var/cache
     chown -R apache:apache $PROJECT_LOCAL_PATH/var/log
     chown -R apache:apache $PROJECT_LOCAL_PATH/public

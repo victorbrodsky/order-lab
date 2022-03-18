@@ -45,6 +45,20 @@ yum install php81-syspaths
 #yum-config-manager --enable remi-php81
 #yum update
 
+!!! https://centos.pkgs.org/7/remi-x86_64/php81-php-8.1.4-1.el7.remi.x86_64.rpm.html !!!
+yum --enablerepo=remi install php81-php
+
+Update PATH:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
+#Disable loading the old PHP 7.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/php74-php.conf /etc/httpd/conf.d/php74-php.off
+mv /etc/httpd/conf.modules.d/15-php74-php.conf /etc/httpd/conf.modules.d/15-php74-php.off
+
+chown -R apache:apache cache
+
+
+
 #Set new PHP path: 
 export PATH=/opt/remi/php81/root/bin:$PATH
 export PATH=/usr/bin/php:/etc/php.d:/etc/php.ini:/opt/remi/php81/root/usr/bin/php:/usr/share/man/man1/php.1.gz
@@ -62,6 +76,9 @@ Test PATH:
 
 export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/oli2002/.local/bin:/home/oli2002/bin
 
+Final test PATH:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
 
 #Use https://github.com/owncloud/documentation/issues/3149
 #Enable PHP 8.1 system-wide:
@@ -72,12 +89,52 @@ source /opt/remi/php81/enable
 mv /etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/rh-php56-php.off
 mv /etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/10-rh-php56-php.off
 
+#Disable loading the old PHP 5.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/php74-php.conf /etc/httpd/conf.d/php74-php.off
+mv /etc/httpd/conf.modules.d/15-php74-php.conf /etc/httpd/conf.modules.d/15-php74-php.off
+
+#don't need: cp /home/oli2002/php81-php.conf /etc/httpd/conf.d/php81-php.conf
+#don't need: cp /home/oli2002/15-php81-php.conf /etc/httpd/conf.modules.d/15-php81-php.conf
+
+???: libphp81.so
+!!! https://centos.pkgs.org/7/remi-x86_64/php81-php-8.1.4-1.el7.remi.x86_64.rpm.html !!!
+yum --enablerepo=remi install php81-php
+
 #update php.ini
 /etc/opt/remi/php74/php.ini
 systemctl restart httpd.service
 
 
+######################
+https://computingforgeeks.com/how-to-install-php-centos-rhel-linux/
+###
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo yum install yum-utils
+sudo subscription-manager repos --enable=rhel-7-server-optional-rpms
+sudo yum-config-manager --disable 'remi-php*'
+sudo yum-config-manager --enable   remi-php81
+sudo yum repolist
+sudo yum -y install php php-{cli,fpm,mysqlnd,zip,devel,gd,mbstring,curl,xml,pear,bcmath,json,opcache,redis,memcache}
 
+##############
+https://www.tecmint.com/install-php-8-on-centos/
+###
+sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo dnf module list php
+sudo dnf module enable php:remi-8.1 -y
+sudo dnf install php php-cli php-common
+
+
+sudo update-alternatives --set php "/usr/bin/php7.4";
+sudo update-alternatives --set "php-config" "/usr/bin/php-config7.4";
+sudo a2dismod "php7.4"
+sudo a2dismod "php5.6"
+sudo a2enmod "php8.1"
+sudo service apache2 restart
+
+/opt/remi/php74/root/usr/lib64/httpd/modules/
 
 
 
