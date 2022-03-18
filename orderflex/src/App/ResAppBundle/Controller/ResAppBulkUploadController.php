@@ -2235,7 +2235,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 //        //Length of our required sub string
 //        $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
 //        // Return the substring from the index substring_start of length size
-//        return substr($str, $subtring_start, $size);
+//        return substr((string)$str, $subtring_start, $size);
 //    }
 //    public function string_between_two_string2($str, $starting_word, $ending_word){
 //        $arr = explode($starting_word, $str);

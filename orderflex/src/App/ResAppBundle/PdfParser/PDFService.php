@@ -37,7 +37,7 @@ class PDFService
     {
 
         $end_directory = $end_directory ? $end_directory : './';
-        $new_path = preg_replace('/[\/]+/', '/', $end_directory.'/'.substr($filename, 0, strrpos($filename, '/')));
+        $new_path = preg_replace('/[\/]+/', '/', $end_directory.'/'.substr((string)$filename, 0, strrpos($filename, '/')));
 
         if (!is_dir($new_path)) {
             // Will make directories under end directory that don't exist
@@ -224,7 +224,7 @@ class PDFService
             $data = $stream;
         } else {
             $length = !empty($options["Length"]) ? $options["Length"] : strlen($stream);
-            $_stream = substr($stream, 0, $length);
+            $_stream = substr((string)$stream, 0, $length);
 
             foreach ($options as $key => $value) {
                 if ($key == "ASCIIHexDecode") {
@@ -339,7 +339,7 @@ class PDFService
                         } elseif ($c2 == "f") {
                             $plain .= '\f';
                         } elseif ($c2 >= '0' && $c2 <= '9') {
-                            $oct = preg_replace("#[^0-9]#", "", substr($texts[$i], $j + 1, 3));
+                            $oct = preg_replace("#[^0-9]#", "", substr((string)$texts[$i], $j + 1, 3));
                             $j += strlen($oct) - 1;
                             $plain .= html_entity_decode("&#".octdec($oct).";");
                         }

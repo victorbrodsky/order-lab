@@ -183,7 +183,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         $origName = null;
         if( strlen($name) > 255 ) {
             $origName = $name;
-            $name = substr($name,0,252).'...';         
+            $name = substr((string)$name,0,252).'...';         
         }
 
         //check if it is already exists in db

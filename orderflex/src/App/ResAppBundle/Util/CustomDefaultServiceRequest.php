@@ -69,7 +69,7 @@ class CustomDefaultServiceRequest //extends DefaultServiceRequest
             CURLOPT_VERBOSE => false,
         );
 
-        if(substr($url, 0, 4) !== 'http') {
+        if(substr((string)$url, 0, 4) !== 'http') {
             $url = $this->serviceUrl . $url;
         }
 

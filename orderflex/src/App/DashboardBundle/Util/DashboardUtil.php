@@ -1104,7 +1104,7 @@ class DashboardUtil
         // Normalize into a six character long hex string
         $hex = str_replace('#', '', $hex);
         if (strlen($hex) == 3) {
-            $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+            $hex = str_repeat(substr((string)$hex,0,1), 2).str_repeat(substr((string)$hex,1,1), 2).str_repeat(substr((string)$hex,2,1), 2);
         }
 
         // Split into three parts: R, G and B

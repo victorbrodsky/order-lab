@@ -7813,14 +7813,14 @@ class AdminController extends OrderAbstractController
                 $nameArrClean = array();
                 foreach ($nameArr as $thisName) {
                     //Countries => Country
-                    if (substr($thisName, -3) == "ies") {
+                    if (substr((string)$thisName, -3) == "ies") {
                         //$len = strlen($thisName);
                         //$thisName = substr_replace("ies", "y", $len-3, $len);
                         $thisName = $this->str_lreplace("ies", "y", $thisName);
                     }
 
                     //Roles => Role
-                    if (substr($thisName, -2) == "es") {
+                    if (substr((string)$thisName, -2) == "es") {
                         //$len = strlen($thisName);
                         //$thisName = substr_replace("es", "e", $len-2, $len);
                         $thisName = $this->str_lreplace("es", "e", $thisName);

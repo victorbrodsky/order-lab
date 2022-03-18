@@ -203,7 +203,7 @@ class AccessRequestController extends OrderAbstractController
     {
         //look for the referer route
         $referer = $request->headers->get('referer');
-        $lastPath = substr($referer, strpos((string)$referer, $request->getBaseUrl()));
+        $lastPath = substr((string)$referer, strpos((string)$referer, $request->getBaseUrl()));
         $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
 
         $matcher = $this->get('router')->getMatcher();
@@ -1953,9 +1953,9 @@ class AccessRequestController extends OrderAbstractController
 
             //generate random password
             //$tokenGenerator = $this->container->get('fos_user.util.token_generator');
-            //$plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+            //$plainPassword = substr((string)$tokenGenerator->generateToken(), 0, 8); // 8 chars
             $userManager = $this->container->get('user_manager');
-            $plainPassword = substr($userManager->generateToken(), 0, 8); // 8 chars
+            $plainPassword = substr((string)$userManager->generateToken(), 0, 8); // 8 chars
             //exit("set password=[".$plainPassword."]");
 
             //encode password

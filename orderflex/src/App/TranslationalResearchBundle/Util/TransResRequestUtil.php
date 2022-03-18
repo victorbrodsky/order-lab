@@ -3901,7 +3901,7 @@ class TransResRequestUtil
         //$j = (($j = $i.length) > 3) ? $j % 3 : 0;
         $j = (($j = strlen($i)) > 3) ? $j % 3 : 0;
 
-        return  $symbol.$sign .($j ? substr($i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr($i,$j)) ;
+        return  $symbol.$sign .($j ? substr((string)$i,0, $j) + $t : '').preg_replace('/(\d{3})(?=\d)/',"$1" + $t,substr((string)$i,$j)) ;
     }
     function toMoney($val,$symbol='$',$r=2)
     {
@@ -4850,7 +4850,7 @@ class TransResRequestUtil
 
         //limit item code length
         if (strlen($itemCode) > 30) {
-            $itemCode = substr($itemCode, 0, 27) . '...';
+            $itemCode = substr((string)$itemCode, 0, 27) . '...';
         }
 
         $quantity = $invoiceItem->getQuantity();

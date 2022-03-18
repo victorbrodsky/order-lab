@@ -57,6 +57,8 @@ mv /etc/httpd/conf.modules.d/15-php74-php.conf /etc/httpd/conf.modules.d/15-php7
 
 chown -R apache:apache cache
 
+#update php.ini
+/etc/opt/remi/php81/php.ini
 
 
 #Set new PHP path: 

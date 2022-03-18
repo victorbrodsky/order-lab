@@ -74,7 +74,7 @@ class PDFParser
                 $a_data = self::getDataArray($obj, 'stream', 'endstream');
 
                 if (is_array($a_data) && isset($a_data[0])) {
-                    $a_chunks[$j]['data'] = trim(substr($a_data[0], strlen('stream'), strlen($a_data[0]) - strlen('stream') - strlen('endstream')));
+                    $a_chunks[$j]['data'] = trim(substr((string)$a_data[0], strlen('stream'), strlen($a_data[0]) - strlen('stream') - strlen('endstream')));
                 }
 
                 $j++;
@@ -140,7 +140,7 @@ class PDFParser
                 preg_match_all('/\\\\([0-9]{3})/', $command, $found_octal_values);
 
                 foreach ($found_octal_values[0] as $value) {
-                    $octal = substr($value, 1);
+                    $octal = substr((string)$value, 1);
 
                     if (intval($octal) < 40) {
                         // Skips non printable chars
@@ -203,14 +203,14 @@ class PDFParser
                 case 'TJ':
                     $start = mb_strpos((string)$command, '[', null, 'UTF-8') + 1;
                     $end   = mb_strrpos($command, ']', null, 'UTF-8');
-                    $text.= self::parseTextCommand(mb_substr($command, $start, $end - $start, 'UTF-8'));
+                    $text.= self::parseTextCommand(mb_substr((string)$command, $start, $end - $start, 'UTF-8'));
                     break;
 
                 // Display text.
                 case 'Tj':
                     $start = mb_strpos((string)$command, '(', null, 'UTF-8') + 1;
                     $end   = mb_strrpos($command, ')', null, 'UTF-8');
-                    $text.= mb_substr($command, $start, $end - $start, 'UTF-8'); // Removes round brackets
+                    $text.= mb_substr((string)$command, $start, $end - $start, 'UTF-8'); // Removes round brackets
                     break;
 
                 // Set leading.
@@ -283,7 +283,7 @@ class PDFParser
             if ($cur_start_text - $cur_start_pos > 8) {
                 $spacing = ' ';
             } else {
-                $spacing_size = mb_substr($text, $cur_start_pos, $cur_start_text - $cur_start_pos, 'UTF-8');
+                $spacing_size = mb_substr((string)$text, $cur_start_pos, $cur_start_text - $cur_start_pos, 'UTF-8');
 
                 if ($spacing_size < -50) {
                     $spacing = ' ';
@@ -295,7 +295,7 @@ class PDFParser
 
             $start_search_end = $cur_start_text;
             while (($cur_start_pos = mb_strpos((string)$text, ')', $start_search_end, 'UTF-8')) !== false) {
-                if (mb_substr($text, $cur_start_pos - 1, 1, 'UTF-8') != '\\') {
+                if (mb_substr((string)$text, $cur_start_pos - 1, 1, 'UTF-8') != '\\') {
                     break;
                 }
                 $start_search_end = $cur_start_pos + 1;
@@ -307,7 +307,7 @@ class PDFParser
             }
 
             // Add to result
-            $result .= $spacing.mb_substr($text, $cur_start_text, $cur_start_pos - $cur_start_text, 'UTF-8');
+            $result .= $spacing.mb_substr((string)$text, $cur_start_text, $cur_start_pos - $cur_start_text, 'UTF-8');
             $cur_start_pos++;
         }
 
@@ -334,7 +334,7 @@ class PDFParser
 
             if ($end !== false && $start !== false) {
                 // data is between start and end
-                $a_results[] = substr($data, $start, $end - $start + strlen($end_word));
+                $a_results[] = substr((string)$data, $start, $end - $start + strlen($end_word));
             }
         }
 

@@ -138,7 +138,7 @@ abstract class AbstractLexer
      */
     public function getInputUntilPosition($position)
     {
-        return substr($this->input, 0, $position);
+        return substr((string)$this->input, 0, $position);
     }
 
     /**

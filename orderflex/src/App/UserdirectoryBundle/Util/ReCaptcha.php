@@ -70,7 +70,7 @@ class ReCaptcha
             $req .= $key . '=' . urlencode(stripslashes($value)) . '&';
         }
         // Cut the last '&'
-        $req=substr($req, 0, strlen($req)-1);
+        $req=substr((string)$req, 0, strlen($req)-1);
         return $req;
     }
     /**

@@ -2618,7 +2618,7 @@ class Project {
         if( $title ) {
             $limit = 20;
             if( strlen($title) > $limit ) {
-                $title = substr($title, 0, $limit) . '...';
+                $title = substr((string)$title, 0, $limit) . '...';
             }
             $info = $info . ", " . $title;
         }
@@ -2639,7 +2639,7 @@ class Project {
 
         $limit = 70;
         if( strlen($info) > $limit ) {
-            $info = substr($info, 0, $limit) . '...';
+            $info = substr((string)$info, 0, $limit) . '...';
         }
 
         return $info;

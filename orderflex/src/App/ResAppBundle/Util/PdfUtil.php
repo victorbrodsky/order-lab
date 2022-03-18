@@ -2513,7 +2513,7 @@ class PdfUtil {
             //echo "strlen($startStr)=".strlen($startStr)."<br>";
             $subtring_start = $subtring_start + strlen($startStr);
             //echo "2subtring_start=$subtring_start <br>";
-            $field = substr($text, $subtring_start, $length);
+            $field = substr((string)$text, $subtring_start, $length);
             $field = trim((string)$field);
             //echo "field=[$field]<br>";
             //exit("EOF getPdfField");
@@ -2531,7 +2531,7 @@ class PdfUtil {
         //Length of our required sub string
         $size = strpos((string)$str, $ending_word, $subtring_start) - $subtring_start;
         // Return the substring from the index substring_start of length size
-        return substr($str, $subtring_start, $size);
+        return substr((string)$str, $subtring_start, $size);
     }
     public function string_between_two_string2($str, $starting_word, $ending_word){
         $arr = explode($starting_word, $str);
@@ -2547,10 +2547,10 @@ class PdfUtil {
             //throw new \InvalidArgumentException("$dirPath must be a directory");
             return false;
         }
-        //if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        //if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != '/') {
         //    $dirPath .= '/';
         //}
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
+        if (substr((string)$dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
             $dirPath .= DIRECTORY_SEPARATOR;
         }
         $files = glob($dirPath . '*', GLOB_MARK);
