@@ -615,7 +615,7 @@ class UserSecurityUtil {
         //set logger entity(s)
         if( $subjectEntities ) {
 
-            if( method_exists($subjectEntities,'getId') ) {
+            if( is_array($subjectEntities) == false && method_exists($subjectEntities,'getId') ) {
 
                 $subjectEntity = $subjectEntities;
                 $ids = $subjectEntity->getId();
