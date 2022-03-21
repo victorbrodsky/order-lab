@@ -101,6 +101,13 @@ class DefaultController extends OrderAbstractController
         }
         exit($user.': groups='.$groups);
 
+        //Total Number of Vacation Requests
+//        $yearRangeStr = '2020-2021';
+//        $vacationRequests = $vacreqUtil->getRequestsByUserYears($user,$yearRangeStr,'vacation');
+//        $businessRequests = $vacreqUtil->getRequestsByUserYears($user,$yearRangeStr,'business');
+//        $totalCount = count($vacationRequests) + count($businessRequests);
+//        exit($user.': totalCount='.$totalCount);
+
         
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }

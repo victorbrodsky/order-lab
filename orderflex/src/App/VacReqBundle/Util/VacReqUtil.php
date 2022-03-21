@@ -1906,6 +1906,90 @@ class VacReqUtil
         return $overlappedMessage;
     }
 
+    //TODO: get all user's requests by year range "2021-2022"
+    //$yearRangeStr: '2021-2022'
+    //$requestTypeStr: 'business' or 'vacation'
+    //$status: 'approved'
+    public function getRequestsByUserYears( $user, $yearRangeStr, $requestTypeStr, $status=null ) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //academicYearStart
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+        if( !$academicYearStart ) {
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        //academicYearEnd
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+
+        //constract start and end date for DB select "Y-m-d"
+        $academicYearStartStr = $academicYearStart->format('m-d');
+
+        //years
+        $yearRangeArr = $this->getYearsFromYearRangeStr($yearRangeStr);
+        $previousYear = $yearRangeArr[0];
+        $currentYear = $yearRangeArr[1];
+
+        $academicYearStartStr = $previousYear."-".$academicYearStartStr;
+        //echo "current academicYearStartStr=".$academicYearStartStr."<br>";
+        //academicYearEnd
+        $academicYearEndStr = $academicYearEnd->format('m-d');
+
+        $academicYearEndStr = $currentYear."-".$academicYearEndStr;
+        //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
+
+        $parameters = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin("request.user", "user");
+        //$dql->leftJoin("request.requestType", "requestType");
+
+        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+            $dql->leftJoin("request.requestBusiness", "requestType");
+        }
+
+        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+            $dql->leftJoin("request.requestVacation", "requestType");
+        }
+
+        $dql->andWhere("requestType.id IS NOT NULL");
+
+        //$dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
+
+        // |----|year|-----start-----end-----|year+1|----|
+        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
+        //echo "range=".$academicYearStartStr." > ".$academicYearEndStr."<br>";
+        $dql->andWhere("requestType.startDate >= '" . $academicYearStartStr . "'" . " AND requestType.endDate <= " . "'" . $academicYearEndStr . "'");
+
+        $dql->andWhere("user.id = :userId");
+        $parameters['userId'] = $user->getId();
+
+        if( $status ) {
+            $dql->andWhere("requestVacation.status = :status");
+            $parameters['status'] = $status;
+        }
+
+        $dql->orderBy('request.createDate', 'ASC');
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $requests = $query->getResult();
+        //echo "requests to analyze=".count($requests)."<br>";
+
+        return $requests;
+    }
+
     //get all user's overlapped requests
     public function getOverlappedUserRequests( $user, $currentYear=true, $log=false ) {
 
@@ -5123,41 +5207,13 @@ class VacReqUtil
         //echo "userIds=".count($userIds)."<br>";
         //exit('1');
 
+        $testing = true;
+        $testing = false;
+
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         $newline =  "\n"; //"<br>\n";
-
-        //$writer = WriterFactory::create(Type::XLSX);
-        $writer = WriterEntityFactory::createXLSXWriter();
-        $writer->openToBrowser($fileName);
-
-        $headerStyle = (new StyleBuilder())
-            ->setFontBold()
-            //->setFontItalic()
-            ->setFontSize(12)
-            ->setFontColor(Color::BLACK)
-            ->setShouldWrapText()
-            ->setBackgroundColor(Color::toARGB("E0E0E0"))
-            ->build();
-
-        $requestStyle = (new StyleBuilder())
-            ->setFontSize(10)
-            //->setShouldWrapText()
-            ->build();
-
-        $border = (new BorderBuilder())
-            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
-            ->build();
-        $footerStyle = (new StyleBuilder())
-            ->setFontBold()
-            //->setFontItalic()
-            ->setFontSize(12)
-            ->setFontColor(Color::BLACK)
-            ->setShouldWrapText()
-            ->setBackgroundColor(Color::toARGB("EBF1DE"))
-            ->setBorder($border)
-            ->build();
 
         $columns = array(
             'Person',                   //0 - A
@@ -5177,20 +5233,59 @@ class VacReqUtil
             //LinksToEachRequestForReview
         );
 
-        $spoutRow = WriterEntityFactory::createRowFromArray(
-            $columns,
-            $headerStyle
-        );
-        $writer->addRow($spoutRow);
+        //exit( "Person col=".array_search('Person', $columns) );
+
+        if( $testing == false ) {
+            //$writer = WriterFactory::create(Type::XLSX);
+            $writer = WriterEntityFactory::createXLSXWriter();
+            $writer->openToBrowser($fileName);
+
+            $headerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("E0E0E0"))
+                ->build();
+
+            $requestStyle = (new StyleBuilder())
+                ->setFontSize(10)
+                //->setShouldWrapText()
+                ->build();
+
+            $border = (new BorderBuilder())
+                ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+                ->build();
+            $footerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("EBF1DE"))
+                ->setBorder($border)
+                ->build();
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                $columns,
+                $headerStyle
+            );
+            $writer->addRow($spoutRow);
+        }
         
         $totalNumberBusinessDays = 0;
         $totalNumberVacationDays = 0;
+        $totalNumberPendingVacationDays = 0;
+        $totalRequests = 0;
+        $totalCarryoverApprovedRequests = 0;
+        $totalApprovedFloatingDays = 0;
 
         $row = 2;
         foreach( $userIds as $userId ) {
 
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-            if( !$user ) {
+            $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            if( !$subjectUser ) {
                 continue;
             }
 
@@ -5201,10 +5296,10 @@ class VacReqUtil
 
             $data = array();
 
-            $data[array_search('Person', $columns)] = $user."";
-            $data[array_search('Email', $columns)] = $user->getSingleEmail();
+            $data[array_search('Person', $columns)] = $subjectUser."";
+            $data[array_search('Email', $columns)] = $subjectUser->getSingleEmail();
 
-
+            //Group
             $groups = "";
             $groupParams = array();
             $groupParams['statusArr'] = array('default','user-added');
@@ -5212,7 +5307,7 @@ class VacReqUtil
             $groupParams['asUser'] = true;
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
             $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-            $organizationalInstitutions = $this->getGroupsByPermission($user,$groupParams);
+            $organizationalInstitutions = $this->getGroupsByPermission($subjectUser,$groupParams);
             //dump($organizationalInstitutions);
             //exit('111');
             foreach($organizationalInstitutions as $organizationalInstitution) {
@@ -5223,78 +5318,98 @@ class VacReqUtil
             }
             $data[array_search('Group', $columns)] = $groups;
 
-            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'vacation',$yearRangeStr);
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRangeStr);
             $approvedVacDays = $vacationDaysRes['numberOfDays'];
+            $approvedVacDays = intval($approvedVacDays);
+            $totalNumberVacationDays = $totalNumberVacationDays + $approvedVacDays;
             $data[array_search('Approved Vacation Days', $columns)] = $approvedVacDays;
 
-            $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'business',$yearRangeStr);
+            $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'business',$yearRangeStr);
             $approvedBusDays = $businessDaysRes['numberOfDays'];
+            $approvedBusDays = intval($approvedBusDays);
+            $totalNumberBusinessDays = $totalNumberBusinessDays + $approvedBusDays;
             $data[array_search('Approved Business Days', $columns)] = $approvedBusDays;
 
-//            $businessRequest = $vacreq->getRequestBusiness();
-//            if( $businessRequest ) {
-//                //$numberBusinessDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$businessRequest,array('E','F','G','H'));
-//                $numberBusinessDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$businessRequest,array(4,5,6,7));
-//                if( $numberBusinessDays ) {
-//                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
-//                }
-//            } else {
-//                $data[4] = NULL;
-//                $data[5] = NULL;
-//                $data[6] = NULL;
-//                $data[7] = NULL;
-//            }
-//            //print_r($data);
-//
-//            $vacationRequest = $vacreq->getRequestVacation();
-//            if( $vacationRequest ) {
-//                //$numberVacationDays = $this->specificRequestExcelSpoutInfo($writer,$vacreq,$vacationRequest,array('I','J','K','L'));
-//                $numberVacationDays = $this->specificRequestExcelSpoutInfo($data,$vacreq,$vacationRequest,array(8,9,10,11));
-//                if( $numberVacationDays ) {
-//                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
-//                }
-//            } else {
-//                $data[8] = NULL;
-//                $data[9] = NULL;
-//                $data[10] = NULL;
-//                $data[11] = NULL;
-//            }
+            $data[array_search('Approved Vacation and Business Days', $columns)] = $approvedVacDays + $approvedBusDays;
+
+            $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear( $subjectUser, 'vacation', $yearRangeStr, "pending" );
+            $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+            $pendingVacDays = intval($pendingVacDays);
+            $totalNumberPendingVacationDays = $totalNumberPendingVacationDays + $pendingVacDays;
+            $data[array_search('Pending Vacation Days', $columns)] = $pendingVacDays;
+
+            //exit('111');
+
+            //Total Number of Vacation Requests
+            $vacationRequests = $this->getRequestsByUserYears($subjectUser,$yearRangeStr,'vacation');
+            $businessRequests = $this->getRequestsByUserYears($subjectUser,$yearRangeStr,'business');
+            $totalThisRequests = count($vacationRequests) + count($businessRequests);
+            $totalRequests = $totalRequests + $totalThisRequests;
+            $data[array_search('Total Number of Vacation Requests', $columns)] = $totalThisRequests;
+
+            //Approved Carry Over Day
+            //$carryOverYear = '2022'; //2021-2022
+            $startYearArr = $this->getYearsFromYearRangeStr($yearRangeStr);
+            $carryOverYear = $startYearArr[0];
+            $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear);
+            $carryoverApprovedRequests = count($approvedRequests);
+            $totalCarryoverApprovedRequests = $totalCarryoverApprovedRequests + $carryoverApprovedRequests;
+            $data[array_search('Approved Carry Over Day', $columns)] = $carryoverApprovedRequests;
+
+            //Approved Floating Days
+            $approvedFloatingDays = $this->getUserFloatingDay($subjectUser,$yearRangeStr,array('approved'));
+            $approvedFloatingDays = intval($approvedFloatingDays);
+            $totalApprovedFloatingDays = $totalApprovedFloatingDays + $approvedFloatingDays;
+            $data[array_search('Approved Floating Days', $columns)] = $approvedFloatingDays;
 
             //print_r($data);
             //exit('111');
 
-            //$writer->addRowWithStyle($data,$requestStyle);
-            $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
-            $writer->addRow($spoutRow);
-            //$row = $row + 1;
+            if( $testing == false ) {
+                //$writer->addRowWithStyle($data,$requestStyle);
+                $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+                $writer->addRow($spoutRow);
+            }
         }//foreach
 
+        //exit('111');
+
         $data = array();
-        $data[0] = NULL;
-        $data[2] = NULL;
-        $data[3] = NULL;
-        $data[5] = NULL;
-        $data[6] = NULL;
-        $data[7] = NULL;
-        $data[8] = NULL;
-        $data[9] = NULL;
+        $data[array_search('Person', $columns)] = NULL;
+        $data[array_search('Email', $columns)] = NULL;
+        $data[array_search('Group', $columns)] = NULL;
+        $data[array_search('Approved Vacation Days', $columns)] = NULL;
+        $data[array_search('Approved Business Days', $columns)] = NULL;
+        $data[array_search('Approved Vacation and Business Days', $columns)] = NULL;
+        $data[array_search('Pending Vacation Days', $columns)] = NULL;
+        $data[array_search('Total Number of Vacation Requests', $columns)] = NULL;
+        $data[array_search('Approved Carry Over Day', $columns)] = NULL;
+        $data[array_search('Approved Floating Days', $columns)] = NULL;
 
-        //$ews->setCellValue('B'.$row, "Total"); //1
-        $data[1] = "Total";
-        //$ews->setCellValue('E'.$row, $totalNumberBusinessDays); //4
-        $data[4] = $totalNumberBusinessDays;
-        //$ews->setCellValue('I'.$row, $totalNumberVacationDays); //8
-        $data[8] = $totalNumberVacationDays;
-        //$writer->addRowWithStyle($data,$footerStyle);
-        $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
-        $writer->addRow($spoutRow);
+        $data[array_search('Person', $columns)] = "Total";
+        $data[array_search('Approved Vacation Days', $columns)] = $totalNumberVacationDays;
+        $data[array_search('Approved Business Days', $columns)] = $totalNumberBusinessDays;
+        $data[array_search('Approved Vacation and Business Days', $columns)] = $totalNumberVacationDays + $totalNumberBusinessDays;
+        $data[array_search('Pending Vacation Days', $columns)] = $totalNumberPendingVacationDays;
+        $data[array_search('Total Number of Vacation Requests', $columns)] = $totalRequests;
+        $data[array_search('Approved Carry Over Day', $columns)] = $totalCarryoverApprovedRequests;
+        $data[array_search('Approved Floating Days', $columns)] = $totalApprovedFloatingDays;
 
-        //set color light green to the last Total row
-        //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+        if( $testing == false ) {
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            $writer->addRow($spoutRow);
 
-        //exit("ids=".$fellappids);
+            //set color light green to the last Total row
+            //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
 
-        $writer->close();
+            //exit("ids=".$fellappids);
+
+            $writer->close();
+        } else {
+            print_r($data);
+            exit('111');
+        }
+
     }
 
     public function redirectIndex( $request ) {
