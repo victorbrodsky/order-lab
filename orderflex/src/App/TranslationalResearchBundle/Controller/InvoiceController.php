@@ -1776,6 +1776,16 @@ class InvoiceController extends OrderAbstractController
         $comment = trim((string)$request->get('comment') );
         $status = trim((string)$request->get('status') );
 
+//        $invoiceId = $request->get('invoiceId');
+//        $paid = $request->get('paid');
+//        $total = $request->get('total');
+//        $discountNumeric = $request->get('discountNumeric');
+//        $discountPercent = $request->get('discountPercent');
+//        $administrativeFee = $request->get('administrativeFee');
+//        $due = $request->get('due');
+//        $comment = $request->get('comment');
+//        $status = $request->get('status');
+
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice id '" . $invoiceId . "'");
@@ -1807,22 +1817,22 @@ class InvoiceController extends OrderAbstractController
         $invoiceSerializedOriginalStr = $invoice->getSerializeStr();
 
 
-        if( $discountNumeric == 0 ) {
+        if( $discountNumeric == 0 || $discountNumeric == "" ) {
             $discountNumeric = NULL;
         }
-        if( $discountPercent == 0 ) {
+        if( $discountPercent == 0 || $discountPercent == "" ) {
             $discountPercent = NULL;
         }
-        if( $administrativeFee == 0 ) {
+        if( $administrativeFee == 0 || $administrativeFee == "" ) {
             $administrativeFee = NULL;
         }
-        if( $paid == 0 ) {
+        if( $paid == 0 || $paid == "" ) {
             $paid = NULL;
         }
-        if( $due == 0 ) {
+        if( $due == 0 || $due == "" ) {
             $due = NULL;
         }
-        if( $total == 0 ) {
+        if( $total == 0 || $total == "" ) {
             $total = NULL;
         }
 
