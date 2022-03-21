@@ -64,30 +64,30 @@ class CalendarController extends OrderAbstractController
         $params['supervisor'] = $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR');
 
         ///// NOT USED /////
-        if(0) {
-            //get submitter groups: VacReqRequest, create
-            $groupParams = array();
-
-            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
-                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-            }
-
-            //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
-                $subjectUser = $user;
-            } else {
-                $groupParams['asSupervisor'] = true;
-                $subjectUser = $vacreqUtil->getClosestSupervisor($user);
-            }
-            //echo "subjectUser=".$subjectUser."<br>";
-            if (!$subjectUser) {
-                $subjectUser = $user;
-            }
-
-            $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
-        }
+//        if(0) {
+//            //get submitter groups: VacReqRequest, create
+//            $groupParams = array();
+//
+//            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+//            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
+//            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+//                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+//            }
+//
+//            //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
+//            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//                $subjectUser = $user;
+//            } else {
+//                $groupParams['asSupervisor'] = true;
+//                $subjectUser = $vacreqUtil->getClosestSupervisor($user);
+//            }
+//            //echo "subjectUser=".$subjectUser."<br>";
+//            if (!$subjectUser) {
+//                $subjectUser = $user;
+//            }
+//
+//            $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
+//        }
         ///// EOF NOT USED /////
 
         $organizationalInstitutions = $vacreqUtil->getAllGroupsByUser($user);

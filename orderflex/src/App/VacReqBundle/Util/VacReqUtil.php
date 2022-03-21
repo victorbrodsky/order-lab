@@ -2757,6 +2757,9 @@ class VacReqUtil
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
     public function getGroupsByPermission( $user=null, $params=array() ) {
 
+        //dump($params);
+        //exit('111');
+
         $asObject = ( array_key_exists('asObject', $params) ? $params['asObject'] : false);
         $asObjectRole = ( array_key_exists('asObjectRole', $params) ? $params['asObjectRole'] : false);
         $permissions = ( array_key_exists('permissions', $params) ? $params['permissions'] : null);
@@ -2764,6 +2767,14 @@ class VacReqUtil
         $asSupervisor = ( array_key_exists('asSupervisor', $params) ? $params['asSupervisor'] : false);
         $asUser = ( array_key_exists('asUser', $params) ? $params['asUser'] : false);
         $statusArr = ( array_key_exists('statusArr', $params) ? $params['statusArr'] : array());
+
+        //$asUser = true;
+//        echo "asUser=$asUser <br>";
+//        if($asUser) {
+//            echo "asUser=True<br>";
+//        } else {
+//            echo "asUser=False<br>";
+//        }
 
         $institutions = array();
         $addedArr = array();
@@ -5106,6 +5117,7 @@ class VacReqUtil
         return $ids;
     }
 
+    //127.0.0.1/order/index_dev.php/vacation-request/download-summary-report-spreadsheet/
     public function createtSummaryReportByNameSpout( $userIds, $fileName, $yearRangeStr ) {
 
         //echo "userIds=".count($userIds)."<br>";
@@ -5113,6 +5125,8 @@ class VacReqUtil
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $newline =  "\n"; //"<br>\n";
 
         //$writer = WriterFactory::create(Type::XLSX);
         $writer = WriterEntityFactory::createXLSXWriter();
@@ -5192,11 +5206,22 @@ class VacReqUtil
 
 
             $groups = "";
+            $groupParams = array();
+            $groupParams['statusArr'] = array('default','user-added');
+            $groupParams['asObject'] = true;
+            $groupParams['asUser'] = true;
+            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+            $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            $organizationalInstitutions = $this->getGroupsByPermission($user,$groupParams);
+            //dump($organizationalInstitutions);
+            //exit('111');
+            foreach($organizationalInstitutions as $organizationalInstitution) {
+                if( $groups ) {
+                    $groups = $groups . $newline;
+                }
+                $groups = $groups . $organizationalInstitution->getShortestName();
+            }
             $data[array_search('Group', $columns)] = $groups;
-
-//            //Group
-//            //$ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
-//            $data[3] = $vacreq->getInstitution()."";
 
             $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($user,'vacation',$yearRangeStr);
             $approvedVacDays = $vacationDaysRes['numberOfDays'];
