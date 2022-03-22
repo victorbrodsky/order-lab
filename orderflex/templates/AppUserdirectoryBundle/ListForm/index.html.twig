@@ -75,8 +75,15 @@
 
         {#linkToListId:{{ linkToListId }}#}
         {#filterform.search={{ filterform.vars.value.search }}#}
-        <a href="{{ path('user_download_list_excel', {'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
-        >download in Excel</a>
+
+        {% if filterform.vars.value.search is defined and filterform.vars.value.search %}
+            <a href="{{ path('user_download_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+            >download in Excel</a>
+        {% else %}
+            <a href="{{ path('user_download_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
+            >download in Excel</a>
+        {% endif %}
+
     </h3>
 
     {% if withCreateNewEntityLink is not defined %}

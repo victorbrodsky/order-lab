@@ -207,6 +207,9 @@ f_install_php81 () {
 	
 	yum --enablerepo=remi install php81-php
 	
+	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	php -v
+	
 	# Restart Apache
     sudo systemctl restart httpd.service
 	

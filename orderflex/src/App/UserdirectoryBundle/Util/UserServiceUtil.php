@@ -30,6 +30,7 @@ namespace App\UserdirectoryBundle\Util;
 
 use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\Permission;
+use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
@@ -53,6 +54,12 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Twilio\Rest\Client;
+
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 //use Crontab\Crontab;
 //use Crontab\Job;
@@ -3166,8 +3173,159 @@ Pathology and Laboratory Medicine",
         return $url;
     }
 
-    public function createtListExcelSpout( $fileName ) {
+    public function createtListExcelSpout( $repository, $entityClass, $search, $fileName ) {
+        //echo "userIds=".count($userIds)."<br>";
+        //exit('1');
+
+        $testing = true;
+        $testing = false;
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $newline =  "\n"; //"<br>\n";
+
+        $dql =  $repository->createQueryBuilder("ent");
+        $dql->select('ent');
+
+        if( method_exists($entityClass,'getSites') ) {
+            $dql->leftJoin("ent.sites", "sites");
+            //$dql->addGroupBy('sites.name');
+        }
+
+        $searchStr =
+            "
+                LOWER(ent.name) LIKE LOWER(:search) 
+                OR LOWER(ent.abbreviation) LIKE LOWER(:search) 
+                OR LOWER(ent.shortname) LIKE LOWER(:search) 
+                OR LOWER(ent.description) LIKE LOWER(:search)
+            ";
+
+        $dql->andWhere($searchStr);
+        $dqlParameters['search'] = '%'.$search.'%';
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        $entities = $query->getResult();
         
+        $columns = array(
+            'ID',
+            'Name',
+            'Short Name',
+            'Abbreviation',
+            'Alias',
+            'Description',
+            //'Site',
+            'Type',
+            //'Level',
+        );
+
+        if( method_exists($entityClass, 'getRoles') ) {
+            $columns = array(
+                'ID',
+                'Name',
+                'Short Name',
+                'Abbreviation',
+                'Alias',
+                'Description',
+                //'Site',
+                'Type',
+                //'Level',
+            );
+        }
+
+        //exit( "Person col=".array_search('Person', $columns) );
+
+        if( $testing == false ) {
+            //$writer = WriterFactory::create(Type::XLSX);
+            $writer = WriterEntityFactory::createXLSXWriter();
+            $writer->openToBrowser($fileName);
+
+            $headerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("E0E0E0"))
+                ->build();
+
+            $requestStyle = (new StyleBuilder())
+                ->setFontSize(10)
+                //->setShouldWrapText()
+                ->build();
+
+            $border = (new BorderBuilder())
+                ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+                ->build();
+            $footerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("EBF1DE"))
+                ->setBorder($border)
+                ->build();
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                $columns,
+                $headerStyle
+            );
+            $writer->addRow($spoutRow);
+        }
+
+        $totalNumberBusinessDays = 0;
+        $totalNumberVacationDays = 0;
+        $totalNumberPendingVacationDays = 0;
+        $totalRequests = 0;
+        $totalCarryoverApprovedRequests = 0;
+        $totalApprovedFloatingDays = 0;
+
+        $row = 2;
+        foreach( $entities as $entity ) {
+            $data = array();
+
+            $data[array_search('ID', $columns)] = $entity->getId();
+            $data[array_search('Name', $columns)] = $entity->getName();
+            $data[array_search('Short Name', $columns)] = $entity->getShortName();
+            $data[array_search('Abbreviation', $columns)] = $entity->getAbbreviation();
+
+            //getAlias
+            if( $entity instanceof Roles ) {
+                $data[array_search('Alias', $columns)] = $entity->getAlias();
+            }
+
+            $data[array_search('Description', $columns)] = $entity->getDescription();
+            //$data[array_search('Site', $columns)] = $entity->getSite();
+            $data[array_search('Type', $columns)] = $entity->getType();
+            //$data[array_search('Level', $columns)] = $entity->getLevel();
+
+            if( $testing == false ) {
+                //$writer->addRowWithStyle($data,$requestStyle);
+                $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+                $writer->addRow($spoutRow);
+            }
+        }//foreach
+
+        if( $testing == false ) {
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            //$writer->addRow($spoutRow);
+
+            //set color light green to the last Total row
+            //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+            //exit("ids=".$fellappids);
+
+            $writer->close();
+        } else {
+            print_r($data);
+            exit('111');
+        }
     }
 
 

@@ -693,17 +693,25 @@ class ListController extends OrderAbstractController
 
         $search = $request->get('search');
         $linkToListId = $request->get('linkToListId');
-        echo "linkToListId=$linkToListId, search=$search <br>";
+        $pathbase = $request->get('pathbase');
+        //echo "linkToListId=$linkToListId, search=$search, pathbase=$pathbase <br>";
         //dump($search);
 
         //dump($request);
-        exit('111');
+        //exit('111');
+
+        $mapper = $this->classListMapper($pathbase,$request);
+        //echo "repository=".$mapper['bundleName'].':'.$mapper['className']."<br>";
+
+        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+
+        $entityClass = $mapper['fullClassName'];
 
         $userServiceUtil = $this->get('user_service_utility');
         
-        $fileName = "list".".xlsx";
+        $fileName = "list_ID_$linkToListId".".xlsx";
 
-        $userServiceUtil->createtListExcelSpout( $ids, $fileName );
+        $userServiceUtil->createtListExcelSpout( $repository, $entityClass, $search, $fileName );
 
         exit();
     }

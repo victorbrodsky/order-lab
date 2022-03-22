@@ -172,6 +172,51 @@ f_install_php74 () {
     sleep 1
 }
 
+f_install_php81 () {
+    ########## INSTALL APACHE 8.1 ##########
+    echo "Installing apache 8.1 ..."
+    sleep 1
+
+	echo @### Install yum-utils and epel repository ###
+	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+	echo @### PHP1: install yum-utils -y ###
+	sudo yum -y install yum-utils
+	sudo yum-config-manager --disable 'remi-php*'
+	sudo yum-config-manager --enable remi-php81
+
+	echo @### PHP2: sudo yum-config-manager --enable remi-php81 ###
+	sudo yum -y update
+
+	#echo @### PHP3: Search for PHP 8.1 packages ###
+	#sudo yum search php81 | more
+	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
+	
+	echo @### PHP3: Install PHP 8.1 ###
+	sudo yum -y install php81 php81-php-cli
+	
+	echo @### PHP4: Install PHP packages ###
+	sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
+	sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
+	sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
+	sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
+	sudo yum -y install php81-php-common
+	
+	yum install php81-syspaths
+	
+	yum --enablerepo=remi install php81-php
+	
+	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	php -v
+	
+	# Restart Apache
+    sudo systemctl restart httpd.service
+	
+	echo ""
+    sleep 1
+}
+
 f_install_util () {
     ########## INSTALL UTILITIES ##########
     echo "Installing util ..."
@@ -339,7 +384,8 @@ f_install_prepare () {
 f_update_os
 f_install_apache
 f_install_postgresql12
-f_install_php74
+#f_install_php74
+f_install_php81
 #Test manually after apache, db, php installed
 #f_install_util
 #f_install_order
