@@ -574,6 +574,7 @@ class ListController extends OrderAbstractController
 
         //echo "pathbase=".$pathbase."<br>";
         //echo "routeName=".$routeName."<br>";
+        //exit('111');
 
         return array(
             'entities' => $entities,
@@ -679,6 +680,32 @@ class ListController extends OrderAbstractController
             'sitename' => $this->sitename,
             'cycle' => 'show'
         );
+    }
+
+    /**
+     * @Route("/download-list-excel", name="user_download_list_excel")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
+     */
+    public function downloadListExcelAction( Request $request ) {
+        //$ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $search = $request->get('search');
+        $linkToListId = $request->get('linkToListId');
+        echo "linkToListId=$linkToListId, search=$search <br>";
+        //dump($search);
+
+        //dump($request);
+        exit('111');
+
+        $userServiceUtil = $this->get('user_service_utility');
+        
+        $fileName = "list".".xlsx";
+
+        $userServiceUtil->createtListExcelSpout( $ids, $fileName );
+
+        exit();
     }
 
     /**

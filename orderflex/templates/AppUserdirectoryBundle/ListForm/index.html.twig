@@ -71,6 +71,12 @@
     <h3 class="text-info">
         {{ displayName }} ({{ entities.getTotalItemCount }} matching)
         {#(Total {{ entities.getTotalItemCount }})#}
+        {#print the list in excel#}
+
+        {#linkToListId:{{ linkToListId }}#}
+        {#filterform.search={{ filterform.vars.value.search }}#}
+        <a href="{{ path('user_download_list_excel', {'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+        >download in Excel</a>
     </h3>
 
     {% if withCreateNewEntityLink is not defined %}

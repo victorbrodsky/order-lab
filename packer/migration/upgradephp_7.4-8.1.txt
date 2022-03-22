@@ -23,7 +23,7 @@ sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
 sudo yum -y install php81-php-common
 
 ### When a single version is installed, command in default path (/usr/bin/php) can be installed:
-#yum install php81-syspaths
+yum install php81-syspaths
 
 ### Replacement of default PHP by version 7.4 installation (simplest):
 #yum-config-manager --enable remi-php81
