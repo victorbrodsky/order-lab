@@ -207,6 +207,12 @@ f_install_php81 () {
 	
 	yum --enablerepo=remi install php81-php
 	
+	#Original PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+	#/usr/bin/php81
+	#/opt/remi/php81/root/usr/bin/
+	echo -e  ${COLOR} export PATH ${NC}
+	export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
 	
