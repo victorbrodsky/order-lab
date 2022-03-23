@@ -5297,7 +5297,7 @@ class VacReqUtil
 
             $data = array();
 
-            $data[0] = ""; //$subjectUser->getId();
+            //$data[0] = ""; //$subjectUser->getId();
 
             $data[array_search('Person', $columns)] = $subjectUser."";
             //$data[0] = $subjectUser->getSingleEmail()."";
@@ -5394,7 +5394,7 @@ class VacReqUtil
 //        $data[array_search('Approved Carry Over Day', $columns)] = NULL;
 //        $data[array_search('Approved Floating Days', $columns)] = NULL;
 
-        //$data[0] = "EEEE";
+        //$data[0] = "";
         $data[array_search('Person', $columns)] = "Total";
         $data[array_search('Approved Vacation Days', $columns)] = $totalNumberVacationDays;
         $data[array_search('Approved Business Days', $columns)] = $totalNumberBusinessDays;

@@ -7758,6 +7758,8 @@ class AdminController extends OrderAbstractController
                 $nameClean = null;
             }
 
+            $entityNamespace = "App\\"."UserdirectoryBundle"."\\Entity";
+
             if( !$listName ) {
                 //get it from ScanListController
                 $mapper = $scanListController->classListMapper($listId,$request);
