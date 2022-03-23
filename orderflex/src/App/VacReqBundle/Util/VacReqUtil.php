@@ -5216,6 +5216,7 @@ class VacReqUtil
         $newline =  "\n"; //"<br>\n";
 
         $columns = array(
+            '',
             'Person',                   //0 - A
             'Email',                    //1 - B
             'Group',                    //3 - D
@@ -5296,7 +5297,11 @@ class VacReqUtil
 
             $data = array();
 
+            $data[0] = ""; //$subjectUser->getId();
+
             $data[array_search('Person', $columns)] = $subjectUser."";
+            //$data[0] = $subjectUser->getSingleEmail()."";
+
             $data[array_search('Email', $columns)] = $subjectUser->getSingleEmail();
 
             //Group
@@ -5368,6 +5373,7 @@ class VacReqUtil
             if( $testing == false ) {
                 //$writer->addRowWithStyle($data,$requestStyle);
                 $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+                //$spoutRow = WriterEntityFactory::createRowFromArray($data);
                 $writer->addRow($spoutRow);
             }
         }//foreach
@@ -5375,17 +5381,20 @@ class VacReqUtil
         //exit('111');
 
         $data = array();
-        $data[array_search('Person', $columns)] = NULL;
-        $data[array_search('Email', $columns)] = NULL;
-        $data[array_search('Group', $columns)] = NULL;
-        $data[array_search('Approved Vacation Days', $columns)] = NULL;
-        $data[array_search('Approved Business Days', $columns)] = NULL;
-        $data[array_search('Approved Vacation and Business Days', $columns)] = NULL;
-        $data[array_search('Pending Vacation Days', $columns)] = NULL;
-        $data[array_search('Total Number of Vacation Requests', $columns)] = NULL;
-        $data[array_search('Approved Carry Over Day', $columns)] = NULL;
-        $data[array_search('Approved Floating Days', $columns)] = NULL;
 
+//        $data[0] = "";
+//        $data[array_search('Person', $columns)] = NULL;
+//        $data[array_search('Email', $columns)] = NULL;
+//        $data[array_search('Group', $columns)] = NULL;
+//        $data[array_search('Approved Vacation Days', $columns)] = NULL;
+//        $data[array_search('Approved Business Days', $columns)] = NULL;
+//        $data[array_search('Approved Vacation and Business Days', $columns)] = NULL;
+//        $data[array_search('Pending Vacation Days', $columns)] = NULL;
+//        $data[array_search('Total Number of Vacation Requests', $columns)] = NULL;
+//        $data[array_search('Approved Carry Over Day', $columns)] = NULL;
+//        $data[array_search('Approved Floating Days', $columns)] = NULL;
+
+        //$data[0] = "EEEE";
         $data[array_search('Person', $columns)] = "Total";
         $data[array_search('Approved Vacation Days', $columns)] = $totalNumberVacationDays;
         $data[array_search('Approved Business Days', $columns)] = $totalNumberBusinessDays;
@@ -5397,6 +5406,7 @@ class VacReqUtil
 
         if( $testing == false ) {
             $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
             $writer->addRow($spoutRow);
 
             //set color light green to the last Total row

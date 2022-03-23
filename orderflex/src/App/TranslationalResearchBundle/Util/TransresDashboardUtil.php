@@ -821,7 +821,7 @@ class TransresDashboardUtil
                     }
 
                     if( strpos((string)$id, $this->otherSearchStr) !== false ) {
-                        $linkFilterArr = null;
+                        $linkFilterArr = array();
                     } else {
                         if( is_array($pi) ) {
                             $userIndex = 0;
@@ -834,7 +834,7 @@ class TransresDashboardUtil
                         }
                     }
 
-                    if( $linkFilterArr ) {
+                    if( count($linkFilterArr) > 0 ) {
                         //echo "### $label<br>";
                         $link = $this->container->get('router')->generate(
                             'translationalresearch_request_index_filter',

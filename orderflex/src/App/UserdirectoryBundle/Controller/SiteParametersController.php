@@ -667,7 +667,7 @@ class SiteParametersController extends OrderAbstractController
             //url: user_update_system_cache_assets
             $urlUpdateCacheAssets = $this->container->get('router')->generate(
                 'user_update_system_cache_assets',
-                null,
+                array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
