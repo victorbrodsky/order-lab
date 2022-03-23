@@ -366,7 +366,8 @@ f_install_prepare () {
 	#Output should be "Installer verified"
 	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
 	#install Composer in the /usr/local/bin directory
-	sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer		
+	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+	php composer-setup.php --install-dir=/usr/local/bin --filename=composer	
 	
 	echo -e ${COLOR} OS Info ${NC}
 	sudo hostnamectl
