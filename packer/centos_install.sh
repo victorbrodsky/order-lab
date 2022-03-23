@@ -203,9 +203,9 @@ f_install_php81 () {
 	sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
 	sudo yum -y install php81-php-common
 	
-	yum install php81-syspaths
+	yum -y install php81-syspaths
 	
-	yum --enablerepo=remi install php81-php
+	yum -y --enablerepo=remi install php81-php
 	
 	echo -e  ${COLOR} export PATH ${NC}
 	export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
@@ -352,8 +352,8 @@ f_install_prepare () {
 	#echo -e ${COLOR} PHP 7.4: Copy php.ini to /etc/ ${NC}
 	#cp /etc/php.ini /etc/php_ORIG.ini
 	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
-	#Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
-	#cp /etc/php.ini /etc/php_ORIG.ini
+	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
+	##cp /etc/php.ini /etc/php_ORIG.ini
 	
 	echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
 	cp /etc/opt/remi/php81/php.ini /etc/opt/remi/php81/php_ORIG.ini
