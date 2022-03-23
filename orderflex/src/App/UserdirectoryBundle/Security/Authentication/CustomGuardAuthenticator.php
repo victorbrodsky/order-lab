@@ -198,6 +198,11 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         if( strpos((string)$route,'employees') !== false ) {
             return "employees";
         }
+
+        if( strpos((string)$route,'user') !== false ) {
+            return "employees";
+        }
+
         if( strpos((string)$route,'deidentifier') !== false ) {
             return "deidentifier";
         }
