@@ -921,6 +921,7 @@ Deprecated: Return type of Doctrine\ORM\Query\TreeWalkerChainIterator::offsetGet
 
 Test server 157.139.226.86:
 cd /opt/order-lab/orderflex/
+
 git pull
 bash deploy.sh
 php vendor/bin/phpunit
@@ -930,3 +931,31 @@ cd /srv/order-lab/orderflex/
 git pull origin master
 bash deploy.sh
 php vendor/bin/phpunit
+
+DigitalOcean:
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\DigitalOcean: notes.txt
+digitalocean: warning: /var/cache/yum/x86_64/7/updates/packages/bind-export-libs-9.11.4-26.P2.el7_9.9.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/pgdg12/packages/postgresql12-libs-12.10-1PGDG.rhel7.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 442df0f8: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/remi-safe/packages/php81-8.1-1.el7.remi.x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 00f97f56: NOKEY
+digitalocean: warning: /var/cache/yum/x86_64/7/epel/packages/libmcrypt-2.5.8-13.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID 352c64e5: NOKEY
+digitalocean: Warning: RPMDB altered outside of yum.
+digitalocean: HTTP request sent, awaiting response... 302 Found
+digitalocean: warning: /var/cache/yum/x86_64/7/yarn/packages/yarn-1.22.18-1.noarch.rpm: Header V4 RSA/SHA512 Signature, key ID 6963f07f: NOKEY
+digitalocean: Public key for yarn-1.22.18-1.noarch.rpm is not installed
+digitalocean: warning: /var/cache/yum/x86_64/7/nodesource/packages/nodejs-12.22.11-1nodesource.x86_64.rpm: Header V4 RSA/SHA512 Signature, key ID 34fa74dd: NOKEY
+digitalocean: Public key for nodejs-12.22.11-1nodesource.x86_64.rpm is not installed
+
+digitalocean: @### Composer and deploy using orderflex###
+==> digitalocean: /tmp/script_6161.sh: line 4: composer: command not found
+==> digitalocean: Provisioning step had errors: Running the cleanup provisioner, if present...
+==> digitalocean: Destroying droplet...
+==> digitalocean: Deleting temporary ssh key...
+Build 'digitalocean' errored: Script exited with non-zero exit status: 127.Allowed exit codes are: [0]
+
+==> Some builds didn't complete successfully and had errors:
+--> digitalocean: Script exited with non-zero exit status: 127.Allowed exit codes are: [0]
+
+==> Builds finished but no artifacts were created.
+
+
+
