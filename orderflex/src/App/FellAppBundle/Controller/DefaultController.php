@@ -101,6 +101,9 @@ class DefaultController extends OrderAbstractController
 //        echo "rec letter files count=".count($files)."<br>";
 //
 //        exit('111');
+
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $googlesheetmanagement->authenticationP12Key();
         
         /////////// EOF testing ///////////
 
