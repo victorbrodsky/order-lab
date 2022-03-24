@@ -2585,12 +2585,22 @@ class ResAppUtil {
 
                 //3) If still missing, set to the default value to July 1st
                 if( $startDate == NULL ) {
-                    $startDate = new \DateTime($currentYear."-07-01");
+                    //$startDate = new \DateTime($currentYear."-07-01");
+                    if( $asDateTimeObject ) {
+                        $startDate = new \DateTime($currentYear."-07-01");
+                    } else {
+                        $startDate = $currentYear."-07-01";
+                    }
                 }
 
                 //3) If still missing, set to the default value to June 30
                 if( $endDate == NULL ) {
-                    $endDate = new \DateTime($currentYear."-06-30");
+                    //$endDate = new \DateTime($currentYear."-06-30");
+                    if( $asDateTimeObject ) {
+                        $endDate = new \DateTime($currentYear . "-06-30");
+                    } else {
+                        $endDate = $currentYear . "-06-30";
+                    }
                 }
             }
         }

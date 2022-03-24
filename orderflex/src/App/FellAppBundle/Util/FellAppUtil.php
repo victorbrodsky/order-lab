@@ -215,9 +215,9 @@ class FellAppUtil {
                 //3) If still missing, set to the default value to April 1st
                 if( $startDate == NULL ) {
                     if( $asDateTimeObject ) {
-                        $startDate = new \DateTime($currentYear."-04-01");
+                        $startDate = new \DateTime($currentYear."-07-01");
                     } else {
-                        $startDate = $currentYear."-04-01";
+                        $startDate = $currentYear."-07-01";
                     }
 
                 }
@@ -227,7 +227,7 @@ class FellAppUtil {
                     if( $asDateTimeObject ) {
                         $endDate = new \DateTime($currentYear . "-03-31");
                     } else {
-                        $endDate = $currentYear . "-03-31";
+                        $endDate = $currentYear . "-06-30";
                     }
                 }
             }
