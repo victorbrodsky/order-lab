@@ -112,38 +112,38 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
-        $em = $this->getDoctrine()->getManager();
-        $primaryPublicUserId = 'administrator';
-        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
-        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
-            array(
-                'primaryPublicUserId' => $primaryPublicUserId,
-                'keytype' => $localUserType->getId()
-            )
-        );
-
-        if( $administrators && count($administrators) == 1 ) {
-            $administrator = $administrators[0];
-        } else {
-            $administrator = NULL;
-        }
-
-        $userManager = $this->container->get('user_manager');
-        $userManager->updateUser($administrator);
-
-        $encoder = $this->container->get('security.password_encoder');
-        $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
-        echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-        //$encodedPassword = '$argon2id$v=19$m=65536,t=4,p=1$JEfUey9jtD13oVS833lFPw$/5GrEbDABSdwnVKGyODzPsLlJ+CDwUv9ZtpM6FSa0AE';
-        $encodedPassword = strval($encodedPassword);
-        $encodedPassword = (string)$encodedPassword;
-
-        $administrator->addRole('ROLE_PLATFORM_ADMIN');
-        //$administrator->setPassword((string)$encodedPassword);
-        $em->persist($administrator);
-        //$em->flush($administrator);
-        $em->flush();
-        exit('111');
+//        $em = $this->getDoctrine()->getManager();
+//        $primaryPublicUserId = 'administrator';
+//        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+//        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
+//            array(
+//                'primaryPublicUserId' => $primaryPublicUserId,
+//                'keytype' => $localUserType->getId()
+//            )
+//        );
+//
+//        if( $administrators && count($administrators) == 1 ) {
+//            $administrator = $administrators[0];
+//        } else {
+//            $administrator = NULL;
+//        }
+//
+//        $userManager = $this->container->get('user_manager');
+//        $userManager->updateUser($administrator);
+//
+//        $encoder = $this->container->get('security.password_encoder');
+//        $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+//        echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+//        //$encodedPassword = '$argon2id$v=19$m=65536,t=4,p=1$JEfUey9jtD13oVS833lFPw$/5GrEbDABSdwnVKGyODzPsLlJ+CDwUv9ZtpM6FSa0AE';
+//        $encodedPassword = strval($encodedPassword);
+//        $encodedPassword = (string)$encodedPassword;
+//
+//        $administrator->addRole('ROLE_PLATFORM_ADMIN');
+//        //$administrator->setPassword((string)$encodedPassword);
+//        $em->persist($administrator);
+//        //$em->flush($administrator);
+//        $em->flush();
+//        exit('111');
         
         /////////// EOF testing ///////////
 

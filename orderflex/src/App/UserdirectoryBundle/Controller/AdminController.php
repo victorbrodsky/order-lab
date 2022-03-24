@@ -926,6 +926,8 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateResidencySpecialties");
         //return "Finished generateResidencySpecialties";
 
+        $count_residencySpecialties = $this->generateDefaultResidencySpecialties();
+
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
         $count_generateAuthorshipRoles = $this->generateAuthorshipRoles();
@@ -5523,6 +5525,52 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //TODO: implement Fellowship Subspecialty 'Clinical Informatics' does not exist.
+    public function generateDefaultResidencySpecialties() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+
+        //ResidencySpecialty: Anatomic Pathology and Clinical Pathology
+        // |
+        //FellowshipSubspecialty: Clinical Informatics (Institution: Weill Cornell Medical College => Pathology and Laboratory Medicine)
+
+        $count = 0;
+
+        $residencySpecialty = "Anatomic Pathology and Clinical Pathology";
+        $order = 0;
+        $newResidencySpecialtyEntity = false;
+        $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+        if( !$residencySpecialtyEntity ) {
+            $residencySpecialtyEntity = new ResidencySpecialty();
+            $this->setDefaultList($residencySpecialtyEntity,$order,$username,$residencySpecialty);
+            $residencySpecialtyEntity->setBoardCertificateAvailable(true);
+            $newResidencySpecialtyEntity = true;
+            $em->persist($residencySpecialtyEntity);
+            $count++;
+        }
+
+        $fellappSubspecialty = "Clinical Informatics";
+        $order = 0;
+        $newFellowshipSubspecialtyEntity = false;
+        $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($residencySpecialty."");
+        if( !$fellowshipSubspecialtyEntity ) {
+            $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
+            $this->setDefaultList($fellowshipSubspecialtyEntity,$order,$username,$fellowshipSubspecialty);
+            $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
+            $newFellowshipSubspecialtyEntity = true;
+            $em->persist($fellowshipSubspecialtyEntity);
+            $count++;
+        }
+
+        if( $newResidencySpecialtyEntity || $newFellowshipSubspecialtyEntity ) {
+            $residencySpecialtyEntity->addChild($fellowshipSubspecialtyEntity);
+            $em->flush();
+        }
+
+        return $count;
+    }
 
     public function generateHonorTrainings() {
 

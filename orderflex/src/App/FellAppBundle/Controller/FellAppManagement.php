@@ -901,7 +901,8 @@ class FellAppManagement extends OrderAbstractController {
                 $subspecialtyType->setInstitution($pathology);
                 if (!$testing) {
                     $em->persist($subspecialtyType);
-                    $em->flush($subspecialtyType);
+                    //$em->flush($subspecialtyType);
+                    $em->flush();
                     $msg = "Subspecialty linked with an associated institution ".$subspecialtyType->getInstitution().".";
                 }
                 $count++;
