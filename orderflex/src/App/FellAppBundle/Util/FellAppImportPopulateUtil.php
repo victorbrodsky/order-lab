@@ -128,8 +128,13 @@ class FellAppImportPopulateUtil {
             }
         }
 
+        $filesGoogleDriveCount = 0;
+        if( $filesGoogleDrive ) {
+            $filesGoogleDriveCount = count($filesGoogleDrive);
+        }
+
         $result = "Finish processing Fellowship Application on Google Drive and on server.<br>".
-            "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
+            "filesGoogleDrive=".$filesGoogleDriveCount.", populatedCount=".$populatedCount.
             ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".$populatedBackupApplications.
             ", First generated report in queue=[".$generatedReport."]".
             ", $notExistedApplicationsStr";
