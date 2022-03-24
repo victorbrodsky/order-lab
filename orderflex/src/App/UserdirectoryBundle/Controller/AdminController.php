@@ -8660,7 +8660,7 @@ class AdminController extends OrderAbstractController
             $logger->notice("generate AdministratorAction: Existed administrator=".$administrator);
 
             $flush = false;
-            $res = "$primaryPublicUserId user already exists.";
+            $res = $primaryPublicUserId." user already exists.";
 
             echo 'testing3 <br>';
 
