@@ -8662,11 +8662,13 @@ class AdminController extends OrderAbstractController
             $flush = false;
             $res = "$primaryPublicUserId user already exists.";
 
-            exit('testing3');
+            echo 'testing3 <br>';
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
+
+            exit('testing4 <br>');
 
             if( !$bool ) {
                 $administrator->setPassword($encodedPassword);
