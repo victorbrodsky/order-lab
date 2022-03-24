@@ -131,11 +131,11 @@ class DefaultController extends OrderAbstractController
         $encoder = $this->container->get('security.password_encoder');
         $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
         //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-        //$encodedPassword = strval($encodedPassword);
+        $encodedPassword = strval($encodedPassword);
         $encodedPassword = (string)$encodedPassword;
 
         $administrator->addRole('ROLE_PLATFORM_ADMIN');
-        //$administrator->setPassword($encodedPassword);
+        $administrator->setPassword((string)$encodedPassword);
         $em->persist($administrator);
         //$em->flush($administrator);
         $em->flush();
