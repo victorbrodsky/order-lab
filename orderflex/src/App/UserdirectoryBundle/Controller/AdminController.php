@@ -8641,12 +8641,12 @@ class AdminController extends OrderAbstractController
         $logger->notice("generate AdministratorAction: count=".count($administrators));
         //exit('testing1');
 
-        if( count($administrators) > 1 ) {
-            exit("Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users");
-            throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
+        if( $administrators && count($administrators) > 1 ) {
+            exit("Found multiple $primaryPublicUserId . Found ".count($administrators)."users");
+            throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($administrators)."users" );
         }
 
-        if( count($administrators) == 1 ) {
+        if( $administrators && count($administrators) == 1 ) {
             $administrator = $administrators[0];
         } else {
             $administrator = NULL;
@@ -8695,7 +8695,7 @@ class AdminController extends OrderAbstractController
                 echo "no flash ";
             }
 
-            exit('testing6 res='.$res.'<br>');
+            exit('testing6 res='.$res.', encodedPassword='.$encodedPassword.'<br>');
 
         } else {
 
