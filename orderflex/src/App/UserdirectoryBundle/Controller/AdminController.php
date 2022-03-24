@@ -893,6 +893,7 @@ class AdminController extends OrderAbstractController
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
         $logger->notice("Finished generateLocations");
+        return "Finished generateLocations";
 
         $count_SpotPurpose = $this->generateSpotPurpose();
 
