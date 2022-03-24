@@ -83,6 +83,7 @@ class AuthUtil {
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
+        return $user; //testing
         //echo "Local DB user =".$user."<br>";
         //exit();
 
