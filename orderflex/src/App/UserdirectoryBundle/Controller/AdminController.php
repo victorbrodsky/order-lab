@@ -1021,7 +1021,7 @@ class AdminController extends OrderAbstractController
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
-        //return "Finished generateBusinessPurposes";
+        return "Finished generateBusinessPurposes";
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
