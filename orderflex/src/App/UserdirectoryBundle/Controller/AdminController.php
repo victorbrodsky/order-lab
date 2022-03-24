@@ -8690,7 +8690,7 @@ class AdminController extends OrderAbstractController
                     $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
                     $em->persist($administrator);
                     //$em->flush($administrator);
-                    //$em->flush();
+                    $em->flush();
                     $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
                     echo "flash ";
                 } else {
