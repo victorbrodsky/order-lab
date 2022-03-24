@@ -131,7 +131,7 @@ class DefaultController extends OrderAbstractController
         $encoder = $this->container->get('security.password_encoder');
         $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
         echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-        $encodedPassword = '$argon2id$v=19$m=65536,t=4,p=1$JEfUey9jtD13oVS833lFPw$/5GrEbDABSdwnVKGyODzPsLlJ+CDwUv9ZtpM6FSa0AE';
+        //$encodedPassword = '$argon2id$v=19$m=65536,t=4,p=1$JEfUey9jtD13oVS833lFPw$/5GrEbDABSdwnVKGyODzPsLlJ+CDwUv9ZtpM6FSa0AE';
         $encodedPassword = strval($encodedPassword);
         $encodedPassword = (string)$encodedPassword;
 

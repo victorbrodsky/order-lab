@@ -8658,6 +8658,7 @@ class AdminController extends OrderAbstractController
         $encoder = $this->container->get('security.password_encoder');
         //echo 'testing2 <br>';
 
+        $administrator = NULL; //testing
         if( $administrator ) {
 
             $logger->notice("generate AdministratorAction: Existed administrator=".$administrator);
@@ -8728,6 +8729,7 @@ class AdminController extends OrderAbstractController
             //$administrator->setExpired(false);
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+            exit("encodedPassword=$encodedPassword"); //testing
             $administrator->setPassword($encodedPassword);
 
             $default_time_zone = $this->getParameter('default_time_zone');
