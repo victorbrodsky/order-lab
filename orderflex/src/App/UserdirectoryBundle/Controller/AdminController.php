@@ -8669,7 +8669,8 @@ class AdminController extends OrderAbstractController
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            $encodedPassword = strval($encodedPassword);
+            //$encodedPassword = strval($encodedPassword);
+            $encodedPassword = (string)$encodedPassword;
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
@@ -8678,7 +8679,7 @@ class AdminController extends OrderAbstractController
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( !$bool ) {
-                $administrator->setPassword((string)$encodedPassword);
+                $administrator->setPassword($encodedPassword);
                 $flush = true;
                 $res .= " Password updated.";
             }
