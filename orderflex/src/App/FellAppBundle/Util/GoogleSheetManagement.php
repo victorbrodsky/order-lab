@@ -86,6 +86,13 @@ class GoogleSheetManagement {
 
         $service = $this->getGoogleService();
 
+        if( !$service ) {
+            $event = "Google API service failed!";
+            //exit($event);
+            $logger->warning("deleteRowInListFeed: ".$event);
+            return false;
+        }
+
         $deletedRows = 0;
 
         //identify file by presence of string 'drive.google.com/a/pathologysystems.org/file/d/'
@@ -756,17 +763,18 @@ class GoogleSheetManagement {
             $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
         }
 
+        //dump($pkey);
+        //exit('$pkey exit');
+
+        if( is_file($pkey) ) {
+            return false;
+        }
+
         //$user_to_impersonate = 'olegivanov@pathologysystems.org';
         $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
 
         //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
-        dump($private_key);
-        exit('$private_key exit');
-
-        if( !$private_key ) {
-
-        }
 
         $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
         if( !$googleDriveApiUrlFellApp ) {
@@ -1184,7 +1192,9 @@ class GoogleSheetManagement {
 
         if( !$service ) {
             $event = "Google API service failed!";
-            exit($event);
+            //exit($event);
+            $logger->warning("getConfigOnGoogleDrive: ".$event);
+            return NULL;
         }
 
         //echo "service ok <br>";

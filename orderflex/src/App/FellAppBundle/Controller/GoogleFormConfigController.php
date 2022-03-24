@@ -258,7 +258,9 @@ class GoogleFormConfigController extends OrderAbstractController
 
         if( !$service ) {
             $event = "Google API service failed!";
-            exit($event);
+            //exit($event);
+            $logger->warning("GoogleFormConfigUpdateDriveAction: ".$event);
+            return NULL;
         }
 
         $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
