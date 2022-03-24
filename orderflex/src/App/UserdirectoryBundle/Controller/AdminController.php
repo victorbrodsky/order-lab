@@ -972,7 +972,7 @@ class AdminController extends OrderAbstractController
         $count_VacReqFloatingTypeList = $this->generateVacReqFloatingTypeList();
         return "Finished generateVacReqFloatingTypeList";
 
-        $adminRes = $this->generateAdministratorAction();
+        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
         return "Finished generateAdministratorAction";
 
@@ -8638,6 +8638,7 @@ class AdminController extends OrderAbstractController
             )
         );
         $logger->notice("generate AdministratorAction: count=".count($administrators));
+        exit('testing1');
 
         if( count($administrators) > 1 ) {
             throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
