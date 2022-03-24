@@ -103,7 +103,14 @@ class DefaultController extends OrderAbstractController
 //        exit('111');
 
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $googlesheetmanagement->authenticationP12Key();
+        $service = $googlesheetmanagement->authenticationP12Key();
+        if( !$service ) {
+            $event = "Google API service failed!";
+            exit($event);
+            //$logger->warning("getConfigOnGoogleDrive: ".$event);
+            //return NULL;
+        }
+        exit('111');
         
         /////////// EOF testing ///////////
 
