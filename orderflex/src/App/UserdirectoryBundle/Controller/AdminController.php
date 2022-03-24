@@ -936,6 +936,7 @@ class AdminController extends OrderAbstractController
         $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
         $count_TrainingTypeList = $this->generateTrainingTypeList();
         $logger->notice("Finished generateTrainingTypeList");
+        return "Finished generateTrainingTypeList";
 
         $count_FellAppStatus = $this->generateFellAppStatus();
         $count_FellAppRank = $this->generateFellAppRank();
@@ -1032,7 +1033,7 @@ class AdminController extends OrderAbstractController
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
         $logger->notice("Finished populateClassUrl");
 
-
+        exit('testing generateAll()');
 
 
         $msg =
