@@ -8698,7 +8698,7 @@ class AdminController extends OrderAbstractController
                 }
             }
 
-            //$res = "test res";
+            $res = "test res";
             return 'testing res='.$res;
             //exit('testing6 res='.$res.', encodedPassword='.$encodedPassword.'<br>');
 
