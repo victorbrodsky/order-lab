@@ -926,7 +926,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateResidencySpecialties");
         //return "Finished generateResidencySpecialties";
 
-        $count_residencySpecialties = $this->generateDefaultResidencySpecialties();
+        $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
@@ -1083,6 +1083,7 @@ class AdminController extends OrderAbstractController
             'Completion Reasons='.$count_completionReasons.', '.
             'Training Degrees='.$count_trainingDegrees.', '.
             'Residency Specialties='.$count_residencySpecialties.', '.
+            'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
             //'Major Trainings ='.$count_majorTrainings.', '.
             //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings='.$count_HonorTrainings.', '.
@@ -5526,7 +5527,7 @@ class AdminController extends OrderAbstractController
     }
 
     //TODO: implement Fellowship Subspecialty 'Clinical Informatics' does not exist.
-    public function generateDefaultResidencySpecialties() {
+    public function generateDefaultFellowshipSubspecialties() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -5539,6 +5540,7 @@ class AdminController extends OrderAbstractController
         $count = 0;
 
         $residencySpecialty = "Anatomic Pathology and Clinical Pathology";
+        //$residencySpecialty = "AP/CP";
         $order = 0;
         $newResidencySpecialtyEntity = false;
         $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
