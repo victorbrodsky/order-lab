@@ -8695,7 +8695,7 @@ class AdminController extends OrderAbstractController
                 echo "no flash ";
             }
 
-            exit('testing6 <br>');
+            exit('testing6 res='.$res.'<br>');
 
         } else {
 
