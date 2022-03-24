@@ -893,7 +893,7 @@ class AdminController extends OrderAbstractController
         $count_buildings = $this->generateBuildings();
         $count_locations = $this->generateLocations();
         $logger->notice("Finished generateLocations");
-        return "Finished generateLocations";
+        //return "Finished generateLocations";
 
         $count_SpotPurpose = $this->generateSpotPurpose();
 
@@ -1011,6 +1011,7 @@ class AdminController extends OrderAbstractController
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
+        return "Finished generateBusinessPurposes";
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
