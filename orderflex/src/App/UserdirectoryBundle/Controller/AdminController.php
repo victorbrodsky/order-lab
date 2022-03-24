@@ -955,7 +955,7 @@ class AdminController extends OrderAbstractController
         $count_ResAppSpecificIndividualList = $this->generateResAppSpecificIndividualList();
 
         $logger->notice("Finished generateResAppSpecificIndividualList");
-        return "Finished generateResAppSpecificIndividualList";
+        //return "Finished generateResAppSpecificIndividualList";
 
         $collaborationtypes = $this->generateCollaborationtypes();
 //        $count_Permissions = $this->generatePermissions();
@@ -973,6 +973,7 @@ class AdminController extends OrderAbstractController
 
         $adminRes = $this->generateAdministratorAction();
         $logger->notice("Finished generate AdministratorAction");
+        return "Finished generateAdministratorAction";
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
         $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
