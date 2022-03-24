@@ -837,6 +837,10 @@ class AdminController extends OrderAbstractController
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
 
+        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+        $logger->notice("Finished generate AdministratorAction");
+        return "Finished generateAdministratorAction";
+
         //$count_countryList = $this->generateCountryList();
 
         $count_sitenameList = $this->generateSitenameList($user);
@@ -981,7 +985,7 @@ class AdminController extends OrderAbstractController
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         $logger->notice("Finished setObjectTypeForAllLists");
-        return "Finished setObjectTypeForAllLists";
+        //return "Finished setObjectTypeForAllLists";
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
@@ -1017,7 +1021,7 @@ class AdminController extends OrderAbstractController
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
-        return "Finished generateBusinessPurposes";
+        //return "Finished generateBusinessPurposes";
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
@@ -1036,8 +1040,7 @@ class AdminController extends OrderAbstractController
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
         $logger->notice("Finished populateClassUrl");
 
-        exit('testing generateAll()');
-
+        //exit('testing generateAll()');
 
         $msg =
             'Generated Tables: '.
@@ -8642,8 +8645,8 @@ class AdminController extends OrderAbstractController
         //exit('testing1');
 
         if( $administrators && count($administrators) > 1 ) {
-            exit("Found multiple $primaryPublicUserId . Found ".count($administrators)."users");
-            throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($administrators)."users" );
+            return "Found multiple $primaryPublicUserId. Found ".count($administrators)."users";
+            //throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($administrators)."users" );
         }
 
         if( $administrators && count($administrators) == 1 ) {
@@ -8653,7 +8656,7 @@ class AdminController extends OrderAbstractController
         }
 
         $encoder = $this->container->get('security.password_encoder');
-        echo 'testing2 <br>';
+        //echo 'testing2 <br>';
 
         if( $administrator ) {
 
@@ -8662,13 +8665,13 @@ class AdminController extends OrderAbstractController
             $flush = false;
             $res = $primaryPublicUserId." user already exists.";
 
-            echo 'testing3 <br>';
+            //echo 'testing3 <br>';
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            echo 'testing4 <br>';
+            //echo 'testing4 <br>';
             //return 'testing res='.$res;
 
             if( !$bool ) {
@@ -8699,7 +8702,7 @@ class AdminController extends OrderAbstractController
             }
 
             //$res = "test res";
-            return 'testing res='.$res;
+            //return 'testing res='.$res;
             //exit('testing6 res='.$res.', encodedPassword='.$encodedPassword.'<br>');
 
         } else {
@@ -8738,7 +8741,7 @@ class AdminController extends OrderAbstractController
             $em->flush();
             $logger->notice("generate AdministratorAction: after flush new administrator=".$administrator);
         }
-        exit('testing');
+        //exit('testing');
 
         $logger->notice("Finished generate AdministratorAction: res=".$res);
         return $res;
