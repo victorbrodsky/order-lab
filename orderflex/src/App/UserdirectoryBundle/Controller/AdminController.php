@@ -8668,7 +8668,7 @@ class AdminController extends OrderAbstractController
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            exit('testing4 <br>');
+            echo 'testing4 <br>';
 
             if( !$bool ) {
                 $administrator->setPassword($encodedPassword);
@@ -8681,6 +8681,8 @@ class AdminController extends OrderAbstractController
                 $flush = true;
                 $res .= " Role ROLE_PLATFORM_ADMIN added.";
             }
+
+            exit('testing5 <br>');
 
             if( $flush ) {
                 $logger->notice("generate AdministratorAction: before flush administrator=".$administrator);
