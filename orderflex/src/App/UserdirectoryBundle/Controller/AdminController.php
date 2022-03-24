@@ -8686,11 +8686,11 @@ class AdminController extends OrderAbstractController
 
                 echo 'testing5 <br>';
 
-                if( 0 && $flush ) {
+                if( $flush ) {
                     $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
                     $em->persist($administrator);
                     //$em->flush($administrator);
-                    $em->flush();
+                    //$em->flush();
                     $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
                     echo "flash ";
                 } else {
