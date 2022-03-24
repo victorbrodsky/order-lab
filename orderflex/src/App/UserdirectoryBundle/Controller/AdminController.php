@@ -920,7 +920,7 @@ class AdminController extends OrderAbstractController
         $count_FellowshipTitles = $this->generateFellowshipTitles();
         $count_residencySpecialties = $this->generateResidencySpecialties();
         $logger->notice("Finished generateResidencySpecialties");
-        return "Finished generateResidencySpecialties";
+        //return "Finished generateResidencySpecialties";
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
@@ -977,6 +977,7 @@ class AdminController extends OrderAbstractController
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         $logger->notice("Finished setObjectTypeForAllLists");
+        return "Finished setObjectTypeForAllLists";
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
