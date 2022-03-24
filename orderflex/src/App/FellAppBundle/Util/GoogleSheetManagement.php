@@ -761,6 +761,12 @@ class GoogleSheetManagement {
 
         //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
+        dump($private_key);
+        exit('$private_key exit');
+
+        if( !$private_key ) {
+
+        }
 
         $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
         if( !$googleDriveApiUrlFellApp ) {
