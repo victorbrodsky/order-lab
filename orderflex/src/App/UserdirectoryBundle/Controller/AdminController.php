@@ -838,6 +838,7 @@ class AdminController extends OrderAbstractController
         //$this->generateLocationsFromExcel();
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+        exit('$adminRes='.$adminRes);
         $logger->notice("Finished generate AdministratorAction");
         return "Finished generateAdministratorAction";
 
