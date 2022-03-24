@@ -8651,8 +8651,9 @@ class AdminController extends OrderAbstractController
         } else {
             $administrator = NULL;
         }
-        exit('testing2');
+
         $encoder = $this->container->get('security.password_encoder');
+        echo 'testing2 <br>';
 
         if( $administrator ) {
 
@@ -8660,6 +8661,8 @@ class AdminController extends OrderAbstractController
 
             $flush = false;
             $res = "$primaryPublicUserId user already exists.";
+
+            exit('testing3');
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
 
@@ -8724,6 +8727,7 @@ class AdminController extends OrderAbstractController
             $em->flush();
             $logger->notice("generate AdministratorAction: after flush new administrator=".$administrator);
         }
+        exit('testing');
 
         $logger->notice("Finished generate AdministratorAction: res=".$res);
         return $res;
