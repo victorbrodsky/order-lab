@@ -985,7 +985,7 @@ class AdminController extends OrderAbstractController
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         $logger->notice("Finished setObjectTypeForAllLists");
-        //return "Finished setObjectTypeForAllLists";
+        return "Finished setObjectTypeForAllLists";
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
@@ -1021,7 +1021,7 @@ class AdminController extends OrderAbstractController
         $count_BusinessPurposesList = $this->generateBusinessPurposes();
         $count_OrderableStatusList = $this->generateOrderableStatusList();
         $logger->notice("Finished generateBusinessPurposes");
-        return "Finished generateBusinessPurposes";
+        //return "Finished generateBusinessPurposes";
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
