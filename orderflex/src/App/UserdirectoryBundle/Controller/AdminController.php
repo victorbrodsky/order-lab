@@ -8677,7 +8677,7 @@ class AdminController extends OrderAbstractController
                 $res .= " Password updated.";
             }
 
-            if(1) {
+            if(0) {
                 if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
                     $administrator->addRole('ROLE_PLATFORM_ADMIN');
                     $flush = true;
