@@ -5526,7 +5526,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    //TODO: implement Fellowship Subspecialty 'Clinical Informatics' does not exist.
+    //Create default Fellowship Subspecialty 'Clinical Informatics'
     public function generateDefaultFellowshipSubspecialties() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
