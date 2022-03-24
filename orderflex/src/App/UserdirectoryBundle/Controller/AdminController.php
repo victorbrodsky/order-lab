@@ -5551,10 +5551,10 @@ class AdminController extends OrderAbstractController
             $count++;
         }
 
-        $fellappSubspecialty = "Clinical Informatics";
+        $fellowshipSubspecialty = "Clinical Informatics";
         $order = 0;
         $newFellowshipSubspecialtyEntity = false;
-        $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($residencySpecialty."");
+        $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
         if( !$fellowshipSubspecialtyEntity ) {
             $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
             $this->setDefaultList($fellowshipSubspecialtyEntity,$order,$username,$fellowshipSubspecialty);
