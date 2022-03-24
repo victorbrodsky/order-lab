@@ -920,6 +920,7 @@ class AdminController extends OrderAbstractController
         $count_FellowshipTitles = $this->generateFellowshipTitles();
         $count_residencySpecialties = $this->generateResidencySpecialties();
         $logger->notice("Finished generateResidencySpecialties");
+        return "Finished generateResidencySpecialties";
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
