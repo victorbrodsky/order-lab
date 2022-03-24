@@ -8684,7 +8684,7 @@ class AdminController extends OrderAbstractController
 
             echo 'testing5 <br>';
 
-            if( $flush ) {
+            if( 0 && $flush ) {
                 $logger->notice("generate AdministratorAction: before flush administrator=".$administrator);
                 $em->persist($administrator);
                 //$em->flush($administrator);
