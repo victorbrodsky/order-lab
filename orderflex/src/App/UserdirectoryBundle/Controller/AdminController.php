@@ -8672,7 +8672,7 @@ class AdminController extends OrderAbstractController
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            echo 'testing4 $encodedPassword='.$encodedPassword.'<br>';
+            //echo 'testing4 $encodedPassword='.$encodedPassword.'<br>';
             //exit('111');
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
@@ -8689,7 +8689,7 @@ class AdminController extends OrderAbstractController
                     $res .= " Role ROLE_PLATFORM_ADMIN added.";
                 }
 
-                echo 'testing5 <br>';
+                //echo 'testing5 <br>';
 
                 if( $flush ) {
                     $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
@@ -8697,9 +8697,9 @@ class AdminController extends OrderAbstractController
                     //$em->flush($administrator);
                     $em->flush();
                     $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
-                    echo "flash ";
+                    //echo "flash ";
                 } else {
-                    echo "no flash ";
+                    //echo "no flash ";
                 }
             }
 
