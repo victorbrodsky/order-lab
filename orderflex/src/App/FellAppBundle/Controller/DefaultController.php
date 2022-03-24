@@ -134,8 +134,8 @@ class DefaultController extends OrderAbstractController
         //$encodedPassword = strval($encodedPassword);
         $encodedPassword = (string)$encodedPassword;
 
-        $administrator->addRole('ROLE_PLATFORM_ADMIN');
-        $administrator->setPassword($encodedPassword);
+        //$administrator->addRole('ROLE_PLATFORM_ADMIN');
+        //$administrator->setPassword($encodedPassword);
         $em->persist($administrator);
         //$em->flush($administrator);
         $em->flush();
