@@ -111,6 +111,34 @@ class DefaultController extends OrderAbstractController
 //            //return NULL;
 //        }
 //        exit('111');
+
+        $em = $this->getDoctrine()->getManager();
+        $primaryPublicUserId = 'administrator';
+        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
+            array(
+                'primaryPublicUserId' => $primaryPublicUserId,
+                'keytype' => $localUserType->getId()
+            )
+        );
+
+        if( $administrators && count($administrators) == 1 ) {
+            $administrator = $administrators[0];
+        } else {
+            $administrator = NULL;
+        }
+
+        $encoder = $this->container->get('security.password_encoder');
+        $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+        //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+        //$encodedPassword = strval($encodedPassword);
+        $encodedPassword = (string)$encodedPassword;
+
+        $administrator->setPassword($encodedPassword);
+        $em->persist($administrator);
+        //$em->flush($administrator);
+        $em->flush();
+        exit('111');
         
         /////////// EOF testing ///////////
 

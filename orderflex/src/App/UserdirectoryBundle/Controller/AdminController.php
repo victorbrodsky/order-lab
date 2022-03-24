@@ -8681,7 +8681,7 @@ class AdminController extends OrderAbstractController
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( $bool == false ) {
-                //$administrator->setPassword($encodedPassword);
+                $administrator->setPassword($encodedPassword);
                 $flush = true;
                 $res .= " Password updated.";
             }
