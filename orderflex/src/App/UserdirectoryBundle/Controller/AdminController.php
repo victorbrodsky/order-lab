@@ -8677,7 +8677,7 @@ class AdminController extends OrderAbstractController
                 $res .= " Password updated.";
             }
 
-            if(0) {
+            if(1) {
                 if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
                     $administrator->addRole('ROLE_PLATFORM_ADMIN');
                     $flush = true;
@@ -8686,7 +8686,7 @@ class AdminController extends OrderAbstractController
 
                 echo 'testing5 <br>';
 
-                if ($flush) {
+                if( 0 && $flush ) {
                     $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
                     $em->persist($administrator);
                     //$em->flush($administrator);
