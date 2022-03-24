@@ -974,7 +974,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateVacReqRequestTypeList");
         $count_VacReqFloatingTextList = $this->generateVacReqFloatingTextList();
         $count_VacReqFloatingTypeList = $this->generateVacReqFloatingTypeList();
-        //return "Finished generateVacReqFloatingTypeList";
+        return "Finished generateVacReqFloatingTypeList";
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
