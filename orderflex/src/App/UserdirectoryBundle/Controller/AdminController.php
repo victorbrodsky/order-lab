@@ -739,7 +739,8 @@ class AdminController extends OrderAbstractController
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $msg1 . "<br><br><br>" . $msg2
+            $msg1 . "<br><br><br>" .
+            $msg2
         );
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
