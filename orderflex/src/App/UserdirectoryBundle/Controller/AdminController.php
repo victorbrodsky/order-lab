@@ -838,7 +838,7 @@ class AdminController extends OrderAbstractController
         //$this->generateLocationsFromExcel();
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
-        exit('$adminRes='.$adminRes);
+        //exit('$adminRes='.$adminRes);
         $logger->notice("Finished generate AdministratorAction");
         return "Finished generateAdministratorAction";
 
@@ -8669,13 +8669,13 @@ class AdminController extends OrderAbstractController
             //echo 'testing3 <br>';
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
-            echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
             $encodedPassword = strval($encodedPassword);
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            exit('111');
+            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+            //exit('111');
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( !$bool ) {
