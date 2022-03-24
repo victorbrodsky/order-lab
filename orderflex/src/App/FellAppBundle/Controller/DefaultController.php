@@ -128,6 +128,9 @@ class DefaultController extends OrderAbstractController
             $administrator = NULL;
         }
 
+        $userManager = $this->container->get('user_manager');
+        $userManager->updateUser($administrator);
+
         $encoder = $this->container->get('security.password_encoder');
         $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
         echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';

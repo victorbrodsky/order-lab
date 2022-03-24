@@ -836,10 +836,10 @@ class AdminController extends OrderAbstractController
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
-        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
-        exit('$adminRes='.$adminRes);
-        $logger->notice("Finished generate AdministratorAction");
-        return "Finished generateAdministratorAction";
+//        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+//        exit('$adminRes='.$adminRes);
+//        $logger->notice("Finished generate AdministratorAction");
+//        return "Finished generateAdministratorAction";
 
         //$count_countryList = $this->generateCountryList();
 
@@ -8658,7 +8658,7 @@ class AdminController extends OrderAbstractController
         $encoder = $this->container->get('security.password_encoder');
         //echo 'testing2 <br>';
 
-        $administrator = NULL; //testing
+        //$administrator = NULL; //testing
         if( $administrator ) {
 
             $logger->notice("generate AdministratorAction: Existed administrator=".$administrator);
@@ -8668,45 +8668,50 @@ class AdminController extends OrderAbstractController
 
             //echo 'testing3 <br>';
 
-            $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
-            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            //$encodedPassword = strval($encodedPassword);
-            $encodedPassword = (string)$encodedPassword;
+            ////////////// Update password ///////////////////
+            if(0) {
+                $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+                //$encodedPassword = strval($encodedPassword);
+                $encodedPassword = (string)$encodedPassword;
 
-            $bool = hash_equals($administrator->getPassword(), $encodedPassword);
+                $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            //echo "admin id=".$administrator->getId()."<br>";
+                //echo "admin id=".$administrator->getId()."<br>";
 
-            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            //exit('111');
-            //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
+                //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+                //exit('111');
+                //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
-            if( $bool == false ) {
-                $administrator->setPassword($encodedPassword);
-                $flush = true;
-                $res .= " Password updated.";
-            }
-
-            if(1) {
-                if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
-                    $administrator->addRole('ROLE_PLATFORM_ADMIN');
+                if ($bool == false) {
+                    $administrator->setPassword($encodedPassword);
                     $flush = true;
-                    $res .= " Role ROLE_PLATFORM_ADMIN added.";
-                }
-
-                //echo 'testing5 <br>';
-
-                if( $flush ) {
-                    $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
-                    $em->persist($administrator);
-                    //$em->flush($administrator);
-                    $em->flush();
-                    $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
-                    //echo "flash ";
-                } else {
-                    //echo "no flash ";
+                    $res .= " Password updated.";
                 }
             }
+            ////////////// EOF Update password ///////////////////
+
+            ////////////// Update Role ///////////////////
+            if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
+                $administrator->addRole('ROLE_PLATFORM_ADMIN');
+                $flush = true;
+                $res .= " Role ROLE_PLATFORM_ADMIN added.";
+            }
+            ////////////// EOF Update Role ///////////////////
+
+            //echo 'testing5 <br>';
+
+            if( $flush ) {
+                $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
+                $em->persist($administrator);
+                //$em->flush($administrator);
+                $em->flush();
+                $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
+                //echo "flash ";
+            } else {
+                //echo "no flash ";
+            }
+
 
             //$res = "test res";
             //return 'testing res='.$res;
@@ -8729,7 +8734,8 @@ class AdminController extends OrderAbstractController
             //$administrator->setExpired(false);
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
-            exit("encodedPassword=$encodedPassword"); //testing
+            //$encodedPassword = $argon2id$v=19$m=65536,t=4,p=1$qQUcnDgdNns+KHgHyFrTXQ$XDuWLo1F2TyPhxzEOp8fZ0zXX94EYSACt+f/vjOZYX4
+            //exit("encodedPassword=$encodedPassword"); //testing
             $administrator->setPassword($encodedPassword);
 
             $default_time_zone = $this->getParameter('default_time_zone');

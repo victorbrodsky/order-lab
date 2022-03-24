@@ -812,13 +812,13 @@ class UserSecurityUtil {
         //Check if username is email
         $user = $this->findUserByUsernameAsEmail($username);
         if( $user ) {
-            //throw new \Exception("User [$user] already exists with ID=".$user->getId());
-            //return $user;
+            throw new \Exception("User [$user] already exists with ID=".$user->getId());
+            return $user;
         }
         $user = $this->getUserByUserstr($username);
         if( $user ) {
-            //throw new \Exception("User [$user] already exists with ID=".$user->getId());
-            //return $user;
+            throw new \Exception("User [$user] already exists with ID=".$user->getId());
+            return $user;
         }
 
         //$userManager = $serviceContainer->get('fos_user.user_manager');
