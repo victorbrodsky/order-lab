@@ -8676,23 +8676,25 @@ class AdminController extends OrderAbstractController
                 $res .= " Password updated.";
             }
 
-            if( !$administrator->hasRole('ROLE_PLATFORM_ADMIN') ) {
-                $administrator->addRole('ROLE_PLATFORM_ADMIN');
-                $flush = true;
-                $res .= " Role ROLE_PLATFORM_ADMIN added.";
-            }
+            if(0) {
+                if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
+                    $administrator->addRole('ROLE_PLATFORM_ADMIN');
+                    $flush = true;
+                    $res .= " Role ROLE_PLATFORM_ADMIN added.";
+                }
 
-            echo 'testing5 <br>';
+                echo 'testing5 <br>';
 
-            if( 0 && $flush ) {
-                $logger->notice("generate AdministratorAction: before flush administrator=".$administrator);
-                $em->persist($administrator);
-                //$em->flush($administrator);
-                $em->flush();
-                $logger->notice("generate AdministratorAction: after flush administrator=".$administrator);
-                echo "flash ";
-            } else {
-                echo "no flash ";
+                if ($flush) {
+                    $logger->notice("generate AdministratorAction: before flush administrator=" . $administrator);
+                    $em->persist($administrator);
+                    //$em->flush($administrator);
+                    $em->flush();
+                    $logger->notice("generate AdministratorAction: after flush administrator=" . $administrator);
+                    echo "flash ";
+                } else {
+                    echo "no flash ";
+                }
             }
 
             exit('testing6 res='.$res.', encodedPassword='.$encodedPassword.'<br>');
