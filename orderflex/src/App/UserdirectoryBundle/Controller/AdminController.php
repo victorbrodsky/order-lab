@@ -836,11 +836,10 @@ class AdminController extends OrderAbstractController
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
-
-        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
-        //exit('$adminRes='.$adminRes);
-        $logger->notice("Finished generate AdministratorAction");
-        return "Finished generateAdministratorAction";
+//        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+//        //exit('$adminRes='.$adminRes);
+//        $logger->notice("Finished generate AdministratorAction");
+//        return "Finished generateAdministratorAction";
 
         //$count_countryList = $this->generateCountryList();
 
@@ -979,7 +978,7 @@ class AdminController extends OrderAbstractController
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
-        return "Finished generateAdministratorAction";
+        //return "Finished generateAdministratorAction";
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
         $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
