@@ -724,7 +724,11 @@ class GoogleSheetManagement {
     public function getGoogleService() {
         //$res = $this->authenticationP12Key();
         $res = $this->authenticationGoogle();
-        return $res['service'];
+        if( $res ) {
+            return $res['service'];
+        }
+
+        return NULL;
     }
 
     public function authenticationGoogle() {
