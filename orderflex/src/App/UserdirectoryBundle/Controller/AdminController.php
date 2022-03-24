@@ -970,7 +970,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateVacReqRequestTypeList");
         $count_VacReqFloatingTextList = $this->generateVacReqFloatingTextList();
         $count_VacReqFloatingTypeList = $this->generateVacReqFloatingTypeList();
-        return "Finished generateVacReqFloatingTypeList";
+        //return "Finished generateVacReqFloatingTypeList";
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
@@ -8618,6 +8618,7 @@ class AdminController extends OrderAbstractController
 
         if( $force == false ) {
             if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                exit('testing0');
                 return $this->redirect($this->generateUrl('employees-nopermission'));
             }
         }
