@@ -978,7 +978,7 @@ class AdminController extends OrderAbstractController
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
-        //return "Finished generateAdministratorAction";
+        return "Finished generateAdministratorAction";
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
         $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
