@@ -8668,15 +8668,16 @@ class AdminController extends OrderAbstractController
             //echo 'testing3 <br>';
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+            $encodedPassword = string($encodedPassword);
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
             echo 'testing4 $encodedPassword='.$encodedPassword.'<br>';
-            exit('111');
-            return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
+            //exit('111');
+            //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( !$bool ) {
-                //$administrator->setPassword($encodedPassword);
+                $administrator->setPassword($encodedPassword);
                 $flush = true;
                 $res .= " Password updated.";
             }
