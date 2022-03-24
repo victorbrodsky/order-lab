@@ -766,7 +766,7 @@ class GoogleSheetManagement {
         //dump($pkey);
         //exit('$pkey exit');
 
-        if( is_file($pkey) ) {
+        if( is_file($pkey) == false ) {
             return false;
         }
 
