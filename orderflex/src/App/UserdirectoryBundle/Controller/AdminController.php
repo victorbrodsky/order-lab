@@ -8618,7 +8618,7 @@ class AdminController extends OrderAbstractController
 
         if( $force == false ) {
             if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-                exit('testing0');
+                //exit('testing0');
                 return $this->redirect($this->generateUrl('employees-nopermission'));
             }
         }
@@ -8639,9 +8639,10 @@ class AdminController extends OrderAbstractController
             )
         );
         $logger->notice("generate AdministratorAction: count=".count($administrators));
-        exit('testing1');
+        //exit('testing1');
 
         if( count($administrators) > 1 ) {
+            exit("Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users");
             throw new \Exception( "Found multiple $primaryPublicUserId . Found ".count($primaryPublicUserId)."users" );
         }
 
@@ -8650,7 +8651,7 @@ class AdminController extends OrderAbstractController
         } else {
             $administrator = NULL;
         }
-
+        exit('testing2');
         $encoder = $this->container->get('security.password_encoder');
 
         if( $administrator ) {
