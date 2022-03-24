@@ -8678,8 +8678,8 @@ class AdminController extends OrderAbstractController
             //exit('111');
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
-            if( !$bool ) {
-                //$administrator->setPassword($encodedPassword);
+            if( $bool == false ) {
+                $administrator->setPassword($encodedPassword);
                 $flush = true;
                 $res .= " Password updated.";
             }
