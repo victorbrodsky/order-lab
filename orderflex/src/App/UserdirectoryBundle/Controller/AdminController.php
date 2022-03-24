@@ -836,10 +836,10 @@ class AdminController extends OrderAbstractController
         //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
-//        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
-//        //exit('$adminRes='.$adminRes);
-//        $logger->notice("Finished generate AdministratorAction");
-//        return "Finished generateAdministratorAction";
+        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+        exit('$adminRes='.$adminRes);
+        $logger->notice("Finished generate AdministratorAction");
+        return "Finished generateAdministratorAction";
 
         //$count_countryList = $this->generateCountryList();
 
@@ -8674,12 +8674,14 @@ class AdminController extends OrderAbstractController
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            //exit('111');
+            echo "admin id=".$administrator->getId()."<br>";
+
+            echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+            exit('111');
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( $bool == false ) {
-                $administrator->setPassword($encodedPassword);
+                //$administrator->setPassword($encodedPassword);
                 $flush = true;
                 $res .= " Password updated.";
             }
