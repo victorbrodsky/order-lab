@@ -978,14 +978,14 @@ class AdminController extends OrderAbstractController
 
         $adminRes = $this->generateAdministratorAction(); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
-        return "Finished generateAdministratorAction";
+        //return "Finished generateAdministratorAction";
 
         $count_HealthcareProviderSpecialtiesList = $this->generateHealthcareProviderSpecialtiesList();
         $count_HealthcareProviderCommunicationsList = $this->generateHealthcareProviderCommunicationsList();
 
         $count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
         $logger->notice("Finished setObjectTypeForAllLists");
-        return "Finished setObjectTypeForAllLists";
+        //return "Finished setObjectTypeForAllLists";
 
         $count_BloodProductTransfused = $this->generateBloodProductTransfused();
         $count_TransfusionReactionType = $this->generateTransfusionReactionType();
@@ -8674,10 +8674,10 @@ class AdminController extends OrderAbstractController
 
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
-            echo "admin id=".$administrator->getId()."<br>";
+            //echo "admin id=".$administrator->getId()."<br>";
 
-            echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
-            exit('111');
+            //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
+            //exit('111');
             //return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( $bool == false ) {
