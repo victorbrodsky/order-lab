@@ -936,7 +936,7 @@ class AdminController extends OrderAbstractController
         $count_generateCertifyingBoardOrganization = $this->generateCertifyingBoardOrganization();
         $count_TrainingTypeList = $this->generateTrainingTypeList();
         $logger->notice("Finished generateTrainingTypeList");
-        return "Finished generateTrainingTypeList";
+        //return "Finished generateTrainingTypeList";
 
         $count_FellAppStatus = $this->generateFellAppStatus();
         $count_FellAppRank = $this->generateFellAppRank();
@@ -955,6 +955,7 @@ class AdminController extends OrderAbstractController
         $count_ResAppSpecificIndividualList = $this->generateResAppSpecificIndividualList();
 
         $logger->notice("Finished generateResAppSpecificIndividualList");
+        return "Finished generateResAppSpecificIndividualList";
 
         $collaborationtypes = $this->generateCollaborationtypes();
 //        $count_Permissions = $this->generatePermissions();
