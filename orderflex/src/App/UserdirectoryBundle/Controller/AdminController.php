@@ -8676,7 +8676,7 @@ class AdminController extends OrderAbstractController
                 $res .= " Password updated.";
             }
 
-            if(0) {
+            if(1) {
                 if (!$administrator->hasRole('ROLE_PLATFORM_ADMIN')) {
                     $administrator->addRole('ROLE_PLATFORM_ADMIN');
                     $flush = true;
@@ -8697,6 +8697,7 @@ class AdminController extends OrderAbstractController
                 }
             }
 
+            $res = "test res";
             exit('testing6 res='.$res.', encodedPassword='.$encodedPassword.'<br>');
 
         } else {
