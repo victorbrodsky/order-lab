@@ -8672,6 +8672,7 @@ class AdminController extends OrderAbstractController
             $bool = hash_equals($administrator->getPassword(), $encodedPassword);
 
             echo 'testing4 $encodedPassword='.$encodedPassword.'<br>';
+            exit('111');
             return 'testing res='.$res.', $encodedPassword='.$encodedPassword;
 
             if( !$bool ) {
