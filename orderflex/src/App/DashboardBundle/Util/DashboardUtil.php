@@ -2661,6 +2661,11 @@ class DashboardUtil
         //echo "end=".$endDate->format('m/d/Y')."<br>";
 
         $projectSpecialtyObjects = array();
+
+        if( !$projectSpecialty ) {
+            $projectSpecialty = NULL;
+        }
+
         //echo "projectSpecialty=".$projectSpecialty."<br>";
         if( $projectSpecialty != 0 ) {
             //echo "projectSpecialty=".$projectSpecialty."<br>";
