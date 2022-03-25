@@ -4954,6 +4954,9 @@ class DashboardUtil
 
             $averageDaysNew = array();
             foreach($averageDays as $stateLabel=>$days) {
+                if( isset($countArr[$stateLabel]) == false ) {
+                    continue;
+                }
                 $count = $countArr[$stateLabel];
                 if( $count > 0 ) {
                     //$stateLabel = $stateLabel . " (" . $count . " projects)";
