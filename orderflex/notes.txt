@@ -965,4 +965,9 @@ digitalocean: warning: /var/cache/yum/x86_64/7/nodesource/packages/nodejs-12.22.
 
 /build/dashboard.9606849c.js
 /build/dashboard.6dc3c12b.js
+node ./node_modules/.bin/encore dev
+
+http://view-test.med.cornell.edu/build/runtime.d94b3b43.js
+Error:  http://143.198.26.67/build/runtime.d94b3b43.js
+OK:     http://143.198.26.67/order/build/runtime.d94b3b43.js
 
