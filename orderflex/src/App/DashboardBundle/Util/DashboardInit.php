@@ -1768,6 +1768,7 @@ class DashboardInit
             $mapper
         );
         if( !$nypPathology ) {
+            return 0;
             exit('No Institution: "NYP Pathology and Laboratory Medicine"');
         }
 
