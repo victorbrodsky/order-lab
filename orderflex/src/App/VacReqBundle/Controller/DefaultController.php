@@ -82,24 +82,24 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
-        $vacreqUtil = $this->get('vacreq_util');
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(375);
-        $groups = "";
-        $groupParams = array();
-        //$groupParams['statusArr'] = array('default','user-added');
-        $groupParams['asObject'] = true;
-        $groupParams['asUser'] = true;
-        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-        dump($organizationalInstitutions);
-        foreach($organizationalInstitutions as $organizationalInstitution) {
-            if( $groups ) {
-                $groups = $groups . ";";
-            }
-            $groups = $groups . $organizationalInstitution->getShortestName();
-        }
-        exit($user.': groups='.$groups);
+//        $vacreqUtil = $this->get('vacreq_util');
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(375);
+//        $groups = "";
+//        $groupParams = array();
+//        //$groupParams['statusArr'] = array('default','user-added');
+//        $groupParams['asObject'] = true;
+//        $groupParams['asUser'] = true;
+//        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+//        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+//        dump($organizationalInstitutions);
+//        foreach($organizationalInstitutions as $organizationalInstitution) {
+//            if( $groups ) {
+//                $groups = $groups . ";";
+//            }
+//            $groups = $groups . $organizationalInstitution->getShortestName();
+//        }
+//        exit($user.': groups='.$groups);
 
         //Total Number of Vacation Requests
 //        $yearRangeStr = '2020-2021';
