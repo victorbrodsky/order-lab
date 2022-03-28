@@ -378,7 +378,7 @@ class GoogleFormConfigController extends OrderAbstractController
             //add 'uploadType' => 'multipart'
 
             $additionalParams = array(
-                'newRevision' => $newRevision,
+                //'newRevision' => $newRevision,
                 'data' => $content,
                 'mimeType' => $newMimeType,
                 'uploadType' => 'media'
