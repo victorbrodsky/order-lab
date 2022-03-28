@@ -283,7 +283,7 @@ class GoogleFormConfigController extends OrderAbstractController
         $newRevision = null;
 
         $forceUpdate = true;
-        //$forceUpdate = false;
+        $forceUpdate = false;
 
         //if live
         $environment = $userSecUtil->getSiteSettingParameter('environment');
@@ -451,7 +451,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
             $service->files->update($fileId, $emptyFile, array(
                 'data' => $content,
-                'mimeType' => 'text/csv', //application/json
+                //'mimeType' => 'application/json', //application/json
                 'uploadType' => 'multipart'
             ));
         } catch (Exception $e) {
