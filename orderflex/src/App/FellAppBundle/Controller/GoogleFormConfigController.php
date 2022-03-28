@@ -395,55 +395,9 @@ class GoogleFormConfigController extends OrderAbstractController
             print "An error occurred: " . $e->getMessage();
         }
     }
-
-    /**
-     * Update an existing file's metadata and content.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param string $fileId ID of the file to update.
-     * @param string $newTitle New title for the file.
-     * @param string $newDescription New description for the file.
-     * @param string $newMimeType New MIME type for the file.
-     * @param string $newFilename Filename of the new content to upload.
-     * @param bool $newRevision Whether or not to create a new revision for this file.
-     * @return Google_Servie_Drive_DriveFile The updated file. NULL is returned if
-     *     an API error occurred.
-     */
-    function updateFileContent_new($service, $fileId, $newTitle, $newDescription, $newMimeType, $content, $newRevision) {
-        try {
-            // First retrieve the file from the API.
-            $file = $service->files->get($fileId);
-
-            // File's new metadata.
-            $file->setName($newTitle);
-            $file->setDescription($newDescription);
-            $file->setMimeType($newMimeType);
-
-            // File's new content.
-            //$data = file_get_contents($newFileName);
-
-            //$content = json_encode($content);
-            //dump($content);
-            //exit('111');
-
-            $additionalParams = array(
-                //'newRevision' => $newRevision,
-                'data' => $content,
-                'mimeType' => $newMimeType,
-                'uploadType' => 'media',
-                //'shared' => true
-                //'trashed' => true
-            );
-
-            // Send the request to the API.
-            $updatedFile = $service->files->update($fileId, $file, $additionalParams);
-            return $updatedFile;
-        } catch (Exception $e) {
-            print "An error occurred: " . $e->getMessage();
-        }
-    }
     function updateFileContent($service, $fileId, $newTitle, $newDescription, $newMimeType, $content, $newRevision) {
         try {
+            //for update, create a new File, don't get an existing file
             $emptyFile = new \Google_Service_Drive_DriveFile();
 
             $emptyFile->setName($newTitle);

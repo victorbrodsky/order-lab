@@ -92,6 +92,7 @@ php: /usr/bin/php /etc/php.d /etc/php.ini /opt/remi/php81/root/usr/bin/php /opt/
 Live PATH:
 [oli2002@xits-po-order-prd1 ~]$ echo "$PATH"
 /opt/remi/php74/root/usr/bin:/opt/remi/php74/root/usr/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/oli2002/.local/bin:/home/oli2002/bin
+/opt/remi/php74/root/usr/bin:/opt/remi/php74/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 
 Test PATH:
 [root@xits-po-order-dev1 ~]# echo "$PATH"
