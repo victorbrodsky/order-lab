@@ -451,8 +451,8 @@ class GoogleFormConfigController extends OrderAbstractController
 
             $service->files->update($fileId, $emptyFile, array(
                 'data' => $content,
-                //'mimeType' => 'application/json', //application/json
-                'uploadType' => 'multipart'
+                'mimeType' => $newMimeType, //'application/json', //application/json
+                'uploadType' => 'media'
             ));
         } catch (Exception $e) {
             print "An error occurred: " . $e->getMessage();
