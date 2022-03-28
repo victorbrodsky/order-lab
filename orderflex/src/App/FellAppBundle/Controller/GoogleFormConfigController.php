@@ -362,7 +362,8 @@ class GoogleFormConfigController extends OrderAbstractController
             $file = $service->files->get($fileId);
 
             // File's new metadata.
-            $file->setTitle($newTitle);
+            //$file->setTitle($newTitle);
+            $file->setName($newTitle);
             $file->setDescription($newDescription);
             $file->setMimeType($newMimeType);
 
