@@ -4663,6 +4663,8 @@ class VacReqUtil
     public function getVacReqIdsArrByDqlParameters($dql,$dqlParameters) {
         $dql->select('request.id');
 
+        $dql->groupBy('request.id');
+
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
@@ -4671,7 +4673,7 @@ class VacReqUtil
 
         $result = $query->getScalarResult();
         $ids = array_map('current', $result);
-        $ids = array_unique($ids);
+        //$ids = array_unique($ids);
 
         return $ids;
     }
@@ -5203,6 +5205,24 @@ class VacReqUtil
 //
 //        echo "users=".count($users)."<br>";
         //exit('111');
+
+        return $ids;
+    }
+
+    public function getVacReqUserIdsArrByDqlParameters($dql,$dqlParameters) {
+        $dql->select('user.id');
+
+        $dql->groupBy('user.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $result = $query->getScalarResult();
+        $ids = array_map('current', $result);
+        //$ids = array_unique($ids);
 
         return $ids;
     }

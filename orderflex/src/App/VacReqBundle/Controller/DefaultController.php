@@ -355,16 +355,15 @@ class DefaultController extends OrderAbstractController
 
         $vacreqUtil = $this->get('vacreq_util');
 
-
         $userIdsStr = $request->request->get('ids');
-        //echo "ids=".$ids."<br>";
+        //echo "ids=".$userIdsStr."<br>";
         //exit('111');
 
         //$yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
         $yearRangeStr = $request->request->get('year');
 
         $fileName = "SummaryReportByName-".$yearRangeStr.".xlsx";
-        
+
         //echo "yearRangeStr=".$yearRangeStr."<br>";
 
         //$yearRanges = array();

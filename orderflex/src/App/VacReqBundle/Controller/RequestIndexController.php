@@ -372,7 +372,11 @@ class RequestIndexController extends OrderAbstractController
                 $paginationData['lastItemNumber']." of ".$totalItemCount." matching)";
         }
 
-        $pageTitle = $indexTitle;
+        $pageTitle = "<p>".$indexTitle ."</p>";
+
+        $downloadLink = NULL;
+        $downloadLink2 = NULL;
+        $downloadLink3 = NULL;
 
         if( $requestTypeAbbreviation != "carryover" ) {
             $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql, $dqlParameters);
@@ -380,41 +384,43 @@ class RequestIndexController extends OrderAbstractController
             //print_r($matchingIdsArr);
             //$limitMatching = 1000;
             $limitMatching = null;
-            if( $limitMatching && count($matchingIds) > $limitMatching ) {
-                $pageTitle = $indexTitle . "<br>Unable to export this quantity of items. Please use filters (such as dates) to decrease the number of matching items below $limitMatching.";
+            if ($limitMatching && count($matchingIds) > $limitMatching) {
+                $pageTitle = $pageTitle .
+                    "Unable to export this quantity of items. ".
+                    "Please use filters (such as dates) to decrease the number of matching items below ".
+                    $limitMatching;
             } else {
                 if ($matchingIds) {
 
                     $warningOnclick = NULL;
                     $matchingIdsCount = count($matchingIds);
-                    if( $matchingIdsCount > 1000 ) {
-                        $minutes = round(($matchingIdsCount/30) / 60);
-                        if( $minutes < 1 ) {
+                    if ($matchingIdsCount > 1000) {
+                        $minutes = round(($matchingIdsCount / 30) / 60);
+                        if ($minutes < 1) {
                             $minutesStr = "1 minute";
                         } else {
-                            $minutesStr = round(($matchingIdsCount/30) / 60) . " minutes";
+                            $minutesStr = $minutes . " minutes";
                         }
-                        $warningOnclickMsg = "There are $matchingIdsCount users to process.".
-                            "This might take ".$minutesStr." (or even to fail) to generate the report.".
-                            " If generation will fail, you can try to reduce the number of users by a filter.".
-                            " Do you want to continue?"
-                        ;
+                        $warningOnclickMsg = "There are $matchingIdsCount requests to process." .
+                            "This might take " . $minutesStr . " (or even to fail) to generate the report." .
+                            " If generation will fail, you can try to reduce the number of users by a filter." .
+                            " Do you want to continue?";
                         //<button type="button" class="btn btn-default" data-dismiss="modal" onclick="alert('thank you');">Close</button>
                         //$warningOnclick = 'data-dismiss="modal" onclick="alert(\''.$warningOnclickMsg.'\');"';
-                        $warningOnclick = 'onsubmit="return confirm(\''.$warningOnclickMsg.'\');"';
+                        $warningOnclick = 'onsubmit="return confirm(\'' . $warningOnclickMsg . '\');"';
                     }
 
-                    if(0) {
-                        $downloadUrl = $this->container->get('router')->generate(
-                            'vacreq_download_spreadsheet_get_ids',
-                            array(
-                                'ids' => implode("-", $matchingIds),
-                            ),
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        );
-                        $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
-                        $pageTitle = $indexTitle . " (" . $downloadLink . ")";
-                    }
+//                    if (0) {
+//                        $downloadUrl = $this->container->get('router')->generate(
+//                            'vacreq_download_spreadsheet_get_ids',
+//                            array(
+//                                'ids' => implode("-", $matchingIds),
+//                            ),
+//                            UrlGeneratorInterface::ABSOLUTE_URL
+//                        );
+//                        $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
+//                        $pageTitle = $indexTitle . " (" . $downloadLink . ")";
+//                    }
 
                     $downloadUrl = $this->container->get('router')->generate(
                         'vacreq_download_spreadsheet',
@@ -422,66 +428,91 @@ class RequestIndexController extends OrderAbstractController
                         UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     $downloadLink =
-                        '<form action="'.$downloadUrl.'" method="post" style="display: inline;"'.
+                        '<form action="' . $downloadUrl . '" method="post" style="display: inline;"' .
                         ' ' . $warningOnclick .
-                        '>'.
-                            '<input type="hidden" name="ids" value="'.implode("-", $matchingIds).'">'.
-                            '<input class="btn" type="submit" value="download in Excel by each request" '.
-                            //$warningOnclick.
-                        '>'.
-                        '</form>';
-
-                    //current academic year
-                    //TODO: Summary Report By Name, make in the same line
-                    $currentYearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
-                    $downloadUrl2 = $this->container->get('router')->generate(
-                        'vacreq_download_summary_report_spreadsheet',
-                        array(),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                    $downloadLink2 =
-                        '<form action="'.$downloadUrl2.'" method="post" style="display: inline;"'.
-                        ' ' . $warningOnclick .
-                        '>'.
-                            '<input type="hidden" name="year" value="'.$currentYearRangeStr.'">'.
-                            '<input type="hidden" name="ids" value="'.implode("-", $matchingIds).'">'.
-                            '<input class="btn" type="submit" value="download in Excel by faculty member for '.
-                            $currentYearRangeStr.'" '.
+                        '>' .
+                        '<input type="hidden" name="ids" value="' . implode("-", $matchingIds) . '">' .
+                        '<input class="btn" type="submit" value="download in Excel by each request" ' .
                         //$warningOnclick.
-                        '>'.
+                        '>' .
                         '</form>';
+                }//if $matchingIds
+            }//if else count($matchingIds) > 0
 
-                    //previous academic year
-                    $previousYearRangeStr = $vacreqUtil->getPreviousAcademicYearRange();
-                    $downloadUrl3 = $this->container->get('router')->generate(
-                        'vacreq_download_summary_report_spreadsheet',
-                        array(),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                    $downloadLink3 =
-                        '<form action="'.$downloadUrl3.'" method="post" style="display: inline;"'.
-                        ' ' . $warningOnclick .
-                        '>'.
-                            '<input type="hidden" name="year" value="'.$previousYearRangeStr.'">'.
-                            '<input type="hidden" name="ids" value="'.implode("-", $matchingIds).'">'.
-                            '<input class="btn" type="submit" value="download in Excel by faculty member for '.
-                            $previousYearRangeStr.'" '.
-                        //$warningOnclick.
-                        '>'.
-                        '</form>';
+            //////////// Summary Report By Name, make in the same line //////////////
+            $matchingUserIds = $vacreqUtil->getVacReqUserIdsArrByDqlParameters($dql, $dqlParameters);
+            if ($matchingUserIds) {
 
-                    //$pageTitle = $indexTitle . " <p class='display: inline;'>" . $downloadLink . $downloadLink2 . $downloadLink3 . "</p>";
-
-                    $pageTitle = "<p>".$indexTitle ."</p>".
-                        " <p style='display: inline-block !important;'>" .
-                        $downloadLink . " " .
-                        $downloadLink2 . " ".
-                        $downloadLink3 .
-                        "</p>";
-                    //$pageTitle = $pageTitle . " <div>" . $downloadLink2 . " ". $downloadLink3 . "</div>";
+                $warningOnclick = NULL;
+                $matchingUserIdsCount = count($matchingUserIds);
+                if ($matchingUserIdsCount > 150) {
+                    $minutes = round(($matchingUserIdsCount/5) / 60);
+                    if ($minutes < 1) {
+                        $minutesStr = "1 minute";
+                    } else {
+                        $minutesStr = $minutes . " minutes";
+                    }
+                    $warningOnclickMsg = "There are $matchingUserIdsCount faculty members to process." .
+                        "This might take " . $minutesStr . " (or even to fail) to generate the report." .
+                        " If generation will fail, you can try to reduce the number of users by a filter." .
+                        " Do you want to continue?";
+                    //<button type="button" class="btn btn-default" data-dismiss="modal" onclick="alert('thank you');">Close</button>
+                    //$warningOnclick = 'data-dismiss="modal" onclick="alert(\''.$warningOnclickMsg.'\');"';
+                    $warningOnclick = 'onsubmit="return confirm(\'' . $warningOnclickMsg . '\');"';
                 }
+
+                //current academic year
+                //TODO: Summary Report By Name, make in the same line
+                $currentYearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
+                $downloadUrl2 = $this->container->get('router')->generate(
+                    'vacreq_download_summary_report_spreadsheet',
+                    array(),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $downloadLink2 =
+                    '<form action="' . $downloadUrl2 . '" method="post" style="display: inline;"' .
+                    ' ' . $warningOnclick .
+                    '>' .
+                    '<input type="hidden" name="year" value="' . $currentYearRangeStr . '">' .
+                    '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
+                    '<input class="btn" type="submit" value="download in Excel by faculty member for ' .
+                    $currentYearRangeStr . '" ' .
+                    //$warningOnclick.
+                    '>' .
+                    '</form>';
+
+                //previous academic year
+                $previousYearRangeStr = $vacreqUtil->getPreviousAcademicYearRange();
+                $downloadUrl3 = $this->container->get('router')->generate(
+                    'vacreq_download_summary_report_spreadsheet',
+                    array(),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $downloadLink3 =
+                    '<form action="' . $downloadUrl3 . '" method="post" style="display: inline;"' .
+                    ' ' . $warningOnclick .
+                    '>' .
+                    '<input type="hidden" name="year" value="' . $previousYearRangeStr . '">' .
+                    '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
+                    '<input class="btn" type="submit" value="download in Excel by faculty member for ' .
+                    $previousYearRangeStr . '" ' .
+                    //$warningOnclick.
+                    '>' .
+                    '</form>';
+            } //if( $matchingUserIds ) {
+
+            //$pageTitle = $indexTitle . " <p class='display: inline;'>" . $downloadLink . $downloadLink2 . $downloadLink3 . "</p>";
+
+            if( $downloadLink || $downloadLink2 || $downloadLink3 ) {
+                $pageTitle = $pageTitle .
+                    //"<p>".$indexTitle ."</p>".
+                    " <p style='display: inline-block !important;'>" .
+                    $downloadLink . " " .
+                    $downloadLink2 . " " .
+                    $downloadLink3 .
+                    "</p>";
+                //$pageTitle = $pageTitle . " <div>" . $downloadLink2 . " ". $downloadLink3 . "</div>";
             }
-        }
 
 //        $items = $pagination->getItems();
 //        echo "item count=".count($items)."<br>";
@@ -489,6 +520,8 @@ class RequestIndexController extends OrderAbstractController
 //            echo "item=".$item[0]."<br>";
 //            //print_r($item);
 //        }
+
+        } //if not "carryover"
 
         return array(
             'filterform' => $filterform,

@@ -971,6 +971,9 @@ http://view-test.med.cornell.edu/build/runtime.d94b3b43.js
 Error:  http://143.198.26.67/build/runtime.d94b3b43.js
 OK:     http://143.198.26.67/order/build/runtime.d94b3b43.js
 
+Update PATH for PHP 8.1:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
 Symfony 4.4 to 5.4
 Not supported by Symfony 5:
 friendsofsymfony/comment-bundle - alternative ezsystems/comment-bundle  (symfony ^5.0?)
