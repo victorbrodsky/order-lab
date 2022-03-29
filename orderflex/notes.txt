@@ -971,3 +971,16 @@ http://view-test.med.cornell.edu/build/runtime.d94b3b43.js
 Error:  http://143.198.26.67/build/runtime.d94b3b43.js
 OK:     http://143.198.26.67/order/build/runtime.d94b3b43.js
 
+Symfony 4.4 to 5.4
+Not supported by Symfony 5:
+friendsofsymfony/comment-bundle - alternative ezsystems/comment-bundle  (symfony ^5.0?)
+
+Abandoned:
+bmatzner/fontawesome-bundle
+swiftmailer/swiftmailer         => symfony/mailer
+symfony/swiftmailer-bundle      => symfony/mailer
+symfony/inflector               => The author suggests using the EnglishInflector from the String component package instead.
+
+
+
+

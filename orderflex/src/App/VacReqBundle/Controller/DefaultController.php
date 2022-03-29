@@ -356,13 +356,15 @@ class DefaultController extends OrderAbstractController
         $vacreqUtil = $this->get('vacreq_util');
 
 
-        //$ids = $request->request->get('ids');
+        $userIdsStr = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
         //exit('111');
 
-        $fileName = "SummaryReportByName".".xlsx";
+        //$yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
+        $yearRangeStr = $request->request->get('year');
 
-        $yearRangeStr = $vacreqUtil->getCurrentAcademicYearRange();
+        $fileName = "SummaryReportByName-".$yearRangeStr.".xlsx";
+        
         //echo "yearRangeStr=".$yearRangeStr."<br>";
 
         //$yearRanges = array();
@@ -371,12 +373,12 @@ class DefaultController extends OrderAbstractController
         //$yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange(1);
 
         //ids - users ids with vacreq requests
-        $userIds = $vacreqUtil->getVacReqUsers();
+        //$userIds = $vacreqUtil->getVacReqUsers();
         //echo "userIds=".count($userIds)."<br>";
         //exit('1');
         
         //Spout
-        $vacreqUtil->createtSummaryReportByNameSpout($userIds, $fileName,$yearRangeStr);
+        $vacreqUtil->createtSummaryReportByNameSpout($userIdsStr, $fileName,$yearRangeStr);
 
         exit();
     }

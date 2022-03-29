@@ -5116,7 +5116,8 @@ class VacReqUtil
         return 0;
     }
 
-    //get unique users with vacreq requests
+    //NOT USED
+    //get all unique users with vacreq requests
     public function getVacReqUsers() {
 
         if(0) {
@@ -5202,10 +5203,14 @@ class VacReqUtil
     }
 
     //127.0.0.1/order/index_dev.php/vacation-request/download-summary-report-spreadsheet/
-    public function createtSummaryReportByNameSpout( $userIds, $fileName, $yearRangeStr ) {
+    public function createtSummaryReportByNameSpout( $userIdsStr, $fileName, $yearRangeStr ) {
+
+        set_time_limit(600);
 
         //echo "userIds=".count($userIds)."<br>";
         //exit('1');
+
+        $userIds = explode("-",$userIdsStr);
 
         $testing = true;
         $testing = false;
@@ -5216,18 +5221,18 @@ class VacReqUtil
         $newline =  "\n"; //"<br>\n";
 
         $columns = array(
-            '',
+            //'',
             'Person',                   //0 - A
             'Email',                    //1 - B
             'Group',                    //3 - D
-            //'Approvers',                            //Name(s)ofApprover(s)
-
+//            'Approvers',                            //Name(s)ofApprover(s)
+//
             'Approved Vacation Days',               //TotalNumberOfApprovedVacationDaysDuringSelectedFiscalYear
             'Approved Business Days',               //TotalNumberOfBusinessTripDaysDuringSelectedFiscalYear
             'Approved Vacation and Business Days',  //TotalNumberOfApprovedDaysAway(VacationAndBusiness)DuringSelectedFiscalYear
             'Pending Vacation Days',                //TotalNumberOfRequestedVacationDaysForSelectedYearPendingApproval
             'Total Number of Vacation Requests',    //TotalNumberOfVacationRequests
-
+//
             'Approved Carry Over Days',             //TotalNumberOfApprovedCarriedOverDaysFromLastYear
             'Approved Floating Days',               //TotalNumberOfApprovedFloatingDaysDuringSelectedFiscalYear
 
@@ -5323,13 +5328,14 @@ class VacReqUtil
             }
             $data[array_search('Group', $columns)] = $groups;
 
-            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRangeStr);
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'vacation', $yearRangeStr);
             $approvedVacDays = $vacationDaysRes['numberOfDays'];
             $approvedVacDays = intval($approvedVacDays);
             $totalNumberVacationDays = $totalNumberVacationDays + $approvedVacDays;
             $data[array_search('Approved Vacation Days', $columns)] = $approvedVacDays;
 
-            $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'business',$yearRangeStr);
+
+            $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'business', $yearRangeStr);
             $approvedBusDays = $businessDaysRes['numberOfDays'];
             $approvedBusDays = intval($approvedBusDays);
             $totalNumberBusinessDays = $totalNumberBusinessDays + $approvedBusDays;
@@ -5337,32 +5343,29 @@ class VacReqUtil
 
             $data[array_search('Approved Vacation and Business Days', $columns)] = $approvedVacDays + $approvedBusDays;
 
-            $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear( $subjectUser, 'vacation', $yearRangeStr, "pending" );
+            $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'vacation', $yearRangeStr, "pending");
             $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
             $pendingVacDays = intval($pendingVacDays);
             $totalNumberPendingVacationDays = $totalNumberPendingVacationDays + $pendingVacDays;
             $data[array_search('Pending Vacation Days', $columns)] = $pendingVacDays;
 
-            //exit('111');
-
             //Total Number of Vacation Requests
-            $vacationRequests = $this->getRequestsByUserYears($subjectUser,$yearRangeStr,'vacation');
-            $businessRequests = $this->getRequestsByUserYears($subjectUser,$yearRangeStr,'business');
+            $vacationRequests = $this->getRequestsByUserYears($subjectUser, $yearRangeStr, 'vacation');
+            $businessRequests = $this->getRequestsByUserYears($subjectUser, $yearRangeStr, 'business');
             $totalThisRequests = count($vacationRequests) + count($businessRequests);
             $totalRequests = $totalRequests + $totalThisRequests;
             $data[array_search('Total Number of Vacation Requests', $columns)] = $totalThisRequests;
 
-            //Approved Carry Over Day
             //$carryOverYear = '2022'; //2021-2022
             $startYearArr = $this->getYearsFromYearRangeStr($yearRangeStr);
             $carryOverYear = $startYearArr[0];
-            $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser,'approved',$carryOverYear);
+            $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser, 'approved', $carryOverYear);
             $carryoverApprovedRequests = count($approvedRequests);
             $totalCarryoverApprovedRequests = $totalCarryoverApprovedRequests + $carryoverApprovedRequests;
-            $data[array_search('Approved Carry Over Day', $columns)] = $carryoverApprovedRequests;
+            $data[array_search('Approved Carry Over Days', $columns)] = $carryoverApprovedRequests;
 
             //Approved Floating Days
-            $approvedFloatingDays = $this->getUserFloatingDay($subjectUser,$yearRangeStr,array('approved'));
+            $approvedFloatingDays = $this->getUserFloatingDay($subjectUser, $yearRangeStr, array('approved'));
             $approvedFloatingDays = intval($approvedFloatingDays);
             $totalApprovedFloatingDays = $totalApprovedFloatingDays + $approvedFloatingDays;
             $data[array_search('Approved Floating Days', $columns)] = $approvedFloatingDays;
@@ -5391,17 +5394,19 @@ class VacReqUtil
 //        $data[array_search('Approved Vacation and Business Days', $columns)] = NULL;
 //        $data[array_search('Pending Vacation Days', $columns)] = NULL;
 //        $data[array_search('Total Number of Vacation Requests', $columns)] = NULL;
-//        $data[array_search('Approved Carry Over Day', $columns)] = NULL;
+//        $data[array_search('Approved Carry Over Days', $columns)] = NULL;
 //        $data[array_search('Approved Floating Days', $columns)] = NULL;
 
         //$data[0] = "";
         $data[array_search('Person', $columns)] = "Total";
+        $data[array_search('Email', $columns)] = NULL;
+        $data[array_search('Group', $columns)] = NULL;
         $data[array_search('Approved Vacation Days', $columns)] = $totalNumberVacationDays;
         $data[array_search('Approved Business Days', $columns)] = $totalNumberBusinessDays;
         $data[array_search('Approved Vacation and Business Days', $columns)] = $totalNumberVacationDays + $totalNumberBusinessDays;
         $data[array_search('Pending Vacation Days', $columns)] = $totalNumberPendingVacationDays;
         $data[array_search('Total Number of Vacation Requests', $columns)] = $totalRequests;
-        $data[array_search('Approved Carry Over Day', $columns)] = $totalCarryoverApprovedRequests;
+        $data[array_search('Approved Carry Over Days', $columns)] = $totalCarryoverApprovedRequests;
         $data[array_search('Approved Floating Days', $columns)] = $totalApprovedFloatingDays;
 
         if( $testing == false ) {
