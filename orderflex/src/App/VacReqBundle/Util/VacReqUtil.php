@@ -4867,6 +4867,8 @@ class VacReqUtil
 
     public function createtListExcelSpout( $ids, $fileName ) {
 
+        set_time_limit(600);
+
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
@@ -5041,14 +5043,17 @@ class VacReqUtil
 
         $data = array();
         $data[0] = NULL;
+        $data[1] = NULL;
         $data[2] = NULL;
         $data[3] = NULL;
+        $data[4] = NULL;
         $data[5] = NULL;
         $data[6] = NULL;
         $data[7] = NULL;
+        $data[8] = NULL;
 
         //$ews->setCellValue('B'.$row, "Total"); //1
-        $data[1] = "Total";
+        $data[0] = "Total Days";
         //$ews->setCellValue('E'.$row, $totalNumberBusinessDays); //4
         $data[4] = $totalNumberBusinessDays;
         //$ews->setCellValue('I'.$row, $totalNumberVacationDays); //8
