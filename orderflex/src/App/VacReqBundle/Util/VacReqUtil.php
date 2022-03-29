@@ -5269,6 +5269,9 @@ class VacReqUtil
         if( $testing == false ) {
             //$writer = WriterFactory::create(Type::XLSX);
             $writer = WriterEntityFactory::createXLSXWriter();
+
+            //$writer->setColumnsWidth(25); //setDefaultColumnWidth(25);
+
             $writer->openToBrowser($fileName);
 
             $headerStyle = (new StyleBuilder())
