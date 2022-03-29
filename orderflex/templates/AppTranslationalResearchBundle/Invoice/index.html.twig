@@ -15,17 +15,18 @@
                 for="download-spreadsheet-form" tabindex="0"
                 data-toggle="tooltip"
                 title="Download the spreadsheet with matching invoices">
-                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
             </label>
 
             {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
                 {% if exportUnpaidSummary %}
 
                     <label
-                            for="download-spreadsheet-form-unpaid" tabindex="0"
-                            data-toggle="tooltip"
-                            title="Download unpaid billing summary spreadsheet with matching invoices">
+                        for="download-spreadsheet-form-unpaid" tabindex="0"
+                        data-toggle="tooltip"
+                        title="Download unpaid billing summary spreadsheet with matching invoices">
                         <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        {#<span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>#}
                     </label>
 
                 {% else %}
@@ -54,7 +55,7 @@
                     {#for="warning-download-spreadsheet-form-unpaid" tabindex="0"#}
                     <label
                             data-toggle="modal" data-target="#warningModal"
-                            data-toggle="tooltip"
+                            {#data-toggle="tooltip"#}
                             title="Download unpaid billing summary spreadsheet with matching invoices"
                         ><span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                     </label>

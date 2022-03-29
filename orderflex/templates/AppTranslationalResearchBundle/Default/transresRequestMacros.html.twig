@@ -915,7 +915,11 @@
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
                 {#glyphicon-duplicate is in bootstrap 4 (might not be free), current version does not have it https://bootstrapdocs.com/v3.2.0/docs/components/#}
-                <button type="button" class="btn btn-default btn-sm transres-product-clone-btn" onClick="transresCloneExistingObject(this,'{{ classname }}')"
+                <button type="button"
+                        class="btn btn-default btn-sm transres-product-clone-btn"
+                        onClick="transresCloneExistingObject(this,'{{ classname }}')"
+                        data-toggle="tooltip"
+                        title="Create a new copy of this product or service"
                 >
                     {#<span class="glyphicon glyphicon-duplicate" aria-label="Clone"></span>#}
                     <span class="fa fa-copy" aria-hidden="true" aria-label="Clone"></span>
@@ -923,8 +927,11 @@
                 </button>
 
                 {#<button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>#}
-                <button type="button" class="btn btn-default btn-sm transres-product-remove-btn"
+                <button type="button"
+                        class="btn btn-default btn-sm transres-product-remove-btn"
                         onClick="removeWorkRequestProductObject(this,'{{ classname }}')"
+                        data-toggle="tooltip"
+                        title="Remove this product or service"
                 ><span class="glyphicon glyphicon-remove"></span></button>
 
             </div>

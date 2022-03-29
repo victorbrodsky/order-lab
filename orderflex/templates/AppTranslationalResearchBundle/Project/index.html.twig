@@ -17,7 +17,7 @@
                     for="download-spreadsheet-form-indexpage" tabindex="0"
                     data-toggle="tooltip"
                     title="Export all matching project summaries to a spreadsheet">
-                <span class="fa fa-file-excel-o" aria-hidden="true"></span>
+                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
             </label>
         {% endif %}
     </h4>
@@ -28,7 +28,7 @@
             <button type="submit"
                     id="download-spreadsheet-form-indexpage"
                     class="btn hidden"
-            ><span class="fa fa-file-excel-o" aria-hidden="true"></span> Export all matching project summaries to a spreadsheet</button>
+            ><span class="fa fa-file-excel fa-lg" aria-hidden="true"></span> Export all matching project summaries to a spreadsheet</button>
         </form>
     {% endif %}
 
@@ -42,7 +42,7 @@
             {#transres_util.getProjectsIdsStr(allProjectIds)#}
             {#<p>#}
                 {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">#}
-                    {#<i class="fa fa-file-excel-o"></i> Export matching project summaries to Excel</a>#}
+                    {#<i class="fa fa-file-excel fa-lg"></i> Export matching project summaries to Excel</a>#}
             {#</p>#}
         {#{% else %}#}
             {#<p>Project export to Excel is not available (too many projects). Limit is {{ exportProjectLimit }} project requests.</p>#}
@@ -604,7 +604,7 @@
 
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
-                                    <i class="fa fa-file-excel-o"></i> Export project summary to a spreadsheet</a>
+                                    <i class="fa fa-file-excel fa-lg"></i> Export project summary to a spreadsheet</a>
                             </li>
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}

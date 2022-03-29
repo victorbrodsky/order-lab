@@ -19,7 +19,7 @@
     {% if allProjects|length > 0 %}
     <p>
         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allProjects)}) }}">
-            <i class="fa fa-file-excel-o"></i> Export matching project summaries to Excel</a>
+            <i class="fa fa-file-excel fa-lg"></i> Export matching project summaries to Excel</a>
     </p>
     {% endif %}
 
@@ -316,7 +316,7 @@
 
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
-                                    <i class="fa fa-file-excel-o"></i> Export project summary to a spreadsheet</a>
+                                    <i class="fa fa-file-excel fa-lg"></i> Export project summary to a spreadsheet</a>
                             </li>
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
