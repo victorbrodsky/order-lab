@@ -38,7 +38,7 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
-    console.log('idleTimeout0 cycle=('+cycle+')');
+    //console.log('idleTimeout0 cycle=('+cycle+')');
 
     if( typeof cycle === "undefined" ) {
         //try to get cycle again
@@ -49,7 +49,7 @@ $(document).ready(function() {
         var cycle = 'show';
     }
 
-    console.log('idleTimeout cycle=('+cycle+')');
+    //console.log('idleTimeout cycle=('+cycle+')');
     if( cycle !== 'download' ) {
         //console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
