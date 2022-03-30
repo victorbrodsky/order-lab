@@ -2164,7 +2164,7 @@ Pathology and Laboratory Medicine",
             foreach ($jobs as $job) {
                 //echo $cronJobName.": job=".$job."<br>";
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
-                
+
                 if (strpos((string)$job, $commandName) !== false) {
                     //return $job."";
                     //break;
@@ -2411,8 +2411,9 @@ Pathology and Laboratory Medicine",
     public function checkStatusTest() {
 
         $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
-        $siteEmail = $secUtil->getSiteSettingParameter('siteEmail');
+        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         $subject = "Testing cron job";
         $msg = "Testing cron job";
