@@ -2023,6 +2023,12 @@ Pathology and Laboratory Medicine",
         return $res;
     }
     public function createStatusCronLinux( $statusFrequency = 30 ) {
+
+        if( $this->isWindows() ) {
+            //Windows
+            return "Windows is not supported";
+        }
+        
         $logger = $this->container->get('logger');
         $logger->notice("Creating status cron job for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
@@ -2044,9 +2050,17 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice($res);
+        
+        return $res;
     }
     //Dummy test cron job to check new line for multiple jobs
     public function createTestStatusCronLinux( $statusFrequency = 30 ) {
+
+        if( $this->isWindows() ) {
+            //Windows
+            return "Windows is not supported";
+        }
+        
         $logger = $this->container->get('logger');
         $logger->notice("Creating statustest cron job for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
@@ -2068,6 +2082,8 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice($res);
+        
+        return $res;
     }
     public function createEmailCronLinux( $mailerFlushQueueFrequency = null ) {
         $userSecUtil = $this->container->get('user_security_utility');

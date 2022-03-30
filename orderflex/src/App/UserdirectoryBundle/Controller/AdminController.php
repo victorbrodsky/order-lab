@@ -8900,14 +8900,14 @@ class AdminController extends OrderAbstractController
 
         $userServiceUtil = $this->get('user_service_utility');
 
-        $userServiceUtil->createStatusCronLinux();
+        $res = $userServiceUtil->createStatusCronLinux();
 
         //add test job
         //$userServiceUtil->createTestStatusCronLinux();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Status cron job is generated (check for Maintenance).'
+            'Status cron job to check the Maintenance state: '.$res
         );
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
@@ -8926,11 +8926,11 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->get('user_service_utility');
 
         //add test job
-        $userServiceUtil->createTestStatusCronLinux();
+        $res = $userServiceUtil->createTestStatusCronLinux();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Status test cron job is generated (Testing).'
+            $res
         );
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
@@ -8947,6 +8947,14 @@ class AdminController extends OrderAbstractController
         }
 
         $userServiceUtil = $this->get('user_service_utility');
+
+        if( $userServiceUtil->isWindows() ){
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Windows is not supported"
+            );
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
+        }
 
         $commandJobName = "cron:".$cronJobName;
 
