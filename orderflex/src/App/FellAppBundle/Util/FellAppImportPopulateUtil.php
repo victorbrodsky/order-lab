@@ -938,8 +938,8 @@ class FellAppImportPopulateUtil {
                 $createDateStr = $createDate->format('d-m-Y H:i:s');
             }
 
-            //Create error notification email
-            $subject = "[ORDER] Error: Invalid number of rows in Fellowship Application Spreadsheet";
+            //Create error notification email [ORDER] 
+            $subject = "Error: Invalid number of rows in Fellowship Application Spreadsheet";
             $body = "Invalid number of rows in Fellowship Application Spreadsheet.".
                 " The applicant data is located in row number 3. The applicant data might be missing.".
                 " Number of rows: $highestRow." . ", document ID=" . $document->getId() .
