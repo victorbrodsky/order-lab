@@ -332,43 +332,53 @@
                 <td>
                     {{ user_service_utility.getCronStatus("swift")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'swift'}) }}">Remove</a>
+                </td>
             </tr>
             <tr>
                 <td>Fellowship Applications Import cron</td>
                 <td>
                     {{ user_service_utility.getCronStatus("importfellapp")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'importfellapp'}) }}">Remove</a>
+                </td>
             </tr>
             <tr>
                 <td>Fellowship Applications Verification Import cron</td>
                 <td>
                     {{ user_service_utility.getCronStatus("verifyimport")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'verifyimport'}) }}">Remove</a>
+                </td>
             </tr>
             <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
                     {{ user_service_utility.getCronStatus("invoice-reminder-emails")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'invoice-reminder-emails'}) }}">Remove</a>
+                </td>
             </tr>
             <tr>
                 <td>Status cron (check for Maintenance)</td>
                 <td>
                     {{ user_service_utility.getCronStatus("status")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'status'}) }}">Remove</a>
+                </td>
             </tr>
             <tr>
-                <td>Status Test cron (for Testing)</td>
+                <td>Testing cron job (send every 2 minutes testing email to admin)</td>
                 <td>
                     {{ user_service_utility.getCronStatus("statustest")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', { 'cronJobName': 'statustest'}) }}">Remove</a>
+                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'statustest'}) }}">Remove</a>
                 </td>
             </tr>
 
