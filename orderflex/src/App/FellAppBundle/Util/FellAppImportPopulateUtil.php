@@ -412,7 +412,7 @@ class FellAppImportPopulateUtil {
 
             //use populateSpreadsheet() - main method to create fellapp entity from a spreadsheet
                                                                             //$document,               $datafile=null, $deleteSourceRow=false, $testing=false
-            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile, false, $testing );
+            $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile, false, $testing ); //populate application from Data File
 
             if( $populatedFellowshipApplications ) {
                 $count = count($populatedFellowshipApplications);
@@ -610,7 +610,7 @@ class FellAppImportPopulateUtil {
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
 
-        $populatedBackupApplications = $this->populateSingleFellApp($backupDb, null, true);
+        $populatedBackupApplications = $this->populateSingleFellApp($backupDb, null, true); //process backup file
 
         if( $populatedBackupApplications ) {
             return count($populatedBackupApplications);
@@ -931,10 +931,23 @@ class FellAppImportPopulateUtil {
         ////////////////// Potential ERROR //////////////////
         //$logger->notice("Fellapp populateSpreadsheet: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
         if( !$highestRow || $highestRow < 3 ) {
+
+            $createDateStr = NULL;
+            $createDate = $document->getCreateDate();
+            if( $createDate ) {
+                $createDateStr = $createDate->format('d-m-Y H:i:s');
+            }
+
             //Create error notification email
             $subject = "[ORDER] Error: Invalid number of rows in Fellowship Application Spreadsheet";
-            $body = "Invalid number of rows in Fellowship Application Spreadsheet. The applicant data is located in row number 3. The applicant data might be missing.".
-            "Number of rows: $highestRow." . "document ID=" . $document->getId() . ", filename=".$inputFileName;
+            $body = "Invalid number of rows in Fellowship Application Spreadsheet.".
+                " The applicant data is located in row number 3. The applicant data might be missing.".
+                " Number of rows: $highestRow." . ", document ID=" . $document->getId() .
+                ", title=".$document->getTitle().
+                ", originalName=".$document->getOriginalname().
+                ", createDate=".$createDateStr.
+                ", size=".$document->getSize().
+                ", filename=".$inputFileName;
 
             $logger->error($body);
 
