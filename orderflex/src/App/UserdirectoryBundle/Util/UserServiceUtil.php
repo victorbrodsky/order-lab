@@ -2149,6 +2149,8 @@ Pathology and Laboratory Medicine",
 
     //$cronJobName - 'statustest'
     public function getCronJobFullNameLinux($cronJobName) {
+        $existingJobs = array();
+
         $crontab = new Crontab();
 
         //$jobs = $crontab->getJobsAsSimpleArray();
@@ -2159,10 +2161,15 @@ Pathology and Laboratory Medicine",
             foreach ($jobs as $job) {
                 echo $cronJobName.": job=".$job."<br>";
                 if (strpos((string)$job, $cronJobName) !== false) {
-                    return $job."";
-                    break;
+                    //return $job."";
+                    //break;
+                    $existingJobs[] = $job."";
                 }
             }
+        }
+
+        if( count($existingJobs) > 0 ) {
+            return implode("<br>",$existingJobs);
         }
 
         return false;
