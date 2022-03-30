@@ -173,6 +173,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:status' }
 
+    App\UserdirectoryBundle\Command\StatusTestCronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:statustest' }
+
     App\UserdirectoryBundle\Command\SwiftCronCommand:
         tags:
             - { name: 'console.command', command: 'cron:swift' }

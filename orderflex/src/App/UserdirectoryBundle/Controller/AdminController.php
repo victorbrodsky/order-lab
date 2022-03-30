@@ -8938,6 +8938,30 @@ class AdminController extends OrderAbstractController
     }
 
     /**
+     * @Route("/list/remove-cron-job/{cronJobName}", name="user_remove_cron_job", methods={"GET"})
+     */
+    public function removeCronJobAction(Request $request, $cronJobName)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+
+        $commandJobName = "cron:".$cronJobName;
+
+        //remove test job
+        $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Cron job '.$cronJobName.' has been removed.'
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
+
+    /**
      * @Route("/list/init-dashboard-charts", name="user_init_dashboard_charts", methods={"GET"})
      */
     public function initDashboardChartsAction(Request $request)

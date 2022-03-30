@@ -367,7 +367,9 @@
                 <td>
                     {{ user_service_utility.getCronStatus("statustest")|raw }}
                 </td>
-                <td></td>
+                <td>
+                    <a href="{{ path('user_remove_cron_job', { 'cronJobName': 'statustest'}) }}">Remove</a>
+                </td>
             </tr>
 
             {#Accessibility#}

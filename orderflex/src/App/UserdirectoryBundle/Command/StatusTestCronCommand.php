@@ -52,7 +52,7 @@ class StatusTestCronCommand extends Command {
         $this
             //->setName('console.command')
             //->setCommand('cron:status')
-            ->setDescription('Cron job to check status');
+            ->setDescription('Cron job to check statustest');
     }
 
 
