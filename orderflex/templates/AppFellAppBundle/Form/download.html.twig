@@ -27,6 +27,8 @@
 
 {% block content %}
 
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
     {% include 'AppFellAppBundle/Form/applicant-content.html.twig' %}
 
 {% endblock %}
