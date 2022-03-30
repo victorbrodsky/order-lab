@@ -8899,6 +8899,7 @@ class AdminController extends OrderAbstractController
         }
 
         $userServiceUtil = $this->get('user_service_utility');
+
         $userServiceUtil->createStatusCronLinux();
 
         //add test job
@@ -8907,6 +8908,29 @@ class AdminController extends OrderAbstractController
         $this->get('session')->getFlashBag()->add(
             'notice',
             'Status cron job is generated (check for Maintenance).'
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //exit("Form Node Tree generated: ".$count);
+    }
+
+    /**
+     * @Route("/list/generate-cron-jobs/statustest", name="user_populate_cron_status_test_jobs", methods={"GET"})
+     */
+    public function generateCronStatusTestJobAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+
+        //add test job
+        $userServiceUtil->createTestStatusCronLinux();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Status test cron job is generated (Testing).'
         );
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
