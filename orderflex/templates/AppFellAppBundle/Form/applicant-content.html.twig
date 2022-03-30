@@ -23,7 +23,7 @@
 
 {% set trclassname = "well well-sm" %}
 
-cycle={{ cycle }}<br>
+cycle1={{ cycle }}<br>
 
 {% if cycle != "download" %}
     {% if entity.appStatus %}
@@ -116,7 +116,7 @@ cycle={{ cycle }}<br>
 
 {% endif %}
 
-
+    cycle2={{ cycle }}<br>
     <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
