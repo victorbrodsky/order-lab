@@ -454,12 +454,12 @@ class SecurityController extends OrderAbstractController
 
         if( $lapse > $maxIdleTime ) {
             $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime) . "seconds.";
-            //$logger->notice("keepAliveAction: ".$overlapseMsg);
+            $logger->notice("keepAliveAction: ".$overlapseMsg);
             //echo $overlapseMsg."<br>";
             $response->setContent('show_idletimeout_modal: '.$overlapseMsg);
         } else {
             //echo "OK<br>";
-            //$logger->notice("keepAliveAction: no overlapse: return OK");
+            $logger->notice("keepAliveAction: no overlapse: return OK");
             $response->setContent($msg); //'OK'
         }
 

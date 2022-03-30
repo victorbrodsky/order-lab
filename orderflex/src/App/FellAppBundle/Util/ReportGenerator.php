@@ -566,7 +566,7 @@ class ReportGenerator {
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
         //$logger->notice("2 outdir=".$outdir);
 
-        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //echo "before generate ApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
         $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
@@ -627,7 +627,7 @@ class ReportGenerator {
                 }
             }
         } else {
-//            //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+//            //echo "before generate ApplicationPdf id=".$id."; outdir=".$outdir."<br>";
 //            //0) generate application pdf
 //            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
 //            $logger->notice("Before generate Application Pdf: applicationFilePath=[$applicationFilePath]; outdir=[$outdir]");
@@ -816,7 +816,7 @@ class ReportGenerator {
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
-            $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
+            $logger->notice("generate ApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
 
