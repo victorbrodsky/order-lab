@@ -310,7 +310,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerSpool'}) }}">Edit</a></td>
             </tr>
             <tr>
-                {% set cronStatus = user_service_utility.getCronStatus("swift") %}
+                {% set cronStatus = user_service_utility.getCronStatus("swift",false) %}
                 <td>Frequency of sending emails in the queue (in minutes between eruptions). {{ cronStatus|raw }}</td>
                 <td>{{ entity.mailerFlushQueueFrequency }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>
@@ -330,7 +330,7 @@
             <tr>
                 <td>Email cron</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("swift")|raw }}
+                    {{ user_service_utility.getCronStatus("swift",false)|raw }}
                 </td>
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
@@ -340,7 +340,7 @@
             <tr>
                 <td>Fellowship Applications Import cron</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("importfellapp")|raw }}
+                    {{ user_service_utility.getCronStatus("importfellapp",false)|raw }}
                 </td>
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
@@ -350,7 +350,7 @@
             <tr>
                 <td>Fellowship Applications Verification Import cron</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("verifyimport")|raw }}
+                    {{ user_service_utility.getCronStatus("verifyimport",false)|raw }}
                 </td>
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
@@ -360,7 +360,7 @@
             <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("invoice-reminder-emails")|raw }}
+                    {{ user_service_utility.getCronStatus("invoice-reminder-emails",false)|raw }}
                 </td>
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
@@ -370,7 +370,7 @@
             <tr>
                 <td>Status cron (check for Maintenance)</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("status")|raw }}
+                    {{ user_service_utility.getCronStatus("status",false)|raw }}
                 </td>
                 <td>
                     <a general-data-confirm="Are you sure you would like to remove this cron job?"
@@ -380,7 +380,7 @@
             <tr>
                 <td>Testing cron job (send every 2 minutes testing email to admin)</td>
                 <td>
-                    {{ user_service_utility.getCronStatus("statustest")|raw }}
+                    {{ user_service_utility.getCronStatus("statustest",false)|raw }}
                 </td>
                 <td>
                     <a

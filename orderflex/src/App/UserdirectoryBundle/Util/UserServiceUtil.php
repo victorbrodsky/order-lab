@@ -2139,16 +2139,16 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    public function getCronStatus($cronJobName) {
+    public function getCronStatus($cronJobName,$single=true) {
         if( $this->isWindows() ){
             return $this->getCronStatusWindows($cronJobName);
         } else {
-            return $this->getCronStatusLinux($cronJobName);
+            return $this->getCronStatusLinux($cronJobName,$single);
         }
     }
 
     //$cronJobName - 'statustest'
-    public function getCronJobFullNameLinux($cronJobName) {
+    public function getCronJobFullNameLinux( $cronJobName, $single=true ) {
         $existingJobs = array();
 
         //make ' cron:statustest '
@@ -2166,8 +2166,12 @@ Pathology and Laboratory Medicine",
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
 
                 if (strpos((string)$job, $commandName) !== false) {
-                    //return $job."";
-                    //break;
+
+                    if( $single ) {
+                        return $job."";
+                        break;
+                    }
+
                     $existingJobs[] = $job."";
                 }
             }
