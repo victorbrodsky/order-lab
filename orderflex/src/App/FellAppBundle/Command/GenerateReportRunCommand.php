@@ -77,8 +77,8 @@ class GenerateReportRunCommand extends Command {
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
 
         ///////// testing /////////
-        $result = $fellappRepGen->testCmd();
-        exit('end of testCmd: result='.$result);
+        //$result = $fellappRepGen->testCmd();
+        //exit('end of testCmd: result='.$result);
         ///////// EOF testing /////////
 
         $result = $fellappRepGen->tryRun();
