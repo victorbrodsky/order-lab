@@ -1758,9 +1758,9 @@ class ReportGenerator {
         $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
-        $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);
+        $res = $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);
 
-        exit();
+        exit("Exit testCmd=[".$res."]");
     }
 
 //    protected function spraed($html) {
