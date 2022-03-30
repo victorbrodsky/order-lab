@@ -1748,7 +1748,15 @@ class ReportGenerator {
     //test method for console command
     public function testCmd() {
 
-        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(6);
+        $fellappId = 6;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == "live" ) { //live
+            $fellappId = 1507;
+        }
+
+        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
         $avatar = $fellapp->getAvatars()->last();
 
         //$serverPath = $avatar->getFullServerPath();
