@@ -1918,15 +1918,15 @@ Pathology and Laboratory Medicine",
 
         //first delete existing cron job
         //$this->removeCronJob($crontab,$fellappCronJobCommand);
-
-        $cronJobName = "cron:importfellapp --env=prod";
+        $commandName = "cron:importfellapp";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
         $fellappCronJob = "00 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
 
             $res = $this->addCronJobLinux($fellappCronJob);
 
@@ -1939,15 +1939,15 @@ Pathology and Laboratory Medicine",
         //////////////////// EOF ImportFellowshipApplications ////////////////////
 
         //////////////////// 2a) Verify Import Fellowship Applications (every 6 hours) ////////////////////
-
-        $cronJobName = "cron:verifyimport --env=prod";
+        $commandName = "cron:verifyimport";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $fellappVerifyImportCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
         $fellappVerifyImportCronJob = "0 */6 * * *" . " " . $fellappVerifyImportCronJobCommand; //every 6 hours
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
 
             $res = $this->addCronJobLinux($fellappVerifyImportCronJob);
 
@@ -1960,7 +1960,8 @@ Pathology and Laboratory Medicine",
         //////////////////// EOF ImportFellowshipApplications ////////////////////
 
         //////////////////// 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
-        $cronJobName = "cron:invoice-reminder-emails --env=prod";
+        $commandName = "cron:invoice-reminder-emails";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
@@ -1970,7 +1971,7 @@ Pathology and Laboratory Medicine",
         //$trpCronJob = "41 16 * * 2" . " " . $trpCronJobCommand; //testing: run every tuesday at 17:32
         //$trpCronJob = "*/10 * * * *" . " " . $trpCronJobCommand; //testing: At minute 10
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($trpCronJob);
             $res = "Created $cronJobName cron job";
         } else {
@@ -1981,14 +1982,15 @@ Pathology and Laboratory Medicine",
         //////////////////// EOF 3) UnpaidInvoiceReminder (at 6 am every Monday) ////////////////////
 
         //////////////////// 3b) Expiration Reminder (at 5 am every Monday) ////////////////////
-        $cronJobName = "cron:expiration-reminder-emails --env=prod";
+        $commandName = "cron:expiration-reminder-emails";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $trpCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
         $trpCronJob = "00 05 * * Mon" . " " . $trpCronJobCommand; //every monday (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($trpCronJob);
             $res = "Created $cronJobName cron job";
         } else {
@@ -2033,7 +2035,8 @@ Pathology and Laboratory Medicine",
         $logger->notice("Creating status cron job for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
 
-        $cronJobName = "cron:status --env=prod";
+        $commandName = "cron:status";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
@@ -2042,7 +2045,7 @@ Pathology and Laboratory Medicine",
         //$statusFrequency = 5; //testing
         $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($statusCronJob);
             $res = "Created $cronJobName cron job";
         } else {
@@ -2065,7 +2068,8 @@ Pathology and Laboratory Medicine",
         $logger->notice("Creating statustest cron job for Linux");
         $projectDir = $this->container->get('kernel')->getProjectDir();
 
-        $cronJobName = "cron:statustest --env=prod";
+        $commandName = "cron:statustest";
+        $cronJobName = $commandName." --env=prod";
 
         $phpPath = $this->getPhpPath();
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
@@ -2074,7 +2078,7 @@ Pathology and Laboratory Medicine",
         $statusFrequency = 2; //testing, in minutes
         $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
 
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($statusCronJob);
             $res = "Created $cronJobName cron job";
         } else {
@@ -2109,12 +2113,12 @@ Pathology and Laboratory Medicine",
 
         $emailCronJob = "*/$mailerFlushQueueFrequency * * * *" . " " . $emailCronJobCommand;
 
-        $cronJobName = "cron:swift";
-        if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
+        $commandName = "cron:swift";
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($emailCronJob);
-            $res = "Created $cronJobName cron job";
+            $res = "Created $commandName cron job";
         } else {
-            $res = "$cronJobName already exists";
+            $res = "$commandName already exists";
         }
 
         $logger->notice($res);
@@ -2127,6 +2131,8 @@ Pathology and Laboratory Medicine",
         $res = $crontab->addJob($fullCommand);
         return $res;
     }
+
+    //$commandName: 'cron:statustest'
     public function removeCronJobLinuxByCommandName( $commandName ) {
         $res = false;
         $cronJobFullName = $this->getCronJobFullNameLinux($commandName);
@@ -2147,12 +2153,17 @@ Pathology and Laboratory Medicine",
         }
     }
 
-    //$cronJobName - 'statustest'
-    public function getCronJobFullNameLinux( $cronJobName, $single=true ) {
+    //$commandName - 'cron:statustest'
+    public function getCronJobFullNameLinux( $commandName, $single=true ) {
         $existingJobs = array();
 
         //make ' cron:statustest '
-        $commandName = " "."cron:".$cronJobName." ";
+        //$commandName = " "."cron:".$cronJobName." ";
+
+        $commandName = trim((string)$commandName);
+
+        //make ' cron:statustest '
+        $commandName = " ".$commandName." ";
 
         $crontab = new Crontab();
 
@@ -2185,15 +2196,18 @@ Pathology and Laboratory Medicine",
         return false;
     }
     public function getCronStatusLinux($cronJobName, $asBoolean=false) {
-        $cronJobFullName = $this->getCronJobFullNameLinux($cronJobName);
+
+        $commandName = "cron:".$cronJobName;
+
+        $cronJobFullName = $this->getCronJobFullNameLinux($commandName);
 
         if( $asBoolean ) {
             return $cronJobFullName;
         } else {
             if( $cronJobFullName ) {
-                $resStr = '<font color="green">'.$cronJobName.' cron job status: '.$cronJobFullName.'.</font>';
+                $resStr = '<font color="green">'.$commandName.' cron job status: '.$cronJobFullName.'.</font>';
             } else {
-                $resStr = '<font color="red">'.$cronJobName.' cron job status: not found.</font>';
+                $resStr = '<font color="red">'.$commandName.' cron job status: not found.</font>';
             }
             return $resStr;
         }

@@ -8956,10 +8956,10 @@ class AdminController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
-        $commandJobName = "cron:".$cronJobName;
+        $commandName = "cron:".$cronJobName;
 
         //remove test job
-        $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
+        $userServiceUtil->removeCronJobLinuxByCommandName($commandName);
 
         $this->get('session')->getFlashBag()->add(
             'notice',

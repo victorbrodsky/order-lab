@@ -583,13 +583,13 @@ class EmailUtil {
 
     public function getCronStatus() {
         if( $this->isWindows() ){
-            return $this->getCronStatusWindows();
+            return $this->getCronStatusWindowsEmail();
         } else {
-            return $this->getCronStatusLinux();
+            return $this->getCronStatusLinuxEmail();
         }
     }
 
-    public function getCronStatusWindows() {
+    public function getCronStatusWindowsEmail() {
         $cronJobName = "swift"; //"Swiftmailer";
         $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
         $res = exec($command);
@@ -604,7 +604,7 @@ class EmailUtil {
         return $res;
     }
 
-    public function getCronStatusLinux() {
+    public function getCronStatusLinuxEmail() {
 
         return "Not implemented for Symfony >=4";
 
