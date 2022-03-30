@@ -2056,8 +2056,8 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $statusFrequency = 30;
-        //$statusFrequency = 5; //testing
+        //$statusFrequency = 30; //minutes
+        $statusFrequency = 2; //testing, in minutes
         $statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
@@ -2372,6 +2372,22 @@ Pathology and Laboratory Medicine",
         } else {
             $msg = "Max time is ok";
         }
+
+        //4) send warning email
+
+        return $msg;
+    }
+
+    public function checkStatusTest() {
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $siteEmail = $secUtil->getSiteSettingParameter('siteEmail');
+
+        $subject = "Testing cron job";
+        $msg = "Testing cron job";
+
+        $emailUtil->sendEmail($siteEmail,$subject,$msg);
 
         //4) send warning email
 
