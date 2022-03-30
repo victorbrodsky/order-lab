@@ -23,6 +23,8 @@
 
 {% set trclassname = "well well-sm" %}
 
+cycle={{ cycle }}<br>
+
 {% if cycle != "download" %}
     {% if entity.appStatus %}
         {% if entity.appStatus.name == 'archive' %}

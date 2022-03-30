@@ -29,7 +29,6 @@
 
 {% block content %}
 
-    cycle={{ cycle }}<br>
     {% if cycle == "download" %}
         {% set collapsein = "in" %}
     {% else %}
@@ -66,30 +65,6 @@
                 $('#interviews').collapse('show');
                 expandTextarea($('#interviews'));
             }
-
-
-
-            //overwrite
-            idleTimeoutClass.prototype.onTimeout = function() {
-                console.log("onTimeout: scan");
-                keepWorking();
-                tryToSubmitForm();
-            }
-
-            //overwrite
-            idleTimeoutClass.prototype.onAbort = function() {
-                console.log("onAbort: scan");
-                tryToSubmitForm();
-                idlelogout();
-                //var par = 'par!!!';
-            }
-
-            var idleTimeout = new idleTimeoutClass();
-
-            idleTimeout.init();
-            //idleTimeout.setMaxIdletime();
-            idleTimeout.checkIdleTimeout();
-
         });
 
     </script>
