@@ -156,7 +156,7 @@ class ResappSiteParameterType extends AbstractType
         $builder->add(
             $builder->create('resappAcademicYearStart', null, [
                 'label'=>'Application season start date (MM/DD) when the default residency application year changes to the following year'.
-                    ' (The global start date is used if not set):',
+                    ' (the global start date is used if not set):',
                 'required' => false,
             ])
                 ->addViewTransformer(new DayMonthDateTransformer())
@@ -164,7 +164,7 @@ class ResappSiteParameterType extends AbstractType
         $builder->add(
             $builder->create('resappAcademicYearEnd', null, [
                 'label'=>'Application season end date (MM/DD) when the default residency application year changes to the following year'.
-                    ' (The global end date is used if not set):',
+                    ' (the global end date is used if not set):',
                 'required' => false,
             ])
                 ->addViewTransformer(new DayMonthDateTransformer())

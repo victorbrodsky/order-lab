@@ -81,7 +81,7 @@ class FellappSiteParameterType extends AbstractType
                 $builder->create('fellappAcademicYearStart', null, [
                     'label'=>'Application season start date (MM/DD) when the default fellowship application'.
                         ' year changes to the following year (i.e. April 1st)'.
-                        ' (The global start date is used if not set):',
+                        ' (the global start date is used if not set):',
                     'required' => false,
                 ])
                     ->addViewTransformer(new DayMonthDateTransformer())
@@ -90,7 +90,7 @@ class FellappSiteParameterType extends AbstractType
             $builder->create('fellappAcademicYearEnd', null, [
                 'label'=>'Application season end date (MM/DD) when the default fellowship application'.
                     ' year changes to the following year, if empty set to start date -1 day (i.e. March 31)'.
-                    ' (The global end date is used if not set):',
+                    ' (the global end date is used if not set):',
                 'required' => false,
             ])
                 ->addViewTransformer(new DayMonthDateTransformer())
