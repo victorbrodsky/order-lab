@@ -38,11 +38,18 @@ $(document).ready(function() {
         Dropzone.autoDiscover = false;
     }
 
+    console.log('idleTimeout0 cycle=('+cycle+')');
+
+    if( typeof cycle === "undefined" ) {
+        //try to get cycle again
+        var cycle = $("#formcycle").val();
+    }
+
     if( typeof cycle === "undefined" ) {
         var cycle = 'show';
     }
 
-    console.log('cycle=('+cycle+')');
+    console.log('idleTimeout cycle=('+cycle+')');
     if( cycle !== 'download' ) {
         //console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
