@@ -2151,6 +2151,9 @@ Pathology and Laboratory Medicine",
     public function getCronJobFullNameLinux($cronJobName) {
         $existingJobs = array();
 
+        //make ' cron:statustest '
+        $commandName = " "."cron:".$cronJobName." ";
+
         $crontab = new Crontab();
 
         //$jobs = $crontab->getJobsAsSimpleArray();
@@ -2159,8 +2162,10 @@ Pathology and Laboratory Medicine",
         if( isset($jobs) && is_array($jobs) ) {
 
             foreach ($jobs as $job) {
-                echo $cronJobName.": job=".$job."<br>";
-                if (strpos((string)$job, $cronJobName) !== false) {
+                //echo $cronJobName.": job=".$job."<br>";
+                //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
+                
+                if (strpos((string)$job, $commandName) !== false) {
                     //return $job."";
                     //break;
                     $existingJobs[] = $job."";
