@@ -1746,7 +1746,14 @@ class ReportGenerator {
 
 
     //test method for console command
+    //php bin/console fellapp:generate-test-reportrun
     public function testCmd() {
+
+        //get PHP version
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $resPhp = $userServiceUtil->runProcess('php -v');
+        echo "php=[".$resPhp."]";
+
 
         $fellappId = 6;
 

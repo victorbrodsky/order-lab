@@ -432,7 +432,7 @@ class RequestIndexController extends OrderAbstractController
                         ' ' . $warningOnclick .
                         '>' .
                         '<input type="hidden" name="ids" value="' . implode("-", $matchingIds) . '">' .
-                        '<input class="btn" type="submit" value="download in Excel by each request" ' .
+                        '<input class="btn" type="submit" value="Download request list" ' .
                         //$warningOnclick.
                         '>' .
                         '</form>';
@@ -475,7 +475,7 @@ class RequestIndexController extends OrderAbstractController
                     '>' .
                     '<input type="hidden" name="year" value="' . $currentYearRangeStr . '">' .
                     '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
-                    '<input class="btn" type="submit" value="download in Excel by faculty member for ' .
+                    '<input class="btn" type="submit" value="Download summary for ' .
                     $currentYearRangeStr . '" ' .
                     //$warningOnclick.
                     '>' .
@@ -494,7 +494,7 @@ class RequestIndexController extends OrderAbstractController
                     '>' .
                     '<input type="hidden" name="year" value="' . $previousYearRangeStr . '">' .
                     '<input type="hidden" name="ids" value="' . implode("-", $matchingUserIds) . '">' .
-                    '<input class="btn" type="submit" value="download in Excel by faculty member for ' .
+                    '<input class="btn" type="submit" value="Download summary for ' .
                     $previousYearRangeStr . '" ' .
                     //$warningOnclick.
                     '>' .
