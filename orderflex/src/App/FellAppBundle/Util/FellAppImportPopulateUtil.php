@@ -410,7 +410,7 @@ class FellAppImportPopulateUtil {
             $logger->notice("Start processing datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
                 ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
 
-            //use populateSpreadsheet() - main method to create fellapp entity from a spreadsheet
+            //use populate Spreadsheet() - main method to create fellapp entity from a spreadsheet
                                                                             //$document,               $datafile=null, $deleteSourceRow=false, $testing=false
             $populatedFellowshipApplications = $this->populateSingleFellApp( $datafile->getDocument(), $datafile, false, $testing ); //populate application from Data File
 
@@ -929,64 +929,72 @@ class FellAppImportPopulateUtil {
         $populatedFellowshipApplications = new ArrayCollection();
 
         ////////////////// Potential ERROR //////////////////
-        //$logger->notice("Fellapp populateSpreadsheet: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
-        if( !$highestRow || $highestRow < 3 ) {
+        //$logger->notice("Fellapp populate Spreadsheet: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+        //TODO: Invalid number of rows in Fellowship Application Spreadsheet.
+        // The applicant data is located in row number 3.
+        // The applicant data might be missing. Number of rows: 2., document ID=39765,
+        // title=, originalName=BackupSpreadsheet,
+        // createDate=30-03-2022 22:23:21, size=8.943359375,
+        // filename=/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648679001ID19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo
+        if(false) {
+            if (!$highestRow || $highestRow < 3) {
 
-            $createDateStr = NULL;
-            $createDate = $document->getCreateDate();
-            if( $createDate ) {
-                $createDateStr = $createDate->format('d-m-Y H:i:s');
+                $createDateStr = NULL;
+                $createDate = $document->getCreateDate();
+                if ($createDate) {
+                    $createDateStr = $createDate->format('d-m-Y H:i:s');
+                }
+
+                //Create error notification email [ORDER]
+                $subject = "Error: Invalid number of rows in Fellowship Application Spreadsheet";
+                $body = "Invalid number of rows in Fellowship Application Spreadsheet." .
+                    " The applicant data is located in row number 3. The applicant data might be missing." .
+                    " Number of rows: $highestRow." . ", document ID=" . $document->getId() .
+                    ", title=" . $document->getTitle() .
+                    ", originalName=" . $document->getOriginalname() .
+                    ", createDate=" . $createDateStr .
+                    ", size=" . $document->getSize() .
+                    ", filename=" . $inputFileName;
+
+                $logger->error($body);
+
+                $userSecUtil = $this->container->get('user_security_utility');
+                $systemUser = $userSecUtil->findSystemUser();
+
+                $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+                //Send email to admins
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                if (!$emails) {
+                    $emails = $ccs;
+                    $ccs = null;
+                }
+                $emails = $ccs = 'oli2002@med.cornell.edu'; //testing
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+                if ($testing == false) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                }
+
+                ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
+                $datafileId = NULL;
+                if ($datafile) {
+                    $datafileId = $datafile->getId();
+                }
+                $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=" . $datafileId . " and associated documentId=" . $document->getId());
+                unlink($inputFileName);
+                $em->remove($document);
+                if ($datafile) {
+                    $em->remove($datafile);
+                }
+
+                if ($testing == false) {
+                    $em->flush();
+                }
+                return false;
             }
-
-            //Create error notification email [ORDER] 
-            $subject = "Error: Invalid number of rows in Fellowship Application Spreadsheet";
-            $body = "Invalid number of rows in Fellowship Application Spreadsheet.".
-                " The applicant data is located in row number 3. The applicant data might be missing.".
-                " Number of rows: $highestRow." . ", document ID=" . $document->getId() .
-                ", title=".$document->getTitle().
-                ", originalName=".$document->getOriginalname().
-                ", createDate=".$createDateStr.
-                ", size=".$document->getSize().
-                ", filename=".$inputFileName;
-
-            $logger->error($body);
-
-            $userSecUtil = $this->container->get('user_security_utility');
-            $systemUser = $userSecUtil->findSystemUser();
-
-            $userSecUtil->sendEmailToSystemEmail($subject, $body);
-
-            //Send email to admins
-            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-            if (!$emails) {
-                $emails = $ccs;
-                $ccs = null;
-            }
-            $emails = $ccs = 'oli2002@med.cornell.edu'; //testing
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
-
-            if( $testing == false ) {
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Fellowship Application Creation Failed');
-            }
-
-            ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
-            $datafileId = NULL;
-            if( $datafile ) {
-                $datafileId = $datafile->getId();
-            }
-            $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=".$datafileId." and associated documentId=".$document->getId());
-            unlink($inputFileName);
-            $em->remove($document);
-            if( $datafile ) {
-                $em->remove($datafile);
-            }
-
-            if( $testing == false ) {
-                $em->flush();
-            }
-            return false;
         }
         ////////////////// EOF Potential ERROR //////////////////
 
