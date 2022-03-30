@@ -2170,9 +2170,10 @@ Pathology and Laboratory Medicine",
                     if( $single ) {
                         return $job."";
                         break;
+                    } else {
+                        $existingJobs[] = $job."";
                     }
 
-                    $existingJobs[] = $job."";
                 }
             }
         }
