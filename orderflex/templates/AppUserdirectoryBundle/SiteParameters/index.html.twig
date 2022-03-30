@@ -913,11 +913,11 @@
             {#Global Academic Start/End Date#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Academic Year Start/End Day and Month:</h3>
+                    <h3>Global Academic Year Start/End Day and Month:</h3>
                 </td>
             </tr>
             <tr>
-                <td>Academic Year Start Day and Month</td>
+                <td>Global Academic Year Start Day and Month</td>
                 <td>
                     {% if entity.academicYearStart %}
                         {{ entity.academicYearStart|date('M d','UTC') }}
@@ -926,7 +926,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'academicYearStart'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Academic Year End Day and Month</td>
+                <td>Global Academic Year End Day and Month</td>
                 <td>
                     {% if entity.academicYearEnd %}
                         {{ entity.academicYearEnd|date('M d','UTC') }}
