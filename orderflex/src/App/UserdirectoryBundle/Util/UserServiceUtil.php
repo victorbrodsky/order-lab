@@ -1772,7 +1772,12 @@ Pathology and Laboratory Medicine",
 
         /* read the source image */
         $source_image = imagecreatefromjpeg($src);
-        $width = imagesx($source_image);
+
+        if( !$source_image ) {
+            return null;
+        }
+
+        $width = imagesx($source_image); //imagesx(): Argument #1 ($image) must be of type GdImage, bool given with code0
         $height = imagesy($source_image);
 
         /* find the "desired height" of this thumbnail, relative to the desired width  */
