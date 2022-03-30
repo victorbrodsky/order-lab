@@ -2157,6 +2157,7 @@ Pathology and Laboratory Medicine",
         if( isset($jobs) && is_array($jobs) ) {
 
             foreach ($jobs as $job) {
+                echo $cronJobName.": job=".$job."<br>";
                 if (strpos((string)$job, $cronJobName) !== false) {
                     return $job."";
                     break;
