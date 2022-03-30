@@ -190,6 +190,10 @@ services:
         tags:
             - { name: 'console.command', command: 'fellapp:generatereportrun' }
 
+    App\FellAppBundle\Command\GenerateTestReportRunCommand:
+            tags:
+                - { name: 'console.command', command: 'fellapp:generate-test-reportrun' }
+
     App\FellAppBundle\Command\CronCommand:
         tags:
             - { name: 'console.command', command: 'cron:importfellapp' }
