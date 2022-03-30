@@ -333,7 +333,8 @@
                     {{ user_service_utility.getCronStatus("swift")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'swift'}) }}">Remove</a>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'swift'}) }}">Remove</a>
                 </td>
             </tr>
             <tr>
@@ -342,7 +343,8 @@
                     {{ user_service_utility.getCronStatus("importfellapp")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'importfellapp'}) }}">Remove</a>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'importfellapp'}) }}">Remove</a>
                 </td>
             </tr>
             <tr>
@@ -351,7 +353,8 @@
                     {{ user_service_utility.getCronStatus("verifyimport")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'verifyimport'}) }}">Remove</a>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'verifyimport'}) }}">Remove</a>
                 </td>
             </tr>
             <tr>
@@ -360,7 +363,8 @@
                     {{ user_service_utility.getCronStatus("invoice-reminder-emails")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'invoice-reminder-emails'}) }}">Remove</a>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'invoice-reminder-emails'}) }}">Remove</a>
                 </td>
             </tr>
             <tr>
@@ -369,7 +373,8 @@
                     {{ user_service_utility.getCronStatus("status")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'status'}) }}">Remove</a>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'status'}) }}">Remove</a>
                 </td>
             </tr>
             <tr>
@@ -378,7 +383,9 @@
                     {{ user_service_utility.getCronStatus("statustest")|raw }}
                 </td>
                 <td>
-                    <a href="{{ path('user_remove_cron_job', {'cronJobName': 'statustest'}) }}">Remove</a>
+                    <a
+                        general-data-confirm="Are you sure you would like to remove this cron job?"
+                        href="{{ path('user_remove_cron_job', {'cronJobName': 'statustest'}) }}">Remove</a>
                 </td>
             </tr>
 
