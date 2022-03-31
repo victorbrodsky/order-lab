@@ -833,7 +833,7 @@ class FellAppImportPopulateUtil {
         //$inputFileName = $path . "/" . $inputFileName;
         //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
         $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
-        echo "inputFileName=".$inputFileName."<br>";
+        //echo "inputFileName=".$inputFileName."<br>";
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
             return false;
@@ -856,9 +856,13 @@ class FellAppImportPopulateUtil {
             //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
 
+            //tesring
+            //1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4
+            $inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4";
+
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            //echo "extension=".$extension."<br>";
+            echo "extension=".$extension."<br>";
             if( !$extension || strlen($extension) > 7 ) {
                 $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
@@ -873,13 +877,14 @@ class FellAppImportPopulateUtil {
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
                 echo "inputFileType=".$inputFileType."<br>";
-                exit('111');
+                //exit('111');
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             }
 
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-
             $objPHPExcel = $objReader->load($inputFileName);
+
+            exit('111');
 
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
