@@ -152,7 +152,7 @@ class DefaultController extends OrderAbstractController
         //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
         $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
         echo "extension=".$extension."<br>";
-        if( !$extension || strlen($extension) > 7 ) {
+        if( $extension || strlen($extension) > 7 ) {
             $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
             $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -171,7 +171,7 @@ class DefaultController extends OrderAbstractController
         }
 
         //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-        $objPHPExcel = $objReader->load($inputFileName);
+        //$objPHPExcel = $objReader->load($inputFileName);
 
         exit('111');
 
