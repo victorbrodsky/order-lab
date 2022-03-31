@@ -812,7 +812,7 @@ class FellAppImportPopulateUtil {
         if( $extension || strlen($extension) > 7 ) {
             //copy('foo/test.php', 'bar/test.php');
 
-            $inputFileName = str_replace('.','_');
+            $inputFileName = str_replace('.','_',$inputFileName);
 
             $inputFileNameNew = $inputFileName."_temp";
 
