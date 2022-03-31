@@ -153,16 +153,16 @@ class DefaultController extends OrderAbstractController
         $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
         echo "extension=".$extension."<br>";
         if( $extension || strlen($extension) > 7 ) {
-            $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
+            //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
-            $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
             //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+            $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
-            $objReader->setReadDataOnly(true);
+            //$objReader->setReadDataOnly(true);
             //$objPHPExcel = $objReader->load($inputFileType);
 
-            return false; //testing: skip
+            //return false; //testing: skip
         } else {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             echo "inputFileType=".$inputFileType."<br>";
@@ -171,8 +171,9 @@ class DefaultController extends OrderAbstractController
         }
 
         //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-        //$objPHPExcel = $objReader->load($inputFileName);
+        $objPHPExcel = $objReader->load($inputFileName);
 
+        dump($objPHPExcel);
         exit('111');
 
         /////////// EOF testing ///////////
