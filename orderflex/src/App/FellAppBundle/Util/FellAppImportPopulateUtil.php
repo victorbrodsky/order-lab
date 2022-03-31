@@ -804,6 +804,25 @@ class FellAppImportPopulateUtil {
         return $populatedFellowshipApplications;
     }
 
+    //create a temporary copy of spreadsheet file if filename has '.'
+    //Spreadsheets\1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18
+    function createTempSpreadsheetCopy($inputFileName) {
+        $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
+        //echo "extension=".$extension."<br>";
+        if( $extension || strlen($extension) > 7 ) {
+            //copy('foo/test.php', 'bar/test.php');
+
+            $inputFileName = str_replace('.','_');
+
+            $inputFileNameNew = $inputFileName."_temp";
+
+            copy($inputFileName,$inputFileNameNew);
+
+            return $inputFileNameNew;
+        }
+
+        return NULL;
+    }
 
     /////////////// populate methods: create fellapp from a spreadsheet ($document) /////////////////
     public function populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false ) {
@@ -860,27 +879,41 @@ class FellAppImportPopulateUtil {
             //1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4
             //$inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4";
 
+            //$inputFileNameOrig = NULL;
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
             //echo "extension=".$extension."<br>";
             if( $extension || strlen($extension) > 7 ) {
-                $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
+                //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-                $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
                 //$objReader->setReadDataOnly(true);
                 //$objPHPExcel = $objReader->load($inputFileType);
 
                 //return false; //testing: skip
+
+                //$inputFileNameOrig = $inputFileName;
+
+                $inputFileNameNew = createTempSpreadsheetCopy($inputFileName);
+                if( $inputFileNameNew ) {
+                    exit('$inputFileNameNew is NULL');
+                }
+
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileNameNew); //Google spreadsheet: identify $inputFileType='Csv'
+                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+                //remove temp file $inputFileNameNew
+                //unlink($inputFileNameNew);
+
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
-                //echo "inputFileType=".$inputFileType."<br>";
-                //exit('111');
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             }
 
+            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
 
