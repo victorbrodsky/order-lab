@@ -898,12 +898,13 @@ class FellAppImportPopulateUtil {
                 //$inputFileNameOrig = $inputFileName;
 
                 $inputFileNameNew = createTempSpreadsheetCopy($inputFileName);
-                if( $inputFileNameNew ) {
+                if( !$inputFileNameNew ) {
                     exit('$inputFileNameNew is NULL');
                 }
 
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileNameNew); //Google spreadsheet: identify $inputFileType='Csv'
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileNameNew);
 
                 //remove temp file $inputFileNameNew
                 //unlink($inputFileNameNew);
@@ -911,11 +912,12 @@ class FellAppImportPopulateUtil {
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
             }
 
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
+            //$objPHPExcel = $objReader->load($inputFileName);
 
             //exit('111');
 
