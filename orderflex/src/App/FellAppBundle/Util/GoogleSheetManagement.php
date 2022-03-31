@@ -1040,10 +1040,10 @@ class GoogleSheetManagement {
      */
     function downloadFile($service, $file, $type=null) {
 
-        $response = $this->downloadGeneralFile($service,$file);
-        dump($response);
-        exit('df');
-        return $response;
+//        $response = $this->downloadGeneralFile($service,$file);
+//        dump($response);
+//        exit('df');
+//        return $response;
 
         ////////////// testing //////////////
         //$fileId = $file->getId();
@@ -1079,7 +1079,9 @@ class GoogleSheetManagement {
             //exportLink does not work anymore (since ~26 June 2020) for CSV files. The body has 307 Temporary Redirect: The document has moved here.
             //Therefore, use api file export HTTP request: https://developers.google.com/drive/api/v3/reference/files/export
             //$fileId = $file->getId();
+
             $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=text/csv';
 
         } else {
             //$downloadUrl = $file->getDownloadUrl();
