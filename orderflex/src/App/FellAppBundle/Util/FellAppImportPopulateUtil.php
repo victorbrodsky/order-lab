@@ -866,11 +866,13 @@ class FellAppImportPopulateUtil {
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
-                //$objReader->setReadDataOnly(true);
+                $objReader->setReadDataOnly(true);
                 //$objPHPExcel = $objReader->load($inputFileType);
 
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+                echo "inputFileType=".$inputFileType."<br>";
+                exit('111');
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             }
 
