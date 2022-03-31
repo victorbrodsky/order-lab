@@ -856,8 +856,9 @@ class FellAppImportPopulateUtil {
             //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
 
+            //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            echo "extension=".$extension."<br>";
+            //echo "extension=".$extension."<br>";
             if( !$extension || strlen($extension) > 7 ) {
                 $inputFileType = 'Csv'; //'Xlsx';
             } else {
