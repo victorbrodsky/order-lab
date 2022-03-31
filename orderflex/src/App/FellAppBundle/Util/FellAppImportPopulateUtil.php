@@ -936,7 +936,9 @@ class FellAppImportPopulateUtil {
         // title=, originalName=BackupSpreadsheet,
         // createDate=30-03-2022 22:23:21, size=8.943359375,
         // filename=/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648679001ID19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo
-        if(false) {
+        $useWarning = false;
+        $useWarning = true;
+        if( $useWarning ) {
             if (!$highestRow || $highestRow < 3) {
 
                 $createDateStr = NULL;
@@ -979,19 +981,23 @@ class FellAppImportPopulateUtil {
                 }
 
                 ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
-                $datafileId = NULL;
-                if ($datafile) {
-                    $datafileId = $datafile->getId();
-                }
-                $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=" . $datafileId . " and associated documentId=" . $document->getId());
-                unlink($inputFileName);
-                $em->remove($document);
-                if ($datafile) {
-                    $em->remove($datafile);
-                }
+                $removeErrorFile = true;
+                $removeErrorFile = false;
+                if( $removeErrorFile ) {
+                    $datafileId = NULL;
+                    if ($datafile) {
+                        $datafileId = $datafile->getId();
+                    }
+                    $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=" . $datafileId . " and associated documentId=" . $document->getId());
+                    unlink($inputFileName);
+                    $em->remove($document);
+                    if ($datafile) {
+                        $em->remove($datafile);
+                    }
 
-                if ($testing == false) {
-                    $em->flush();
+                    if ($testing == false) {
+                        $em->flush();
+                    }
                 }
                 return false;
             }
