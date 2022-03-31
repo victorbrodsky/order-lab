@@ -903,7 +903,7 @@ class ReportGenerator {
             $logger->notice("has session");
             $session = $request->getSession();
             if( $session && $session->getId() ) {
-                $logger->notice("1before session save: ".dump($session));
+                //$logger->notice("1before session save: ".dump($session));
                 $session->save();
                 //$logger->notice("after save session");
                 session_write_close();
@@ -915,7 +915,7 @@ class ReportGenerator {
             //take care of authentication
             $session = $this->container->get('session');
             if( $session && $session->getId() ) {
-                $logger->notice("2before session save: ".dump($session));
+                //$logger->notice("2before session save: ".dump($session));
                 $session->save();
                 session_write_close();
                 $PHPSESSID = $session->getId();
