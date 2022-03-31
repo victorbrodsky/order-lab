@@ -897,7 +897,7 @@ class FellAppImportPopulateUtil {
 
                 //$inputFileNameOrig = $inputFileName;
 
-                $inputFileNameNew = createTempSpreadsheetCopy($inputFileName);
+                $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName);
                 if( !$inputFileNameNew ) {
                     exit('$inputFileNameNew is NULL');
                 }
