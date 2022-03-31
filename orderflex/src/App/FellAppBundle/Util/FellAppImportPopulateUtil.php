@@ -833,6 +833,7 @@ class FellAppImportPopulateUtil {
         //$inputFileName = $path . "/" . $inputFileName;
         //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
         $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
+        echo "inputFileName=".$inputFileName."<br>";
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
             return false;
