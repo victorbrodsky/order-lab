@@ -1080,7 +1080,7 @@ class GoogleSheetManagement {
             //Therefore, use api file export HTTP request: https://developers.google.com/drive/api/v3/reference/files/export
             //$fileId = $file->getId();
 
-            $downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
+            //$downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=text/csv';
 
         } else {
@@ -1111,8 +1111,8 @@ class GoogleSheetManagement {
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
             if( $httpRequest->getResponseHttpCode() == 200 ) {
 
-                dump($httpRequest->getResponseBody());
-                exit('fd');
+                //dump($httpRequest->getResponseBody());
+                //exit('fd');
 
                 //$logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
                 //$logger->notice("getResponseBody=".$httpRequest->getResponseBody());
@@ -1138,7 +1138,7 @@ class GoogleSheetManagement {
         $logger->error($body);
 
         //Create error notification email
-        $subject = "[ORDER] ERROR: can not download $type file for Fellowship Application";
+        $subject = "ERROR: can not download $type file for Fellowship Application";
         //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
         //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
 
