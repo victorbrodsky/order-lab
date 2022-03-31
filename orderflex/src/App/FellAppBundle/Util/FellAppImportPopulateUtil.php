@@ -862,8 +862,8 @@ class FellAppImportPopulateUtil {
             if( !$extension || strlen($extension) > 7 ) {
                 $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
-                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-                $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
                 //$objReader->setReadDataOnly(true);
