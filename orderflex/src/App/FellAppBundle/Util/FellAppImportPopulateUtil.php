@@ -862,21 +862,21 @@ class FellAppImportPopulateUtil {
 
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            echo "extension=".$extension."<br>";
-            if( !$extension || strlen($extension) > 7 ) {
+            //echo "extension=".$extension."<br>";
+            if( $extension || strlen($extension) > 7 ) {
                 $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
-                $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
-                $objReader->setReadDataOnly(true);
+                //$objReader->setReadDataOnly(true);
                 //$objPHPExcel = $objReader->load($inputFileType);
 
-                return false; //testing: skip
+                //return false; //testing: skip
             } else {
-                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-                echo "inputFileType=".$inputFileType."<br>";
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                //echo "inputFileType=".$inputFileType."<br>";
                 //exit('111');
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             }
@@ -884,7 +884,7 @@ class FellAppImportPopulateUtil {
             //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
 
-            exit('111');
+            //exit('111');
 
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
