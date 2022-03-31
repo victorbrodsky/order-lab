@@ -860,7 +860,7 @@ class FellAppImportPopulateUtil {
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
             //echo "extension=".$extension."<br>";
             if( !$extension || strlen($extension) > 7 ) {
-                $inputFileType = 'Csv'; //'Xlsx';
+                $inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             }
