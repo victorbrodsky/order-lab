@@ -869,6 +869,7 @@ class FellAppImportPopulateUtil {
                 $objReader->setReadDataOnly(true);
                 //$objPHPExcel = $objReader->load($inputFileType);
 
+                return false; //testing: skip
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
                 echo "inputFileType=".$inputFileType."<br>";
