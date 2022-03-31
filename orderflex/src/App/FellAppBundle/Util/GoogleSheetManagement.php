@@ -1040,6 +1040,11 @@ class GoogleSheetManagement {
      */
     function downloadFile($service, $file, $type=null) {
 
+        $response = $this->downloadGeneralFile($service,$file);
+        dump($response);
+        exit('df');
+        return $response;
+
         ////////////// testing //////////////
         //$fileId = $file->getId();
         //$content = $service->files->get($fileId, array(
@@ -1100,7 +1105,6 @@ class GoogleSheetManagement {
         //echo "downloadUrl=".$downloadUrl."<br>";
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-            //$request = new \Google_Http_Request($downloadUrl);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
             if( $httpRequest->getResponseHttpCode() == 200 ) {
