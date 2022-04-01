@@ -814,7 +814,7 @@ class FellAppImportPopulateUtil {
 
             $inputFileNameNew = str_replace('.','_',$inputFileName);
 
-            $inputFileNameNew = $inputFileNameNew."_temp";
+            $inputFileNameNew = $inputFileNameNew."_temp.csv";
 
             copy($inputFileName,$inputFileNameNew);
 
