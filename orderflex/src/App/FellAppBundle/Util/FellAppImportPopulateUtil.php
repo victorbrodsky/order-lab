@@ -1070,6 +1070,10 @@ class FellAppImportPopulateUtil {
                         $em->flush();
                     }
                 }
+
+                //testing
+                throw new IOException("Testing: ".$subject);
+
                 return false;
             }
         }
