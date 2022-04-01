@@ -559,6 +559,10 @@ class FellAppImportPopulateUtil {
     //4)  Process backup sheet on Google Drive
     public function processBackupFellAppFromGoogleDrive() {
 
+        //Not Used now for v2:
+        //Logic based on the modified date, howevere, there ModifiedTime is empty and getModifiedTime return NULL
+        //return 0;
+
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -579,7 +583,7 @@ class FellAppImportPopulateUtil {
 
 
         //testing
-        $backupFileIdFellApp = '1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o';
+        //$backupFileIdFellApp = '1HBHG_53KYj59bQW_zSF221OiJJCrlFoEjy4m27TActk'; //'1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o';
         //1) get backup file on GoogleDrive
         $backupFile = $service->files->get($backupFileIdFellApp);
         //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
@@ -592,11 +596,13 @@ class FellAppImportPopulateUtil {
         if( $modifiedDate ) {
             //echo "1modifiedDate=".$modifiedDate."<br>";
             //$logger->notice("modifiedDate=".$modifiedDate);
-
             $datetimeNow = new \DateTime();
             //$datetimeNow->modify('+9 day'); //testing
             $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
+        } else {
+            $logger->notice("Error processing Backup spreadsheet file: modified date is empty modifiedDate=[$modifiedDate]");
+            return 0;
         }
 
         //echo "intervalDays=".$intervalDays."<br>";
@@ -606,9 +612,10 @@ class FellAppImportPopulateUtil {
             $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
             return 0;
         }
-        dump($backupFile);
-        exit('111');
+
+        //dump($backupFile);
         //exit('process backup');
+
         $logger->notice("Process backup file modified on ".$modifiedDate);
 
         //download backup file to server and link it to Document DB
@@ -622,7 +629,50 @@ class FellAppImportPopulateUtil {
 
         return 0;
     }
+    //testing
+    public function getFileInfofromGoogleDriveTesting() {
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
+        if( !$service ) {
+            $event = "Google API service failed!";
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            return 0;
+        }
 
+        $backupFileIdFellApp = '1HBHG_53KYj59bQW_zSF221OiJJCrlFoEjy4m27TActk'; //'1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o';
+        //1) get backup file on GoogleDrive
+        $backupFile = $service->files->get($backupFileIdFellApp);
+        //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
+        $modifiedDate = $backupFile->getModifiedTime(); //V3
+        echo "0modifiedDate=".$modifiedDate."<br>";
+
+        $intervalDays = 0;
+
+        //get interval
+        if( $modifiedDate ) {
+            echo "1modifiedDate=".$modifiedDate."<br>";
+            //$logger->notice("modifiedDate=".$modifiedDate);
+
+            $datetimeNow = new \DateTime();
+            //$datetimeNow->modify('+9 day'); //testing
+            $datetimeModified = new \DateTime($modifiedDate);
+            $intervalDays = $datetimeNow->diff($datetimeModified)->days;
+        } else {
+            echo "1modifiedDate is null<br>";
+        }
+
+        echo "intervalDays=".$intervalDays."<br>";
+        //don't process backup file if interval is more than 1 day (process if interval is less then 1 day - recently modified backup)
+        if( $intervalDays > 1 ) {
+            //exit('dont process backup');
+            $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
+            return 0;
+        }
+
+        dump($backupFile);
+        exit('process backup');
+    }
 
 
     /**

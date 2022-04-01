@@ -145,38 +145,41 @@ class DefaultController extends OrderAbstractController
 //        $em->flush();
 //        exit('111');
 
-        //tesring
-        //1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4
-        $inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4";
-        $inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18";
-        echo "inputFileName=".$inputFileName."<br>";
+//        //testing
+//        //1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4
+//        $inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4";
+//        $inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18";
+//        echo "inputFileName=".$inputFileName."<br>";
+//
+//        //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
+//        $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
+//        echo "extension=".$extension."<br>";
+//        if( $extension || strlen($extension) > 7 ) {
+//            //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
+//
+//            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+//            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+//            $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+//
+//            //$objReader->setReadDataOnly(true);
+//            //$objPHPExcel = $objReader->load($inputFileType);
+//
+//            //return false; //testing: skip
+//        } else {
+//            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+//            echo "inputFileType=".$inputFileType."<br>";
+//            //exit('111');
+//            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+//        }
+//
+//        //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+//        $objPHPExcel = $objReader->load($inputFileName);
+//
+//        dump($objPHPExcel);
+//        exit('111');
 
-        //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
-        $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-        echo "extension=".$extension."<br>";
-        if( $extension || strlen($extension) > 7 ) {
-            //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
-
-            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-            //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-            $objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-
-            //$objReader->setReadDataOnly(true);
-            //$objPHPExcel = $objReader->load($inputFileType);
-
-            //return false; //testing: skip
-        } else {
-            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-            echo "inputFileType=".$inputFileType."<br>";
-            //exit('111');
-            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-        }
-
-        //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-        $objPHPExcel = $objReader->load($inputFileName);
-
-        dump($objPHPExcel);
-        exit('111');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $fellappImportPopulateUtil->getFileInfofromGoogleDriveTesting();
 
         /////////// EOF testing ///////////
 
