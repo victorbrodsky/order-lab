@@ -601,7 +601,7 @@ class FellAppImportPopulateUtil {
             $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
         } else {
-            $logger->notice("Error processing Backup spreadsheet file: modified date is empty modifiedDate=[$modifiedDate]");
+            $logger->notice("Ignore processing Backup spreadsheet file: modified date is empty modifiedDate=[$modifiedDate]");
             return 0;
         }
 
