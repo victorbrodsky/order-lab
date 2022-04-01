@@ -588,7 +588,7 @@ class FellAppImportPopulateUtil {
 
         //get interval
         if( $modifiedDate ) {
-            //echo "modifiedDate=".$modifiedDate."<br>";
+            echo "modifiedDate=".$modifiedDate."<br>";
             //$logger->notice("modifiedDate=".$modifiedDate);
 
             $datetimeNow = new \DateTime();
@@ -597,14 +597,14 @@ class FellAppImportPopulateUtil {
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
         }
 
-        //echo "intervalDays=".$intervalDays."<br>";
+        echo "intervalDays=".$intervalDays."<br>";
         //don't process backup file if interval is more than 1 day (process if interval is less then 1 day - recently modified backup)
         if( $intervalDays > 1 ) {
             //exit('dont process backup');
             $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
             return 0;
         }
-        //exit('process backup');
+        exit('process backup');
         $logger->notice("Process backup file modified on ".$modifiedDate);
 
         //download backup file to server and link it to Document DB
