@@ -907,7 +907,7 @@ class FellAppImportPopulateUtil {
                 $objPHPExcel = $objReader->load($inputFileNameNew);
 
                 //remove temp file $inputFileNameNew
-                //unlink($inputFileNameNew);
+                unlink($inputFileNameNew);
 
             } else {
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
