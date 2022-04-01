@@ -579,8 +579,6 @@ class FellAppImportPopulateUtil {
 
         //1) get backup file on GoogleDrive
         $backupFile = $service->files->get($backupFileIdFellApp);
-        //dump($backupFile);
-        //exit('111');
         //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
         $modifiedDate = $backupFile->getModifiedTime(); //V3
         //echo "0modifiedDate=".$modifiedDate."<br>";
@@ -605,6 +603,8 @@ class FellAppImportPopulateUtil {
             $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
             return 0;
         }
+        dump($backupFile);
+        exit('111');
         //exit('process backup');
         $logger->notice("Process backup file modified on ".$modifiedDate);
 
