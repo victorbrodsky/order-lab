@@ -583,12 +583,13 @@ class FellAppImportPopulateUtil {
         //exit('111');
         //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
         $modifiedDate = $backupFile->getModifiedTime(); //V3
+        echo "0modifiedDate=".$modifiedDate."<br>";
 
         $intervalDays = 0;
 
         //get interval
         if( $modifiedDate ) {
-            echo "modifiedDate=".$modifiedDate."<br>";
+            echo "1modifiedDate=".$modifiedDate."<br>";
             //$logger->notice("modifiedDate=".$modifiedDate);
 
             $datetimeNow = new \DateTime();
