@@ -883,7 +883,7 @@ class FellAppImportPopulateUtil {
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
             //echo "extension=".$extension."<br>";
-            if( $extension || strlen($extension) > 7 ) {
+            if( $extension || strlen($extension) > 9 ) {
                 //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -899,7 +899,14 @@ class FellAppImportPopulateUtil {
 
                 $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName);
                 if( !$inputFileNameNew ) {
-                    exit('$inputFileNameNew is NULL');
+                    $errorSubject = "Can not create temp file for the source spreadsheet";
+                    $errorEvent = $errorSubject . ". Filename=" .
+                        $inputFileName . ", extension=" . $extension .
+                        ", documentId=" . $document->getId();
+                    $logger->error($event);
+                    $this->sendEmailToSystemEmail($errorSubject, $errorEvent);
+                    return false;
+                    //exit('$inputFileNameNew is NULL');
                 }
 
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileNameNew); //Google spreadsheet: identify $inputFileType='Csv'
