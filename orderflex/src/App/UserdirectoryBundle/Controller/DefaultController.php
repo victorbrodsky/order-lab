@@ -28,6 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Ldap\Adapter\ExtLdap\ConnectionOptions;
 use Symfony\Component\Ldap\Ldap;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -519,7 +522,11 @@ class DefaultController extends OrderAbstractController
      */
     public function emailTestingAction() {
 
-        //exit("emailTestingAction");
+//        $inputEmails = "e1,e2";
+//        $inputEmails = "e1";
+//        $inputEmailArr = explode(',',$inputEmails);
+//        dump($inputEmailArr);
+//        exit("emailTestingAction");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -528,8 +535,11 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $email = "oli2002@med.cornell.edu";
-        $ccs = "cinava@yahoo.com";
+        $ccs = NULL;
+
+        $email = "oli2002@med.cornell.edu,cinava@yahoo.com";
+        //$email = "oli2002@med.cornell.edu";
+        $ccs = "cinava@yahoo.com,cinava@yahoo.com";
 
         $invoice = NULL;
         $userSecUtil = $this->container->get('user_security_utility');
@@ -561,6 +571,34 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF emailTestingAction");
 
+    }
+
+    /**
+     * @Route("/email-testing-plain")
+     */
+    public function sendEmail(MailerInterface $mailer): Response
+    {
+        //dump($mailer);
+        //exit('111');
+
+        $email = (new Email())
+            //->from('oli2002@med.cornell.edu')
+            ->from('cinava@yahoo.com')
+            ->to('oli2002@med.cornell.edu')
+            ->to('cinava@yahoo.com')
+            //->cc('cinava@yahoo.com')
+            //->cc(new Address('cinava@yahoo.com'))
+            //->bcc(new Address('cinava@yahoo.com'))
+            //->bcc('cinava@yahoo.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>See Twig integration for better HTML integration!</p>');
+
+        $res = $mailer->send($email);
+
+        exit('res='.$res);
     }
 
 }

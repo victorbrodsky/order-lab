@@ -41,8 +41,8 @@ class EmailUtil {
     }
 
     //php bin/console swiftmailer:spool:send --env=prod
-    //$emails: single, comma separated emails, or array of emails
-    //$ccs: single, comma separated emails, or array of emails (optional)
+    //$emails: string, comma separated string or address objects (new Address('fabien@example.com'), new Address('fabien@example.com', 'Fabien'), Address::fromString('Fabien Potencier <fabien@example.com>'))
+    //$ccs: same as $emails (optional)
     //$subject: string
     //$body: html email text
     //$attachmentPath: absolute path to the attachment file (optional)
@@ -54,6 +54,9 @@ class EmailUtil {
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
         //$emails = "oli2002@med.cornell.edu";
         //$ccs = null;
+        //$this->sendThisEmail($this->mailer);
+        //dump($this->mailer);
+        //exit('111');
 
         //$transport = $this->getSmtpTransport();
         //dump($transport);
@@ -151,16 +154,42 @@ class EmailUtil {
         }
         //$logger->notice("sendEmail: sending email: subject=".$subject."; body=".$body."; fromEmail=".$fromEmail);
 
-        $emails = $this->checkEmails($emails);
-        $ccs = $this->checkEmails($ccs);
+        //send copy email to siteEmail via bcc
+        $userSecUtil = $this->container->get('user_security_utility');
+        $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
 
-        if( count($emails) == 0 ) {
-            //$logger->error("sendEmail: Email has not been sent, because emails array is empty");
-            $logger->error("sendEmail: Email has not been sent ('To:' emails array is empty): From:".$fromEmail."; subject=".$subject."; body=".$body);
+        //$allEmails = "";
+        $emails = $this->checkEmails($emails); //,'to',$allEmails);
+        $ccs = $this->checkEmails($ccs); //,'css',$allEmails);
+        $bcc = $this->checkEmails($bcc); //,'bcc',$allEmails);
+
+        echo "fromEmail=[$fromEmail], emails=[$emails], ccs=[$ccs], bcc=[$bcc] <br>";
+
+        if( !$emails ) {
+            $logger->error("sendEmail: Email has not been sent ('To:' emails is empty): From:".$fromEmail."; subject=".$subject."; body=".$body);
             return false;
         }
 
+        //re-route all emails to
+        $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+
         $message = new Email(); //new \Swift_Message();
+        $mailer = $this->mailer;
+
+        /////////// testing ////////////
+//        $mailer = $this->mailer;
+//        $message->from('cinava@yahoo.com');
+//        $message->to('oli2002@med.cornell.edu');
+//        //->cc('cc@example.com')
+//        //->bcc('bcc@example.com')
+//        //->replyTo('fabien@example.com')
+//        //->priority(Email::PRIORITY_HIGH)
+//        $message->subject('Time for Symfony Mailer!');
+//        $message->text('Sending emails is fun again!');
+//        $message->html('<p>See Twig integration for better HTML integration!</p>');
+//        $res = $mailer->send($message);
+//        exit('res='.$res);
+        /////////// EOF testing ////////////
 
         $message->subject($subject);
         $message->from($fromEmail);
@@ -168,41 +197,49 @@ class EmailUtil {
         //for html
         $body = str_replace("\r\n","<br>",$body);
 
-        $message->html(
-            $body,
-            'text/html'
-            //'text/plain'
-        );
+//        $message->html(
+//            $body,
+//            'text/html'
+//            //'text/plain'
+//        );
+        $message->html($body);
 
+        //re-route all emails to
         $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         if( $mailerDeliveryAddresses ) {
-            //$mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
-            //$mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
+
+            $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
+            echo "mailerDeliveryAddresses=[$mailerDeliveryAddresses]<br>";
             $message->to($mailerDeliveryAddresses);
+
         } else {
+
+            //to
+            echo "emails=[$emails]<br>";
             $message->to($emails);
+
+            //cc
             if( $ccs ) {
-                $message->cc($ccs);
+                $resCcs = $this->removeDuplicate($ccs,$emails);
+                echo "resCcs=[$resCcs]<br>";
+                $message->cc($resCcs);
+            }
+
+            //send copy email to siteEmail via bcc
+            $userSecUtil = $this->container->get('user_security_utility');
+            $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if( $bcc ) {
+                $resBcc = $this->removeDuplicate($bcc,$emails);
+
+                $resBcc = $this->removeDuplicate($resBcc,$css);
+
+                echo "resBcc=[$resBcc]<br>";
+                $message->bcc($resBcc);
             }
         }
 
-        //send copy email to siteEmail via setBcc
-        $userSecUtil = $this->container->get('user_security_utility');
-        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        if( $siteEmail ) {
-            $message->bcc($siteEmail);
-        }
-
-            /*
-             * If you also want to include a plaintext version of the message
-            ->addPart(
-                $this->renderView(
-                    'Emails/registration.txt.twig',
-                    array('name' => $name)
-                ),
-                'text/plain'
-            )
-            */
+        $res = $mailer->send($message);
+        exit('res='.$res);
 
         // Optionally add any attachments
         if( $attachmentPath ) {
@@ -226,12 +263,12 @@ class EmailUtil {
         }
 
         $ccStr = "";
-        if( $ccs && count($ccs)>0 ) {
-            $ccStr = implode("; ",$ccs);
+        if( $ccs ) {
+            $ccStr = $ccs;
         }
         $emailsStr = "";
-        if( $emails && count($emails)>0 ) {
-            $emailsStr = implode("; ",$emails);
+        if( $emails ) {
+            $emailsStr = $emails;
         }
 
 //        $mailer = $this->getSwiftMailer();
@@ -267,50 +304,149 @@ class EmailUtil {
         return $emailRes;
     }
 
-    public function checkEmails($emails) {
+    public function sendThisEmail(MailerInterface $mailer)
+    {
+        $email = (new Email())
+            ->from('cinava@yahoo.com')
+            ->to('oli2002@med.cornell.edu')
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>See Twig integration for better HTML integration!</p>');
+
+        $mailer->send($email);
+    }
+
+    //Remove cc, bcc if exists in 'to'
+    public function checkEmails( $emails ) {
         //$logger = $this->container->get('logger');
 
         if( !$emails ) {
-            return $emails;
+            return $this->cleanEmail($emails);
         }
 
+        //array
         if( is_array($emails) ) {
-            return $this->validateEmailsArr($emails);
-            //return $emails;
+            $emailStr = "";
+            foreach($emails as $email) {
+                if( $email ) {
+                    $email = str_replace(" ", "", $email);
+                    if( $email ) {
+                        if( $emailStr ) {
+                            $emailStr = $emailStr . "," . $email;
+                        } else {
+                            $emailStr = $email;
+                        }
+                    }
+                }
+            } //foreach
+            return $this->cleanEmail($emailStr);
         }
 
-        //$logger = $this->container->get('logger');
-        //$logger->notice("checkEmails: input emails=".print_r($emails));
-        if( strpos((string)$emails, ',') !== false ) {
-            $emails = str_replace(" ","",$emails);
-            //return explode(',', $emails);
-            return $this->validateEmailsArr(explode(',', $emails));
+        return $this->cleanEmail($emails);
+    }
+
+    public function cleanEmail($emails) {
+        if( $emails ) {
+            $emails = trim((string)$emails);
+            $emails = str_replace(" ", "", $emails);
+            $emails = str_replace(",,,", ",", $emails);
+            $emails = str_replace(",,", ",", $emails);
+        }
+
+        //remove duplicates
+        if( $emails && str_contains($emails, ',') ) {
+            $emailsArr = explode(',', $emails);
+            $emailsArr = array_unique($emailsArr);
+            $emails = implode(',',$emailsArr);
+        }
+
+        return $emails;
+    }
+
+    //$inputEmails:     e1,e5
+    //$emails:          e1,e2,e3,e4
+    //output emails:    e5
+    public function removeDuplicate( $inputEmails, $emails ) {
+
+        if( $inputEmails ) {
+            $inputEmailsArr = explode(',', $inputEmails);
         } else {
-            if( $emails ) {
-                //return array( $emails );
-                return $this->validateEmailsArr(array($emails));
+            return NULL;
+        }
+
+        if( $emails ) {
+            $emailsArr = explode(',', $emails);
+        } else {
+            return $inputEmails;
+        }
+
+        if( $inputEmailsArr && count($inputEmailsArr) > 0 && $emailsArr && count($emailsArr) > 0 ) {
+            $resultArr = array(); //array_diff($array1, $array2);
+
+            foreach($inputEmailsArr as $inputEmail) {
+                if( in_array($inputEmail, $emailsArr) ) {
+                    continue; //skip
+                }
+                $resultArr[] = $inputEmail;
             }
-        }
 
-        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
-        //return $emails;
-        return $this->validateEmailsArr($emails);
-    }
-    public function validateEmailsArr($emails) {
-        $validEmails = array();
-
-        if( !is_array($emails) ) {
-            return $validEmails;
-        }
-
-        foreach($emails as $email) {
-            if( $email ) {
-                $validEmails[] = $email;
+            if( count($resultArr) > 0 ) {
+                return implode(',',$resultArr);
             }
+
         }
 
-        return $validEmails;
+        return NULL;
     }
+
+//    public function checkEmailsOrig($emails) {
+//        //$logger = $this->container->get('logger');
+//
+//        if( !$emails ) {
+//            return $emails;
+//        }
+//
+//        if( is_array($emails) ) {
+//            return $this->validateEmailsArr($emails);
+//            //return $emails;
+//        }
+//
+//        //$logger = $this->container->get('logger');
+//        //$logger->notice("checkEmails: input emails=".print_r($emails));
+//        if( strpos((string)$emails, ',') !== false ) {
+//            $emails = str_replace(" ","",$emails);
+//            //return explode(',', $emails);
+//            return $this->validateEmailsArr(explode(',', $emails));
+//        } else {
+//            if( $emails ) {
+//                //return array( $emails );
+//                return $this->validateEmailsArr(array($emails));
+//            }
+//        }
+//
+//        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
+//        //return $emails;
+//        return $this->validateEmailsArr($emails);
+//    }
+//    public function validateEmailsArr($emails) {
+//        $validEmails = array();
+//
+//        if( !is_array($emails) ) {
+//            return $validEmails;
+//        }
+//
+//        foreach($emails as $email) {
+//            if( $email ) {
+//                $validEmails[] = $email;
+//            }
+//        }
+//
+//        return $validEmails;
+//    }
 
     //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
     public function getSwiftMailer() {

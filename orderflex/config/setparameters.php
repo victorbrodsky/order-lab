@@ -504,7 +504,15 @@ if( $conn ) {
             $mailer_user = NULL;
             //$mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
 
+            $mailer_user_param = $mailer_user.':'.$mailer_password.'@';
+            $mailer_user_param = $mailer_user.'@';
+            $mailer_user_param = '';
+
             $mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+            $mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
+            $mailparams = 'verify_peer_name=0';
+            $mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
+            $mailparams = '';
 
             $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25';
             //$mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?timeout=60&encryption=tls&auth_mode=login';
@@ -513,6 +521,12 @@ if( $conn ) {
             $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:587?encryption=starttls&auth_mode=plain';
             $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?allow_self_signed=true&verify_peer=false&verify_peer_name=false';
             $mailer_dsn = 'smtp://'.'smtp.med.cornell.edu:25/?'.$mailparams;
+            $mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:25/?'.$mailparams;
+            //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25/?'.$mailparams;
+
+            //https://stackoverflow.com/questions/60329775/how-to-disable-verify-peer-with-symfony-mailer-component
+            //$mailer_dsn = "smtp://".$mailer_user.':'.$mailer_password.'@'."smtp.med.cornell.edu:25/?".$mailparams;
+
             //$mailer_dsn = 'sendmail://default';
             echo "mailer_dsn=".$mailer_dsn."<br>";
             $container->setParameter('mailer_dsn', $mailer_dsn);
