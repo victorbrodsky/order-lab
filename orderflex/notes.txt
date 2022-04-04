@@ -980,10 +980,11 @@ friendsofsymfony/comment-bundle - alternative ezsystems/comment-bundle  (symfony
 
 Abandoned:
 bmatzner/fontawesome-bundle
-swiftmailer/swiftmailer         => symfony/mailer
+//swiftmailer/swiftmailer         => symfony/mailer
 symfony/swiftmailer-bundle      => symfony/mailer
 symfony/inflector               => The author suggests using the EnglishInflector from the String component package instead.
 
-
-populateSingleFellApp -> populateSpreadsheet
+Removed:
+"bmatzner/fontawesome-bundle": "^4.7",
+"symfony/swiftmailer-bundle": "^3.5",
 

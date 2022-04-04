@@ -514,5 +514,53 @@ class DefaultController extends OrderAbstractController
 
     }
 
+    /**
+     * @Route("/email-testing/", name="employees_email_testing")
+     */
+    public function emailTestingAction() {
+
+        //exit("emailTestingAction");
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $email = "oli2002@med.cornell.edu";
+        $ccs = "cinava@yahoo.com";
+
+        $invoice = NULL;
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if ($environment == "dev") {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
+        }
+        if ($environment == "test") {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        }
+        if ($environment == "live") {
+            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
+        }
+        if (!$invoice) {
+            exit("Invoice not defined for environment=$environment");
+        }
+        $invoicePDF = $invoice->getRecentPDF();
+        $attachmentPath = $invoicePDF->getAttachmentEmailPath();
+        $attachmentFilename = null; //"invoiceAttachment";
+
+        //$emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=nul
+
+        $resEmail = $emailUtil->sendEmail($email, "Test Invoice Subject", "Test Invoice Body", $ccs, $email, $attachmentPath, $attachmentFilename);
+        echo "resEmail=$resEmail <br>";
+
+        //$res = $invoice->getId() . ": attachmentPath=$attachmentPath <br>";
+
+        //echo "res=$res <br>";
+
+        exit("EOF emailTestingAction");
+
+    }
 
 }

@@ -5,9 +5,6 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
-    "bmatzner/fontawesome-bundle": {
-        "version": "4.7.0"
-    },
     "box/spout": {
         "version": "v3.1.0"
     },

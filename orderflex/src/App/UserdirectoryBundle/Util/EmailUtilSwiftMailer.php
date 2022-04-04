@@ -20,24 +20,91 @@ namespace App\UserdirectoryBundle\Util;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\FellAppBundle\Controller\FellAppApplicantController;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+
+//use Crontab\Crontab;
+//use Crontab\Job;
+
+
+//EmailUtil.php on line 58:
+//Swift_SmtpTransport {#8238 ▼
+//    #buffer: Swift_Transport_StreamBuffer {#8226 ▼
+//    #sequence: 0
+//    -filters: []
+//    -writeBuffer: ""
+//    -mirrors: []
+//    -stream: null
+//    -in: null
+//    -out: null
+//    -params: []
+//    -replacementFactory: Swift_StreamFilters_StringReplacementFilterFactory {#8242 ▼
+//        -filters: []
+//    }
+//    -translations: []
+//  }
+//  #started: false
+//  #domain: "[127.0.0.1]"
+//  #eventDispatcher: Swift_Events_SimpleEventDispatcher {#8214 ▼
+//    -eventMap: array:5 [▼
+//      "Swift_Events_CommandEvent" => "Swift_Events_CommandListener"
+//      "Swift_Events_ResponseEvent" => "Swift_Events_ResponseListener"
+//      "Swift_Events_SendEvent" => "Swift_Events_SendListener"
+//      "Swift_Events_TransportChangeEvent" => "Swift_Events_TransportChangeListener"
+//      "Swift_Events_TransportExceptionEvent" => "Swift_Events_TransportExceptionListener"
+//    ]
+//    -listeners: []
+//  }
+//  #addressEncoder: Swift_AddressEncoder_IdnAddressEncoder {#8218}
+//  #pipelining: null
+//  #pipeline: []
+//  #sourceIp: null
+//  -handlers: array:1 [▼
+//    "AUTH" => Swift_Transport_Esmtp_AuthHandler {#8243 ▼
+//      -authenticators: array:5 [▼
+//        0 => Swift_Transport_Esmtp_Auth_CramMd5Authenticator {#8236}
+//        1 => Swift_Transport_Esmtp_Auth_LoginAuthenticator {#8241}
+//        2 => Swift_Transport_Esmtp_Auth_PlainAuthenticator {#8239}
+//        3 => Swift_Transport_Esmtp_Auth_NTLMAuthenticator {#8207}
+//    4 => Swift_Transport_Esmtp_Auth_XOAuth2Authenticator {#8223}
+//        ]
+//        -username: null
+//        -password: null
+//        -auth_mode: null
+//        -esmtpParams: []
+//    }
+//  ]
+//  -capabilities: []
+//    -params: array:8 [▼
+//    "protocol" => ""
+//    "host" => "smtp.med.cornell.edu"
+//    "port" => 25
+//    "timeout" => 30
+//    "blocking" => 1
+//    "tls" => false
+//    "type" => 1
+//    "stream_context_options" => array:1 [▼
+//      "ssl" => array:3 [▼
+//        "allow_self_signed" => true
+//        "verify_peer" => false
+//        "verify_peer_name" => false
+//      ]
+//    ]
+//  ]
+//}
 
 
 /**
- * @author oli2002
+ * Description of EmailUtil
+ *
+ * @author Cina
  */
-class EmailUtil {
+class EmailUtilSwiftMailer {
 
     protected $em;
     protected $container;
-    protected $mailer;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, MailerInterface $mailer ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
-        $this->mailer = $mailer;
     }
 
     //php bin/console swiftmailer:spool:send --env=prod
@@ -55,13 +122,22 @@ class EmailUtil {
         //$emails = "oli2002@med.cornell.edu";
         //$ccs = null;
 
-        //$transport = $this->getSmtpTransport();
-        //dump($transport);
-        //exit('111');
-
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         //set_time_limit(0); //set time limit to 600 sec == 10 min
+
+        //echo "emails=".$emails."<br>";
+        //print_r($emails);
+        //echo "ccs=".$ccs."<br>";
+        //$logger->notice("emails=".$emails);
+        //$logger->notice("ccs=".$ccs);
+
+//        if( $this->hasConnection() == false ) {
+//            $logger->error("sendEmail: connection error");
+//            //exit('no connection');
+//            return false;
+//        }
+        //exit('yes connection');
 
         $sitenameAbbreviation = null;
         $url = null;
@@ -160,15 +236,38 @@ class EmailUtil {
             return false;
         }
 
-        $message = new Email(); //new \Swift_Message();
+//        if( count($emails) > 0 ) {
+//            if( !$emails[0] ) {
+//                $logger->error("sendEmail: emails[0] empty=" . $emails[0]);
+//                return false;
+//            }
+//        }
 
-        $message->subject($subject);
-        $message->from($fromEmail);
+//        $logger->notice("emails count=".count($emails));
+//        $logger->notice("emails=".implode(", ",$emails));
+//        $logger->notice("emails[0]=".$emails[0]);
+
+//        if( $this->em ) {
+//            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+//            $smtp_host_ip = gethostbyname($smtpServerAddress);
+//            //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
+//            //$message = \Swift_Message::newInstance($smtp_host_ip);
+//            $mailer = $this->getSwiftMailer();
+//        } else {
+//            $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
+//            $message = \Swift_Message::newInstance();
+//        }
+
+//        $message = \Swift_Message::newInstance();
+        $message = new \Swift_Message();
+
+        $message->setSubject($subject);
+        $message->setFrom($fromEmail);
 
         //for html
         $body = str_replace("\r\n","<br>",$body);
 
-        $message->html(
+        $message->setBody(
             $body,
             'text/html'
             //'text/plain'
@@ -176,13 +275,13 @@ class EmailUtil {
 
         $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         if( $mailerDeliveryAddresses ) {
-            //$mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
-            //$mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
-            $message->to($mailerDeliveryAddresses);
+            $mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
+            $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
+            $message->setTo($mailerDeliveryAddresses);
         } else {
-            $message->to($emails);
+            $message->setTo($emails);
             if( $ccs ) {
-                $message->cc($ccs);
+                $message->setCc($ccs);
             }
         }
 
@@ -190,7 +289,7 @@ class EmailUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( $siteEmail ) {
-            $message->bcc($siteEmail);
+            $message->setBcc($siteEmail);
         }
 
             /*
@@ -234,9 +333,7 @@ class EmailUtil {
             $emailsStr = implode("; ",$emails);
         }
 
-//        $mailer = $this->getSwiftMailer();
-        $mailer = $this->mailer;
-
+        $mailer = $this->getSwiftMailer();
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.
                 "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
@@ -253,12 +350,9 @@ class EmailUtil {
         //$emailRes = $mailer->send($message);
         try{
             $emailRes = $mailer->send($message);
-        }
-        catch( \TransportExceptionInterface $e ){
-        //catch(\Swift_TransportException $e){
+        }catch(\Swift_TransportException $e){
             $emailRes = $e->getMessage() ;
         }
-
 
         $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail.
             "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.

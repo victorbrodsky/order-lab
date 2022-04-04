@@ -6,7 +6,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "asimlqt/php-google-spreadsheet-client": "^3.0",
-        "bmatzner/fontawesome-bundle": "^4.7",
         "box/spout": "^3.1",
         "doctrine/doctrine-bundle": "2.3.2",
         "doctrine/doctrine-migrations-bundle": "^3.2",

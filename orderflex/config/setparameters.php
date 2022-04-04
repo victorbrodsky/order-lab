@@ -496,6 +496,27 @@ if( $conn ) {
             $contentabout_page = str_replace("%", "%%", $contentabout_page);
             $container->setParameter('contentabout_page', $contentabout_page);
 
+            //testing mailer_dsn
+            //"LOGIN", "PLAIN", "XOAUTH2"
+            $mailer_password = NULL;
+            //$mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
+
+            $mailer_user = NULL;
+            //$mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
+
+            $mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+
+            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25';
+            //$mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?timeout=60&encryption=tls&auth_mode=login';
+            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?auth_mode=plain';
+            //$mailer_dsn = 'smtp://null@smtp.med.cornell.edu:25/?auth_mode=plain';
+            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:587?encryption=starttls&auth_mode=plain';
+            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+            $mailer_dsn = 'smtp://'.'smtp.med.cornell.edu:25/?'.$mailparams;
+            //$mailer_dsn = 'sendmail://default';
+            echo "mailer_dsn=".$mailer_dsn."<br>";
+            $container->setParameter('mailer_dsn', $mailer_dsn);
+
             //ldap
 //        if( $aDLDAPServerAddress )
 //            $container->setParameter('ldaphost',$aDLDAPServerAddress);
