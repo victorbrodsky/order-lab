@@ -163,7 +163,7 @@ class EmailUtil {
         $resBcc = array();
 
         //echo "fromEmail=[$fromEmail] <br>";
-        echo "fromEmail=[".$fromEmail."], emails=[".json_encode($emails)."], ccs=[".json_encode($ccs)."], bcc=[".json_encode($bcc)."] <br><br>";
+        //echo "fromEmail=[".$fromEmail."], emails=[".json_encode($emails)."], ccs=[".json_encode($ccs)."], bcc=[".json_encode($bcc)."] <br><br>";
 
         if( $emails && count($emails) > 0 ) {
             //OK
@@ -284,7 +284,7 @@ class EmailUtil {
             ", BCC:".$bccStr.
             "; redirected=".$mailerDeliveryAddressesStr
         ;
-        echo $msg . "<br>";
+        //echo $msg . "<br>";
 
         $msg = $msg .
             "; subject=".$subject."; body=".$body.
