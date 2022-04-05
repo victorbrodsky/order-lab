@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6871cca3e266d0b6e3aad917c3609599",
+    "content-hash": "2d26d6c050e20eab6a5d704573e2bc0c",
     "packages": [
         {
             "name": "asimlqt/php-google-spreadsheet-client",

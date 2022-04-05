@@ -116,8 +116,7 @@
             "require": "4.4.*"
         },
         "google/apiclient-services": [
-            "Drive",
-            "YouTube"
+            "Drive"
         ]
     }
 }
