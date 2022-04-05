@@ -58,10 +58,6 @@ class EmailUtil {
         //dump($this->mailer);
         //exit('111');
 
-        //$transport = $this->getSmtpTransport();
-        //dump($transport);
-        //exit('111');
-
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         //set_time_limit(0); //set time limit to 600 sec == 10 min
@@ -167,7 +163,7 @@ class EmailUtil {
         $resBcc = array();
 
         //echo "fromEmail=[$fromEmail] <br>";
-        echo "emails=[".json_encode($emails)."], ccs=[".json_encode($ccs)."], bcc=[".json_encode($bcc)."] <br>";
+        echo "fromEmail=[".$fromEmail."], emails=[".json_encode($emails)."], ccs=[".json_encode($ccs)."], bcc=[".json_encode($bcc)."] <br><br>";
 
         if( $emails && count($emails) > 0 ) {
             //OK
@@ -176,26 +172,8 @@ class EmailUtil {
             return false;
         }
 
-        //re-route all emails to
-        $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
-
-        $message = new Email(); //new \Swift_Message();
+        $message = new Email();
         $mailer = $this->mailer;
-
-        /////////// testing ////////////
-//        $mailer = $this->mailer;
-//        $message->from('cinava@yahoo.com');
-//        $message->to('oli2002@med.cornell.edu');
-//        //->cc('cc@example.com')
-//        //->bcc('bcc@example.com')
-//        //->replyTo('fabien@example.com')
-//        //->priority(Email::PRIORITY_HIGH)
-//        $message->subject('Time for Symfony Mailer!');
-//        $message->text('Sending emails is fun again!');
-//        $message->html('<p>See Twig integration for better HTML integration!</p>');
-//        $res = $mailer->send($message);
-//        exit('res='.$res);
-        /////////// EOF testing ////////////
 
         $message->subject($subject);
         $message->from($fromEmail);
@@ -203,23 +181,16 @@ class EmailUtil {
         //for html
         $body = str_replace("\r\n","<br>",$body);
 
-//        $message->html(
-//            $body,
-//            'text/html'
-//            //'text/plain'
-//        );
         $message->html($body);
 
         //re-route all emails to
-        $mailerDeliveryAddresses = NULL;
-        //$mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+        //$mailerDeliveryAddresses = NULL;
+        $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+        //$mailerDeliveryAddresses = "cinava@yahoo.com,cinava@yahoo.com,oli2002@med.cornell.edu, ,,";
         if( $mailerDeliveryAddresses ) {
 
             $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
             //echo "mailerDeliveryAddresses2=[".json_encode($mailerDeliveryAddresses)."]<br>";
-            foreach($mailerDeliveryAddresses as $mailerDeliveryAddress) {
-
-            }
             //$message->to($mailerDeliveryAddresses);
             $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
 
@@ -250,9 +221,6 @@ class EmailUtil {
             }
         }
 
-        //$res = $mailer->send($message);
-        //exit('res='.$res);
-
         // Optionally add any attachments
         if( $attachmentPath ) {
 
@@ -265,22 +233,34 @@ class EmailUtil {
             $message->attachFromPath($attachmentPath,$attachmentFilename);
         }
 
-        $ccStr = "";
-        if( $resCc ) {
-            $ccStr = implode(',',$resCc);
-        }
         $emailsStr = "";
-        if( $emails ) {
+        if( $emails && count($emails) > 0 ) {
             $emailsStr = implode(',',$emails);
         }
+        $ccStr = "";
+        if( $resCc && count($resCc) > 0 ) {
+            $ccStr = implode(',',$resCc);
+        }
+        $bccStr = "";
+        if( $resBcc && count($resBcc) > 0 ) {
+            $bccStr = implode(',',$resBcc);
+        }
+        $mailerDeliveryAddressesStr = "";
+        if( $mailerDeliveryAddresses && count($mailerDeliveryAddresses) > 0 ) {
+            $mailerDeliveryAddressesStr = implode(',',$mailerDeliveryAddresses);
+        }
 
-//        $mailer = $this->getSwiftMailer();
         $mailer = $this->mailer;
 
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.
-                "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
-                "; attachmentPath=".$attachmentPath);
+                "; To:".$emailsStr.
+                "; CC:".$ccStr.
+                ", BCC:".$bccStr.
+                "; subject=".$subject."; body=".$body.
+                "; attachmentPath=".$attachmentPath).
+                "; redirected=".$mailerDeliveryAddressesStr
+            ;
         }
         //echo "after transport newInstance <br>";
         //$logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
@@ -295,49 +275,57 @@ class EmailUtil {
             $emailRes = $mailer->send($message);
         }
         catch( \TransportExceptionInterface $e ){
-        //catch(\Swift_TransportException $e){
             $emailRes = $e->getMessage() ;
         }
 
-
-        $msg = "sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail.
-            "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
-            "; attachmentPath=".$attachmentPath;
+        $msg = "sendEmail: From:".$fromEmail.
+            "; To:".$emailsStr.
+            "; CC:".$ccStr.
+            ", BCC:".$bccStr.
+            "; redirected=".$mailerDeliveryAddressesStr
+        ;
         echo $msg . "<br>";
+
+        $msg = $msg .
+            "; subject=".$subject."; body=".$body.
+            "; attachmentPath=".$attachmentPath
+        ;
+
         $logger->notice($msg);
 
         return $emailRes;
     }
 
-    public function sendThisEmail(MailerInterface $mailer)
-    {
-        $email = (new Email())
-            ->from('cinava@yahoo.com')
-            ->to('oli2002@med.cornell.edu')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
-
-        $mailer->send($email);
-    }
-
-
     public function addEmailByType( $message, $emailArr, $type ) {
         if( $emailArr ) {
+            $addedCounter = 0;
             foreach ($emailArr as $email) {
                 if ($email) {
                     if ($type === 'to') {
-                        $message->to($email);
+                        if( $addedCounter == 0 ) {
+                            $message->to($email);
+                        } else {
+                            $message->addTo($email);
+                        }
+                        $addedCounter++;
                     }
                     if ($type === 'cc') {
-                        $message->cc($email);
+                        if( $addedCounter == 0 ) {
+                            $message->cc($email);
+                        } else {
+                            $message->addCc($email);
+                        }
+                        $addedCounter++;
+                        //$message->cc($email);
                     }
                     if ($type === 'bcc') {
-                        $message->bcc($email);
+                        if( $addedCounter == 0 ) {
+                            $message->bcc($email);
+                        } else {
+                            $message->addBcc($email);
+                        }
+                        $addedCounter++;
+                        //$message->bcc($email);
                     }
                 }
             }
@@ -360,7 +348,10 @@ class EmailUtil {
             //array
             foreach($emails as $email) {
                 if( $email ) {
-                    $cleanEmailsArr = $this->cleanEmail($email);
+                    $email = $this->cleanEmail($email);
+                    if( $email ) {
+                        $cleanEmailsArr[] = $email;
+                    }
                 }
             } //foreach
 
@@ -371,7 +362,10 @@ class EmailUtil {
                 $emailsArr = explode(',', $emails);
                 foreach($emailsArr as $email) {
                     if( $email ) {
-                        $cleanEmailsArr[] = $this->cleanEmail($email);
+                        $email = $this->cleanEmail($email);
+                        if( $email ) {
+                            $cleanEmailsArr[] = $email;
+                        }
                     }
                 }
             //}
@@ -428,7 +422,7 @@ class EmailUtil {
                 if( in_array($inputEmail, $emails) ) {
                     continue; //skip
                 }
-                $resultArr[] = $inputEmail;
+                $resultArr[] = $inputEmail; //add to result email
             }
 
             if( count($resultArr) > 0 ) {
@@ -485,110 +479,75 @@ class EmailUtil {
 //        return $validEmails;
 //    }
 
-    //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
-    public function getSwiftMailer() {
-        $userSecUtil = $this->container->get('user_security_utility');
+//    public function sendThisEmail(MailerInterface $mailer)
+//    {
+//        $email = (new Email())
+//            ->from('cinava@yahoo.com')
+//            ->to('oli2002@med.cornell.edu')
+//            //->cc('cc@example.com')
+//            //->bcc('bcc@example.com')
+//            //->replyTo('fabien@example.com')
+//            //->priority(Email::PRIORITY_HIGH)
+//            ->subject('Time for Symfony Mailer!')
+//            ->text('Sending emails is fun again!')
+//            ->html('<p>See Twig integration for better HTML integration!</p>');
+//
+//        $mailer->send($email);
+//    }
 
-        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
-        if( $useSpool ) {
-            $spoolPath = $this->container->get('kernel')->getProjectDir() .
-                DIRECTORY_SEPARATOR . "app" .
-                DIRECTORY_SEPARATOR . "spool".
-                DIRECTORY_SEPARATOR . "default";
-            $spool = new \Swift_FileSpool($spoolPath);
-            //$transport = \Swift_SpoolTransport::newInstance($spool);
-            $transport = new \Swift_SpoolTransport($spool);
-        } else {
-            $transport = $this->getSmtpTransport();
-            if( !$transport ) {
-                return null;
-            }
-        }
 
-        //$mailer = \Swift_Mailer::newInstance($transport);
-        $mailer = new \Swift_Mailer($transport);
-
-        return $mailer;
-    }
-
-    public function getSmtpTransport() {
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
-        if( !$host ) {
-            return null;
-        } 
-
-        $port = $userSecUtil->getSiteSettingParameter('mailerPort');
-        $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
-        $username = $userSecUtil->getSiteSettingParameter('mailerUser');
-        //Note for Google email server: use Google App specific password
-        //Enable 2-step verification
-        //Generate Google App specific password
-        $password = $userSecUtil->getSiteSettingParameter('mailerPassword');
-        $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
-        //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
-
-        //echo "before transport newInstance <br>";
-        //$transport = \Swift_SmtpTransport::newInstance();
-        $transport = new \Swift_SmtpTransport();
-        //echo "after transport newInstance <br>";
-        if( !$transport ) {
-            return null;
-        }
-
-        $transport->setHost($host);
-
-        if( $port ) {
-            $transport->setPort($port);
-        }
-
-        if( $username ) {
-            $transport->setUsername($username);
-        }
-
-        if( $password ) {
-            $transport->setPassword($password);
-        }
-
-        if( $authMode ) {
-            $transport->setAuthMode($authMode);
-        }
-        
-        if( $encrypt ) {
-            $transport->setEncryption($encrypt);
-        }
-
-        $transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
-
-        return $transport;
-    }
-
-    public function sendSpooledEmails() {
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $transport = $this->getSmtpTransport();
-        if( !$transport ) {
-            return null;
-        }
-
-        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
-        if( $useSpool ) {
-            $spoolPath = $this->container->get('kernel')->getProjectDir() .
-                DIRECTORY_SEPARATOR . "app" .
-                DIRECTORY_SEPARATOR . "spool".
-                DIRECTORY_SEPARATOR . "default";
-            $spool = new \Swift_FileSpool($spoolPath);
-
-            $spool->recover();
-            $res = $spool->flushQueue($transport);
-
-            return $res;
-        }
-
-        return null;
-    }
-
+//    public function getSmtpTransport() {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+//        if( !$host ) {
+//            return null;
+//        }
+//
+//        $port = $userSecUtil->getSiteSettingParameter('mailerPort');
+//        $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
+//        $username = $userSecUtil->getSiteSettingParameter('mailerUser');
+//        //Note for Google email server: use Google App specific password
+//        //Enable 2-step verification
+//        //Generate Google App specific password
+//        $password = $userSecUtil->getSiteSettingParameter('mailerPassword');
+//        $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
+//        //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
+//
+//        //echo "before transport newInstance <br>";
+//        //$transport = \Swift_SmtpTransport::newInstance();
+//        $transport = new \Swift_SmtpTransport();
+//        //echo "after transport newInstance <br>";
+//        if( !$transport ) {
+//            return null;
+//        }
+//
+//        $transport->setHost($host);
+//
+//        if( $port ) {
+//            $transport->setPort($port);
+//        }
+//
+//        if( $username ) {
+//            $transport->setUsername($username);
+//        }
+//
+//        if( $password ) {
+//            $transport->setPassword($password);
+//        }
+//
+//        if( $authMode ) {
+//            $transport->setAuthMode($authMode);
+//        }
+//
+//        if( $encrypt ) {
+//            $transport->setEncryption($encrypt);
+//        }
+//
+//        $transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
+//
+//        return $transport;
+//    }
 
     public function createEmailCronJob() {
         if( $this->isWindows() ){

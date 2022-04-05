@@ -113,6 +113,8 @@ $container->setParameter('crn.uploadpath',$crnuploadpath);
 $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
+$container->setParameter('mailer_dsn', "null://null");
+
 //exit("1");
 if( $useDb ) {
     $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
@@ -237,6 +239,11 @@ if( $conn ) {
             $database_name_pacsvendor = null;
             $database_user_pacsvendor = null;
             $database_password_pacsvendor = null;
+
+            $mailer_host = NULL;
+            $mailer_password = NULL;
+            $mailer_user = NULL;
+            $mailer_port = NULL;
 
             if ($row) {
 
@@ -496,39 +503,34 @@ if( $conn ) {
             $contentabout_page = str_replace("%", "%%", $contentabout_page);
             $container->setParameter('contentabout_page', $contentabout_page);
 
-            //testing mailer_dsn
-            //"LOGIN", "PLAIN", "XOAUTH2"
-            $mailer_password = NULL;
-            //$mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
+            //mailer_dsn
+            $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
+            $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
+            $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
+            $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
 
-            $mailer_user = NULL;
-            //$mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
+            if( !$mailer_port ) {
+                $mailer_port = '25';
+            }
 
-            $mailer_user_param = $mailer_user.':'.$mailer_password.'@';
-            $mailer_user_param = $mailer_user.'@';
-            $mailer_user_param = '';
+            $mailer_user_param = "";
+            if( $mailer_user && $mailer_password ) {
+                $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
+            }
 
-            $mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-            $mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
-            $mailparams = 'verify_peer_name=0';
-            $mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
-            $mailparams = '';
+            //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+            //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
+            //$mailparams = 'verify_peer_name=0';
+            //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
+            //$mailparams = '';
 
-            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25';
-            //$mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?timeout=60&encryption=tls&auth_mode=login';
-            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?auth_mode=plain';
-            //$mailer_dsn = 'smtp://null@smtp.med.cornell.edu:25/?auth_mode=plain';
-            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:587?encryption=starttls&auth_mode=plain';
-            $mailer_dsn = 'smtp://'.$mailer_user.':'.$mailer_password.'@smtp.med.cornell.edu:25/?allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-            $mailer_dsn = 'smtp://'.'smtp.med.cornell.edu:25/?'.$mailparams;
-            $mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:25/?'.$mailparams;
-            //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25/?'.$mailparams;
-
-            //https://stackoverflow.com/questions/60329775/how-to-disable-verify-peer-with-symfony-mailer-component
-            //$mailer_dsn = "smtp://".$mailer_user.':'.$mailer_password.'@'."smtp.med.cornell.edu:25/?".$mailparams;
+            //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
+            //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
+            //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
+            $mailer_dsn = 'smtp://'.$mailer_host.':'.$mailer_port;
 
             //$mailer_dsn = 'sendmail://default';
-            echo "mailer_dsn=".$mailer_dsn."<br>";
+            //echo "mailer_dsn=".$mailer_dsn."<br>";
             $container->setParameter('mailer_dsn', $mailer_dsn);
 
             //ldap
