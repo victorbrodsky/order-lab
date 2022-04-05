@@ -537,9 +537,10 @@ class DefaultController extends OrderAbstractController
 
         $ccs = NULL;
 
-        $email = "oli2002@med.cornell.edu,cinava@yahoo.com";
+        $email = "oli2002@med.cornell.edu,cinava@yahoo.com,cinava@yahoo.com,oli2002@med.cornell.edu";
         //$email = "oli2002@med.cornell.edu";
-        $ccs = "cinava@yahoo.com,cinava@yahoo.com";
+        $ccs = "cinava@yahoo.com,cinava@yahoo.com,oli2002@med.cornell.edu";
+        $fromEmail = NULL;
 
         $invoice = NULL;
         $userSecUtil = $this->container->get('user_security_utility');
@@ -562,8 +563,8 @@ class DefaultController extends OrderAbstractController
 
         //$emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=nul
 
-        $resEmail = $emailUtil->sendEmail($email, "Test Invoice Subject", "Test Invoice Body", $ccs, $email, $attachmentPath, $attachmentFilename);
-        echo "resEmail=$resEmail <br>";
+        $resEmail = $emailUtil->sendEmail($email, "Test Invoice Subject", "Test Invoice Body", $ccs, $fromEmail, $attachmentPath, $attachmentFilename);
+        //echo "resEmail=$resEmail <br>";
 
         //$res = $invoice->getId() . ": attachmentPath=$attachmentPath <br>";
 

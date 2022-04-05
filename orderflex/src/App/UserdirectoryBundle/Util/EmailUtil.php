@@ -163,9 +163,15 @@ class EmailUtil {
         $ccs = $this->checkEmails($ccs); //,'css',$allEmails);
         $bcc = $this->checkEmails($bcc); //,'bcc',$allEmails);
 
-        echo "fromEmail=[$fromEmail], emails=[$emails], ccs=[$ccs], bcc=[$bcc] <br>";
+        $resCc = array();
+        $resBcc = array();
 
-        if( !$emails ) {
+        //echo "fromEmail=[$fromEmail] <br>";
+        echo "emails=[".json_encode($emails)."], ccs=[".json_encode($ccs)."], bcc=[".json_encode($bcc)."] <br>";
+
+        if( $emails && count($emails) > 0 ) {
+            //OK
+        } else {
             $logger->error("sendEmail: Email has not been sent ('To:' emails is empty): From:".$fromEmail."; subject=".$subject."; body=".$body);
             return false;
         }
@@ -205,70 +211,67 @@ class EmailUtil {
         $message->html($body);
 
         //re-route all emails to
-        $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+        $mailerDeliveryAddresses = NULL;
+        //$mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         if( $mailerDeliveryAddresses ) {
 
             $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
-            echo "mailerDeliveryAddresses=[$mailerDeliveryAddresses]<br>";
-            $message->to($mailerDeliveryAddresses);
+            //echo "mailerDeliveryAddresses2=[".json_encode($mailerDeliveryAddresses)."]<br>";
+            foreach($mailerDeliveryAddresses as $mailerDeliveryAddress) {
+
+            }
+            //$message->to($mailerDeliveryAddresses);
+            $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
 
         } else {
 
             //to
-            echo "emails=[$emails]<br>";
-            $message->to($emails);
+            //echo "emails=[".json_encode($emails)."]<br>";
+            //$message->to($emails);
+            $message = $this->addEmailByType($message,$emails,'to');
 
             //cc
-            if( $ccs ) {
-                $resCcs = $this->removeDuplicate($ccs,$emails);
-                echo "resCcs=[$resCcs]<br>";
-                $message->cc($resCcs);
+            if( $ccs && count($ccs) > 0 ) {
+                $resCc = $this->removeDuplicate($ccs,$emails);
+                //echo "resCc=[".json_encode($resCc)."]<br>";
+                //$message->cc($resCc);
+                $message = $this->addEmailByType($message,$resCc,'cc');
             }
 
             //send copy email to siteEmail via bcc
-            $userSecUtil = $this->container->get('user_security_utility');
-            $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
-            if( $bcc ) {
+            if( $bcc && count($bcc) > 0 ) {
                 $resBcc = $this->removeDuplicate($bcc,$emails);
 
-                $resBcc = $this->removeDuplicate($resBcc,$css);
+                $resBcc = $this->removeDuplicate($resBcc,$resCc);
 
-                echo "resBcc=[$resBcc]<br>";
-                $message->bcc($resBcc);
+                //echo "resBcc=[".json_encode($resBcc)."]<br>";
+                //$message->bcc($resBcc);
+                $message = $this->addEmailByType($message,$resBcc,'bcc');
             }
         }
 
-        $res = $mailer->send($message);
-        exit('res='.$res);
+        //$res = $mailer->send($message);
+        //exit('res='.$res);
 
         // Optionally add any attachments
         if( $attachmentPath ) {
 
-            //Get absolute path
-            //$appPath = $this->container->getParameter('kernel.root_dir');
-            //$webPath = realpath($appPath . '/../web');
-            //echo "webPath=$webPath<br>";
-
-            //echo "attachmentPath=$attachmentPath<br>";
-            $attachment = \Swift_Attachment::fromPath($attachmentPath);
-            if( $attachmentFilename ) {
-                $attachment->setFilename($attachmentFilename);
-            }
-            if( $attachment ) {
+            if( $attachmentPath ) {
                 $logger->notice("Attachment exists; fromPath=".$attachmentPath);
             } else {
                 $logger->notice("Attachment is NULL; fromPath=".$attachmentPath);
             }
-            $message->attach($attachment);
+
+            $message->attachFromPath($attachmentPath,$attachmentFilename);
         }
 
         $ccStr = "";
-        if( $ccs ) {
-            $ccStr = $ccs;
+        if( $resCc ) {
+            $ccStr = implode(',',$resCc);
         }
         $emailsStr = "";
         if( $emails ) {
-            $emailsStr = $emails;
+            $emailsStr = implode(',',$emails);
         }
 
 //        $mailer = $this->getSwiftMailer();
@@ -297,9 +300,11 @@ class EmailUtil {
         }
 
 
-        $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail.
+        $msg = "sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail.
             "; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$body.
-            "; attachmentPath=".$attachmentPath);
+            "; attachmentPath=".$attachmentPath;
+        echo $msg . "<br>";
+        $logger->notice($msg);
 
         return $emailRes;
     }
@@ -320,33 +325,63 @@ class EmailUtil {
         $mailer->send($email);
     }
 
-    //Remove cc, bcc if exists in 'to'
+
+    public function addEmailByType( $message, $emailArr, $type ) {
+        if( $emailArr ) {
+            foreach ($emailArr as $email) {
+                if ($email) {
+                    if ($type === 'to') {
+                        $message->to($email);
+                    }
+                    if ($type === 'cc') {
+                        $message->cc($email);
+                    }
+                    if ($type === 'bcc') {
+                        $message->bcc($email);
+                    }
+                }
+            }
+        }
+        return $message;
+    }
+
+    //Convert emails to unique array
+    //return: array of unique emails
     public function checkEmails( $emails ) {
         //$logger = $this->container->get('logger');
 
+        $cleanEmailsArr = array();
+
         if( !$emails ) {
-            return $this->cleanEmail($emails);
+            return $cleanEmailsArr;
         }
 
-        //array
         if( is_array($emails) ) {
-            $emailStr = "";
+            //array
             foreach($emails as $email) {
                 if( $email ) {
-                    $email = str_replace(" ", "", $email);
-                    if( $email ) {
-                        if( $emailStr ) {
-                            $emailStr = $emailStr . "," . $email;
-                        } else {
-                            $emailStr = $email;
-                        }
-                    }
+                    $cleanEmailsArr = $this->cleanEmail($email);
                 }
             } //foreach
-            return $this->cleanEmail($emailStr);
+
+        } else {
+            //string
+            //if( $emails && str_contains($emails, ',') ) {
+                $cleanEmailsArr = array();
+                $emailsArr = explode(',', $emails);
+                foreach($emailsArr as $email) {
+                    if( $email ) {
+                        $cleanEmailsArr[] = $this->cleanEmail($email);
+                    }
+                }
+            //}
         }
 
-        return $this->cleanEmail($emails);
+        if( count($cleanEmailsArr) > 0 ) {
+            $cleanEmailsArr = array_unique($cleanEmailsArr);
+        }
+
+        return $cleanEmailsArr;
     }
 
     public function cleanEmail($emails) {
@@ -357,45 +392,47 @@ class EmailUtil {
             $emails = str_replace(",,", ",", $emails);
         }
 
-        //remove duplicates
-        if( $emails && str_contains($emails, ',') ) {
-            $emailsArr = explode(',', $emails);
-            $emailsArr = array_unique($emailsArr);
-            $emails = implode(',',$emailsArr);
-        }
+//        //remove duplicates
+//        if( $emails && str_contains($emails, ',') ) {
+//            $emailsArr = explode(',', $emails);
+//            $emailsArr = array_unique($emailsArr);
+//            $emails = implode(',',$emailsArr);
+//        }
 
         return $emails;
     }
 
-    //$inputEmails:     e1,e5
-    //$emails:          e1,e2,e3,e4
+    //$inputEmails:     array(e1,e5)
+    //$emails:          array(e1,e2,e3,e4)
     //output emails:    e5
     public function removeDuplicate( $inputEmails, $emails ) {
 
-        if( $inputEmails ) {
-            $inputEmailsArr = explode(',', $inputEmails);
+        if( $inputEmails && count($inputEmails) > 0 ) {
+            //
         } else {
+            //all checking $inputEmails are empty => return NULL
             return NULL;
         }
 
-        if( $emails ) {
-            $emailsArr = explode(',', $emails);
+        if( $emails && count($emails) > 0 ) {
+            //
         } else {
+            //all emails are empty => return all checking $inputEmails
             return $inputEmails;
         }
 
-        if( $inputEmailsArr && count($inputEmailsArr) > 0 && $emailsArr && count($emailsArr) > 0 ) {
+        if( $inputEmails && count($inputEmails) > 0 && $emails && count($emails) > 0 ) {
             $resultArr = array(); //array_diff($array1, $array2);
 
-            foreach($inputEmailsArr as $inputEmail) {
-                if( in_array($inputEmail, $emailsArr) ) {
+            foreach($inputEmails as $inputEmail) {
+                if( in_array($inputEmail, $emails) ) {
                     continue; //skip
                 }
                 $resultArr[] = $inputEmail;
             }
 
             if( count($resultArr) > 0 ) {
-                return implode(',',$resultArr);
+                return $resultArr;
             }
 
         }
