@@ -148,6 +148,11 @@ class UserController extends OrderAbstractController
 //        $userTest = $authUtil->findUserByUsername('user1_@_local-user');
 //        echo "testUser=".$userTest."<br>";
 
+//        $userServiceUtil = $this->get('user_service_utility');
+//        $apiInfo = $userServiceUtil->getFrameworkInfo();
+//        echo "apiInfo=$apiInfo <br>";
+//        exit('111');
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

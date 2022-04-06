@@ -1567,6 +1567,11 @@ Pathology and Laboratory Medicine",
         }
         $info = $process->getOutput();
 
+        //remove api secret
+        $apiInfo = $this->getStringBetween($info,"APP_SECRET","DATABASE_URL");
+        //echo "apiInfo=$apiInfo <br>";
+        $info = str_replace($apiInfo, " *****<br>", $info);
+
         //$divider = "-------------------- ---------------------------------------------------------------------------------------";
         $divider = "\n";
 
@@ -1577,6 +1582,15 @@ Pathology and Laboratory Medicine",
         $res = $res . $info;
 
         return $res;
+    }
+
+    public function getStringBetween($string, $start, $end){
+        $string = ' ' . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) return '';
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
     }
 
     public function getPhpPath() {
