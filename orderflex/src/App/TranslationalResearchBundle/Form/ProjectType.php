@@ -59,6 +59,7 @@ class ProjectType extends AbstractType
                 'label' => "Approval Date:",
                 //'disabled' => true,
                 'format' => 'MM/dd/yyyy',
+                'html5' => false, //Solution to the exception: Using a custom format when the "html5" option is enabled is deprecated since Symfony 4.3 and will lead to an exception in 5.0
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
@@ -86,6 +87,7 @@ class ProjectType extends AbstractType
                 'label' => "Submission Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
                 'required' => false,
             ));
@@ -209,6 +211,7 @@ class ProjectType extends AbstractType
             'widget' => 'single_text',
             'label' => $this->params['transresUtil']->getHumanName()." Expiration Date:",
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             //'view_timezone' => $user_tz,
             //'model_timezone' => $user_tz,
             'attr' => array('class' => 'datepicker form-control transres-project-irbExpirationDate'),
@@ -220,6 +223,7 @@ class ProjectType extends AbstractType
                 'widget' => 'single_text',
                 'label' => "Expected Expiration Date (for non-funded project only):",
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 //'view_timezone' => $user_tz,
                 //'model_timezone' => $user_tz,
                 'attr' => array('class' => 'datepicker form-control transres-project-expectedExpirationDate'),
@@ -274,6 +278,7 @@ class ProjectType extends AbstractType
                 'label' => "Expected Completion Date:",
                 'widget' => 'single_text',
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class'=>'datepicker form-control')
             ));
         }
@@ -371,6 +376,7 @@ class ProjectType extends AbstractType
             'widget' => 'single_text',
             'label' => $this->params['transresUtil']->getAnimalName()." Expiration Date:",
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             //'view_timezone' => $user_tz,
             //'model_timezone' => $user_tz,
             'attr' => array('class' => 'datepicker form-control transres-project-iacucExpirationDate'),

@@ -135,6 +135,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
@@ -143,6 +144,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
@@ -248,6 +250,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Expected Completion Date'),
         ));
         $builder->add('toExpectedCompletionDate', DateTimeType::class, array(
@@ -255,6 +258,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Expected Completion Date'),
         ));
 
@@ -263,6 +267,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'data' => $this->params['fromImplicitExpDate'],
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));
@@ -271,6 +276,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'data' => $this->params['toImplicitExpDate'],
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To '.$this->params['humanAnimalNameSlash'].' Expiration Date'),
         ));

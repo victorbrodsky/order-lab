@@ -122,6 +122,7 @@ class ListType extends AbstractType
             'required' => true,
             //'disabled' => true,
             'format' => 'MM/dd/yyyy, H:mm:ss',
+            'html5' => false,
             'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
             'attr' => array('class' => 'form-control', 'readonly'=>true),
         ));

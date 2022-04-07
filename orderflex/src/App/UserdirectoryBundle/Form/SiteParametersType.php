@@ -451,6 +451,7 @@ class SiteParametersType extends AbstractType
                 'label'=>'Maintenance Until:',
                 'widget' => 'single_text',
                 'format' => 'MM/dd/yyyy H:m',
+                'html5' => false,
                 'attr' => array('class'=>'form-control datetimepicker')
             ));
 

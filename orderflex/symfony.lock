@@ -8,6 +8,9 @@
     "box/spout": {
         "version": "v3.1.0"
     },
+    "cinava/comment-bundle": {
+        "version": "4.0.x-dev"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.5"
     },
@@ -101,9 +104,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
-    },
-    "friendsofsymfony/comment-bundle": {
-        "version": "v2.4.0"
     },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.3",

@@ -58,6 +58,7 @@ class GeneratedUserType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'disabled' => true,
             'attr' => array('class' => 'datepicker form-control'),
         ));

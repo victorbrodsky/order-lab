@@ -56,6 +56,7 @@ class EmploymentStatusType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control') //'readonly'=>$readonly
         ));
 
@@ -72,6 +73,7 @@ class EmploymentStatusType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control user-expired-end-date')
         ));
 

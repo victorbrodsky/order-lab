@@ -154,6 +154,7 @@ class MessageObjectType extends AbstractType
                 'label' => "Generation Date:",
                 //'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
                 'format' => 'MM/dd/yyyy, H:mm:ss',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
@@ -255,6 +256,7 @@ class MessageObjectType extends AbstractType
         $builder->add('deadline', DateType::class,array(
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'data' => $deadline,

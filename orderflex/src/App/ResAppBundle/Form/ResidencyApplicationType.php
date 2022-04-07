@@ -140,6 +140,7 @@ class ResidencyApplicationType extends AbstractType
                 'label' => "Application Receipt Date:",
                 //'format' => 'MM/dd/yyyy, H:mm:ss',
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
@@ -149,6 +150,7 @@ class ResidencyApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Expected Residency Start Date:", //"Residency Start Date:"
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control resapp-startDate'),
             'required' => false,
         ));
@@ -157,6 +159,7 @@ class ResidencyApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Expected Graduation Date:", //"Residency End Date:",
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control resapp-endDate'),
             'required' => false,
         ));
@@ -165,6 +168,7 @@ class ResidencyApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Application Season Start Date:",
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control resapp-applicationSeasonStartDate'),
             'required' => false,
         ));
@@ -173,6 +177,7 @@ class ResidencyApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Application Season End Date:",
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control resapp-applicationSeasonEndDate'),
             'required' => false,
         ));
@@ -290,6 +295,7 @@ class ResidencyApplicationType extends AbstractType
 //            'widget' => 'single_text',
 //            'required' => false,
 //            'format' => 'MM/dd/yyyy',
+//            'html5' => false,
 //            'attr' => array('class' => 'datepicker form-control'),
 //        ));
 
@@ -369,6 +375,7 @@ class ResidencyApplicationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
 

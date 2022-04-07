@@ -105,6 +105,7 @@ class TransResRequestType extends AbstractType
                 'label' => "Save as Draft Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
                 'required' => false,
             ));
@@ -120,6 +121,7 @@ class TransResRequestType extends AbstractType
                 'label' => "Creation ('Submission') Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
                 'required' => false,
             ));
@@ -241,6 +243,7 @@ class TransResRequestType extends AbstractType
                 'widget' => 'single_text',
                 'label' => "Support End Date (".$this->params['humanAnimalNameSlash']." Expiration Date):",
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => $supportEndDateAttr,  //array('class' => 'datepicker form-control'),
                 'required' => false,
             ));

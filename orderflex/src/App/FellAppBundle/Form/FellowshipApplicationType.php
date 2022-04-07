@@ -123,6 +123,7 @@ class FellowshipApplicationType extends AbstractType
                 'label' => "Application Receipt Date:",
                 //'format' => 'MM/dd/yyyy, H:mm:ss',
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
@@ -132,6 +133,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Start Date:",
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
             'required' => false,
         ));
@@ -140,6 +142,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'label' => "Expected Graduation Date:",
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
             'required' => false,
         ));
@@ -270,6 +273,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -349,6 +353,7 @@ class FellowshipApplicationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
 

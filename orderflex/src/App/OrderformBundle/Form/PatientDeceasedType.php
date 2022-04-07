@@ -48,6 +48,7 @@ class PatientDeceasedType extends AbstractType
         $builder->add('deathdate',DateTimeType::class,array(
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
             'required' => false,
             'label'=>'Date of Death:',

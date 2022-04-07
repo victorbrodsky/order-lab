@@ -105,7 +105,8 @@ class GrantType extends AbstractType
             'label' => "Grant Support Start Date:",
             'widget' => 'single_text',
             'required' => false,
-            'format' => 'MM/dd/yyyy',    //'MM/dd/yyyy',
+            'format' => 'MM/dd/yyyy',   
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control grant-startDate-field', 'readonly'=>$readonly),
         ));
 
@@ -115,6 +116,7 @@ class GrantType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control grant-endDate-field', 'readonly'=>$readonly),
         ));
 

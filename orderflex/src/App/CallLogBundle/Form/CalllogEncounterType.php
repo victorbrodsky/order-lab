@@ -374,6 +374,7 @@ class CalllogEncounterType extends AbstractType
             //'disabled' => $this->params['readonlyEncounter'],
             //'mapped' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control patient-dob-date', 'readonly' => $this->params['readonlyEncounter']), //'style'=>'margin-top: 0;'
         ));
 

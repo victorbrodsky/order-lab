@@ -11,7 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "2.9.6",
         "fabiang/sasl": "^1.0",
-        "friendsofsymfony/comment-bundle": "^4.0.x-dev",
+        "cinava/comment-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "google/apiclient": "^1.1",
         "knplabs/knp-paginator-bundle": "^5.8",
@@ -118,5 +118,12 @@
         "google/apiclient-services": [
             "Drive"
         ]
-    }
+    },
+    "repositories":
+    [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cinava/FOSCommentBundle.git"
+        }
+    ]
 }

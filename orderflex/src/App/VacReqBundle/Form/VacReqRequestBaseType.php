@@ -52,6 +52,7 @@ class VacReqRequestBaseType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control vacreq-startDate'), //datepicker-nocleardate datepicker-onclear-cleartooltip
             'disabled' => ($this->params['review'] ? true : false)
         ));
@@ -61,6 +62,7 @@ class VacReqRequestBaseType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control vacreq-endDate'),
             'disabled' => ($this->params['review'] ? true : false)
         ));

@@ -159,6 +159,7 @@ class InvoiceType extends AbstractType
             'label' => "Due Date:",
             //'disabled' => true,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
         ));
@@ -168,6 +169,7 @@ class InvoiceType extends AbstractType
             'label' => "Paid Date:",
             //'disabled' => true,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
         ));

@@ -260,6 +260,7 @@ class VacReqRequestType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control allow-future-date vacreq-firstDayBackInOffice'),
             'disabled' => ($this->params['review'] ? true : false)
         ));

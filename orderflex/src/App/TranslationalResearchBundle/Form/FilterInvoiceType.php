@@ -153,6 +153,7 @@ class FilterInvoiceType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Due Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
@@ -161,6 +162,7 @@ class FilterInvoiceType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Due Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
@@ -169,6 +171,7 @@ class FilterInvoiceType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Generated Date'),
         ));
         $builder->add('endCreateDate', DateTimeType::class, array(
@@ -176,6 +179,7 @@ class FilterInvoiceType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Generated Date'),
         ));
 

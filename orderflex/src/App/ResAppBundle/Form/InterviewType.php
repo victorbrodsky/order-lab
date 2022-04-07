@@ -71,6 +71,7 @@ class InterviewType extends AbstractType
                 'widget' => 'single_text',
                 'label' => "Interview Date:",
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control interview-interviewDate'),
                 'required' => false,
             ));

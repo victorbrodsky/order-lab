@@ -73,6 +73,7 @@ class BaseTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
@@ -81,6 +82,7 @@ class BaseTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control allow-future-date user-expired-end-date'),
         ));
 
@@ -312,6 +314,7 @@ class BaseTitleType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker form-control pgystart-field', 'style'=>'margin-top: 0;'),
             ));
 

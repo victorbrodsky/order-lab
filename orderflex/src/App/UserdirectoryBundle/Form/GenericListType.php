@@ -1407,6 +1407,7 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'MM/dd/yyyy',
+                'html5' => false,
                 'attr' => array('class'=>'datepicker form-control allow-future-date'),
             ));
 
@@ -1635,6 +1636,7 @@ class GenericListType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class'=>'datepicker form-control allow-future-date'),
         ));
     }

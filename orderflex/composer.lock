@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d26d6c050e20eab6a5d704573e2bc0c",
+    "content-hash": "f3fdf203a13249c6520fd70ae7e62c32",
     "packages": [
         {
             "name": "asimlqt/php-google-spreadsheet-client",
@@ -177,6 +177,104 @@
                 "source": "https://github.com/box/spout/tree/v3.3.0"
             },
             "time": "2021-05-14T21:18:09+00:00"
+        },
+        {
+            "name": "cinava/comment-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cinava/FOSCommentBundle.git",
+                "reference": "69523d4b8af2f1cfbabdb32eb261a2050c585654"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cinava/FOSCommentBundle/zipball/69523d4b8af2f1cfbabdb32eb261a2050c585654",
+                "reference": "69523d4b8af2f1cfbabdb32eb261a2050c585654",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "~1.0",
+                "friendsofsymfony/rest-bundle": "~2.8",
+                "jms/serializer-bundle": "~2.0|~3.0",
+                "php": "^7.4 || ^8.0",
+                "phpoption/phpoption": "~1.1",
+                "symfony/asset": "~3.4|^4.3",
+                "symfony/dependency-injection": "~3.4|^4.3",
+                "symfony/form": "~3.4|^4.3",
+                "symfony/framework-bundle": "~3.4|^4.3",
+                "symfony/routing": "~3.4|^4.3",
+                "symfony/security-bundle": "~3.4|^4.3",
+                "symfony/twig-bridge": "~3.4|^4.3",
+                "symfony/twig-bundle": "~3.4|^4.3",
+                "symfony/validator": "~3.4|^4.3",
+                "symfony/yaml": "~3.4|^4.3",
+                "twig/twig": "~2.0|~3.0"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "^1.6|^2.0",
+                "doctrine/orm": "~2.3",
+                "friendsofphp/php-cs-fixer": "^2.2",
+                "friendsofsymfony/user-bundle": "~2.0",
+                "ornicar/akismet-bundle": "dev-master",
+                "phpunit/phpunit": "^6.5",
+                "symfony/browser-kit": "~3.4|^4.3",
+                "symfony/css-selector": "~3.4|^4.3",
+                "symfony/dom-crawler": "~3.4|^4.3",
+                "symfony/expression-language": "~3.4|^4.3",
+                "symfony/phpunit-bridge": "~3.4|^4.3"
+            },
+            "suggest": {
+                "friendsofsymfony/user-bundle": "Allows for user integration.",
+                "ornicar/akismet-bundle": "Integrate Akismet for spam detection.",
+                "symfony/acl-bundle": "Integrates the ACL Security component.",
+                "symfony/assetic-bundle": "Integrates Assetic into Symfony."
+            },
+            "default-branch": true,
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FOS\\CommentBundle\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "FOS\\CommentBundle\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Nagel",
+                    "email": "tim@nagel.com.au"
+                },
+                {
+                    "name": "Alexander Mols",
+                    "email": "iam.asm89@gmail.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSCommentBundle/contributors"
+                }
+            ],
+            "description": "This Bundle provides threaded comment functionality for Symfony applications",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "comment",
+                "forum",
+                "threads"
+            ],
+            "support": {
+                "issues": "https://github.com/FriendsOfSymfony/FOSCommentBundle/issues",
+                "source": "https://github.com/cinava/FOSCommentBundle/tree/master"
+            },
+            "time": "2022-04-06T21:13:05+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -1870,100 +1968,6 @@
                 }
             ],
             "time": "2022-03-02T09:29:19+00:00"
-        },
-        {
-            "name": "friendsofsymfony/comment-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FriendsOfSymfony/FOSCommentBundle.git",
-                "reference": "eb5db4511ca9d2b342231583af8032626571cf37"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSCommentBundle/zipball/eb5db4511ca9d2b342231583af8032626571cf37",
-                "reference": "eb5db4511ca9d2b342231583af8032626571cf37",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "~1.0",
-                "friendsofsymfony/rest-bundle": "~2.8",
-                "jms/serializer-bundle": "~2.0|~3.0",
-                "php": "^7.4 || ^8.0",
-                "phpoption/phpoption": "~1.1",
-                "symfony/asset": "~3.4|^4.3",
-                "symfony/dependency-injection": "~3.4|^4.3",
-                "symfony/form": "~3.4|^4.3",
-                "symfony/framework-bundle": "~3.4|^4.3",
-                "symfony/routing": "~3.4|^4.3",
-                "symfony/security-bundle": "~3.4|^4.3",
-                "symfony/twig-bridge": "~3.4|^4.3",
-                "symfony/twig-bundle": "~3.4|^4.3",
-                "symfony/validator": "~3.4|^4.3",
-                "symfony/yaml": "~3.4|^4.3",
-                "twig/twig": "~2.0|~3.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "^1.6|^2.0",
-                "doctrine/orm": "~2.3",
-                "friendsofphp/php-cs-fixer": "^2.2",
-                "friendsofsymfony/user-bundle": "~2.0",
-                "ornicar/akismet-bundle": "dev-master",
-                "phpunit/phpunit": "^6.5",
-                "symfony/browser-kit": "~3.4|^4.3",
-                "symfony/css-selector": "~3.4|^4.3",
-                "symfony/dom-crawler": "~3.4|^4.3",
-                "symfony/expression-language": "~3.4|^4.3",
-                "symfony/phpunit-bridge": "~3.4|^4.3"
-            },
-            "suggest": {
-                "friendsofsymfony/user-bundle": "Allows for user integration.",
-                "ornicar/akismet-bundle": "Integrate Akismet for spam detection.",
-                "symfony/acl-bundle": "Integrates the ACL Security component.",
-                "symfony/assetic-bundle": "Integrates Assetic into Symfony."
-            },
-            "default-branch": true,
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "FOS\\CommentBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tim Nagel",
-                    "email": "tim@nagel.com.au"
-                },
-                {
-                    "name": "Alexander Mols",
-                    "email": "iam.asm89@gmail.com"
-                },
-                {
-                    "name": "FriendsOfSymfony Community",
-                    "homepage": "https://github.com/friendsofsymfony/FOSCommentBundle/contributors"
-                }
-            ],
-            "description": "This Bundle provides threaded comment functionality for Symfony applications",
-            "homepage": "http://friendsofsymfony.github.com",
-            "keywords": [
-                "comment",
-                "forum",
-                "threads"
-            ],
-            "support": {
-                "issues": "https://github.com/FriendsOfSymfony/FOSCommentBundle/issues",
-                "source": "https://github.com/FriendsOfSymfony/FOSCommentBundle/tree/master"
-            },
-            "time": "2022-01-18T23:19:26+00:00"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -9733,16 +9737,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.3.9",
+            "version": "v3.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "6ff9b0e440fa66f97f207e181c41340ddfa5683d"
+                "reference": "8442df056c51b706793adf80a9fd363406dd3674"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/6ff9b0e440fa66f97f207e181c41340ddfa5683d",
-                "reference": "6ff9b0e440fa66f97f207e181c41340ddfa5683d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8442df056c51b706793adf80a9fd363406dd3674",
+                "reference": "8442df056c51b706793adf80a9fd363406dd3674",
                 "shasum": ""
             },
             "require": {
@@ -9793,7 +9797,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.3.9"
+                "source": "https://github.com/twigphp/Twig/tree/v3.3.10"
             },
             "funding": [
                 {
@@ -9805,7 +9809,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-25T09:37:52+00:00"
+            "time": "2022-04-06T06:47:41+00:00"
         },
         {
             "name": "twilio/sdk",
@@ -12293,7 +12297,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "friendsofsymfony/comment-bundle": 20
+        "cinava/comment-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

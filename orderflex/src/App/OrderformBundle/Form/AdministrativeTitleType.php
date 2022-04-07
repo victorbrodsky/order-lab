@@ -44,6 +44,7 @@ class AdministrativeTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
@@ -52,6 +53,7 @@ class AdministrativeTitleType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
 

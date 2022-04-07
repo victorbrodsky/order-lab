@@ -139,6 +139,7 @@ class LoggerFilterType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'Start Date/Time')
         ));
 
@@ -147,6 +148,7 @@ class LoggerFilterType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'End Date/Time')
         ));
 

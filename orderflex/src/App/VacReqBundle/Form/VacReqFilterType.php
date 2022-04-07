@@ -92,6 +92,7 @@ class VacReqFilterType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'format' => 'yyyy',
+                'html5' => false,
                 'attr' => array('class' => 'datepicker-only-year form-control', 'placeholder' => 'Academic Year', 'title' => $this->params['academicYearTooltip'], 'data-toggle' => 'tooltip'),
             ));
         }
@@ -115,6 +116,7 @@ class VacReqFilterType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Start Date', 'title'=>'Start Date of Request Submission', 'data-toggle'=>'tooltip')
         ));
 
@@ -123,6 +125,7 @@ class VacReqFilterType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'End Date', 'title'=>'End Date of Request Submission', 'data-toggle'=>'tooltip')
         ));
 

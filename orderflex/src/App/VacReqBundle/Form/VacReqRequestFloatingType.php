@@ -264,6 +264,7 @@ class VacReqRequestFloatingType extends AbstractType
             'required' => false,
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'disabled' => $disable,
             'attr' => array(
                 'class' => 'form-control datetimepicker floatingDay',

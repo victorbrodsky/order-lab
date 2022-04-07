@@ -47,6 +47,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('USMLEStep1Score', null, array(
@@ -64,6 +65,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('USMLEStep2CKScore', null, array(
@@ -80,6 +82,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('USMLEStep2CSScore', null, array(
@@ -97,6 +100,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('USMLEStep3Score', null, array(
@@ -118,6 +122,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('ECFMGCertificate', CheckboxType::class, array(
@@ -131,6 +136,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('COMLEXLevel1Score', null, array(
@@ -147,6 +153,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('COMLEXLevel2Score', null, array(
@@ -163,6 +170,7 @@ class ExaminationType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('COMLEXLevel3Score', null, array(
