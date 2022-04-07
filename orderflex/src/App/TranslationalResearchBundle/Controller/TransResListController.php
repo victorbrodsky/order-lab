@@ -202,4 +202,42 @@ class TransResListController extends ListController
 
         return $this->updateList($request,$id);
     }
+
+
+    /**
+     * @Route("/download-fees-list-excel", name="trp_download_fees_list_excel")
+     * @Template("AppUserdirectoryBundle/Default/about.html.twig")
+     */
+    public function downloadFeesListExcelAction( Request $request ) {
+        //$ids = $request->request->get('ids');
+        //echo "ids=".$ids."<br>";
+        //exit('111');
+
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $search = $request->get('search');
+        $linkToListId = $request->get('linkToListId');
+        $pathbase = $request->get('pathbase');
+        //echo "linkToListId=$linkToListId, search=$search, pathbase=$pathbase <br>";
+        //dump($search);
+
+        //dump($request);
+        //exit('111');
+
+        $mapper = $this->classListMapper($pathbase,$request);
+        //echo "repository=".$mapper['bundleName'].':'.$mapper['className']."<br>";
+
+        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+
+        $entityClass = $mapper['fullClassName'];
+
+        //$userServiceUtil = $this->get('user_service_utility');
+
+        $fileName = "list_ID_$linkToListId".".xlsx";
+
+        $transresRequestUtil->createtFeesListExcelSpout( $repository, $entityClass, $search, $fileName );
+
+        exit();
+    }
+
 }

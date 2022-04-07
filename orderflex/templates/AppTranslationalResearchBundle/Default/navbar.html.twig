@@ -490,82 +490,83 @@
                     {#{% endif %}#}
 
                     {% if simpleMenu %}
-                    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-                        {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
+                        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                            {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
 
-                        {% if specialties|length > 0 %}
-                            <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
+                            {% if specialties|length > 0 %}
+                                <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
 
-                                {% for specialty in specialties %}
-                                    <li>
-                                        <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                        >Default Reviewers for {{ specialty.getName() }}</a>
-                                    </li>
-                                {% endfor %}
+                                    {% for specialty in specialties %}
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                            >Default Reviewers for {{ specialty.getName() }}</a>
+                                        </li>
+                                    {% endfor %}
 
-                                    <li>
-                                        <a href="{{ path(translationalresearch_sitename~'_substitute_user') }}">Substitute user</a>
-                                    </li>
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_substitute_user') }}">Substitute user</a>
+                                        </li>
 
-                                </ul>
-                            </li>
-
-                            {#<li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">#}
-                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>#}
-                                {#<ul class="dropdown-menu">#}
-
-                                    {#{% for specialty in specialties %}#}
-                                        {#<li>#}
-                                            {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
-                                            {#>Default Site Settings for {{ specialty.getName() }}</a>#}
-                                        {#</li>#}
-                                    {#{% endfor %}#}
-
-                                {#</ul>#}
-                            {#</li>#}
-                        {% endif %}
-
-                    {% endif %}
-
-                    {#<li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>#}
-                    <li id="nav-bar-translationalresearch-project-workflow" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">References<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project-requests'}) }}">Project Request Approval Status Progress</a>
-                            </li>
-
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-billing'}) }}">Work Request Billing Progress</a>
-                            </li>
-
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-completion-progress'}) }}">Work Request Completion Progress</a>
-                            </li>
-
-                            <hr style="margin-top: 10px; margin-bottom: 10px;">
-
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>
-                            </li>
-
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
-                                <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                <li>
-                                    <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Product/Service (Fee Schedule) List Management</a>
+                                    </ul>
                                 </li>
 
-                                <li>
-                                    <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>
-                                </li>
+                                {#<li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">#}
+                                    {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>#}
+                                    {#<ul class="dropdown-menu">#}
+
+                                        {#{% for specialty in specialties %}#}
+                                            {#<li>#}
+                                                {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                                {#>Default Site Settings for {{ specialty.getName() }}</a>#}
+                                            {#</li>#}
+                                        {#{% endfor %}#}
+
+                                    {#</ul>#}
+                                {#</li>#}
                             {% endif %}
 
-                        </ul>
-                    </li>
+                        {% endif %}
+
+                        {#<li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>#}
+                        <li id="nav-bar-translationalresearch-project-workflow" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">References<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project-requests'}) }}">Project Request Approval Status Progress</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-billing'}) }}">Work Request Billing Progress</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'work-requests-completion-progress'}) }}">Work Request Completion Progress</a>
+                                </li>
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'feesschedule-list') }}">Fee schedule</a>
+                                </li>
+
+                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    <li>
+                                        <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Product/Service (Fee Schedule) List Management</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </li>
                     {% endif %}
+                    {# EOF simpleMenu #}
 
                     {#multi-level#}
                     <li id="nav-bar-translationalresearch-configuration" class="dropdown">
@@ -579,9 +580,9 @@
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
                                 {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
                                 {#Product/Service (Fee Schedule) List Management#}
-                                <li>
-                                    <a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Fee schedule management</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path('transresrequestcategorytypes-list_translationalresearch') }}">Fee schedule management</a>#}
+                                {#</li>#}
 
                                 <li>
                                     <a href="{{ path('antibodies-list_translationalresearch') }}">Antibody list management</a>

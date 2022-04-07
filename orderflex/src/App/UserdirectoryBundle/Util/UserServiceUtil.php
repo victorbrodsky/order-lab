@@ -3258,6 +3258,7 @@ Pathology and Laboratory Medicine",
         return $url;
     }
 
+    //Used for list Excel generation 
     public function createtListExcelSpout( $repository, $entityClass, $search, $fileName ) {
         //echo "userIds=".count($userIds)."<br>";
         //exit('1');

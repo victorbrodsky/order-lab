@@ -10,7 +10,15 @@
 {% block content %}
 
     <h4 class="text-info" align="center">
-        {{ title|raw }}
+        {{ title|raw }} ({{ fees.getTotalItemCount }} matching)
+
+        {% if filterform.vars.value.search is defined and filterform.vars.value.search %}
+            <a href="{{ path('trp_download_fees_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+            >download in Excel</a>
+        {% else %}
+            <a href="{{ path('trp_download_fees_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
+            >download in Excel</a>
+        {% endif %}
     </h4>
 
     <br>
@@ -53,11 +61,15 @@
     <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
-                {#<th>{{ knp_pagination_sortable(fees, 'ID', 'list.id') }}</th>#}
+                <th>{{ knp_pagination_sortable(fees, 'ID', 'list.id') }}</th>
 
-                <th>{{ knp_pagination_sortable(fees, 'Histology', 'list.productId') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Section', 'list.name') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Product ID', 'list.section') }}</th>
+                {#Product ID#}
+                <th>{{ knp_pagination_sortable(fees, 'Catalog', 'list.productId') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Name', 'list.name') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Description', 'list.description') }}</th>
+
 
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
@@ -70,8 +82,10 @@
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Hide for specialty', 'projectSpecialties.name') }}</th>
+
+                {#<th>{{ knp_pagination_sortable(fees, 'Hide for specialty', 'projectSpecialties.name') }}</th>#}
                 <th>{{ knp_pagination_sortable(fees, 'Orderable for specialty', 'projectSpecialties.name') }}</th>
+
                 <th>{{ knp_pagination_sortable(fees, 'Type', 'list.type') }}</th>
 
                 {% if adminUser %}
@@ -100,20 +114,20 @@
             {% if nonEmptyPrices %}
 
             <tr>
-                {#<td>#}
-                    {#{{ fee.id }}#}
-                {#</td>#}
+                <td>
+                    {{ fee.id }}
+                </td>
+
+                <td>
+                    {{ fee.productId }}
+                </td>
 
                 <td>
                     {{ fee.name }}
                 </td>
 
                 <td>
-                    {{ fee.section }}
-                </td>
-
-                <td>
-                    {{ fee.productId }}
+                    {{ fee.description }}
                 </td>
 
                 <td>
@@ -157,12 +171,14 @@
                     {{ fee.getFeeUnitStr() }}
                 </td>
 
-                <td>
-                    {% for specialty in fee.projectSpecialties %}
-                        {{ specialty.getUppercaseShortName() }}<br>
-                    {% endfor %}
-                </td>
+                {#Hide for specialty#}
+                {#<td>#}
+                    {#{% for specialty in fee.projectSpecialties %}#}
+                        {#{{ specialty.getUppercaseShortName() }}<br>#}
+                    {#{% endfor %}#}
+                {#</td>#}
 
+                {#Orderable for specialty#}
                 <td>
                     {% for orderableSpecialty in transres_util.orderableProjectSpecialties(fee) %}
                         {{ orderableSpecialty.getUppercaseShortName() }}<br>

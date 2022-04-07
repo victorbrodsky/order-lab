@@ -2562,16 +2562,25 @@ class RequestController extends OrderAbstractController
 
         //categoryListLink
         $categoryListLink = null;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            $categoryListUrl = $this->container->get('router')->generate(
-                'transresrequestcategorytypes-list_translationalresearch',
-                array(),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //$categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
-            //glyphicon glyphicon-wrench
-            $categoryListLink = " <a data-toggle='tooltip' title='Products/Services (Fee Schedule) List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
-        }
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            $categoryListUrl = $this->container->get('router')->generate(
+//                'transresrequestcategorytypes-list_translationalresearch',
+//                array(),
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+//            //$categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
+//            //glyphicon glyphicon-wrench
+//            $categoryListLink = " <a data-toggle='tooltip' title='Products/Services (Fee Schedule) List Management' href=".
+//                $categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+//        }
+        $categoryListUrl = $this->container->get('router')->generate(
+            'translationalresearchfeesschedule-list',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $categoryListLink = " <a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
+            $categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+
 
         $projectSpecialties = array();
         if( $transresRequest ) {
@@ -3236,12 +3245,20 @@ class RequestController extends OrderAbstractController
             $adminUser = true;
         }
 
+        //get linkToListId by RequestCategoryTypeList from user_platformlistmanagerrootlist (PlatformListManagerRootList)
+        $linkToListId = NULL;
+        $linkToList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName('RequestCategoryTypeList');
+        if( $linkToList ) {
+            $linkToListId = $linkToList->getId();
+        }
+
         return array(
             'filterform' => $filterform->createView(),
             'fees' => $fees,
             'title' => "Fee Schedule",
             'adminUser' => $adminUser,
-            'pathbase' => "translationalresearchfeesschedule"
+            'pathbase' => "translationalresearchfeesschedule",
+            'linkToListId' => $linkToListId,
         );
     }
 
