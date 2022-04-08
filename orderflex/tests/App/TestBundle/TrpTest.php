@@ -346,7 +346,11 @@ class TrpTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Histology")')->count()
+            $crawler->filter('html:contains("Catalog")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Description")')->count()
         );
     }
 
