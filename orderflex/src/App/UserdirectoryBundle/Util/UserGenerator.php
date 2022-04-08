@@ -121,7 +121,7 @@ class UserGenerator {
         //echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
 
         if( !$sectionNameContactInfoRange ) {
-            return "Invalid source excel file: no 'Name and Preferred Contact Info' section has been found in the source file. ";
+            return "Invalid source spreadsheet file: no 'Name and Preferred Contact Info' section has been found in the source file. ";
         }
 
         //for each user in excel (start at row 2)
@@ -957,7 +957,7 @@ class UserGenerator {
         //return $count;
 
         if( $count > 0 ) {
-            $resmsg = 'Imported ' . $count . ' new users from Excel.';
+            $resmsg = 'Imported ' . $count . ' new users from spreadsheet.';
         } else {
             $resmsg = 'No new users have been imported.';
         }

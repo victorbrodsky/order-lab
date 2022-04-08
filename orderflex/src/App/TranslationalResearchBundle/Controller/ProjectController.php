@@ -2536,12 +2536,12 @@ class ProjectController extends OrderAbstractController
 
         if( $ids ) {
             if( is_array($ids) && count($ids) == 0 ) {
-                exit("No Projects to Export to Excel");
+                exit("No Projects to Export to spreadsheet");
             }
         }
 
         if( !$ids ) {
-            exit("No Projects to Export to Excel");
+            exit("No Projects to Export to spreadsheet");
         }
 
         //ini_set('memory_limit', '4096M');
@@ -2628,12 +2628,12 @@ class ProjectController extends OrderAbstractController
 
         if( $ids ) {
             if( is_array($ids) && count($ids) == 0 ) {
-                exit("No Projects to Export to Excel");
+                exit("No Projects to Export to spreadsheet");
             }
         }
 
         if( !$ids ) {
-            exit("No Projects to Export to Excel");
+            exit("No Projects to Export to spreadsheet");
         }
 
         $transresUtil = $this->container->get('transres_util');

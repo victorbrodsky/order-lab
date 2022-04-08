@@ -1012,9 +1012,9 @@ class ResAppUtil {
             ->setCreator($author."")
             ->setTitle('Residency Applicants')
             ->setLastModifiedBy($author."")
-            ->setDescription('Residency Applicants list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel lakers')
+            ->setDescription('Residency Applicants list in spreadsheet format')
+            ->setSubject('PHP spreadsheet manipulation')
+            ->setKeywords('spreadsheet php office')
             ->setCategory('programming')
             ;
         

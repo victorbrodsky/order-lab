@@ -3604,9 +3604,9 @@ class CrnEntryController extends OrderAbstractController
             ->setCreator($author."")
             ->setTitle('Critical Result Notification data')
             ->setLastModifiedBy($author."")
-            ->setDescription('Critical Result Notification data list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel')
+            ->setDescription('Critical Result Notification data list in spreadsheet format')
+            ->setSubject('PHP spreadsheet manipulation')
+            ->setKeywords('spreadsheet php office')
             ->setCategory('programming')
         ;
 

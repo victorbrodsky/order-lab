@@ -203,9 +203,9 @@ class UserDownloadUtil {
                 ->setCreator($author . "")
                 ->setTitle('User List')
                 ->setLastModifiedBy($author . "")
-                ->setDescription('User list in Excel format')
-                ->setSubject('PHP Excel manipulation')
-                ->setKeywords('excel php office phpexcel wcmc')
+                ->setDescription('User list in spreadsheet format')
+                ->setSubject('PHP spreadsheet manipulation')
+                ->setKeywords('spreadsheet php office wcm')
                 ->setCategory('programming');
         }
 

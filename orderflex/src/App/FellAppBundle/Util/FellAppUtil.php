@@ -1004,9 +1004,9 @@ class FellAppUtil {
             ->setCreator($author."")
             ->setTitle('Fellowship Applicants')
             ->setLastModifiedBy($author."")
-            ->setDescription('Fellowship Applicants list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel lakers')
+            ->setDescription('Fellowship Applicants list in spreadsheet format')
+            ->setSubject('PHP spreadsheet manipulation')
+            ->setKeywords('spreadsheet php office')
             ->setCategory('programming')
             ;
         

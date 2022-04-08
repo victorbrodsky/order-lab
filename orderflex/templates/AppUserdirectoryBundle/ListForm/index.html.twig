@@ -77,11 +77,17 @@
         {#filterform.search={{ filterform.vars.value.search }}#}
 
         {% if filterform.vars.value.search is defined and filterform.vars.value.search %}
-            <a href="{{ path('user_download_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
-            >download in Excel</a>
+            <a
+                href="{{ path('user_download_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+                data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
         {% else %}
-            <a href="{{ path('user_download_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
-            >download in Excel</a>
+            <a
+                href="{{ path('user_download_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
+                data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
         {% endif %}
 
     </h3>
@@ -131,3 +137,16 @@
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) }}
 
 {% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+{% endblock %}
+
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
+

@@ -3690,9 +3690,9 @@ class CallEntryController extends OrderAbstractController
             ->setCreator($author."")
             ->setTitle('Call Log Book data')
             ->setLastModifiedBy($author."")
-            ->setDescription('Call Log Book data list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel')
+            ->setDescription('Call Log Book data list in spreadsheet format')
+            ->setSubject('PHP spreadsheet manipulation')
+            ->setKeywords('spreadsheet php office')
             ->setCategory('programming')
         ;
 

@@ -4689,9 +4689,9 @@ class VacReqUtil
             ->setCreator($author."")
             ->setTitle('Business/Vacation Requests')
             ->setLastModifiedBy($author."")
-            ->setDescription('Business/Vacation Requests list in Excel format')
-            ->setSubject('PHP Excel manipulation')
-            ->setKeywords('excel php office phpexcel lakers')
+            ->setDescription('Business/Vacation Requests list in spreadsheet format')
+            ->setSubject('PHP spreadsheet manipulation')
+            ->setKeywords('spreadsheet php office')
             ->setCategory('programming')
         ;
 

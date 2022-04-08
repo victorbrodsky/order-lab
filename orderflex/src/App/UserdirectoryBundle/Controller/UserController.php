@@ -4232,9 +4232,9 @@ class UserController extends OrderAbstractController
         $count_users = $userGenerator->generateUsersExcelV2($inputFileName);
 
         if( $count_users > 0 ) {
-            $msg = 'Imported ' . $count_users . ' new users from Excel.';
+            $msg = 'Imported ' . $count_users . ' new users from spreadsheet.';
         } else {
-            $msg = 'Imported new users from Excel failed.';
+            $msg = 'Imported new users from spreadsheet failed.';
         }
 
         $this->get('session')->getFlashBag()->add(

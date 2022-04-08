@@ -13,11 +13,16 @@
         {{ title|raw }} ({{ fees.getTotalItemCount }} matching)
 
         {% if filterform.vars.value.search is defined and filterform.vars.value.search %}
-            <a href="{{ path('trp_download_fees_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
-            >download in Excel</a>
+            <a
+                href="{{ path('trp_download_fees_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+                data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
         {% else %}
-            <a href="{{ path('trp_download_fees_list_excel', {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
-            >download in Excel</a>
+            <a href="{{ path('trp_download_fees_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
+               data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
         {% endif %}
     </h4>
 
@@ -240,3 +245,11 @@
 
 {% endblock %}
 
+
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
