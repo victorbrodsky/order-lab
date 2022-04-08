@@ -6622,7 +6622,7 @@ class TransResRequestUtil
                 'ID',
                 'Catalog', //TRP-0001
                 'Name',
-                'Description',
+                //'Description',
                 'Fee for one',
                 'Fee per additional item',
                 //'External fee for one',
@@ -6643,15 +6643,15 @@ class TransResRequestUtil
                 'ID',
                 'Catalog', //TRP-0001
                 'Name',
-                'Description',
+                //'Description',
                 'Fee for one',
                 'Fee per additional item'
             );
         }
 
         $columns[] = 'Unit';
-        $columns[] = 'Hide for specialty';
-        $columns[] = 'Orderable for specialty';
+        //$columns[] = 'Hide for specialty';
+        //$columns[] = 'Orderable for specialty';
 
 
 //        $columns = array(
@@ -6716,7 +6716,7 @@ class TransResRequestUtil
             $data[array_search('ID', $columns)] = $entity->getId();
             $data[array_search('Catalog', $columns)] = $entity->getProductId();
             $data[array_search('Name', $columns)] = $entity->getName();
-            $data[array_search('Description', $columns)] = $entity->getDescription();
+            //$data[array_search('Description', $columns)] = $entity->getDescription();
 
             $data[array_search('Fee for one', $columns)] = $entity->getFee();
             $data[array_search('Fee per additional item', $columns)] = $entity->getFeeAdditionalItem();
@@ -6736,25 +6736,25 @@ class TransResRequestUtil
 
             $data[array_search('Unit', $columns)] = $entity->getFeeUnit();
 
-            $hideSpecialtyStr = '';
-            foreach( $entity->getProjectSpecialties() as $specialty ) {
-                if( $hideSpecialtyStr ) {
-                    $hideSpecialtyStr = $hideSpecialtyStr . ", " . $specialty->getUppercaseShortName();
-                } else {
-                    $hideSpecialtyStr = $hideSpecialtyStr . $specialty->getUppercaseShortName();
-                }
-            }
-            $data[array_search('Hide for specialty', $columns)] = $hideSpecialtyStr;
+//            $hideSpecialtyStr = '';
+//            foreach( $entity->getProjectSpecialties() as $specialty ) {
+//                if( $hideSpecialtyStr ) {
+//                    $hideSpecialtyStr = $hideSpecialtyStr . ", " . $specialty->getUppercaseShortName();
+//                } else {
+//                    $hideSpecialtyStr = $hideSpecialtyStr . $specialty->getUppercaseShortName();
+//                }
+//            }
+//            $data[array_search('Hide for specialty', $columns)] = $hideSpecialtyStr;
 
-            $specialtyStr = '';
-            foreach( $transresUtil->orderableProjectSpecialties($entity) as $orderableSpecialty ) {
-                if( $specialtyStr ) {
-                    $specialtyStr = $specialtyStr . ", " . $orderableSpecialty->getUppercaseShortName();
-                } else {
-                    $specialtyStr = $specialtyStr . $orderableSpecialty->getUppercaseShortName();
-                }
-            }
-            $data[array_search('Orderable for specialty', $columns)] = $specialtyStr;
+//            $specialtyStr = '';
+//            foreach( $transresUtil->orderableProjectSpecialties($entity) as $orderableSpecialty ) {
+//                if( $specialtyStr ) {
+//                    $specialtyStr = $specialtyStr . ", " . $orderableSpecialty->getUppercaseShortName();
+//                } else {
+//                    $specialtyStr = $specialtyStr . $orderableSpecialty->getUppercaseShortName();
+//                }
+//            }
+//            $data[array_search('Orderable for specialty', $columns)] = $specialtyStr;
 
             if( $testing == false ) {
                 //$writer->addRowWithStyle($data,$requestStyle);
