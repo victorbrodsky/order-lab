@@ -233,7 +233,7 @@ class TransResListController extends ListController
 
         //$userServiceUtil = $this->get('user_service_utility');
 
-        $fileName = "list_ID_$linkToListId".".xlsx";
+        $fileName = "fee_schedule_list".".xlsx";
 
         $transresRequestUtil->createtFeesListExcelSpout( $repository, $entityClass, $search, $fileName );
 

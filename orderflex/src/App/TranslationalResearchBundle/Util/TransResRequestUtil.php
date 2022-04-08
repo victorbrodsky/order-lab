@@ -6548,7 +6548,7 @@ class TransResRequestUtil
     }
 
 
-    //Used for list Excel generation 
+    //Custom Excel generation for the Fees
     public function createtFeesListExcelSpout( $repository, $entityClass, $search, $fileName ) {
         //echo "userIds=".count($userIds)."<br>";
         //exit('1');
@@ -6556,6 +6556,7 @@ class TransResRequestUtil
         $testing = true;
         $testing = false;
 
+        $transresUtil = $this->container->get('transres_util');
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
@@ -6580,6 +6581,8 @@ class TransResRequestUtil
         $dql->andWhere($searchStr);
         $dqlParameters['search'] = '%'.$search.'%';
 
+        $dql->orderBy('ent.orderinlist','ASC');
+
         $query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
@@ -6588,31 +6591,61 @@ class TransResRequestUtil
 
         $entities = $query->getResult();
 
-        $columns = array(
-            'ID',
-            'Name',
-            'Short Name',
-            'Abbreviation',
-            'Alias',
-            'Description',
-            //'Site',
-            'Type',
-            //'Level',
-        );
+        //$includeExternalFee = false;
+        $priceLists = NULL;
 
-        if( method_exists($entityClass, 'getRoles') ) {
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
             $columns = array(
                 'ID',
+                'Catalog', //TRP-0001
                 'Name',
-                'Short Name',
-                'Abbreviation',
-                'Alias',
                 'Description',
-                //'Site',
-                'Type',
-                //'Level',
+                //'Fee for one',
+                //'Fee per additional item',
+                //'External fee for one',
+                //'External fee per additional item',
+                //'Unit',
+            );
+
+            $priceLists = $transresUtil->getDbPriceLists();
+            //$priceLists = $transresUtil->getUserAssociatedSpecificPriceList(true); //for each individual user despite the role
+            foreach($priceLists as $priceList) {
+                $columns[] = 'Fee for one ('.$priceList->getName().')';
+                $columns[] = 'Fee per additional item ('.$priceList->getName().')';
+            }
+
+            //$includeExternalFee = true;
+        }   else {
+            $columns = array(
+                'ID',
+                'Catalog', //TRP-0001
+                'Name',
+                'Description',
+                'Fee for one',
+                'Fee per additional item'
             );
         }
+
+        $columns[] = 'Unit';
+        $columns[] = 'Hide for specialty';
+        $columns[] = 'Orderable for specialty';
+
+
+//        $columns = array(
+//            'ID',
+//            'Catalog', //TRP-0001
+//            'Name',
+//            'Description',
+//            'Fee for one',
+//            'Fee per additional item',
+//            //'External fee for one',
+//            //'External fee per additional item',
+//            'Unit',
+//        );
 
         //exit( "Person col=".array_search('Person', $columns) );
 
@@ -6655,31 +6688,54 @@ class TransResRequestUtil
             $writer->addRow($spoutRow);
         }
 
-        $totalNumberBusinessDays = 0;
-        $totalNumberVacationDays = 0;
-        $totalNumberPendingVacationDays = 0;
-        $totalRequests = 0;
-        $totalCarryoverApprovedRequests = 0;
-        $totalApprovedFloatingDays = 0;
-
         $row = 2;
         foreach( $entities as $entity ) {
             $data = array();
 
-            $data[array_search('ID', $columns)] = $entity->getId();
-            $data[array_search('Name', $columns)] = $entity->getName();
-            $data[array_search('Short Name', $columns)] = $entity->getShortName();
-            $data[array_search('Abbreviation', $columns)] = $entity->getAbbreviation();
+            //$linkToList = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find('RequestCategoryTypeList');
 
-            //getAlias
-            if( $entity instanceof Roles ) {
-                $data[array_search('Alias', $columns)] = $entity->getAlias();
+            $data[array_search('ID', $columns)] = $entity->getId();
+            $data[array_search('Catalog', $columns)] = $entity->getProductId();
+            $data[array_search('Name', $columns)] = $entity->getName();
+            $data[array_search('Description', $columns)] = $entity->getDescription();
+
+            //Only for Admin
+            //if( $includeExternalFee ) {
+            if( $priceLists ) {
+                //specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList()
+                foreach($priceLists as $priceList) {
+                    $index1 = array_search('Fee for one ('.$priceList->getName().')', $columns);
+                    $data[$index1] = $entity->getPriceFee($priceList);
+
+                    $index2 = array_search('Fee per additional item ('.$priceList->getName().')', $columns);
+                    $data[$index2] = $entity->getPriceFeeAdditionalItem($priceList);
+                }
+            } else {
+                $data[array_search('Fee for one', $columns)] = $entity->getFee();
+                $data[array_search('Fee per additional item', $columns)] = $entity->getFeeAdditionalItem();
             }
 
-            $data[array_search('Description', $columns)] = $entity->getDescription();
-            //$data[array_search('Site', $columns)] = $entity->getSite();
-            $data[array_search('Type', $columns)] = $entity->getType();
-            //$data[array_search('Level', $columns)] = $entity->getLevel();
+            $data[array_search('Unit', $columns)] = $entity->getFeeUnit();
+
+            $hideSpecialtyStr = '';
+            foreach( $entity->getProjectSpecialties() as $specialty ) {
+                if( $hideSpecialtyStr ) {
+                    $hideSpecialtyStr = $hideSpecialtyStr . ", " . $specialty->getUppercaseShortName();
+                } else {
+                    $hideSpecialtyStr = $hideSpecialtyStr . $specialty->getUppercaseShortName();
+                }
+            }
+            $data[array_search('Hide for specialty', $columns)] = $hideSpecialtyStr;
+
+            $specialtyStr = '';
+            foreach( $transresUtil->orderableProjectSpecialties($entity) as $orderableSpecialty ) {
+                if( $specialtyStr ) {
+                    $specialtyStr = $specialtyStr . ", " . $orderableSpecialty->getUppercaseShortName();
+                } else {
+                    $specialtyStr = $specialtyStr . $orderableSpecialty->getUppercaseShortName();
+                }
+            }
+            $data[array_search('Orderable for specialty', $columns)] = $specialtyStr;
 
             if( $testing == false ) {
                 //$writer->addRowWithStyle($data,$requestStyle);
