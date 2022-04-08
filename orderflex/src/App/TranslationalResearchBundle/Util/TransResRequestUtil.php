@@ -6562,26 +6562,45 @@ class TransResRequestUtil
 
         $newline =  "\n"; //"<br>\n";
 
-        $dql =  $repository->createQueryBuilder("ent");
-        $dql->select('ent');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
 
         if( method_exists($entityClass,'getSites') ) {
-            $dql->leftJoin("ent.sites", "sites");
+            $dql->leftJoin("list.sites", "sites");
             //$dql->addGroupBy('sites.name');
         }
 
-        $searchStr =
-            "
-                LOWER(ent.name) LIKE LOWER(:search) 
-                OR LOWER(ent.abbreviation) LIKE LOWER(:search) 
-                OR LOWER(ent.shortname) LIKE LOWER(:search) 
-                OR LOWER(ent.description) LIKE LOWER(:search)
+        $dqlParameters = array();
+
+        if( $search ) {
+
+            $searchStr = "";
+
+            if( is_numeric($search) ) {
+                //echo "int <br>";
+                $searchInt = intval($search);
+                $searchStr = "list.id = :searchInt OR";
+                $dqlParameters['searchInt'] = $searchInt;
+            }
+
+            $searchStr = $searchStr .
+                "
+                LOWER(list.name) LIKE LOWER(:search) 
+                OR LOWER(list.abbreviation) LIKE LOWER(:search) 
+                OR LOWER(list.shortname) LIKE LOWER(:search) 
+                OR LOWER(list.description) LIKE LOWER(:search)
             ";
 
-        $dql->andWhere($searchStr);
-        $dqlParameters['search'] = '%'.$search.'%';
+            $searchStr = $searchStr . " OR LOWER(list.section) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.productId) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.feeUnit) LIKE LOWER(:search)";
+            $searchStr = $searchStr . " OR LOWER(list.fee) LIKE LOWER(:search)";
 
-        $dql->orderBy('ent.orderinlist','ASC');
+            $dql->andWhere($searchStr);
+            $dqlParameters['search'] = '%' . $search . '%';
+        }
+
+        $dql->orderBy('list.orderinlist','ASC');
 
         $query = $this->em->createQuery($dql);
 
