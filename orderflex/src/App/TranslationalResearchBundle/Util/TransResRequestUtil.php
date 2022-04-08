@@ -6604,8 +6604,8 @@ class TransResRequestUtil
                 'Catalog', //TRP-0001
                 'Name',
                 'Description',
-                //'Fee for one',
-                //'Fee per additional item',
+                'Fee for one',
+                'Fee per additional item',
                 //'External fee for one',
                 //'External fee per additional item',
                 //'Unit',
@@ -6699,6 +6699,9 @@ class TransResRequestUtil
             $data[array_search('Name', $columns)] = $entity->getName();
             $data[array_search('Description', $columns)] = $entity->getDescription();
 
+            $data[array_search('Fee for one', $columns)] = $entity->getFee();
+            $data[array_search('Fee per additional item', $columns)] = $entity->getFeeAdditionalItem();
+
             //Only for Admin
             //if( $includeExternalFee ) {
             if( $priceLists ) {
@@ -6710,9 +6713,6 @@ class TransResRequestUtil
                     $index2 = array_search('Fee per additional item ('.$priceList->getName().')', $columns);
                     $data[$index2] = $entity->getPriceFeeAdditionalItem($priceList);
                 }
-            } else {
-                $data[array_search('Fee for one', $columns)] = $entity->getFee();
-                $data[array_search('Fee per additional item', $columns)] = $entity->getFeeAdditionalItem();
             }
 
             $data[array_search('Unit', $columns)] = $entity->getFeeUnit();
