@@ -988,3 +988,7 @@ git push https://<GITHUB_ACCESS_TOKEN>@github.com/<GITHUB_USERNAME>/<REPOSITORY_
 
 git push https://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@github.com/cinava/FOSCommentBundle.git
 
+
+http://127.0.0.1/order/index_dev.php/dashboards/?filter%5BstartDate%5D=04/08/2021&filter%5BendDate%5D=04/08/2022&filter%5B
+projectSpecialty%5D%5B%5D=0&title=Favorite%20charts&filter%5BchartType%5D%5B1%5D=pi-by-affiliation&filter%5BchartType%5D%5B2%5D=projects-per-pi&filter%5BchartType%5D%5B3%5D=reminder-emails-per-month&filter%5BchartType%5D%5B4%5D=successful-logins-site&filter%5BchartType%5D%5B5%5D=total-amount-paid-unpaid-invoices-per-month&filter%5BchartType%5D%5B6%5D=total-amount-paid-unpaid-invoices-per-year&filter%5BchartType%5D%5B7%5D=fellapp-number-applicant-by-year&filter%5BchartType%5D%5B8%5D=fellapp-average-usmle-scores-by-year&filter%5BchartType%5D%5B9%5D=chart-view-stat
+
