@@ -1734,10 +1734,7 @@
         {#{{ form_rest(fieldThis) }}#}
         {% if cycle != 'show' %}
             {% if norest is not defined or norest == "" %}
-                {% if fieldThis.others is defined %}
-                    {#{% if fieldThis.others.status is defined %}#}
-                        {#{{ formmacros.field(fieldThis.others.status) }}#}
-                    {#{% endif %}#}
+                {% if fieldThis.others is defined and not fieldThis.others.rendered %}
                     {{ form_widget(fieldThis.others) }}
                 {% endif %}
                 {{ form_rest(fieldThis) }}
