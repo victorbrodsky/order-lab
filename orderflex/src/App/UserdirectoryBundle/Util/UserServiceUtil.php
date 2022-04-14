@@ -29,6 +29,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\ResAppBundle\Entity\ResappSiteParameter;
+use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\SiteParameters;
@@ -3413,6 +3414,151 @@ Pathology and Laboratory Medicine",
             exit('111');
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getPendingAdminReview(): int
+    {
+        $pendingCount = 0;
+
+        if( false === $this->security->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $pendingCount;
+        }
+
+        $limitFlag = false;
+
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+        $criteriastr = "(".
+            "administrativeTitles.status = ".$pendingStatus.
+            " OR appointmentTitles.status = ".$pendingStatus.
+            " OR medicalTitles.status = ".$pendingStatus.
+            //" OR locations.status = ".$pendingStatus.
+            ")";
+
+        //current_only
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (";
+        $criteriastr .= "employmentStatus.id IS NULL";
+        $criteriastr .= " OR ";
+        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $criteriastr .= ")";
+
+        //filter out system user
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+
+        //filter out Pathology Fellowship Applicants
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+
+        if( $criteriastr ) {
+            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+        }
+
+        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+
+        //$em = $this->em; //getDoctrine()->getManager();
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder('user');
+
+        //$dql->select('COUNT(DISTINCT user.id)');
+        $dql->select('user');
+
+        //$dql->select('COUNT(user.id)');
+
+        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+        $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
+        $dql->where($totalcriteriastr);
+
+        $query = $this->em->createQuery($dql);
+
+        //$pending = 0;
+        //$pending = $query->getSingleScalarResult();
+        //$pending = $query->getOneOrNullResult();
+        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+
+        //Symfony Exception: Doctrine\ORM\Query::getDQL(): Return value must be of type ?string, Doctrine\ORM\QueryBuilder returned
+        $pendings = $query->getResult();
+        //dump($pendings);
+        //exit('111');
+
+        //return $pendings;
+
+        $pendingCount = count($pendings);
+
+        //dump($pending);
+        //exit('111');
+
+        return $pendingCount;
+    }
+
+    /**
+     * Working
+     *
+     * @return int
+     */
+    public function getPendingAdminReview_WORKING(): int
+    {
+        //$entityManager = $this->getEntityManager();
+
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+        $criteriastr = "(".
+            "administrativeTitles.status = ".$pendingStatus.
+            " OR appointmentTitles.status = ".$pendingStatus.
+            " OR medicalTitles.status = ".$pendingStatus.
+            //" OR locations.status = ".$pendingStatus.
+            ")";
+
+        //current_only
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (";
+        $criteriastr .= "employmentStatus.id IS NULL";
+        $criteriastr .= " OR ";
+        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $criteriastr .= ")";
+
+        //filter out system user
+        $totalcriteriastr = "u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system'";
+
+        //filter out Pathology Fellowship Applicants
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+
+        if( $criteriastr ) {
+            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+        }
+
+        //WHERE administrativeTitles.status = '.$pendingStatus.' OR appointmentTitles.status = '.$pendingStatus.' OR medicalTitles.status = '.$pendingStatus.'
+
+        //$dql->leftJoin("user.employmentStatus", "employmentStatus");
+        //$dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
+        $query = $this->em->createQuery(
+            'SELECT u 
+            FROM AppUserdirectoryBundle:User u
+            JOIN u.administrativeTitles administrativeTitles
+            JOIN u.appointmentTitles appointmentTitles
+            JOIN u.medicalTitles medicalTitles
+            JOIN u.employmentStatus employmentStatus
+            JOIN employmentStatus.employmentType employmentType
+            WHERE '.$totalcriteriastr.'
+            ORDER BY u.id ASC'
+        );
+
+        $pendings = $query->getResult();
+
+        $pendingCount = count($pendings);
+
+        return $pendingCount;
+    }
+
+
+
 
 
     /////////////// NOT USED ///////////////////

@@ -431,7 +431,7 @@
 
 
 
-        {% if form.status is defined %}
+        {% if form.status is defined and not form.status.rendered %}
             {{ formmacros.field(form.status) }}
         {% endif %}
 

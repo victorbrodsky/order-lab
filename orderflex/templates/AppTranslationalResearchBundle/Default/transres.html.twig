@@ -961,7 +961,11 @@
         {% if actionLinks|length > 0 and cycle == "show" %}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
             {#include async.html.twig threadId={{ threadId }}<br>#}
-            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+            {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+            {{ render(controller(
+                'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',
+                { 'id': threadId }))
+            }}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
         {% else %}
             {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
@@ -1066,7 +1070,14 @@
                 </p>
             {% endfor %}
 
-            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+            {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+            threadId={{ threadId }}<br>
+            {#{{ render(controller(#}
+                {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
+                {#{ 'id': threadId }))#}
+            {#}}#}
+            {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
+
         </div>
     {% endif %}
 {% endmacro %}
@@ -1159,7 +1170,11 @@
                 {% set stateStr = transres_util.getAllowedFromState(project) %}
                 {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ stateStr %}
 
-                {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+                {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+                {{ render(controller(
+                    'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',
+                    { 'id': threadId }))
+                }}
 
                 {% set hasReviews = true %}
             </div>

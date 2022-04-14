@@ -1,3 +1,4 @@
-_errors:
-    resource: '@TwigBundle/Resources/config/routing/errors.xml'
-    prefix: /_error
+#Remove these in Symfony 4.4
+#_errors:
+#    resource: '@TwigBundle/Resources/config/routing/errors.xml'
+#    prefix: /_error

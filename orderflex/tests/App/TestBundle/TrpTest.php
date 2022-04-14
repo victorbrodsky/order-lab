@@ -631,6 +631,40 @@ class TrpTest extends WebTestBase
         );
     }
 
+    public function testReviewAction() {
+        $this->logIn();
+
+        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        if( count($projects) > 0 ) {
+            $project = end($projects);
+            $projectId = $project->getId();
+            //echo "projectId=$projectId \n\r";
+
+            $crawler = $this->client->request('GET', '/translational-research/project/review/'.$projectId);
+            //$content = $this->client->getResponse()->getContent();
+            //exit("content=$content");
+
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Review Project request")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Reviewers")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Project")')->count()
+            );
+            $this->assertGreaterThan(
+                0,
+                $crawler->filter('html:contains("Back to the list")')->count()
+            );
+        } else {
+            echo "Skip testReviewAction, projects not found";
+        }
+    }
+
 //    public function testUnderConstruction() {
 //        //under-construction
 //        $this->logIn();

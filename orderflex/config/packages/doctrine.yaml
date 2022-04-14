@@ -126,7 +126,7 @@ doctrine:
 #                    AppVacReqBundle: ~
 #                    AppCallLogBundle: ~
 #                    AppTranslationalResearchBundle: ~
-                    FOSCommentBundle: ~
+#                    FOSCommentBundle: ~
                     gedmo_tree:
                         type: annotation
                         prefix: Gedmo\Tree\Entity

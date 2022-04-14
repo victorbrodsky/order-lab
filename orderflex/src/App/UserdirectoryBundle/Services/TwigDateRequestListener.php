@@ -26,7 +26,8 @@
 namespace App\UserdirectoryBundle\Services;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+//use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Twig\Environment;
 
 //Twig listener to modify timezone as per http://stackoverflow.com/questions/9886058/how-can-i-set-the-default-date-format-for-twig-templates-in-symfony2
@@ -43,7 +44,7 @@ class TwigDateRequestListener {
         $this->defaultTimeZone = $defaultTimeZone;
     }
 
-    public function onKernelRequest(GetResponseEvent $event) {
+    public function onKernelRequest(RequestEvent $event) {
         //$this->twig->getExtension('core')->setDateFormat('Y-m-d', '%d days');
 
         $user = null;

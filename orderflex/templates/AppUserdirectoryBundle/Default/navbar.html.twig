@@ -34,7 +34,8 @@
 {% block navbar %}
 
     {#{% set pendingadminreview = render(controller("AppUserdirectoryBundle:User:pendingAdminReview")) %}#}
-    {% set pendingadminreview = render(controller("App\\UserdirectoryBundle\\Controller\\UserController::pendingAdminReviewAction")) %}
+    {#{% set pendingadminreview = render(controller("App\\UserdirectoryBundle\\Controller\\UserController::pendingAdminReviewAction")) %}#}
+    {% set pendingadminreview = user_service_utility.getPendingAdminReview() %}
 
     {% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 

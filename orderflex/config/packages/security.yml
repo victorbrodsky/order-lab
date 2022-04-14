@@ -573,7 +573,9 @@ security:
        - { path: ^/scan/image-viewer/, role: [ROLE_SCANORDER_SUBMITTER] }
 
        #All other urls: make all sure /scan is protected from accessing the users with not sufficient roles
-       - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
+#       - { path: ^/scan/, allow_if: "has_role('ROLE_SCANORDER_SUBMITTER') and !has_role('ROLE_SCANORDER_UNAPPROVED') and !has_role('ROLE_SCANORDER_BANNED')" }
+       # has_role() function in security expressions is deprecated since Symfony 4.2, so we should use is_granted() instead
+       - { path: ^/scan/, allow_if: "is_granted('ROLE_SCANORDER_SUBMITTER') and !is_granted('ROLE_SCANORDER_UNAPPROVED') and !is_granted('ROLE_SCANORDER_BANNED')" }
 
 
       ############################## Fellowship Applications SITE SETTINGS ##############################

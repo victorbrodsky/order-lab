@@ -34,15 +34,18 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
+use App\UserdirectoryBundle\Util\UserCommentUtil;
 use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
-use FOS\CommentBundle\Model\CommentInterface;
+//use FOS\CommentBundle\Model\CommentInterface;
 use FOS\CommentBundle\Model\CommentManagerInterface;
 use FOS\CommentBundle\Model\ThreadManagerInterface;
+//use App\UserdirectoryBundle\Comment\Model\CommentManagerInterface;
+//use App\UserdirectoryBundle\Comment\Model\ThreadManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -127,6 +130,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
         $subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
 //        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
+        $subscribedServices['user_comment_utility'] = '?'.UserCommentUtil::class;
 
         $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
         $subscribedServices['dashboard_init'] = '?'.\App\DashboardBundle\Util\DashboardInit::class;

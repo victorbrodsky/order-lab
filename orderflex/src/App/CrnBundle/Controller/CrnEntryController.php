@@ -408,9 +408,10 @@ class CrnEntryController extends OrderAbstractController
 
         //$defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
         $defaultCommunication = $userSecUtil->getSiteSettingParameter('defaultInitialCommunication',$sitename);
-        if( $defaultCommunication ) {
-            $defaultCommunication = $defaultCommunication->getId();
-        }
+        //Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader::getIdValue(): Argument #1 ($object) must be of type ?object, int given
+//        if( $defaultCommunication ) {
+//            $defaultCommunication = $defaultCommunication->getId();
+//        }
 //        $referringProviderCommunications = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findBy(array('type'=>array('default','user-added')));
 //        $referringProviderCommunicationChoices = array();
 //        foreach( $referringProviderCommunications as $referringProviderCommunication ) {

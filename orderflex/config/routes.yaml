@@ -23,62 +23,62 @@ main_under_construction:
 #order is important: base bundle userdirectory must be the last one
 #    resource: "@AppDeidentifierBundle/Controller/"
 app_dashboard:
-    resource: "App/DashboardBundle/Controller/"
+    resource: "../src/App/DashboardBundle/Controller/"
     type:     annotation
     prefix:   /dashboards
     schemes:  ['%connection_channel%']
 
 app_deidentifier:
-    resource: "App/DeidentifierBundle/Controller/"
+    resource: "../src/App/DeidentifierBundle/Controller/"
     type:     annotation
     prefix:   /deidentifier
     schemes:  ['%connection_channel%']
 
 app_fellapp:
 #    resource: "@AppFellAppBundle/Controller/"
-    resource: "App/FellAppBundle/Controller/"
+    resource: "../src/App/FellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
     schemes:  ['%connection_channel%']
 
 app_resapp:
-    resource: "App/ResAppBundle/Controller/"
+    resource: "../src/App/ResAppBundle/Controller/"
     type:     annotation
     prefix:   /residency-applications
     schemes:  ['%connection_channel%']
 
 app_vacreq:
-    resource: "App/VacReqBundle/Controller/"
+    resource: "../src/App/VacReqBundle/Controller/"
     type:     annotation
     prefix:   /vacation-request
     schemes:  ['%connection_channel%']
 
 app_calllog:
-    resource: "App/CallLogBundle/Controller/"
+    resource: "../src/App/CallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book
     schemes:  ['%connection_channel%']
 
 app_crn:
-    resource: "App/CrnBundle/Controller/"
+    resource: "../src/App/CrnBundle/Controller/"
     type:     annotation
     prefix:   /critical-result-notifications
     schemes:  ['%connection_channel%']
 
 app_orderform:
-    resource: "App/OrderformBundle/Controller/"
+    resource: "../src/App/OrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
     schemes:  ['%connection_channel%']
 
 app_translationalresearch:
-    resource: "App/TranslationalResearchBundle/Controller/"
+    resource: "../src/App/TranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
     schemes:  ['%connection_channel%']
 
 app_userdirectory:
-    resource: "App/UserdirectoryBundle/Controller/"
+    resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
     schemes:  ['%connection_channel%']
@@ -220,10 +220,25 @@ oneup_uploader:
 
 #FOSJsRoutingBundle
 fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+#    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 
 fos_comment_api:
-    type: rest
+    type: annotation
     resource: "@FOSCommentBundle/Resources/config/routing.yml"
     prefix: /api
     defaults: { _format: html }
+
+#fos_comment.controller.thread:
+##    type: rest
+#    resource: "@FOSCommentBundle/Resources/config/controller.xml"
+
+#fos_comment_api:
+#    type: annotation
+#    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+#    prefix: /api
+#    defaults: { _format: html }
+
+
+
+

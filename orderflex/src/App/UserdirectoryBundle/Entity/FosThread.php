@@ -25,6 +25,8 @@
 namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
+//use App\UserdirectoryBundle\Comment\Entity\Thread as FosBaseThread;
 use FOS\CommentBundle\Entity\Thread as FosBaseThread;
 
 /**

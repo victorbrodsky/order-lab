@@ -57,7 +57,7 @@ class ImportUsersType extends AbstractType {
      */
     public function getBlockPrefix()
     {
-        return null;
+        return '';
         //return 'oleg_userdirectorybundle_import';
     }
 

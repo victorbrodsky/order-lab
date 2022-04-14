@@ -53,6 +53,9 @@ imports:
     - { resource: "setparameters.php" } #must run after importing services
 #    - { resource: "setparameters-test.php" } #must run after importing services
 
+#    - { resource: "@FOSCommentBundle/Resources/config/controller.xml" }
+
+
 services:
     # default configuration for services in *this* file
     _defaults:

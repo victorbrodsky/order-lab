@@ -995,3 +995,23 @@ projectSpecialty%5D%5B%5D=0&title=Favorite%20charts&filter%5BchartType%5D%5B1%5D
 "sensio/framework-extra-bundle": "^5.5", => "sensio/framework-extra-bundle": "^6.2",
 "friendsofsymfony/jsrouting-bundle": "^2.5", => "friendsofsymfony/jsrouting-bundle": "^2.8",
 
+git: 'credential-cache' is not a git command:
+git config --global --unset credential.helper
+
+To save credentials:
+git config --global credential.helper cache
+
+git config --global credential.helper store
+
+Fork:
+"cinava/comment-bundle": "dev-master",
+"repositories":
+    [
+        {
+            "type": "vcs",
+            "url": "https://github.com/cinava/FOSCommentBundle.git"
+        }
+    ]
+
+"intracto/comment-bundle": "^4",
+"ezsystems/comment-bundle": "^3.2",

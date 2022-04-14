@@ -118,12 +118,12 @@
         ]
     },
     "friendsofsymfony/rest-bundle": {
-        "version": "2.2",
+        "version": "3.3",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
             "version": "2.2",
-            "ref": "cad41ef93d6150067ae2bb3c7fd729492dff6f0a"
+            "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
         },
         "files": [
             "./config/packages/fos_rest.yaml"
@@ -145,13 +145,13 @@
         ]
     },
     "jms/metadata": {
-        "version": "2.1.0"
+        "version": "2.6.1"
     },
     "jms/serializer": {
-        "version": "3.4.0"
+        "version": "3.17.1"
     },
     "jms/serializer-bundle": {
-        "version": "3.0",
+        "version": "3.10",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
@@ -244,13 +244,13 @@
         "version": "1.10.1"
     },
     "phpoption/phpoption": {
-        "version": "1.7.2"
+        "version": "1.8.1"
     },
     "phpspec/prophecy": {
         "version": "v1.15.0"
     },
     "phpstan/phpdoc-parser": {
-        "version": "0.5.4"
+        "version": "1.4.4"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.10"
@@ -285,6 +285,9 @@
         "version": "1.0.1"
     },
     "psr/container": {
+        "version": "1.0.0"
+    },
+    "psr/event-dispatcher": {
         "version": "1.0.0"
     },
     "psr/http-client": {
@@ -426,9 +429,6 @@
     "symfony/css-selector": {
         "version": "v4.4.2"
     },
-    "symfony/debug": {
-        "version": "v4.4.2"
-    },
     "symfony/debug-bundle": {
         "version": "4.1",
         "recipe": {
@@ -521,9 +521,6 @@
     "symfony/http-kernel": {
         "version": "v4.4.2"
     },
-    "symfony/inflector": {
-        "version": "v4.4.2"
-    },
     "symfony/intl": {
         "version": "v4.4.2"
     },
@@ -571,6 +568,9 @@
     "symfony/options-resolver": {
         "version": "v4.4.2"
     },
+    "symfony/password-hasher": {
+        "version": "v5.4.3"
+    },
     "symfony/phpunit-bridge": {
         "version": "4.3",
         "recipe": {
@@ -586,6 +586,9 @@
             "./phpunit.xml.dist",
             "./tests/.gitignore"
         ]
+    },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.25.0"
     },
     "symfony/polyfill-intl-icu": {
         "version": "v1.13.1"
@@ -607,9 +610,6 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.17.1"
-    },
-    "symfony/polyfill-php81": {
-        "version": "v1.24.0"
     },
     "symfony/process": {
         "version": "v4.4.2"
@@ -669,6 +669,9 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.2"
+    },
+    "symfony/string": {
+        "version": "v5.4.3"
     },
     "symfony/templating": {
         "version": "v4.4.2"
@@ -807,6 +810,6 @@
         "version": "v1.1.0"
     },
     "willdurand/negotiation": {
-        "version": "v2.3.1"
+        "version": "3.1.0"
     }
 }

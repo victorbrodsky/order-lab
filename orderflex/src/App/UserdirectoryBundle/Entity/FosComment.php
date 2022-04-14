@@ -24,12 +24,16 @@
 
 namespace App\UserdirectoryBundle\Entity;
 
+
 use Doctrine\ORM\Mapping as ORM;
-use FOS\CommentBundle\Entity\Comment as FosBaseComment;
-use FOS\CommentBundle\Model\SignedCommentInterface;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use FOS\CommentBundle\Entity\Comment as FosBaseComment;
+use FOS\CommentBundle\Model\SignedCommentInterface;
 
+//use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
+//use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
 
 /**
  * @ORM\Entity
@@ -183,6 +187,11 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
 //        if( $this->getPrefix() ) {
 //            return $this->getPrefix() . $this->body;
 //        }
+
+        //echo "comment body=".$this->body."<br>";
+        //exit('111');
+        //return "comment test";
+
         return $this->body;
     }
 
@@ -283,13 +292,22 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
         if( $author ) {
             $createdDate = $this->convertFromUtcToUserTimezone($createdDate,$author);
         }
-        $createdStr = $createdDate->format('m/d/Y') . " at " . $createdDate->format('h:ia T');
+
+        $createdStr = '';
+        if( $createdDate ) {
+            $createdStr = $createdDate->format('m/d/Y') . " at " . $createdDate->format('h:ia T');
+        }
+
         //$info = "Submitted by a ".$this->getAuthorTypeDescription()." on ".$createdStr.": '".$this->getBody()."'";
         $info = $this->getAuthorTypeDescription()." (on ".$createdStr."): <b>".$this->getBody()."</b>";
         return $info;
     }
     public function convertFromUtcToUserTimezone($datetime,$user)
     {
+
+        if( !$datetime ) {
+            return NULL;
+        }
 
         //$user_tz = 'America/New_York';
         $user_tz = null;

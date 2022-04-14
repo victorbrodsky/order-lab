@@ -120,7 +120,7 @@ class SimpleUserType extends UserType {
      */
     public function getBlockPrefix()
     {
-        return null;
+        return '';
         //return 'oleg_userdirectorybundle_user';
     }
 

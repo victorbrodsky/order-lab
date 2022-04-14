@@ -426,11 +426,15 @@ class CallEntryController extends OrderAbstractController
         }
         ////////// EOF attachmentTypes //////////
 
+        //Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader::getIdValue(): Argument #1 ($object) must be of type ?object, int given
+        //https://stackoverflow.com/questions/62649386/argument-1-passed-to-symfony-bridge-doctrine-form-choicelist-idreadergetidvalu
+        //https://ourcodeworld.com/articles/read/1388/how-to-solve-symfony-5-exception-argument-1-passed-to-symfonybridgedoctrineformchoicelistidreader-getidvalue-must-be-an-object-or-null-string-given
         //$defaultCommunication = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName("Inbound");
         $defaultCommunication = $userSecUtil->getSiteSettingParameter('defaultInitialCommunication',$sitename);
-        if( $defaultCommunication ) {
-            $defaultCommunication = $defaultCommunication->getId();
-        }
+//        if( $defaultCommunication ) {
+//            $defaultCommunication = $defaultCommunication->getId();
+//        }
+
 //        $referringProviderCommunications = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findBy(array('type'=>array('default','user-added')));
 //        $referringProviderCommunicationChoices = array();
 //        foreach( $referringProviderCommunications as $referringProviderCommunication ) {
@@ -445,7 +449,7 @@ class CallEntryController extends OrderAbstractController
         } else {
             $parentPatientListId = null;
         }
-        
+
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
@@ -466,6 +470,7 @@ class CallEntryController extends OrderAbstractController
             //'defaultAccessionType' => $defaultAccessionType,
             'metaphone' => $metaphone
         );
+
         $filterform = $this->createForm(CalllogFilterType::class, null, array(
             'method'=>'GET',
             'form_custom_value'=>$params

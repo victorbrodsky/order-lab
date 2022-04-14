@@ -260,11 +260,48 @@ class DefaultController extends OrderAbstractController
      */
     public function someTestingAction() {
 
-        exit("disabled");
+        //exit("disabled");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+
+        $em = $this->getDoctrine()->getManager();
+
+        echo "############### <br>";
+        $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
+        echo "Count comments=".count($comments)."<br>";
+
+        $comment = $em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
+        echo $comment->getId().": body=[".(string)$comment->getBody()."], comment=[".$comment->getCommentShort()."], threadId=[".$comment->getThread()->getId()."]".
+            ", entityId=".$comment->getEntityId().
+            "<br><br>";
+        //exit("EOF Test comment");
+
+        $id = 'transres-Project-3358-admin_review';
+        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        //$thread = $this->get('fos_comment_manager_thread')->findThreadById($id);
+        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+
+        dump($comments);
+        exit('111');
+
+        $count = 0;
+        foreach($comments as $comment) {
+            echo $comment->getId().": body=[".$comment->getBody()."], comment=[".$comment->getCommentShort()."], threadId=[".$comment->getThread()->getId()."]<br>";
+            $count++;
+        }
+        exit("EOF Test manager comments, COUNT=".$count);
+
+        echo "############### <br>";
+        $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
+        echo "comments=".count($comments)."<br>";
+        $count = 0;
+        foreach($comments as $comment) {
+            echo $comment->getId().": body=[".$comment->getBody()."], comment=[".$comment->getCommentShort()."], threadId=[".$comment->getThread()->getId()."]<br>";
+            $count++;
+        }
+        exit("EOF Test comments, COUNT=".$count);
 
         //Test 1
         $em = $this->getDoctrine()->getManager();

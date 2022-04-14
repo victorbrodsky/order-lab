@@ -1432,6 +1432,7 @@ class AccessRequestController extends OrderAbstractController
             'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdTypeId
             //'sc' => $this->get('security.context')
         );
+
         $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
 
         //$query = $userSecUtil->getQueryUserBySite( $this->siteName );

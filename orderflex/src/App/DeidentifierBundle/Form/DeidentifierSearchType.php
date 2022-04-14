@@ -125,7 +125,7 @@ class DeidentifierSearchType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return null;
-        return 'deidentifier_search_box';
+        return '';
+        //return 'deidentifier_search_box';
     }
 }

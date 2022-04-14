@@ -9,11 +9,11 @@
 namespace App\UserdirectoryBundle\Util;
 
 
-use Doctrine\DBAL\Schema\PostgreSqlSchemaManager as PostgreSqlSchemaManagerBaseController;
+//use Doctrine\DBAL\Schema\PostgreSqlSchemaManager as PostgreSqlSchemaManagerBaseController;
 
 //NOT USED
 //Override
-class PostgreSqlSchemaManager extends PostgreSqlSchemaManagerBaseController
+class PostgreSqlSchemaManager //extends PostgreSqlSchemaManagerBaseController
 {
 
     /**

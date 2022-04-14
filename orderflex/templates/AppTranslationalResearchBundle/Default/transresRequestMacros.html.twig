@@ -218,7 +218,11 @@
             {% endfor %}
 
             <p>
-            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+                {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+                {{ render(controller(
+                    'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',
+                    { 'id': threadId }))
+                }}
             </p>
         </div>
     {% endif %}

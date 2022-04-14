@@ -25,7 +25,8 @@
 namespace App\UserdirectoryBundle\Services;
 
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+//use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -58,7 +59,7 @@ class MaintenanceListener {
     }
 
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
 
 //        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {

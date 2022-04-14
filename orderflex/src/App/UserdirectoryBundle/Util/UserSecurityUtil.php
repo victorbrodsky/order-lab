@@ -527,9 +527,14 @@ class UserSecurityUtil {
 
     public function findSystemUser() {
 
+        //error_reporting(E_ALL ^ E_WARNING);
+
+        $systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('system');
+        //$systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->find(1);
+        return $systemusers;
+
         $systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(
             array(
-                //'keytype' => NULL,
                 'primaryPublicUserId' => 'system'
             )
         );
@@ -2715,8 +2720,8 @@ class UserSecurityUtil {
 
         //processor and division chief can perform any actions
         if(
-            $this->secAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+            $this->seAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_cSCANORDER_PROCESSOR') ||
             $this->secAuth->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
         ) {
             return true;
