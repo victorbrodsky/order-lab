@@ -1015,3 +1015,7 @@ Fork:
 
 "intracto/comment-bundle": "^4",
 "ezsystems/comment-bundle": "^3.2",
+
+
+"friendsofsymfony/comment-bundle": "^4.0.x-dev", => "cinava/comment-bundle": "dev-master",
+

@@ -12,7 +12,7 @@
         "doctrine/orm": "2.9.6",
         "fabiang/sasl": "^1.0",
         "friendsofsymfony/jsrouting-bundle": "^3.1",
-        "cinava/comment-bundle": "dev-master",
+        "cinava/comment-bundle": "4.0.x-dev",
         "google/apiclient": "^1.1",
         "knplabs/knp-paginator-bundle": "^5.8",
         "knplabs/knp-snappy-bundle": "^1.7",

@@ -100,6 +100,47 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
      */
     private $entityId;
 
+    //Overwrite with explicit the doctrine fields
+//$this->addSql('ALTER TABLE user_foscomment DROP ancestors');
+//$this->addSql('ALTER TABLE user_foscomment DROP depth');
+//$this->addSql('ALTER TABLE user_foscomment DROP created_at');
+//$this->addSql('ALTER TABLE user_foscomment DROP state');
+    /**
+     * Comment text.
+     * Overwrite with explicit the doctrine type="text". Otherwise the return body value is NULL
+     *
+     * @ORM\Column(name="body", type="text")
+     */
+    protected $body;
+
+    /**
+     * All ancestors of the comment. Length = 1024
+     *
+     * @ORM\Column(name="ancestors", type="string", length=1024, nullable=false)
+     */
+    protected $ancestors = '';
+
+    /**
+     * The depth of the comment.
+     *
+     * @ORM\Column(name="depth", type="integer")
+     */
+    protected $depth = 0;
+
+    /**
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * Current state of the comment.
+     *
+     * @ORM\Column(name="state", type="integer")
+     */
+    protected $state = 0;
+
+
 
 
     /**

@@ -45,4 +45,41 @@ class FosThread extends FosBaseThread
      */
     protected $id;
 
+
+//<field name="permalink" column="permalink" type="string" />
+//
+//<field name="isCommentable" column="is_commentable" type="boolean" />
+//
+//<field name="numComments" column="num_comments" type="integer" />
+//
+//<field name="lastCommentAt" column="last_comment_at" type="datetime" nullable="true" />
+
+    /**
+     * Url of the page where the thread lives.
+     *
+     * @ORM\Column(name="permalink", type="string")
+     */
+    protected $permalink;
+
+    /**
+     * Tells if new comments can be added in this thread.
+     *
+     * @ORM\Column(name="is_commentable", type="boolean")
+     */
+    protected $isCommentable = true;
+
+    /**
+     * Denormalized number of comments.
+     *
+     * @ORM\Column(name="num_comments", type="integer")
+     */
+    protected $numComments = 0;
+
+    /**
+     * Denormalized date of the last comment.
+     *
+     * @ORM\Column(name="last_comment_at", type="datetime", nullable=true)
+     */
+    protected $lastCommentAt = null;
+
 }

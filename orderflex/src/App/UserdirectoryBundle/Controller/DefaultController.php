@@ -268,19 +268,48 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        echo "############### <br>";
-        $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
-        echo "Count comments=".count($comments)."<br>";
+        if(0) {
+            echo "############### <br>";
+            $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
+            echo "Count comments=" . count($comments) . "<br>";
+            echo "############### <br><br>";
 
-        $comment = $em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
-        echo $comment->getId().": body=[".(string)$comment->getBody()."], comment=[".$comment->getCommentShort()."], threadId=[".$comment->getThread()->getId()."]".
-            ", entityId=".$comment->getEntityId().
-            "<br><br>";
-        //exit("EOF Test comment");
+            echo "<br> ######## Get single comment by find() ####### <br>";
+            $comment = $em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
+            echo $comment->getId() . ": body=[" . $comment->getBody() . "], comment=[" . $comment->getCommentShort() . "], threadId=[" . $comment->getThread()->getId() . "]" .
+                ", entityId=" . $comment->getEntityId() .
+                "<br>";
+            if ($comment->getBody() === NULL) {
+                echo "body is NULL <br>";
+            }
+            if ($comment->getBody() === '') {
+                echo "body is '' <br>";
+            }
+            if (!$comment->getBody()) {
+                echo "body is empty <br>";
+            }
+            echo "Comment:" . get_class($comment) . "<br>";
+            echo "####### EOF Get single comment by find() ######## <br><br>";
+            //rawBody
+            //exit("EOF Test comment");
+        }
 
         $id = 'transres-Project-3358-admin_review';
         $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
         //$thread = $this->get('fos_comment_manager_thread')->findThreadById($id);
+
+        $commentAtStr = "";
+        if($thread->getLastCommentAt()) {
+            $commentAtStr = $thread->getLastCommentAt()->format('d-m-Y H:i:s');
+        }
+
+        echo $thread->getId().
+            ": permalink=".$thread->getPermalink().
+            ", isCommentable=".$thread->isCommentable().
+            ", numComments=".$thread->getNumComments().
+            ", lastCommentAt=".$commentAtStr. //($thread->getLastCommentAt()) ? $thread->getLastCommentAt()->format('d-m-Y H:i:s') : ''.
+            "<br>";
+
         $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
 
         dump($comments);

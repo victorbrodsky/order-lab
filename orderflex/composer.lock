@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7613d964836df40f4609d86905801444",
+    "content-hash": "77dd0a0d28b08c1b346eca19db906144",
     "packages": [
         {
             "name": "asimlqt/php-google-spreadsheet-client",
@@ -184,12 +184,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cinava/FOSCommentBundle.git",
-                "reference": "72caadf38e45006fa46dfbb447b66845459454fa"
+                "reference": "7ee1c09d8b9c34471d7029b4d22f237cda43b4a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cinava/FOSCommentBundle/zipball/72caadf38e45006fa46dfbb447b66845459454fa",
-                "reference": "72caadf38e45006fa46dfbb447b66845459454fa",
+                "url": "https://api.github.com/repos/cinava/FOSCommentBundle/zipball/7ee1c09d8b9c34471d7029b4d22f237cda43b4a4",
+                "reference": "7ee1c09d8b9c34471d7029b4d22f237cda43b4a4",
                 "shasum": ""
             },
             "require": {
@@ -272,9 +272,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FriendsOfSymfony/FOSCommentBundle/issues",
-                "source": "https://github.com/cinava/FOSCommentBundle/tree/master"
+                "source": "https://github.com/cinava/FOSCommentBundle/tree/oleg-v4.0.2"
             },
-            "time": "2022-04-14T14:29:19+00:00"
+            "time": "2022-04-14T16:29:57+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
