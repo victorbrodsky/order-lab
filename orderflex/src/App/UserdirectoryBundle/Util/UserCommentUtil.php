@@ -27,7 +27,9 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\UserdirectoryBundle\Comment\Model\CommentInterface;
 use App\UserdirectoryBundle\Comment\Model\ThreadInterface;
+use App\UserdirectoryBundle\Entity\FosComment;
 use App\UserdirectoryBundle\Entity\FosThread;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -218,6 +220,24 @@ class UserCommentUtil {
         //$tree = $sorter->sort($tree);
 
         return $tree;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createComment(ThreadInterface $thread, CommentInterface $parent = null)
+    {
+        $comment = new FosComment();
+        $comment->setThread($thread);
+
+        if (null !== $parent) {
+            $comment->setParent($parent);
+        }
+
+        //$event = new CommentEvent($comment);
+        //$this->dispatch($event, Events::COMMENT_CREATE);
+
+        return $comment;
     }
 
 }

@@ -14,7 +14,10 @@
 {#{% endif %}#}
 
 {% if thread and comments|length > 0 %}
-    <div id="fos_comment_thread" data-thread="{{ thread.id }}">
+    <div id="fos_comment_thread"
+         data-thread="{{ thread.id }}"
+         {#data-parent="{{ parent }}"#}
+    >
 
         {#
         {% include '@FOSComment/Thread/comments.html.twig' with {
@@ -77,7 +80,7 @@
                 <div class="row">
                     <div class="col-xs-12" align="left">
                         <textarea
-                            id="transres_project_new_comment"
+                            id="foscomment_new_comment"
                             class="form-control"
                             placeholder="New comment" type="text">
                         </textarea>
@@ -89,6 +92,7 @@
                             id="fos_comment_submit_btn_oleg"
                             style=""
                             type="submit"
+                            onclick="foscommentNewComment()"
                             value="Add Comment Without Changing Status">
                     </div>
                 </div>
