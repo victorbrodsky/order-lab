@@ -56,12 +56,12 @@ parameters:
 #        address: oli2002@med.cornell.edu
 #        sender_name: Oleg Ivanov
 
-fos_comment:
-    db_driver: orm
-    class:
-        model:
-            comment: App\UserdirectoryBundle\Entity\FosComment
-            thread: App\UserdirectoryBundle\Entity\FosThread
+#fos_comment:
+#    db_driver: orm
+#    class:
+#        model:
+#            comment: App\UserdirectoryBundle\Entity\FosComment
+#            thread: App\UserdirectoryBundle\Entity\FosThread
 
 services:
     _defaults:
@@ -240,4 +240,5 @@ services:
 #        arguments:
 #            $name: '@name'
 
-
+#    fos_comment.manager.thread:
+#        class: App\UserdirectoryBundle\Comment\Model\ThreadManager

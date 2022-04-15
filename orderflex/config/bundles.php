@@ -20,7 +20,5 @@ return [
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
     Knp\Bundle\TimeBundle\KnpTimeBundle::class => ['all' => true],
-    JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
-    FOS\RestBundle\FOSRestBundle::class => ['all' => true],
-    FOS\CommentBundle\FOSCommentBundle::class => ['all' => true],
+    //FOS\CommentBundle\FOSCommentBundle::class => ['all' => true],
 ];

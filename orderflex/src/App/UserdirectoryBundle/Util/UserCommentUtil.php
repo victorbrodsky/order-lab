@@ -100,7 +100,7 @@ class UserCommentUtil {
 
     public function findCommentTreeByThread( $thread, $depth = null )
     {
-        echo "threadId=".$thread->getId()."<br>";
+        //echo "threadId=".$thread->getId()."<br>";
 
         //return $this->em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
 
@@ -116,9 +116,9 @@ class UserCommentUtil {
 
         $comments = $query->getResult();
 
-        foreach($comments as $comment) {
-            echo $comment->getId().": comment=".$comment->getCommentShort()."<br>";
-        }
+//        foreach($comments as $comment) {
+//            echo $comment->getId().": comment=".$comment->getCommentShort()."<br>";
+//        }
 
         return $comments;
     }
@@ -140,27 +140,27 @@ class UserCommentUtil {
     public function findCommentsByThread(ThreadInterface $thread, $depth = null, $sorterAlias = null)
     {
 
-        echo "threadId=".$thread->getId()."<br>";
+        //echo "threadId=".$thread->getId()."<br>";
 
         $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
 
-        $dql =  $repository->createQueryBuilder("comment");
-        $dql->select('comment');
-        $dql->leftJoin("comment.thread", "thread");
-        $dql->where("thread.id = :threadId");
-        $query = $this->em->createQuery($dql);
-
-        $query->setParameters(array('threadId'=>$thread->getId()));
-
-        $comments = $query->getResult();
-
-        return $comments;
+//        $dql =  $repository->createQueryBuilder("comment");
+//        $dql->select('comment');
+//        $dql->leftJoin("comment.thread", "thread");
+//        $dql->where("thread.id = :threadId");
+//        $query = $this->em->createQuery($dql);
+//
+//        $query->setParameters(array('threadId'=>$thread->getId()));
+//
+//        $comments = $query->getResult();
+//
+//        return $comments;
 
         $qb = $repository
             ->createQueryBuilder('c')
             ->join('c.thread', 't')
             ->where('t.id = :thread')
-            //->orderBy('c.ancestors', 'ASC')
+            ->orderBy('c.ancestors', 'ASC')
             ->setParameter('thread', $thread->getId());
 
         if (null !== $depth && $depth >= 0) {

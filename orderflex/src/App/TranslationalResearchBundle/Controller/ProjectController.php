@@ -2376,8 +2376,10 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * //Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+     * 
      * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
      */
     public function threadCommentsAction(Request $request, $id)
     {
@@ -2386,17 +2388,21 @@ class ProjectController extends OrderAbstractController
         }
 
         //$id = 'thread_id';
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        $thread = $this->container->get('user_comment_utility')->findThreadById($id);
         if (null === $thread) {
-            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+            //$thread = $this->container->get('fos_comment.manager.thread')->createThread();
+            $thread = $this->container->get('user_comment_utility')->createThread();
             $thread->setId($id);
             $thread->setPermalink($request->getUri());
 
             // Add the thread
-            $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+            //$this->container->get('fos_comment.manager.thread')->saveThread($thread);
+            $this->container->get('user_comment_utility')->saveThread($thread);
         }
 
-        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
 
         //return $comments;
 
@@ -2407,8 +2413,10 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * //Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+     *
      * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
      */
     public function threadCommentsShowAction(Request $request, $id)
     {
@@ -2421,7 +2429,8 @@ class ProjectController extends OrderAbstractController
         }
 
         //$id = 'thread_id';
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        $thread = $this->container->get('user_comment_utility')->findThreadById($id);
 //        if (null === $thread) {
 //            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
 //            $thread->setId($id);
@@ -2433,7 +2442,8 @@ class ProjectController extends OrderAbstractController
 
         if( $thread ) {
             $thread->setCommentable(false);
-            $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+            //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+            $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
         } else {
             $comments = array();
         }

@@ -55,6 +55,7 @@ imports:
 
 #    - { resource: "@FOSCommentBundle/Resources/config/controller.xml" }
 
+#    - { resource: "@FOSCommentBundle/Resources/config/services.yaml" }
 
 services:
     # default configuration for services in *this* file
@@ -135,6 +136,10 @@ services:
 #        tags: ['controller.service_arguments']
     App\DashboardBundle\Controller\:
         resource: '../src/App/DashboardBundle/Controller/'
+
+    #FOS\CommentBundle\Controller
+#    App\Controller\:
+#        resource: '@FOSCommentBundle/Controller/'
 
 #    App\UserdirectoryBundle\Controller\UserController: ~
 

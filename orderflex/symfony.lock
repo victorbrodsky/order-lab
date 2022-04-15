@@ -8,9 +8,6 @@
     "box/spout": {
         "version": "v3.1.0"
     },
-    "cinava/comment-bundle": {
-        "version": "4.0.x-dev"
-    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.5"
     },
@@ -117,18 +114,6 @@
             "./config/routes/fos_js_routing.yaml"
         ]
     },
-    "friendsofsymfony/rest-bundle": {
-        "version": "3.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.2",
-            "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
-        },
-        "files": [
-            "./config/packages/fos_rest.yaml"
-        ]
-    },
     "gedmo/doctrine-extensions": {
         "version": "v3.0.0"
     },
@@ -142,26 +127,6 @@
         },
         "files": [
             "./config/packages/google_apiclient.yaml"
-        ]
-    },
-    "jms/metadata": {
-        "version": "2.6.1"
-    },
-    "jms/serializer": {
-        "version": "3.17.1"
-    },
-    "jms/serializer-bundle": {
-        "version": "3.10",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "3.0",
-            "ref": "384cec52df45f3bfd46a09930d6960a58872b268"
-        },
-        "files": [
-            "./config/packages/dev/jms_serializer.yaml",
-            "./config/packages/jms_serializer.yaml",
-            "./config/packages/prod/jms_serializer.yaml"
         ]
     },
     "knplabs/knp-components": {
@@ -243,14 +208,8 @@
     "phpoffice/phpspreadsheet": {
         "version": "1.10.1"
     },
-    "phpoption/phpoption": {
-        "version": "1.8.1"
-    },
     "phpspec/prophecy": {
         "version": "v1.15.0"
-    },
-    "phpstan/phpdoc-parser": {
-        "version": "1.4.4"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.10"
@@ -808,8 +767,5 @@
     },
     "willdurand/jsonp-callback-validator": {
         "version": "v1.1.0"
-    },
-    "willdurand/negotiation": {
-        "version": "3.1.0"
     }
 }

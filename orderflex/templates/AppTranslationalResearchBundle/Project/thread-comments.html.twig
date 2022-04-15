@@ -9,6 +9,10 @@
     var fos_comment_thread_container = $('.fos_comment_thread');
 </script>
 
+{#{% if fos_comment_can_comment_thread(thread) %}#}
+    {{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}
+{#{% endif %}#}
+
 {% if thread and comments|length > 0 %}
     <div id="fos_comment_thread" data-thread="{{ thread.id }}">
 

@@ -57,12 +57,17 @@ class CommentThreadController extends OrderAbstractController
         return $this->getViewHandler()->handle($view);
     }
 
+//    /**
+//     * Gets the thread for a given id.
+//     *
+//     * @param string $id
+//     *
+//     * @return View
+//     */
     /**
-     * Gets the thread for a given id.
+     * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads/transres-Project-3358-admin_review
      *
-     * @param string $id
-     *
-     * @return View
+     * @Route("/api/threads", name="fos_comment_get_threads", methods={"GET"})
      */
     public function getThreadAction($id)
     {
@@ -423,24 +428,27 @@ class CommentThreadController extends OrderAbstractController
         return $this->getViewHandler()->handle($this->onEditCommentError($form, $id, $comment->getParent()));
     }
 
-    /**
-     * Get the comments of a thread. Creates a new thread if none exists.
-     *
-     * @param Request $request Current request
-     * @param string  $id      Id of the thread
-     *
-     * @return View
-     *
-     * @todo Add support page/pagesize/sorting/tree-depth parameters
-     */
+//    /**
+//     * Get the comments of a thread. Creates a new thread if none exists.
+//     *
+//     * @param Request $request Current request
+//     * @param string  $id      Id of the thread
+//     *
+//     * @return View
+//     *
+//     * @todo Add support page/pagesize/sorting/tree-depth parameters
+//     */
+//      * @Template("AppTranslationalResearchBundle/Default/about.html.twig")
+
+//
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-admin_review
      * body = 'okok admin'
      *
      * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-irb_review
      *
-     * @Route("/comment_api/threads-comments/{id}", name="fos_comment_get_threads_comments", methods={"GET"})
-     * @Template("AppTranslationalResearchBundle/Default/about.html.twig")
+     * @Route("/api/threads/{id}/comments", name="fos_comment_get_thread_comments", methods={"GET"})
+     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
      */
     public function getThreadCommentsAction(Request $request, $id)
     {
@@ -520,8 +528,8 @@ class CommentThreadController extends OrderAbstractController
             echo "body=".$comment->getBody().", AuthorId=".$comment->getAuthor().", AuthorType=".$comment->getAuthorType()."<br>";
         }
 
-        dump($comments);
-        exit('111');
+        //dump($comments);
+        //exit('111');
 
 //        $view = View::create()
 //            ->setData([
@@ -550,10 +558,15 @@ class CommentThreadController extends OrderAbstractController
             $this->get('fos_rest.view_handler')->registerHandler('rss', $templatingHandler);
         }
 
-        dump($comments);
-        exit('111');
+        //dump($comments);
+        //exit('111');
 
-        return $this->getViewHandler()->handle($view);
+        //return $this->getViewHandler()->handle($view);
+
+        return array(
+            'comments' => $comments,
+            'thread' => $thread,
+        );
     }
 
     /**
@@ -566,6 +579,12 @@ class CommentThreadController extends OrderAbstractController
      *
      * @todo Add support for comment parent (in form?)
      */
+    /**
+     * http://127.0.0.1/order/index_dev.php/translational-research/api/threads/transres-Project-3358-admin_review/comments/new
+     *
+     * @Route("/api/threads/{id}/comments/new", name="fos_comment_new_thread_comments", methods={"GET","POST"})
+     * @Template("bundles/FOSCommentBundle/Thread/new.html.twig")
+     */
     public function postThreadCommentsAction(Request $request, $id)
     {
         $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
@@ -573,9 +592,9 @@ class CommentThreadController extends OrderAbstractController
             throw new NotFoundHttpException(sprintf('Thread with identifier of "%s" does not exist', $id));
         }
 
-        if (!$thread->isCommentable()) {
-            throw new AccessDeniedHttpException(sprintf('Thread "%s" is not commentable', $id));
-        }
+//        if (!$thread->isCommentable()) {
+//            throw new AccessDeniedHttpException(sprintf('Thread "%s" is not commentable', $id));
+//        }
 
         $parent = $this->getValidCommentParent($thread, $request->query->get('parentId'));
         $commentManager = $this->container->get('fos_comment.manager.comment');
@@ -587,11 +606,22 @@ class CommentThreadController extends OrderAbstractController
 
         if ($form->isValid()) {
             if (false !== $commentManager->saveComment($comment)) {
-                return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $id, $parent));
+
+                //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $id, $parent));
+                return array(
+                    'parent' => $parent,
+                    'id' => $id,
+                    'form' => $form
+                );
             }
         }
 
-        return $this->getViewHandler()->handle($this->onCreateCommentError($form, $id, $parent));
+        //return $this->getViewHandler()->handle($this->onCreateCommentError($form, $id, $parent));
+        return array(
+            'parent' => $parent,
+            'id' => $id,
+            'form' => $form
+        );
     }
 
     /**

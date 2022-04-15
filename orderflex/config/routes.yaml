@@ -223,11 +223,11 @@ fos_js_routing:
 #    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 
-fos_comment_api:
-    type: annotation
-    resource: "@FOSCommentBundle/Resources/config/routing.yml"
-    prefix: /api
-    defaults: { _format: html }
+#fos_comment_api:
+#    type: annotation
+#    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+#    prefix: /api
+#    defaults: { _format: html }
 
 #fos_comment.controller.thread:
 ##    type: rest
@@ -239,14 +239,20 @@ fos_comment_api:
 #    prefix: /api
 #    defaults: { _format: html }
 
+#  https://view-test.med.cornell.edu/
+#  api/threads/transres-Project-3350-irb_review/
+#  comments?permalink=https%3A%2F%2Fview-test.med.cornell.edu%2Ftranslational-research%2Fproject%2Freview%2F3350&view=tree
+# http://127.0.0.1/order/index_dev.php/
+#  api/threads/transres-Project-3358-admin_review/
+#  comments?permalink=http://127.0.0.1/order/index_dev.php/translational-research/project/review/3358&view=tree
 #fos_comment_get_threads:
-#    path: /comment_api/threads/{id}
+#    path: /api/threads
 #    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadAction"
 #    methods:    GET
-#
+
 ##http://127.0.0.1/order/index_dev.php/comment_api/threads/transres-Project-3358-irb_review/comments
 #fos_comment_get_thread_comments:
-#    path: /comment_api/threads/{id}/comments
+#    path: /api/threads/{id}/comments
 #    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadCommentsAction"
 #    methods:    GET
 

@@ -1070,13 +1070,18 @@
                 </p>
             {% endfor %}
 
-            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
+            {#
+            https://view-test.med.cornell.edu/
+            api/threads/transres-Project-3350-irb_review/
+            comments?permalink=https%3A%2F%2Fview-test.med.cornell.edu%2Ftranslational-research%2Fproject%2Freview%2F3350&view=tree
+            #}
+            {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
             threadId={{ threadId }}<br>
             {#{{ render(controller(#}
                 {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                 {#{ 'id': threadId }))#}
             {#}}#}
-            {#{{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}#}
+            {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
 
         </div>
     {% endif %}

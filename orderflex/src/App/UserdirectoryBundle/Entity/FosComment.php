@@ -29,11 +29,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
-use FOS\CommentBundle\Entity\Comment as FosBaseComment;
-use FOS\CommentBundle\Model\SignedCommentInterface;
+//use FOS\CommentBundle\Entity\Comment as FosBaseComment;
+//use FOS\CommentBundle\Model\SignedCommentInterface;
 
-//use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
-//use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
+use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
+use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
 
 /**
  * @ORM\Entity

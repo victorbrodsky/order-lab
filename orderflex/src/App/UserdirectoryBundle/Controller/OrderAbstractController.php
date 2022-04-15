@@ -41,11 +41,15 @@ use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
+
 //use FOS\CommentBundle\Model\CommentInterface;
-use FOS\CommentBundle\Model\CommentManagerInterface;
-use FOS\CommentBundle\Model\ThreadManagerInterface;
+//use FOS\CommentBundle\Model\CommentManagerInterface;
+//use FOS\CommentBundle\Model\ThreadManagerInterface;
 //use App\UserdirectoryBundle\Comment\Model\CommentManagerInterface;
 //use App\UserdirectoryBundle\Comment\Model\ThreadManagerInterface;
+//use App\UserdirectoryBundle\Comment\Model\CommentManager;
+//use App\UserdirectoryBundle\Comment\Model\ThreadManager;
+
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -127,8 +131,10 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['kernel'] = '?'.KernelInterface::class;
         $subscribedServices['logger'] = '?'.LoggerInterface::class;
 
-        $subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
-        $subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
+        //$subscribedServices['fos_comment.manager.comment'] = '?'.CommentManagerInterface::class;
+        //$subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManagerInterface::class;
+        //$subscribedServices['fos_comment.manager.comment'] = '?'.CommentManager::class;
+        //$subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManager::class;
 //        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
         $subscribedServices['user_comment_utility'] = '?'.UserCommentUtil::class;
 
