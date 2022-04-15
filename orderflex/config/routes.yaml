@@ -239,16 +239,14 @@ fos_comment_api:
 #    prefix: /api
 #    defaults: { _format: html }
 
-fos_comment_get_threads:
-    path: /comment_api/threads/{id}
-    # the controller value has the format 'controller_class::method_name'
-    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadAction"
-    methods:    GET
-
-#http://127.0.0.1/order/index_dev.php/comment_api/threads/transres-Project-3358-irb_review/comments
-fos_comment_get_thread_comments:
-    path: /comment_api/threads/{id}/comments
-    # the controller value has the format 'controller_class::method_name'
-    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadCommentsAction"
-    methods:    GET
+#fos_comment_get_threads:
+#    path: /comment_api/threads/{id}
+#    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadAction"
+#    methods:    GET
+#
+##http://127.0.0.1/order/index_dev.php/comment_api/threads/transres-Project-3358-irb_review/comments
+#fos_comment_get_thread_comments:
+#    path: /comment_api/threads/{id}/comments
+#    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadCommentsAction"
+#    methods:    GET
 

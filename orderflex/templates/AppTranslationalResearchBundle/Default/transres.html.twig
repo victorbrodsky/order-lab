@@ -1070,13 +1070,13 @@
                 </p>
             {% endfor %}
 
-            {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+            {% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}
             threadId={{ threadId }}<br>
             {#{{ render(controller(#}
                 {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                 {#{ 'id': threadId }))#}
             {#}}#}
-            {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
+            {#{{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}#}
 
         </div>
     {% endif %}

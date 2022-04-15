@@ -95,7 +95,7 @@ class CommentThreadController extends OrderAbstractController
     /**
      * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads/transres-Project-3358-admin_review
      *
-     * @Route("/comment_api/threads", name="fos_comment_get_threads", methods={"GET"})
+     * @Route("/comment_api/threads111", name="fos_comment_get_threads111", methods={"GET"})
      */
     public function getThreadsActions(Request $request)
     {
