@@ -168,12 +168,12 @@ services:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: preUpdate, connection: default }
 
-    foscomment.listener:
-        class: App\UserdirectoryBundle\Services\FosCommentListener
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
-        tags:
-            - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
-            - { name: "kernel.event_listener", event: "fos_comment.comment.post_persist", method: onCommentPostPersist }
+#    foscomment.listener:
+#        class: App\UserdirectoryBundle\Services\FosCommentListener
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
+#            - { name: "kernel.event_listener", event: "fos_comment.comment.post_persist", method: onCommentPostPersist }
 
     #user mailer util
     user_mailer_utility:
@@ -204,6 +204,10 @@ services:
 
     user_comment_utility:
         class: App\UserdirectoryBundle\Util\UserCommentUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    user_comment_listener_utility:
+        class: App\UserdirectoryBundle\Util\FosCommentListenerUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 #    fos_comment.manager.comment:

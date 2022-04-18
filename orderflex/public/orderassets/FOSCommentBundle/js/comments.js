@@ -19,12 +19,12 @@ function foscommentNewComment() {
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        type: "PUT",
+        type: "POST",
         data: {threadId: threadId, parentId: parentId, comment: comment },
         dataType: 'json',
         async: asyncflag
     }).success(function(response) {
-        //console.log(response);
+        console.log(response);
 
 
     }).done(function() {

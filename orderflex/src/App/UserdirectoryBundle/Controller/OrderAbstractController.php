@@ -34,6 +34,7 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
+use App\UserdirectoryBundle\Util\FosCommentListenerUtil;
 use App\UserdirectoryBundle\Util\UserCommentUtil;
 use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
@@ -137,6 +138,7 @@ class OrderAbstractController extends AbstractController {
         //$subscribedServices['fos_comment.manager.thread'] = '?'.ThreadManager::class;
 //        $subscribedServices['fos_comment'] = '?'.CommentInterface::class;
         $subscribedServices['user_comment_utility'] = '?'.UserCommentUtil::class;
+        $subscribedServices['user_comment_listener_utility'] = '?'.FosCommentListenerUtil::class;
 
         $subscribedServices['dashboard_util'] = '?'.\App\DashboardBundle\Util\DashboardUtil::class;
         $subscribedServices['dashboard_init'] = '?'.\App\DashboardBundle\Util\DashboardInit::class;

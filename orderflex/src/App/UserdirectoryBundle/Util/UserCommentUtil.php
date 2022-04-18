@@ -139,7 +139,7 @@ class UserCommentUtil {
     /**
      * {@inheritdoc}
      */
-    public function findCommentsByThread(ThreadInterface $thread, $depth = null, $sorterAlias = null)
+    public function findCommentsByThread(ThreadInterface $thread, $depth = null)
     {
 
         //echo "threadId=".$thread->getId()."<br>";
@@ -177,50 +177,45 @@ class UserCommentUtil {
             ->getQuery()
             ->execute();
 
-        //if (null !== $sorterAlias) {
-            //$sorter = $this->sortingFactory->getSorter($sorterAlias);
-            //$comments = $sorter->sortFlat($comments);
-        //}
-
         return $comments;
     }
 
-    /**
-     * Organises a flat array of comments into a Tree structure.
-     *
-     * For organising comment branches of a Tree, certain parents which
-     * have not been fetched should be passed in as an array to $ignoreParents.
-     *
-     * @param CommentInterface[]      $comments      An array of comments to organise
-     * //@param SortingInterface        $sorter        The sorter to use for sorting the tree
-     * @param CommentInterface[]|null $ignoreParents An array of parents to ignore
-     *
-     * @return array A tree of comments
-     */
-    protected function organiseComments($comments, $ignoreParents = null)
-    {
-        $tree = new Tree();
-
-        foreach ($comments as $comment) {
-            $path = $tree;
-
-            $ancestors = $comment->getAncestors();
-            if (is_array($ignoreParents)) {
-                $ancestors = array_diff($ancestors, $ignoreParents);
-            }
-
-            foreach ($ancestors as $ancestor) {
-                $path = $path->traverse($ancestor);
-            }
-
-            $path->add($comment);
-        }
-
-        $tree = $tree->toArray();
-        //$tree = $sorter->sort($tree);
-
-        return $tree;
-    }
+//    /**
+//     * Organises a flat array of comments into a Tree structure.
+//     *
+//     * For organising comment branches of a Tree, certain parents which
+//     * have not been fetched should be passed in as an array to $ignoreParents.
+//     *
+//     * @param CommentInterface[]      $comments      An array of comments to organise
+//     * //@param SortingInterface        $sorter        The sorter to use for sorting the tree
+//     * @param CommentInterface[]|null $ignoreParents An array of parents to ignore
+//     *
+//     * @return array A tree of comments
+//     */
+//    protected function organiseComments($comments, $ignoreParents = null)
+//    {
+//        $tree = new Tree();
+//
+//        foreach ($comments as $comment) {
+//            $path = $tree;
+//
+//            $ancestors = $comment->getAncestors();
+//            if (is_array($ignoreParents)) {
+//                $ancestors = array_diff($ancestors, $ignoreParents);
+//            }
+//
+//            foreach ($ancestors as $ancestor) {
+//                $path = $path->traverse($ancestor);
+//            }
+//
+//            $path->add($comment);
+//        }
+//
+//        $tree = $tree->toArray();
+//        //$tree = $sorter->sort($tree);
+//
+//        return $tree;
+//    }
 
     /**
      * {@inheritdoc}
@@ -240,4 +235,13 @@ class UserCommentUtil {
         return $comment;
     }
 
+    public function findCommentById($commentId) {
+        if( !$commentId ) {
+            return null;
+        }
+        return $this->em->getRepository('AppUserdirectoryBundle:FosComment')->find($commentId);
+    }
+
 }
+
+

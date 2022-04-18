@@ -22,16 +22,15 @@
  * Time: 9:55 AM
  */
 
-namespace App\UserdirectoryBundle\Services;
+namespace App\UserdirectoryBundle\Util;
 
+use App\UserdirectoryBundle\Comment\Model\CommentInterface;
 use Doctrine\ORM\EntityManagerInterface;
-//use FOS\CommentBundle\Events;
-use FOS\CommentBundle\Event\CommentEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-//NOT USED
-class FosCommentListener implements EventSubscriberInterface {
+
+//Derived from FosCommentListener
+class FosCommentListenerUtil {
 
 
     private $container;
@@ -52,24 +51,12 @@ class FosCommentListener implements EventSubscriberInterface {
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return array(
-            //Events::COMMENT_PRE_PERSIST => 'onCommentPrePersistTest',
-            //Events::COMMENT_POST_PERSIST => 'onCommentPostPersistTest',
-        );
-    }
-
-    public function onCommentPrePersist(CommentEvent $event)
+    public function onCommentPrePersist(CommentInterface $comment)
     {
         if( $this->disable ) {
             return;
         }
 
-        $comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
         if( $entity ) {
@@ -89,20 +76,20 @@ class FosCommentListener implements EventSubscriberInterface {
         //$this->setCommentEventLog($event,$comment,$entity);
     }
 
-    public function onCommentPostPersist(CommentEvent $event)
+    public function onCommentPostPersist(CommentInterface $comment)
     {
         if( $this->disable ) {
             return;
         }
         
-        $comment = $event->getComment();
+        //$comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
         //echo "entity=".$entity->getId()."<br>";
         //exit('111');
 
         //set only eventlog
-        $resArr = $this->setCommentEventLog($event,$comment,$entity);
+        $resArr = $this->setCommentEventLog($comment,$entity);
 
         //send only emails (Comment takes lots of time - couple seconds delay)
         $this->sendCommentEmails($comment,$entity,$resArr);
@@ -110,12 +97,8 @@ class FosCommentListener implements EventSubscriberInterface {
 
 
 
-    public function setCommentEventLog(CommentEvent $event, $comment=null, $entity=null) {
+    public function setCommentEventLog($comment, $entity=null) {
         $transresUtil = $this->container->get('transres_util');
-
-        if( !$comment ) {
-            $comment = $event->getComment();
-        }
 
         if( !$entity ) {
             $entity = $this->getEntityFromComment($comment);

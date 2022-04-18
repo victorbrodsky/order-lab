@@ -11,10 +11,11 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Comment\Model\ThreadInterface;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use FOS\CommentBundle\Model\CommentInterface;
-use FOS\CommentBundle\Model\ThreadInterface;
-use FOS\RestBundle\View\View;
+//use FOS\CommentBundle\Model\CommentInterface;
+//use FOS\CommentBundle\Model\ThreadInterface;
+//use FOS\RestBundle\View\View;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -124,44 +125,48 @@ class CommentThreadController extends OrderAbstractController
     /**
      * Create new comment by ajax
      *
-     * @Route("/thread/new/comment", name="user_thread_new_comment_ajax", options={"expose"=true}, methods={"PUT"})
+     * @Route("/thread/new/comment", name="user_thread_new_comment_ajax", options={"expose"=true}, methods={"POST","PUT"})
      * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
      */
     public function newThreadCommentsAction(Request $request)
     {
-        $threadId = $request->query->get('threadId');
-        $parentId = $request->query->get('parentId');
+        $em = $this->getDoctrine()->getManager();
+
+        $uri = $request->getUri();
+//        $threadId = $request->query->get('threadId');
+//        $parentId = $request->query->get('parentId');
+//        $comment = $request->query->get('comment');
+        $threadId = $request->get('threadId');
+        $parentId = $request->get('parentId');
+        $commentText = $request->get('comment');
+        //echo "threadId=$threadId, parentId=$parentId, comment=$comment, uri=$uri <br>";
+        //exit('111');
 
         $thread = $this->container->get('user_comment_utility')->findThreadById($threadId);
         if (!$thread) {
-            throw new NotFoundHttpException(sprintf('Thread with identifier of "%s" does not exist', $threadId));
+            //throw new NotFoundHttpException(sprintf('Thread with identifier of "%s" does not exist', $threadId));
+            $thread = $this->container->get('user_comment_utility')->createThread();
+            $thread->setId($threadId);
+            $thread->setPermalink($uri);
         }
 
+        $parent = $this->getValidCommentParent($thread,$parentId);
+        $comment = $this->container->get('user_comment_utility')->createComment($thread,$parent);
+
+        //body
+        $comment->setBody($commentText);
         
-        $comment = $this->container->get('user_comment_utility')->createComment($thread);
+        //author
+        //authorType
+        //authorTypeDescription
+        //prefix
+        //setObject($entity)
+        //ancestors '14471/14478'
 
-        $parent = $this->getValidCommentParent($thread, $request->query->get('parentId'));
-
-        //$form = $this->container->get('fos_comment.form_factory.comment')->createForm();
-        //$form->setData($comment);
-
-//        $view = View::create()
-//            ->setData([
-//                    'data' => [
-//                        'form' => $form->createView(),
-//                        'first' => 0 === $thread->getNumComments(),
-//                        'thread' => $thread,
-//                        'parent' => $parent,
-//                        'id' => $id,
-//                    ],
-//                    'template' => '@FOSComment/Thread/comment_new.html.twig',
-//                ]
-//            );
-//
-//        return $this->getViewHandler()->handle($view);
-
-        //$result['error'] = false;
-        //$result['msg'] = "Under construction.";
+        $this->container->get('user_comment_listener_utility')->onCommentPrePersist($comment);
+        $em->persist($comment);
+        //$em->flush();
+        //$this->container->get('user_comment_listener_utility')->onCommentPostPersist($comment);
 
         $result = "OK";
 
@@ -184,15 +189,17 @@ class CommentThreadController extends OrderAbstractController
         if (null !== $commentId) {
             $comment = $this->container->get('user_comment_utility')->findCommentById($commentId);
             if (!$comment) {
-                throw new NotFoundHttpException(sprintf('Parent comment with identifier "%s" does not exist', $commentId));
+                //throw new NotFoundHttpException(sprintf('Parent comment with identifier "%s" does not exist', $commentId));
             }
 
-            if ($comment->getThread() !== $thread) {
-                throw new NotFoundHttpException('Parent comment is not a comment of the given thread.');
-            }
+            //if ($comment->getThread() !== $thread) {
+            //    throw new NotFoundHttpException('Parent comment is not a comment of the given thread.');
+            //}
 
             return $comment;
         }
+
+        return null;
     }
 
 
@@ -207,7 +214,7 @@ class CommentThreadController extends OrderAbstractController
 
 
 
-
+    /////////////////////////////////// NOT USED /////////////////////////////////////////////
     /**
      * Presents the form to use to create a new Thread.
      *
@@ -270,6 +277,8 @@ class CommentThreadController extends OrderAbstractController
      */
     public function getThreadsActions(Request $request)
     {
+        exit('exit getThreadsActions');
+
         $ids = $request->query->get('ids');
 
         if (null === $ids) {
@@ -594,7 +603,6 @@ class CommentThreadController extends OrderAbstractController
         return $this->getViewHandler()->handle($this->onEditCommentError($form, $id, $comment->getParent()));
     }
 
-//
     /**
      * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
      *
@@ -624,6 +632,9 @@ class CommentThreadController extends OrderAbstractController
 
         // We're now sure it is no duplicate id, so create the thread
         if (null === $thread) {
+
+            exit('No thread');
+
             $permalink = $request->query->get('permalink');
 
             $thread = $this->container->get('fos_comment.manager.thread')->createThread();
@@ -779,6 +790,17 @@ class CommentThreadController extends OrderAbstractController
             'form' => $form
         );
     }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Get the votes of a comment.

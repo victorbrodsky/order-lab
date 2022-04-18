@@ -940,39 +940,39 @@
     {#{% endif %}#}
 {#{% endmacro %}#}
 {#NOT USED#}
-{% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}
+{#{% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}#}
 
-    {% if
-        cycle == "show" and
-        review.id and
-        transres_util.isUserAllowedReview(review) and
-        transres_util.isReviewCorrespondsToState(review)
-    %}
-        {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
-        {% for actionLink in actionLinks %}
-            <p>
-                {{ actionLink|raw }}
-            </p>
-        {% endfor %}
+    {#{% if#}
+        {#cycle == "show" and#}
+        {#review.id and#}
+        {#transres_util.isUserAllowedReview(review) and#}
+        {#transres_util.isReviewCorrespondsToState(review)#}
+    {#%}#}
+        {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
+        {#{% for actionLink in actionLinks %}#}
+            {#<p>#}
+                {#{{ actionLink|raw }}#}
+            {#</p>#}
+        {#{% endfor %}#}
 
         {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
-        {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}
+        {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
         {#actionLinks|length={{ actionLinks|length }}, cycle={{ cycle }}<br>#}
-        {% if actionLinks|length > 0 and cycle == "show" %}
+        {#{% if actionLinks|length > 0 and cycle == "show" %}#}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
             {#include async.html.twig threadId={{ threadId }}<br>#}
             {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
-            {{ render(controller(
-                'App\\UserdirectoryBundle\\Controller\\CommentThreadController::getThreadsActions',
-                { 'id': threadId }))
-            }}
+            {#{{ render(controller(#}
+                {#'App\\UserdirectoryBundle\\Controller\\CommentThreadController::getThreadsActions',#}
+                {#{ 'id': threadId }))#}
+            {#}}#}
             {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
-        {% else %}
-            {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
-        {% endif %}
-    {% endif %}
+        {#{% else %}#}
+            {#{{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}#}
+        {#{% endif %}#}
+    {#{% endif %}#}
 
-{% endmacro %}
+{#{% endmacro %}#}
 
 {#show allowed transition to links#}
 {% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
@@ -1176,10 +1176,11 @@
                 {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ stateStr %}
 
                 {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
-                {{ render(controller(
-                    'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',
-                    { 'id': threadId }))
-                }}
+                {#{{ render(controller(#}
+                    {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
+                    {#{ 'id': threadId }))#}
+                {#}}#}
+                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
                 {% set hasReviews = true %}
             </div>
