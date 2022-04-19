@@ -82,4 +82,14 @@ class FosThread extends FosBaseThread
      */
     protected $lastCommentAt = null;
 
+
+    public function incrementNumberOfComments() {
+        $num = $this->getNumComments();
+        if( $num === NULL ) {
+            $num = 0;
+        }
+        $num = $num + 1;
+        $this->setNumComments($num);
+        return $num;
+    }
 }

@@ -232,7 +232,12 @@
 {% macro getShowRequestReviewCommentsSection(transresRequest, cycle, statMachineType, showComments) %}
     {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
     {% if showComments == 1 %}
-        {{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}
+        {#{{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}#}
+        getShowRequestReviewCommentsSection threadId={{ threadId }}<br>
+        {{ render(controller(
+            'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+            { 'id': threadId, 'newcomment': false }
+        )) }}
     {% endif %}
 {% endmacro %}
 

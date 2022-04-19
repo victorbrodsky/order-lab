@@ -1,23 +1,90 @@
 
-{#{% javascripts#}
-    {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
-{#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-{#{% endjavascripts %}#}
-
 <script type="text/javascript">
-    var fos_comment_thread_container = $('.fos_comment_thread');
+    //var fos_comment_thread_container = $('.fos_comment_thread');
+
+    $(document).ready(function() {
+
+        console.log('fos comment js');
+        //var textCommentElement = document.getElementById('foscomment_new_comment');
+        //resetCursor(textCommentElement);
+
+        //document.querySelector("textarea").focus(); //set the focus - cursor at end
+        //document.querySelector("textarea").setSelectionRange(0,0); // place cursor at start
+
+        //$('textarea[name="foscomment_new_comment"]').focus().setSelectionRange(0,0);
+        //var textCommentElement = $('#foscomment_new_comment');
+        var textCommentElement = document.getElementById('foscomment_new_comment');
+        if( textCommentElement ) {
+            resetCursor(textCommentElement);
+        }
+    });
+    function resetCursor(txtElement) {
+        console.log('resetCursor');
+        if( !txtElement ) {
+            console.log('resetCursor exit');
+            return;
+        }
+        if (txtElement.setSelectionRange) {
+            console.log('resetCursor 1');
+            txtElement.focus();
+            txtElement.setSelectionRange(0, 0);
+        } else if (txtElement.createTextRange) {
+            console.log('resetCursor 2');
+            var range = txtElement.createTextRange();
+            range.moveStart('character', 0);
+            range.select();
+        }
+    }
 </script>
 
 {#{% if fos_comment_can_comment_thread(thread) %}#}
     {#{{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}#}
 {#{% endif %}#}
 
-{% if thread and comments|length > 0 %}
+newComment={{ newComment }}<br>
+{% if newComment is not defined %}
+    {% set newComment = true %}
+{% endif %}
+
+{% if newComment %}
     <div id="fos_comment_thread"
-         data-thread="{{ thread.id }}"
-         {#data-parent="{{ parent }}"#}
-    >
+         data-thread="{{ threadId }}"
+            {#data-parent="{{ parent }}"#}
+    ></div>
+
+    {#placeholder="Type your comment here..."#}
+    <p>
+        <div class="fos_comment_comment_new_form">
+            <h4>Add New Comment</h4>
+            <div class="row">
+                {#<div class="col-xs-1"></div>#}
+                <div class="col-xs-12" align="left">
+                                <textarea
+                                        id="foscomment_new_comment"
+                                        class="textarea form-control"
+                                        name="foscomment_new_comment"
+                                        {#style="align-content:center; overflow:auto; border:6px outset #000000;"#}
+                                >
+                                </textarea>
+                </div>
+                {#<div class="col-xs-1"></div>#}
+            </div>
+            {#<div class="btn btn-default">Add Comment without Changing Status</div>#}
+            <div class="fos_comment_submit">
+                <input
+                        class="btn btn-default fos_comment_submit_btn"
+                        id="fos_comment_submit_btn_oleg"
+                        style=""
+                        type="submit"
+                        onclick="foscommentNewComment()"
+                        value="Add Comment Without Changing Status">
+            </div>
+        </div>
+    </p>
+{% endif %}
+
+
+{#{% if thread and comments|length > 0 %}#}
 
         {#
         {% include '@FOSComment/Thread/comments.html.twig' with {
@@ -26,89 +93,63 @@
         } %}
         #}
 
-        {% if newComment is not defined %}
-            {% set newComment = true %}
-        {% endif %}
+        {#{% if newComment is not defined %}#}
+            {#{% set newComment = true %}#}
+        {#{% endif %}#}
 
         {#<br>#}
         <div class="well well-sm">
 
-            {% if newComment %}
-                {#include new comment form#}
+            {#{% if newComment %}#}
+
+                {#placeholder="Type your comment here..."#}
                 {#<p>#}
-                    {#<label for="lname">New comment:</label>#}
-                    {#<input class="form-control" type="text" id="newcomment" name="newcomment">#}
-                    {#<input type="submit" value="Submit new comment">#}
+                {#<h4>Add New Comment</h4>#}
+                {#<div class="row">#}
+                    {#<div class="col-xs-1"></div>#}
+                    {#<div class="col-xs-12" align="left">#}
+                        {#<textarea#}
+                            {#id="foscomment_new_comment"#}
+                            {#class="textarea form-control"#}
+                            {#name="foscomment_new_comment"#}
+                            {#style="align-content:center; overflow:auto; border:6px outset #000000;"#}
+                        {#>#}
+                        {#</textarea>#}
+                    {#</div>#}
+                    {#<div class="col-xs-1"></div>#}
+                {#</div>#}
+                {#<div class="btn btn-default">Add Comment without Changing Status</div>#}
+                {#<div class="fos_comment_submit">#}
+                    {#<input#}
+                            {#class="btn btn-default fos_comment_submit_btn"#}
+                            {#id="fos_comment_submit_btn_oleg"#}
+                            {#style=""#}
+                            {#type="submit"#}
+                            {#onclick="foscommentNewComment()"#}
+                            {#value="Add Comment Without Changing Status">#}
+                {#</div>#}
                 {#</p>#}
 
-
-                {#<div class="fos_comment_comment_form_holder">#}
-                    {#<h3>Add New Comment</h3>#}
-
-                    {#<form class="fos_comment_comment_new_form"#}
-                          {#id="fos_comment_comment_new_form_oleg"#}
-                          {#action="https://view-test.med.cornell.edu/api/threads/transres-Project-3350-irb_review/comments"#}
-                          {#data-parent="" method="POST"#}
-                    {#>#}
-
-                        {#<div class="fos_comment_form_errors">#}
-
-                        {#</div>#}
-                        {#<textarea id="fos_comment_comment_body" name="fos_comment_comment[body]" required="required" placeholder="Type your comment here...">#}
-                        {#</textarea>#}
-
-                        {#<input type="hidden"#}
-                               {#id="fos_comment_comment__token"#}
-                               {#name="fos_comment_comment[_token]"#}
-                               {#value="yT3l8abR1nPkF7EfCx2W4fla4f1K7HXH8LyX42JGOPM"#}
-                        {#>#}
-                        {#<div class="fos_comment_submit">#}
-                            {#<input#}
-                                    {#class="fos_comment_submit_btn"#}
-                                    {#id="fos_comment_submit_btn_oleg"#}
-                                    {#style=""#}
-                                    {#type="submit"#}
-                                    {#value="Add Comment Without Changing Status">#}
-                        {#</div>#}
-
-                    {#</form>#}
-
-                {#</div>#}
-
-                <p>
-                <h4>Add New Comment</h4>
-                <div class="row">
-                    <div class="col-xs-12" align="left">
-                        <textarea
-                            id="foscomment_new_comment"
-                            class="form-control"
-                            type="text">
-                        </textarea>
-                    </div>
-                    {#<div class="btn btn-default">Add Comment without Changing Status</div>#}
-                    <div class="fos_comment_submit">
-                        <input
-                            class="btn btn-default fos_comment_submit_btn"
-                            id="fos_comment_submit_btn_oleg"
-                            style=""
-                            type="submit"
-                            onclick="foscommentNewComment()"
-                            value="Add Comment Without Changing Status">
-                    </div>
-                </div>
-                </p>
-
-            {% endif %}
+            {#{% endif %}#}
 
             <br>
-            {% for comment in comments %}
-                <p>{{ comment.getCommentShort()|raw }}</p>
-            {% endfor %}
+            <div id="foscomment-comments">
+                {% for comment in comments %}
+                    <p>{{ comment.getCommentShort()|raw }}</p>
+                {% endfor %}
+
+                {% if comments|length == 0 %}
+                    <div id="no-comment-msg">
+                        <h3>No comments</h3>
+                    </div>
+                {% endif %}
+
+            </div>
         </div>
 
-    </div>
-{% else %}
-    <h3>No comments</h3>
-{% endif %}
+{#{% else %}#}
+    {#<div id="foscomment-comments"></div>#}
+    {#<h3>No comments</h3>#}
+{#{% endif %}#}
 
 

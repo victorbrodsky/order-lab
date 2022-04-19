@@ -1737,9 +1737,10 @@ class TransResUtil
     public function getTransitionLabelByName( $transitionName, $review=null ) {
 
         //$returnLabel = "<$transitionName>";
-
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $humanName = $this->getHumanName();
+
+        //echo "transitionName=$transitionName <br>";
 
         switch ($transitionName) {
             //initial stages
@@ -1815,6 +1816,7 @@ class TransResUtil
                         $labeled = "Recommended Approval as a Result of Committee Review" . $userInfo;
                     }
                 }
+                //echo "label=$label<br>";
                 break;
             case "committee_review_rejected":
                 $label = "Reject Project Request as a Result of Committee Review";
@@ -1909,6 +1911,7 @@ class TransResUtil
             }
         }
 
+        //echo "returnLabel=$returnLabel<br>";
         return $returnLabel;
     }
     public function getReviewerInfo($review) {
@@ -3551,12 +3554,14 @@ class TransResUtil
         $threadId = "transres-" . $project->getEntityName() . "-" . $project->getId() . "-" . $reviewState;
         //echo "thread=[$threadId] <br>";
 
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($threadId);
+        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($threadId);
+        $thread = $this->container->get('user_comment_utility')->findThreadById($threadId);
         //echo "thread=[$thread] <br>";
 
         if( $thread ) {
-            $thread->setCommentable(false);
-            $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+            //$thread->setCommentable(false);
+            //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+            $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
         } else {
             $comments = array();
         }
@@ -3578,14 +3583,27 @@ class TransResUtil
     //   'comment' => CommentInterface,
     //   'children' => array(...)
     //)
+//    public function getCommentTreeStr($comments,$newline,$level=0) {
+//        $res = "";
+//        foreach($comments as $commentArr) {
+//            $comment = $commentArr['comment'];
+//            $res = $res . $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
+//            $children = $commentArr['children'];
+//            $res = $res . $this->getCommentTreeStr($children,$newline,($level+1));
+//            //$res = $res . $newline;
+//        }
+//        return $res;
+//    }
     public function getCommentTreeStr($comments,$newline,$level=0) {
         $res = "";
-        foreach($comments as $commentArr) {
-            $comment = $commentArr['comment'];
-            $res = $res . $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
-            $children = $commentArr['children'];
-            $res = $res . $this->getCommentTreeStr($children,$newline,($level+1));
+        foreach($comments as $comment) {
+            //$comment = $commentArr['comment'];
+            //$res = $res . $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
+            //$children = $commentArr['children'];
+            //$res = $res . $this->getCommentTreeStr($children,$newline,($level+1));
             //$res = $res . $newline;
+
+            $res = $res . $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
         }
         return $res;
     }
@@ -3608,8 +3626,13 @@ class TransResUtil
         }
 
         //$userServiceUtil = $this->container->get('user_service_utility');
-        $commentManager = $this->container->get('fos_comment.manager.comment');
-        $threadManager = $this->container->get('fos_comment.manager.thread');
+        //$commentManager = $this->container->get('fos_comment.manager.comment');
+        //$threadManager = $this->container->get('fos_comment.manager.thread');
+        $commentThreadManager = $this->container->get('user_comment_utility');
+
+        //FosCommentListenerUtil
+        //$commentThreadManager = $this->container->get('user_comment_listener_utility');
+
         $author = $this->secTokenStorage->getToken()->getUser();
 
         $threadId = $this->getProjectThreadIdByCurrentState($project);
@@ -3631,22 +3654,25 @@ class TransResUtil
         //echo "threadId=".$threadId."<br>";
         //echo "permalink=".$permalink."<br>";
 
-        $thread = $threadManager->findThreadById($threadId);
+        $thread = $commentThreadManager->findThreadById($threadId);
 
         if( null === $thread ) {
-            $thread = $threadManager->createThread();
+            $thread = $commentThreadManager->createThread();
             $thread->setId($threadId);
 
             //$permalink = $uri . "/project/review/" . $entity->getId();
             $thread->setPermalink($permalink);
 
+            $thread->setCommentable(true);
+            $thread->incrementNumberOfComments();
+
             // Add the thread
-            $threadManager->saveThread($thread);
+            $commentThreadManager->saveThread($thread);
         }
 
         //set Author
         $parentComment = null;
-        $comment = $commentManager->createComment($thread,$parentComment);
+        $comment = $commentThreadManager->createComment($thread,$parentComment);
         $comment->setAuthor($author);
 
 //        if( $createDateStr ) {
@@ -3669,11 +3695,15 @@ class TransResUtil
 //            $comment->setAuthorTypeDescription($authorTypeArr['description']);
 //        }
 
-        if ($commentManager->saveComment($comment) !== false) {
-            //exit("Comment saved successful!!!");
-            //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
-            //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
-        }
+//        if ($commentThreadManager->saveComment($comment) !== false) {
+//            //exit("Comment saved successful!!!");
+//            //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
+//            //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
+//        }
+
+        $this->container->get('user_comment_listener_utility')->onCommentPrePersist($comment);
+        $this->container->get('user_comment_utility')->saveComment($comment);
+        $this->container->get('user_comment_listener_utility')->onCommentPostPersist($comment);
 
         return $comment;
     }

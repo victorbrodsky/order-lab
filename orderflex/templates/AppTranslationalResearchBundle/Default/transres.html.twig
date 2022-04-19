@@ -1076,11 +1076,11 @@
             comments?permalink=https%3A%2F%2Fview-test.med.cornell.edu%2Ftranslational-research%2Fproject%2Freview%2F3350&view=tree
             #}
             {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
-            threadId={{ threadId }}<br>
             {#{{ render(controller(#}
                 {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                 {#{ 'id': threadId }))#}
             {#}}#}
+            projectReviewsEnabledLinkActions threadId={{ threadId }}<br>
             {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
         </div>
@@ -1152,8 +1152,11 @@
 
     {#Add a new darker green button next to the green approve button titled “Grant Final Approval” #}
     {#if move it to projectReviewsEnabledLinkActions, then fields to modify project (price list, budget, irb exp date) would be editable by primar reviewer => final reviewer would be equal to admin#}
+    {#hasReviews={{ hasReviews }}<br>#}
     {% if hasReviews == false %}
+        {#hasReviews1<br>#}
         {% if transres_permission_util.hasProjectPermission("funded-final-review",project) and project.state != 'final_approved' %}
+            {#hasReviews2<br>#}
             <div class="well transres-review-holder text-center col-xs-12">
                 {#<a#}
                         {#class="btn btn-darkgreen transres-review-submit"#}
@@ -1180,6 +1183,8 @@
                     {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                     {#{ 'id': threadId }))#}
                 {#}}#}
+                {#TODO: test#}
+                getActionReviewCommentsSection threadId={{ threadId }}<br>
                 {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
                 {% set hasReviews = true %}
@@ -1281,7 +1286,11 @@
                                 {% set thisState = "irb_review" %}
                                 {#{% set thisState = project.vars.value.irbReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+                                projectReviews irb threadId={{ threadId }}<br>
+                                {{ render(controller(
+                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    { 'id': threadId, 'newcomment': false }
+                                )) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1319,7 +1328,11 @@
                                 {% set thisState = "admin_review" %}
                                 {#{% set thisState = project.vars.value.adminReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+                                projectReviews admin threadId={{ threadId }}<br>
+                                {{ render(controller(
+                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    { 'id': threadId, 'newcomment': false }
+                                )) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1356,7 +1369,11 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "committee_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+                                projectReviews commitee threadId={{ threadId }}<br>
+                                {{ render(controller(
+                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    { 'id': threadId, 'newcomment': false }
+                                )) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -1393,7 +1410,11 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "final_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+                                projectReviews final threadId={{ threadId }}<br>
+                                {{ render(controller(
+                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    { 'id': threadId, 'newcomment': false }
+                                )) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}

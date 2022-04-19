@@ -58,6 +58,7 @@ class FosCommentListenerUtil {
         }
 
         $entity = $this->getEntityFromComment($comment);
+        $user = $this->secTokenStorage->getToken()->getUser();
 
         if( $entity ) {
             //send comment entity properties
@@ -65,6 +66,7 @@ class FosCommentListenerUtil {
 
             $authorTypeArr = $this->getAuthorType($entity);
             if( $authorTypeArr && count($authorTypeArr) > 0 ) {
+                $comment->setAuthor($user);
                 $comment->setAuthorType($authorTypeArr['type']);
                 $comment->setAuthorTypeDescription($authorTypeArr['description']);
             }

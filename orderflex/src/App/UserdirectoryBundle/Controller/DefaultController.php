@@ -295,8 +295,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $id = 'transres-Project-3358-admin_review';
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
-        //$thread = $this->get('fos_comment_manager_thread')->findThreadById($id);
+        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        $thread = $this->get('user_comment_utility')->findThreadById($id);
 
         $commentAtStr = "";
         if($thread->getLastCommentAt()) {
@@ -310,7 +310,8 @@ class DefaultController extends OrderAbstractController
             ", lastCommentAt=".$commentAtStr. //($thread->getLastCommentAt()) ? $thread->getLastCommentAt()->format('d-m-Y H:i:s') : ''.
             "<br>";
 
-        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
 
         dump($comments);
         exit('111');

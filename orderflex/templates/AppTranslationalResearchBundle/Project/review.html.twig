@@ -112,7 +112,7 @@
 {#{% endblock %}#}
 
 {% block additionalcss %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
     <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/comments.css') }}" />
 {% endblock %}
 
@@ -136,6 +136,8 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
+        //expandTextarea();
 
         //transres-review-submit
         $('.transres-review-submit').click(function(event) {

@@ -938,12 +938,12 @@ function expandTextarea(holder) {
             console.log("originalHidden=" + originalHidden);
         }
 
-        if( domElement.id in targetidHeight && targetidHeight[domElement.id] ) {
-            if( targetidHeight[domElement.id] > 40 ) {
-                //console.log("already set="+domElement.id+", h="+targetidHeight[domElement.id]);
-                return null;
-            }
-        }
+        // if( domElement.id in targetidHeight && targetidHeight[domElement.id] ) {
+        //     if( targetidHeight[domElement.id] > 40 ) {
+        //         console.log("already set="+domElement.id+", h="+targetidHeight[domElement.id]);
+        //         return null;
+        //     }
+        // }
 
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;

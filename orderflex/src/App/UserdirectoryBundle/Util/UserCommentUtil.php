@@ -87,16 +87,22 @@ class UserCommentUtil {
      */
     public function saveThread($thread)
     {
-//        $event = new ThreadEvent($thread);
-//        $this->dispatch($event, Events::THREAD_PRE_PERSIST);
-//
-//        $this->doSaveThread($thread);
-//
-//        $event = new ThreadEvent($thread);
-//        $this->dispatch($event, Events::THREAD_POST_PERSIST);
-
         $this->em->persist($thread);
-        //$this->em->flush();
+        $this->em->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function saveComment(CommentInterface $comment)
+    {
+
+        //$this->doSaveComment($comment);
+        $this->em->persist($comment->getThread());
+        $this->em->persist($comment);
+        $this->em->flush();
+
+        return true;
     }
 
 
@@ -112,6 +118,7 @@ class UserCommentUtil {
         $dql->select('comment');
         $dql->leftJoin("comment.thread", "thread");
         $dql->where("thread.id = :threadId");
+        $dql->orderBy("comment.id",'DESC');
         $query = $this->em->createQuery($dql);
 
         $query->setParameters(array('threadId'=>$thread->getId()));
@@ -228,6 +235,8 @@ class UserCommentUtil {
         if (null !== $parent) {
             $comment->setParent($parent);
         }
+
+        $comment->setCreatedAt(new \DateTime('now'));
 
         //$event = new CommentEvent($comment);
         //$this->dispatch($event, Events::COMMENT_CREATE);

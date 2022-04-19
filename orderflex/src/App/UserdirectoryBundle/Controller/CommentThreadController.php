@@ -40,47 +40,10 @@ class CommentThreadController extends OrderAbstractController
     /**
      * //Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
      *
-     * @Route("/project/thread-comments/{id}", name="user_project_thread_comments", methods={"GET"})
+     * @Route("/project/thread-comments/show/{id}/{newcomment}", name="user_project_thread_comments_show", methods={"GET"})
      * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
      */
-    public function threadCommentsAction(Request $request, $id)
-    {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-            return $this->redirect($this->generateUrl('user-nopermission'));
-        }
-
-        //$id = 'thread_id';
-        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
-        $thread = $this->container->get('user_comment_utility')->findThreadById($id);
-        if (null === $thread) {
-            //$thread = $this->container->get('fos_comment.manager.thread')->createThread();
-            $thread = $this->container->get('user_comment_utility')->createThread();
-            $thread->setId($id);
-            $thread->setPermalink($request->getUri());
-
-            // Add the thread
-            //$this->container->get('fos_comment.manager.thread')->saveThread($thread);
-            $this->container->get('user_comment_utility')->saveThread($thread);
-        }
-
-        //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
-        $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
-
-        //return $comments;
-
-        return array(
-            'comments' => $comments,
-            'thread' => $thread,
-        );
-    }
-
-    /**
-     * //Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
-     *
-     * @Route("/project/thread-comments/show/{id}", name="user_project_thread_comments_show", methods={"GET"})
-     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
-     */
-    public function threadCommentsShowAction(Request $request, $id)
+    public function threadCommentsShowAction(Request $request, $id, $newcomment=true)
     {
         //echo "comments id=".$id."<br>";
         //exit('1');
@@ -103,7 +66,7 @@ class CommentThreadController extends OrderAbstractController
 //        }
 
         if( $thread ) {
-            $thread->setCommentable(false);
+            //$thread->setCommentable(false);
             //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
             $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
         } else {
@@ -114,10 +77,14 @@ class CommentThreadController extends OrderAbstractController
 //        if( count($comments) == 0 ) {
 //            exit('stop');
 //        }
+        //$newComment = false;
+        //echo "controller newcomment=".$newcomment."<br>";
 
         return array(
             'comments' => $comments,
             'thread' => $thread,
+            'threadId' => $id,
+            'newComment' => $newcomment
         );
     }
 
@@ -142,13 +109,33 @@ class CommentThreadController extends OrderAbstractController
         //echo "threadId=$threadId, parentId=$parentId, comment=$comment, uri=$uri <br>";
         //exit('111');
 
+        $commentText = trim($commentText);
+
+        if( !$commentText ) {
+            $result = array(
+                'error' => true,
+                'commentHtml' => ""
+            );
+
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($result));
+            return $response;
+        }
+
         $thread = $this->container->get('user_comment_utility')->findThreadById($threadId);
         if (!$thread) {
             //throw new NotFoundHttpException(sprintf('Thread with identifier of "%s" does not exist', $threadId));
-            $thread = $this->container->get('user_comment_utility')->createThread();
+            $thread = $this->container->get('user_comment_utility')->createThread($threadId);
+            //$em->persist($thread);
             $thread->setId($threadId);
             $thread->setPermalink($uri);
+            $thread->setCommentable(true);
         }
+
+        $thread->setLastCommentAt(new \DateTime('now'));
+
+        $thread->incrementNumberOfComments();
 
         $parent = $this->getValidCommentParent($thread,$parentId);
         $comment = $this->container->get('user_comment_utility')->createComment($thread,$parent);
@@ -164,11 +151,15 @@ class CommentThreadController extends OrderAbstractController
         //ancestors '14471/14478'
 
         $this->container->get('user_comment_listener_utility')->onCommentPrePersist($comment);
-        $em->persist($comment);
-        //$em->flush();
-        //$this->container->get('user_comment_listener_utility')->onCommentPostPersist($comment);
+        $this->container->get('user_comment_utility')->saveComment($comment);
+        $this->container->get('user_comment_listener_utility')->onCommentPostPersist($comment);
 
-        $result = "OK";
+        $commentHtml = "<p>".$comment->getCommentShort()."</p>";
+
+        $result = array(
+            'error' => false,
+            'commentHtml' => $commentHtml
+        );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -215,6 +206,45 @@ class CommentThreadController extends OrderAbstractController
 
 
     /////////////////////////////////// NOT USED /////////////////////////////////////////////
+
+    //    /**
+//     * //Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+//     *
+//     * @Route("/project/thread-comments/{id}", name="user_project_thread_comments", methods={"GET"})
+//     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
+//     */
+//    public function threadCommentsAction(Request $request, $id)
+//    {
+//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//            return $this->redirect($this->generateUrl('user-nopermission'));
+//        }
+//
+//        //$id = 'thread_id';
+//        //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+//        $thread = $this->container->get('user_comment_utility')->findThreadById($id);
+//        if (null === $thread) {
+//            //$thread = $this->container->get('fos_comment.manager.thread')->createThread();
+//            $thread = $this->container->get('user_comment_utility')->createThread();
+//            $thread->setId($id);
+//            $thread->setPermalink($request->getUri());
+//
+//            // Add the thread
+//            //$this->container->get('fos_comment.manager.thread')->saveThread($thread);
+//            $this->container->get('user_comment_utility')->saveThread($thread);
+//        }
+//
+//        //$comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+//        $comments = $this->container->get('user_comment_utility')->findCommentTreeByThread($thread);
+//
+//        //return $comments;
+//
+//        return array(
+//            'comments' => $comments,
+//            'thread' => $thread,
+//        );
+//    }
+
+
     /**
      * Presents the form to use to create a new Thread.
      *
@@ -603,138 +633,138 @@ class CommentThreadController extends OrderAbstractController
         return $this->getViewHandler()->handle($this->onEditCommentError($form, $id, $comment->getParent()));
     }
 
-    /**
-     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
-     *
-     * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-admin_review
-     * body = 'okok admin'
-     *
-     * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-irb_review
-     *
-     * @Route("/api/threads/{id}/comments", name="fos_comment_get_thread_comments", methods={"GET"})
-     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
-     */
-    public function getThreadCommentsAction(Request $request, $id)
-    {
-
-        //$em = $this->getDoctrine()->getManager();
-        //$thread = $em->getRepository('AppUserdirectoryBundle:FosThread')->find($id);
-
-        $displayDepth = $request->query->get('displayDepth');
-        $sorter = $request->query->get('sorter');
-        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
-
-        //$userCommentUtil = $this->container->get('user_comment_utility');
-        //$thread = $userCommentUtil->findThreadById($id);
-
-        //dump($thread);
-        //exit('111');
-
-        // We're now sure it is no duplicate id, so create the thread
-        if (null === $thread) {
-
-            exit('No thread');
-
-            $permalink = $request->query->get('permalink');
-
-            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
-            //$thread = $userCommentUtil->createThread();
-            $thread->setId($id);
-            $thread->setPermalink($permalink);
-
-//            // Validate the entity
-//            $errors = $this->get('validator')->validate($thread, null, ['NewThread']);
-//            if (count($errors) > 0) {
-//                $view = View::create()
-//                    ->setStatusCode(Response::HTTP_BAD_REQUEST)
-//                    ->setData([
-//                        'data' => [
-//                            'errors' => $errors,
-//                        ],
-//                        'template' => '@FOSComment/Thread/errors.html.twig',
-//                    ]
-//                );
+//    /**
+//     * @Template("AppTranslationalResearchBundle/Project/thread-comments.html.twig")
+//     *
+//     * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-admin_review
+//     * body = 'okok admin'
+//     *
+//     * http://127.0.0.1/order/index_dev.php/translational-research/comment_api/threads-comments/transres-Project-3358-irb_review
+//     *
+//     * @Route("/api/threads/{id}/comments", name="fos_comment_get_thread_comments", methods={"GET"})
+//     * @Template("bundles/FOSCommentBundle/thread-comments.html.twig")
+//     */
+//    public function getThreadCommentsAction(Request $request, $id)
+//    {
 //
-//                return $this->getViewHandler()->handle($view);
-//            }
-
-            // Decode the permalink for cleaner storage (it is encoded on the client side)
-            $thread->setPermalink(urldecode($permalink));
-
-            // Add the thread
-            $this->container->get('fos_comment.manager.thread')->saveThread($thread);
-            //$userCommentUtil->saveThread($thread);
-        }
-
-        $viewMode = $request->query->get('view', 'tree');
-        echo "viewMode=$viewMode <br>";
-        switch ($viewMode) {
-            case self::VIEW_FLAT:
-                echo "viewMode FLAT <br>";
-                $comments = $this->container->get('fos_comment.manager.comment')->findCommentsByThread($thread, $displayDepth, $sorter);
-                //$comments = $userCommentUtil->findCommentsByThread($thread, $displayDepth, $sorter);
-
-                // We need nodes for the api to return a consistent response, not an array of comments
-                $comments = array_map(function ($comment) {
-                    return ['comment' => $comment, 'children' => []];
-                },
-                    $comments
-                );
-                break;
-            case self::VIEW_TREE:
-            default:
-                echo "viewMode NOTFLAT <br>";
-                $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread, $sorter, $displayDepth);
-                //$comments = $userCommentUtil->findCommentTreeByThread($thread, $sorter, $displayDepth);
-                break;
-        }
-
-        foreach($comments as $commentArr) {
-            $comment = $commentArr['comment'];
-            //dump($comment);
-            echo "body=".$comment->getBody().", AuthorId=".$comment->getAuthor().", AuthorType=".$comment->getAuthorType()."<br>";
-        }
-
-        //dump($comments);
-        //exit('111');
-
-//        $view = View::create()
-//            ->setData([
-//                'data' => [
-//                    'comments' => $comments,
-//                    'displayDepth' => $displayDepth,
-//                    'sorter' => 'date',
-//                    'thread' => $thread,
-//                    'view' => $viewMode,
-//                ],
-//                'template' => '@FOSComment/Thread/comments.html.twig',
-//            ]
+//        //$em = $this->getDoctrine()->getManager();
+//        //$thread = $em->getRepository('AppUserdirectoryBundle:FosThread')->find($id);
+//
+//        $displayDepth = $request->query->get('displayDepth');
+//        $sorter = $request->query->get('sorter');
+//        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+//
+//        //$userCommentUtil = $this->container->get('user_comment_utility');
+//        //$thread = $userCommentUtil->findThreadById($id);
+//
+//        //dump($thread);
+//        //exit('111');
+//
+//        // We're now sure it is no duplicate id, so create the thread
+//        if (null === $thread) {
+//
+//            exit('No thread');
+//
+//            $permalink = $request->query->get('permalink');
+//
+//            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+//            //$thread = $userCommentUtil->createThread();
+//            $thread->setId($id);
+//            $thread->setPermalink($permalink);
+//
+////            // Validate the entity
+////            $errors = $this->get('validator')->validate($thread, null, ['NewThread']);
+////            if (count($errors) > 0) {
+////                $view = View::create()
+////                    ->setStatusCode(Response::HTTP_BAD_REQUEST)
+////                    ->setData([
+////                        'data' => [
+////                            'errors' => $errors,
+////                        ],
+////                        'template' => '@FOSComment/Thread/errors.html.twig',
+////                    ]
+////                );
+////
+////                return $this->getViewHandler()->handle($view);
+////            }
+//
+//            // Decode the permalink for cleaner storage (it is encoded on the client side)
+//            $thread->setPermalink(urldecode($permalink));
+//
+//            // Add the thread
+//            $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+//            //$userCommentUtil->saveThread($thread);
+//        }
+//
+//        $viewMode = $request->query->get('view', 'tree');
+//        echo "viewMode=$viewMode <br>";
+//        switch ($viewMode) {
+//            case self::VIEW_FLAT:
+//                echo "viewMode FLAT <br>";
+//                $comments = $this->container->get('fos_comment.manager.comment')->findCommentsByThread($thread, $displayDepth, $sorter);
+//                //$comments = $userCommentUtil->findCommentsByThread($thread, $displayDepth, $sorter);
+//
+//                // We need nodes for the api to return a consistent response, not an array of comments
+//                $comments = array_map(function ($comment) {
+//                    return ['comment' => $comment, 'children' => []];
+//                },
+//                    $comments
+//                );
+//                break;
+//            case self::VIEW_TREE:
+//            default:
+//                echo "viewMode NOTFLAT <br>";
+//                $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread, $sorter, $displayDepth);
+//                //$comments = $userCommentUtil->findCommentTreeByThread($thread, $sorter, $displayDepth);
+//                break;
+//        }
+//
+//        foreach($comments as $commentArr) {
+//            $comment = $commentArr['comment'];
+//            //dump($comment);
+//            echo "body=".$comment->getBody().", AuthorId=".$comment->getAuthor().", AuthorType=".$comment->getAuthorType()."<br>";
+//        }
+//
+//        //dump($comments);
+//        //exit('111');
+//
+////        $view = View::create()
+////            ->setData([
+////                'data' => [
+////                    'comments' => $comments,
+////                    'displayDepth' => $displayDepth,
+////                    'sorter' => 'date',
+////                    'thread' => $thread,
+////                    'view' => $viewMode,
+////                ],
+////                'template' => '@FOSComment/Thread/comments.html.twig',
+////            ]
+////        );
+//
+//        // Register a special handler for RSS. Only available on this route.
+//        if ('rss' === $request->getRequestFormat()) {
+//            $templatingHandler = function ($handler, $view, $request) {
+//                $data = $view->getData();
+//                $data['template'] = '@FOSComment/Thread/thread_xml_feed.html.twig';
+//
+//                $view->setData($data);
+//
+//                return new Response($handler->renderTemplate($view, 'rss'), Response::HTTP_OK, $view->getHeaders());
+//            };
+//
+//            $this->get('fos_rest.view_handler')->registerHandler('rss', $templatingHandler);
+//        }
+//
+//        //dump($comments);
+//        //exit('111');
+//
+//        //return $this->getViewHandler()->handle($view);
+//
+//        return array(
+//            'comments' => $comments,
+//            'thread' => $thread,
 //        );
-
-        // Register a special handler for RSS. Only available on this route.
-        if ('rss' === $request->getRequestFormat()) {
-            $templatingHandler = function ($handler, $view, $request) {
-                $data = $view->getData();
-                $data['template'] = '@FOSComment/Thread/thread_xml_feed.html.twig';
-
-                $view->setData($data);
-
-                return new Response($handler->renderTemplate($view, 'rss'), Response::HTTP_OK, $view->getHeaders());
-            };
-
-            $this->get('fos_rest.view_handler')->registerHandler('rss', $templatingHandler);
-        }
-
-        //dump($comments);
-        //exit('111');
-
-        //return $this->getViewHandler()->handle($view);
-
-        return array(
-            'comments' => $comments,
-            'thread' => $thread,
-        );
-    }
+//    }
 
     /**
      * Creates a new Comment for the Thread from the submitted data.
