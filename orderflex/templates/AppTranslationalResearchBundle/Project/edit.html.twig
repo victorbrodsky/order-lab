@@ -126,7 +126,7 @@
                         {#{ 'id': threadId }#}
                     {#))#}
                 {#}}#}
-                edit.html threadId={{ threadId }}<br>
+                {#edit.html threadId={{ threadId }}<br>#}
                 {{ render(controller(
                     'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                     { 'id': threadId, 'newcomment': false }

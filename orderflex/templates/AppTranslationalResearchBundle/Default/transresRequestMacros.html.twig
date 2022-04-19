@@ -219,8 +219,9 @@
 
             <p>
                 {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
+                {#getActionRequestReviewCommentsSection threadId={{ threadId }}<br>#}
                 {{ render(controller(
-                    'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',
+                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                     { 'id': threadId }))
                 }}
             </p>
@@ -233,7 +234,7 @@
     {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
     {% if showComments == 1 %}
         {#{{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}#}
-        getShowRequestReviewCommentsSection threadId={{ threadId }}<br>
+        {#getShowRequestReviewCommentsSection threadId={{ threadId }}<br>#}
         {{ render(controller(
             'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
             { 'id': threadId, 'newcomment': false }

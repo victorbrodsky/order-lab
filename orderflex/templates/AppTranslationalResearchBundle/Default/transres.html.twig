@@ -1077,10 +1077,10 @@
             #}
             {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
             {#{{ render(controller(#}
-                {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
+                {#'App\\UserdirectoryBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                 {#{ 'id': threadId }))#}
             {#}}#}
-            projectReviewsEnabledLinkActions threadId={{ threadId }}<br>
+            {#projectReviewsEnabledLinkActions threadId={{ threadId }}<br>#}
             {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
         </div>
@@ -1180,11 +1180,11 @@
 
                 {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
                 {#{{ render(controller(#}
-                    {#'App\\TranslationalResearchBundle\\Controller\\CommentThreadController::getThreadsActions',#}
+                    {#'App\\UserdirectoryBundle\\Controller\\CommentThreadController::getThreadsActions',#}
                     {#{ 'id': threadId }))#}
                 {#}}#}
                 {#TODO: test#}
-                getActionReviewCommentsSection threadId={{ threadId }}<br>
+                {#getActionReviewCommentsSection threadId={{ threadId }}<br>#}
                 {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
                 {% set hasReviews = true %}
@@ -1286,7 +1286,7 @@
                                 {% set thisState = "irb_review" %}
                                 {#{% set thisState = project.vars.value.irbReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                projectReviews irb threadId={{ threadId }}<br>
+                                {#projectReviews irb threadId={{ threadId }}<br>#}
                                 {{ render(controller(
                                     'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
@@ -1328,7 +1328,7 @@
                                 {% set thisState = "admin_review" %}
                                 {#{% set thisState = project.vars.value.adminReviews|first.getStateStr() %}#}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                projectReviews admin threadId={{ threadId }}<br>
+                                {#projectReviews admin threadId={{ threadId }}<br>#}
                                 {{ render(controller(
                                     'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
@@ -1369,7 +1369,7 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "committee_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                projectReviews commitee threadId={{ threadId }}<br>
+                                {#projectReviews commitee threadId={{ threadId }}<br>#}
                                 {{ render(controller(
                                     'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
@@ -1410,7 +1410,7 @@
                             {% if showComments == 1 %}
                                 {% set thisState = "final_review" %}
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
-                                projectReviews final threadId={{ threadId }}<br>
+                                {#projectReviews final threadId={{ threadId }}<br>#}
                                 {{ render(controller(
                                     'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
