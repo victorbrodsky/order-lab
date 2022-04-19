@@ -131,17 +131,6 @@ class UserCommentUtil {
 
         return $comments;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function findCommentTreeByThread_ORIG(ThreadInterface $thread, $sorter = null, $depth = null)
-    {
-        $comments = $this->findCommentsByThread($thread, $depth);
-        //$sorter = $this->sortingFactory->getSorter($sorter);
-
-        //return $this->organiseComments($comments, $sorter);
-        return $comments;
-    }
 
     /**
      * {@inheritdoc}
@@ -186,43 +175,6 @@ class UserCommentUtil {
 
         return $comments;
     }
-
-//    /**
-//     * Organises a flat array of comments into a Tree structure.
-//     *
-//     * For organising comment branches of a Tree, certain parents which
-//     * have not been fetched should be passed in as an array to $ignoreParents.
-//     *
-//     * @param CommentInterface[]      $comments      An array of comments to organise
-//     * //@param SortingInterface        $sorter        The sorter to use for sorting the tree
-//     * @param CommentInterface[]|null $ignoreParents An array of parents to ignore
-//     *
-//     * @return array A tree of comments
-//     */
-//    protected function organiseComments($comments, $ignoreParents = null)
-//    {
-//        $tree = new Tree();
-//
-//        foreach ($comments as $comment) {
-//            $path = $tree;
-//
-//            $ancestors = $comment->getAncestors();
-//            if (is_array($ignoreParents)) {
-//                $ancestors = array_diff($ancestors, $ignoreParents);
-//            }
-//
-//            foreach ($ancestors as $ancestor) {
-//                $path = $path->traverse($ancestor);
-//            }
-//
-//            $path->add($comment);
-//        }
-//
-//        $tree = $tree->toArray();
-//        //$tree = $sorter->sort($tree);
-//
-//        return $tree;
-//    }
 
     /**
      * {@inheritdoc}

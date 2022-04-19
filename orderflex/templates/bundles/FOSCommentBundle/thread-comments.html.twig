@@ -41,7 +41,7 @@
     {#{{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}#}
 {#{% endif %}#}
 
-newComment={{ newComment }}<br>
+{#newComment={{ newComment }}<br>#}
 {% if newComment is not defined %}
     {% set newComment = true %}
 {% endif %}
