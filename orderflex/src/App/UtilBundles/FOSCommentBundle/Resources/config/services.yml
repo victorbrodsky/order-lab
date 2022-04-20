@@ -8,8 +8,9 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
 
     App\UtilBundles\FOSCommentBundle\Util\:
-#        resource: '../../../../../../src/App/UtilBundles/FOSCommentBundle/Util'
         resource: '%kernel.project_dir%/src/App/UtilBundles/FOSCommentBundle/Util'
+#        resource: '../../../../../../src/App/UtilBundles/FOSCommentBundle/Util'
+
 
     user_comment_utility:
         class: App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil

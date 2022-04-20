@@ -50,7 +50,7 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 /**
  * Created by PhpStorm.
- * User: ch3
+ * User: Oleg Ivanov
  * Date: 8/25/2017
  * Time: 09:48 AM
  */
@@ -5286,6 +5286,8 @@ class TransResRequestUtil
 //        }
 
         if( $totalClean ) {
+            $discount = 0;
+
             if( $discountNumeric ) {
                 $discount = (float)$discountNumeric;
             }

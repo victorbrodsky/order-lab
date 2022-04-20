@@ -57,19 +57,17 @@
         <div class="fos_comment_comment_new_form">
             <h4>Add New Comment</h4>
             <div class="row">
-                {#<div class="col-xs-1"></div>#}
                 <div class="col-xs-12" align="left">
                                 <textarea
                                         id="foscomment_new_comment"
                                         class="textarea form-control"
                                         name="foscomment_new_comment"
+                                        placeholder="Type your comment here..."
                                         {#style="align-content:center; overflow:auto; border:6px outset #000000;"#}
                                 >
                                 </textarea>
                 </div>
-                {#<div class="col-xs-1"></div>#}
             </div>
-            {#<div class="btn btn-default">Add Comment without Changing Status</div>#}
             <div class="fos_comment_submit">
                 <input
                         class="btn btn-default fos_comment_submit_btn"
@@ -83,73 +81,20 @@
     </p>
 {% endif %}
 
+<div class="well well-sm">
 
-{#{% if thread and comments|length > 0 %}#}
+    {#<br>#}
+    <div id="foscomment-comments">
+        {% for comment in comments %}
+            <p>{{ comment.getCommentShort()|raw }}</p>
+        {% endfor %}
 
-        {#
-        {% include '@FOSComment/Thread/comments.html.twig' with {
-            'comments': comments,
-            'thread': thread
-        } %}
-        #}
-
-        {#{% if newComment is not defined %}#}
-            {#{% set newComment = true %}#}
-        {#{% endif %}#}
-
-        {#<br>#}
-        <div class="well well-sm">
-
-            {#{% if newComment %}#}
-
-                {#placeholder="Type your comment here..."#}
-                {#<p>#}
-                {#<h4>Add New Comment</h4>#}
-                {#<div class="row">#}
-                    {#<div class="col-xs-1"></div>#}
-                    {#<div class="col-xs-12" align="left">#}
-                        {#<textarea#}
-                            {#id="foscomment_new_comment"#}
-                            {#class="textarea form-control"#}
-                            {#name="foscomment_new_comment"#}
-                            {#style="align-content:center; overflow:auto; border:6px outset #000000;"#}
-                        {#>#}
-                        {#</textarea>#}
-                    {#</div>#}
-                    {#<div class="col-xs-1"></div>#}
-                {#</div>#}
-                {#<div class="btn btn-default">Add Comment without Changing Status</div>#}
-                {#<div class="fos_comment_submit">#}
-                    {#<input#}
-                            {#class="btn btn-default fos_comment_submit_btn"#}
-                            {#id="fos_comment_submit_btn_oleg"#}
-                            {#style=""#}
-                            {#type="submit"#}
-                            {#onclick="foscommentNewComment()"#}
-                            {#value="Add Comment Without Changing Status">#}
-                {#</div>#}
-                {#</p>#}
-
-            {#{% endif %}#}
-
-            <br>
-            <div id="foscomment-comments">
-                {% for comment in comments %}
-                    <p>{{ comment.getCommentShort()|raw }}</p>
-                {% endfor %}
-
-                {% if comments|length == 0 %}
-                    <div id="no-comment-msg">
-                        <h3>No comments</h3>
-                    </div>
-                {% endif %}
-
+        {% if comments|length == 0 %}
+            <div id="no-comment-msg">
+                <h3>No comments</h3>
             </div>
-        </div>
+        {% endif %}
 
-{#{% else %}#}
-    {#<div id="foscomment-comments"></div>#}
-    {#<h3>No comments</h3>#}
-{#{% endif %}#}
-
+    </div>
+</div>
 
