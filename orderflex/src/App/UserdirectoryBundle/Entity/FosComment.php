@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //use FOS\CommentBundle\Model\SignedCommentInterface;
 
 //use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
-use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
+use App\UtilBundles\FOSCommentBundle\Entity\Comment as FosBaseComment;
 
 /**
  * @ORM\Entity

@@ -10,7 +10,7 @@
  */
 
 //namespace FOS\CommentBundle\Model;
-namespace App\UserdirectoryBundle\Comment\Model;
+namespace App\UtilBundles\FOSCommentBundle\Model;
 
 /**
  * CommentInterface.

@@ -24,7 +24,7 @@
 
 namespace App\UserdirectoryBundle\Util;
 
-use App\UserdirectoryBundle\Comment\Model\CommentInterface;
+use App\UtilBundles\FOSCommentBundle\Model\CommentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

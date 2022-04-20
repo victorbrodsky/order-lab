@@ -10,9 +10,10 @@
  */
 
 //namespace FOS\CommentBundle\Entity;
-namespace App\UserdirectoryBundle\Comment\Entity;
+namespace App\UtilBundles\FOSCommentBundle\Entity;
 
-use App\UserdirectoryBundle\Comment\Model\Comment as AbstractComment;
+//use App\UserdirectoryBundle\Comment\Model\Comment as AbstractComment;
+use App\UtilBundles\FOSCommentBundle\Model\Comment as AbstractComment;
 
 /**
  * Default ORM implementation of CommentInterface.

@@ -9,10 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\UserdirectoryBundle\Comment\Entity;
+namespace App\UtilBundles\FOSCommentBundle\Entity;
 
 //use FOS\CommentBundle\Model\Thread as AbstractThread;
-use App\UserdirectoryBundle\Comment\Model\Thread as AbstractThread;
+use App\UtilBundles\FOSCommentBundle\Model\Thread as AbstractThread;
 
 /**
  * Default ORM ThreadInterface implementation.

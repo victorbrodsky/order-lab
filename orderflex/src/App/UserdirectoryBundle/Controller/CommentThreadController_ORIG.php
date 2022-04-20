@@ -11,7 +11,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
-use App\UserdirectoryBundle\Comment\Model\ThreadInterface;
+use App\UtilBundles\FOSCommentBundle\Model\ThreadInterface;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use FOS\CommentBundle\Model\CommentInterface;
 //use FOS\CommentBundle\Model\ThreadInterface;
@@ -32,7 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 // * @author Alexander <iam.asm89@gmail.com>
 // */
 
-class CommentThreadController extends OrderAbstractController
+class CommentThreadController_ORIG extends OrderAbstractController
 {
     const VIEW_FLAT = 'flat';
     const VIEW_TREE = 'tree';

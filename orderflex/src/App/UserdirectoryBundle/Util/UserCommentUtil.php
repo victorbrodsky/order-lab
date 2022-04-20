@@ -27,8 +27,8 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
-use App\UserdirectoryBundle\Comment\Model\CommentInterface;
-use App\UserdirectoryBundle\Comment\Model\ThreadInterface;
+use App\UtilBundles\FOSCommentBundle\Model\CommentInterface;
+use App\UtilBundles\FOSCommentBundle\Model\ThreadInterface;
 use App\UserdirectoryBundle\Entity\FosComment;
 use App\UserdirectoryBundle\Entity\FosThread;
 use Doctrine\ORM\EntityManagerInterface;
