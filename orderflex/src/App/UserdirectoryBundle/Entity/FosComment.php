@@ -32,7 +32,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //use FOS\CommentBundle\Entity\Comment as FosBaseComment;
 //use FOS\CommentBundle\Model\SignedCommentInterface;
 
-use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
+//use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
 use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
 
 /**
@@ -40,7 +40,7 @@ use App\UserdirectoryBundle\Comment\Entity\Comment as FosBaseComment;
  * @ORM\Table(name="user_fosComment")
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
-class FosComment extends FosBaseComment implements SignedCommentInterface
+class FosComment extends FosBaseComment // implements SignedCommentInterface
 {
 
     /**
