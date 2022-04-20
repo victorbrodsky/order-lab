@@ -221,7 +221,7 @@
                 {#{% include '@FOSComment/Thread/async.html.twig' with {'id': threadId} %}#}
                 {#getActionRequestReviewCommentsSection threadId={{ threadId }}<br>#}
                 {{ render(controller(
-                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                     { 'id': threadId }))
                 }}
             </p>
@@ -236,7 +236,7 @@
         {#{{ render(controller('App\\TranslationalResearchBundle\\Controller\\ProjectController::threadCommentsShowAction', { 'id': threadId })) }}#}
         {#getShowRequestReviewCommentsSection threadId={{ threadId }}<br>#}
         {{ render(controller(
-            'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+            'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
             { 'id': threadId, 'newcomment': false }
         )) }}
     {% endif %}

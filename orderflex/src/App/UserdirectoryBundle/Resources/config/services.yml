@@ -202,13 +202,13 @@ services:
         class: App\UserdirectoryBundle\Util\UserServiceUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@service_container"]
 
-    user_comment_utility:
-        class: App\UserdirectoryBundle\Util\UserCommentUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
-
-    user_comment_listener_utility:
-        class: App\UserdirectoryBundle\Util\FosCommentListenerUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#    user_comment_utility:
+#        class: App\UserdirectoryBundle\Util\UserCommentUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#
+#    user_comment_listener_utility:
+#        class: App\UserdirectoryBundle\Util\FosCommentListenerUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 #    fos_comment.manager.comment:
 #        class: App\UserdirectoryBundle\Comment\Model\CommentManagerInterface

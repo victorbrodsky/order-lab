@@ -35,7 +35,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
-class UserCommentUtil {
+class UserCommentUtil_ORIG {
 
     protected $em;
     protected $container;

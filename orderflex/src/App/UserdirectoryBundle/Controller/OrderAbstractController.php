@@ -34,12 +34,14 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
-use App\UserdirectoryBundle\Util\FosCommentListenerUtil;
-use App\UserdirectoryBundle\Util\UserCommentUtil;
+//use App\UserdirectoryBundle\Util\FosCommentListenerUtil;
+//use App\UserdirectoryBundle\Util\UserCommentUtil;
 use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
+use App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil;
+use App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
 

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace App\UserdirectoryBundle\Controller;
+namespace App\UtilBundles\FOSCommentBundle\Controller;
 
 use App\UtilBundles\FOSCommentBundle\Model\ThreadInterface;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;

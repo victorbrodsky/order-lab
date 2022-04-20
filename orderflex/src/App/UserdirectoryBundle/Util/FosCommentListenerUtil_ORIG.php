@@ -30,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 //Derived from FosCommentListener
-class FosCommentListenerUtil {
+class FosCommentListenerUtil_ORIG {
 
 
     private $container;

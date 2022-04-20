@@ -1081,7 +1081,7 @@
                 {#{ 'id': threadId }))#}
             {#}}#}
             {#projectReviewsEnabledLinkActions threadId={{ threadId }}<br>#}
-            {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+            {{ render(controller('App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
         </div>
     {% endif %}
@@ -1185,7 +1185,7 @@
                 {#}}#}
                 {#TODO: test#}
                 {#getActionReviewCommentsSection threadId={{ threadId }}<br>#}
-                {{ render(controller('App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
+                {{ render(controller('App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction', { 'id': threadId })) }}
 
                 {% set hasReviews = true %}
             </div>
@@ -1288,7 +1288,7 @@
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
                                 {#projectReviews irb threadId={{ threadId }}<br>#}
                                 {{ render(controller(
-                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
                                 )) }}
                             {% endif %}
@@ -1330,7 +1330,7 @@
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
                                 {#projectReviews admin threadId={{ threadId }}<br>#}
                                 {{ render(controller(
-                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
                                 )) }}
                             {% endif %}
@@ -1371,7 +1371,7 @@
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
                                 {#projectReviews commitee threadId={{ threadId }}<br>#}
                                 {{ render(controller(
-                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
                                 )) }}
                             {% endif %}
@@ -1412,7 +1412,7 @@
                                 {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
                                 {#projectReviews final threadId={{ threadId }}<br>#}
                                 {{ render(controller(
-                                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                                     { 'id': threadId, 'newcomment': false }
                                 )) }}
                             {% endif %}

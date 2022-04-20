@@ -128,7 +128,7 @@
                 {#}}#}
                 {#edit.html threadId={{ threadId }}<br>#}
                 {{ render(controller(
-                    'App\\UserdirectoryBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
+                    'App\\UtilBundles\\FOSCommentBundle\\Controller\\CommentThreadController::threadCommentsShowAction',
                     { 'id': threadId, 'newcomment': false }
                 )) }}
                 {#<hr>#}
