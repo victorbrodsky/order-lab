@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 ///**
-// * Restful controller for the Threads.
+// * Controller derived from FOSCommentBundle
 // *
 // * @author Alexander <iam.asm89@gmail.com>
 // */
