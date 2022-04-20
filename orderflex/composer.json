@@ -118,12 +118,5 @@
         "google/apiclient-services": [
             "Drive"
         ]
-    },
-    "repositories":
-    [
-        {
-            "type": "vcs",
-            "url": "https://github.com/cinava/FOSCommentBundle.git"
-        }
-    ]
+    }
 }
