@@ -111,6 +111,8 @@ use App\VacReqBundle\Entity\VacReqRequestTypeList;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Intl\Languages;
+use Symfony\Component\Intl\Locales;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Application;
@@ -124,7 +126,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Intl\Intl;
 
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
@@ -168,7 +169,6 @@ use App\UserdirectoryBundle\Entity\EquipmentType;
 use App\UserdirectoryBundle\Entity\LocationPrivacyList;
 use App\UserdirectoryBundle\Entity\RoleAttributeList;
 use App\UserdirectoryBundle\Entity\LanguageList;
-use Symfony\Component\Intl\Locale\Locale;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -767,29 +767,23 @@ class AdminController extends OrderAbstractController
         //testing
         if(0) {
             \Locale::setDefault('en');
-            echo "after setDefault <br>";
-            $elements = array();
-            $language = Intl::getLanguageBundle()->getLanguageName('en');
-            //exit("language=$language");
-            $elements['en'] = $language;
-            $language = Intl::getLanguageBundle()->getLanguageName('en_US');
-            $elements['en_US'] = $language;
-            $language = Intl::getLanguageBundle()->getLanguageName('fr');
-            $elements['fr'] = $language;
-            $language = Intl::getLanguageBundle()->getLanguageName('de');
-            $elements['de'] = $language;
-            echo "language=$language <br>";
-            //print_r($elements);
-            //exit('language='.$language);
-            //$elements = Intl::getLanguageBundle()->getLanguageNames();
-            print_r($elements);
-            exit('Exit Intl');
-        }
 
-        if(0) {
-            $elements = Intl::getLocaleBundle()->getLocaleNames();
-            print_r($elements);
-            exit();
+            $elements = array();
+            $language = Languages::getName('en');
+            $elements['en'] = $language;
+            $language = Languages::getName('en_US');
+            $elements['en_US'] = $language;
+            dump($elements);
+            //exit('Exit Intl');
+
+            $elements = array();
+            $locale = Locales::getName('en');
+            $elements['en'] = $locale;
+            $locale = Locales::getName('en_US');
+            $elements['en_US'] = $locale;
+            dump($elements);
+
+            exit("Intl test");
         }
 
         $msg = $this->generateAll();
@@ -3672,19 +3666,12 @@ class AdminController extends OrderAbstractController
 
         $logger->notice("Start generateLanguages. before getLanguageNames");
 
-        //\Locale::setDefault('ru');
-        //$elements = Intl::getLanguageBundle()->getLanguageNames();
-
-        $languageBundle = Intl::getLanguageBundle();
+        \Locale::setDefault('en');
         $elements = array();
-        $language = $languageBundle->getLanguageName('en');
+        $language = Languages::getName('en');
         $elements['en'] = $language;
-        $language = $languageBundle->getLanguageName('en_US');
+        $language = Languages::getName('en_US');
         $elements['en_US'] = $language;
-        //$language = $languageBundle->getLanguageName('fr');
-        //$elements['fr'] = $language;
-        //$language = $languageBundle->getLanguageName('de');
-        //$elements['de'] = $language;
 
         //print_r($elements);
         //exit();
@@ -3714,23 +3701,20 @@ class AdminController extends OrderAbstractController
                 $logger->notice("Created LanguageList: name=".$name.", abbreviation=".$abbreviation);
             }
 
-            \Locale::setDefault($abbreviation);
-            $languageNativeName = $languageBundle->getLanguageName($abbreviation);
-
+            //\Locale::setDefault($abbreviation);
+            //$languageNativeName = $languageBundle->getLanguageName($abbreviation);
             //uppercase the first letter
-            $languageNativeName = mb_convert_case(mb_strtolower($languageNativeName), MB_CASE_TITLE, "UTF-8");
-
+            //$languageNativeName = mb_convert_case(mb_strtolower($languageNativeName), MB_CASE_TITLE, "UTF-8");
 //            if( $abbreviation == 'ru' ) {
 //                echo $abbreviation."=(".$languageNativeName.")<br>";
 //                exit();
 //            }
-
-            $entity->setNativeName($languageNativeName);
+            //$entity->setNativeName($languageNativeName);
 
             $em->persist($entity);
             $em->flush();
 
-            $logger->notice("set languageNativeName=".$languageNativeName);
+            //$logger->notice("set languageNativeName=".$languageNativeName);
 
             $count = $count + 10;
 
@@ -3758,18 +3742,12 @@ class AdminController extends OrderAbstractController
 
         $logger->notice("Start generateLocales. before getLocaleNames");
 
-        //$elements = Intl::getLocaleBundle()->getLocaleNames();
-
-        $localeBundle = Intl::getLocaleBundle();
+        \Locale::setDefault('en');
         $elements = array();
-        $language = $localeBundle->getLocaleName('en');
-        $elements['en'] = $language;
-        $language = $localeBundle->getLocaleName('en_US');
-        $elements['en_US'] = $language;
-//        $language = $localeBundle->getLocaleName('fr');
-//        $elements['fr'] = $language;
-//        $language = $localeBundle->getLocaleName('de');
-//        $elements['de'] = $language;
+        $locale = Locales::getName('en');
+        $elements['en'] = $locale;
+        $locale = Locales::getName('en_US');
+        $elements['en_US'] = $locale;
 
         //print_r($elements);
         //exit();
