@@ -244,7 +244,7 @@ class ResAppImportPopulateUtil {
 
         $deleteImportedAplicationsResApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsResApp');
         if( !$deleteImportedAplicationsResApp ) {
-            $logger->warning("deleteImportedAplicationsResApp parameter is nor defined or is set to false");
+            $logger->warning("deleteImportedAplicationsResApp parameter is not defined or is set to false");
             return false;
         }
 

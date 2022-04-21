@@ -496,7 +496,7 @@ class RecLetterUtil {
             $event = "Google API service failed!";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
+            $userSecUtil->sendEmailToSystemEmail($event, $event);
             return null;
         }
 
@@ -601,7 +601,7 @@ class RecLetterUtil {
             $event = "Google API service failed!";
             $logger->warning($event);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $this->sendEmailToSystemEmail($event, $event);
+            $userSecUtil->sendEmailToSystemEmail($event, $event);
             return null;
         }
 
@@ -1322,7 +1322,7 @@ class RecLetterUtil {
             } else {
                 $applicantEmail = null;
                 $errorMsg = "Logical Error: Applicantion ID#".$fellapp->getId()." does not have applicant email";
-                $this->sendEmailToSystemEmail($errorMsg, $errorMsg);
+                $userSecUtil->sendEmailToSystemEmail($errorMsg, $errorMsg);
                 return false;
             }
 
