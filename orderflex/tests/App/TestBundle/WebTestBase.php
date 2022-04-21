@@ -11,7 +11,7 @@ namespace Tests\App\TestBundle;
 //namespace App\CallLogBundle\Controller;
 
 //use PHPUnit\Framework\TestCase;
-use App\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+//use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;

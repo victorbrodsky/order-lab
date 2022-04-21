@@ -2440,7 +2440,7 @@ class FellAppImportPopulateUtil {
         //check if timestamp of the last successful fellowship application import is more than 24 hours ago from current time
         if( $lastImportTimestamp > $date24Ago ) {
             //OK
-            $res = "Verify Import OK:"." lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s');
+            $res = "Verify Fellowship application import OK:"." lastImportTimestamp=".$lastImportTimestamp->format('d-m-Y H:i:s');
             $logger->notice($res);
             //echo "$res <br>";
         } else {
@@ -2450,7 +2450,7 @@ class FellAppImportPopulateUtil {
             //Create error notification email
             $subject = "[ORDER] WARNING: Last Fellowship Application successfully imported over 24 hours ago";
 
-            $body = "Warning! Last fellowship application was successfully imported over 24 hours ago. 
+            $body = "Verify Fellowship application import Warning! Last fellowship application was successfully imported over 24 hours ago. 
             This usually indicates an issue with the automated import process for all fellowship applications 
             potentially resulting in some successfully submitted fellowship applications not being received. 
             Please check Google Sheets and Google Drive (as well as your e-mail confirmation notifications) 
