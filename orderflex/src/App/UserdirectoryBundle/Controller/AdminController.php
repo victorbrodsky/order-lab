@@ -860,6 +860,9 @@ class AdminController extends OrderAbstractController
         $count_PermissionActions = $this->generatePermissionActions();
         $logger->notice("Finished generatePermissionActions");
 
+        $count_residencyTrackList = $this->generateResidencyTrackList(); //must be run before generateRoles
+        $logger->notice("Finished generateResidencyTrackList");
+
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
@@ -883,8 +886,8 @@ class AdminController extends OrderAbstractController
         $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user);
         $count_identifierTypeList = $this->generateIdentifierTypeList();
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
-        $count_residencyTrackList = $this->generateResidencyTrackList();
-        $logger->notice("Finished generateResidencyTrackList");
+        //$count_residencyTrackList = $this->generateResidencyTrackList();
+        //$logger->notice("Finished generateResidencyTrackList");
 
         $count_medicalTitleList = $this->generateMedicalTitleList();
         $count_medicalSpecialties = $this->generateMedicalSpecialties();
