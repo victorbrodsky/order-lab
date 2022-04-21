@@ -56,12 +56,15 @@ class StatusTestCronCommand extends Command {
     }
 
 
-    //php bin/console cron:status --env=prod
+    //Send test email
+    //php bin/console cron:statustest --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatusTest();
         $output->writeln($res);
-        return true;
+
+        //return true;
+        return Command::SUCCESS;
     }
 
 } 

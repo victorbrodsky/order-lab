@@ -445,34 +445,33 @@ class AdminController extends OrderAbstractController
         //$windows
         if( $windows ) {
             if( $cache ) {
-                echo "assets:install=" . exec("php bin" . $dirSep . "console assets:install") . "<br>";
-                echo "cache:clear=" . exec("php bin" . $dirSep . "console cache:clear --env=prod --no-debug") . "<br>";
-                //echo "assetic:dump=" . exec("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug") . "<br>";
+                //echo "assets:install=" . exec("php bin" . $dirSep . "console assets:install") . "<br>";
+                //echo "cache:clear=" . exec("php bin" . $dirSep . "console cache:clear --env=prod --no-debug") . "<br>";
+                echo "deploy=" . exec("bash deploy.sh") . "<br>";
 
                 //remove var/cache/prod
-                $cachePathOld = "var" . $dirSep . "cache" . $dirSep . "prod";
-                $cachePathNew = "var" . $dirSep . "cache" . $dirSep . "pro_";
+                //$cachePathOld = "var" . $dirSep . "cache" . $dirSep . "prod";
+                //$cachePathNew = "var" . $dirSep . "cache" . $dirSep . "pro_";
                 //echo "rm =" . exec("php var/console assets:install") . "<br>";
 
-                if (is_dir($cachePathOld)) {
-                    echo "cachePathOld exists! <br>";
-                } else {
-                    echo "cachePathOld not exists: $cachePathOld <br>";
-                    exit('error');
-                }
-                if (is_dir($cachePathNew)) {
-                    echo "cachePathNew exists! <br>";
-                } else {
-                    echo "cachePathNew not exists: $cachePathNew <br>";
-                    exit('error');
-                }
-
-                echo exec("rmdir " . $cachePathOld . " /S /Q") . "<br>";
-                echo exec("rename " . $cachePathNew . " " . $cachePathOld) . "<br>";
-                if (is_dir($cachePathNew)) {
-                    echo exec("rmdir " . $cachePathNew . " /S /Q") . "<br>";
-                }
-            }
+//                if (is_dir($cachePathOld)) {
+//                    echo "cachePathOld exists! <br>";
+//                } else {
+//                    echo "cachePathOld not exists: $cachePathOld <br>";
+//                    exit('error');
+//                }
+//                if (is_dir($cachePathNew)) {
+//                    echo "cachePathNew exists! <br>";
+//                } else {
+//                    echo "cachePathNew not exists: $cachePathNew <br>";
+//                    exit('error');
+//                }
+//                echo exec("rmdir " . $cachePathOld . " /S /Q") . "<br>";
+//                echo exec("rename " . $cachePathNew . " " . $cachePathOld) . "<br>";
+//                if (is_dir($cachePathNew)) {
+//                    echo exec("rmdir " . $cachePathNew . " /S /Q") . "<br>";
+//                }
+            }//cache
 
             if( $update ) {
                 echo "git pull=" . exec("git pull") . "<br>";

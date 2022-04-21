@@ -64,6 +64,7 @@ class ExpirationCronCommand extends Command {
 
         $output->writeln($results);
 
+        return Command::SUCCESS;
     }
 
 }

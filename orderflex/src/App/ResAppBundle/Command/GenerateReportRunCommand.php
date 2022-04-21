@@ -88,6 +88,7 @@ class GenerateReportRunCommand extends Command {
         $output->writeln($result);
         //$output->writeln('run finished');
 
+        return Command::SUCCESS;
     }
 
 } 

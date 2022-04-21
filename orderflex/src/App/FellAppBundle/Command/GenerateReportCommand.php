@@ -69,24 +69,25 @@ class GenerateReportCommand extends Command {
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         
-     if(1) {             
-        $res = $fellappRepGen->generateFellAppReport( $id );
-     } else {
-        //testing
-        $reportsUploadPathFellApp = "Reports";
-        //$userUtil = new UserUtil();
-        //$reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
-        $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/'.$reportsUploadPathFellApp;
-        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath.'/';
-         $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath . DIRECTORY_SEPARATOR;
+         if(1) {
+            $res = $fellappRepGen->generateFellAppReport( $id );
+         } else {
+            //testing
+            $reportsUploadPathFellApp = "Reports";
+            //$userUtil = new UserUtil();
+            //$reportsUploadPathFellApp = $userUtil->getSiteSetting($this->em,'reportsUploadPathFellApp');
+            $uploadReportPath = 'Uploaded/' . $this->container->getParameter('fellapp.uploadpath').'/'.$reportsUploadPathFellApp;
+            //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath.'/';
+             $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath . DIRECTORY_SEPARATOR;
 
-         $outdir = $reportPath.'temp_'.$id.DIRECTORY_SEPARATOR;
-        $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
-        $res = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
-    }
+             $outdir = $reportPath.'temp_'.$id.DIRECTORY_SEPARATOR;
+            $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+            $res = $fellappRepGen->generateApplicationPdf($id,$applicationFilePath);
+        }
         
         $output->writeln($res);
 
+        return Command::SUCCESS;
     }
 
 

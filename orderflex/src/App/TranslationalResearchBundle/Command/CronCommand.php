@@ -160,6 +160,7 @@ class CronCommand extends Command {
 
         $output->writeln($results);
 
+        return Command::SUCCESS;
     }
 
 }

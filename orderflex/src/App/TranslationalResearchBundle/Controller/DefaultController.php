@@ -28,6 +28,9 @@ class DefaultController extends OrderAbstractController
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
 
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil->browserCheck();
+
         //test
         //$test = $this->getDummyClass();
         //$test = new DummyClass();

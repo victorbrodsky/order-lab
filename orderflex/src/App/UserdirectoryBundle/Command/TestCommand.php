@@ -96,7 +96,7 @@ class TestCommand extends Command
         $resultTotal = implode("\r\n",$resultArr);
         $output->writeln($resultTotal);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
 

@@ -100,6 +100,8 @@ class UtilCommand extends Command {
 
         //$output->writeln($res);
         $output->writeln($res);
+
+        return Command::SUCCESS;
     }
     
     

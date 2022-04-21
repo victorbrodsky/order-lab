@@ -64,6 +64,7 @@ class VerifyImportCommand extends Command {
         
         $output->writeln($res);
 
+        return Command::SUCCESS;
     }
 
 

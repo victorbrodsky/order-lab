@@ -55,13 +55,15 @@ class StatusCronCommand extends Command {
             ->setDescription('Cron job to check status');
     }
 
-
+    
     //php bin/console cron:status --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatus();
         $output->writeln($res);
-        return true;
+        
+        //return true;
+        return Command::SUCCESS;
     }
 
 } 

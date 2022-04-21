@@ -88,6 +88,8 @@ class CronCommand extends Command {
         $logger->notice($result);
 
         $output->writeln($result);
+
+        return Command::SUCCESS;
     }
 
 } 

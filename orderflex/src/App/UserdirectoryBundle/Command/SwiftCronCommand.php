@@ -84,6 +84,8 @@ class SwiftCronCommand extends Command {
         //$logger->notice("cron:swift: Last line of the output:".$last_line."; Return value:".$retval);
 
         $output->writeln($retval);
+
+        return Command::SUCCESS;
     }
 
 } 
