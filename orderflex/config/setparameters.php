@@ -474,6 +474,10 @@ if( $conn ) {
                 //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
                 $mailer_dsn = 'smtp://'.$mailer_host.':'.$mailer_port;
 
+                if( $mailer_user_param ) {
+                    $mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
+                }
+
                 //$mailer_dsn = 'sendmail://default';
                 //echo "mailer_dsn=".$mailer_dsn."<br>";
                 $container->setParameter('mailer_dsn', $mailer_dsn);
