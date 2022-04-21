@@ -454,7 +454,7 @@ class UserServiceUtil {
         //$logger->notice("$name $version browser on $platform");
         //echo "version=$version <br>";
 
-        $msg = "You appear to be using the <strong>outdated $name [$version] browser on $platform</strong>
+        $msg = "You appear to be using the <strong>outdated $name [v $version] browser on $platform</strong>
         and it is not able to show you this site properly.<br>
         Please use Chrome, Firefox, Internet Explorer 9, Internet Explorer 10, Internet Explorer 11,
         or the Edge browser instead and visit this page again.<br>
@@ -475,6 +475,12 @@ class UserServiceUtil {
             return $browserInfo;
         }
 
+        if( str_contains($version, '.') ) {
+            $versionArr = explode('.', $version, 2);
+            $version = (int)$versionArr[0];
+        }
+        //echo "version=$version <br>";
+
         if( $name == Browser::IE ) {
             //Bootstrap IE 8+
             //Select2 IE 8+
@@ -491,7 +497,9 @@ class UserServiceUtil {
         }
 
         if( $name == Browser::CHROME ) {
+            //echo "version=$version <br>";
             if( $version < 48 ) {
+                //echo "$version < 48 <br>";
                 return $msg;
             }
         }

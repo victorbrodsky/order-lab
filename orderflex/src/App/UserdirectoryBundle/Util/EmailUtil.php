@@ -20,7 +20,9 @@ namespace App\UserdirectoryBundle\Util;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\FellAppBundle\Controller\FellAppApplicantController;
+use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -250,10 +252,7 @@ class EmailUtil {
             $mailerDeliveryAddressesStr = implode(',',$mailerDeliveryAddresses);
         }
 
-        $mailer = $this->mailer;
-
-        //$transport = $mailer->getTransport();
-        //Transport:: use Symfony\Component\Mailer\Transport;
+        $mailer = $this->getMailer();
 
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.
@@ -298,6 +297,99 @@ class EmailUtil {
 
         return $emailRes;
     }
+
+    public function getMailer() {
+
+        //return $this->mailer;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+        if( $useSpool ) {
+//            $spoolPath = $this->container->get('kernel')->getProjectDir() .
+//                DIRECTORY_SEPARATOR . "app" .
+//                DIRECTORY_SEPARATOR . "spool".
+//                DIRECTORY_SEPARATOR . "default";
+//            $spool = new \Swift_FileSpool($spoolPath);
+//            $transport = new \Swift_SpoolTransport($spool);
+
+            //TODO: Implement spool
+            $transport = $this->getSmtpTransport();
+            if( !$transport ) {
+                return null;
+            }
+        } else {
+            $transport = $this->getSmtpTransport();
+            if( !$transport ) {
+                return null;
+            }
+        }
+
+        //$mailer = \Swift_Mailer::newInstance($transport);
+        //$mailer = new \Swift_Mailer($transport);
+        $mailer = new Mailer($transport);
+
+        return $mailer;
+    }
+    public function getSmtpTransport() {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+        if( !$host ) {
+            return null;
+        }
+
+        $port = $userSecUtil->getSiteSettingParameter('mailerPort');
+        $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
+        $username = $userSecUtil->getSiteSettingParameter('mailerUser');
+        //Note for Google email server: use Google App specific password
+        //Enable 2-step verification
+        //Generate Google App specific password
+        $password = $userSecUtil->getSiteSettingParameter('mailerPassword');
+        $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
+        //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
+
+        //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
+        $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port);
+        return $transport;
+
+//        //echo "before transport newInstance <br>";
+//        //$transport = \Swift_SmtpTransport::newInstance();
+//        //$transport = new \Swift_SmtpTransport();
+//        //$transport = new Transport(); //Symfony\Component\Mailer\Transport
+//        //$transport = new Transport\Smtp\EsmtpTransport('localhost');
+//        //echo "after transport newInstance <br>";
+//        if( !$transport ) {
+//            return null;
+//        }
+//
+//        $transport->setHost($host);
+//
+//        if( $port ) {
+//            $transport->setPort($port);
+//        }
+//
+//        if( $username ) {
+//            $transport->setUsername($username);
+//        }
+//
+//        if( $password ) {
+//            $transport->setPassword($password);
+//        }
+//
+//        if( $authMode ) {
+//            $transport->setAuthMode($authMode);
+//        }
+//
+//        if( $encrypt ) {
+//            $transport->setEncryption($encrypt);
+//        }
+//
+//        $transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
+//
+//        return $transport;
+    }//getSmtpTransport
 
     public function addEmailByType( $message, $emailArr, $type ) {
         if( $emailArr ) {
@@ -436,121 +528,6 @@ class EmailUtil {
 
         return NULL;
     }
-
-//    public function checkEmailsOrig($emails) {
-//        //$logger = $this->container->get('logger');
-//
-//        if( !$emails ) {
-//            return $emails;
-//        }
-//
-//        if( is_array($emails) ) {
-//            return $this->validateEmailsArr($emails);
-//            //return $emails;
-//        }
-//
-//        //$logger = $this->container->get('logger');
-//        //$logger->notice("checkEmails: input emails=".print_r($emails));
-//        if( strpos((string)$emails, ',') !== false ) {
-//            $emails = str_replace(" ","",$emails);
-//            //return explode(',', $emails);
-//            return $this->validateEmailsArr(explode(',', $emails));
-//        } else {
-//            if( $emails ) {
-//                //return array( $emails );
-//                return $this->validateEmailsArr(array($emails));
-//            }
-//        }
-//
-//        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
-//        //return $emails;
-//        return $this->validateEmailsArr($emails);
-//    }
-//    public function validateEmailsArr($emails) {
-//        $validEmails = array();
-//
-//        if( !is_array($emails) ) {
-//            return $validEmails;
-//        }
-//
-//        foreach($emails as $email) {
-//            if( $email ) {
-//                $validEmails[] = $email;
-//            }
-//        }
-//
-//        return $validEmails;
-//    }
-
-//    public function sendThisEmail(MailerInterface $mailer)
-//    {
-//        $email = (new Email())
-//            ->from('cinava@yahoo.com')
-//            ->to('oli2002@med.cornell.edu')
-//            //->cc('cc@example.com')
-//            //->bcc('bcc@example.com')
-//            //->replyTo('fabien@example.com')
-//            //->priority(Email::PRIORITY_HIGH)
-//            ->subject('Time for Symfony Mailer!')
-//            ->text('Sending emails is fun again!')
-//            ->html('<p>See Twig integration for better HTML integration!</p>');
-//
-//        $mailer->send($email);
-//    }
-
-
-//    public function getSmtpTransport() {
-//        $userSecUtil = $this->container->get('user_security_utility');
-//
-//        $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
-//        if( !$host ) {
-//            return null;
-//        }
-//
-//        $port = $userSecUtil->getSiteSettingParameter('mailerPort');
-//        $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
-//        $username = $userSecUtil->getSiteSettingParameter('mailerUser');
-//        //Note for Google email server: use Google App specific password
-//        //Enable 2-step verification
-//        //Generate Google App specific password
-//        $password = $userSecUtil->getSiteSettingParameter('mailerPassword');
-//        $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
-//        //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
-//
-//        //echo "before transport newInstance <br>";
-//        //$transport = \Swift_SmtpTransport::newInstance();
-//        $transport = new \Swift_SmtpTransport();
-//        //echo "after transport newInstance <br>";
-//        if( !$transport ) {
-//            return null;
-//        }
-//
-//        $transport->setHost($host);
-//
-//        if( $port ) {
-//            $transport->setPort($port);
-//        }
-//
-//        if( $username ) {
-//            $transport->setUsername($username);
-//        }
-//
-//        if( $password ) {
-//            $transport->setPassword($password);
-//        }
-//
-//        if( $authMode ) {
-//            $transport->setAuthMode($authMode);
-//        }
-//
-//        if( $encrypt ) {
-//            $transport->setEncryption($encrypt);
-//        }
-//
-//        $transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
-//
-//        return $transport;
-//    }
 
     public function createEmailCronJob() {
         if( $this->isWindows() ){
@@ -737,8 +714,41 @@ class EmailUtil {
 
 
 
+    //Testing
+    public function sendInvoiceTestEmail() {
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
+        //$email = "oli2002@med.cornell.edu";
+        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
+        $invoice = NULL;
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if ($environment == "dev") {
+            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
+        }
+        if ($environment == "test") {
+            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        }
+        if ($environment == "live") {
+            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
+        }
+        if (!$invoice) {
+            return "Invoice not defined for environment=$environment";
+            //exit("Invoice not defined for environment=$environment");
+        }
+        $invoicePDF = $invoice->getRecentPDF();
+        $attachmentPath = $invoicePDF->getAttachmentEmailPath();
+        $emailUtil->sendEmail($siteEmail, "Test Email Invoice", "Test Email Invoice", null, $siteEmail, $attachmentPath);
+
+        //$res = $invoice->getId() . ": attachmentPath=$attachmentPath <br>";
+        //$res = "Testing email has been sent. " . $res;
+
+        $res = "Testing email sent";
+
+        return $res;
+    }
 
 
 

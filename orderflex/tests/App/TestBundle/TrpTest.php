@@ -26,6 +26,21 @@ class TrpTest extends WebTestBase
         );
     }
 
+    public function testSendInvoiceEmail() {
+        $this->logIn();
+
+        $crawler = $this->client->request('GET', '/translational-research/test-invoice-email');
+
+        $count1 = $crawler->filter('html:contains("Testing email sent")')->count();
+        $count2 = $crawler->filter('html:contains("Invoice not defined for environment")')->count();
+        $totalCount = $count1 + $count2;
+
+        $this->assertGreaterThan(
+            0,
+            $totalCount
+        );
+    }
+
     public function testProjectAction() {
         $this->logIn();
 
@@ -664,6 +679,20 @@ class TrpTest extends WebTestBase
             echo "Skip testReviewAction, projects not found";
         }
     }
+
+//    public function testSendInvoiceEmail() {
+//        $this->logIn();
+//
+//        $crawler = $this->client->request('GET', '/translational-research/test-invoice-email');
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Testing email sent")')->count()
+//        );
+//
+//        //$emailUtil = $this->container->get('user_mailer_utility');
+//        //$output = $emailUtil->sendInvoiceTestEmail();
+//        //$this->assertStringContainsString('Testing email has been sent', $output);
+//    }
 
 //    public function testUnderConstruction() {
 //        //under-construction

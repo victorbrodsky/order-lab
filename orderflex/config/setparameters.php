@@ -240,10 +240,12 @@ if( $conn ) {
             $database_user_pacsvendor = null;
             $database_password_pacsvendor = null;
 
-            $mailer_host = NULL;
-            $mailer_password = NULL;
-            $mailer_user = NULL;
-            $mailer_port = NULL;
+            if(0) {
+                $mailer_host = NULL;
+                $mailer_password = NULL;
+                $mailer_user = NULL;
+                $mailer_port = NULL;
+            }
 
             if( $row && is_array($row) ) {
 
@@ -449,38 +451,41 @@ if( $conn ) {
                 //echo "connection_channel=[".$connection_channel."]\n";
 
                 /////////////////// mailer_dsn ///////////////////
-                $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
-                $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
-                $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
-                $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
+                //Moved to the EmailUtil->getSmtpTransport()
+                if(0) {
+                    $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
+                    $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
+                    $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
+                    $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
 
-                if( !$mailer_port ) {
-                    $mailer_port = '25';
+                    if (!$mailer_port) {
+                        $mailer_port = '25';
+                    }
+
+                    $mailer_user_param = "";
+                    if ($mailer_user && $mailer_password) {
+                        $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
+                    }
+
+                    //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+                    //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
+                    //$mailparams = 'verify_peer_name=0';
+                    //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
+                    //$mailparams = '';
+
+                    //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
+                    //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
+                    //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
+                    $mailer_dsn = 'smtp://' . $mailer_host . ':' . $mailer_port;
+
+                    if ($mailer_user_param) {
+                        $mailer_dsn = 'smtp://' . $mailer_user_param . $mailer_host . ':' . $mailer_port;
+                    }
+
+                    //$mailer_dsn = 'sendmail://default';
+                    //echo "mailer_dsn=".$mailer_dsn."<br>";
+                    $container->setParameter('mailer_dsn', $mailer_dsn);
                 }
-
-                $mailer_user_param = "";
-                if( $mailer_user && $mailer_password ) {
-                    $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
-                }
-
-                //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-                //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
-                //$mailparams = 'verify_peer_name=0';
-                //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
-                //$mailparams = '';
-
-                //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
-                //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
-                //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
-                $mailer_dsn = 'smtp://'.$mailer_host.':'.$mailer_port;
-
-                if( $mailer_user_param ) {
-                    $mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
-                }
-
-                //$mailer_dsn = 'sendmail://default';
-                //echo "mailer_dsn=".$mailer_dsn."<br>";
-                $container->setParameter('mailer_dsn', $mailer_dsn);
                 /////////////////// EOF mailer_dsn ///////////////////
 
             }//if $row
