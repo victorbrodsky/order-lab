@@ -479,7 +479,7 @@ if( $conn ) {
                 }
 
                 //$mailer_dsn = 'sendmail://default';
-                echo "mailer_dsn=".$mailer_dsn."<br>";
+                //echo "mailer_dsn=".$mailer_dsn."<br>";
                 $container->setParameter('mailer_dsn', $mailer_dsn);
                 /////////////////// EOF mailer_dsn ///////////////////
 

@@ -173,7 +173,7 @@ class EmailUtil {
         }
 
         $message = new Email();
-        $mailer = $this->mailer;
+        //$mailer = $this->mailer;
 
         $message->subject($subject);
         $message->from($fromEmail);
@@ -251,6 +251,9 @@ class EmailUtil {
         }
 
         $mailer = $this->mailer;
+
+        //$transport = $mailer->getTransport();
+        //Transport:: use Symfony\Component\Mailer\Transport;
 
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.

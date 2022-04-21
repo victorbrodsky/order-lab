@@ -65,6 +65,7 @@ function prep()
     #echo "*** Clear cache ***"
     #php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
 
+    #php bin/console cache:clear --no-warmup --env=prod
     echo "*** Clear cache with warmup ***"
     php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
