@@ -170,6 +170,7 @@ class SingleChart extends Component {
         }
 
         //console.log("SingleChart: chartIndex="+chartIndex);
+        //https://stackoverflow.com/questions/51143730/axios-posting-empty-request: set header to 'Content-Type': 'application/x-www-form-urlencoded'
 
         axios({
             method: 'post',
@@ -198,81 +199,6 @@ class SingleChart extends Component {
                 "or select a smaller time period for this chart. "+error;
             this.addErrorLine(errorMsg,'error');
         });
-
-    }
-
-    getChartData_TEST(thisSitename) {
-        let url = Routing.generate(thisSitename+'_single_chart');
-        //console.log("url="+url);
-
-        let startDate = this.props.startDate; //$("#filter_startDate").val();
-        //console.log("startDate="+startDate);
-
-        let endDate = this.props.endDate; //$("#filter_endDate").val();
-        //console.log("endDate="+endDate);
-
-        let projectSpecialty = this.props.projectSpecialty; //$("#filter_projectSpecialty").select2("val");
-        //console.log("projectSpecialty="+projectSpecialty);
-
-        //filter_chartType
-        let productservice = this.props.category; //$("#filter_category").select2("val");
-        //console.log("productservice:");
-        //console.log(productservice);
-
-        let showLimited = this.props.showLimited;
-        //console.log("showLimited="+showLimited);
-
-        let quantityLimit = this.props.quantityLimit; //$("#filter_quantityLimit").val();
-
-        let chartIndex = this.props.chartIndex;
-        //console.log("SingleChart: chartIndex="+chartIndex);
-
-        if( chartIndex === null ) {
-            console.log("SingleChart: chartIndex is null");
-            const element = <div>Logical error: chart is not defined</div>;
-            ReactDOM.render(element, document.getElementById('error-message'));
-        }
-
-        console.log("SingleChart: chartIndex="+chartIndex);
-
-        axios.defaults.headers.common = {
-            "Content-Type": "application/json"
-        };
-
-    //     axios.post(url, {
-    //         chartType: chartIndex
-    //     }, {
-    //         headers: {
-    //             'Content-Type': 'application/x-www-form-urlencoded'
-    //         }
-    //     })
-    //         .then(response => {
-    //         console.log(response.data);
-    // });
-
-        // axios.get(url, {
-        //     chartType: chartIndex
-        // }).catch(function (thrown) {
-        //     if (axios.isCancel(thrown)) {
-        //         console.log('Request canceled', thrown.message);
-        //     } else {
-        //         // handle error
-        //     }
-        // });
-
-        // Send a POST request
-        axios(
-            {
-                method: 'post',
-                url: url,
-                data: {
-                    chartType: chartIndex,
-                },
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }
-        );
 
     }
 
