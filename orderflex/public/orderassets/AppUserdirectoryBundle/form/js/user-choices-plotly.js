@@ -40,7 +40,7 @@ function plotlyGetChartsReact(thisSitename) {
 }
 
 function plotlyGetCharts( thisSitename ) {
-    //console.log("get charts");
+    //console.log("plotlyGetCharts");
 
     _totalChartCount = 0;
     _retrievedChartCount = 0;

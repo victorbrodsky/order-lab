@@ -139,6 +139,7 @@ class SingleChart extends Component {
 
     getChartData(thisSitename) {
         let url = Routing.generate(thisSitename+'_single_chart');
+        //console.log("url="+url);
 
         let startDate = this.props.startDate; //$("#filter_startDate").val();
         //console.log("startDate="+startDate);
@@ -160,12 +161,15 @@ class SingleChart extends Component {
         let quantityLimit = this.props.quantityLimit; //$("#filter_quantityLimit").val();
 
         let chartIndex = this.props.chartIndex;
-        //console.log("chartIndex="+chartIndex);
+        //console.log("SingleChart: chartIndex="+chartIndex);
 
         if( chartIndex === null ) {
+            //console.log("SingleChart: chartIndex is null");
             const element = <div>Logical error: chart is not defined</div>;
             ReactDOM.render(element, document.getElementById('error-message'));
         }
+
+        //console.log("SingleChart: chartIndex="+chartIndex);
 
         axios({
             method: 'post',
@@ -178,6 +182,9 @@ class SingleChart extends Component {
                 quantityLimit:quantityLimit,
                 chartType:chartIndex,
                 productservice:productservice
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         })
         .then((result) => {
@@ -189,13 +196,84 @@ class SingleChart extends Component {
             var errorMsg = "Unexpected Error. " +
                 "Please make sure that your session is not timed out and you are still logged in, " +
                 "or select a smaller time period for this chart. "+error;
-            //errorMsg = errorMsg + " responseText="+jqXHR.responseText+", textStatus="+textStatus+", errorThrown="+errorThrown;
             this.addErrorLine(errorMsg,'error');
-
-            //const element = <div>{errorMsg}</div>;
-            //ReactDOM.render(element, document.getElementById('error-message'));
-
         });
+
+    }
+
+    getChartData_TEST(thisSitename) {
+        let url = Routing.generate(thisSitename+'_single_chart');
+        //console.log("url="+url);
+
+        let startDate = this.props.startDate; //$("#filter_startDate").val();
+        //console.log("startDate="+startDate);
+
+        let endDate = this.props.endDate; //$("#filter_endDate").val();
+        //console.log("endDate="+endDate);
+
+        let projectSpecialty = this.props.projectSpecialty; //$("#filter_projectSpecialty").select2("val");
+        //console.log("projectSpecialty="+projectSpecialty);
+
+        //filter_chartType
+        let productservice = this.props.category; //$("#filter_category").select2("val");
+        //console.log("productservice:");
+        //console.log(productservice);
+
+        let showLimited = this.props.showLimited;
+        //console.log("showLimited="+showLimited);
+
+        let quantityLimit = this.props.quantityLimit; //$("#filter_quantityLimit").val();
+
+        let chartIndex = this.props.chartIndex;
+        //console.log("SingleChart: chartIndex="+chartIndex);
+
+        if( chartIndex === null ) {
+            console.log("SingleChart: chartIndex is null");
+            const element = <div>Logical error: chart is not defined</div>;
+            ReactDOM.render(element, document.getElementById('error-message'));
+        }
+
+        console.log("SingleChart: chartIndex="+chartIndex);
+
+        axios.defaults.headers.common = {
+            "Content-Type": "application/json"
+        };
+
+    //     axios.post(url, {
+    //         chartType: chartIndex
+    //     }, {
+    //         headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded'
+    //         }
+    //     })
+    //         .then(response => {
+    //         console.log(response.data);
+    // });
+
+        // axios.get(url, {
+        //     chartType: chartIndex
+        // }).catch(function (thrown) {
+        //     if (axios.isCancel(thrown)) {
+        //         console.log('Request canceled', thrown.message);
+        //     } else {
+        //         // handle error
+        //     }
+        // });
+
+        // Send a POST request
+        axios(
+            {
+                method: 'post',
+                url: url,
+                data: {
+                    chartType: chartIndex,
+                },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        );
+
     }
 
     /*let renderObject1 = (

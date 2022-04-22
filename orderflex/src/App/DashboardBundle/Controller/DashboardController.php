@@ -361,6 +361,9 @@ class DashboardController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
 //        }
 
+        //dump($request);
+        //exit('111');
+
         $dashboardUtil = $this->container->get('dashboard_util');
 
         $chartsArray = $dashboardUtil->getDashboardChart($request);

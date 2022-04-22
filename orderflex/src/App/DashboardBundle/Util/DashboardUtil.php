@@ -2401,19 +2401,42 @@ class DashboardUtil
         }
         elseif( $request->isMethod('POST') ) {
             //echo "request is POST <br>";
-            $startDate = $request->get('startDate');
-            $endDate = $request->get('endDate');
-            $projectSpecialty = $request->get('projectSpecialty');
-            $showLimited = $request->get('showLimited');
-            $chartType = $request->get('chartType');
-            $productservice = $request->get('productservice');
-            $quantityLimit = $request->get('quantityLimit');
-            $processed = true;
+            //dump($request);
+
+            //use $request->getContent() for axios with header: application/x-www-form-urlencoded
+            $content = $request->getContent();
+            if( $content ) {
+                //dump($content);
+                //exit('111');
+                $postData = json_decode($content, true);
+                $startDate = $postData['startDate'];
+                $endDate = $postData['endDate'];
+                $projectSpecialty = $postData['projectSpecialty'];
+                $showLimited = $postData['showLimited'];
+                $chartType = $postData['chartType'];
+                $quantityLimit = $postData['quantityLimit'];
+
+                $productservice = NULL;
+                if( array_key_exists('productservice', $postData) ) {
+                    $productservice = $postData['productservice'];
+                }
+                $processed = true;
+            } else {
+                $startDate = $request->get('startDate');
+                $endDate = $request->get('endDate');
+                $projectSpecialty = $request->get('projectSpecialty');
+                $showLimited = $request->get('showLimited');
+                $chartType = $request->get('chartType');
+                $productservice = $request->get('productservice');
+                $quantityLimit = $request->get('quantityLimit');
+                $processed = true;
+            }
         } else {
             //exit('Logical error: request is not GET or POST');
         }
 
         if( $processed ) {
+            //echo "1chartType=$chartType <br>";
             $parametersArr['startDate'] = $startDate;
             $parametersArr['endDate'] = $endDate;
             $parametersArr['projectSpecialty'] = $projectSpecialty;
@@ -2422,6 +2445,9 @@ class DashboardUtil
             $parametersArr['productservice'] = $productservice;
             $parametersArr['quantityLimit'] = $quantityLimit;
         }
+
+        //echo "chartType=".$chartType."<br>";
+        //exit('111');
 
         return $parametersArr;
     }
@@ -2538,6 +2564,7 @@ class DashboardUtil
 //                exit('Logical error: request is not GET or POST');
 //            }
 
+            //echo "get params from request<br>";
             $parametersArr = $this->getRequestParameters($request);
         }
 //        else {

@@ -65,6 +65,7 @@ class Charts extends Component {
         //console.log("projectSpecialty="+projectSpecialty);
 
         let chartTypes = $("#filter_chartType").select2("val");
+        //console.log("chartTypes:",chartTypes);
 
         //filter_chartType
         let productservice = $("#filter_category").select2("val");

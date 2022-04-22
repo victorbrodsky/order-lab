@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "138ee6f8177b645df81cf34ee5dde45d",
+    "content-hash": "de28de27fce6436d92d36eb2c68b3db9",
     "packages": [
         {
             "name": "asimlqt/php-google-spreadsheet-client",
@@ -1720,30 +1720,33 @@
         },
         {
             "name": "fabiang/sasl",
-            "version": "v1.0.3",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabiang/sasl.git",
-                "reference": "1ea6a403f2f2eb6cea69881c10c4605d52121d89"
+                "reference": "6e9e4bfddf5e40f7147e346d4fd73576bc9e94a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabiang/sasl/zipball/1ea6a403f2f2eb6cea69881c10c4605d52121d89",
-                "reference": "1ea6a403f2f2eb6cea69881c10c4605d52121d89",
+                "url": "https://api.github.com/repos/fabiang/sasl/zipball/6e9e4bfddf5e40f7147e346d4fd73576bc9e94a9",
+                "reference": "6e9e4bfddf5e40f7147e346d4fd73576bc9e94a9",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3 || ^7.0 || ^8.0"
+                "php": "^5.3.3 || ^7.0 || ~8.0.0 || ~8.1.0"
             },
             "require-dev": {
                 "behat/behat": "^3.6",
-                "codeclimate/php-test-reporter": "@dev",
-                "phpunit/php-invoker": "^1.1",
-                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.5 || ^9.5",
-                "satooshi/php-coveralls": "^0.6.1"
+                "phpunit/phpunit": ">=4.8",
+                "slevomat/coding-standard": "*",
+                "squizlabs/php_codesniffer": "*",
+                "vimeo/psalm": "*"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/throwable.php"
+                ],
                 "psr-4": {
                     "Fabiang\\Sasl\\": "src/"
                 }
@@ -1780,9 +1783,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fabiang/sasl/issues",
-                "source": "https://github.com/fabiang/sasl/tree/v1.0.3"
+                "source": "https://github.com/fabiang/sasl/tree/v1.1.0"
             },
-            "time": "2021-02-15T11:51:02+00:00"
+            "time": "2022-04-21T13:35:11+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
@@ -11574,16 +11577,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.38.0",
+            "version": "v1.39.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "143024ab0e426285d3d9b7f6a3ce51e12a9d8ec5"
+                "reference": "f2b99ba44e22a44fcf724affa53b5539b25fde90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/143024ab0e426285d3d9b7f6a3ce51e12a9d8ec5",
-                "reference": "143024ab0e426285d3d9b7f6a3ce51e12a9d8ec5",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/f2b99ba44e22a44fcf724affa53b5539b25fde90",
+                "reference": "f2b99ba44e22a44fcf724affa53b5539b25fde90",
                 "shasum": ""
             },
             "require": {
@@ -11642,7 +11645,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.38.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.39.0"
             },
             "funding": [
                 {
@@ -11658,7 +11661,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-24T21:06:51+00:00"
+            "time": "2022-04-21T18:16:11+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",

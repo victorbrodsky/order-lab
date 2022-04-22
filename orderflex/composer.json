@@ -46,7 +46,7 @@
         "symfony/twig-bundle": "^5.4",
         "symfony/validator": "^5.4",
         "symfony/web-link": "^5.4",
-        "symfony/webpack-encore-bundle": "^1.7",
+        "symfony/webpack-encore-bundle": "^1.14",
         "symfony/workflow": "^5.4",
         "symfony/yaml": "^5.4",
         "tattali/calendar-bundle": "^1.2",
