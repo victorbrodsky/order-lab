@@ -1192,7 +1192,6 @@ class UserServiceUtil {
 //            }
             $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
             if( $wcmc ) {
-                //exit('generateSiteParameters: No Institution: "WCM"');
                 $mapper = array(
                     'prefix' => 'App',
                     'bundleName' => 'UserdirectoryBundle',
@@ -1207,6 +1206,8 @@ class UserServiceUtil {
                     $params->setAutoAssignInstitution($autoAssignInstitution);
                     $logger->notice("Auto Assign Generated Institution: $autoAssignInstitution");
                 }
+            } else {
+                exit('generateSiteParameters: No Institution: "WCM"');
             }
         }
         $logger->notice("Finished with Auto Assign Institution");

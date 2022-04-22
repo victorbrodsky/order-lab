@@ -82,7 +82,7 @@ function prep(){
     #git pull
 
     #try to set permission
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
+    #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
     chown -R apache:apache $PROJECT_LOCAL_PATH/public
 
     if [[ $PARAM2 != "-nodb" ]]
@@ -122,9 +122,9 @@ function prep(){
     echo "*** Set permissions ***"
     chmod a+x $PROJECT_LOCAL_PATH
 
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/log
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
+    #chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
+    #chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/log
+    #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
 
     #chown -R apache:apache cache
     chown -R apache:apache $PROJECT_LOCAL_PATH/var/cache

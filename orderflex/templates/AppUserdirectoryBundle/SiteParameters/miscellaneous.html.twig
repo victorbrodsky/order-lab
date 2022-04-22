@@ -27,8 +27,10 @@
     <div id="miscellaneous" class="panel-collapse collapse">
         <div class="panel-body">
 
-                <h4 class="text-info">Populate Lists</h4>
+            <h4 class="text-info">Populate Lists</h4>
 
+            <div class="well">
+                <h4 class="text-info">Main Lists</h4>
                 <p>
                     <a general-data-confirm="Are you sure?"
                        href="{{ path('generate_country_city') }}">
@@ -68,59 +70,47 @@
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Call Log Book system."
                         href="{{ path('employees_generate_form_node_tree') }}">
-                        5a) Pre-generate form node tree fields for Call Log Book</a>
+                        5) Pre-generate form node tree fields for Call Log Book</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Dermatopathology Critical Result Notification."
                         href="{{ path('employees_generate_dermatopathology_form_node_tree') }}">
-                        5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification</a>
+                        6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate a new default Fellowship Type if it does not exist."
                         href="{{ path('fellapp_create_default_fellowship_type') }}">
-                        5c) Pre-generate a new Fellowship Type if it does not exist</a>
+                        7) Pre-generate a new Fellowship Type if it does not exist</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate a new Business/Vacation group if it does not exist."
                         href="{{ path('vacreq_generate_default_group') }}">
-                        5d) Pre-generate a new Business/Vacation group if it does not exist</a>
-                </p>
-
-                <p>
-                    <a  general-data-confirm="Are you sure? This action will pre-generate empty custom lists."
-                        href="{{ path('user_populate_platform_list_manager',{'withcustom': 'withcustomlist'}) }}">
-                        6) Pre-generate empty custom lists (Optional)</a>
+                        8) Pre-generate a new Business/Vacation group if it does not exist</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."
                         href="{{ path('user_populate_cron_jobs') }}">
-                        7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)</a>
+                        9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-generate status cron job (check for Maintenance)."
                         href="{{ path('user_populate_cron_status_jobs') }}">
-                        8) Pre-generate status cron job (check for Maintenance)</a>
-                </p>
-
-                <p>
-                    <a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."
-                        href="{{ path('user_populate_cron_status_test_jobs') }}">
-                        9) Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>
+                        10) Pre-generate status cron job (check for Maintenance)</a>
                 </p>
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will pre-initialize dashboard charts (assign roles, topics, types)."
                         href="{{ path('user_init_dashboard_charts') }}">
-                        10) Pre-initialize dashboard charts (assign roles, topics, types)</a>
+                        11) Pre-initialize dashboard charts (assign roles, topics, types)</a>
                 </p>
+                </div>
 
-
-                <hr>
+                {#<hr>#}
 
                 {#<p>#}
                     {#Populate Antibody List from SQL file:<br>#}
@@ -139,13 +129,13 @@
 
                 {#<hr>#}
 
+            <div class="well">
+                <h4 class="text-info">Optional Lists</h4>
                 <p>
                     <a general-data-confirm="Are you sure? This action will populate new users from a spreadsheet."
                        href="{{ path('generate_users') }}">Populate Users From Spreadsheet (this is optional and should only be run once upon system initialization).
                     </a>
                 </p>
-
-                <hr>
 
                 <p>
                     <a general-data-confirm="Are you sure? This action will generate metaphone key for all empty patients last, first, middle names."
@@ -153,40 +143,47 @@
                     </a>
                 </p>
 
-                <hr>
+                <p>
+                    <a  general-data-confirm="Are you sure? This action will pre-generate empty custom lists."
+                        href="{{ path('user_populate_platform_list_manager',{'withcustom': 'withcustomlist'}) }}">
+                        Pre-generate empty custom lists (Optional)</a>
+                </p>
+
+                {#This is generated in the main list generation#}
+                {#<a href="{{ path('generate_residencyspecialties') }}">#}
+                    {#Populate Residency Specialties List with Default Values#}
+                {#</a>#}
+
+                {#<h4 class="text-info">Stains</h4>#}
+                {#<p>#}
+                    {#<a href="{{ path('generate_stain') }}">Populate Stain List with Default Values from Excel sheet Stains.xlsm</a>#}
+                {#</p>#}
+
+                {#<p>#}
+                    {#<a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Spreadsheet</a>#}
+                {#</p>#}
+                {#<p>#}
+                    {#<a href="{{ path('stain_update_fulltitle') }}">Update Stain Titles</a>#}
+                {#</p>#}
+            </div>
+
+            <div class="well">
+                <h4 class="text-info">For Development Testing Only</h4>
 
                 <p><a  data-confirm="Are you sure? This action will create a Test Patient in Database."
                        href="{{ path('scan_testpatient_new') }}">Create a Test Patient</a>
                 </p>
 
-                <hr>
-
-                <a href="{{ path('generate_residencyspecialties') }}">
-                    Populate Residency Specialties List with Default Values
-                </a>
-
-                <hr>
-                <h4 class="text-info">Preset Form Node Tree</h4>
-                <p>
-                    <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_form_node_tree') }}">Preset Form Node Tree</a>
-                </p>
                 <p>
                     <a general-data-confirm="Are you sure?" href="{{ path('employees_generate_test_form_node_tree') }}">Preset Test Form Node Tree</a>
                 </p>
 
-                <hr>
-                <h4 class="text-info">Stains</h4>
                 <p>
-                    <a href="{{ path('generate_stain') }}">Populate Stain List with Default Values</a>
+                    <a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."
+                        href="{{ path('user_populate_cron_status_test_jobs') }}">
+                        Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>
                 </p>
-
-                <p>
-                    <a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Spreadsheet</a>
-                </p>
-
-                <p>
-                    <a href="{{ path('stain_update_fulltitle') }}">Update Stain Titles</a>
-                </p>
+            </div>
 
         </div>
     </div>
