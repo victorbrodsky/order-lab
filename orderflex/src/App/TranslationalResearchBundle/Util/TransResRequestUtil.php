@@ -1658,7 +1658,7 @@ class TransResRequestUtil
             $piEmailArr[] = $piEmail;
         } else {
             //return "There is no PI's email. Email has not been sent.";
-            throw new \Exception("There is no PI's email. Email has not been sent.");
+            //throw new \Exception("There is no PI's email. Email has not been sent.");
         }
         //Invoice's Billing Contact
         $invoiceBillingContact = $invoice->getBillingContact();
@@ -1669,8 +1669,13 @@ class TransResRequestUtil
             }
         }
 
+        $piEmailStr = "NoEmailProvided";
+        if( $piEmailArr && count($piEmailArr) > 0 ) {
+            $piEmailStr = implode(", ",$piEmailArr);
+        }
+
         $body = $body . $newline."To issue the invoice to ".$pi->getUsernameOptimal().
-            " at email ".implode(", ",$piEmailArr)." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
+            " at email ".$piEmailStr." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
 
         //3 To edit the invoice and generate an updated copy, please follow this link
         $editInvoiceUrl = $this->container->get('router')->generate(
