@@ -1283,7 +1283,7 @@
             {% else %}
                 {#No Titles#}
                 <div class="col-xs-1" align="right" title="Check to mark as Completed" data-toggle="tooltip">
-                    {% if formCalllogTask.status is defined %}
+                    {% if formCalllogTask.status is defined and not formCalllogTask.status.rendered %}
                         {{ form_widget(formCalllogTask.status) }}
                     {% endif %}
                 </div>

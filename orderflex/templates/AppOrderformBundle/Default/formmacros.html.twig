@@ -2157,7 +2157,9 @@
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
 
-        {{ form_widget(field.others) }}
+        {% if not field.others.rendered %}
+            {{ form_widget(field.others) }}
+        {% endif %}
 
         {{ formmacros.field(field.deceased) }}
         {{ formmacros.fieldDateLabel(field.deathdate,'regular-datepicker') }}
@@ -2169,7 +2171,7 @@
     {% import _self as formmacros %}
     {#{% if order.vars.value and order.vars.value.status == 'valid' %}#}
         {{ form_errors(order) }}
-        {% if order.others is defined %}
+        {% if order.others is defined and not order.others.rendered %}
             {{ form_widget(order.others) }}
         {% endif %}
         {% if order.source is defined %}
@@ -2186,7 +2188,11 @@
     {% import _self as formmacros %}
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
-        {{ form_widget(field.others) }}
+
+        {% if not field.others.rendered %}
+            {{ form_widget(field.others) }}
+        {% endif %}
+
         {{ formmacros.field(field.source) }}
         {{ formmacros.fieldDateLabel(field.admissiondate,'regular-datepicker') }}
         {{ formmacros.field(field.admissiontime) }}
@@ -2325,7 +2331,10 @@
     {% import _self as formmacros %}
     {% if field.vars.value.status == 'valid' %}
         {{ form_errors(field) }}
-        {{ form_widget(field.others) }}
+
+        {% if not field.others.rendered %}
+            {{ form_widget(field.others) }}
+        {% endif %}
 
         {% if field.outsidereport.order is defined %}
             {{ formmacros.fieldGeneralOrder(field.outsidereport.order,cycle) }}
