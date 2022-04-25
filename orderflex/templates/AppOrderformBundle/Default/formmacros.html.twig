@@ -1822,7 +1822,7 @@
             {% set fullfieldThis = fullfield %}
         {% endif %}
         {% set fieldStatus = "" %}
-        {% if fullfieldThis.others.status is defined %}
+        {% if fullfieldThis.others.status is defined and not fullfieldThis.others.status.rendered  %}
             {% set fieldStatus = " " ~ form_widget(fullfieldThis.others.status) %}
         {% endif %}
         {% set label = label ~ fieldStatus %}
