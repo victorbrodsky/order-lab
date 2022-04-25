@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+//use Symfony\Component\DependencyInjection\ContainerInterface;
 
 //NOTE: userWrapper used:
 //CourseTitleTree, Educational
@@ -54,9 +54,11 @@ class UserWrapperTransformer implements DataTransformerInterface
     private $bundleName;
 
     /**
+     * TODO: inject only service user_security_utility
+     *
      * @param ObjectManager $om
      */
-    public function __construct( EntityManagerInterface $em, ContainerInterface $serviceContainer, $user=null, $className=null, $bundleName=null )
+    public function __construct( EntityManagerInterface $em, $serviceContainer, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
         $this->serviceContainer = $serviceContainer;

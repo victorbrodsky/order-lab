@@ -287,6 +287,11 @@ class PatientController extends OrderAbstractController
         //image is an 'attachmentContainer' field in AccessionType, PartType, BlockType ans 'scan' field in SlideType
         //BUT images are shown only if the 'datastructure' parameters is set to 'datastructure'.
 
+        $showTreeDepth = 2; //true;
+        if( array_key_exists('show-tree-depth',$parameters) ) {
+            $showTreeDepth = $parameters['show-tree-depth'];
+        }
+
         $params = array(
             'type' => 'multy',
             'cycle' => "show",
@@ -296,7 +301,7 @@ class PatientController extends OrderAbstractController
             'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker'],
-            'show-tree-depth' => $parameters['show-tree-depth']
+            'show-tree-depth' => $showTreeDepth
         );
 
         //message fields
