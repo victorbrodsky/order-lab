@@ -655,14 +655,16 @@ class RequestController extends OrderAbstractController
 
         //$sitename = $this->getParameter('translationalresearch.sitename');
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('accessionType',$sitename);
-        $projectSpecialty = $project->getProjectSpecialty();
-        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
-        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-        if( !$siteParameter ) {
-            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-        }
-        $defaultAccessionType = $siteParameter->getAccessionType();
+//        $projectSpecialty = $project->getProjectSpecialty();
+//        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+//        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//        if( !$siteParameter ) {
+//            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//        }
+//        $defaultAccessionType = $siteParameter->getAccessionType();
+        $defaultAccessionType = $transresRequestUtil->getTransresSiteParameter('accessionType',$transresRequest);
         //echo "defaultAccessionType=".$defaultAccessionType."<br>";
+        //exit('222');
 
         //defaultAntibodyType
         $defaultAntibodyType = null;

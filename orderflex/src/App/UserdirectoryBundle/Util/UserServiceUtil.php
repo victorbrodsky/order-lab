@@ -1207,7 +1207,8 @@ class UserServiceUtil {
                     $logger->notice("Auto Assign Generated Institution: $autoAssignInstitution");
                 }
             } else {
-                exit('generateSiteParameters: No Institution: "WCM"');
+                //exit('generateSiteParameters: No Institution: "WCM"');
+                $logger->notice("Auto Assign Generated Institution is not set: No Institution found by abbreviation 'WCM'");
             }
         }
         $logger->notice("Finished with Auto Assign Institution");

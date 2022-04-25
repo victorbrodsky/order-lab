@@ -1379,23 +1379,25 @@ class TransResRequestUtil
         }
 
         //Get project's projectSpecialty
-        $project = $transresRequest->getProject();
-        $projectSpecialty = $project->getProjectSpecialty();
-        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+//        $project = $transresRequest->getProject();
+//        $projectSpecialty = $project->getProjectSpecialty();
+//        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
 
         //find site parameters
-        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-        if( !$siteParameter ) {
-            return $this->getDefaultStaticLogo();
-            //throw new \Exception("getInvoiceLogo: SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-        }
+//        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//        if( !$siteParameter ) {
+//            return $this->getDefaultStaticLogo();
+//            //throw new \Exception("getInvoiceLogo: SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//        }
 
-        if( $siteParameter ) {
+        //if( $siteParameter ) {
 
-            $getMethod = "get".$fieldName;
+            //$getMethod = "get".$fieldName;
             //echo "getMethod=$getMethod<br>";
 
-            $logoDocuments = $siteParameter->$getMethod();
+            //$logoDocuments = $siteParameter->$getMethod();
+            $logoDocuments = $this->getTransresSiteParameter($fieldName,$transresRequest);
+
             if( count($logoDocuments) > 0 ) {
                 $logoDocument = $logoDocuments->first(); //DESC order => the most recent first
                 $docPath = $logoDocument->getAbsoluteUploadFullPath();
@@ -1405,7 +1407,7 @@ class TransResRequestUtil
                     return $docPath;
                 }
             }
-        }
+        //}
 
         return $this->getDefaultStaticLogo();
     }
@@ -1560,7 +1562,6 @@ class TransResRequestUtil
     //Changing the status of request to "Approved/Ready for Invoicing" (approvedInvoicing) should send an email notification
     public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing=false) {
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
 
@@ -1829,21 +1830,29 @@ class TransResRequestUtil
             $projectSpecialty = $project->getProjectSpecialty();
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
 
-            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-            if( !$siteParameter ) {
-                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-            }
+//            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//            if( !$siteParameter ) {
+//                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//            }
         }
 
-        if( $siteParameter ) {
-            $emailBody = $siteParameter->getRequestCompletedNotifiedEmail();
+//        if( $siteParameter ) {
+//            $emailBody = $siteParameter->getRequestCompletedNotifiedEmail();
+//            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
+//        }
+        $emailBody = $this->getTransresSiteParameter('requestCompletedNotifiedEmail',$transresRequest);
+        if( $emailBody ) {
             $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
         } else {
             $emailBody = "Request ".$transresRequest->getOid()." status has been changed to 'Completed and Notified'";
         }
 
-        if( $siteParameter ) {
-            $emailSubject = $siteParameter->getRequestCompletedNotifiedEmailSubject();
+//        if( $siteParameter ) {
+//            $emailSubject = $siteParameter->getRequestCompletedNotifiedEmailSubject();
+//            $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,null);
+//        }
+        $emailSubject = $this->getTransresSiteParameter('requestCompletedNotifiedEmailSubject',$transresRequest);
+        if( $emailSubject ) {
             $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,null);
         } else {
             $emailSubject = "Request ".$transresRequest->getOid()." status has been changed to 'Completed and Notified'";
@@ -1882,10 +1891,10 @@ class TransResRequestUtil
         $projectSpecialty = $project->getProjectSpecialty();
         $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
 
-        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-        if( !$siteParameter ) {
-            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-        }
+//        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//        if( !$siteParameter ) {
+//            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//        }
 
         $invoice = new Invoice($user);
         $invoice->setStatus("Pending");
@@ -1898,11 +1907,15 @@ class TransResRequestUtil
         //$newline = "<br>";
 
         //pre-populate salesperson from default salesperson
-        if( $siteParameter->getInvoiceSalesperson() ) {
-            $salesperson = $siteParameter->getInvoiceSalesperson();
-            if( $salesperson ) {
-                $invoice->setSalesperson($salesperson);
-            }
+//        if( $siteParameter->getInvoiceSalesperson() ) {
+//            $salesperson = $siteParameter->getInvoiceSalesperson();
+//            if( $salesperson ) {
+//                $invoice->setSalesperson($salesperson);
+//            }
+//        }
+        $salesperson = $this->getTransresSiteParameter('invoiceSalesperson',$transresRequest);
+        if( $salesperson ) {
+            $invoice->setSalesperson($salesperson);
         }
 
         //pre-populate irbNumber
@@ -1918,9 +1931,9 @@ class TransResRequestUtil
         }
 
         ////////////// from //////////////
-        if( $siteParameter->getTransresFromHeader() ) {
-            $from = $siteParameter->getTransresFromHeader();
-        } else {
+        //$siteParameter->getTransresFromHeader()
+        $from = $this->getTransresSiteParameter('transresFromHeader',$transresRequest);
+        if( !$from ) {
             $from = "";
             //$from = "Weill Cornell Medicine".$newline."Department of Pathology and".$newline."Laboratory Medicine";
             //$from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
@@ -1951,9 +1964,8 @@ class TransResRequestUtil
         ////////////// EOF from //////////////
 
         //footer:
-        if( $siteParameter->getTransresFooter() ) {
-            $footer = $siteParameter->getTransresFooter();
-        } else {
+        $footer = $this->getTransresSiteParameter('transresFooter',$transresRequest);
+        if( !$footer ) {
             $footer = "";
             //$footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: TPR Billing)";
         }
@@ -2010,7 +2022,6 @@ class TransResRequestUtil
     }
     public function createSubmitNewInvoice( $transresRequest, $invoice, $updateWorkRequest=true ) {
         $transresUtil = $this->container->get('transres_util');
-        //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
@@ -2945,7 +2956,7 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
 
         $transresRequest = null;
-        $siteParameter = null;
+        //$siteParameter = null;
         $attachmentPath = null;
         $ccs = null;
 
@@ -2990,10 +3001,10 @@ class TransResRequestUtil
             $projectSpecialty = $project->getProjectSpecialty();
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
 
-            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
-            if( !$siteParameter ) {
-                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
-            }
+//            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+//            if( !$siteParameter ) {
+//                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+//            }
         }
 
         //Change Invoice status to Unpaid/Issued
@@ -3004,19 +3015,35 @@ class TransResRequestUtil
         $this->em->persist($invoice);
         $this->em->flush($invoice);
 
-        if( $siteParameter ) {
-            $emailBody = $siteParameter->getTransresNotificationEmail();
+        $emailSubject = NULL;
+        $emailBody = NULL;
+
+//        if( $siteParameter ) {
+//            $emailBody = $siteParameter->getTransresNotificationEmail();
+//            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,$invoice);
+//        }
+        $emailBody = $this->getTransresSiteParameter('transresNotificationEmail',$transresRequest);
+        if( $emailBody ) {
             $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,$invoice);
-        } else {
+        }
+        if( !$emailBody ) {
             $emailBody = "Please find the attached invoice in PDF.";
         }
 
-        if( $siteParameter ) {
-            $emailSubject = $siteParameter->getTransresNotificationEmailSubject();
+//        if( $siteParameter ) {
+//            $emailSubject = $siteParameter->getTransresNotificationEmailSubject();
+//            $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,$invoice);
+//        }
+        $emailSubject = $this->getTransresSiteParameter('transresNotificationEmailSubject',$transresRequest);
+        if( $emailSubject ) {
             $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,$invoice);
-        } else {
+        }
+        if( !$emailSubject ) {
             $emailSubject = "Pathology Translational Research Invoice ".$invoice->getOid();
         }
+        //echo "emailBody=$emailBody <br>";
+        //echo "emailSusbject=$emailSubject <br>";
+        //exit('111');
 
         // Verify that the updated (version greater than 1) invoice is sent with
         // an email body that makes it clear the attached invoice has been “updated”
@@ -3101,8 +3128,8 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
 
         $newline = "<br>";
-        $siteParameter = null;
-        $attachmentPath = null;
+        //$siteParameter = null;
+        //$attachmentPath = null;
         $salespersonEmail = null;
         $ccs = null;
 
@@ -3138,7 +3165,8 @@ class TransResRequestUtil
         $sendInvoiceByEmailUrl = $this->getSendInvoiceByEmailUrl($invoice);
 
         //$emailSubject = "Draft Translational Research Invoice for work request ".$transresRequest->getOid()." has been generated";
-        $emailSubject = "Draft Invoice for the ".$transresUtil->getBusinessEntityName()." for work request ".$transresRequest->getOid()." has been generated";
+        $emailSubject = "Draft Invoice for the ".$transresUtil->getBusinessEntityName().
+            " for work request ".$transresRequest->getOid()." has been generated";
 
         //Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:
         $body = "Please review the draft invoice pdf for work request ".$transresRequest->getOid()." by visiting:";
@@ -3320,8 +3348,7 @@ class TransResRequestUtil
 //    }
     public function getInvoicesInfosByRequest($transresRequest) {
         $admin = false;
-        $transresRequestUtil = $this->container->get('transres_request_util');
-        if( $transresRequestUtil->isUserHasInvoicePermission($invoice = NULL, "update") ) {
+        if( $this->isUserHasInvoicePermission($invoice = NULL, "update") ) {
             $admin = true;
         }
         return $transresRequest->getInvoicesInfosByRequest($admin);
@@ -5061,8 +5088,7 @@ class TransResRequestUtil
                 $showSubsidy = true;
             } else {
                 //negative subsidy: additional check if admin or technician
-                $transresRequestUtil = $this->container->get('transres_request_util');
-                if( $transresRequestUtil->isUserHasInvoicePermission($invoice, "update") ) {
+                if( $this->isUserHasInvoicePermission($invoice, "update") ) {
                     $showSubsidy = true;
                 }
             }
@@ -5394,8 +5420,7 @@ class TransResRequestUtil
             $showSubsidy = true;
         } else {
             //negative subsidy: additional check if admin or technician
-            $transresRequestUtil = $this->container->get('transres_request_util');
-            if( $transresRequestUtil->isUserHasInvoicePermission($invoice, "update") ) {
+            if( $this->isUserHasInvoicePermission($invoice, "update") ) {
                 $showSubsidy = true;
             }
         }
