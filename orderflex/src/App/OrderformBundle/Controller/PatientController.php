@@ -234,6 +234,8 @@ class PatientController extends OrderAbstractController
     }
     public function showPatient( $request, $id, $parameters ) {
 
+        ini_set('max_execution_time', 900); //900 seconds = 15 minutes;
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -274,7 +276,7 @@ class PatientController extends OrderAbstractController
 //            //echo "no increase memory_limit <br>";
 //            ini_set('memory_limit', '3072M');
 //        }
-        ini_set('memory_limit', '5120M');
+        ini_set('memory_limit', '2G');
 
 //        $showtreedepth = true; //show all levels
 //        if( array_key_exists('show-tree-depth',$parameters) ) {
