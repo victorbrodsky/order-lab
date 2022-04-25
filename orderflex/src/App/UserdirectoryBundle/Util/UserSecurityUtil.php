@@ -2720,7 +2720,7 @@ class UserSecurityUtil {
 
         //processor and division chief can perform any actions
         if(
-            $this->seAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
             $this->secAuth->isGranted('ROLE_cSCANORDER_PROCESSOR') ||
             $this->secAuth->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
         ) {
