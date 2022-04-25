@@ -424,6 +424,10 @@ class PatientController extends OrderAbstractController
             $entity->addEncounter($encounter); //add new encounter to patient
         }
 
+        $showTreeDepth = 2; //true;
+        if( array_key_exists('show-tree-depth',$parameters) ) {
+            $showTreeDepth = $parameters['show-tree-depth'];
+        }
 
         //////////////// params ////////////////
         $params = array(
@@ -435,7 +439,7 @@ class PatientController extends OrderAbstractController
             'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker'],
-            'show-tree-depth' => $parameters['show-tree-depth']
+            'show-tree-depth' => $showTreeDepth
         );
 
         $params['endpoint.system'] = true;
