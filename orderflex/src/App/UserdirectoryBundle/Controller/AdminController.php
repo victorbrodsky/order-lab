@@ -2766,14 +2766,14 @@ class AdminController extends OrderAbstractController
         //employmentType
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
         if( !$employmentType ) {
-            exit('No object: "Full Time"');
+            exit('No object EmploymentType: "Full Time"');
         }
         $pathDefaultGroup->setEmploymentType($employmentType);
 
         //locale: en_US - English (United States)
         $locale = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findOneByName("en_US");
         if( !$locale ) {
-            exit('No object: "en_US"');
+            exit('No object LocaleList: "en_US"');
         }
         $pathDefaultGroup->setLocale($locale);
 
@@ -2783,7 +2783,7 @@ class AdminController extends OrderAbstractController
             $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("English");
         }
         if( !$language ) {
-            exit('No object: "American English or English"');
+            exit('No object LanguageList: "American English or English"');
         }
         $pathDefaultGroup->addLanguage($language);
 
@@ -2799,7 +2799,7 @@ class AdminController extends OrderAbstractController
         //locationTypes
         $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
         if( !$locationType ) {
-            exit('No object: "Employee Office"');
+            exit('No object LocationTypeList: "Employee Office"');
         }
         $pathDefaultGroup->addLocationType($locationType);
 
@@ -2809,14 +2809,14 @@ class AdminController extends OrderAbstractController
         //city
         $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
         if( !$city ) {
-            exit('No object: "New York"');
+            exit('No object CityList: "New York"');
         }
         $pathDefaultGroup->setCity($city);
 
         //state
         $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
         if( !$state ) {
-            exit('No object: "New York"');
+            exit('No object States: "New York"');
         }
         $pathDefaultGroup->setState($state);
 
@@ -2826,7 +2826,7 @@ class AdminController extends OrderAbstractController
         //country
         $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
         if( !$country ) {
-            exit('No object: "United States"');
+            exit('No object Countries: "United States"');
         }
         $pathDefaultGroup->setCountry($country);
 

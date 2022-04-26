@@ -278,6 +278,7 @@ class EmailUtil {
         }
         catch( \TransportExceptionInterface $e ){
             $emailRes = $e->getMessage() ;
+            $logger->error($emailRes);
         }
 
         $msg = "sendEmail: From:".$fromEmail.
@@ -350,8 +351,13 @@ class EmailUtil {
         $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
+        //MAILER_DSN=smtp://****:****@smtp.office365.com:587?timeout=60
+        $timeoutStr = "";
+        $timeoutStr = "?timeout=60"; //timeout in seconds
+
         //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
-        $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port);
+        $transport = Transport::fromDsn('smtp://'.urlencode((string)$username).':'.urlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
+
         return $transport;
 
 //        //echo "before transport newInstance <br>";
