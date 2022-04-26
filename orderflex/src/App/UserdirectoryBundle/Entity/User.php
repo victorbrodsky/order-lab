@@ -470,7 +470,7 @@ class User extends UserBase {
     /**
      * @return mixed
      */
-    public function getPrimaryPublicUserId() : string
+    public function getPrimaryPublicUserId() : ?string
     {
         return $this->primaryPublicUserId;
     }
@@ -627,7 +627,7 @@ class User extends UserBase {
      *
      * @return integer 
      */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -1088,7 +1088,7 @@ class User extends UserBase {
 //        $this->lastFailedAttemptDate = $lastFailedAttemptDate;
 //    }
 
-    public function getUserIdentifier() : string
+    public function getUserIdentifier() : ?string
     {
         return $this->getUsername();
     }
@@ -1166,7 +1166,7 @@ class User extends UserBase {
         $this->setUsername($this->createUniqueUsername());
     }
 
-    public function createUniqueUsername() : string
+    public function createUniqueUsername() : ?string
     {
         $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
         if( $uniqueUsername ) {
@@ -1190,7 +1190,7 @@ class User extends UserBase {
     }
 
     //Get CWID
-    public function createCleanUsername($username) : string
+    public function createCleanUsername($username) : ?string
     {
         if( $username ) {
             //$username = trim((string)$username);
@@ -1201,7 +1201,7 @@ class User extends UserBase {
         return $usernameArr[0];
     }
 
-    public function getUsernamePrefix($username=null) : string
+    public function getUsernamePrefix($username=null) : ?string
     {
         if( !$username ) {
             $username = $this->getUsername();

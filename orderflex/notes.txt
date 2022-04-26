@@ -1020,3 +1020,7 @@ Fork:
 "friendsofsymfony/comment-bundle": "^4.0.x-dev", => "cinava/comment-bundle": "dev-master",
 
 "symfony/webpack-encore-bundle": "^1.7", => "symfony/webpack-encore-bundle": "^1.14",
+
+Check fellapp rec letters for felapp ID 1678:
+2c325726ff3bfc552d20f13df3b2cb9b7562c112
+

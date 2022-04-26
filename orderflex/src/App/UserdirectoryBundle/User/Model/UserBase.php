@@ -282,7 +282,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getId() : int
+    public function getId() : ?int
     {
         return $this->id;
     }
@@ -290,7 +290,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername() : string
+    public function getUsername() : ?string
     {
         return $this->username;
     }
@@ -298,7 +298,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsernameCanonical() : string
+    public function getUsernameCanonical() : ?string
     {
         return $this->usernameCanonical;
     }
