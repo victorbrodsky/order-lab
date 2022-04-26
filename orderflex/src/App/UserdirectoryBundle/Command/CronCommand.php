@@ -49,7 +49,8 @@ class CronCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:delete-orphan')
             ->setDescription('Cron job to delete orphan files older than 2 years of age');
@@ -64,7 +65,8 @@ class CronCommand extends Command {
     //Cron job to delete orphan files (uploaded manually but not attached to the application by clicking "Update" that are older than 2 years of age).
     // 2 years => 365*2 = 730 days
     //php app/console cron:delete-orphan --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
 

@@ -35,18 +35,21 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 //Role Voter check for the general roles such as ROLE_DASHBOARD_USER, ROLE_DASHBOARD_BANNED etc.: isGranted("ROLE_DASHBOARD_USER")
 class DashboardRoleVoter extends BaseRoleVoter {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'DASHBOARD';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'dashboard';  //Site abbreviation i.e. resapp, not residency-applications
     }
 
 
 
     //evaluate if this user has this role (attribute)
-    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) {
+    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) : bool
+    {
         //exit('dashboard voteOnSiteSpecificAttribute: attribute='.$attribute);
         //return false; //testing
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";

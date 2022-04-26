@@ -28,6 +28,7 @@ namespace App\TranslationalResearchBundle\Security\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -52,7 +53,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         $this->firewallName = 'ldap_translationalresearch_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
 
         //exit("onAuthenticationSuccess");
         //$em = $this->em;
@@ -119,7 +121,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
     }
 
     //overwrite parent basic user check for minimum role
-    public function checkBasicRole($user,$targetUrl=null) {
+    public function checkBasicRole($user,$targetUrl=null) : void
+    {
         //$subdomain = "order/";
         $subdomain = "";
         if( strpos((string)$targetUrl,$subdomain."translational-research/project/new") !== false ) {
@@ -130,7 +133,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         parent::checkBasicRole($user,$targetUrl);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
+    {
         return parent::onAuthenticationFailure($request,$exception);
     }
 

@@ -141,7 +141,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString() : string
     {
         return (string) $this->getUsername();
     }
@@ -149,7 +149,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function addRole($role)
+    public function addRole($role) : self
     {
         $role = strtoupper($role);
         if ($role === static::ROLE_DEFAULT) {
@@ -184,13 +184,14 @@ abstract class UserBase implements UserInterface #, GroupableInterface
      *
      * @final
      */
-    public function serialize()
+    public function serialize() : array
     {
         return serialize($this->__serialize());
     }
     //implements the Serializable interface, which is deprecated. Implement __serialize() and __unserialize()
     //public function __serialize(): array {}
-    public function __serialize() {
+    public function __serialize() : array
+    {
         return array(
             $this->password,
             $this->salt,
@@ -238,12 +239,13 @@ abstract class UserBase implements UserInterface #, GroupableInterface
      *
      * @final
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized) : void
     {
         $this->__unserialize(unserialize($serialized));
     }
     //public function __unserialize(array $data): void {}
-    public function __unserialize($data) {
+    public function __unserialize($data) : void
+    {
         //$this->unserialize($data);
         //$data = unserialize($serialized);
 
@@ -272,7 +274,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function eraseCredentials()
+    public function eraseCredentials() : void
     {
         $this->plainPassword = null;
     }
@@ -280,7 +282,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
@@ -288,7 +290,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername() : string
     {
         return $this->username;
     }
@@ -296,7 +298,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getUsernameCanonical()
+    public function getUsernameCanonical() : string
     {
         return $this->usernameCanonical;
     }
@@ -304,7 +306,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getSalt()
+    public function getSalt() : ?string
     {
         return $this->salt;
     }
@@ -312,7 +314,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getEmail()
+    public function getEmail() : ?string
     {
         return $this->email;
     }
@@ -320,7 +322,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getEmailCanonical()
+    public function getEmailCanonical() : ?string
     {
         return $this->emailCanonical;
     }
@@ -328,7 +330,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getPassword()
+    public function getPassword() : ?string
     {
         return $this->password;
     }
@@ -336,7 +338,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getPlainPassword()
+    public function getPlainPassword() : ?string
     {
         return $this->plainPassword;
     }
@@ -362,7 +364,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles() : array
     {
         $roles = $this->roles;
 
@@ -379,7 +381,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function hasRole($role)
+    public function hasRole($role) : bool
     {
         return in_array(strtoupper($role), $this->getRoles(), true);
     }
@@ -387,7 +389,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonExpired()
+    public function isAccountNonExpired() : bool
     {
         return true;
     }
@@ -395,7 +397,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked() : bool
     {
         return true;
     }
@@ -403,12 +405,12 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired() : bool
     {
         return true;
     }
 
-    public function isEnabled()
+    public function isEnabled() : bool
     {
         return $this->enabled;
     }
@@ -416,7 +418,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function isSuperAdmin()
+    public function isSuperAdmin() : bool
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
@@ -424,7 +426,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function removeRole($role)
+    public function removeRole($role) : self
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
@@ -437,7 +439,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setUsername($username)
+    public function setUsername($username) : ?self
     {
         $this->username = $username;
 
@@ -447,7 +449,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setUsernameCanonical($usernameCanonical)
+    public function setUsernameCanonical($usernameCanonical) : ?self
     {
         $this->usernameCanonical = $usernameCanonical;
 
@@ -457,7 +459,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setSalt($salt)
+    public function setSalt($salt) : self
     {
         $this->salt = $salt;
 
@@ -467,7 +469,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setEmail($email)
+    public function setEmail($email) : ?self
     {
         $this->email = $email;
 
@@ -477,7 +479,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setEmailCanonical($emailCanonical)
+    public function setEmailCanonical($emailCanonical) : self
     {
         $this->emailCanonical = $emailCanonical;
 
@@ -487,7 +489,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setEnabled($boolean)
+    public function setEnabled($boolean) : self
     {
         $this->enabled = (bool) $boolean;
 
@@ -497,7 +499,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setPassword($password)
+    public function setPassword($password) : self
     {
         $this->password = $password;
 
@@ -507,7 +509,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setSuperAdmin($boolean)
+    public function setSuperAdmin($boolean) : self
     {
         if (true === $boolean) {
             $this->addRole(static::ROLE_SUPER_ADMIN);
@@ -521,7 +523,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setPlainPassword($password)
+    public function setPlainPassword($password) : self
     {
         $this->plainPassword = $password;
 
@@ -531,7 +533,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setLastLogin(\DateTime $time = null)
+    public function setLastLogin(\DateTime $time = null) : self
     {
         $this->lastLogin = $time;
 
@@ -541,7 +543,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setConfirmationToken($confirmationToken)
+    public function setConfirmationToken($confirmationToken) : self
     {
         $this->confirmationToken = $confirmationToken;
 
@@ -551,7 +553,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setPasswordRequestedAt(\DateTime $date = null)
+    public function setPasswordRequestedAt(\DateTime $date = null) : self
     {
         $this->passwordRequestedAt = $date;
 
@@ -571,7 +573,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function isPasswordRequestNonExpired($ttl)
+    public function isPasswordRequestNonExpired($ttl) : bool
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
                $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
@@ -580,7 +582,7 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles) : self
     {
         $this->roles = array();
 
@@ -594,10 +596,10 @@ abstract class UserBase implements UserInterface #, GroupableInterface
     /**
      * {@inheritdoc}
      */
-    public function canonicalize($string)
+    public function canonicalize($string) : ?string
     {
         if (null === $string) {
-            return;
+            return null;
         }
 
         $encoding = mb_detect_encoding($string);

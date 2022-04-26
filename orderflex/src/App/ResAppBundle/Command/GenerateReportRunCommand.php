@@ -50,7 +50,8 @@ class GenerateReportRunCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('resapp:generatereportrun')
             ->setDescription('Try to generate resident application report')
@@ -63,7 +64,8 @@ class GenerateReportRunCommand extends Command {
     }
 
     //php bin/console resapp:generatereportrun
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
         $logger->notice("Run Command: try run");

@@ -37,20 +37,24 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class CrnPermissionVoter extends BasePermissionVoter //BasePermissionVoter   //PatientHierarchyVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'CRN';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'crn';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
 
-    protected function canEdit($subject, TokenInterface $token) {
+    protected function canEdit($subject, TokenInterface $token) : bool
+    {
         return false;
     }
 
-    protected function canChangeStatus($subject, TokenInterface $token) {
+    protected function canChangeStatus($subject, TokenInterface $token) : bool
+    {
         return false;
     }
 

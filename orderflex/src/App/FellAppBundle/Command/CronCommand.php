@@ -50,14 +50,16 @@ class CronCommand extends Command {
     }
 
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:importfellapp')
             ->setDescription('Import and Populate Fellowship Applications from Google Form');
     }
 
     //php bin/console cron:importfellapp --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
 

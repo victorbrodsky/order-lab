@@ -47,14 +47,16 @@ class TestCommand extends Command
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('app:simple-tests')
             ->setDescription('Run simple tests');
     }
 
     //php bin/console app:simple-tests --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
 

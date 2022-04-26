@@ -28,6 +28,7 @@ namespace App\DeidentifierBundle\Security\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -52,7 +53,8 @@ class DeidentifierLoginSuccessHandler extends LoginSuccessHandler {
         $this->firewallName = 'ldap_deidentifier_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
 
 //        $user = $token->getUser();
 //        echo "user ok=".$user."<br>";
@@ -62,7 +64,8 @@ class DeidentifierLoginSuccessHandler extends LoginSuccessHandler {
         return parent::onAuthenticationSuccess($request,$token);
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
+    {
         //exit("auth failed");
         return parent::onAuthenticationFailure($request,$exception);
     }

@@ -34,16 +34,19 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class FellAppPermissionVoter extends BasePermissionVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'FELLAPP';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'fellapp';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
 
-    protected function canView($subject, TokenInterface $token) {
+    protected function canView($subject, TokenInterface $token) : bool
+    {
         //exit('fellapp canView');
 
         //can view if user is an interviewer or observer
@@ -69,7 +72,8 @@ class FellAppPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    protected function canEdit($subject, TokenInterface $token) {
+    protected function canEdit($subject, TokenInterface $token) : bool
+    {
         //exit('fellapp canEdit');
 
         if( parent::canEdit($subject,$token) ) {
@@ -85,7 +89,8 @@ class FellAppPermissionVoter extends BasePermissionVoter
     }
 
     //additional check for fellapp permission to access this object: user is Observers/Interviewers or hasSameFellowshipTypeId
-    public function fellappAdditionalCheck($subject,$token) {
+    public function fellappAdditionalCheck($subject,$token) : bool
+    {
         if( is_object($subject) ) {
             $user = $token->getUser();
             $fellappUtil = $this->container->get('fellapp_util');
@@ -99,7 +104,8 @@ class FellAppPermissionVoter extends BasePermissionVoter
         return true;
     }
 
-    public function isObserverOrInterviewer($subject,$token) {
+    public function isObserverOrInterviewer($subject,$token) : bool
+    {
         if( is_object($subject) ) {
             $user = $token->getUser();
 

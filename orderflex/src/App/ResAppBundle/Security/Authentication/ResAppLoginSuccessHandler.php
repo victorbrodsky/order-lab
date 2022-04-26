@@ -28,6 +28,7 @@ namespace App\ResAppBundle\Security\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -51,7 +52,8 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
         $this->firewallName = 'ldap_resapp_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
         if( $this->secAuth->isGranted('ROLE_RESAPP_ADMIN') ) {
@@ -80,13 +82,14 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
         return $redirectResponse;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
     {
         return parent::onAuthenticationFailure($request,$exception);
     }
 
     //check "Residency Interviewer" is the highest role into the residency site
-    public function isResidencyInterviewerHighestRole($user) {
+    public function isResidencyInterviewerHighestRole($user) : mixed
+    {
 
         //1) check if the user has role "Residency Interviewer" with permission: object="Interview", action="create"
         $resappRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "Interview", "create" );
@@ -108,7 +111,8 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
         return false;
     }
 
-    public function getHighestRoleLevel($user) {
+    public function getHighestRoleLevel($user) : mixed
+    {
         $level = 0;
         foreach( $user->getRoles() as $roleName ) {
             $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);

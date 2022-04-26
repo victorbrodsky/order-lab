@@ -35,11 +35,13 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class UserPermissionVoter extends BasePermissionVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'USERDIRECTORY';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'employees';     //Site abbreviation (i.e. fellapp), not site name (i.e. fellowship-applications)
     }
 

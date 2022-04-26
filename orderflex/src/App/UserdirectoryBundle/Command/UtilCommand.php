@@ -49,7 +49,8 @@ class UtilCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             ->setName('cron:util-command')
             ->setDescription('Some utility command');
@@ -58,7 +59,8 @@ class UtilCommand extends Command {
 
     //Cron job to periodically overnight copy data
     //php app/console cron:util-command --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         //$logger = $this->container->get('logger');

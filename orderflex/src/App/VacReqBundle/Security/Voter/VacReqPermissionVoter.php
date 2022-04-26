@@ -40,7 +40,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
     const CHANGESTATUS_CARRYOVER = 'changestatus-carryover';
     // if the attribute isn't one we support, return false
-    protected function supportAttribute($attribute, $subject) {
+
+    protected function supportAttribute($attribute, $subject) : bool
+    {
         if( parent::supportAttribute($attribute, $subject) ) {
             return true;
         } else {
@@ -51,7 +53,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 
         return false;
     }
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
+    {
         if( parent::voteOnAttribute($attribute, $subject, $token) ) {
             return true;
         } else {
@@ -65,18 +69,21 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     }
 
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         //exit('111');
         return 'VACREQ';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'vacreq';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
 
 
-    protected function canView($subject, TokenInterface $token) {
+    protected function canView($subject, TokenInterface $token) : bool
+    {
         //echo "canView: ... <br>";
         if( parent::canView($subject, $token) ) {
             //echo "canView: parent YES<br><br>";
@@ -99,7 +106,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return $this->checkLocalPermission($subject, $token);
     }
 
-    protected function canEdit($subject, TokenInterface $token) {
+    protected function canEdit($subject, TokenInterface $token) : bool
+    {
         //echo "canEdit: ... <br>";
         if( parent::canEdit($subject, $token) ) {
             return true;
@@ -124,7 +132,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     }
 
     //status change: user can view and update the subject
-    protected function canChangeStatus($subject, TokenInterface $token) {
+    protected function canChangeStatus($subject, TokenInterface $token) : bool
+    {
         //exit("canChangeStatus: ...");
 
         //ROLE_PLATFORM_DEPUTY_ADMIN can do anything
@@ -180,7 +189,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return false;
     }
 
-    public function canChangeCarryoverStatus($subject, TokenInterface $token) {
+    public function canChangeCarryoverStatus($subject, TokenInterface $token) : bool
+    {
         //exit("canChangeCarryoverStatus: ...");
         if( $this->canChangeStatus($subject, $token) ) {
             $user = $token->getUser();
@@ -213,7 +223,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return false;
     }
 
-    private function checkLocalPermission($subject, TokenInterface $token) {
+    private function checkLocalPermission($subject, TokenInterface $token) : bool
+    {
 //        $user = $token->getUser();
 //        if( !$user instanceof User ) {
 //            return false;
@@ -234,7 +245,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
     }
 
     //check if approver with the same institution: compare subject->getInstitution() and user's approver role->getInstitution()
-    private function hasApproverRoleInstitution( $subject, TokenInterface $token, $tentative=false ) {
+    private function hasApproverRoleInstitution( $subject, TokenInterface $token, $tentative=false ) : bool
+    {
         $user = $token->getUser();
         if( !$user instanceof User ) {
             return false;

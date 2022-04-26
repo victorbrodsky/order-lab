@@ -35,18 +35,21 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class DashboardPermissionVoter extends BasePermissionVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'DASHBOARD';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'dashboard';  //Site abbreviation
     }
 
     //isGranted("read", "Accession") or isGranted("read", $accession)
     //$attribute: string i.e. "read"
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function supports($attribute, $subject) {
+    protected function supports($attribute, $subject) : bool
+    {
         //return false; //testing
         //return true; //testing
 
@@ -134,7 +137,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
     //Can view according to chart's: accessRoles, denyRoles and denyUsers
     //usage: $this->get('security.authorization_checker')->isGranted('view', $chart)
-    protected function canView($subject, TokenInterface $token) {
+    protected function canView($subject, TokenInterface $token) : bool
+    {
         //exit('dashboard canView');
 
         //return true; //testing
@@ -197,7 +201,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    public function userIsDeniedByChart($user,$chart) {
+    public function userIsDeniedByChart($user,$chart) : bool
+    {
         //return true; //testing
         if( $chart->getDenyUsers()->contains($user) ) {
             //exit("chart has DenyUsers");
@@ -207,7 +212,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
         return false;
     }
-    public function userIsDeniedByTopic($user,$chart) {
+    public function userIsDeniedByTopic($user,$chart) : bool
+    {
         foreach( $chart->getTopics() as $topic ) {
             if( $topic->getDenyUsers()->contains($user) ) {
                 //exit("chart has DenyUsers");
@@ -223,12 +229,14 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
         return false;
     }
-    public function userIsDeniedByParentTopics($user,$chart,$topic) {
+    public function userIsDeniedByParentTopics($user,$chart,$topic) : bool
+    {
         //return true;
         return false;
     }
 
-    public function userHasChartDenyRoles($user,$chart) {
+    public function userHasChartDenyRoles($user,$chart) : bool
+    {
         $denyRoles = $chart->getDenyRoles();
         //$userRoles = $user->getSiteRoles('dashboard');
         $securityUtil = $this->container->get('user_security_utility');
@@ -247,7 +255,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         }
         return false;
     }
-    public function userHasTopicDenyRoles($user,$chart) {
+    public function userHasTopicDenyRoles($user,$chart) : bool
+    {
         foreach( $chart->getTopics() as $topic ) {
             $denyRoles = $topic->getDenyRoles();
             //$userRoles = $user->getSiteRoles('dashboard');
@@ -271,7 +280,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
     }
 
 
-    public function userHasChartAccessRoles($user,$chart) {
+    public function userHasChartAccessRoles($user,$chart) : bool
+    {
         //return true; //testing
 
         $securityUtil = $this->container->get('user_security_utility');
@@ -311,7 +321,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    public function userHasTopicAccessRoles($user,$chart) {
+    public function userHasTopicAccessRoles($user,$chart) : bool
+    {
         $securityUtil = $this->container->get('user_security_utility');
 
         $sitename = $this->getSitename();
@@ -349,14 +360,16 @@ class DashboardPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    public function setPermissionErrorSession($chart,$error) {
+    public function setPermissionErrorSession($chart,$error) : void
+    {
         //Use session to store error attribute
         $session = $this->container->get('session');
         $session->set('permission-error-'.$chart->getId(), $error);
     }
 
 
-    protected function canEdit($subject, TokenInterface $token) {
+    protected function canEdit($subject, TokenInterface $token) : bool
+    {
         //return true; //testing
         //exit('dashboard canEdit');
 
@@ -376,7 +389,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
     }
 
     //additional check for dashboard permission
-    public function dashboardAdditionalCheck($subject,$token) {
+    public function dashboardAdditionalCheck($subject,$token) : bool
+    {
         return true;
 
         if( is_object($subject) ) {

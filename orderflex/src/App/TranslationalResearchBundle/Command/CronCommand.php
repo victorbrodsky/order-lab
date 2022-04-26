@@ -41,14 +41,16 @@ class CronCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:invoice-reminder-emails')
             ->setDescription('Translational Research Unpaid Invoice Reminder Email');
     }
 
     //php bin/console cron:invoice-reminder-emails --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
         //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');

@@ -40,11 +40,13 @@ use App\UserdirectoryBundle\Entity\User;
 class TranslationalResearchPermissionVoter extends BasePermissionVoter //BasePermissionVoter   //PatientHierarchyVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'TRANSRES';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'translationalresearch';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 

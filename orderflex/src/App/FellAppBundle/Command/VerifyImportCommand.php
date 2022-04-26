@@ -50,13 +50,15 @@ class VerifyImportCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this->setDescription('Verify Importing and Populating Fellowship Applications from Google Form');
     }
 
     //php bin/console cron:verifyimport --env=prod
     //runs every 6 hours
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 

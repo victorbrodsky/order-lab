@@ -82,7 +82,8 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
      * used for the request. Returning false will cause this authenticator
      * to be skipped.
      */
-    public function supports(Request $request) {
+    public function supports(Request $request) : bool
+    {
         // GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
 
@@ -129,7 +130,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         return false;
     }
 
-    protected function getLoginUrl()
+    protected function getLoginUrl() : string
     {
         $url = $this->container->get('router')->generate('directory_login'); //employees_login
         return $url;
@@ -138,7 +139,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
     /**
      * Called when authentication is needed, but it's not sent
      */
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null) : RedirectResponse
     {
         $route = $request->attributes->get('_route');
         //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
@@ -167,7 +168,8 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         return new RedirectResponse($url);
     }
 
-    public function getSiteNameByRoute($route) {
+    public function getSiteNameByRoute($route) : string
+    {
         //sitename is the first string before '_';
         //$sitenameArr = explode('_',$route);
         //return $sitenameArr[0];
@@ -228,7 +230,8 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
      */
-    public function getCredentials(Request $request) {
+    public function getCredentials(Request $request) : mixed
+    {
 
         //dump($request->request);
 
@@ -249,7 +252,7 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
     //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
     // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
-    public function getUser($credentials, UserProviderInterface $userProvider)
+    public function getUser($credentials, UserProviderInterface $userProvider) : mixed
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -279,28 +282,28 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
         $this->passwordToken = NULL;
         return NULL;
     }
-    public function getUserOrig($credentials, UserProviderInterface $userProvider)
-    {
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if( !$this->csrfTokenManager->isTokenValid($token) ) {
-            throw new InvalidCsrfTokenException();
-        }
-
-        $this->userProvider = $userProvider;
-        $username = $credentials['username'];
-
-        if( null === $username ) {
-            return false;
-        }
-
-        $authUtil = $this->container->get('authenticator_utility');
-        $user = $authUtil->findUserByUsername($username);
-
-        return $user;
-    }
+//    public function getUserOrig($credentials, UserProviderInterface $userProvider)
+//    {
+//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+//        if( !$this->csrfTokenManager->isTokenValid($token) ) {
+//            throw new InvalidCsrfTokenException();
+//        }
+//
+//        $this->userProvider = $userProvider;
+//        $username = $credentials['username'];
+//
+//        if( null === $username ) {
+//            return false;
+//        }
+//
+//        $authUtil = $this->container->get('authenticator_utility');
+//        $user = $authUtil->findUserByUsername($username);
+//
+//        return $user;
+//    }
 
     //Just check if passwordToken is set by getUser()
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user) : bool
     {
         if( $this->passwordToken ) {
             return true;
@@ -308,35 +311,38 @@ class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator {
 
         return false;
     }
-    public function checkCredentialsOrig($credentials, UserInterface $user) {
-        //Request $request, $username, $password, $providerKey
-        $request = null;
-        $username = $credentials['username'];
-        $password = $credentials['password'];
-        $providerKey = 'ldap_employees_firewall'; //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
-        $unauthenticatedToken = new UsernamePasswordToken(
-            $username,
-            $password,
-            $providerKey
-        );
-        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
-        if( $usernamePasswordToken ) {
-            return true;
-        }
-        return false;
-    }
+//    public function checkCredentialsOrig($credentials, UserInterface $user)
+//    {
+//        //Request $request, $username, $password, $providerKey
+//        $request = null;
+//        $username = $credentials['username'];
+//        $password = $credentials['password'];
+//        $providerKey = 'ldap_employees_firewall'; //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
+//        $unauthenticatedToken = new UsernamePasswordToken(
+//            $username,
+//            $password,
+//            $providerKey
+//        );
+//        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
+//        if( $usernamePasswordToken ) {
+//            return true;
+//        }
+//        return false;
+//    }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) : Response
+    {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
         return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }
-
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+    
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
+    {
         $authenticationSuccess = $this->container->get('employees_authentication_handler');
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
     }
 
-    public function supportsRememberMe()
+    public function supportsRememberMe() : bool
     {
         return true;
     }

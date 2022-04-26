@@ -40,11 +40,13 @@ use App\UserdirectoryBundle\Entity\User;
 class DeidentifierPermissionVoter extends BasePermissionVoter //BasePermissionVoter   //PatientHierarchyVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'DEIDENTIFICATOR';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'deidentifier';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 

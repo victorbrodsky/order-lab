@@ -50,7 +50,8 @@ class GenerateTestReportRunCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('fellapp:generate-test-reportrun')
             ->setDescription('Try to generate test fellowship application report')
@@ -63,7 +64,8 @@ class GenerateTestReportRunCommand extends Command {
     }
 
     //php bin/console fellapp:generate-test-reportrun
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
         $logger->notice("Run Command: try run fellapp:generate-test-reportrun");

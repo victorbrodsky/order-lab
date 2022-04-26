@@ -48,7 +48,8 @@ class SwiftCronCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:swift')
             ->setDescription('Cron job to send emails from file spool');
@@ -56,7 +57,8 @@ class SwiftCronCommand extends Command {
 
 
     //php bin/console cron:swift --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         //use custom sendSpooledEmails (mainly because of the google auth)
         $emailUtil = $this->container->get('user_mailer_utility');

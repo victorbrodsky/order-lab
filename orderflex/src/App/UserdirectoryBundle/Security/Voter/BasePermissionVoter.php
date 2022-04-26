@@ -62,7 +62,8 @@ abstract class BasePermissionVoter extends Voter {
     //isGranted("read", "Accession") or isGranted("read", $accession)
     //$attribute: string i.e. "read"
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function supports($attribute, $subject) {
+    protected function supports($attribute, $subject) : bool
+    {
         //return false; //testing
         //exit('base: support');
 
@@ -111,7 +112,8 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
     // if the attribute isn't one we support, return false
-    protected function supportAttribute($attribute, $subject) {
+    protected function supportAttribute($attribute, $subject) : bool
+    {
         $attribute = $this->convertAttribute($attribute);
         if( in_array($attribute, array(self::CREATE, self::READ, self::UPDATE, self::CHANGESTATUS)) ) {
             //exit("Not supported attribute=".$attribute."<br>");
@@ -126,7 +128,7 @@ abstract class BasePermissionVoter extends Voter {
 
 
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
     {
 
         $attribute = $this->convertAttribute($attribute);
@@ -158,7 +160,7 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
 
-    protected function canView($subject, TokenInterface $token)
+    protected function canView($subject, TokenInterface $token) : bool
     {
         //echo "base canView? <br>";
         //exit('base canView?');
@@ -224,7 +226,7 @@ abstract class BasePermissionVoter extends Voter {
     }
 
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function canEdit($subject, TokenInterface $token)
+    protected function canEdit($subject, TokenInterface $token) : bool
     {
         //echo "Base canEdit? <br>";
         //echo "subject=".$subject."<br>";
@@ -292,7 +294,8 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
 
-    protected function canCreate($subject, TokenInterface $token) {
+    protected function canCreate($subject, TokenInterface $token) : bool
+    {
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
@@ -335,7 +338,8 @@ abstract class BasePermissionVoter extends Voter {
     }
 
     //status change: user can view and update the subject
-    protected function canChangeStatus($subject, TokenInterface $token) {
+    protected function canChangeStatus($subject, TokenInterface $token) : bool
+    {
 
         //exit("canChangeStatus: not implemented yet: overwrite in the particular permission voter");
 
@@ -354,7 +358,8 @@ abstract class BasePermissionVoter extends Voter {
 
 
     //check if subject is under user's permitted/collaborated institutions
-    protected function checkPermittedInstitutions( $subject, $user ) {
+    protected function checkPermittedInstitutions( $subject, $user ) : bool
+    {
 
         //do not use permitted institution scope or user's "Order data visible to members of (Institutional PHI Scope):" should match role permission's "Institution(s):"
         return true;
@@ -380,7 +385,8 @@ abstract class BasePermissionVoter extends Voter {
         return true;
     }
 
-    protected function isAuthor( $subject, TokenInterface $token ) {
+    protected function isAuthor( $subject, TokenInterface $token ) : bool
+    {
         //echo "isAuthor: ...<br>";
         $user = $token->getUser();
         if( !$user instanceof User ) {
@@ -399,7 +405,8 @@ abstract class BasePermissionVoter extends Voter {
         return false;
     }
 
-    protected function getClassName($subject) {
+    protected function getClassName($subject) : mixed
+    {
 
         if( is_object($subject) ) {
             //get object class name
@@ -412,7 +419,7 @@ abstract class BasePermissionVoter extends Voter {
         return $className;
     }
 
-    protected function convertAttribute($attribute)
+    protected function convertAttribute($attribute) : mixed
     {
         switch($attribute) {
 

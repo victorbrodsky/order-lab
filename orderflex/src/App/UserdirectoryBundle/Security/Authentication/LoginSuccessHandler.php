@@ -29,6 +29,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -71,7 +72,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->firewallName = 'ldap_employees_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
 
         //testing
         //return new RedirectResponse($this->router->generate('employees_initial_configuration'));
@@ -243,7 +245,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
     }
 
-    public function checkBasicRole($user,$targetUrl=null) {
+    public function checkBasicRole($user,$targetUrl=null) : void
+    {
         if( !$this->secAuth->isGranted($this->roleUser)  ) {
             //echo "assign role UNAPPROVED user <br>";
             //exit('UNAPPROVED user');
@@ -251,7 +254,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         }
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
     {
         //error_log('You are out!');
         //echo "user is not ok!. Exception=<br>".$exception."<br>";

@@ -48,7 +48,8 @@ class StatusCronCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('console.command')
             //->setCommand('cron:status')
@@ -57,7 +58,8 @@ class StatusCronCommand extends Command {
 
     
     //php bin/console cron:status --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
         $userServiceUtil = $this->container->get('user_service_utility');
         $res = $userServiceUtil->checkStatus();
         $output->writeln($res);

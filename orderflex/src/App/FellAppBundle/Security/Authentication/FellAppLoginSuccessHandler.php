@@ -28,6 +28,7 @@ namespace App\FellAppBundle\Security\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -51,7 +52,8 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         $this->firewallName = 'ldap_fellapp_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
         if( $this->secAuth->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -80,7 +82,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         return $redirectResponse;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
     {
         return parent::onAuthenticationFailure($request,$exception);
     }
@@ -108,7 +110,8 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         return false;
     }
 
-    public function getHighestRoleLevel($user) {
+    public function getHighestRoleLevel($user) : mixed
+    {
         $level = 0;
         foreach( $user->getRoles() as $roleName ) {
             $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);

@@ -50,7 +50,8 @@ class GenerateReportCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('fellapp:generatereport')
             ->setDescription('Import and Populate Fellowship Applications from Google Form')
@@ -63,7 +64,8 @@ class GenerateReportCommand extends Command {
     }
 
     //php app/console fellapp:generatereport fellappid
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $id = $input->getArgument('id');
 

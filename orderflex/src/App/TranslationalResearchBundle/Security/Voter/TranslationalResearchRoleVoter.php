@@ -39,18 +39,20 @@ use App\UserdirectoryBundle\Entity\User;
 
 class TranslationalResearchRoleVoter extends BaseRoleVoter {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string {
         return 'TRANSRES';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'translationalresearch';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
 
     //Role Voter: attribute is ROLE_...
     //Vote if a user has a general site role
-    protected function siteSpecificRoleSupport($attribute, $subject, $sitename, $siteRoleBase) {
+    protected function siteSpecificRoleSupport($attribute, $subject, $sitename, $siteRoleBase) : bool
+    {
 
         //echo "DeidentifierVoter: support <br>";
         //echo "TRANSRES: ".$sitename.': siteSpecificRoleSupport: attribute='.$attribute."<br>";
@@ -75,7 +77,8 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
 
 
     //evaluate if this user has this role (attribute)
-    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) {
+    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) : bool
+    {
         //exit('voteOnSiteSpecificAttribute: attribute='.$attribute);
         //return false; //testing
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";

@@ -56,7 +56,8 @@ abstract class BaseRoleVoter extends Voter {
     //isGranted("ROLE_DEIDENTIFICATOR_USER") or isGranted("ROLE_DEIDENTIFICATOR_BANNED")
     //$attribute: ROLE_...
     //$subject: null
-    protected function supports($attribute, $subject) {
+    protected function supports($attribute, $subject) : bool
+    {
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();
@@ -74,7 +75,8 @@ abstract class BaseRoleVoter extends Voter {
     }
 
     //evaluate if this user has this role (attribute)
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) {
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
+    {
 
         //return false; //testing
 
@@ -89,7 +91,8 @@ abstract class BaseRoleVoter extends Voter {
 
     //Role Voter: attribute is ROLE_...
     //Vote if a user has a general site role
-    protected function siteSpecificRoleSupport($attribute, $subject, $sitename, $siteRoleBase) {
+    protected function siteSpecificRoleSupport($attribute, $subject, $sitename, $siteRoleBase) : bool
+    {
 
         //echo "DeidentifierVoter: support <br>";
         //echo $sitename.': siteSpecificRoleSupport: attribute='.$attribute."<br>";
@@ -112,7 +115,8 @@ abstract class BaseRoleVoter extends Voter {
     }
 
     //evaluate if this user has this role (attribute)
-    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) {
+    public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) : bool
+    {
         //exit('voteOnSiteSpecificAttribute');
         //return false; //testing
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";
@@ -185,7 +189,8 @@ abstract class BaseRoleVoter extends Voter {
     }
 
 
-    public function hasGeneralSiteRole( $user, $sitename ) {
+    public function hasGeneralSiteRole( $user, $sitename ) : bool
+    {
 
         foreach( $user->getRoles() as $roleStr ) {
             //echo 'roleStr='.$roleStr."<br>";

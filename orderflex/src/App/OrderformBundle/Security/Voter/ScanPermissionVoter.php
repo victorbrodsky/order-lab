@@ -54,11 +54,13 @@ class ScanPermissionVoter extends BasePermissionVoter {
     const SIGN = 'sign';
 
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'SCANORDER';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'scan';  //Site abbreviation i.e. fellapp, not fellowship-applications
     }
 
@@ -69,7 +71,7 @@ class ScanPermissionVoter extends BasePermissionVoter {
     //isChief - service chief can perform any actions if the objects under his/her service scope
 
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function canView($subject, TokenInterface $token)
+    protected function canView($subject, TokenInterface $token) : bool
     {
         //echo "subject=".$subject."<br>";
         //exit('Scan PermissionVoter: canView');
@@ -89,7 +91,7 @@ class ScanPermissionVoter extends BasePermissionVoter {
     }
 
     //$subject: string (i.e. "FellowshipApplication") or entity
-    protected function canEdit($subject, TokenInterface $token)
+    protected function canEdit($subject, TokenInterface $token) : bool
     {
         //exit('2');
         if( parent::canEdit($subject,$token) ) {
@@ -133,7 +135,8 @@ class ScanPermissionVoter extends BasePermissionVoter {
 
 
 
-    protected function isOwner($subject, TokenInterface $token) {
+    protected function isOwner($subject, TokenInterface $token) : bool
+    {
 
         if( !method_exists($subject, "getProvider") ){
             return false;

@@ -40,14 +40,16 @@ class ExpirationCronCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:expiration-reminder-emails')
             ->setDescription('Translational Research Project Expiration Reminder Email');
     }
 
     //php bin/console cron:expiration-reminder-emails --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
 

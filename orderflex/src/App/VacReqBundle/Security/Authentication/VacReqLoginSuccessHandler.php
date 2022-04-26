@@ -28,6 +28,7 @@ namespace App\VacReqBundle\Security\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -53,7 +54,8 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
         $this->firewallName = 'ldap_vacreq_firewall';
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response
+    {
         //return parent::onAuthenticationSuccess($request,$token);
 
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
@@ -97,7 +99,8 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
         return $redirectResponse;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
+    {
         return parent::onAuthenticationFailure($request,$exception);
     }
 

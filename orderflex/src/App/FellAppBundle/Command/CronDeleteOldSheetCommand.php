@@ -49,14 +49,16 @@ class CronDeleteOldSheetCommand extends Command {
         $this->em = $em;
     }
 
-    protected function configure() {
+    protected function configure() : void 
+    {
         $this
             //->setName('cron:deleteoldsheetfellapp')
             ->setDescription('Delete Old Fellowship Application Spreadsheets from the server');
     }
 
     //php app/console cron:deleteoldsheetfellapp --env=prod
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output) : int
+    {
 
         $logger = $this->container->get('logger');
 

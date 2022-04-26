@@ -78,7 +78,7 @@ class OrderAbstractController extends AbstractController {
     //1) Create OrderAbstarctController extends OrderAbstractController
     //2) Override getSubscribedServices adding util services
     //3) replace in controller $this->get by $this->container->get
-    public static function getSubscribedServices()
+    public static function getSubscribedServices() : array
     {
         $subscribedServices = parent::getSubscribedServices();
 

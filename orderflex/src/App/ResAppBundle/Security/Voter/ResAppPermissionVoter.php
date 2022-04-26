@@ -34,16 +34,19 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class ResAppPermissionVoter extends BasePermissionVoter
 {
 
-    protected function getSiteRoleBase() {
+    protected function getSiteRoleBase() : string
+    {
         return 'RESAPP';
     }
 
-    protected function getSitename() {
+    protected function getSitename() : string
+    {
         return 'resapp';  //Site abbreviation i.e. resapp, not residency-applications
     }
 
 
-    protected function canView($subject, TokenInterface $token) {
+    protected function canView($subject, TokenInterface $token) : bool
+    {
         //exit('resapp canView');
         //echo "subject=".$subject."<br>"; //ResidencyApplication
 
@@ -64,7 +67,8 @@ class ResAppPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    protected function canEdit($subject, TokenInterface $token) {
+    protected function canEdit($subject, TokenInterface $token) : bool
+    {
         //exit('resapp canEdit');
 
         if( parent::canEdit($subject,$token) ) {
@@ -76,7 +80,8 @@ class ResAppPermissionVoter extends BasePermissionVoter
     }
 
     //additional check for resapp permission to access this object: user is Observers/Interviewers or hasSameResidencyTypeId
-    public function resappAdditionalCheck($subject,$token) {
+    public function resappAdditionalCheck($subject,$token) : bool
+    {
         if( is_object($subject) ) {
             //exit('is_object($subject)');
             $user = $token->getUser();
@@ -92,7 +97,8 @@ class ResAppPermissionVoter extends BasePermissionVoter
         return true;
     }
 
-    public function isObserverOrInterviewer($subject,$token) {
+    public function isObserverOrInterviewer($subject,$token) : bool
+    {
         //echo "isObserverOrInterviewer <br>";
         if( is_object($subject) ) {
             $user = $token->getUser();
