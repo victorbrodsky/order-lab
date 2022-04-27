@@ -663,6 +663,9 @@ class PatientController extends OrderAbstractController
                 }
             }
 
+            //An exception occurred while executing
+            // 'UPDATE user_location SET status = ?, id = ?, updatedon = ? WHERE id = ?' with params [null, null, "2022-04-27 20:59:09", 95]:
+            //SQLSTATE[23502]: Not null violation: 7 ERROR: null value in column "id" violates not-null constraint
             //exit("Form is valid");
             $em->persist($entity);
             $em->flush();
