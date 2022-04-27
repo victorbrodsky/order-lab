@@ -629,12 +629,10 @@ class PatientController extends OrderAbstractController
             //exit('1');
 
             //we might have newly added not persisted tracker without ID
-            echo "tracker count=".count($entity->getTracker())."<br>";
-            foreach($entity->getTracker() as $tracker) {
-                echo "Tracker ID=".$tracker->getId()."<br>";
-                if( !$tracker->getId() ) {
-                    $em->persist($tracker);
-                }
+            $tracker = $entity->getTracker();
+            echo "tracker id=".$tracker->getId()."<br>";
+            if( !$tracker->getId() ) {
+                $em->persist($tracker);
             }
 
             //we might have newly added not persisted encounter without ID
@@ -648,7 +646,7 @@ class PatientController extends OrderAbstractController
             //exit("Form is valid");
             //$em->persist($entity);
             $em->flush();
-            //exit('111');
+            exit('111');
 
             //testing
             //return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
