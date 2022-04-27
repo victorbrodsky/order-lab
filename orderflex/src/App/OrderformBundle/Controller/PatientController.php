@@ -618,8 +618,8 @@ class PatientController extends OrderAbstractController
 //            }
 
             echo "Update patient <br>";
-            $em->flush();
-            exit('111');
+            ///$em->flush();
+            //exit('111');
 
             //get patient's changes
             $changeSetStr = $entity->obtainChangeObjectStr();
@@ -628,9 +628,17 @@ class PatientController extends OrderAbstractController
             //echo $changeSetStr;
             //exit('1');
 
+            //we might have newly added not persisted tracker without ID
+            foreach($entity->getTracker() as $tracker) {
+                echo "Tracker ID=".$tracker->getId()."<br>";
+                if( !$tracker->getId() ) {
+                    $em->persist($tracker);
+                }
+            }
+
             //we might have newly added not persisted encounter without ID
             foreach( $entity->getEncounter() as $encounter ) {
-                echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
+                //echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
                 if( !$encounter->getCreationdate() ) {
                     $em->persist($encounter);
                 }
@@ -639,7 +647,7 @@ class PatientController extends OrderAbstractController
             //exit("Form is valid");
             //$em->persist($entity);
             $em->flush();
-            exit('111');
+            //exit('111');
 
             //testing
             //return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
