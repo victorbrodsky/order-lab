@@ -724,11 +724,11 @@ class UserSecurityUtil {
         if ($sitename == 'deidentifier' ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
+        if ($sitename == 'dashboard' ) {
+            $defaultSourceSystemName = 'ORDER Dashboards';
+        }
         if ($sitename == 'scan' || $sitename == null ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
-        }
-        if ($sitename == 'dashboard' || $sitename == null ) {
-            $defaultSourceSystemName = 'ORDER Dashboards';
         }
 
         $source = $this->em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
@@ -736,7 +736,7 @@ class UserSecurityUtil {
         if( !$source ) {
             if( $this->container ) {
                 $logger = $this->container->get('logger');
-                $logger->warning('Warning (Not Found): Default Source System with name '.$defaultSourceSystemName);
+                $logger->warning('Warning (Not Found): Default Source System with name "'.$defaultSourceSystemName.'"');
             }
         }
 
