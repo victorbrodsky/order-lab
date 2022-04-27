@@ -181,11 +181,15 @@ class DefaultController extends OrderAbstractController
         //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
         //$fellappImportPopulateUtil->getFileInfofromGoogleDriveTesting();
 
-//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-//        $service = $googlesheetmanagement->authenticationP12Key();
-//        $folderId = "1gapiVoGBGzOZ5frPcBiXjRSC8Wbz6H8l"; //$userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-//        $fileName = "Untitled spreadsheet";
-//        $googlesheetmanagement->findOneFolderByFolderNameAndParentFolder($service, $folderId, $fileName);
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
+        $folderId = "1gapiVoGBGzOZ5frPcBiXjRSC8Wbz6H8l"; //$userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+        $fileName = "wcmpath_29be771f19e9fc0ab21f874990e29ab7038d3fba_2021-07-09-14-15-59_Shabna.doc";
+        $file = $googlesheetmanagement->findOneFolderByFolderNameAndParentFolder($service, $folderId, $fileName);
+        if( $file ) {
+            dump($file);
+        }
+        exit('111');
         
         /////////// EOF testing ///////////
 

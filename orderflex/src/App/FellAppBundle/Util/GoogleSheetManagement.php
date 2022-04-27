@@ -421,50 +421,50 @@ class GoogleSheetManagement {
     }
 
 
-    /**
-     * Search for folder by the parent folder ID and folder Name.
-     */
-    function findFolderByFolderNameAndParentFolder_OLD($service,$parentFolderId,$folderName) {
-        $result = array();
-        $pageToken = NULL;
-
-        do {
-            try {
-
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and name='config.json'");
-                $files = $service->files->listFiles($parameters);
-
-                foreach ($files->getFiles() as $file) {
-                    echo "file=" . $file->getId() . "<br>";
-                    echo "File Title=" . $file->getName() . "<br>";
-                }
-
-                return $file;
-
-
-                //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
-                $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and name='".$folderName."'");
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and name='config.json'");
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $folders = $service->files->listFiles($parameters);
-                foreach ($folders->getFiles() as $folder) {
-                    echo "file=" . $folder->getId() . "<br>";
-                    echo "File Title=" . $folder->getName() . "<br>";
-                    $result = $folder;
-                }
-
-                //$result = array_merge($result, $folders->getFiles());
-
-                $pageToken = $folders->getNextPageToken();
-            } catch (Exception $e) {
-                //print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-        return $result;
-    }
+//    /**
+//     * Search for folder by the parent folder ID and folder Name.
+//     */
+//    function findFolderByFolderNameAndParentFolder_OLD($service,$parentFolderId,$folderName) {
+//        $result = array();
+//        $pageToken = NULL;
+//
+//        do {
+//            try {
+//
+//                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and name='config.json'");
+//                $files = $service->files->listFiles($parameters);
+//
+//                foreach ($files->getFiles() as $file) {
+//                    echo "file=" . $file->getId() . "<br>";
+//                    echo "File Title=" . $file->getName() . "<br>";
+//                }
+//
+//                return $file;
+//
+//
+//                //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
+//                $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and name='".$folderName."'");
+//                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and name='config.json'");
+//                if ($pageToken) {
+//                    $parameters['pageToken'] = $pageToken;
+//                }
+//                $folders = $service->files->listFiles($parameters);
+//                foreach ($folders->getFiles() as $folder) {
+//                    echo "file=" . $folder->getId() . "<br>";
+//                    echo "File Title=" . $folder->getName() . "<br>";
+//                    $result = $folder;
+//                }
+//
+//                //$result = array_merge($result, $folders->getFiles());
+//
+//                $pageToken = $folders->getNextPageToken();
+//            } catch (Exception $e) {
+//                //print "An error occurred: " . $e->getMessage();
+//                $pageToken = NULL;
+//            }
+//        } while ($pageToken);
+//        return $result;
+//    }
     /**
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
@@ -483,13 +483,49 @@ class GoogleSheetManagement {
                 //$parameters = array();
                 //$parameters = array('q' => "trashed=false and title='config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and '".$folderId."' in parents and name='".$fileName."'");
-                //$parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
+                ////$parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and title='".$fileName."'");
+                //$parameters = array('q' => "mimeType='application/vnd.google-apps.folder' and trashed=false and '".$folderId."' in parents and name='".$fileName."'");
+
+                //https://github.com/googleapis/google-api-php-client/issues/1257
+                $parameters = array(
+                    'q' => "'" . $folderId . "' in parents and trashed=false and name='".$fileName."'",
+                    //'fields' => 'nextPageToken, files(id, name, size, webViewLink, mimeType)'
+                    'fields' => 'nextPageToken, files(*)'
+                    //'fields' => 'files(*)'
+                );
+                //$parameters = array('q' => "'" . $folderId . "' in parents and trashed=false and name='config.json'");
                 $files = $service->files->listFiles($parameters);
+                echo "files count=".count($files)."<br>";
 
                 foreach ($files->getFiles() as $file) {
                     echo "File ID=" . $file->getId()."<br>";
                     echo "File Title=" . $file->getName()."<br>";
+                    echo "File Size=" . $file->getSize()."<br>";
+
+                    //Get file size???
+                    //$file2 = $service->files->get($file->getId());
+                    //dump($file2);
+                    //echo "2File Size=".$file2->getSize()."<br>";
+
+//                    $response = $service->files->get(
+//                        $file->getId(),
+//                        array(
+//                            //'alt' => 'media'
+//                            'mimeType' => 'application/json'
+//                        )
+//                    );
+//                    dump($response);
+                    //echo "2File Size=".$response->size."<br>";
+
+                    //$size = $file->getBody()->getSize();
+                    //echo "2File Size=".$size."<br>";
+
+//                    $optpParams = array(
+//                        'fields' => "size"
+//                    );
+//                    $response = $service->files->get($file->getId(), $optpParams);
+//                    dump($response);
+//                    echo "2File Size=".$response->size."<br>";
 
                     return $file;
                 }
@@ -1259,12 +1295,16 @@ class GoogleSheetManagement {
             //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
             //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
             //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false");
-            $parameters = array('q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and name='config.json'");
+            $parameters = array(
+                'q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and name='config.json'",
+                'fields' => 'nextPageToken, files(*)'
+            );
             $files = $service->files->listFiles($parameters);
 
             foreach ($files->getFiles() as $file) {
                 echo "file=" . $file->getId() . "<br>";
                 echo "File Title=" . $file->getName() . "<br>";
+                echo "File Size=" . $file->getSize() . "<br>";
             }
 
             return $file;
@@ -1292,7 +1332,10 @@ class GoogleSheetManagement {
                 //$parameters = array();
                 //$parameters = array('q' => "trashed=false and title='config.json'");
                 //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and name='".$fileName."'");
+                $parameters = array(
+                    'q' => "'".$folderId."' in parents and trashed=false and name='".$fileName."'",
+                    'fields' => 'nextPageToken, files(*)'
+                );
 
                 //TODO: Error calling GET https://www.googleapis.com/drive/v3/
                 //Error calling GET https://www.googleapis.com/drive/v3/files?q=%270B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M%27
@@ -1344,7 +1387,10 @@ class GoogleSheetManagement {
 
                 //https://stackoverflow.com/questions/36605461/downloading-a-file-with-google-drive-api-with-php
                 //The getItems() method in v2 will become getFiles() in v3 and the getTitle() will become getName()
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false and name='".$fileName."'");
+                $parameters = array(
+                    'q' => "'".$folderId."' in parents and trashed=false and name='".$fileName."'",
+                    'fields' => 'nextPageToken, files(*)'
+                );
 
                 $files = $service->files->listFiles($parameters); //Google_Service_Drive_FileList
 
