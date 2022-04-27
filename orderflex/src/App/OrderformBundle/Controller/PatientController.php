@@ -634,7 +634,7 @@ class PatientController extends OrderAbstractController
 
             //exit("Form is valid");
             //$em->persist($entity);
-            $em->flush();
+            //$em->flush();
             exit('111');
 
             //testing
