@@ -412,7 +412,7 @@ class PatientController extends OrderAbstractController
             $spotEntityPatient = null;
             $withdummyfields = false; //true;
 
-            //$entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
+            $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
 
             //echo "spots=".count($entity->getTracker()->getSpots())."<br>";
         }
@@ -632,8 +632,26 @@ class PatientController extends OrderAbstractController
             $tracker = $entity->getTracker();
             if( $tracker ) {
                 echo "tracker id=" . $tracker->getId() . "<br>";
-                if (!$tracker->getId()) {
-                    $em->persist($tracker);
+//                if (!$tracker->getId()) {
+//                    $em->persist($tracker);
+//                }
+                foreach($tracker->getSpots() as $spot) {
+                    echo "spot id=" . $spot->getId() . "<br>";
+                    if( !$spot->getCreation() ) {
+                        $em->persist($spot);
+                    }
+                    $curLocation = $spot->getCurrentLocation();
+                    if( $curLocation ) {
+                        if( !$curLocation->getCreatedate() ) {
+                            $em->persist($curLocation);
+                        }
+                    }
+                    $intLocation = $spot->getIntendedLocation();
+                    if( $intLocation ) {
+                        if( !$intLocation->getCreatedate() ) {
+                            $em->persist($intLocation);
+                        }
+                    }
                 }
             }
 
