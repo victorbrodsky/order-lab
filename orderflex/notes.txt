@@ -1030,7 +1030,10 @@ git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Util
 git checkout 6fbb9ba393fca2cf6d3830dcfd52cc8a975b0966 src/App/FellAppBundle/Util/RecLetterUtil.php
 
 Live:
-git checkout origin master
+git fetch
+git checkout origin/master -- path/to/file
+
+git fetch origin master
 git checkout 111b382b7cf7f2b568c23d5c3e5b5441ef844dbc src/App/FellAppBundle/Controller/DefaultController.php
 
 Reinstall vendors:

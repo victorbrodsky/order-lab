@@ -278,7 +278,10 @@ class GoogleSheetManagement {
 
         do {
             try {
-                $parameters = array('q' => "'".$folderId."' in parents and trashed=false");
+                $parameters = array(
+                    'q' => "'".$folderId."' in parents and trashed=false",
+                    'fields' => 'nextPageToken, files(*)'
+                );
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
