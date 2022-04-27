@@ -626,7 +626,7 @@ class PatientController extends OrderAbstractController
 
             //we might have newly added not persisted encounter without ID
             foreach( $entity->getEncounter() as $encounter ) {
-                //echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
+                echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
                 if( !$encounter->getCreationdate() ) {
                     $em->persist($encounter);
                 }
