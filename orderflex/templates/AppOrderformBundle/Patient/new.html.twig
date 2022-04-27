@@ -113,7 +113,8 @@
             {#<button id="patient_update_btn" class="btn_margin_top btn btn-primary btn-success" name="btnUpdate" type="submit">#}
                 {#Update Patient#}
             {#</button>#}
-            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(editpath, { 'id': entity.id}) }}">Edit Patient</a>
+            {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path(editpath, { 'id': entity.id}) }}">Edit Patient</a>#}
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path('calllog_single_patient_view', { 'id': entity.id}) }}">Edit Patient</a>
         </p>
     {% endif %}
 
