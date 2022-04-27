@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "@babel/preset-react": "7.0.0",
+        "@babel/preset-react": "^7.16.0",
         "@symfony/webpack-encore": "^0.28.2",
         "axios": "^0.24.0",
         "core-js": "^3.0.0",
@@ -19,8 +19,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "@babel/plugin-proposal-class-properties": "7.0.0",
-        "@babel/plugin-transform-runtime": "7.0.0",
+        "@babel/plugin-proposal-class-properties": "^7.16.0",
+        "@babel/plugin-transform-runtime": "^7.16.4",
         "react-router-dom": "^6.1.1"
     }
 }
