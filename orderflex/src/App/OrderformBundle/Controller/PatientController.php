@@ -289,7 +289,7 @@ class PatientController extends OrderAbstractController
         //image is an 'attachmentContainer' field in AccessionType, PartType, BlockType ans 'scan' field in SlideType
         //BUT images are shown only if the 'datastructure' parameters is set to 'datastructure'.
 
-        $showTreeDepth = 2; //true;
+        $showTreeDepth = true; //2; //true;
         if( array_key_exists('show-tree-depth',$parameters) ) {
             $showTreeDepth = $parameters['show-tree-depth'];
         }
@@ -424,7 +424,7 @@ class PatientController extends OrderAbstractController
             $entity->addEncounter($encounter); //add new encounter to patient
         }
 
-        $showTreeDepth = 2; //true;
+        $showTreeDepth = true; //2; //true;
         if( array_key_exists('show-tree-depth',$parameters) ) {
             $showTreeDepth = $parameters['show-tree-depth'];
         }
@@ -629,31 +629,31 @@ class PatientController extends OrderAbstractController
             //exit('1');
 
             //we might have newly added not persisted tracker without ID
-            $tracker = $entity->getTracker();
-            if( $tracker ) {
-                echo "tracker id=" . $tracker->getId() . "<br>";
+//            $tracker = $entity->getTracker();
+//            if( $tracker ) {
+//                echo "tracker id=" . $tracker->getId() . "<br>";
 //                if (!$tracker->getId()) {
 //                    $em->persist($tracker);
 //                }
-                foreach($tracker->getSpots() as $spot) {
-                    echo "spot id=" . $spot->getId() . "<br>";
-                    if( !$spot->getCreation() ) {
-                        $em->persist($spot);
-                    }
-                    $curLocation = $spot->getCurrentLocation();
-                    if( $curLocation ) {
-                        if( !$curLocation->getCreatedate() ) {
-                            $em->persist($curLocation);
-                        }
-                    }
-                    $intLocation = $spot->getIntendedLocation();
-                    if( $intLocation ) {
-                        if( !$intLocation->getCreatedate() ) {
-                            $em->persist($intLocation);
-                        }
-                    }
-                }
-            }
+//                foreach($tracker->getSpots() as $spot) {
+//                    echo "spot id=" . $spot->getId() . "<br>";
+//                    if( !$spot->getCreation() ) {
+//                        $em->persist($spot);
+//                    }
+//                    $curLocation = $spot->getCurrentLocation();
+//                    if( $curLocation ) {
+//                        if( !$curLocation->getCreatedate() ) {
+//                            $em->persist($curLocation);
+//                        }
+//                    }
+//                    $intLocation = $spot->getIntendedLocation();
+//                    if( $intLocation ) {
+//                        if( !$intLocation->getCreatedate() ) {
+//                            $em->persist($intLocation);
+//                        }
+//                    }
+//                }
+//            }
 
             //we might have newly added not persisted encounter without ID
             foreach( $entity->getEncounter() as $encounter ) {
@@ -664,7 +664,7 @@ class PatientController extends OrderAbstractController
             }
 
             //exit("Form is valid");
-            //$em->persist($entity);
+            $em->persist($entity);
             $em->flush();
             //exit('111');
 

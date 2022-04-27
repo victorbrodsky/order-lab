@@ -611,9 +611,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                     foreach( $fields as $field ) {  //original fields from submitted form
 
-                        //if( !is_object($field) ) {
-                            //continue;
-                        //}
+                        if( !is_object($field) ) {
+                            continue;
+                        }
 
                         //echo "field=".$field."<br>";
                         $basename = NULL;
