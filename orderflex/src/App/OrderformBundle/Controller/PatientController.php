@@ -629,6 +629,7 @@ class PatientController extends OrderAbstractController
             //exit('1');
 
             //we might have newly added not persisted tracker without ID
+            echo "tracker count=".count($entity->getTracker())."<br>";
             foreach($entity->getTracker() as $tracker) {
                 echo "Tracker ID=".$tracker->getId()."<br>";
                 if( !$tracker->getId() ) {
