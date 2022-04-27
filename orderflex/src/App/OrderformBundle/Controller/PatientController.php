@@ -620,9 +620,9 @@ class PatientController extends OrderAbstractController
             //get patient's changes
             $changeSetStr = $entity->obtainChangeObjectStr();
 
-            echo "changeSetStr:<br>";
-            echo $changeSetStr;
-            exit('1');
+            //echo "changeSetStr:<br>";
+            //echo $changeSetStr;
+            //exit('1');
 
             //we might have newly added not persisted encounter without ID
             foreach( $entity->getEncounter() as $encounter ) {
@@ -633,8 +633,9 @@ class PatientController extends OrderAbstractController
             }
 
             //exit("Form is valid");
-            $em->persist($entity);
+            //$em->persist($entity);
             $em->flush();
+            exit('111');
 
             //testing
             //return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
