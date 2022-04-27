@@ -412,7 +412,7 @@ class PatientController extends OrderAbstractController
             $spotEntityPatient = null;
             $withdummyfields = false; //true;
 
-            $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
+            //$entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
 
             //echo "spots=".count($entity->getTracker()->getSpots())."<br>";
         }
@@ -630,9 +630,11 @@ class PatientController extends OrderAbstractController
 
             //we might have newly added not persisted tracker without ID
             $tracker = $entity->getTracker();
-            echo "tracker id=".$tracker->getId()."<br>";
-            if( !$tracker->getId() ) {
-                $em->persist($tracker);
+            if( $tracker ) {
+                echo "tracker id=" . $tracker->getId() . "<br>";
+                if (!$tracker->getId()) {
+                    $em->persist($tracker);
+                }
             }
 
             //we might have newly added not persisted encounter without ID
@@ -646,7 +648,7 @@ class PatientController extends OrderAbstractController
             //exit("Form is valid");
             //$em->persist($entity);
             $em->flush();
-            exit('111');
+            //exit('111');
 
             //testing
             //return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
