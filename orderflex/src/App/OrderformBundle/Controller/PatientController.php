@@ -638,9 +638,9 @@ class PatientController extends OrderAbstractController
 
             //DO IT AFTER UPDATE DB: set patient's common fields (names, suffix and gender) for the latest modified encounter.
             // The latest encounter fields will be copy to the patient object. They can come from different encounters
-            $em->getRepository('AppOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
-            //$em->persist($entity); //entity is a patient object
-            $em->flush();
+           // $em->getRepository('AppOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
+           // $em->persist($entity); //entity is a patient object
+           // $em->flush();
 
             if( $changeSetStr ) {
                 $userSecUtil = $this->container->get('user_security_utility');
