@@ -1036,9 +1036,13 @@ git checkout origin/master -- path/to/file
 git fetch origin master
 git checkout 111b382b7cf7f2b568c23d5c3e5b5441ef844dbc src/App/FellAppBundle/Controller/DefaultController.php
 
+"resolutions": {
+        "babel-core": "7.0.0-bridge.0"
+    }
 Reinstall vendors:
 rm -rf vendor/*
 composer install
-rm -rf node_modules/*
+Yarn webpack:
+rm -rf node_modules
 sudo yarn install --frozen-lockfile
 
