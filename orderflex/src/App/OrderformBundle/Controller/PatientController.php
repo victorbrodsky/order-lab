@@ -620,9 +620,9 @@ class PatientController extends OrderAbstractController
             //get patient's changes
             $changeSetStr = $entity->obtainChangeObjectStr();
 
-//            echo "changeSetStr:<br>";
-//            echo $changeSetStr;
-//            exit('1');
+            echo "changeSetStr:<br>";
+            echo $changeSetStr;
+            exit('1');
 
             //we might have newly added not persisted encounter without ID
             foreach( $entity->getEncounter() as $encounter ) {
@@ -637,7 +637,7 @@ class PatientController extends OrderAbstractController
             $em->flush();
 
             //testing
-            return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
+            //return $this->redirect($this->generateUrl($parameters['showpath'], array('id' => $id)));
 
             //DO IT AFTER UPDATE DB: set patient's common fields (names, suffix and gender) for the latest modified encounter.
             // The latest encounter fields will be copy to the patient object. They can come from different encounters
