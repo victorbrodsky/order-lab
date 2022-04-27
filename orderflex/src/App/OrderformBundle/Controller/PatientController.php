@@ -622,7 +622,7 @@ class PatientController extends OrderAbstractController
             //exit('111');
 
             //get patient's changes
-            $changeSetStr = $entity->obtainChangeObjectStr();
+            //$changeSetStr = $entity->obtainChangeObjectStr();
 
             //echo "changeSetStr:<br>";
             //echo $changeSetStr;
