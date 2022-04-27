@@ -617,6 +617,9 @@ class PatientController extends OrderAbstractController
 //                echo "Controller: parentId=".$dob->getParent()->getId()."; dob id=".$dob->getId()."; dob=".$dob."; status=".$dob->getStatus()."; provider =(ID#".$dob->getProvider()->getId().")".$dob->getProvider()."<br>";
 //            }
 
+            $em->flush();
+            exit('111');
+
             //get patient's changes
             $changeSetStr = $entity->obtainChangeObjectStr();
 
