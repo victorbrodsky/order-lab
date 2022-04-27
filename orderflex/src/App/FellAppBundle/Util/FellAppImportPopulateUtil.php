@@ -635,7 +635,7 @@ class FellAppImportPopulateUtil {
         $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {
             $event = "Google API service failed!";
-            $logger->error($event);
+            //$logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
             return 0;
         }
@@ -646,6 +646,8 @@ class FellAppImportPopulateUtil {
         //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
         $modifiedDate = $backupFile->getModifiedTime(); //V3
         echo "0modifiedDate=".$modifiedDate."<br>";
+        $backupFileName = $backupFile->getName(); //V3
+        echo "backupFileName=".$backupFileName."<br>";
 
         $intervalDays = 0;
 
@@ -666,7 +668,7 @@ class FellAppImportPopulateUtil {
         //don't process backup file if interval is more than 1 day (process if interval is less then 1 day - recently modified backup)
         if( $intervalDays > 1 ) {
             //exit('dont process backup');
-            $logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
+            //$logger->notice("Do not process backup: $modifiedDate=[$modifiedDate]; intervalDays=[$intervalDays]");
             return 0;
         }
 

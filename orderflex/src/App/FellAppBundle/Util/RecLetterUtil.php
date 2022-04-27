@@ -540,7 +540,8 @@ class RecLetterUtil {
             return NULL;
         }
 
-        $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+        //Google API 3: getTitle() -> getName()
+        $fileExt = pathinfo($file->getName(), PATHINFO_EXTENSION);
         if( !$fileExt ) {
             if( $file->getMimeType() == "application/vnd.google-apps.spreadsheet" ) {
                 $fileExt = "csv";
@@ -554,7 +555,7 @@ class RecLetterUtil {
         //$root = $this->container->get('kernel')->getRootDir();
         //$fullpath = $root . '/../public/'.$path;
         $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
-        $target_file = $fullpath . DIRECTORY_SEPARATOR . $file->getTitle() . $fileExtStr;
+        $target_file = $fullpath . DIRECTORY_SEPARATOR . $file->getName() . $fileExtStr;
 
         //check if file already exists by file path
         if( file_exists($target_file) ) {
@@ -678,11 +679,11 @@ class RecLetterUtil {
         //$filesize = $file->getFileSize();
         $filesize = $file->getSize();
         if( $filesize == 0 ) {
-            $logger->error("Error processing reference letter with title=".$file->getTitle().": size is zero, filesize=".$filesize);
+            $logger->error("Error processing reference letter with title=".$file->getName().": size is zero, filesize=".$filesize);
             //Send email to admin
 
             //send email
-            $msg = "Error processing reference letter with title ".$file->getTitle().": reference file is empty";
+            $msg = "Error processing reference letter with title ".$file->getName().": reference file is empty";
             //$userSecUtil->sendEmailToSystemEmail($msg, $msg);
 
             /////////////////
@@ -725,7 +726,7 @@ class RecLetterUtil {
 
         //ID_datetime_name.ext: 55555_0000000110c8357966576df46f3b802ca897deb7ad18b12f1c24ecff6386ebd9_2019-04-03-13-13-17_Cat-Wa.jpg
         $letterDatetimeStr = null;
-        $letterArr = explode("_",$file->getTitle());
+        $letterArr = explode("_",$file->getName());
         //echo "letterArr count=".count($letterArr)."<br>";
         if( count($letterArr) >= 3 ) {
             $instituteIdentification = $letterArr[0];
@@ -839,7 +840,7 @@ class RecLetterUtil {
                 //echo "filename=".$res['filename']."<br>";
                 return $uploadedLetterDb;
             } else {
-                $msg = "New letter ".$file->getTitle()." is identical to already existed letters for the application ID ".$fellapp->getId();
+                $msg = "New letter ".$file->getName()." is identical to already existed letters for the application ID ".$fellapp->getId();
                 $logger->notice($msg);
                 $userSecUtil->sendEmailToSystemEmail($msg,$msg);
                 //eventlog
@@ -854,6 +855,7 @@ class RecLetterUtil {
         return NULL;
     }
 
+    //NOT USED
     public function getGoogleFileCreationDatetime($service, $fileId) {
         $file = null;
         try {
@@ -862,10 +864,10 @@ class RecLetterUtil {
             throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
         }
 
-        $fileId = $file->getId();
+        //$fileId = $file->getId();
         //echo "fileId=".$fileId."<br>";
 
-        $fileTitle = $file->getTitle();
+        $fileTitle = $file->getName();
         echo "fileTitle=".$fileTitle.": ";
 
         $createdTime = null;

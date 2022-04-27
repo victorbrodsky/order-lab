@@ -361,7 +361,7 @@ class GoogleSheetManagementModified {
             //$fileTitle = str_replace(" ","",$fileTitle);
             //$fileTitle = str_replace("-","_",$fileTitle);
             //$fileTitle = 'testfile.jpg';
-            $fileExt = pathinfo($file->getTitle(), PATHINFO_EXTENSION);
+            $fileExt = pathinfo($file->getName(), PATHINFO_EXTENSION);
             $fileExtStr = "";
             if( $fileExt ) {
                 $fileExtStr = ".".$fileExt;
@@ -388,7 +388,7 @@ class GoogleSheetManagementModified {
             //https://developers.google.com/resources/api-libraries/documentation/drive/v3/php/latest/class-Google_Service_Drive_DriveFile.html
 
             //clean originalname
-            $object->setCleanOriginalname($file->getTitle());
+            $object->setCleanOriginalname($file->getName());
 
 //            if( $type && $type == 'excel' ) {
 //                $fellappSpreadsheetType = $this->em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Fellowship Application Spreadsheet');
@@ -438,50 +438,50 @@ class GoogleSheetManagementModified {
     }
 
 
-    /**
-     * Search for folder by the parent folder ID and folder Name.
-     */
-    function findFolderByFolderNameAndParentFolder_OLD($service,$parentFolderId,$folderName) {
-        $result = array();
-        $pageToken = NULL;
-
-        do {
-            try {
-
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
-                $files = $service->files->listFiles($parameters);
-
-                foreach ($files->getItems() as $file) {
-                    echo "file=" . $file->getId() . "<br>";
-                    echo "File Title=" . $file->getTitle() . "<br>";
-                }
-
-                return $file;
-
-
-                //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
-                $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and title='".$folderName."'");
-                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $folders = $service->files->listFiles($parameters);
-                foreach ($folders->getItems() as $folder) {
-                    echo "file=" . $folder->getId() . "<br>";
-                    echo "File Title=" . $folder->getTitle() . "<br>";
-                    $result = $folder;
-                }
-
-                //$result = array_merge($result, $folders->getItems());
-
-                $pageToken = $folders->getNextPageToken();
-            } catch (Exception $e) {
-                //print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-        return $result;
-    }
+//    /**
+//     * Search for folder by the parent folder ID and folder Name.
+//     */
+//    function findFolderByFolderNameAndParentFolder_OLD($service,$parentFolderId,$folderName) {
+//        $result = array();
+//        $pageToken = NULL;
+//
+//        do {
+//            try {
+//
+//                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+//                $files = $service->files->listFiles($parameters);
+//
+//                foreach ($files->getItems() as $file) {
+//                    echo "file=" . $file->getId() . "<br>";
+//                    echo "File Title=" . $file->getTitle() . "<br>";
+//                }
+//
+//                return $file;
+//
+//
+//                //files.list?q=mimetype=application/vnd.google-apps.folder and trashed=false&fields=parents,name
+//                $parameters = array('q' => "mimetype=application/vnd.google-apps.folder and '".$parentFolderId."' in parents and trashed=false and title='".$folderName."'");
+//                $parameters = array('q' => "'" . $parentFolderId . "' in parents and trashed=false and title='config.json'");
+//                if ($pageToken) {
+//                    $parameters['pageToken'] = $pageToken;
+//                }
+//                $folders = $service->files->listFiles($parameters);
+//                foreach ($folders->getItems() as $folder) {
+//                    echo "file=" . $folder->getId() . "<br>";
+//                    echo "File Title=" . $folder->getTitle() . "<br>";
+//                    $result = $folder;
+//                }
+//
+//                //$result = array_merge($result, $folders->getItems());
+//
+//                $pageToken = $folders->getNextPageToken();
+//            } catch (Exception $e) {
+//                //print "An error occurred: " . $e->getMessage();
+//                $pageToken = NULL;
+//            }
+//        } while ($pageToken);
+//        return $result;
+//    }
     /**
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
@@ -506,7 +506,7 @@ class GoogleSheetManagementModified {
 
                 foreach ($files->getItems() as $file) {
                     echo "File ID=" . $file->getId()."<br>";
-                    echo "File Title=" . $file->getTitle()."<br>";
+                    echo "File Title=" . $file->getName()."<br>";
 
                     return $file;
                 }
@@ -1229,7 +1229,7 @@ class GoogleSheetManagementModified {
         try {
             $file = $service->files->get($fileId);
 
-            print "Title: " . $file->getTitle();
+            print "Title: " . $file->getName();
             print "; Description: " . $file->getDescription();
             print "; MIME type: " . $file->getMimeType();
             print "<br>";
@@ -1365,7 +1365,7 @@ class GoogleSheetManagementModified {
 
             foreach ($files->getItems() as $file) {
                 echo "file=" . $file->getId() . "<br>";
-                echo "File Title=" . $file->getTitle() . "<br>";
+                echo "File Title=" . $file->getName() . "<br>";
             }
 
             return $file;
