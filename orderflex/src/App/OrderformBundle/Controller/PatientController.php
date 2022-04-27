@@ -628,7 +628,7 @@ class PatientController extends OrderAbstractController
             foreach( $entity->getEncounter() as $encounter ) {
                 //echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
                 if( !$encounter->getCreationdate() ) {
-                    $em->persist($encounter);
+                    //$em->persist($encounter);
                 }
             }
 
