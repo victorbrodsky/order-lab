@@ -1739,6 +1739,7 @@ class ProjectController extends OrderAbstractController
                 if( $review && $transitionName ) {
                     //http://127.0.0.1/order/translational-research/project-review-transition/irb_review_resubmit/3371/1218
                     //@Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review")
+                    //exit("redirect1 to translationalresearch_transition_action_by_review");
                     return $this->redirectToRoute('translationalresearch_transition_action_by_review',
                         array(
                             'transitionName' => $transitionName,
@@ -1747,9 +1748,11 @@ class ProjectController extends OrderAbstractController
                         )
                     );
                 } else {
+                    //exit("redirect2 to translationalresearch_project_resubmit");
                     return $this->redirectToRoute('translationalresearch_project_resubmit', array('id' => $project->getId()));
                 }
             }
+            //exit("exit111");
 
             $this->get('session')->getFlashBag()->add(
                 'notice',

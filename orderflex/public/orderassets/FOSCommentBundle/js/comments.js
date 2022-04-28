@@ -34,7 +34,7 @@ function foscommentNewComment() {
         type: "POST",
         data: {threadId: threadId, parentId: parentId, comment: comment },
         dataType: 'json',
-        async: asyncflag
+        async: false //asyncflag
     }).success(function(response) {
         //console.log(response);
         if( response.error == false ) {
@@ -49,11 +49,12 @@ function foscommentNewComment() {
     }).done(function() {
         submitLaddaBtn.stop();
         submitBtn.disabled = false;
-    }).error(function(jqXHR, textStatus, errorThrown) {
-        submitLaddaBtn.stop();
-        submitBtn.disabled = false;
-        console.log('Error : ' + errorThrown);
+    }).error(function(jqXHR, textStatus, errorThrown) { //fail
+        //submitLaddaBtn.stop();
+        //submitBtn.disabled = false;
+        console.log('Error=' + errorThrown + ", textStatus=" + textStatus);
     });
+
 }
 
 // function resetCursor(txtElement) {
