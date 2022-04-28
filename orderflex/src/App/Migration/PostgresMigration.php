@@ -34,6 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //6) Migrate:  php bin/console doctrine:migrations:migrate --all-or-nothing
 
 //Skip:     php bin/console doctrine:migrations:version YYYYMMDDHHMMSS --add
+//If error "The metadata storage is not up to date..":   php bin/console doctrine:migration:sync-metadata-storage
 
 //In VersionYYYYMMDDHHMM.php
 //1) Add "use App\Migration\PostgresMigration;"
