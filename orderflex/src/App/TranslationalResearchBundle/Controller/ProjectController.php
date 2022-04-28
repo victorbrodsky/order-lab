@@ -1742,7 +1742,7 @@ class ProjectController extends OrderAbstractController
                 //Therefore, just get a first reviewer and transit the project to '_review' stage
                 $review = NULL;
                 $reviews = $transresUtil->getReviewsByProjectAndState($project,$project->getState());
-                if( count($reviews) > 1 ) {
+                if( count($reviews) > 0 ) {
                     $review = $reviews[0];
                 }
 
