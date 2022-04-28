@@ -2420,7 +2420,7 @@ class FellAppImportPopulateUtil {
         $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('allowPopulateFellApp');
 
         if( !$allowPopulateFellApp ) {
-            return "Nothing to verify: allowPopulateFellApp is not set";
+            return "Verify Fellowship application import. Nothing to verify: allowPopulateFellApp is not set";
         }
 
         //Get Last successful import date
