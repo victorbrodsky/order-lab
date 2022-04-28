@@ -34,7 +34,7 @@ function foscommentNewComment() {
         type: "POST",
         data: {threadId: threadId, parentId: parentId, comment: comment },
         dataType: 'json',
-        async: false //asyncflag
+        async: asyncflag //false
     }).success(function(response) {
         //console.log(response);
         if( response.error == false ) {

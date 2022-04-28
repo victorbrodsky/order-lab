@@ -2233,6 +2233,8 @@ class TransResUtil
         }
 
         $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project); //DB array
+        //echo "state=$state, reviews count=".count($reviews)."<br>";
+        //exit('000');
 
         //filter by project funded/non-funded
         if( $state == "admin_review" ) {
@@ -2251,6 +2253,7 @@ class TransResUtil
     }
 
     public function getSingleReviewByProject($project) {
+        //echo $project->getId().": state=".$project->getState()."<br>"; //testing
         $reviews = $this->getReviewsByProjectAndState($project,$project->getState());
         //take the first review
         if( count($reviews) == 1 ) {
@@ -2386,6 +2389,11 @@ class TransResUtil
         $query->setParameters($parameters);
 
         $reviewObjects = $query->getResult();
+
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "reviewObjectClassName=".$reviewObjectClassName."<br>";
+        //echo "reviewObjects count=".count($reviewObjects)."<br>";
+        //exit('000');
 
         return $reviewObjects;
     }

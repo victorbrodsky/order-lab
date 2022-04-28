@@ -147,6 +147,17 @@
             //var submitLaddaBtn = Ladda.create(this);
             //submitLaddaBtn.start();
 
+            ////////////// Submit comment //////////////
+            var reviewHolder = $(this).closest('.transres-review-holder');
+            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+            console.log("comment="+comment);
+            if( comment ) {
+                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+                console.log("submit comment clicked");
+            }
+            ////////////// EOF Submit comment //////////////
+
+
             event.stopPropagation();
             window.onbeforeunload = null;
 

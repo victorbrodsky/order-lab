@@ -1734,8 +1734,21 @@ class ProjectController extends OrderAbstractController
                 //exit("Resubmit; comment=".$reSubmitReviewComment);
 
                 //redirect to review action or to the original project resubmit page
-                $review = $transresUtil->getSingleReviewByProject($project);
+                //1) get a single reviewer:
+                //$review = $transresUtil->getSingleReviewByProject($project);
+                //However, we might have a multiple reviewers => just get the first one.
+                //We need one single reviewer in order to use 'translationalresearch_transition_action_by_review' workflow
+                //logic to transit the project from '_missinginfo' to the '_review' stage.
+                //Therefore, just get a first reviewer and transit the project to '_review' stage
+                $review = NULL;
+                $reviews = $transresUtil->getReviewsByProjectAndState($project,$project->getState());
+                if( count($reviews) > 1 ) {
+                    $review = $reviews[0];
+                }
+
                 $transitionName = $transresUtil->getSingleTransitionNameByProject($project);
+                //echo "review=$review, transitionName=$transitionName <br>";
+                //exit("111");
                 if( $review && $transitionName ) {
                     //http://127.0.0.1/order/translational-research/project-review-transition/irb_review_resubmit/3371/1218
                     //@Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review")
