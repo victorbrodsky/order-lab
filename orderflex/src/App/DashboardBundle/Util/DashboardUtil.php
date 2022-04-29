@@ -156,56 +156,12 @@ class DashboardUtil
         $public = false;
         if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
             $public = true;
-            //get flat tree
-
-            //$nodes=array(), $nameMethod="getNodeNameWithParent", $asLabelValue=true, $types=array()
-            //$filterTopics = $root->printTreeSelectList(array(),"getName",false);
-            //$filterTopics = $root->getFullTreeAsEntity(array(),array(),$public);
-
-//            $publicTopics = array();
-//            foreach($filterTopics as $id => $name) {
-//                if( ) {
-//                    $publicTopics[] =
-//                }
-//
-//            }
         }
 
         //$filterTopics = $root->getFullTreeAsEntity(array(),array("default","user-added"));
         $filterTopics = $root->getFullTreeAsEntity(array(),array(),$public);
         
         return $filterTopics;
-
-//        //get all enabled dashboard topics
-//        $topics = $this->em->getRepository('AppDashboardBundle:TopicList')->findBy(
-//            array(
-//                'type' => array("default","user-added")
-//            ),
-//            array('orderinlist' => 'ASC')
-//        );
-//
-////        echo "topics=".count($topics)."<br>";
-//
-//        $parent = NULL;
-//        $elements = array();
-//        foreach($topics as $topic) {
-//            //echo "topic=$topic <br>";
-//            //echo "level=".$topic->getLevel()."<br>";
-//            if( $topic->getLevel() == 0 ) {
-//                $parent = $topic."";
-//            }
-//            if( $topic->getLevel() == 1 ) {
-//                $elements[$topic->getId()] = $topic . "";
-//            }
-//        }
-//
-//        $filterTopics = array();
-//
-//        $filterTopics[$parent] = $elements;
-//        //dump($filterTopics);
-//        //exit();
-//
-//        return $filterTopics;
     }
 
     public function getFilterServices() {

@@ -1430,6 +1430,27 @@ class DashboardInit
             exit("Error: not found: Educational->Fellowship Candidate Statistics");
         }
 
+        //TODO: test it
+        //9) assign topic 'Clinical'->'Call log site utilization' to charts 62 and 63
+        $charts9Arr = array();
+        $addChart9Arr = array("62. ", "63. ");
+        $clinical = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Clinical",
+            $root,
+            $mapper
+        );
+        if( !$clinical ) {
+            exit("Error: not found: Clinical");
+        }
+        $clinicalCalllog = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Call log site utilization",
+            $clinical,
+            $mapper
+        );
+        if( !$clinicalCalllog ) {
+            exit("Error: not found: Clinical->Call log site utilization");
+        }
+
         $count = 0;
 
         foreach($charts as $chart) {
@@ -1472,6 +1493,9 @@ class DashboardInit
             //8) Educational->Fellowship Candidate Statistics
             $charts8Arr = $this->addSpecificTopic($chart,$educationalFellapp,$addChart8Arr,$charts8Arr);
 
+            //9) Educational->Fellowship Candidate Statistics
+            $charts9Arr = $this->addSpecificTopic($chart,$clinicalCalllog,$addChart9Arr,$charts9Arr);
+
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
 //                foreach($chart->getTopics() as $topic) {
 //                    echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
@@ -1505,7 +1529,7 @@ class DashboardInit
 
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
-        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr);
+        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr)+count($charts9Arr);
 
         if( $count > 0 ) {
             if( $testing ) {
@@ -1518,6 +1542,7 @@ class DashboardInit
                 dump($charts7Arr);
                 dump($charts7aArr);
                 dump($charts8Arr);
+                dump($charts9Arr);
             } else {
                 $this->em->flush();
             }

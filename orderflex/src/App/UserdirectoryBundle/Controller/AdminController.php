@@ -10621,7 +10621,9 @@ class AdminController extends OrderAbstractController
                 "Translational Research" => array(),
                 "Pathologist Involvement in Translational Research" => array()
             ),
-            "Clinical" => array(),
+            "Clinical" => array(
+                "Call log site utilization" => array()
+            ),
             "Research" => array(
                 "Translational Projects" => array()
             ),

@@ -544,7 +544,6 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
     public function getNodeNameWithRoot() {
 
-        //$treeNameStr = $this->getName()."";
         $treeNameStr = $this."";
 
         $root = $this->getRootName($this);
