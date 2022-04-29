@@ -2561,13 +2561,13 @@ class TransResRequestUtil
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
         ) {
             $elements = array(
-                "My Invoices",
-                "My Outstanding Invoices",
+                "All my outstanding invoices",
+                "All my invoices",
                 "Invoices where I am the PI",
                 "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
                 "Invoices where I am the salesperson",
                 //"Unpaid Invoices sent to Me",
-                "Unpaid Invoices where I am the PI",
+                "Outstanding invoices where I am the PI",
             );
             $filterTypes["My invoices"] = $elements;
 
@@ -2619,89 +2619,89 @@ class TransResRequestUtil
             $elements = array(
                 //'My Invoices (I am Submitter, Salesperson or PI)',
                 //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
-                "My Invoices",
-                "My Outstanding Invoices",
+                "All my outstanding invoices",
+                "All my invoices",
                 "Invoices where I am the PI",
                 "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
                 "Invoices where I am the salesperson",
                 //"Unpaid Invoices sent to Me",
-                "Unpaid Invoices where I am the PI",
+                "Outstanding invoices where I am the PI",
             );
             $filterTypes["My invoices"] = $elements;
 
             return $filterTypes;
         }
     }
-    public function getInvoiceFilterPresetType_ORIG() {
-
-        $transresUtil = $this->container->get('transres_util');
-        //$filterTypes = array();
-
-        if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
-        ) {
-            //Show all invoices filter
-            $filterTypes = array(
-                //'My Invoices (I am Submitter, Salesperson or PI)',
-                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
-                "My Invoices",
-                "My Outstanding Invoices",
-                "Invoices where I am the PI",
-                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
-                "Invoices where I am the salesperson",
-                //"Unpaid Invoices sent to Me",
-                "Unpaid Invoices where I am the PI",
-
-                '[[hr]]',
-
-                "Latest Versions of All Invoices Except Canceled",
-                "Latest Versions of All Invoices",
-                "Latest Versions of Issued (Unpaid) Invoices",
-                "Latest Versions of Pending (Unissued) Invoices",
-                "Latest Versions of Paid Invoices",
-                "Latest Versions of Partially Paid Invoices",
-                "Latest Versions of Paid and Partially Paid Invoices",
-                "Latest Versions of Canceled Invoices",
-
-                '[[hr]]',
-
-                'All Invoices',
-                'All Issued Invoices',
-                'All Pending Invoices',
-
-                '[[hr]]',
-
-                "Old Versions of All Invoices",
-                "Old Versions of Issued (Unpaid) Invoices",
-                "Old Versions of Pending (Unissued) Invoices",
-                "Old Versions of Paid Invoices",
-                "Old Versions of Partially Paid Invoices",
-                "Old Versions of Paid and Partially Paid Invoices",
-                "Old Versions of Canceled Invoices"
-            );
-
-            return $filterTypes;
-        } else {
-            //Show only My Invoices
-            $filterTypes = array(
-                //'My Invoices (I am Submitter, Salesperson or PI)',
-                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
-                "My Invoices",
-                "My Outstanding Invoices",
-                "Invoices where I am the PI",
-                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
-                "Invoices where I am the salesperson",
-                //"Unpaid Invoices sent to Me",
-                "Unpaid Invoices where I am the PI",
-            );
-
-            return $filterTypes;
-        }
-    }
+//    public function getInvoiceFilterPresetType_ORIG() {
+//
+//        $transresUtil = $this->container->get('transres_util');
+//        //$filterTypes = array();
+//
+//        if(
+//            $transresUtil->isAdminOrPrimaryReviewer() ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//        ) {
+//            //Show all invoices filter
+//            $filterTypes = array(
+//                //'My Invoices (I am Submitter, Salesperson or PI)',
+//                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+//                "All my invoices",
+//                "My Outstanding Invoices",
+//                "Invoices where I am the PI",
+//                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
+//                "Invoices where I am the salesperson",
+//                //"Unpaid Invoices sent to Me",
+//                "Unpaid Invoices where I am the PI",
+//
+//                '[[hr]]',
+//
+//                "Latest Versions of All Invoices Except Canceled",
+//                "Latest Versions of All Invoices",
+//                "Latest Versions of Issued (Unpaid) Invoices",
+//                "Latest Versions of Pending (Unissued) Invoices",
+//                "Latest Versions of Paid Invoices",
+//                "Latest Versions of Partially Paid Invoices",
+//                "Latest Versions of Paid and Partially Paid Invoices",
+//                "Latest Versions of Canceled Invoices",
+//
+//                '[[hr]]',
+//
+//                'All Invoices',
+//                'All Issued Invoices',
+//                'All Pending Invoices',
+//
+//                '[[hr]]',
+//
+//                "Old Versions of All Invoices",
+//                "Old Versions of Issued (Unpaid) Invoices",
+//                "Old Versions of Pending (Unissued) Invoices",
+//                "Old Versions of Paid Invoices",
+//                "Old Versions of Partially Paid Invoices",
+//                "Old Versions of Paid and Partially Paid Invoices",
+//                "Old Versions of Canceled Invoices"
+//            );
+//
+//            return $filterTypes;
+//        } else {
+//            //Show only My Invoices
+//            $filterTypes = array(
+//                //'My Invoices (I am Submitter, Salesperson or PI)',
+//                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+//                "All my invoices",
+//                "My Outstanding Invoices",
+//                "Invoices where I am the PI",
+//                "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
+//                "Invoices where I am the salesperson",
+//                //"Unpaid Invoices sent to Me",
+//                "Unpaid Invoices where I am the PI",
+//            );
+//
+//            return $filterTypes;
+//        }
+//    }
 
     //get allowed filter request types for logged in user
     public function getRequestFilterPresetType() {

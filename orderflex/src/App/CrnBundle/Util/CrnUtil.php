@@ -605,7 +605,7 @@ class CrnUtil
             if( $unmergedMasterPatients[0]->getId() != $masterId ) {
                 //re-set master record
                 $ids = $this->setMasterPatientRecord($unmergedPatients,$masterId,$user);
-                $res['msg'] = " Patient with ID $masterId has been set as a Master Record Patient; Patients affected ids=".implode(", ",$ids);
+                $res['msg'] = " Patient with ID $masterId has been set as a primary patient record; Patients affected ids=".implode(", ",$ids);
             } else {
                 //un-merged master record is the same: error
                 $res['error'] = true;
@@ -616,7 +616,7 @@ class CrnUtil
         if( count($unmergedMasterPatients) > 1 ) {
             //logical error
             $res['error'] = true;
-            $res['msg'] = " Found multiple number of master records: ".count($unmergedMasterPatients)." master record found.";
+            $res['msg'] = " Found multiple number of primary patient records: ".count($unmergedMasterPatients)." primary patient records found.";
         }
 
         return $res;

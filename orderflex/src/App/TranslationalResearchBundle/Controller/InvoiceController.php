@@ -203,7 +203,7 @@ class InvoiceController extends OrderAbstractController
 //                    )
 //                );
 //            }
-            if( $invoicetypeLowerCase == strtolower("My Invoices") ) {
+            if( $invoicetypeLowerCase == strtolower("All my invoices") ) {
                 //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -222,7 +222,7 @@ class InvoiceController extends OrderAbstractController
                     )
                 );
             }
-            if ($invoicetypeLowerCase == strtolower("My Outstanding Invoices")) {
+            if ($invoicetypeLowerCase == strtolower("All my outstanding invoices")) {
                 //all outstanding Invoices for all Work Requests issued, but not paid for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -274,7 +274,7 @@ class InvoiceController extends OrderAbstractController
                 );
             }
             //"Unpaid Invoices where I am a PI", "Unpaid Invoices sent to Me"
-            if ($invoicetypeLowerCase == strtolower("Unpaid Invoices where I am the PI")) {
+            if ($invoicetypeLowerCase == strtolower("Outstanding invoices where I am the PI")) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -511,7 +511,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         //if ($invoicetypeLowerCase == strtolower("My Invoices")) {
-        if( strtolower($filterTitle) == strtolower("My Invoices") ) {
+        if( strtolower($filterTitle) == strtolower("All my invoices") ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
@@ -527,7 +527,7 @@ class InvoiceController extends OrderAbstractController
             //exit($title);
         }
 
-        if( strtolower($filterTitle) == strtolower("My Outstanding Invoices") ) {
+        if( strtolower($filterTitle) == strtolower("All my outstanding invoices") ) {
             //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
             $dqlParameters["userId"] = $user->getId();

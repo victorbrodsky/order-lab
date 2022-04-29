@@ -340,7 +340,7 @@ class DataQualityController extends CallEntryController
 
     /**
      * @Route("/un-merge-patient-records", name="calllog_unmerge_patient_records", options={"expose"=true})
-     * @Route("/set-master-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
+     * @Route("/specify-primary-patient-record", name="calllog_set_master_patient_record", options={"expose"=true})
      *
      * @Template("AppCallLogBundle/DataQuality/un-merge-records.html.twig")
      */
@@ -362,7 +362,7 @@ class DataQualityController extends CallEntryController
             $title = "Un-merge Patient Records";
             $formtype = 'unmerge';
         } else {
-            $title = "Set Master Patient Record";
+            $title = "Specify Primary Patient Record";
             $formtype = 'set-master-record';
         }
 
@@ -403,7 +403,7 @@ class DataQualityController extends CallEntryController
 
 
     /**
-     * @Route("/set-master-patient-record-ajax", name="calllog_set_master_patient_record_ajax", options={"expose"=true})
+     * @Route("/specify-primary-patient-record-ajax", name="calllog_set_master_patient_record_ajax", options={"expose"=true})
      */
     public function setMasterPatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
@@ -430,7 +430,7 @@ class DataQualityController extends CallEntryController
             $patients = $calllogUtil->getAllMergedPatients(array($patientObject));
             $ids = $calllogUtil->setMasterPatientRecord($patients, $patientId, $user);
             $em->flush();
-            $msg .= "Patient with ID $patientId has been set as a Master Record Patient; Patients affected ids=".implode(", ",$ids);
+            $msg .= "Patient with ID $patientId has been set as a primary patient record; Patients affected ids=".implode(", ",$ids);
         } else {
             $error = true;
             $msg .= "Patient ID is not provided; patientId=".$patientId;

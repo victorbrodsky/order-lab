@@ -333,7 +333,7 @@
                                             {% for priceList in priceLists %}
                                                 <li>
                                                     <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[priceList]':priceList.id}) }}"
-                                                    >Projects utilizing {{ priceList.getName() }}</a>
+                                                    >Projects utilizing {{ priceList.getName()|lower }}</a>
                                                 </li>
                                             {% endfor %}
                                         {% endif %}
@@ -354,7 +354,7 @@
                             {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
                             {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                                 <li id="nav-bar-translationalresearch-new-standalone-request">
-                                    <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New work request</a>
                                 </li>
                             {% endif %}
                         {% endif %}
@@ -386,7 +386,7 @@
                                 {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
                                 {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                                     <li id="nav-bar-translationalresearch-new-standalone-request">
-                                        <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                                        <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New work request</a>
                                     </li>
                                 {% endif %}
                             {% endif %}

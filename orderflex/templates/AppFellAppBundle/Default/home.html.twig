@@ -82,17 +82,17 @@
         <p>
             <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-                   data-toggle="tooltip" title="Download Displayed Application Summaries in Spreadsheet">
+                   data-toggle="tooltip" title="Download displayed application summaries as a spreadsheet">
                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
                     <i class="fa fa-file-excel fa-lg"></i>
             </a>
             <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in Word">
+               data-toggle="tooltip" title="Download displayed interviewee summaries as an editable document">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-word fa-lg"></i>
             </a>
             <a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download Displayed Interviewee Summaries in PDF">
+               data-toggle="tooltip" title="Download displayed interviewee summaries as a PDF document">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
                 <i class="fa fa-file-pdf fa-lg"></i>
             </a>

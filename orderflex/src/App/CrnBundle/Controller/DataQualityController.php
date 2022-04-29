@@ -340,7 +340,7 @@ class DataQualityController extends CrnEntryController
 
     /**
      * @Route("/un-merge-patient-records", name="crn_unmerge_patient_records", options={"expose"=true})
-     * @Route("/set-master-patient-record", name="crn_set_master_patient_record", options={"expose"=true})
+     * @Route("/specify-primary-patient-record", name="crn_set_master_patient_record", options={"expose"=true})
      *
      * @Template("AppCrnBundle/DataQuality/un-merge-records.html.twig")
      */
@@ -362,7 +362,7 @@ class DataQualityController extends CrnEntryController
             $title = "Un-merge Patient Records";
             $formtype = 'unmerge';
         } else {
-            $title = "Set Master Patient Record";
+            $title = "Specify Primary Patient Record";
             $formtype = 'set-master-record';
         }
 
@@ -403,7 +403,7 @@ class DataQualityController extends CrnEntryController
 
 
     /**
-     * @Route("/set-master-patient-record-ajax", name="crn_set_master_patient_record_ajax", options={"expose"=true})
+     * @Route("/specify-primary-patient-record-ajax", name="crn_set_master_patient_record_ajax", options={"expose"=true})
      */
     public function setMasterPatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
@@ -430,7 +430,7 @@ class DataQualityController extends CrnEntryController
             $patients = $crnUtil->getAllMergedPatients(array($patientObject));
             $ids = $crnUtil->setMasterPatientRecord($patients, $patientId, $user);
             $em->flush();
-            $msg .= "Patient with ID $patientId has been set as a Master Record Patient; Patients affected ids=".implode(", ",$ids);
+            $msg .= "Patient with ID $patientId has been set as a primary patient record; Patients affected ids=".implode(", ",$ids);
         } else {
             $error = true;
             $msg .= "Patient ID is not provided; patientId=".$patientId;
