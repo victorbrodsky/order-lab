@@ -243,11 +243,16 @@ class DashboardUtil
         $institutions = array();
 
         foreach($charts as $chart) {
+            //echo "#### chart=".$chart."<br>";
             $chartInstitutions = $chart->getInstitutions();
             foreach($chartInstitutions as $chartInstitution) {
-                $institutions[$chartInstitution->getId()] = $chartInstitution->getName();
+                //echo "chartInstitution=".$chartInstitution."<br>";
+                $institutions[$chartInstitution->getId()] = $chartInstitution->getNodeNameWithRoot(); //getNodeNameWithParent();
             }
         }
+
+        //dump($institutions);
+        //exit('111');
 
         return $institutions;
     }

@@ -147,7 +147,7 @@ class DashboardController extends OrderAbstractController
         if( $chartTypesCount > 3 ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
-                "Please click 'Show' button to generate multiple charts"
+                "Please click 'Display' button to generate multiple charts"
             );
         }
 
@@ -255,7 +255,7 @@ class DashboardController extends OrderAbstractController
         if( $chartTypesCount > 3 ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
-                "Please click 'Show' button to generate multiple charts"
+                "Please click 'Display' button to generate multiple charts"
             );
         }
 
