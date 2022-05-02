@@ -136,8 +136,9 @@ function regularCombobox(holder) {
 }
 function specificRegularCombobox( comboboxEl ) {
     //return; //testing
+    console.log("specificRegularCombobox");
     //console.log('comboboxEl:');
-    //console.log(comboboxEl);
+    console.log(comboboxEl);
 
     if( comboboxEl && comboboxEl.length ) {
         //ok
@@ -262,8 +263,9 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 //target - class or id of the target element
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
+    console.log("populateSelectCombobox");
     //console.log("target="+target);
-    //printF(target,'populate combobox target: ');
+    printF(target,'populate combobox target: ');
 
 //    //clear the value if it is not set (What is the point to do so if it is empty?!)
 //    var value = $(target).val();
@@ -279,9 +281,13 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
     if( placeholder ) {
         var allowClear = true;
+        //console.log('allowClear true');
     } else {
         var allowClear = false;
+        //console.log('allowClear false');
     }
+    //allowClear = true;
+    //console.log('allowClear='+allowClear);
 
     if( multipleFlag ) {
         //console.log('multiple true');
@@ -347,8 +353,16 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 var select2Matcher = function(term, text, opt) {
     //console.log("term="+term);
     //console.log("text="+text);
-    var textStr = text.toUpperCase().replace(/[\. ,\/:;-]+/g, "");
-    var termStr = term.toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    var textStr = text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    var termStr = term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    // var textStr = text;
+    // var termStr = term;
+    // if( text ) {
+    //     textStr = text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    // }
+    // if( term ) {
+    //     termStr = term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    // }
     return textStr.indexOf(termStr)>=0;
 }
 
