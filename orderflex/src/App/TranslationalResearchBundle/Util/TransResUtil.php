@@ -4042,10 +4042,13 @@ class TransResUtil
             //$dqlParameters = array("state" => "final_approved");
         }
 
-        //2) irb/iacuc ExpirationDate (implicitExpirationDate)
+        //2) irb/iacuc ExpirationDate (implicitExpirationDate) and expectedExpirationDate
         if( $notExpired ) {
-            //$dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+            //check implicitExpirationDate
             $dql->andWhere("project.implicitExpirationDate IS NULL OR project.implicitExpirationDate >= CURRENT_DATE()");
+
+            //check expectedExpirationDate
+            $dql->andWhere("project.expectedExpirationDate IS NULL OR project.expectedExpirationDate >= CURRENT_DATE()");
         }
 
         //3) logged in user is requester (only if not admin)

@@ -94,6 +94,16 @@ class RequestController extends OrderAbstractController
 
         $availableProjects = NULL;
 
+        if( $project ) {
+            if( $transresRequestUtil->isRequestCanBeCreated($project) !== 1 ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not submit a new work request for an expired project"
+                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
+        }
+
         // $_GET: get project id parameter for standalone new work request page
         $projectId = NULL;
         $routeName = $request->get('_route');
@@ -116,6 +126,14 @@ class RequestController extends OrderAbstractController
         if( $project ) {
 
             //exit('111');
+
+            if( $transresRequestUtil->isRequestCanBeCreated($project) !== 1 ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not submit a new work request for an expired project"
+                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
 
             $transresRequest->setProject($project);
             $title = "New Work Request for project ID ".$project->getOid();

@@ -538,7 +538,7 @@ class Project {
     private $tissueFormComment;
 
     /**
-     * Implicit Expiration Date
+     * Implicit Expiration Date: the EARLIEST IRB or IACUC date
      * @ORM\Column(type="date", nullable=true)
      */
     private $implicitExpirationDate;

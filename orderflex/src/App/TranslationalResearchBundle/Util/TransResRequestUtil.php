@@ -735,7 +735,8 @@ class TransResRequestUtil
             return -2;
         }
 
-        //3) Request can not be submitted for the expired project
+        //3) Request can not be submitted for the expired project based on project->$implicitExpirationDate
+        //$implicitExpirationDate: the EARLIEST IRB or IACUC date
         $expDate = null;
         if( $project->getImplicitExpirationDate() ) {
             //use simple project's field
@@ -752,6 +753,15 @@ class TransResRequestUtil
             return -3;
         }
         //echo "not expired<br>";
+        
+        //4) Request can not be submitted if the project is expired based on $expectedExpirationDate
+        //Expected Expiration Date (for non-funded project only) - should this apply only fo non-funded projects only?
+        $expectedExpirationDate = $project->getExpectedExpirationDate();
+        if( $expectedExpirationDate ) {
+            if( $expectedExpirationDate && new \DateTime() > $expectedExpirationDate ) {
+                return -4;
+            }
+        }
 
         return 1;
     }

@@ -603,7 +603,7 @@ class TransResPermissionUtil
 
             if( $project ) {
                 if( $transresUtil->isProjectRequester($project) ) {
-                    if( $transresRequestUtil->isRequestCanBeCreated($project) ) {
+                    if( $transresRequestUtil->isRequestCanBeCreated($project) === 1 ) {
                         return true;
                     }
                 }
