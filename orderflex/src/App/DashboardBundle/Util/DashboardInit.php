@@ -1164,7 +1164,7 @@ class DashboardInit
             $chartName = $chart->getName();
             $chartInstitutions = $chart->getInstitutions();
 
-            echo "Process chart $chartName <br>";
+            //echo "Process chart $chartName <br>";
 
             ///////////// 4 set all charts except 57, 58, 59, 62, 63 to 'Center for Translational Pathology' /////////////
             foreach( $exceptionTrpStrArr as $exceptionTrpStr ) {
@@ -1189,7 +1189,7 @@ class DashboardInit
                 //4 add Center for Translational Pathology
                 if ($trp && !$chartInstitutions->contains($trp)) {
                     $chart->addInstitution($trp);
-                    echo "- 1Added TRP <br>";
+                    //echo "- 1Added TRP <br>";
                     $count++;
                 }
             }
@@ -1202,10 +1202,10 @@ class DashboardInit
                     //echo 'true';
                     if ($informatics && !$chartInstitutions->contains($informatics)) {
                         $chart->addInstitution($informatics);
-                        echo "-- 2Added Institution $informatics<br>";
+                        //echo "-- 2Added Institution $informatics<br>";
                         $count++;
                     } else {
-                        echo "-- 2Already exists Institution $informatics<br>";
+                        //echo "-- 2Already exists Institution $informatics<br>";
                     }
                     break;
                 }
@@ -1220,10 +1220,10 @@ class DashboardInit
                     //echo 'true';
                     if ($pathology && !$chartInstitutions->contains($pathology)) {
                         $chart->addInstitution($pathology);
-                        echo "--- 3Added Institution $pathology<br>";
+                        //echo "--- 3Added Institution $pathology<br>";
                         $count++;
                     } else {
-                        echo "--- 3Already exists Institution $pathology<br>";
+                        //echo "--- 3Already exists Institution $pathology<br>";
                     }
                     break;
                 }
@@ -1281,7 +1281,7 @@ class DashboardInit
         if( !$financialTrp ) {
             exit("Error: not found: Financial > Translational Research");
         } else {
-            echo "Financial > Translational Research ID=".$financialTrp->getId()."<br>";
+            //echo "Financial > Translational Research ID=".$financialTrp->getId()."<br>";
         }
         //$financialTrpArr = array();//testing
 
@@ -1313,7 +1313,7 @@ class DashboardInit
         if( !$productivityTurntimeTrp ) {
             exit("Error: not found: Productivity > Turnaround Times > Translational Research");
         } else {
-            echo "Productivity > Turnaround Times > Translational Research ID=".$productivityTurntimeTrp->getId()."<br>";
+            //echo "Productivity > Turnaround Times > Translational Research ID=".$productivityTurntimeTrp->getId()."<br>";
         }
         //exit('111');
 
@@ -1430,7 +1430,6 @@ class DashboardInit
             exit("Error: not found: Educational->Fellowship Candidate Statistics");
         }
 
-        //TODO: test it
         //9) assign topic 'Clinical'->'Call log site utilization' to charts 62 and 63
         $charts9Arr = array();
         $addChart9Arr = array("62. ", "63. ");
@@ -1450,8 +1449,6 @@ class DashboardInit
         if( !$clinicalCalllog ) {
             exit("Error: not found: Clinical->Call log site utilization");
         }
-
-        $count = 0;
 
         foreach($charts as $chart) {
 
@@ -1828,33 +1825,33 @@ class DashboardInit
         $query = $dql->getQuery();
 
         $charts = $query->getResult();
-        echo "charts count=".count($charts)."<br>";
+        //echo "charts count=".count($charts)."<br>";
 
         $totalCount = 0;
         $processedCharts = array();
 
         foreach($charts as $chart) {
-            echo "<br>Process chart '$chart' <br>";
+            //echo "<br>Process chart '$chart' <br>";
 
             $count = 0;
 
             //add topic
             $resTopic = $chart->addTopic($siteUtilizationTopic);
             if( $resTopic ) {
-                echo "Topic added ";
+                //echo "Topic added ";
                 $count++;
             }
 
             //add institution
             $resInst = $chart->addInstitution($pathology);
             if( $resInst ) {
-                echo "WCM Pathology added ";
+                //echo "WCM Pathology added ";
                 $count++;
             }
 
             $resInst = $chart->addInstitution($nypPathology);
             if( $resInst ) {
-                echo "NYP Pathology added ";
+                //echo "NYP Pathology added ";
                 $count++;
             }
 
@@ -1862,12 +1859,12 @@ class DashboardInit
             foreach ($rolesArr as $role) {
                 $resRolesThis = $chart->addAccessRole($role);
                 if( $resRolesThis ) {
-                    echo "Access role $role added ";
+                    //echo "Access role $role added ";
                     $count++;
                 }
                 $resRolesThis = $chart->addDownloadRole($role);
                 if( $resRolesThis ) {
-                    echo "Download role $role added ";
+                    //echo "Download role $role added ";
                     $count++;
                 }
             }
@@ -1939,7 +1936,7 @@ class DashboardInit
                     //dump($data); exit('111');
                 }
             } else {
-                echo "Chart invalid: chartType=".$chartType."<br>";
+                //echo "Chart invalid: chartType=".$chartType."<br>";
                 $chartTypeInvalidArr[] = $chartType;
                 continue;
             }
@@ -1952,7 +1949,7 @@ class DashboardInit
 
             //check if chart type already set
             if( count($chartEntity->getChartTypes()) > 0 ) {
-                echo $count.": $chartEntity already has a type!!! <br>";
+                //echo $count.": $chartEntity already has a type!!! <br>";
                 continue;
             }
 
@@ -1975,7 +1972,7 @@ class DashboardInit
                 foreach ($chartEntity->getChartTypes() as $thisChartType) {
                     $thisChartTypeStr = $thisChartTypeStr . $thisChartType->getName() . "";
                 }
-                echo "ID ".$chartEntity->getId()." - ". $chartEntity->getName().
+                //echo "ID ".$chartEntity->getId()." - ". $chartEntity->getName().
                     " (" . $chartEntity->getAbbreviation() . "): ChartType=" . $thisChartTypeStr . "<br>";
             }
 
