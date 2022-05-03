@@ -311,5 +311,21 @@ class FellappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Cancel")')->count()
         );
+
+        //Test Download (generating PDF)
+        $crawler = $this->client->request('GET', '/fellowship-applications/download/'.$fellappId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Fellowship Application ID")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Applicant Data")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Signature")')->count()
+        );
     }
 }

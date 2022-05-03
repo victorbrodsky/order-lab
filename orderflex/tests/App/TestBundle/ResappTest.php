@@ -315,5 +315,22 @@ class ResappTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Cancel")')->count()
         );
+
+
+        //Test Download (generating PDF)
+        $crawler = $this->client->request('GET', '/residency-applications/download/'.$resappId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Residency Application ID")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Applicant")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Residency Track")')->count()
+        );
     }
 }
