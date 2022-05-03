@@ -92,6 +92,7 @@
             </div>
         {% else %}
 
+            {% if 1 %}
             <div class="row">
                 <div class="col-xs-11" data-toggle="tooltip" title="Chart">
                     {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
@@ -110,7 +111,11 @@
                     >Clear</button>
                 </div>
             </div>
+            {% else %}
+                {% do filterform.chartType.setRendered %}
+            {% endif %}
 
+            {% if 1 %}
             <div id="hidden-filter" class="row" style="margin-top: 10px; display: none;">
                 <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
                     {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
@@ -144,6 +149,14 @@
                     {% endif %}
                 </div>
             </div>
+            {% else %}
+                {% do filterform.startDate.setRendered %}
+                {% do filterform.endDate.setRendered %}
+                {% do filterform.projectSpecialty.setRendered %}
+                {% do filterform.showLimited.setRendered %}
+                {% do filterform.quantityLimit.setRendered %}
+                {% do filterform.category.setRendered %}
+            {% endif %}
 
         {% endif %}
 
@@ -168,6 +181,14 @@
         <!-- Plotly chart will be drawn inside this DIV -->
     </div>
 
+    {#<select class="combobox 111js-example-basic-single" name="states[]" multiple="multiple">#}
+        {#<option></option>#}
+        {#<option value="AL">Alabama</option>#}
+        {#<option value="WY">Wyoming</option>#}
+        {#<option value="AL1">Alabama1</option>#}
+        {#<option value="AL2">Alabama2</option>#}
+    {#</select>#}
+
 {% endblock %}
 
 
@@ -186,20 +207,5 @@
 
     {#<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />#}
     {#<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>#}
-
-    {#<script language="Javascript">#}
-        {#$(document).ready(function() {#}
-            {#console.log("local select2");#}
-            {#$("select.combobox-new").select2({#}
-                {#//width: comboboxWidth,#}
-                {#//dropdownAutoWidth: true,#}
-                {#placeholder: "Select an option",#}
-                {#allowClear: true,#}
-                {#//selectOnBlur: false,#}
-                {#//matcher: select2Matcher#}
-                {#//containerCssClass: 'combobox-width'#}
-            {#});#}
-        {#});#}
-    {#</script>#}
 
 {% endblock %}

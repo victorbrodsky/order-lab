@@ -136,9 +136,9 @@ function regularCombobox(holder) {
 }
 function specificRegularCombobox( comboboxEl ) {
     //return; //testing
-    console.log("specificRegularCombobox");
+    //console.log("specificRegularCombobox");
     //console.log('comboboxEl:');
-    console.log(comboboxEl);
+    //console.log(comboboxEl);
 
     if( comboboxEl && comboboxEl.length ) {
         //ok
@@ -160,6 +160,15 @@ function specificRegularCombobox( comboboxEl ) {
         matcher: select2Matcher
         //containerCssClass: 'combobox-width'
     });
+
+    // comboboxEl.select2({
+    //     width: comboboxWidth,
+    //     dropdownAutoWidth: true,
+    //     placeholder: "Select an option",
+    //     allowClear: true,
+    //     selectOnBlur: false,
+    //     matcher: select2Matcher
+    // });
 
     if (comboboxEl.attr("readonly")) {
         comboboxEl.select2("readonly", true);
@@ -263,9 +272,9 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 //target - class or id of the target element
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
-    console.log("populateSelectCombobox");
+    //console.log("populateSelectCombobox");
     //console.log("target="+target);
-    printF(target,'populate combobox target: ');
+    //printF(target,'populate combobox target: ');
 
     //printF($('#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName'),'populate combobox target1: ');
     //printF(document.getElementById('oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName'),'populate combobox target2: ');
@@ -354,7 +363,8 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     //console.log("EOF populateSelectCombobox");
 }
 
-var select2Matcher = function(term, text, opt) {
+var select2Matcher_OLD = function(term, text, opt) {
+    //return;
     //console.log("term="+term);
     //console.log("text="+text);
     var textStr = text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
@@ -368,6 +378,32 @@ var select2Matcher = function(term, text, opt) {
     //     termStr = term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
     // }
     return textStr.indexOf(termStr)>=0;
+}
+//https://select2.org/searching function matchCustom(params, data)b
+var select2Matcher = function(params, data) {
+
+    // If there are no search terms, return all of the data
+    if ($.trim(params.term) === '') {
+        return data;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof data.text === 'undefined') {
+        return null;
+    }
+
+    var textStr = data.text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+    var termStr = params.term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
+
+    if( textStr.indexOf(termStr)>=0 ) {
+        var modifiedData = $.extend({}, data, true);
+        //modifiedData.text += ' (matched)';
+        // You can return modified objects from here
+        return modifiedData;
+    }
+
+    // Return `null` if the term should not be displayed
+    return null;
 }
 
 var filterDisabledOptions = function(data,target) {

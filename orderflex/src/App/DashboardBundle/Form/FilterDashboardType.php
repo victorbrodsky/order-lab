@@ -116,6 +116,9 @@ class FilterDashboardType extends AbstractType
         }
 
         if( isset($this->params['chartType']) && $this->params['chartType'] ) {
+            //dump($this->params['chartTypes']);
+            //dump($this->params['chartTypesShow']);
+            //exit('111');
             $builder->add('chartType', ChoiceType::class, array(
                 'label' => false,
                 'choices' => $this->params['chartTypes'],
