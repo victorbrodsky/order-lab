@@ -919,7 +919,7 @@ class FellAppController extends OrderAbstractController {
             $cycle = 'download';
             $disabled = true;
             $method = "GET";
-            $action = null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+            $action = ""; //null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
         $params = array(
@@ -2134,7 +2134,7 @@ class FellAppController extends OrderAbstractController {
         if( $routeName == "fellapp_interview_show" ) {
             $cycle = "show";
             $method = "GET";
-            $action = null;
+            $action = ""; //null;
             $disabled = true;
         }
 

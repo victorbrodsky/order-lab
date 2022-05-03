@@ -978,7 +978,7 @@ class ResAppController extends OrderAbstractController {
             $cycle = 'new';
             $disabled = false;
             $method = null; //"GET";
-            $action = null; //$this->generateUrl('resapp_show',array('id' => $entity->getId()));
+            $action = ""; //null; //$this->generateUrl('resapp_show',array('id' => $entity->getId()));
             //exit('resapp_new, action='.$action);
         }
 
@@ -1013,7 +1013,7 @@ class ResAppController extends OrderAbstractController {
             $cycle = 'download';
             $disabled = true;
             $method = "GET";
-            $action = null; //$this->generateUrl('resapp_update', array('id' => $entity->getId()));
+            $action = ""; //null; //$this->generateUrl('resapp_update', array('id' => $entity->getId()));
         }
 
         $ethnicities = $resappUtil->getEthnicities($entity,$cycle); //show
@@ -2367,7 +2367,7 @@ class ResAppController extends OrderAbstractController {
         if( $routeName == "resapp_interview_show" ) {
             $cycle = "show";
             $method = "GET";
-            $action = null;
+            $action = ""; //null;
             $disabled = true;
         }
 

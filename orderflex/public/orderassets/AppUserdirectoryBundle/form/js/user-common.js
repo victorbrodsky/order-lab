@@ -267,6 +267,10 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     //console.log("target="+target);
     printF(target,'populate combobox target: ');
 
+    //printF($('#oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName'),'populate combobox target1: ');
+    //printF(document.getElementById('oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName'),'populate combobox target2: ');
+    //printF(document.getElementById('sssssss'),'populate combobox target3: ');
+
 //    //clear the value if it is not set (What is the point to do so if it is empty?!)
 //    var value = $(target).val();
 //    console.log("target="+target+", value1="+value);
@@ -1061,11 +1065,16 @@ function capitaliseFirstLetter(string)
 }
 
 function printF(element,text) {
-    var str = "id="+element.attr("id") + ", class=" + element.attr("class")
-    if( text ) {
-        str = text + " : " + str;
+    if( element && $(element).length > 0 ) {
+        //return null;
+
+        //var str = "id=" + element.attr("id") + ", class=" + element.attr("class");
+        var str = "id=" + $(element).attr("id") + ", class=" + $(element).attr("class")
+        if (text) {
+            str = text + " : " + str;
+        }
+        console.log(str);
     }
-    console.log(str);
 }
 
 function inArrayCheck( arr, needle ) {
