@@ -180,11 +180,11 @@ function getComboboxCompositetree(holder) {
 
 function getComboboxSingleCompositetree(comboboxEl,bundleName,entityName) {
 
-    //console.log('getComboboxSingleCompositetree:');
-    //console.log(comboboxEl);
+    console.log('getComboboxSingleCompositetree:');
+    console.log(comboboxEl);
 
     var thisid = comboboxEl.val();
-    //console.log('thisid='+thisid);
+    console.log('thisid='+thisid);
 
     if( !thisid ) {
         thisid = 0;
@@ -299,6 +299,8 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
 
         //orderformtype (sitename) "calllog, crn, single, multi, transres ..."
         var orderformtype = $('#orderformtype').val();
+
+        console.log('thisid2='+thisid);
 
         //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
