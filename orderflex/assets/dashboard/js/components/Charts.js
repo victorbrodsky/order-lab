@@ -87,7 +87,7 @@ class Charts extends Component {
         //console.log("totalChartCount="+totalChartCount);
 
         if( totalChartCount == 0 ) {
-            const element = <div>Please select chart</div>;
+            const element = <div></div>;
             ReactDOM.render(element, document.getElementById('error-message'));
         }
 
@@ -292,7 +292,7 @@ class Charts extends Component {
         //console.log("totalChartCount="+totalChartCount);
 
         if( totalChartCount == 0 ) {
-            const element = <div>Please select chart</div>;
+            const element = <div></div>;
             ReactDOM.render(element, document.getElementById('error-message'));
         }
 

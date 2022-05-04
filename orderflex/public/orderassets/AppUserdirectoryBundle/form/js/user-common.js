@@ -363,24 +363,16 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     //console.log("EOF populateSelectCombobox");
 }
 
-var select2Matcher_OLD = function(term, text, opt) {
-    //return;
+//Select2 V3
+var select2Matcher = function(term, text, opt) {
     //console.log("term="+term);
     //console.log("text="+text);
     var textStr = text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
     var termStr = term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
-    // var textStr = text;
-    // var termStr = term;
-    // if( text ) {
-    //     textStr = text.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
-    // }
-    // if( term ) {
-    //     termStr = term.toString().toUpperCase().replace(/[\. ,\/:;-]+/g, "");
-    // }
     return textStr.indexOf(termStr)>=0;
 }
-//https://select2.org/searching function matchCustom(params, data)b
-var select2Matcher = function(params, data) {
+//Select2 V4 (https://select2.org/searching function matchCustom(params, data))
+var select2Matcher_V4 = function(params, data) {
 
     // If there are no search terms, return all of the data
     if ($.trim(params.term) === '') {
