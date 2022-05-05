@@ -229,7 +229,8 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+        //$invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findBy(array(), array('id' => 'DESC'));
 
         if( count($invoices) > 0 ) {
             $invoice = end($invoices);
