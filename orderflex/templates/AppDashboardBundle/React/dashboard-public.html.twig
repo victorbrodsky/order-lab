@@ -13,7 +13,9 @@
     {% endif %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <input type="hidden" id="useWarning" value="{{ useWarning }}" />
+    {#<input type="hidden" id="useWarning" value="{{ useWarning }}" />#}
+    <input type="hidden" id="chartTypesCount" value="{{ chartTypesCount }}" />
+    <input type="hidden" id="maxDisplayCharts" value="{{ maxDisplayCharts }}" />
 
     {% if testflag is defined %}
         <input type="hidden" id="testflag" value="{{ testflag }}" />
@@ -91,23 +93,25 @@
                 </div>
             </div>
         {% else %}
-
+            {#Filter form#}
             <div class="row">
                 <div class="col-xs-11" data-toggle="tooltip" title="Chart">
                     {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
                 </div>
                 <div class="col-xs-1">
-                    <button id="filter-btn"
-                            type="button"
-                            class="btn btn-default"
-                            onclick="plotlyGetChartsReact('dashboard')"
-                            data-spinner-color="{{ spinnerColor }}"
-                    >Display</button>
-                    <button id="clear-btn"
-                            type="button"
-                            class="btn btn-default"
-                            onclick="dashboardClearAllCharts()"
-                    >Clear</button>
+                    <div class="btn-group" role="group" aria-label="Toolbar with button groups">
+                        <button id="filter-btn"
+                                type="button"
+                                class="btn btn-default"
+                                onclick="plotlyGetChartsReact('dashboard')"
+                                data-spinner-color="{{ spinnerColor }}"
+                        >Display</button>
+                        <button id="clear-btn"
+                                type="button"
+                                class="btn btn-default"
+                                onclick="dashboardClearAllCharts()"
+                        >X</button>
+                    </div>
                 </div>
             </div>
 
@@ -180,15 +184,28 @@
     {{ encore_entry_script_tags('dashboard') }}
 {% endblock %}
 
+{% block additionalcss %}
+    {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.7/css/font-awesome.min.css') }}" />
+{% endblock %}
+
 {% block additionaljs %}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>
+
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 {% endblock %}
 
 {% block mainjs %}
+    {#Remove timeout#}
 
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>

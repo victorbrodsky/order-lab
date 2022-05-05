@@ -116,19 +116,19 @@ class DashboardController extends OrderAbstractController
         $filterform->handleRequest($request);
 
         //chartType
-        $useWarning = true;
-        $autoLoad = $request->query->get('auto');
-        if( isset($autoLoad) ) {
-            if( $autoLoad ) {
-                //echo "auto is true <br>";
-                $useWarning = false;
-            } else {
-                //echo "auto is false <br>";
-            }
-        } else {
-            //echo "auto not set <br>";
-            //$useWarning = true;
-        }
+//        $useWarning = true;
+//        $autoLoad = $request->query->get('auto');
+//        if( isset($autoLoad) ) {
+//            if( $autoLoad ) {
+//                //echo "auto is true <br>";
+//                $useWarning = false;
+//            } else {
+//                //echo "auto is false <br>";
+//            }
+//        } else {
+//            //echo "auto not set <br>";
+//            //$useWarning = true;
+//        }
 //        if( $useWarning ) {
 //            echo "useWarning is true <br>";
 //            $useWarning = false;
@@ -163,7 +163,7 @@ class DashboardController extends OrderAbstractController
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
-            'useWarning' => $useWarning,
+            //'useWarning' => $useWarning,
             'chartTypesCount' => $chartTypesCount,
             'maxDisplayCharts' => $maxDisplayCharts,
             'public' => false
@@ -220,43 +220,52 @@ class DashboardController extends OrderAbstractController
     }
 
     /**
+     * Public Dashboards: https://bitbucket.org/victorbrodsky/trp/issues/261/public-dashboards
+     *
      * @Route("/public", name="dashboard_public")
      * @Template("AppDashboardBundle/React/dashboard-public.html.twig")
      */
     public function dashboardPublicChoicesAction( Request $request )
     {
+        //B- checks if the user is logged in and forwards to the usual URL
+        // if the user is logged in (making use of the chart ID array in the URL,
+        // so the logged in user still sees the same charts with one click).
         if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
             return $this->redirectToRoute('dashboard_home');
         }
 
-        $dashboardUtil = $this->container->get('dashboard_util');
+        //exit('111');
+
+        //$dashboardUtil = $this->container->get('dashboard_util');
         $filterform = $this->getFilterPublic();
         $filterform->handleRequest($request);
 
         //chartType
-        $useWarning = true;
-        $autoLoad = $request->query->get('auto');
-        if( isset($autoLoad) ) {
-            if( $autoLoad ) {
-                //echo "auto is true <br>";
-                $useWarning = false;
-            } else {
-                //echo "auto is false <br>";
-            }
-        } else {
-            //echo "auto not set <br>";
-            //$useWarning = true;
-        }
+//        $useWarning = true;
+//        $autoLoad = $request->query->get('auto');
+//        if( isset($autoLoad) ) {
+//            if( $autoLoad ) {
+//                //echo "auto is true <br>";
+//                $useWarning = false;
+//            } else {
+//                //echo "auto is false <br>";
+//            }
+//        } else {
+//            //echo "auto not set <br>";
+//            //$useWarning = true;
+//        }
 
         $chartTypesCount = 0;
         $chartTypes = $filterform["chartType"]->getData();
         if( $chartTypes ) {
             $chartTypesCount = count($chartTypes);
         }
-        if( !$useWarning ) {
-            $chartTypesCount = 0;
-        }
-        if( $chartTypesCount > 3 ) {
+//        if( !$useWarning ) {
+//            $chartTypesCount = 0;
+//        }
+
+        $maxDisplayCharts = 3;
+        if( $chartTypesCount > $maxDisplayCharts ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
                 "Please click 'Display' button to generate multiple charts"
@@ -273,13 +282,15 @@ class DashboardController extends OrderAbstractController
             'filterform' => $filterform->createView(),
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
-            'useWarning' => $useWarning,
+//            'useWarning' => $useWarning,
+            'chartTypesCount' => $chartTypesCount,
+            'maxDisplayCharts' => $maxDisplayCharts,
             'public' => true
         );
     }
 
     public function getFilterPublic( $showLimited=false, $withCompareType=false ) {
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
         $dashboardUtil = $this->container->get('dashboard_util');
 
         //////////// Filter ////////////
@@ -316,6 +327,10 @@ class DashboardController extends OrderAbstractController
         }
 
         $publicCharts = $dashboardUtil->getPublicChartTypes();
+
+        //dump($publicCharts);
+        //exit('111');
+
         //chartTypes
         $params["chartType"] = true;
         $params["chartTypes"] = $publicCharts;
