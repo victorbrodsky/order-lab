@@ -570,7 +570,7 @@ class DashboardUtil
             //"60. PIs with most projects" => "pis-with-most-projects",
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
-            "60. Number of fellowship applicant by year" => "fellapp-number-applicant-by-year",
+            "60. Number of fellowship applicants by year" => "fellapp-number-applicant-by-year",
             "61. Average sum of the USMLE and COMLEX scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
 
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",

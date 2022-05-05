@@ -25,7 +25,7 @@
         {#{% if childrens|length > 0 %}#}
         {% if childrens %}
             <li class="dropdown-submenu">
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target1="_blank">{{ name }}</a>
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}">{{ name }}</a>
                 {#{% if childrens|length > 0 %}#}
                     <ul class="dropdown-menu">
                         {{ _self.createFilterTopics(childrens) }}
@@ -34,7 +34,7 @@
             </li>
         {% else %}
             <li>
-                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}" target="_blank">{{ name }}</a>
+                <a href="{{ path(dashboard_sitename~'_single_topic_id',{'id':id}) }}">{{ name }}</a>
             </li>
         {% endif %}
 
@@ -49,7 +49,7 @@
                 {% for key,value in values %}
                     {% set filterServiceUrl = value|replace({' ':'-'}) %}
                     <li>
-                        <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}" target="_blank">{{ value }}</a>
+                        <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}">{{ value }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -61,7 +61,7 @@
         <ul class="dropdown-menu multi-level">
             {% for key,value in filterServices %}
                 <li>
-                    <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}" target="_blank">{{ value }}</a>
+                    <a href="{{ path(dashboard_sitename~'_single_service',{'id':key}) }}">{{ value }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -79,7 +79,7 @@
         <ul class="dropdown-menu multi-level">
             {% for key,value in filterTypes %}
                 <li>
-                    <a href="{{ path(dashboard_sitename~'_single_type',{'id':key}) }}" target="_blank">{{ value }}</a>
+                    <a href="{{ path(dashboard_sitename~'_single_type',{'id':key}) }}">{{ value }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -99,7 +99,7 @@
         <ul class="dropdown-menu multi-level">
             {% for key,value in filterFavorites %}
                 <li>
-                    <a href="{{ path(dashboard_sitename~'_single_favorite',{'id':key}) }}" target="_blank">{{ value }}</a>
+                    <a href="{{ path(dashboard_sitename~'_single_favorite',{'id':key}) }}">{{ value }}</a>
                 </li>
             {% endfor %}
         </ul>
