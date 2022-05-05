@@ -141,10 +141,12 @@ class DashboardController extends OrderAbstractController
         if( $chartTypes ) {
             $chartTypesCount = count($chartTypes);
         }
-        if( !$useWarning ) {
-            $chartTypesCount = 0;
-        }
-        if( $chartTypesCount > 3 ) {
+//        if( !$useWarning ) {
+//            $chartTypesCount = 0;
+//        }
+
+        $maxDisplayCharts = 3;
+        if( $chartTypesCount > $maxDisplayCharts ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
                 "Please click 'Display' button to generate multiple charts"
@@ -162,6 +164,8 @@ class DashboardController extends OrderAbstractController
             'chartsArray' => array(),
             'spinnerColor' => '#85c1e9',
             'useWarning' => $useWarning,
+            'chartTypesCount' => $chartTypesCount,
+            'maxDisplayCharts' => $maxDisplayCharts,
             'public' => false
         );
     }

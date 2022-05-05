@@ -9,15 +9,19 @@
 {% block content %}
 
     {#TODO update fontawesome: spin not spinning#}
+    {#<script defer src="orderassets/AppUserdirectoryBundle/fontawesome/js/all.js"></script>#}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.min.css') }}" />#}
+    {#<script defer src="orderassets/AppUserdirectoryBundle/fontawesome/js/all.js"></script>#}
     {#<div>#}
-    <span class="fa fa-refresh fa-spin fa-spinner fa-4x"></span>
-    <i class="fa fa-refresh fa-spin fa-spinner fa-4x"></i>
+    {#<span class="fa fa-spin fa-spinner fa-4x"></span>#}
+    {#<i class="fa fa-spin fa-spinner fa-4x"></i>#}
+    {#<i class="fa fa-file-pdf fa-lg"></i>#}
+
     {#</div>#}
     {#<p>Spinning:</p>#}
     {#<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>#}
@@ -27,7 +31,9 @@
     {% endif %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <input type="hidden" id="useWarning" value="{{ useWarning }}" />
+    {#<input type="hidden" id="useWarning" value="{{ useWarning }}" />#}
+    <input type="hidden" id="chartTypesCount" value="{{ chartTypesCount }}" />
+    <input type="hidden" id="maxDisplayCharts" value="{{ maxDisplayCharts }}" />
 
     {% if testflag is defined %}
         <input type="hidden" id="testflag" value="{{ testflag }}" />
@@ -222,15 +228,8 @@
 
 {% block additionalcss %}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />#}
-    {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.1/css/font-awesome.min.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome/css/font-awesome.min.css') }}" />#}
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/regular.css') }}" />#}
-    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/brands.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.7/css/font-awesome.min.css') }}" />
 {% endblock %}
 
 {% block additionaljs %}

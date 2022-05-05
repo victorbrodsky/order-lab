@@ -10,15 +10,25 @@ $(document).ready(function() {
     //
 
     //click filter button if number of charts less or equal 3
-    var useWarning = $("#useWarning").val();
-    var chartTypesLen = $('#filter_chartType').select2('data').length;
-    //console.log("1 chartTypesLen="+chartTypesLen);
-    if( !useWarning ) {
-        //console.log("not set useWarning="+useWarning);
-        chartTypesLen = 0;
+    // var useWarning = $("#useWarning").val();
+    // var chartTypesLen = $('#filter_chartType').select2('data').length;
+    // console.log("1 chartTypesLen="+chartTypesLen);
+    // if( !useWarning ) {
+    //     //console.log("not set useWarning="+useWarning);
+    //     chartTypesLen = 0;
+    // }
+
+    var chartTypesLen = $('#chartTypesCount').val();
+    var maxDisplayCharts = $('#maxDisplayCharts').val();
+    maxDisplayCharts = parseInt(maxDisplayCharts);
+
+    if( chartTypesLen == 0 ) {
+        chartTypesLen = $('#filter_chartType').select2('data').length;
     }
-    //console.log("2 chartTypesLen="+chartTypesLen);
-    if( chartTypesLen > 0 && chartTypesLen < 4 ) {
+
+    console.log("2 chartTypesLen="+chartTypesLen);
+    console.log("2 maxDisplayCharts="+maxDisplayCharts);
+    if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
             document.getElementById("filter-btn").click(); //chart-filter-btn
