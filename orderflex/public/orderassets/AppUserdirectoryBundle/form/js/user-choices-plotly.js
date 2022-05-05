@@ -18,7 +18,7 @@ $(document).ready(function() {
         chartTypesLen = 0;
     }
     //console.log("2 chartTypesLen="+chartTypesLen);
-    if( chartTypesLen >= 0 && chartTypesLen < 4 ) {
+    if( chartTypesLen > 0 && chartTypesLen < 4 ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
             document.getElementById("filter-btn").click(); //chart-filter-btn

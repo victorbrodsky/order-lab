@@ -9,13 +9,15 @@
 {% block content %}
 
     {#TODO update fontawesome: spin not spinning#}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
     {#<div>#}
-    {#<span class="fa fa-refresh fa-spin fa-spinner fa-4x"></span>#}
-    {#<i class="fa fa-refresh fa-spin fa-spinner fa-4x"></i>#}
+    <span class="fa fa-refresh fa-spin fa-spinner fa-4x"></span>
+    <i class="fa fa-refresh fa-spin fa-spinner fa-4x"></i>
     {#</div>#}
     {#<p>Spinning:</p>#}
     {#<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>#}
@@ -105,7 +107,7 @@
             </div>
 
         {% else %}
-
+            {#Filter form#}
             {% if 1 %}
             <div class="row">
                 <div class="col-xs-11" data-toggle="tooltip" title="Chart">
@@ -218,12 +220,18 @@
     {{ encore_entry_script_tags('dashboard') }}
 {% endblock %}
 
-{#{% block additionalcss %}#}
+{% block additionalcss %}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />#}
     {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />#}
     {#<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
-{#{% endblock %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.1/css/font-awesome.min.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome/css/font-awesome.min.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/fontawesome.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/regular.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/brands.css') }}" />#}
+{% endblock %}
 
 {% block additionaljs %}
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.min.js') }}"></script>
