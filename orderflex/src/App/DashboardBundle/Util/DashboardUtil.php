@@ -7639,7 +7639,7 @@ class DashboardUtil
             $chartsArray = $this->getChart($fellappArr, $chartName,'bar',$layoutArray);
         }
 
-        //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+        //"61-simple. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
         if( $chartType == "fellapp-average-usmle-scores-by-year-SIMPLE" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
