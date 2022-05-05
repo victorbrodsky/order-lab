@@ -135,11 +135,7 @@ class DashboardTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Show")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Clear")')->count()
+            $crawler->filter('html:contains("Display")')->count()
         );
     }
 
