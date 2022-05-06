@@ -145,7 +145,7 @@ class DashboardController extends OrderAbstractController
 //            $chartTypesCount = 0;
 //        }
 
-        $maxDisplayCharts = 3;
+        $maxDisplayCharts = 20;
         if( $chartTypesCount > $maxDisplayCharts ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
@@ -264,7 +264,7 @@ class DashboardController extends OrderAbstractController
 //            $chartTypesCount = 0;
 //        }
 
-        $maxDisplayCharts = 3;
+        $maxDisplayCharts = 20;
         if( $chartTypesCount > $maxDisplayCharts ) {
             $this->get('session')->getFlashBag()->add(
                 'pnotify',

@@ -96,6 +96,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //I should be redirected to the URL I was trying to visit after login.
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
+        //echo "lastRoute=".$lastRoute."<br>";
+        //exit('111');
 
         $options['sitename'] = $this->siteName;
 
@@ -185,6 +187,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $keepalive = strpos((string)$lastRoute, '/keepalive');
         $idlelogout = strpos((string)$lastRoute, '/idle-log-out');
         $common = strpos((string)$lastRoute, '/common/');
+        //$newproject = strpos((string)$lastRoute, '/project/new/');
 
         $filedownload = strpos((string)$lastRoute, '/file-download');
         if( $filedownload ) {
@@ -203,7 +206,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
             $lastRoute && $lastRoute != '' && 
             $loginpos === false && $nopermpos === false && 
             $nocheck === false && $keepalive === false && 
-            $idlelogout === false && $common === false 
+            $idlelogout === false && $common === false
         ) {
             $referer_url = $lastRoute;
         } else {

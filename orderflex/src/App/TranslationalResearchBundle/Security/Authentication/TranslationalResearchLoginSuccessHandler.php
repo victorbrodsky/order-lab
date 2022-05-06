@@ -68,6 +68,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
         $url = $redirectResponse->getTargetUrl();
         //echo "targetUrl=".$targetUrl."; url=".$url."<br>";
+        //exit('111');
 
         //IF: new project creation page "order/translational-research/project/new" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
         //THEN: assign minimum role for new project page "ROLE_TRANSRES_REQUESTER"

@@ -7892,11 +7892,12 @@ class DashboardUtil
 
             //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
 
+            //Show the last 10 years (in 2022): 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
             //$startYear = $fellappUtil->getDefaultAcademicStartYear();
-            $startDate->modify('-4 year');
-            $endDate->modify('+1 year');
+            $startDate->modify('-7 year');
+            $endDate->modify('+2 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
