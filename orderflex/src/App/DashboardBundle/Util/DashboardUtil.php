@@ -571,7 +571,8 @@ class DashboardUtil
             //"61. PIs with highest expenditures" => "pis-with-highest-expenditures",
 
             "60. Number of fellowship applicants by year" => "fellapp-number-applicant-by-year",
-            "61. Average sum of the USMLE and COMLEX scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+            //"61-OLD. Average sum of the USMLE and COMLEX scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year-OLD",
+            "61. Average USMLE and COMLEX scores for fellowship applicants by year" => "fellapp-average-usmle-scores-by-year",
 
             "62. New and Edited Call Log Entries Per Week" => "new-and-edited-calllog-entries-per-day",
             "63. Patients with Call Log Entries Per Week" => "patients-calllog-per-day",
@@ -7951,6 +7952,7 @@ class DashboardUtil
 
                 foreach($fellapps as $fellapp) {
 
+                    //Usmle
                     $usmle1ScoreAvg = 0;
                     $usmle1ScoreCounter = 0;
                     $usmle1ScoreSumTotal = 0;
@@ -7963,9 +7965,18 @@ class DashboardUtil
                     $usmle3ScoreCounter = 0;
                     $usmle3ScoreSumTotal = 0;
 
-                    $comlexScoreAvg = 0;
-                    $comlexScoreCounter = 0;
-                    $comlexScoreSumTotal = 0;
+                    //Comlex
+                    $comlex1ScoreAvg = 0;
+                    $comlex1ScoreCounter = 0;
+                    $comlex1ScoreSumTotal = 0;
+
+                    $comlex2ScoreAvg = 0;
+                    $comlex2ScoreCounter = 0;
+                    $comlex2ScoreSumTotal = 0;
+
+                    $comlex3ScoreAvg = 0;
+                    $comlex3ScoreCounter = 0;
+                    $comlex3ScoreSumTotal = 0;
 
                     $usmleArr = $fellapp->getAllUsmleArr();
                     if( count($usmleArr) > 0 ) {
@@ -8002,23 +8013,32 @@ class DashboardUtil
                     $comlexArr = $fellapp->getAllComlexArr();
                     if( count($comlexArr) > 0 ) {
                         if( $comlexArr[1] !== NULL ) {
-                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[1];
-                            $comlexScoreCounter++;
+                            $comlex1ScoreSumTotal = $comlex1ScoreSumTotal + $comlexArr[1];
+                            $comlex1ScoreCounter++;
                         }
                         if( $comlexArr[2] !== NULL ) {
-                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[2];
-                            $comlexScoreCounter++;
+                            $comlex2ScoreSumTotal = $comlex2ScoreSumTotal + $comlexArr[2];
+                            $comlex2ScoreCounter++;
                         }
                         if( $comlexArr[3] !== NULL ) {
-                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[3];
-                            $comlexScoreCounter++;
+                            $comlex3ScoreSumTotal = $comlex3ScoreSumTotal + $comlexArr[3];
+                            $comlex3ScoreCounter++;
                         }
                     }
 
-                    if( $comlexScoreCounter > 0 ) {
-                        //echo "$usmleScoreSumTotal / $usmleScoreCounter <br>";
-                        $comlexScoreAvg = round($comlexScoreSumTotal / $comlexScoreCounter);
-                        $comlexValueArr[] = $comlexScoreAvg;
+                    if( $comlex1ScoreCounter > 0 ) {
+                        $comlex1ScoreAvg = round($comlex1ScoreSumTotal / $comlex1ScoreCounter);
+                        $comlex1ValueArr[] = $comlex1ScoreAvg;
+                        $comlexYearArr[] = $startDateLabel;
+                    }
+                    if( $comlex2ScoreCounter > 0 ) {
+                        $comlex2ScoreAvg = round($comlex2ScoreSumTotal / $comlex2ScoreCounter);
+                        $comlex2ValueArr[] = $comlex2ScoreAvg;
+                        $comlexYearArr[] = $startDateLabel;
+                    }
+                    if( $comlex3ScoreCounter > 0 ) {
+                        $comlex3ScoreAvg = round($comlex3ScoreSumTotal / $comlex3ScoreCounter);
+                        $comlex3ValueArr[] = $comlex3ScoreAvg;
                         $comlexYearArr[] = $startDateLabel;
                     }
 
@@ -8045,9 +8065,14 @@ class DashboardUtil
             $combinedData['USMLE3']['values'] = $usmle3ValueArr;
 
             ////////// COMLEX //////////
+            $combinedData['COMLEX1']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX1']['values'] = $comlex1ValueArr;
 
-            //$combinedData['COMLEX']['labels'] = $comlexYearArr;
-            //$combinedData['COMLEX']['values'] = $comlexValueArr;
+            $combinedData['COMLEX2']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX2']['values'] = $comlex2ValueArr;
+
+            $combinedData['COMLEX3']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX3']['values'] = $comlex3ValueArr;
 
             //violin
             //$combinedDataArr, $title, $type="violin", $layoutArray=null, $hoverinfo=null
