@@ -26,8 +26,8 @@ $(document).ready(function() {
         chartTypesLen = $('#filter_chartType').select2('data').length;
     }
 
-    console.log("2 chartTypesLen="+chartTypesLen);
-    console.log("2 maxDisplayCharts="+maxDisplayCharts);
+    //console.log("2 chartTypesLen="+chartTypesLen);
+    //console.log("2 maxDisplayCharts="+maxDisplayCharts);
     if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");

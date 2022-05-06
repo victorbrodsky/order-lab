@@ -705,7 +705,7 @@ function extendAll(holder) {
 //}
 
 function initDatepicker( holder ) {
-    // console.log("init Datepicker cycle="+cycle);
+    //console.log("init Datepicker cycle="+cycle);
     if( cycle != "show" ) {
 
         //console.log("init Datepicker");
@@ -737,7 +737,7 @@ function processAllDatepickers( targets ) {
 
 //Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
 function initSingleDatepicker( datepickerElement ) {
-
+    //console.log("1 initSingleDatepicker:");
     if( datepickerElement.hasClass('datepicker-ignore') ) {
         //printF(datepickerElement,'Ignore:');
         return;
@@ -753,7 +753,7 @@ function initSingleDatepicker( datepickerElement ) {
         return;
     }
 
-    //console.log("initSingleDatepicker:");
+    //console.log("2 initSingleDatepicker:");
     //printF(datepickerElement,'datepicker element:');
     //console.log(datepickerElement);
 

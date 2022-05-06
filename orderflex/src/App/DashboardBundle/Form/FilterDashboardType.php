@@ -63,7 +63,7 @@ class FilterDashboardType extends AbstractType
             'html5' => false,
             //'data' => new \DateTime(),  //$this->params['startDate'],
             'data' => $this->params['startDate'],
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
+            'attr' => array('class'=>'datepicker form-control', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
         $builder->add('endDate', DateTimeType::class, array(

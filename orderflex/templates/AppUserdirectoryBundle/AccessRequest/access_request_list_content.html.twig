@@ -70,14 +70,17 @@
             <td>{{ entity.user.email }}</td>
             <td>{{ entity.user.preferredPhone }}</td>
             <td>
-                {{ entity.user.preferredMobilePhone }}
-                {% set userInfo = entity.user.getUSerInfo() %}
-                {% if userInfo %}
-                    {#<br>#}
-                    {% if userInfo.getPreferredMobilePhoneVerified %}
-                        <span class="text-success">Verified</span>
-                    {% else %}
-                        <span class="text-danger">Unverified</span>
+                {% set preferredMobilePhone = entity.user.preferredMobilePhone %}
+                {% if preferredMobilePhone %}
+                    {{ preferredMobilePhone }}
+                    {% set userInfo = entity.user.getUSerInfo() %}
+                    {% if userInfo %}
+                        {#<br>#}
+                        {% if userInfo.getPreferredMobilePhoneVerified %}
+                            <span class="text-success">Verified</span>
+                        {% else %}
+                            <span class="text-danger">Unverified</span>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             </td>
