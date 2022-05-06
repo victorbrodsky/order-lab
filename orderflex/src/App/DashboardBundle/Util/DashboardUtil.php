@@ -7896,8 +7896,8 @@ class DashboardUtil
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
             //$startYear = $fellappUtil->getDefaultAcademicStartYear();
-            $startDate->modify('-7 year');
-            $endDate->modify('+2 year');
+            $startDate->modify('-10 year');
+            $endDate->modify('+10 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
