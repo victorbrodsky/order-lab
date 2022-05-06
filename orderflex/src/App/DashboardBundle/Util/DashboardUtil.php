@@ -7748,8 +7748,8 @@ class DashboardUtil
             //violin
 
         }
-        //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
-        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+        //"61-OLD. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year-OLD",
+        if( $chartType == "fellapp-average-usmle-scores-by-year-OLD" ) {
             $fellappUtil = $this->container->get('fellapp_util');
 
             //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
@@ -7880,6 +7880,174 @@ class DashboardUtil
 
             $combinedData['COMLEX']['labels'] = $comlexYearArr;
             $combinedData['COMLEX']['values'] = $comlexValueArr;
+
+            //violin
+            //$combinedDataArr, $title, $type="violin", $layoutArray=null, $hoverinfo=null
+            $chartsArray = $this->getViolinChart($combinedData,$chartName,'violin');
+        }
+        //"61. Average sum of the USMLE scores for fellowship applicant by year" => "fellapp-average-usmle-scores-by-year",
+        if( $chartType == "fellapp-average-usmle-scores-by-year" ) {
+            $fellappUtil = $this->container->get('fellapp_util');
+
+            //echo "startDate=".$startDate->format('d-m-Y').", endDate=".$endDate->format('d-m-Y')."<br>";
+
+            //TODO: use shifted year: current year + 2 years
+            //TODO: academic year or calendar year range?
+            //$startYear = $fellappUtil->getDefaultAcademicStartYear();
+            $startDate->modify('-4 year');
+            $endDate->modify('+1 year');
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            $endYearInt = intval($endYear);
+
+            //$startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true,+2);
+            $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYear,true);
+            $academicStartDate = $startEndDates['startDate'];
+            $academicEndDate = $startEndDates['endDate'];
+            //echo "academicStartDate=".$academicStartDate->format('d-m-Y').", academicEndDate=".$academicEndDate->format('d-m-Y')."<br>";
+            //exit('111');
+
+            $usmleYearArr = array();
+            $comlexYearArr = array();
+
+            $totalScoreArr = array();
+            $totalUsmleArr = array();
+            $totalComlexArr = array();
+
+//            $usmle1Arr = array();
+//            $usmle2Arr = array();
+//            $usmle3Arr = array();
+//            $comlex1Arr = array();
+//            $comlex2Arr = array();
+//            $comlex3Arr = array();
+
+//            $usmleCounter1 = 0;
+//            $usmleCounter2 = 0;
+//            $usmleCounter3 = 0;
+//            $comlexCounter1 = 0;
+//            $comlexCounter2 = 0;
+//            $comlexCounter3 = 0;
+
+            $usmle1ValueArr = array();
+            $usmle2ValueArr = array();
+            $usmle3ValueArr = array();
+
+            $comlexValueArr = array();
+
+            $totalCount = 0;
+
+            do {
+                $startDateLabel = $academicStartDate->format('Y');
+                $startDateInt = intval($startDateLabel);
+                //echo "startDateLabel=".$startDateLabel."<br>";
+                //echo "StartDate=".$academicStartDate->format("d-M-Y")."; endYearInt=".$endYearInt.": <br>";
+
+                $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
+
+                $academicStartDate->modify('+ 1 year');
+
+                //$usmleSingleYearArr = array();
+                //$comlexSingleYearArr = array();
+
+                foreach($fellapps as $fellapp) {
+
+                    $usmle1ScoreAvg = 0;
+                    $usmle1ScoreCounter = 0;
+                    $usmle1ScoreSumTotal = 0;
+
+                    $usmle2ScoreAvg = 0;
+                    $usmle2ScoreCounter = 0;
+                    $usmle2ScoreSumTotal = 0;
+
+                    $usmle3ScoreAvg = 0;
+                    $usmle3ScoreCounter = 0;
+                    $usmle3ScoreSumTotal = 0;
+
+                    $comlexScoreAvg = 0;
+                    $comlexScoreCounter = 0;
+                    $comlexScoreSumTotal = 0;
+
+                    $usmleArr = $fellapp->getAllUsmleArr();
+                    if( count($usmleArr) > 0 ) {
+                        if( $usmleArr[1] !== NULL ) {
+                            $usmle1ScoreSumTotal = $usmle1ScoreSumTotal + $usmleArr[1];
+                            $usmle1ScoreCounter++;
+                        }
+                        if( $usmleArr[2] !== NULL ) {
+                            $usmle2ScoreSumTotal = $usmle2ScoreSumTotal + $usmleArr[2];
+                            $usmle2ScoreCounter++;
+                        }
+                        if( $usmleArr[3] !== NULL ) {
+                            $usmle3ScoreSumTotal = $usmle3ScoreSumTotal + $usmleArr[3];
+                            $usmle3ScoreCounter++;
+                        }
+                    }
+
+                    if( $usmle1ScoreCounter > 0 ) {
+                        $usmle1ScoreAvg = round($usmle1ScoreSumTotal / $usmle1ScoreCounter);
+                        $usmle1ValueArr[] = $usmle1ScoreAvg;
+                        $usmleYearArr[] = $startDateLabel;
+                    }
+                    if( $usmle2ScoreCounter > 0 ) {
+                        $usmle2ScoreAvg = round($usmle2ScoreSumTotal / $usmle2ScoreCounter);
+                        $usmle2ValueArr[] = $usmle2ScoreAvg;
+                        $usmleYearArr[] = $startDateLabel;
+                    }
+                    if( $usmle3ScoreCounter > 0 ) {
+                        $usmle3ScoreAvg = round($usmle3ScoreSumTotal / $usmle3ScoreCounter);
+                        $usmle3ValueArr[] = $usmle3ScoreAvg;
+                        $usmleYearArr[] = $startDateLabel;
+                    }
+
+                    $comlexArr = $fellapp->getAllComlexArr();
+                    if( count($comlexArr) > 0 ) {
+                        if( $comlexArr[1] !== NULL ) {
+                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[1];
+                            $comlexScoreCounter++;
+                        }
+                        if( $comlexArr[2] !== NULL ) {
+                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[2];
+                            $comlexScoreCounter++;
+                        }
+                        if( $comlexArr[3] !== NULL ) {
+                            $comlexScoreSumTotal = $comlexScoreSumTotal + $comlexArr[3];
+                            $comlexScoreCounter++;
+                        }
+                    }
+
+                    if( $comlexScoreCounter > 0 ) {
+                        //echo "$usmleScoreSumTotal / $usmleScoreCounter <br>";
+                        $comlexScoreAvg = round($comlexScoreSumTotal / $comlexScoreCounter);
+                        $comlexValueArr[] = $comlexScoreAvg;
+                        $comlexYearArr[] = $startDateLabel;
+                    }
+
+                }//foreach fellapp
+
+                $fellappsCount = count($fellapps);
+                $totalCount = $totalCount + $fellappsCount;
+
+            } while( $startDateInt < $endYearInt );
+
+            $chartName = $chartName . " (" . $totalCount . " applications in total)";
+            //exit('$chartName='.$chartName);
+
+            $combinedData = array();
+
+            ////////// USMLE //////////
+            $combinedData['USMLE1']['labels'] = $usmleYearArr;
+            $combinedData['USMLE1']['values'] = $usmle1ValueArr;
+
+            $combinedData['USMLE2']['labels'] = $usmleYearArr;
+            $combinedData['USMLE2']['values'] = $usmle2ValueArr;
+
+            $combinedData['USMLE3']['labels'] = $usmleYearArr;
+            $combinedData['USMLE3']['values'] = $usmle3ValueArr;
+
+            ////////// COMLEX //////////
+
+            //$combinedData['COMLEX']['labels'] = $comlexYearArr;
+            //$combinedData['COMLEX']['values'] = $comlexValueArr;
 
             //violin
             //$combinedDataArr, $title, $type="violin", $layoutArray=null, $hoverinfo=null
