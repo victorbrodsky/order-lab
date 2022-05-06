@@ -1230,9 +1230,9 @@ class ProjectController extends OrderAbstractController
      */
     public function newProjectSelectorAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
 
         $transresUtil = $this->container->get('transres_util');
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
