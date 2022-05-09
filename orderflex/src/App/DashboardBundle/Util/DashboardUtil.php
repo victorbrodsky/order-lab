@@ -7896,8 +7896,8 @@ class DashboardUtil
             //TODO: use shifted year: current year + 2 years
             //TODO: academic year or calendar year range?
             //$startYear = $fellappUtil->getDefaultAcademicStartYear();
-            $startDate->modify('-10 year');
-            $endDate->modify('+10 year');
+            $startDate->modify('-6 year');
+            $endDate->modify('+2 year');
             $startYear = $startDate->format('Y');
             $endYear = $endDate->format('Y');
             $endYearInt = intval($endYear);
@@ -7912,23 +7912,17 @@ class DashboardUtil
             $usmleYearArr = array();
             $comlexYearArr = array();
 
+            $usmle1YearArr = array();
+            $usmle2YearArr = array();
+            $usmle3YearArr = array();
+            $comlex1YearArr = array();
+            $comlex2YearArr = array();
+            $comlex3YearArr = array();
+
+
             $totalScoreArr = array();
             $totalUsmleArr = array();
             $totalComlexArr = array();
-
-//            $usmle1Arr = array();
-//            $usmle2Arr = array();
-//            $usmle3Arr = array();
-//            $comlex1Arr = array();
-//            $comlex2Arr = array();
-//            $comlex3Arr = array();
-
-//            $usmleCounter1 = 0;
-//            $usmleCounter2 = 0;
-//            $usmleCounter3 = 0;
-//            $comlexCounter1 = 0;
-//            $comlexCounter2 = 0;
-//            $comlexCounter3 = 0;
 
             $usmle1ValueArr = array();
             $usmle2ValueArr = array();
@@ -7945,12 +7939,14 @@ class DashboardUtil
                 //echo "StartDate=".$academicStartDate->format("d-M-Y")."; endYearInt=".$endYearInt.": <br>";
 
                 $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$startDateLabel);
+                //echo "startDateLabel=".$startDateLabel.", fellapps=".count($fellapps)."<br>";
 
                 $academicStartDate->modify('+ 1 year');
 
                 //$usmleSingleYearArr = array();
                 //$comlexSingleYearArr = array();
 
+                //TODO: make sure the value corresponds to year
                 foreach($fellapps as $fellapp) {
 
                     //Usmle
@@ -7998,17 +7994,17 @@ class DashboardUtil
                     if( $usmle1ScoreCounter > 0 ) {
                         $usmle1ScoreAvg = round($usmle1ScoreSumTotal / $usmle1ScoreCounter);
                         $usmle1ValueArr[] = $usmle1ScoreAvg;
-                        $usmleYearArr[] = $startDateLabel;
+                        $usmle1YearArr[] = $startDateLabel;
                     }
                     if( $usmle2ScoreCounter > 0 ) {
                         $usmle2ScoreAvg = round($usmle2ScoreSumTotal / $usmle2ScoreCounter);
                         $usmle2ValueArr[] = $usmle2ScoreAvg;
-                        $usmleYearArr[] = $startDateLabel;
+                        $usmle2YearArr[] = $startDateLabel;
                     }
                     if( $usmle3ScoreCounter > 0 ) {
                         $usmle3ScoreAvg = round($usmle3ScoreSumTotal / $usmle3ScoreCounter);
                         $usmle3ValueArr[] = $usmle3ScoreAvg;
-                        $usmleYearArr[] = $startDateLabel;
+                        $usmle3YearArr[] = $startDateLabel;
                     }
 
                     $comlexArr = $fellapp->getAllComlexArr();
@@ -8030,17 +8026,17 @@ class DashboardUtil
                     if( $comlex1ScoreCounter > 0 ) {
                         $comlex1ScoreAvg = round($comlex1ScoreSumTotal / $comlex1ScoreCounter);
                         $comlex1ValueArr[] = $comlex1ScoreAvg;
-                        $comlexYearArr[] = $startDateLabel;
+                        $comlex1YearArr[] = $startDateLabel;
                     }
                     if( $comlex2ScoreCounter > 0 ) {
                         $comlex2ScoreAvg = round($comlex2ScoreSumTotal / $comlex2ScoreCounter);
                         $comlex2ValueArr[] = $comlex2ScoreAvg;
-                        $comlexYearArr[] = $startDateLabel;
+                        $comlex2YearArr[] = $startDateLabel;
                     }
                     if( $comlex3ScoreCounter > 0 ) {
                         $comlex3ScoreAvg = round($comlex3ScoreSumTotal / $comlex3ScoreCounter);
                         $comlex3ValueArr[] = $comlex3ScoreAvg;
-                        $comlexYearArr[] = $startDateLabel;
+                        $comlex3YearArr[] = $startDateLabel;
                     }
 
                 }//foreach fellapp
@@ -8051,29 +8047,35 @@ class DashboardUtil
             } while( $startDateInt < $endYearInt );
 
             $chartName = $chartName . " (" . $totalCount . " applications in total)";
+
+            //dump($usmleYearArr);
+            //dump($usmle1ValueArr);
             //exit('$chartName='.$chartName);
 
             $combinedData = array();
 
             ////////// USMLE //////////
-            $combinedData['USMLE1']['labels'] = $usmleYearArr;
+            $combinedData['USMLE1']['labels'] = $usmle1YearArr;
             $combinedData['USMLE1']['values'] = $usmle1ValueArr;
 
-            $combinedData['USMLE2']['labels'] = $usmleYearArr;
+            $combinedData['USMLE2']['labels'] = $usmle2YearArr;
             $combinedData['USMLE2']['values'] = $usmle2ValueArr;
 
-            $combinedData['USMLE3']['labels'] = $usmleYearArr;
+            $combinedData['USMLE3']['labels'] = $usmle3YearArr;
             $combinedData['USMLE3']['values'] = $usmle3ValueArr;
 
             ////////// COMLEX //////////
-            $combinedData['COMLEX1']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX1']['labels'] = $comlex1YearArr;
             $combinedData['COMLEX1']['values'] = $comlex1ValueArr;
 
-            $combinedData['COMLEX2']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX2']['labels'] = $comlex2YearArr;
             $combinedData['COMLEX2']['values'] = $comlex2ValueArr;
 
-            $combinedData['COMLEX3']['labels'] = $comlexYearArr;
+            $combinedData['COMLEX3']['labels'] = $comlex3YearArr;
             $combinedData['COMLEX3']['values'] = $comlex3ValueArr;
+
+            //dump($combinedData);
+            //exit('$chartName='.$chartName);
 
             //violin
             //$combinedDataArr, $title, $type="violin", $layoutArray=null, $hoverinfo=null
