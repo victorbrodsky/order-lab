@@ -166,17 +166,17 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 8. Populate the database tables with default values by logging into the Employee Directory site (http://IPADDRESS/order/directory/) as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-    - 1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    - 2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    - 3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    - 4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    - 5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-    - 6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    - 7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
-    - 8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
-    - 9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-    - 10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
-    - 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 
 9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, and clicking the "Update" button.
 
@@ -289,17 +289,17 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-    - 1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    - 2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    - 3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    - 4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    - 5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-    - 6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    - 7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
-    - 8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
-    - 9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-    - 10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
-    - 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 
 10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
@@ -519,17 +519,17 @@ Symfony 4.4 with PHP 7.4:
 	
 	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-    - 1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    - 2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    - 3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    - 4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    - 5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-    - 6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    - 7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
-    - 8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
-    - 9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-    - 10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
-    - 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4) c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 	
 	e) Run the deployment script again by following step 5a above:
 
