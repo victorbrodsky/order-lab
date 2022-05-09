@@ -45,6 +45,10 @@ $(document).ready(function() {
 });
 
 function plotlyGetChartsReact(thisSitename) {
+
+    //clear alert alert-danger
+    dashboardClearAlertMessages();
+
     window.ChartsComponent.plotlyGetChartsReact(thisSitename);
     //plotlyGetCharts(thisSitename);
 }
@@ -413,10 +417,10 @@ function plotlyAddErrorLine( msg, type ) {
     divEl.style.float = "left";
     divEl.style.width = "100%";
     if( type == 'error' ) {
-        divEl.className = "alert alert-danger";
+        divEl.className = "alert alert-danger dashboard-alert-msg";
     }
     if( type == 'warning' ) {
-        divEl.className = "alert alert-warning";
+        divEl.className = "alert alert-warning dashboard-alert-msg";
     }
     divEl.innerHTML = msg;
     //newline.setAttribute('id', divId);
@@ -486,7 +490,22 @@ function favoriteChart(favoriteEl,chartId) {
 
 function dashboardClearAllCharts() {
     //console.log("dashboardClearAllCharts");
+
+    dashboardClearAlertMessages();
+
     //var chartTypes = $("#filter_chartType").select2("val");
     $("#filter_chartType").val(null).trigger('change');
+}
+
+//clear alert messages
+function dashboardClearAlertMessages() {
+    //console.log("dashboardClearAlertMessages");
+    //clear alert alert-danger
+    //$('.dashboard-alert-msg').remove();
+    $('#error-message').html(null);
+
+    //clear charts
+    //document.getElementById("charts").innerHTML = "";
+    //$('#charts').html(null);
 }
 
