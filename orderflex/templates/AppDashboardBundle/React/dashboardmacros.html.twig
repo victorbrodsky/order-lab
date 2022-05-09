@@ -76,13 +76,14 @@
             </div>
 
         {% else %}
-            {#Filter form#}
+
+            {############# Filter form #################}
             {% if 1 %}
                 <div class="row">
-                    <div class="col-xs-11" data-toggle="tooltip" title="Chart">
+                    <div class="col-xs-10" data-toggle="tooltip" title="Chart">
                         {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
                     </div>
-                    <div class="col-xs-1">
+                    <div class="col-xs-2">
                         <div class="btn-group" role="group" aria-label="Toolbar with button groups">
                             <button id="filter-btn"
                                     type="button"
@@ -96,6 +97,24 @@
                                     data-toggle="tooltip" title="Clear selected charts"
                                     onclick="dashboardClearAllCharts()"
                             >X</button>
+                            {#<span data-toggle="buttons-checkbox">#}
+                                {#<div#}
+                                        {#data-toggle="collapse"#}
+                                        {#href="#dashboard-AdvancedSearch"#}
+                                        {#class="btn btn-default toggle-btn-state"#}
+                                        {#data-active-class="advance-search-wrench"#}
+                                {#>#}
+                                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                                {#</div>#}
+                            {#</span>#}
+                            <button
+                                    data-toggle="collapse"
+                                    href="#dashboard-AdvancedSearch"
+                                    class="btn btn-default toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                <span class="glyphicon glyphicon-wrench"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -104,47 +123,54 @@
             {% endif %}
 
             {% if 1 %}
-                <div id="hidden-filter" class="row" style="margin-top: 10px; display: none;">
-                    <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
-                        {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
-                    </div>
-                    <div class="col-xs-2" data-toggle="tooltip" title="End Date">
-                        {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
-                    </div>
-                    <div class="col-xs-2" data-toggle="tooltip" title="Specialty">
-                        {% if filterform.projectSpecialty is defined %}
-                            {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-1" data-toggle="tooltip" title="Hide remaining total">
-                        {% if filterform.showLimited is defined %}
-                            {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
-                            {#{{ form_row(filterform.showLimited) }}#}
-                            {{ form_widget(filterform.showLimited) }}
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-1" data-toggle="tooltip" title="Quantity limit">
-                        {% if filterform.quantityLimit is defined %}
-                            {#{{ form_label(filterform.quantityLimit) }}&nbsp;{{ form_widget(filterform.quantityLimit) }}#}
-                            {#{{ form_row(filterform.quantityLimit) }}#}
-                            {{ form_widget(filterform.quantityLimit) }}
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-4" data-toggle="tooltip" title="Products/Services">
-                        {% if filterform.category is defined %}
-                            {{ form_widget(filterform.category) }}
-                            {#{{ form_row(filterform.category) }}#}
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                {% do filterform.startDate.setRendered %}
-                {% do filterform.endDate.setRendered %}
-                {% do filterform.projectSpecialty.setRendered %}
-                {% do filterform.showLimited.setRendered %}
-                {% do filterform.quantityLimit.setRendered %}
-                {% do filterform.category.setRendered %}
-            {% endif %}
+                <div id="dashboard-AdvancedSearch" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        {#display: none;#}
+                        <div id="hidden-filter" class="row" style="margin-top: 10px;">
+                            <div class="col-xs-2" data-toggle="tooltip" title="Start Date">
+                                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                            </div>
+                            <div class="col-xs-2" data-toggle="tooltip" title="End Date">
+                                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                            </div>
+                            <div class="col-xs-2" data-toggle="tooltip" title="Specialty">
+                                {% if filterform.projectSpecialty is defined %}
+                                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-1" data-toggle="tooltip" title="Hide remaining total">
+                                {% if filterform.showLimited is defined %}
+                                    {#{{ form_label(filterform.showLimited) }}&nbsp;{{ form_widget(filterform.showLimited) }}#}
+                                    {#{{ form_row(filterform.showLimited) }}#}
+                                    {{ form_widget(filterform.showLimited) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-1" data-toggle="tooltip" title="Quantity limit">
+                                {% if filterform.quantityLimit is defined %}
+                                    {#{{ form_label(filterform.quantityLimit) }}&nbsp;{{ form_widget(filterform.quantityLimit) }}#}
+                                    {#{{ form_row(filterform.quantityLimit) }}#}
+                                    {{ form_widget(filterform.quantityLimit) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-4" data-toggle="tooltip" title="Products/Services">
+                                {% if filterform.category is defined %}
+                                    {{ form_widget(filterform.category) }}
+                                    {#{{ form_row(filterform.category) }}#}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% do filterform.startDate.setRendered %}
+                        {% do filterform.endDate.setRendered %}
+                        {% do filterform.projectSpecialty.setRendered %}
+                        {% do filterform.showLimited.setRendered %}
+                        {% do filterform.quantityLimit.setRendered %}
+                        {% do filterform.category.setRendered %}
+                    {% endif %}
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
 
         {% endif %}
 
@@ -155,7 +181,7 @@
 {% macro body() %}
     <div id="root"></div>
 
-    <div id="error-message"></div>
+    <div id="error-message" style="margin-top: 5px;"></div>
 
     <div id="charts" align="center">
         <!-- Plotly chart will be drawn inside this DIV -->
