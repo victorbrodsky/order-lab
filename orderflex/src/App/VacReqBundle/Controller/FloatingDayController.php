@@ -1819,7 +1819,7 @@ class FloatingDayController extends OrderAbstractController
                 if( $absolute ) {
                     $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_URL;
                 } else {
-                    $absoluteFlag = null;
+                    $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_PATH;;
                 }
                 $link = $this->container->get('router')->generate(
                     'vacreq_floating_show',

@@ -2208,7 +2208,7 @@ class VacReqUtil
                 if( $absolute ) {
                     $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_URL;
                 } else {
-                    $absoluteFlag = null;
+                    $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_PATH;
                 }
                 $link = $this->container->get('router')->generate(
                     'vacreq_show',
