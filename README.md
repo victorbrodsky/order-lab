@@ -25,13 +25,15 @@ It includes several functional applications tied by LDAP/AD-capable single sign-
 
 - Residency Application (ERAS) and Candidate Interview Evaluation System
 
-- Glass Slide Scan Ordering System
+- Translational Research Project Approval, Work Order Processing, and Invoicing system
+
+- Dashboards System for displaying categorized chart groups to authorized users
+
+- Critical Result Notification and Acknowledgement Tracking
 
 - De-identifier / Honest Broker System for Accession Numbers
 
-- Translational Research Project Approval, Work Order Processing, Invoicing, and Dashboards
-
-- Critical Result Notification and Acknowledgement Tracking
+- Glass Slide Scan Ordering System
 
 
 ## Data Models
@@ -64,7 +66,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 ## Installation instructions for deploying a Linux-based server using a local Linux client (tested on a local Ubuntu OS)
 
->**Warning:** This software was initially developed and tested in a Windows-based environment to accommodate existing servers. It is now running on CentOS Linux. 
+>**Warning:** This software was initially developed and tested in a Windows-based environment to accommodate existing servers. It is now running on Red Hat (CentOS) Linux. 
 > To ease further development and testing, the [Packer](https://www.packer.io/)-based deployment [script](https://github.com/victorbrodsky/order-lab/blob/master/packer/deploy-order-digital-ocean.sh) for a [Digital Ocean](https://www.digitalocean.com/)
 > [virtual machine (VM)](https://en.wikipedia.org/wiki/Virtual_machine) is provided. Additional testing may be necessary to discover and address unresolved issues associated with
 > cross-platform compatibility (for example, with specific Linux distributions or Windows versions). The installation instructions assume the use of a Linux platform on your local machine (such as 
@@ -102,7 +104,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 		cd order-lab-master/packer
 
-5. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP, (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
+5. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP, (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate, and follow the instructions in the corresponding step (a), (b), or (c) below:
 
 	(a) Run /packer/deploy-order-digital-ocean.sh via one of the following commands (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
@@ -162,17 +164,19 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit'. Set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-8. Populate the database tables with default values by logging into the Employee Directory site (http://IPADDRESS/order/directory/) as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+8. Populate the database tables with default values by logging into the Employee Directory site (http://IPADDRESS/order/directory/) as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-	5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
-	7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-	8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 
 9. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, and clicking the "Update" button.
 
@@ -223,7 +227,7 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 		cd order-lab-master/packer
 
-6. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate:
+6. Decide whether you want to (a) use no domain name and no https/SSL, accessing the server via its IP (b) use your domain name and https/SSL certificate, or (c) use your domain name and no https/SSL certificate, and follow the instructions in the corresponding step (a), (b), or (c) below:
 
 	(a) Run /packer/deploy-order-digital-ocean.sh via one of the following commands (make sure to substitute your API token, database user name, and the database password. If "dbusername" and "dbpassword" are not provided, the default "symfony"/"symfony" values are used.):
 
@@ -283,17 +287,19 @@ Note: If you choose to use MySQL database on Linux instead of the default Postgr
 
 8. Select "Local User" above the user name field and log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (or http://example.com/order/directory/ or https://example.com/order/directory/ depending on whether you used your domain name and SSL certificates during set up). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-	5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
-	7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-	8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 
 10. Select the sites you would like to be accessible on the homepage besides the "Employee Directory" by visiting https://IPADDRESS/order/directory/admin/list-manager/id/2 , clicking the "Action" button to the right of the desired site name, and clicking "Edit", then putting a checkmark in the "Show Link On Home Page" and "Show Link in Navbar" fields, followed by clicking the "Update" button.
 
@@ -329,7 +335,7 @@ Symfony 4.4 with PHP 7.4:
 3) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
 
 
-## Installation Instructions for deploying a Windows-based server directly
+## Older Installation Instructions for deploying a Windows-based server directly
 
 > Tested on Windows 10 and Windows 7
 
@@ -511,17 +517,19 @@ Symfony 4.4 with PHP 7.4:
 
 	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field first). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en) to get the "[app password](https://support.google.com/accounts/answer/185833?hl=en)" and enter it on the Site Settings page. You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 	
-	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, in the "Main Lists" section, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-    	1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    	2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    	3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    	4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
-    	5a) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
-		5b) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://view.med.cornell.edu/directory/admin/list/generate-dermatopathology-form-node-tree/)
-    	6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
-		7) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
-		8) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate form node tree fields for Dermatopathology Critical Result Notification (https://IPADDRESS/directory/admin/list/generate-dermatopathology-form-node-tree/)
+    7) Pre-generate a new Fellowship Type if it does not exist (https://IPADDRESS/fellowship-applications/create-default-fellowship-type)
+    8) Pre-generate a new Business/Vacation group if it does not exist (https://IPADDRESS/vacation-request/generate-default-group)
+    9) Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/)
+    10) Pre-generate status cron job (check for Maintenance) (https://IPADDRESS/directory/admin/list/generate-cron-jobs/status)
+    11) 11) Pre-initialize dashboard charts (assign roles, topics, types) (https://IPADDRESS/directory/admin/list/init-dashboard-charts)
 	
 	e) Run the deployment script again by following step 5a above:
 
