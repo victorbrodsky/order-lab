@@ -190,7 +190,23 @@ class DefaultController extends OrderAbstractController
 //            dump($file);
 //        }
 //        exit('111');
-        
+
+//        //wcmpath_dbbd7f57b9f1f175496505ad42bdbd902a40249c_2022-05-06-14-32-52_Geszte is windows doc file => error
+//        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//        $service = $googlesheetmanagement->getGoogleService();
+//        $configFileFolderIdFellApp = '1gapiVoGBGzOZ5frPcBiXjRSC8Wbz6H8l';
+//        $fileName = 'wcmpath_dbbd7f57b9f1f175496505ad42bdbd902a40249c_2022-05-06-14-32-52_Geszte';
+//        //$fileName = 'config.json';
+//        $file = $googlesheetmanagement->findConfigFileInFolder($service,$configFileFolderIdFellApp,$fileName);
+//
+//        $response = $googlesheetmanagement->downloadGeneralFile($service,$file);
+//        echo "getWebContentLink=".$response->getWebContentLink()."<br>";
+//        dump($response);
+//
+//        $response = $googlesheetmanagement->downloadFile($service,$file);
+//
+//        dump($response);
+//        exit('111');
         /////////// EOF testing ///////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

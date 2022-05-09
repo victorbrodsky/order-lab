@@ -1104,6 +1104,7 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
 
         $fileId = $file->getId();
+        $fileName = $file->getName();
 
         if( $type && (  $type == 'Fellowship Application Spreadsheet' ||
                         $type == 'Fellowship Application Backup Spreadsheet' ||
@@ -1124,7 +1125,7 @@ class GoogleSheetManagement {
 
         } else {
             //$downloadUrl = $file->getDownloadUrl();
-            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl';
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl'; //working
 
 
 //            $response = $service->files->get(
@@ -1145,6 +1146,7 @@ class GoogleSheetManagement {
 
         //echo "downloadUrl=".$downloadUrl."<br>";
         if ($downloadUrl) {
+            //Use downloadGeneralFile()?
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
@@ -1164,12 +1166,12 @@ class GoogleSheetManagement {
                 //return $httpRequest->getResponseBody(); //testing
                 //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
 
-                $body = "Error downloading $type file (ID $fileId): invalid response =".$httpRequest->getResponseHttpCode()."; downloadUrl=".$downloadUrl;
+                $body = "Error downloading $type file (Name:$fileName, ID:$fileId): invalid response =".$httpRequest->getResponseHttpCode()."; downloadUrl=".$downloadUrl;
                 //return null;
             }
         } else {
             // The file doesn't have any content stored on Drive.
-            $body = "Error downloading $type file (ID $fileId): downloadUrl is null; downloadUrl=".$downloadUrl;
+            $body = "Error downloading $type file (Name:$fileName, ID:$fileId): downloadUrl is null; downloadUrl=".$downloadUrl;
             //return null;
         }
 
@@ -1462,8 +1464,9 @@ class GoogleSheetManagement {
             $response = $service->files->get(
                 $fileId,
                 array(
-                    'alt' => 'media'
+                    'alt' => 'media',
                     //'mimeType' => 'application/json'
+                    //'mimeType' => 'application/vnd.google-apps.unknown'
                 )
             );
 
@@ -1512,6 +1515,23 @@ class GoogleSheetManagement {
         }//else
 
         return null;
+    }
+    function downloadTestGeneralFile($service, $file) {
+        //https://developers.google.com/drive/api/v2/manage-downloads#php
+        $fileId = $file->getId(); //'0BwwA4oUTeiV1UVNwOHItT0xfa2M';
+        $response = $service->files->get(
+            $fileId,
+            array(
+                //'alt' => 'media',
+                //'mimeType' => 'application/json'
+                'mimeType' => 'application/vnd.google-apps.unknown'
+            )
+        );
+
+        //dump($response);
+        //exit('111');
+
+        return $response;
     }
 
 }
