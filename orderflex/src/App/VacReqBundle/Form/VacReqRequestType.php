@@ -351,6 +351,7 @@ class VacReqRequestType extends AbstractType
             //echo "set org inst <br>";
             $requiredInst = true;
         }
+        //$requiredInst = false; //testing
 
 //        echo "organizationalInstitutions count=".count($this->params['organizationalInstitutions'])."<br>";
 //        foreach( $this->params['organizationalInstitutions'] as $tentativeInstitution ) {

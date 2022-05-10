@@ -827,6 +827,7 @@
         }
 
         function validateVacReqForm(btn) {
+            //console.log("_requestType="+_requestType);
             if( _requestType == "business-vacation" ) {
                 validateVacReqBusinessVacationForm(btn);
             }
@@ -847,6 +848,8 @@
             var error = null;
 
             var userInstitution = $('.vacreq-institution').select2('data');
+            //For carry over request, only vacreq-tentativeInstitution is required
+            //var userInstitution = $('.vacreq-tentativeInstitution').select2('data');
             if (!error && !userInstitution) {
                 error = "Please select the organizational group";
             }

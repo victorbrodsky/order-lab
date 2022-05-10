@@ -133,7 +133,7 @@ class VacReqUtil
 
 
     //find role approvers by institution
-    public function getRequestApprovers( $entity, $institutionType="institution", $onlyWorking=false ) {
+    public function getRequestApprovers( $entity, $institutionType="institution", $forceApproverRole=null, $onlyWorking=false ) {
 
         $institution = $entity->getInstitution();
 //        if( $institutionType == "institution" ) {
@@ -146,17 +146,22 @@ class VacReqUtil
 //        }
 
         //echo "institution=$institution <br>";
+        //exit('111');
         if( !$institution ) {
-            return null;
+            return array();
         }
 
+        //echo "VacReq Request ID=".$entity->getId()."<br>";
         //echo "<br>institution=".$institution."<br>";
         //echo "tentative institution=".$entity->getTentativeInstitution()."<br>";
 
         if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
 
+            $tentativeInstitution = $entity->getTentativeInstitution();
+            //echo "2 tentative institution=".$tentativeInstitution."<br>";
+
             //echo "getTentativeStatus=".$entity->getTentativeStatus()."<br>";
-            if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
+            if( $tentativeInstitution && $entity->getTentativeStatus() == 'pending' ) {
                 $approverRole = "ROLE_VACREQ_APPROVER";
                 $institution = $entity->getTentativeInstitution();
             } else {
@@ -164,13 +169,17 @@ class VacReqUtil
             }
 
             //specifically asked for tentative approvers
-            if( $entity->getTentativeInstitution() && $institutionType == "tentativeInstitution" ) {
+            if( $tentativeInstitution && $institutionType == "tentativeInstitution" ) {
                 $approverRole = "ROLE_VACREQ_APPROVER";
                 $institution = $entity->getTentativeInstitution();
             }
 
         } else {
             $approverRole = "ROLE_VACREQ_APPROVER";
+        }
+
+        if( $forceApproverRole ) {
+            $approverRole = $forceApproverRole;
         }
 
         //echo "approverRole=".$approverRole."<br>";
@@ -180,6 +189,10 @@ class VacReqUtil
         $roleApprovers = $this->em->getRepository('AppUserdirectoryBundle:User')->
             findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
         //echo "roleApprovers count=".count($roleApprovers)."<br>";
+
+        if( count($roleApprovers) == 0 ) {
+            return array();
+        }
 
         $roleApprover = $roleApprovers[0];
 
@@ -197,6 +210,10 @@ class VacReqUtil
 
         $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                             findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
+
+        if( count($roles) == 0 ) {
+            return array();
+        }
 
         $role = $roles[0];
 
@@ -2994,6 +3011,9 @@ class VacReqUtil
                     $approverStr = $this->getApproversBySubmitterRole($role);
                     if( $approverStr ) {
                         $orgName = $institution . " (for review by " . $approverStr . ")";
+                        if( $this->security->isGranted('ROLE_PLATFORM_ADMIN') || $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                            $orgName = $institution->getId()." ".$institution . " (for review by " . $approverStr . ")";
+                        }
                     } else {
                         $orgName = $institution;
                     }
@@ -4413,10 +4433,17 @@ class VacReqUtil
         /////////////// check permission: if user is in approvers => ok ///////////////
         if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
+            //echo "########## processChangeStatusCarryOverRequest <br>";
             $approvers = $this->getRequestApprovers($entity);
+            //echo "inst approvers=".count($approvers)."<br>"; //testing
+            if( count($approvers) == 0 ) {
+                //getRequestApprovers( $entity, $institutionType="institution", $forceApproverRole=null, $onlyWorking=false )
+                $approvers = $this->getRequestApprovers($entity,"tentativeInstitution","ROLE_VACREQ_APPROVER");
+            }
             $approversName = array();
+            //echo "tent approvers=".count($approvers)."<br>"; //testing
             foreach ($approvers as $approver) {
-                if ($user->getId() == $approver->getId()) {
+                if( $user->getId() == $approver->getId() ) {
                     //ok
                     $permitted = true;
                 }
@@ -4443,9 +4470,18 @@ class VacReqUtil
         $break = "<br>";
         $action = null;
 
+        //echo "status=$status <br>";
+        $institution = $entity->getInstitution();
+        $tentativeInstitution = $entity->getTentativeInstitution();
+        if( $institution && $tentativeInstitution && $institution == $tentativeInstitution ) {
+            $entity->setTentativeStatus($status);
+            $entity->setStatus($status);
+        }
+
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
         if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
             ////////////// FIRST STEP: group pre-approver ///////////////////
+            //echo $entity->getId().": FIRST STEP: group pre-approver <br>"; exit('111'); //testing
 
             //setTentativeInstitution to approved or rejected
 
@@ -4466,16 +4502,44 @@ class VacReqUtil
             //send email to supervisor for a final approval
             if( $status == 'approved' ) {
 
-                $entity->setApprover(null);
-                $entity->setStatus('pending');
-
-                $approversNameStr = $this->sendConfirmationEmailToApprovers($entity);
-
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
-                    "Email for a final approval has been sent to ".$approversNameStr;
+                $institution = $entity->getInstitution();
+                $tentativeInstitution = $entity->getTentativeInstitution();
+
+                if( $institution && $institution != $tentativeInstitution )
+                {
+                    //if carry over request has main organizational group => regular flow: set status to pending and send email to the final approvers
+                    $entity->setApprover(null);
+                    $entity->setStatus('pending');
+
+                    $approversNameStr = $this->sendConfirmationEmailToApprovers($entity); //send email to second step approval
+
+                    $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
+                        "Email for a final approval has been sent to ".$approversNameStr;
+                } elseif( !$institution || ($institution && $tentativeInstitution && $institution == $tentativeInstitution) )
+                {
+                    //if carry over request has main organizational group the same as tentative => set status as approved
+                    //if carry over request does not have main organizational group => set status as approved
+                    $entity->setApprover($user);
+                    $entity->setStatus($status);
+                    $event = $requestName . " for ".$entity->getUser()." has been approved by ".$entity->getApprover().
+                        ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
+
+                    $subjectApproved = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
+                        $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange()." has been approved.";
+
+                    $bodyApproved = $entity->getTentativeApprover(). " has approved your request ID #".$entity->getId()." to carry over ".
+                        $entity->getCarryOverDays()." vacation days from ".
+                        $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
+
+                    //request info
+                    $bodyApproved .= $break.$break.$entity->printRequest($this->container);
+
+                    $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectApproved, $bodyApproved, null, null );
+                }
+
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
@@ -4525,6 +4589,7 @@ class VacReqUtil
 
         } else {
             ////////////// SECOND STEP: supervisor //////////////
+            //echo $entity->getId().": SECOND STEP: supervisor. status=$status <br>";exit('111'); //testing
 
             $action = "Final ".$status;
             $logger->notice("process ChangeStatusCarryOverRequest: action=".$action);
@@ -4645,8 +4710,10 @@ class VacReqUtil
             if( !array_key_exists($institution->getId(), $organizationalInstitutions) ) {
                 $thisApprovers = $this->getRequestApprovers( $entity, $institutionType );
                 $approversArr = array();
-                foreach( $thisApprovers as $thisApprover ) {
-                    $approversArr[] = $thisApprover->getUsernameShortest();
+                if( $thisApprovers && is_array($thisApprovers) ) {
+                    foreach ($thisApprovers as $thisApprover) {
+                        $approversArr[] = $thisApprover->getUsernameShortest();
+                    }
                 }
                 if( count($approversArr) > 0 ) {
                     $orgName = $institution . " (for review by " . implode(", ",$approversArr) . ")";

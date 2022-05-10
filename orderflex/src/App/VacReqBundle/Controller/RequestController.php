@@ -144,7 +144,7 @@ class RequestController extends OrderAbstractController
 
         $cycle = 'new';
 
-        $form = $this->createRequestForm($entity,$cycle,$request);
+        $form = $this->createRequestForm($entity,$cycle,$request); //new
 
         $form->handleRequest($request);
 
@@ -396,7 +396,7 @@ class RequestController extends OrderAbstractController
             $title = "Vacation/Business Travel Request";
         }
 
-        $form = $this->createRequestForm($entity,$cycle,$request);
+        $form = $this->createRequestForm($entity,$cycle,$request); //show
 
         return array(
             'entity' => $entity,
@@ -497,7 +497,7 @@ class RequestController extends OrderAbstractController
             $carryOverWarningMessageLog = null;
         }
 
-        $form = $this->createRequestForm($entity,$cycle,$request);
+        $form = $this->createRequestForm($entity,$cycle,$request); //edit/review
 
         $form->handleRequest($request);
 
@@ -585,15 +585,21 @@ class RequestController extends OrderAbstractController
 
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
-                    if( $originalTentativeStatus != $entity->getTentativeStatus() ) {
-                        $status = $entity->getTentativeStatus();
+
+                    $newTentativeStatus = $entity->getTentativeStatus();
+                    //echo "$originalTentativeStatus=?".$newTentativeStatus."<br>"; //testing
+                    if( $originalTentativeStatus && $newTentativeStatus && $originalTentativeStatus != $newTentativeStatus ) {
+                        $status = $newTentativeStatus;
                         $changedStatusCount++;
                     }
-                    if( $originalStatus != $entity->getStatus() ) {
-                        $status = $entity->getStatus();
+                    $newStatus = $entity->getStatus();
+                    //echo "$originalStatus=?".$newStatus."<br>"; //testing
+                    if( $originalStatus && $newStatus && $originalStatus != $newStatus ) {
+                        $status = $newStatus;
                         $changedStatusCount++;
                     }
                     //if two statuses are changed (only admin can do it), then use one step (as executive) approval with the final status
+                    //echo "changedStatusCount=$changedStatusCount <br>"; //testing
                     if( $changedStatusCount > 1 ) {
                         //echo "########## set tentative to NULL <br>";
                         $entity->setTentativeStatus(NULL);
@@ -621,6 +627,8 @@ class RequestController extends OrderAbstractController
                     } else {
                         $logger->warning("Review CarryOver request ID=".$entity->getId()."; failed to process: changedStatusCount=".$changedStatusCount);
                     }
+
+                    $eventType = 'Carry Over Request Updated';
 
                 } //carryover
                     else
@@ -1396,6 +1404,7 @@ class RequestController extends OrderAbstractController
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
 
         //testing Institutions
+//        dump($tentativeInstitutions);
 //        foreach( $tentativeInstitutions as $tentativeInstitution ) {
 //            echo "tentativeInstitution=".$tentativeInstitution."<br>";
 //        }
@@ -1405,6 +1414,14 @@ class RequestController extends OrderAbstractController
         //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
+            if( $tentativeInstitutions && count($tentativeInstitutions) > 0 ) {
+                $organizationalInstitutions = $tentativeInstitutions;
+            }
+        }
+
+        //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
+        //For example, Brooklyn Methodist is independent institution with a single stage approval
+        if( count($organizationalInstitutions) == 0 && ($tentativeInstitutions === null or count($tentativeInstitutions) == 0) ) {
             //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/
 
             if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -1416,6 +1433,12 @@ class RequestController extends OrderAbstractController
                 );
                 $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
                     ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $warningMsg
+                );
             } else {
                 //regular user
                 $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
@@ -1431,15 +1454,17 @@ class RequestController extends OrderAbstractController
                     $emailStr = " Administrator email(s): " . implode(", ", $emails);
                 }
 
-                $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
-                    " Please contact the site administrator to create a group and/or get a Submitter role for your account.".$emailStr;
+                $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site." .
+                    " Please contact the site administrator to create a group and/or get a Submitter role for your account." . $emailStr;
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    $warningMsg
+                );
             }
-            //Flash
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                $warningMsg
-            );
-        }
+
+        }//if count($organizationalInstitutions) == 0
 
         //get holidays url
         $userSecUtil = $this->container->get('user_security_utility');

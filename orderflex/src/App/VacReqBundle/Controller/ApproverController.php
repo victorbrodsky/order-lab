@@ -129,7 +129,14 @@ class ApproverController extends OrderAbstractController
         //find role approvers by institution
         $approvers = array();
         $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
-        $roleApprover = $roleApprovers[0];
+        //echo "roleApprovers=".count($roleApprovers)."<br>";
+        //exit();
+
+        $roleApprover = null;
+        if( count($roleApprovers) > 0 ) {
+            $roleApprover = $roleApprovers[0];
+        }
+
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
             $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);

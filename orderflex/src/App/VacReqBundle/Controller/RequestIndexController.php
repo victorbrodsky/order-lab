@@ -244,6 +244,7 @@ class RequestIndexController extends OrderAbstractController
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
         $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null); //logged in user
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
+        //echo "approver=".$approver."<br>";s
 
         $routeName = $request->get('_route');
 
@@ -277,6 +278,7 @@ class RequestIndexController extends OrderAbstractController
         //filter by institutions for any user by using a general sub role name "ROLE_VACREQ_"
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
+                //echo "Yes approver <br>";
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
                 $vacreqRoles = $em->getRepository('AppUserdirectoryBundle:User')->
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
@@ -312,6 +314,9 @@ class RequestIndexController extends OrderAbstractController
                         $dql->andWhere($instCriteriaStr);
                     }
                 }
+            }
+            else {
+                //echo "No approver <br>";
             }
         }
 
@@ -584,13 +589,15 @@ class RequestIndexController extends OrderAbstractController
             }
         }
         //echo "requestTypeId=".$requestTypeId."<br>";
+        $requestTypeAbbreviation = null;
         if( $requestTypeId ) {
             $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
             if (!$requestType) {
                 throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
             }
             //echo "requestTypeAbbreviation=".$requestType->getAbbreviation()."<br>";
-            $params['requestTypeAbbreviation'] = $requestType->getAbbreviation();
+            $requestTypeAbbreviation = $requestType->getAbbreviation();
+            $params['requestTypeAbbreviation'] = $requestTypeAbbreviation; //$requestType->getAbbreviation();
         }
 
         //institutional group
@@ -627,11 +634,15 @@ class RequestIndexController extends OrderAbstractController
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
-        //foreach( $organizationalInstitutions as $organizationalInstitution ) {
-            //echo "organizationalInstitution=".$organizationalInstitution."<br>";
-        //}
+//        echo "requestTypeAbbreviation=".$requestTypeAbbreviation."<br>";
+//        foreach( $organizationalInstitutions as $organizationalInstitution ) {
+//            echo "organizationalInstitution=".$organizationalInstitution."<br>";
+//        }
 
-        if( count($organizationalInstitutions) == 0 ) {
+        if(
+            count($organizationalInstitutions) == 0 &&
+            ($requestTypeAbbreviation && $requestTypeAbbreviation != "carryover")
+        ) {
             if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
@@ -678,9 +689,9 @@ class RequestIndexController extends OrderAbstractController
         }
         $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
         //testing
-        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
-            //echo "tentativeInstitution=".$tentativeInstitution."<br>";
-        //}
+//        foreach( $tentativeInstitutions as $tentativeInstitution ) {
+//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+//        }
 
         //tooltip for Academic Year:
         //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
@@ -866,16 +877,20 @@ class RequestIndexController extends OrderAbstractController
             $filtered = true;
         }
 
-        if( $groups == null && $request->get('_route') == "vacreq_incomingrequests" ) {
+        //echo "groups=".$groups."<br>";
+        //if( $groups == null && $request->get('_route') == "vacreq_incomingrequests" ) {
+        if( $request->get('_route') == "vacreq_incomingrequests" ) {
 
             $instWhereArr = array();
 
-            $instArr = array();
-            foreach( $organizationalInstitutions as $instId => $instNameStr ) {
-                $instArr[] = $instId;
-            }
-            if( count($instArr) > 0 ) {
-                $instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
+            if( $groups ) {
+                $instArr = array();
+                foreach ($organizationalInstitutions as $instId => $instNameStr) {
+                    $instArr[] = $instId;
+                }
+                if (count($instArr) > 0) {
+                    $instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
+                }
             }
 
             $tentativeInstArr = array();

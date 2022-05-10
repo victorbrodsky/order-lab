@@ -208,7 +208,7 @@ class VacReqFilterType extends AbstractType
             } else {
                 $required = false;
             }
-            $required = false;
+            //$required = false;
 
             //Institutional Group name - ApproverName
             $builder->add('organizationalInstitutions', ChoiceType::class, array( //flipped
