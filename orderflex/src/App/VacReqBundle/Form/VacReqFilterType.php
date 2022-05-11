@@ -208,7 +208,10 @@ class VacReqFilterType extends AbstractType
             } else {
                 $required = false;
             }
-            //$required = false;
+            //if carryover set to false
+            if( $this->params['requestTypeAbbreviation'] == 'carryover' ) {
+                $required = false;
+            }
 
             //Institutional Group name - ApproverName
             $builder->add('organizationalInstitutions', ChoiceType::class, array( //flipped

@@ -279,7 +279,9 @@ class RequestController extends OrderAbstractController
                 " Confirmation email has been sent to ".$approversNameStr;
             $event = $event . $break.$break. $entity->printRequest();
 
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+            if( $testing === false ) {
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
+            }
 
             //exit('exit event='.$event);
 
@@ -295,7 +297,10 @@ class RequestController extends OrderAbstractController
                 $resCarryOverRequest = $vacreqUtil->processVacReqCarryOverRequest($entity,true); //new carryover request
                 $carryOverWarningMessageLog = $resCarryOverRequest['carryOverWarningMessageLog'];
                 $eventType = "Existing Days Carry Over Request Created";
-                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
+                if( $testing === false ) {
+                    $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),
+                        $carryOverWarningMessageLog, $user, $entity, $request, $eventType);
+                }
             }
 
             if( $testing ) {
@@ -585,35 +590,46 @@ class RequestController extends OrderAbstractController
 
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
+                    $step = 'first-step';
 
                     $newTentativeStatus = $entity->getTentativeStatus();
                     //echo "$originalTentativeStatus=?".$newTentativeStatus."<br>"; //testing
-                    if( $originalTentativeStatus && $newTentativeStatus && $originalTentativeStatus != $newTentativeStatus ) {
+                    if(  $newTentativeStatus && $originalTentativeStatus != $newTentativeStatus ) {
                         $status = $newTentativeStatus;
                         $changedStatusCount++;
                     }
                     $newStatus = $entity->getStatus();
                     //echo "$originalStatus=?".$newStatus."<br>"; //testing
-                    if( $originalStatus && $newStatus && $originalStatus != $newStatus ) {
+                    if(  $newStatus && $originalStatus != $newStatus ) {
                         $status = $newStatus;
                         $changedStatusCount++;
+                        $step = 'second-step';
                     }
+
                     //if two statuses are changed (only admin can do it), then use one step (as executive) approval with the final status
                     //echo "changedStatusCount=$changedStatusCount <br>"; //testing
                     if( $changedStatusCount > 1 ) {
                         //echo "########## set tentative to NULL <br>";
-                        $entity->setTentativeStatus(NULL);
-                        $entity->setTentativeInstitution(NULL);
+                        //$entity->setTentativeStatus(NULL);
+                        //$entity->setTentativeInstitution(NULL);
                         $status = $entity->getStatus();
+                        //$status = $newStatus;
+                        $step = 'second-step';
                     }
+
+                    //if org inst is null => always second step
+                    if( !$entity->getInstitution() ) {
+                        $step = 'second-step';
+                    }
+
                     if( $changedStatusCount > 0 ) {
                         //reset statuses to original
                         $entity->setTentativeStatus($originalTentativeStatus);
                         $entity->setStatus($originalStatus);
 
                         $withRedirect = false;
-                        $update=true;
-                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update ); //review
+                        $update = true;
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update, $step ); //review
                         //exit("action=".$action);
 
                         if( $action == 'vacreq-nopermission' ) {
@@ -1413,11 +1429,12 @@ class RequestController extends OrderAbstractController
 //        }
         //exit('1');
 
-        if( count($organizationalInstitutions) == 0 ) {
-            if( $tentativeInstitutions && count($tentativeInstitutions) > 0 ) {
-                $organizationalInstitutions = $tentativeInstitutions;
-            }
-        }
+        //set org institution as tentative if empty
+//        if( count($organizationalInstitutions) == 0 ) {
+//            if( $tentativeInstitutions && count($tentativeInstitutions) > 0 ) {
+//                $organizationalInstitutions = $tentativeInstitutions;
+//            }
+//        }
 
         //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
         //For example, Brooklyn Methodist is independent institution with a single stage approval
@@ -1480,6 +1497,7 @@ class RequestController extends OrderAbstractController
         $params = array(
             'container' => $this->container,
             'em' => $em,
+            'entity' => $entity,
             'user' => $entity->getUser(),
             'cycle' => $cycle,
             'roleAdmin' => $admin,

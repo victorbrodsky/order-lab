@@ -289,10 +289,10 @@ class CarryOverController extends OrderAbstractController
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
             $approvers = $vacreqUtil->getRequestApprovers($entity);
-            if( count($approvers) == 0 ) {
-                //getRequestApprovers( $entity, $institutionType="institution", $forceApproverRole=null, $onlyWorking=false )
-                $approvers = $this->getRequestApprovers($entity,"tentativeInstitution","ROLE_VACREQ_APPROVER");
-            }
+//            if( count($approvers) == 0 ) {
+//                //getRequestApprovers( $entity, $institutionType="institution", $forceApproverRole=null, $onlyWorking=false )
+//                $approvers = $this->getRequestApprovers($entity,"tentativeInstitution","ROLE_VACREQ_APPROVER");
+//            }
             $approversName = array();
             foreach ($approvers as $approver) {
                 if ($user->getId() == $approver->getId()) {
