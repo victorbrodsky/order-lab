@@ -354,54 +354,61 @@ class VacReqRequestType extends AbstractType
             ));
         }
 
-
-        //organizationalInstitutions
-        $requiredInst = false;
-        if( count($this->params['organizationalInstitutions']) == 1 ) {
-            //echo "set org inst <br>";
-            $requiredInst = true;
+        //if entity does not have org institution
+        $showInstitution = true;
+        $tentativeInstitutionLabel = "Tentative Approval:";
+        if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
+            $entity = $this->params['entity'];
+            if( !$entity->getInstitution() ) {
+                $showInstitution = false;
+                $tentativeInstitutionLabel = "Organizational Group:";
+            }
         }
-        //$requiredInst = false; //testing
 
-//        echo "organizationalInstitutions count=".count($this->params['organizationalInstitutions'])."<br>";
-//        foreach( $this->params['organizationalInstitutions'] as $tentativeInstitution ) {
-//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
-//        }
+        if( $showInstitution ) {
+            //organizationalInstitutions
+            $requiredInst = false;
+            if (count($this->params['organizationalInstitutions']) == 1) {
+                //echo "set org inst <br>";
+                $requiredInst = true;
+            }
+            //$requiredInst = false; //testing
 
-        //$requiredInst = true;
-        $institutionAttr = array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group');
-        if( $this->params['review'] ) {
-            $institutionAttr['readonly'] = true;
+            //$requiredInst = true;
+            $institutionAttr = array('class' => 'combobox combobox-width vacreq-institution');
+            if ($this->params['review']) {
+                $institutionAttr['readonly'] = true;
+            }
+            $builder->add('institution', ChoiceType::class, array( //flipped
+                'label' => "Organizational Group:",
+                'required' => $requiredInst,
+                'attr' => $institutionAttr, //array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+                'choices' => $this->params['organizationalInstitutions'],
+                //'choices_as_values' => true,
+                //'disabled' => ($this->params['review'] ? true : false)
+            ));
+            $builder->get('institution')
+                ->addModelTransformer(new CallbackTransformer(
+                    //original from DB to form: institutionObject to institutionId
+                        function ($originalInstitution) {
+                            //echo "originalInstitution=".$originalInstitution."<br>";
+                            if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
+                                return $originalInstitution->getId();
+                            }
+                            return $originalInstitution; //id
+                        },
+                        //reverse from form to DB: institutionId to institutionObject
+                        function ($submittedInstitutionObject) {
+                            //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+                            if ($submittedInstitutionObject) { //id
+                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+                                return $institutionObject;
+                            }
+                            return null;
+                        }
+                    )
+                );
         }
-        $builder->add('institution', ChoiceType::class, array( //flipped
-            'label' => "Organizational Group:",
-            'required' => $requiredInst,
-            'attr' => $institutionAttr, //array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
-            'choices' => $this->params['organizationalInstitutions'],
-            //'choices_as_values' => true,
-            //'disabled' => ($this->params['review'] ? true : false)
-        ));
-        $builder->get('institution')
-            ->addModelTransformer(new CallbackTransformer(
-                //original from DB to form: institutionObject to institutionId
-                    function($originalInstitution) {
-                        //echo "originalInstitution=".$originalInstitution."<br>";
-                        if( is_object($originalInstitution) && $originalInstitution->getId() ) { //object
-                            return $originalInstitution->getId();
-                        }
-                        return $originalInstitution; //id
-                    },
-                    //reverse from form to DB: institutionId to institutionObject
-                    function($submittedInstitutionObject) {
-                        //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
-                        if( $submittedInstitutionObject ) { //id
-                            $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
-                            return $institutionObject;
-                        }
-                        return null;
-                    }
-                )
-            );
 
         //tentativeInstitution
         if( $this->params['tentativeInstitutions'] && count($this->params['tentativeInstitutions']) > 0 ) {
@@ -416,12 +423,12 @@ class VacReqRequestType extends AbstractType
                 //$readonlyTentativeInstitution = false;
             }
             //$requiredTentInst = true;
-            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group');
+            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution');
             if( $this->params['review'] ) {
                 $tentativeInstitutionAttr['readonly'] = true;
             }
             $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
-                'label' => "Tentative Approval:",
+                'label' => $tentativeInstitutionLabel, //"Tentative Approval:",
                 'required' => $requiredTentInst,
                 'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],

@@ -622,6 +622,9 @@ class RequestController extends OrderAbstractController
                         $step = 'second-step';
                     }
 
+                    $testing = false;
+                    //$testing = true;
+
                     if( $changedStatusCount > 0 ) {
                         //reset statuses to original
                         $entity->setTentativeStatus($originalTentativeStatus);
@@ -629,15 +632,20 @@ class RequestController extends OrderAbstractController
 
                         $withRedirect = false;
                         $update = true;
-                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update, $step ); //review
+                        //main logic to change status and send emails
+                        $action = $vacreqUtil->processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect, $update, $step, $testing ); //review
                         //exit("action=".$action);
 
                         if( $action == 'vacreq-nopermission' ) {
                             return $this->redirectToRoute('vacreq-nopermission');
                         }
 
-                        $em->persist($entity);
-                        $em->flush();
+                        if( $testing === false ) {
+                            $em->persist($entity);
+                            $em->flush();
+                        } else {
+                            exit("EOF editAction: review");
+                        }
 
                         $logger->notice("Review CarryOver request ID=".$entity->getId()."; status=".$status."; resulting action=".$action);
                     } else {
@@ -752,6 +760,7 @@ class RequestController extends OrderAbstractController
 
             //get request type
             if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
+                //This will make sure that only one carryover request exists for the current year, and it will cancel all previous carryover requests
                 $vacreqUtil->syncVacReqCarryOverRequest($entity,$originalStatus); //vacreq_review, vacreq_edit
             }
 
@@ -1415,6 +1424,14 @@ class RequestController extends OrderAbstractController
         //include this request institution to the $organizationalInstitutions array
         $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
         //echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+
+        //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
+        //set $organizationalInstitutions to empty if entity has only tentative institution and does not have org institution
+        if( $requestType->getAbbreviation() == "carryover" ) {
+            if( $entity->getTentativeInstitution() && !$entity->getInstitution() ) {
+                $organizationalInstitutions = array();
+            }
+        }
 
         //include this request institution to the $tentativeInstitutions array
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );

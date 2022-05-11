@@ -748,7 +748,7 @@ class VacReqUtil
         $requestType = $entity->getRequestType();
 
         if( !$requestType || ($requestType && $requestType->getAbbreviation() != "carryover") ) {
-            return;
+            return null;
         }
 
         $subjectUser = $entity->getUser();
@@ -890,6 +890,7 @@ class VacReqUtil
     }
 
     //Assume all entities are in DB
+    //This will make sure that only one carryover request exists for the current year, and it will cancel all previous carryover requests
     //Used in
     //CarryOverController #365: vacreq_status_change_carryover, vacreq_status_email_change_carryover
     //RequestController: vacreq_status_change, vacreq_status_email_change
@@ -4453,7 +4454,7 @@ class VacReqUtil
     //Used by vacreq_status_change_carryover, vacreq_status_email_change_carryover
     //$status - pre-approval or final status (the one has been changed) ($status - new status)
     //Pass 'first-step' or 'second-step' approval stage flag (default='first-step')
-    public function processChangeStatusCarryOverRequest_ORIG( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
+    public function processChangeStatus_CarryOverRequest_ORIG( $entity, $status, $user, $request, $withRedirect=true, $update=true ) {
 
         //echo "<br><br>Testing: process ChangeStatusCarryOverRequest: request ID=".$entity->getId()."<br>";
         //echo "Tentative inst=".$entity->getTentativeInstitution()."<br>";
@@ -4464,7 +4465,7 @@ class VacReqUtil
         /////////////// check permission: if user is in approvers => ok ///////////////
         if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
-            //echo "########## processChangeStatusCarryOverRequest <br>";
+            //echo "########## processChangeStatus_CarryOverRequest <br>";
             $approvers = $this->getRequestApprovers($entity);
             //echo "inst approvers=".count($approvers)."<br>"; //testing
 //            if( count($approvers) == 0 ) {
@@ -4729,7 +4730,16 @@ class VacReqUtil
     //Used by vacreq_status_change_carryover, vacreq_status_email_change_carryover
     //$status - pre-approval or final status (the one has been changed) ($status - new status)
     //Pass 'first-step' or 'second-step' approval stage flag (default='first-step')
-    public function processChangeStatusCarryOverRequest( $entity, $status, $user, $request, $withRedirect=true, $update=true, $step='first-step' ) {
+    public function processChangeStatusCarryOverRequest(
+        $entity,
+        $status,
+        $user,
+        $request,
+        $withRedirect=true,
+        $update=true,
+        $step='first-step',
+        $testing=false
+    ) {
 
         //echo "<br><br>Testing: process ChangeStatusCarryOverRequest: request ID=".$entity->getId()."<br>";
         //echo "Tentative inst=".$entity->getTentativeInstitution()."<br>";
@@ -4778,6 +4788,7 @@ class VacReqUtil
         $action = null;
 
         //echo "status=$status <br>";
+        //TODO: check if required here
         $institution = $entity->getInstitution();
         $tentativeInstitution = $entity->getTentativeInstitution();
         //sync tentative status and org status
@@ -4791,7 +4802,7 @@ class VacReqUtil
         //Case 2: tentative institution is set, org institution is set => two stage
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
-        if( $entity->getTentativeInstitution() && $entity->getTentativeStatus() == 'pending' ) {
+        if( $step == 'first-step' && $entity->getTentativeStatus() == 'pending' ) {
             ////////////// FIRST STEP: group pre-approver ///////////////////
             //echo $entity->getId().": FIRST STEP: group pre-approver <br>"; exit('111'); //testing
 
@@ -4814,44 +4825,16 @@ class VacReqUtil
             //send email to supervisor for a final approval
             if( $status == 'approved' ) {
 
+                $entity->setApprover(null);
+                $entity->setStatus('pending');
+
+                $approversNameStr = $this->sendConfirmationEmailToApprovers($entity);
+
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $institution = $entity->getInstitution();
-                $tentativeInstitution = $entity->getTentativeInstitution();
-
-                if( $institution && $institution != $tentativeInstitution )
-                {
-                    //if carry over request has main organizational group => regular flow: set status to pending and send email to the final approvers
-                    $entity->setApprover(null);
-                    $entity->setStatus('pending');
-
-                    $approversNameStr = $this->sendConfirmationEmailToApprovers($entity); //send email to second step approval
-
-                    $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
-                        "Email for a final approval has been sent to ".$approversNameStr;
-                } elseif( !$institution || ($institution && $tentativeInstitution && $institution == $tentativeInstitution) )
-                {
-                    //if carry over request has main organizational group the same as tentative => set status as approved
-                    //if carry over request does not have main organizational group => set status as approved
-                    $entity->setApprover($user);
-                    $entity->setStatus($status);
-                    $event = $requestName . " for ".$entity->getUser()." has been approved by ".$entity->getApprover().
-                        ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
-
-                    $subjectApproved = "Your request ID #".$entity->getId()." to carry over ".$entity->getCarryOverDays()." vacation days from ".
-                        $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange()." has been approved.";
-
-                    $bodyApproved = $entity->getTentativeApprover(). " has approved your request ID #".$entity->getId()." to carry over ".
-                        $entity->getCarryOverDays()." vacation days from ".
-                        $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
-
-                    //request info
-                    $bodyApproved .= $break.$break.$entity->printRequest($this->container);
-
-                    $emailUtil->sendEmail( $entity->getUser()->getSingleEmail(), $subjectApproved, $bodyApproved, null, null );
-                }
-
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively approved by ".$entity->getTentativeApprover().". ".
+                    "Email for a final approval has been sent to ".$approversNameStr;
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
@@ -4886,7 +4869,7 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been tentatively rejected by ".
+                $event = $requestName . " ID #".$entity->getId()." for ".$entity->getUser()." has been rejected (tentatively, in the first step) by ".
                     $entity->getTentativeApprover().". ".
                     "Confirmation email has been sent to the submitter ".$entity->getUser().".";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
@@ -4903,7 +4886,10 @@ class VacReqUtil
             ////////////// SECOND STEP: supervisor //////////////
             //echo $entity->getId().": SECOND STEP: supervisor. status=$status <br>";exit('111'); //testing
 
-            $action = "Final ".$status;
+            //A request is either approved or rejected (in that second step)
+            //$action = "Final ".$status;
+            $action = $status;
+
             $logger->notice("process ChangeStatusCarryOverRequest: action=".$action);
 
             $entity->setStatus($status);
@@ -4943,7 +4929,7 @@ class VacReqUtil
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
-                $bodyApproved = $entity->getApprover(). " has approved your request in the final phase to carry over ".
+                $bodyApproved = $entity->getApprover(). " has approved your request to carry over ".
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
@@ -4955,7 +4941,7 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been approved in the final phase by ".$entity->getApprover().
+                $event = $requestName . " for ".$entity->getUser()." has been approved (in the final phase) by ".$entity->getApprover().
                     ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
@@ -4975,7 +4961,7 @@ class VacReqUtil
 
                 //Message: FirstNameOfTentativeApprover LastNameOfTentativeApprover has rejected your request to
                 // carry over X vacation days from 20XX-20YY to 20YY-20ZZ.
-                $bodyRejected = $entity->getApprover(). " has rejected your request in the final phase to carry over ".
+                $bodyRejected = $entity->getApprover(). " has rejected your request to carry over ".
                     $entity->getCarryOverDays()." vacation days from ".
                     $entity->getSourceYearRange() . " to " . $entity->getDestinationYearRange();
 
@@ -4987,7 +4973,7 @@ class VacReqUtil
                 //Event Log
                 $requestName = $entity->getRequestName();
                 $eventType = 'Carry Over Request Updated';
-                $event = $requestName . " for ".$entity->getUser()." has been rejected in the final phase by ".$entity->getApprover().
+                $event = $requestName . " for ".$entity->getUser()." has been rejected (in the final phase) by ".$entity->getApprover().
                     ". Confirmation email has been sent to the submitter ".$entity->getUser()->getSingleEmail();
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
