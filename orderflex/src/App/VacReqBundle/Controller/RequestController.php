@@ -590,7 +590,7 @@ class RequestController extends OrderAbstractController
 
                     $action = "Undefined Action";
                     $changedStatusCount = 0;
-                    $step = 'first-step';
+                    $step = 'first-step'; //force to approval step
 
                     $newTentativeStatus = $entity->getTentativeStatus();
                     //echo "$originalTentativeStatus=?".$newTentativeStatus."<br>"; //testing
@@ -614,7 +614,7 @@ class RequestController extends OrderAbstractController
                         //$entity->setTentativeInstitution(NULL);
                         $status = $entity->getStatus();
                         //$status = $newStatus;
-                        $step = 'second-step';
+                        //$step = 'second-step';
                     }
 
                     //if org inst is null => always second step
@@ -1006,6 +1006,7 @@ class RequestController extends OrderAbstractController
                         //re-set tentative status according to the submitter group
                         //set tentativeStatus only for non executive submitter
                         $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
+
                         //re-set tentative status according to the TentativeInstitution
                         if( !$userExecutiveSubmitter && $entity->getTentativeInstitution() ) {
                             $entity->setTentativeStatus('pending');
@@ -1020,7 +1021,12 @@ class RequestController extends OrderAbstractController
 //                        $vacreqUtil->deleteCanceledVacReqCarryOverRequest($entity);
 //                    }
 
-                }
+                    //if institution is null (one step approval) => sync status for both
+                    if( !$entity->getInstitution() ) {
+                        $entity->setTentativeStatus($status);
+                    }
+
+                }//carryover
 
 
                 $entity->setStatus($status);

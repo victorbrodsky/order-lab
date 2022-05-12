@@ -343,9 +343,9 @@ class RequestIndexController extends OrderAbstractController
             'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );
 
-        if( $routeName == 'vacreq_incomingrequests' ) {
+        //if( $routeName == 'vacreq_incomingrequests' ) {
             $paginationParams['defaultSortFieldName'] = 'request.createDate'; //'request.id';
-        }
+        //}
 
 
         $paginator  = $this->get('knp_paginator');

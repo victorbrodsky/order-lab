@@ -4894,10 +4894,20 @@ class VacReqUtil
 
             $entity->setStatus($status);
 
+            if( $step == 'second-step' ) {
+                $entity->setTentativeStatus($status);
+            }
+
             if( $status == "pending" ) {
                 $entity->setApprover(null);
+                if( $step == 'second-step' ) {
+                    $entity->setTentativeApprover(null);
+                }
             } else {
                 $entity->setApprover($user);
+                if( $step == 'second-step' ) {
+                    $entity->setTentativeApprover($user);
+                }
             }
 
             if( $status == "approved" ) {

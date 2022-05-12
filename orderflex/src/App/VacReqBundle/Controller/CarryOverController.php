@@ -361,7 +361,6 @@ class CarryOverController extends OrderAbstractController
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
         //$withRedirect=true; $update=true;
-        $step = 'second-step';
         //main logic to change status and send emails
         $action = $vacreqUtil->processChangeStatusCarryOverRequest(
             $entity,
