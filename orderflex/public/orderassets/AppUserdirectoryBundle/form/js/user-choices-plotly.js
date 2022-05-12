@@ -429,7 +429,7 @@ function plotlyAddErrorLine( msg, type ) {
 
 function favoriteChart(favoriteEl,chartId) {
     //console.log("favorite clicked");
-    printF($(favoriteEl),"favorite clicked");
+    //printF($(favoriteEl),"favorite clicked");
     //$(favoriteEl).toggleClass("glyphicon-heart glyphicon-heart-empty");
 
     //console.log("chartId="+chartId);
@@ -502,7 +502,8 @@ function dashboardClearAlertMessages() {
     //console.log("dashboardClearAlertMessages");
     //clear alert alert-danger
     //$('.dashboard-alert-msg').remove();
-    $('#error-message').html(null);
+    //$('#error-message').html(null);
+    $('.dashboard-alert-msg').remove();
 
     //clear charts
     //document.getElementById("charts").innerHTML = "";

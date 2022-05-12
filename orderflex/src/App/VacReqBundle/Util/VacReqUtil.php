@@ -5612,7 +5612,7 @@ class VacReqUtil
 
         $userIds = explode("-",$userIdsStr);
 
-        $testing = true;
+        //$testing = true;
         $testing = false;
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();

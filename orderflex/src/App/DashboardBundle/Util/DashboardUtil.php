@@ -582,6 +582,9 @@ class DashboardUtil
 
             "66. Chart viewing stats per month" => "chart-view-stat",
 
+            "67. Scheduled residency and fellowship interviews by interviewer" => "fellapp-resapp-interviews",
+            "68. Residency and fellowship Interviews for which feedback was provided, by interviewer" => "fellapp-resapp-interviews-feedback",
+
             "" => "",
             "" => "",
         );
@@ -8588,6 +8591,125 @@ class DashboardUtil
             );
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
+        }
+
+        //"67. Scheduled residency and fellowship interviews by interviewer" => "fellapp-resapp-interviews",
+        if( $chartType == "fellapp-resapp-interviews" ) {
+            //Scheduled residency and fellowship interviews by interviewer ([total scheduled interviews])
+            //Y axis: Number of assigned interviews
+            //X axis: Interviewer name
+            //The default time range would be the "current year", but would be adjustable via
+            // "From Date" and "To Date" fields (so you could get the counts for any 1 or more years).
+
+            $fellappUtil = $this->container->get('fellapp_util');
+
+            //$transresRequestUtil = $this->container->get('transres_request_util');
+            $totalInterviewsCount = 0;
+            $totalInterviewsArr = array();
+
+            //$yearShift = 2; //+2
+            //$startDate->modify('+'.$yearShift.' year');
+            //$endDate->modify('+'.$yearShift.' year');
+
+            //$year can be multiple dates "2019,2020,2021..."
+            $startYear = $startDate->format('Y');
+            $endYear = $endDate->format('Y');
+            //echo "1startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            if( (int)$startYear > (int)$endYear ) {
+                //echo "flip<br>";
+                $tempYear = $startYear;
+                $startYear = $endYear;
+                $endYear = $tempYear;
+            }
+            //echo "2startYear=".$startYear.", endYear=".$endYear."<br>";
+
+            $yearRange = '';
+
+            foreach(range($startYear, $endYear) as $thisYear) {
+                $yearRangeArr[] = $thisYear;
+            }
+
+            if( count($yearRangeArr) > 0 ) {
+                $yearRange = implode(",",$yearRangeArr);
+            } else {
+                $yearRange = $startYear;
+            }
+
+            //$status,$fellSubspecArg,$year=null,$interviewer=null
+            $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
+            //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>"; exit('111');
+
+            foreach($fellapps as $fellapp) {
+
+                foreach($fellapp->getInterviews() as $interview) {
+                    $interviewer = $interview->getInterviewer();
+                    if( $interviewer ) {
+                        $interviewerIndex = $interviewer->getUsernameOptimal();
+
+                        if( array_key_exists($interviewerIndex, $totalInterviewsArr) ) {
+                            $currentCount = $totalInterviewsArr[$interviewerIndex];
+                        } else {
+                            $currentCount = 0;
+                        }
+
+                        $currentCount++;
+                        $totalInterviewsArr[$interviewerIndex] = $currentCount;
+                        $totalInterviewsCount++;
+                    }
+
+                }
+
+            }//foreach $fellapp
+
+            $addTitle = $totalInterviewsCount;
+            $addTitle = $addTitle.", fellapps=".count($fellapps).", yearRange=".$yearRange;
+
+            $chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
+            $showOther = $this->getOtherStr($showLimited,"Interviewers");
+            $totalInterviewsTopArr = $this->getTopArray($totalInterviewsArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($totalInterviewsTopArr, $chartName,'pie',$layoutArray,"",null,null,"percent+label");
+        }
+
+        //"68. Residency and fellowship Interviews for which feedback was provided, by interviewer" => "fellapp-resapp-interviews-feedback",
+        if( $chartType == "fellapp-resapp-interviews-feedback" ) {
+            //Residency and fellowship Interviews for which feedback was provided, by interviewer ([total feedback comments])
+            //Y axis: Number of interviewees for whom feedback was submitted
+            //X axis: Interviewer name
+
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $totalFeesByInvestigatorArr = array();
+
+            $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+            foreach($requests as $transRequest) {
+
+                $pis = $transRequest->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $pi = $pis[0];
+                    $investigatorIndex = $pi->getUsernameOptimal();
+                }
+
+                $subtotalFee = intval($transresRequestUtil->getTransResRequestSubTotal($transRequest));
+                //$subtotalFees = $subtotalFees + $subtotalFee;
+
+                //15. Total Fees per Investigator (Top 10)
+                if (isset($totalFeesByInvestigatorArr[$investigatorIndex])) {
+                    $totalFee = $totalFeesByInvestigatorArr[$investigatorIndex] + $subtotalFee;
+                } else {
+                    $totalFee = $subtotalFee;
+                }
+                //$totalFee = $this->getNumberFormat($totalFee);
+                $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+                /////////////////////////////
+
+                $titleCount = $titleCount + $subtotalFee;
+
+            }//foreach $requests
+
+            $chartName = $this->getTitleWithTotal($chartName,$this->getNumberFormat($titleCount),"$");
+            $showOther = $this->getOtherStr($showLimited,"Investigators");
+            $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr,$showOther,$quantityLimit);
+            $chartsArray = $this->getChart($totalFeesByInvestigatorTopArr, $chartName,'pie',$layoutArray," : $",null,null,"percent+label");
         }
 
         if( $chartType == "" ) {

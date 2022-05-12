@@ -144,7 +144,7 @@ class FellAppUtil {
                 $criterionStr = implode(" OR ",$criterions);
                 $dql->andWhere($criterionStr);
             } else {
-                //seingle year
+                //single year
                 //$bottomDate = $year."-01-01";
                 //$topDate = $year."-12-31";
                 //echo "old: bottomDate=$bottomDate, topDate=$topDate <br>";

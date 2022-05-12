@@ -1450,6 +1450,26 @@ class DashboardInit
             exit("Error: not found: Clinical->Call log site utilization");
         }
 
+        //TODO: 10) "67. ", "68. ": "Education" -> "Interview Statistics"
+        $charts10Arr = array();
+        $addChart10Arr = array("67. ", "68. ");
+        $educational = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Educational",
+            $root,
+            $mapper
+        );
+        if( !$educational ) {
+            exit("Error: not found: Educational");
+        }
+        $educationalInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Interview Statistics",
+            $educational,
+            $mapper
+        );
+        if( !$educationalInterviewStats ) {
+            exit("Error: not found: Educational->Interview Statistics");
+        }
+
         foreach($charts as $chart) {
 
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
@@ -1493,6 +1513,9 @@ class DashboardInit
             //9) Educational->Fellowship Candidate Statistics
             $charts9Arr = $this->addSpecificTopic($chart,$clinicalCalllog,$addChart9Arr,$charts9Arr);
 
+            //10) Educational->Interview Statistics
+            $charts10Arr = $this->addSpecificTopic($chart,$educationalInterviewStats,$addChart10Arr,$charts10Arr);
+
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
 //                foreach($chart->getTopics() as $topic) {
 //                    echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
@@ -1526,7 +1549,7 @@ class DashboardInit
 
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
-        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr)+count($charts9Arr);
+        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr)+count($charts9Arr)+count($charts10Arr);
 
         if( $count > 0 ) {
             if( $testing ) {
@@ -1540,6 +1563,7 @@ class DashboardInit
                 dump($charts7aArr);
                 dump($charts8Arr);
                 dump($charts9Arr);
+                dump($charts10Arr);
             } else {
                 $this->em->flush();
             }
