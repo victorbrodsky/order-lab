@@ -502,8 +502,8 @@ function dashboardClearAlertMessages() {
     //console.log("dashboardClearAlertMessages");
     //clear alert alert-danger
     //$('.dashboard-alert-msg').remove();
-    //$('#error-message').html(null);
-    $('.dashboard-alert-msg').remove();
+    $('#error-message').empty();
+    //$('.dashboard-alert-msg').remove();
 
     //clear charts
     //document.getElementById("charts").innerHTML = "";
