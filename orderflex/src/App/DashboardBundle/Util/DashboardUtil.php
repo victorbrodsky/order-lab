@@ -583,7 +583,13 @@ class DashboardUtil
             "66. Chart viewing stats per month" => "chart-view-stat",
 
             "67. Scheduled residency and fellowship interviews by interviewer" => "fellapp-resapp-interviews",
+            "69. Scheduled residency interviews by interviewer" => "resapp-interviews",
+            "70. Scheduled fellowship interviews by interviewer" => "fellapp-interviews",
+
             "68. Residency and fellowship Interviews for which feedback was provided, by interviewer" => "fellapp-resapp-interviews-feedback",
+            "71. Residency Interviews for which feedback was provided, by interviewer" => "resapp-interviews-feedback",
+            "72. Fellowship Interviews for which feedback was provided, by interviewer" => "fellapp-interviews-feedback",
+
 
             "" => "",
             "" => "",
@@ -8751,9 +8757,9 @@ class DashboardUtil
             $chartType == "fellapp-resapp-interviews" ||            //fell+resapp interview
             $chartType == "fellapp-interviews" ||                   //fell interview
             $chartType == "resapp-interviews" ||                    //resapp interview
-            $chartType == "fellapp-resapp-interviews-feedbacks" ||  //fell+resapp feedbacks
-            $chartType == "fellapp-interviews-feedbacks" ||         //fell feedbacks
-            $chartType == "resapp-interviews-feedbacks"             //resapp feedbacks
+            $chartType == "fellapp-resapp-interviews-feedback" ||  //fell+resapp feedback
+            $chartType == "fellapp-interviews-feedback" ||         //fell feedback
+            $chartType == "resapp-interviews-feedback"             //resapp feedback
         ) {
             //Scheduled residency and fellowship interviews by interviewer ([total scheduled interviews])
             //Y axis: Number of assigned interviews
@@ -8804,49 +8810,90 @@ class DashboardUtil
                 $yearRange = $startYear;
             }
 
-            //$status,$fellSubspecArg,$year=null,$interviewer=null
-            $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
-            //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
-            //exit('111');
+            /////////////// fellowship applications //////////////////
+            $fellapps = array();
+            if(
+                $chartType == "fellapp-resapp-interviews" ||            //fell+resapp interview
+                $chartType == "fellapp-interviews" ||                   //fell interview
+                $chartType == "fellapp-resapp-interviews-feedback" ||  //fell+resapp feedback
+                $chartType == "fellapp-interviews-feedback"            //fell feedback
+            ) {
+                                    //$status,$fellSubspecArg,$year=null,$interviewer=null
+                $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
+                //echo "yearRange=$yearRange, fellapps=".count($fellapps)."<br>";
+                //exit('111');
 
-            foreach($fellapps as $fellapp) {
-                foreach($fellapp->getInterviews() as $interview) {
-                    $interviewer = $interview->getInterviewer();
-                    if( $interviewer ) {
-                        $interviewerIndex = $interviewer->getUsernameOptimal();
-                        if( array_key_exists($interviewerIndex, $totalInterviewsArr) ) {
-                            $currentCount = $totalInterviewsArr[$interviewerIndex];
-                        } else {
-                            $currentCount = 0;
+                foreach($fellapps as $fellapp) {
+                    foreach($fellapp->getInterviews() as $interview) {
+
+                        if(
+                            (
+                                $chartType == "fellapp-resapp-interviews-feedback" ||
+                                $chartType == "fellapp-interviews-feedback"
+                            ) &&
+                            $interview->isEmpty() === true )
+                        {
+                            continue; //skip for feedback if feedback is empty
                         }
-                        $currentCount++;
-                        $totalInterviewsArr[$interviewerIndex] = $currentCount;
-                        $totalFellappInterviewsCount++;
-                    }
-                }//foreach $interview
-            }//foreach $fellapp
 
-
-            $resapps = $resappUtil->getResAppByStatusAndYear(null,null,$yearRange);
-            //echo "yearRange=$yearRange, resapps=".count($resapps)."<br>";
-            //exit('111');
-
-            foreach($resapps as $resapp) {
-                foreach($resapp->getInterviews() as $interview) {
-                    $interviewer = $interview->getInterviewer();
-                    if( $interviewer ) {
-                        $interviewerIndex = $interviewer->getUsernameOptimal();
-                        if( array_key_exists($interviewerIndex, $totalInterviewsArr) ) {
-                            $currentCount = $totalInterviewsArr[$interviewerIndex];
-                        } else {
-                            $currentCount = 0;
+                        $interviewer = $interview->getInterviewer();
+                        if( $interviewer ) {
+                            $interviewerIndex = $interviewer->getUsernameOptimal();
+                            if( array_key_exists($interviewerIndex, $totalInterviewsArr) ) {
+                                $currentCount = $totalInterviewsArr[$interviewerIndex];
+                            } else {
+                                $currentCount = 0;
+                            }
+                            $currentCount++;
+                            $totalInterviewsArr[$interviewerIndex] = $currentCount;
+                            $totalFellappInterviewsCount++;
                         }
-                        $currentCount++;
-                        $totalInterviewsArr[$interviewerIndex] = $currentCount;
-                        $totalResappInterviewsCount++;
-                    }
-                }//foreach $interview
-            }//foreach $resapp
+                    }//foreach $interview
+                }//foreach $fellapp
+            }//if fellapp
+            /////////////// EOF fellowship applications //////////////////
+
+            /////////////// residency applications //////////////////
+            $resapps = array();
+            if(
+                $chartType == "fellapp-resapp-interviews" ||            //fell+resapp interview
+                $chartType == "resapp-interviews" ||                    //resapp interview
+                $chartType == "fellapp-resapp-interviews-feedback" ||  //fell+resapp feedback
+                $chartType == "resapp-interviews-feedback"             //resapp feedback
+            ) {
+                $resapps = $resappUtil->getResAppByStatusAndYear(null,null,$yearRange);
+                //echo "yearRange=$yearRange, resapps=".count($resapps)."<br>";
+                //exit('111');
+
+                foreach($resapps as $resapp) {
+                    foreach($resapp->getInterviews() as $interview) {
+
+                        if(
+                            (
+                                $chartType == "fellapp-resapp-interviews-feedback" ||
+                                $chartType == "fellapp-interviews-feedback"
+                            ) &&
+                            $interview->isEmpty() === true )
+                        {
+                            continue; //skip for feedback if feedback is empty
+                        }
+
+                        $interviewer = $interview->getInterviewer();
+                        if( $interviewer ) {
+                            $interviewerIndex = $interviewer->getUsernameOptimal();
+                            if( array_key_exists($interviewerIndex, $totalInterviewsArr) ) {
+                                $currentCount = $totalInterviewsArr[$interviewerIndex];
+                            } else {
+                                $currentCount = 0;
+                            }
+                            $currentCount++;
+                            $totalInterviewsArr[$interviewerIndex] = $currentCount;
+                            $totalResappInterviewsCount++;
+                        }
+                    }//foreach $interview
+                }//foreach $resapp
+            }//if resapp
+            /////////////// EOF residency applications //////////////////
 
             $totalInterviewsCount = $totalFellappInterviewsCount + $totalResappInterviewsCount;
 
@@ -8875,11 +8922,8 @@ class DashboardUtil
             //$layoutArray = NULL;//array();
 
             array_multisort($totalInterviewsArr, SORT_DESC);
-            //arsort($totalFellappInterviewsArr,SORT_NUMERIC);
-            //arsort($totalResappInterviewsArr,SORT_NUMERIC);
 
-            //dump($totalFellappInterviewsArr);
-            //dump($totalResappInterviewsArr);
+            //dump($totalInterviewsArr);
             //exit('111');
 
             //bar chart
