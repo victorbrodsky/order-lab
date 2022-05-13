@@ -8691,8 +8691,12 @@ class DashboardUtil
 
             $totalInterviewsCount = $totalFellappInterviewsCount + $totalResappInterviewsCount;
 
-            $addTitle = " - " . $totalInterviewsCount . " in total (years $startYear-$endYear)";
-            $addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
+            $fellappCount = count($fellapps);
+            $resappCount = count($resapps);
+
+            $addTitle = " - " . $totalInterviewsCount . " in total for $startYear-$endYear";
+            $addTitle = $addTitle . " (" . $fellappCount + $resappCount . " applications in total)";
+            //$addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
 
             //$chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
             $chartName = $chartName . " " . $addTitle;
@@ -8734,11 +8738,11 @@ class DashboardUtil
             $combinedData = array();
 
             //if( count($totalFellappInterviewsArr) > 0 ) {
-                $combinedData['Fellowship'] = $totalFellappInterviewsArr;
+                $combinedData['Fellowship - '.$totalFellappInterviewsCount.' interviewers'] = $totalFellappInterviewsArr;
             //}
 
             //if( count($totalResappInterviewsArr) > 0 ) {
-                $combinedData['Residency'] = $totalResappInterviewsArr;
+                $combinedData['Residency - '.$totalResappInterviewsCount.' interviewers'] = $totalResappInterviewsArr;
             //}
             //dump($combinedData); exit('111');
 
