@@ -1455,6 +1455,7 @@ class DashboardUtil
     public function getStackedChart( $combinedDataArr, $title, $type="stack", $layoutArray=null, $hoverinfo=null ) {
 
         if( count($combinedDataArr) == 0 ) {
+            //exit('no data');
             return array();
         }
 
@@ -1479,6 +1480,7 @@ class DashboardUtil
         $layoutArray['barmode'] = 'stack';
 
         $stackDataArray = array();
+        $allValues = array();
         //$stackDataSumArray = array();
         $xAxis = "x";
         $yAxis = "y";
@@ -1501,6 +1503,8 @@ class DashboardUtil
                 $labels[] = $label;
                 $values[] = $value;
                 $links[] = $link;
+
+                $allValues[] = $value;
 
 //                if( isset($stackDataSumArray[$label]) ) {
 //                    $sumValue = $stackDataSumArray[$label] + $value;
@@ -1528,9 +1532,10 @@ class DashboardUtil
             }
 
             $stackDataArray[] = $chartDataArray;
-        }
+        }//foreach
 
-        if( count($values) == 0 ) {
+        //if( count($values) == 0 ) {
+        if( count($stackDataArray) == 0 || count($allValues) == 0 ) {
             return array();
             //return array('error'=>"No data found corresponding to this chart parameters");
         }
@@ -1539,6 +1544,7 @@ class DashboardUtil
             'layout' => $layoutArray,
             'data' => $stackDataArray
         );
+        //dump($chartsArray);exit('111');
 
         return $chartsArray;
     }
@@ -8685,10 +8691,12 @@ class DashboardUtil
 
             $totalInterviewsCount = $totalFellappInterviewsCount + $totalResappInterviewsCount;
 
-            $addTitle = $totalInterviewsCount;
-            $addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps).", yearRange=".$yearRange;
+            $addTitle = " - " . $totalInterviewsCount . " in total (years $startYear-$endYear)";
+            $addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
 
-            $chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
+            //$chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
+            $chartName = $chartName . " " . $addTitle;
+
             //$showOther = $this->getOtherStr($showLimited,"Interviewers");
             //$totalInterviewsTopArr = $this->getTopArray($totalInterviewsArr,$showOther,$quantityLimit);
             //$chartsArray = $this->getChart($totalInterviewsTopArr, $chartName,'pie',$layoutArray,"",null,null,"percent+value+label");
@@ -8725,13 +8733,13 @@ class DashboardUtil
 
             $combinedData = array();
 
-            if( count($totalFellappInterviewsArr) > 0 ) {
+            //if( count($totalFellappInterviewsArr) > 0 ) {
                 $combinedData['Fellowship'] = $totalFellappInterviewsArr;
-            }
+            //}
 
-            if( count($totalResappInterviewsArr) > 0 ) {
+            //if( count($totalResappInterviewsArr) > 0 ) {
                 $combinedData['Residency'] = $totalResappInterviewsArr;
-            }
+            //}
             //dump($combinedData); exit('111');
 
             $chartsArray = $this->getStackedChart($combinedData, $chartName, "stack", $layoutArray);
@@ -8806,7 +8814,9 @@ class DashboardUtil
             $addTitle = $totalInterviewsCount;
             $addTitle = $addTitle.", fellapps=".count($fellapps).", yearRange=".$yearRange;
 
-            $chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
+            //$chartName = $this->getTitleWithTotal($chartName,$addTitle,"");
+
+            $chartName = $chartName . " " . $addTitle;
 
             //increase vertical
             //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format

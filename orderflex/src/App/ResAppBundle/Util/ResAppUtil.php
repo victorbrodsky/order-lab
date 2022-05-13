@@ -103,16 +103,18 @@ class ResAppUtil {
         $dql->select('resapp');
         $dql->leftJoin("resapp.appStatus", "appStatus");
 
-        if( strpos((string)$status, "-") !== false ) {
-            $statusArr = explode("-", $status);
-            $statusStr = $statusArr[0];
-            $statusNot = $statusArr[1];
-            if( $statusNot && $statusNot == 'not' ) {
-                //'interviewee-not' is dummy status which is all statuses but not
-                $dql->where("appStatus.name != '" . $statusStr . "'");
+        if( $status ) {
+            if (strpos((string)$status, "-") !== false) {
+                $statusArr = explode("-", $status);
+                $statusStr = $statusArr[0];
+                $statusNot = $statusArr[1];
+                if ($statusNot && $statusNot == 'not') {
+                    //'interviewee-not' is dummy status which is all statuses but not
+                    $dql->where("appStatus.name != '" . $statusStr . "'");
+                }
+            } else {
+                $dql->where("appStatus.name = '" . $status . "'");
             }
-        } else {
-            $dql->where("appStatus.name = '" . $status . "'");
         }
 
         if( $resSubspecArg ) {
