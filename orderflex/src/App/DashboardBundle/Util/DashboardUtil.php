@@ -8925,8 +8925,14 @@ class DashboardUtil
                 $yearRangeStr = $yearRange;
             }
 
-            $addTitle = " - " . $totalInterviewsCount . " in total for $yearRangeStr";
-            $addTitle = $addTitle . " (" . $totalAppCount . " applications in total)";
+            //$addTitle = " - " . $totalInterviewsCount . " in total for $yearRangeStr";
+            //$addTitle = $addTitle . " (" . $totalAppCount . " applications in total)";
+
+            //67. Scheduled residency and fellowship interviews by interviewer
+            // – 908 interviews for 250 applications (X not interviewed) in total for 2021-2022
+            $addTitle = "- $totalInterviewsCount interviews for $totalAppCount".
+                " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+
             //$addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
 
             if( $chartType == "fellapp-resapp-interviews" ) {
