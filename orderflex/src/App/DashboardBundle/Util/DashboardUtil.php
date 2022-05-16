@@ -8832,6 +8832,10 @@ class DashboardUtil
 
                         $grandTotalFellappInterviewsCount++;
 
+                        if( $fellappUtil->isFellAppInterviewed($fellapp) ) {
+                            $interviewedFellappCount++;
+                        }
+
                         if(
                             (
                                 $chartType == "fellapp-resapp-interviews-feedback" ||
@@ -8841,10 +8845,6 @@ class DashboardUtil
                         )
                         {
                             continue; //skip for feedback if feedback is empty
-                        }
-
-                        if( $fellappUtil->isFellAppInterviewed($fellapp) ) {
-                            $interviewedFellappCount++;
                         }
 
                         $interviewer = $interview->getInterviewer();
@@ -8881,6 +8881,10 @@ class DashboardUtil
 
                         $grandTotalResappInterviewsCount++;
 
+                        if( $resappUtil->isResAppInterviewed($fellapp) ) {
+                            $interviewedResappCount++;
+                        }
+
                         if(
                             (
                                 $chartType == "fellapp-resapp-interviews-feedback" ||
@@ -8889,10 +8893,6 @@ class DashboardUtil
                             $interview->isEmpty() === true )
                         {
                             continue; //skip for feedback if feedback is empty
-                        }
-
-                        if( $resappUtil->isResAppInterviewed($fellapp) ) {
-                            $interviewedResappCount++;
                         }
 
                         $interviewer = $interview->getInterviewer();
