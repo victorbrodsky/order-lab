@@ -8778,9 +8778,11 @@ class DashboardUtil
             $totalInterviewsArr = array();
 
             $grandTotalFellappInterviewsCount = 0;
+            $interviewedFellappCount = 0;
             $totalFellappInterviewsCount = 0;
 
             $grandTotalResappInterviewsCount = 0;
+            $interviewedResappCount = 0;
             $totalResappInterviewsCount = 0;
 
             //$yearShift = 2; //+2
@@ -8835,9 +8837,14 @@ class DashboardUtil
                                 $chartType == "fellapp-resapp-interviews-feedback" ||
                                 $chartType == "fellapp-interviews-feedback"
                             ) &&
-                            $interview->isEmpty() === true )
+                            $interview->isEmpty() === true
+                        )
                         {
                             continue; //skip for feedback if feedback is empty
+                        }
+
+                        if( $fellappUtil->isFellAppInterviewed($fellapp) ) {
+                            $interviewedFellappCount++;
                         }
 
                         $interviewer = $interview->getInterviewer();
@@ -8884,6 +8891,10 @@ class DashboardUtil
                             continue; //skip for feedback if feedback is empty
                         }
 
+                        if( $resappUtil->isResAppInterviewed($fellapp) ) {
+                            $interviewedResappCount++;
+                        }
+
                         $interviewer = $interview->getInterviewer();
                         if( $interviewer ) {
                             $interviewerIndex = $interviewer->getUsernameOptimal();
@@ -8902,19 +8913,27 @@ class DashboardUtil
             /////////////// EOF residency applications //////////////////
 
             $totalInterviewsCount = $totalFellappInterviewsCount + $totalResappInterviewsCount;
+            $interviewedCount = $interviewedFellappCount + $interviewedResappCount;
 
             $fellappCount = count($fellapps);
             $resappCount = count($resapps);
             $totalAppCount = $fellappCount + $resappCount;
 
-            $addTitle = " - " . $totalInterviewsCount . " in total for $startYear-$endYear";
+            if( strpos((string)$yearRange, ",") !== false ) {
+                $yearRangeStr = "$startYear-$endYear";
+            } else {
+                $yearRangeStr = $yearRange;
+            }
+
+            $addTitle = " - " . $totalInterviewsCount . " in total for $yearRangeStr";
             $addTitle = $addTitle . " (" . $totalAppCount . " applications in total)";
             //$addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
 
             if( $chartType == "fellapp-resapp-interviews" ) {
                 //67. Scheduled residency and fellowship interviews by interviewer
                 // – 908 interviews for 250 applications (X not interviewed) in total for 2021-2022
-                $addTitle = "- $totalInterviewsCount interviews for $totalAppCount applications (X not interviewed) in total for 2021-2022";
+                $addTitle = "- $totalInterviewsCount interviews for $totalAppCount".
+                " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
             }
 
             //$chartName = $this->getTitleWithTotal($chartName,$addTitle,"");

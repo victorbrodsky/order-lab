@@ -2062,6 +2062,46 @@ class ResidencyApplication extends BaseUserAttributes {
         return NULL;
     }
 
+    public function isInterviewed() {
+        //definition of the not interviewed applications
+        //interviewed means she sets the interview date and then sends interview evaluation emails.
+        //The simplest answer if "not interviewed" would be any applicant that if all those are true:
+        // (a) was never set to the “Interviewee” status AND
+        // (b) does not have any interview feedback AND
+        // (c) does not have an interview date field value AND
+
+        // (a) was never set to the “Interviewee” status
+        $resAppStatusEntity = $this->getAppStatus();
+        if( $resAppStatusEntity ) {
+            if( $resAppStatusEntity->getName() == 'interviewee' ) {
+                return true;
+            }
+        }
+
+        // (b) does not have any interview feedback
+        // (c) does not have an interview date field value
+        foreach( $this->getInterviews() as $interview ) {
+
+            // (b) does not have any interview feedback
+            if( $interview->isEmpty() === false ) {
+                return true;
+            }
+
+            if( $interview->getComment() ) {
+                return true;
+            }
+
+            // (c) does not have an interview date field value
+            //getInterviewDate
+            if( $interview->getInterviewDate() ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
     public function __toString() {
         return "ResidencyApplication";
     }

@@ -2614,5 +2614,29 @@ class ResAppUtil {
             'endDate'=> $endDate,
         );
     }
+
+    public function isResAppInterviewed( $resapp ) {
+        //definition of the not interviewed applications
+        //interviewed means she sets the interview date and then sends interview evaluation emails.
+        //The simplest answer if "not interviewed" would be any applicant that if all those are true:
+        // (a) was never set to the “Interviewee” status AND
+        // (b) does not have any interview feedback AND
+        // (c) does not have an interview date field value AND
+        // (d) never had any interviewer evaluation emails sent to interviewers
+
+        // (a) was never set to the “Interviewee” status AND
+        // (b) does not have any interview feedback AND
+        // (c) does not have an interview date field value AND
+        if( $resapp->isInterviewed() ) {
+            return true;
+        }
+
+        //TODO: (d) never had any interviewer evaluation emails sent to interviewers
+//        if( 0 ) {
+//            return true;
+//        }
+
+        return false;
+    }
     
 } 
