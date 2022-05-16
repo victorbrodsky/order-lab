@@ -8949,7 +8949,7 @@ class DashboardUtil
             //tickformat: https://github.com/d3/d3-format/blob/main/README.md#locale_format
             $layoutArray = array(
                 'height' => $this->height,//*1.3,
-                'width' => $this->width,
+                'width' => $this->width*1.2,
                 'title' => $chartName,
                 'margin' => array('b'=>200),
                 'xaxis' => array(
