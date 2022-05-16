@@ -162,9 +162,9 @@ class FellAppUtil {
             $dql->andWhere("interviewer.id=".$interviewer->getId());
         }
 
-        //echo "dql=".$dql."<br>";
-
         $dql->orderBy("fellapp.id","ASC");
+
+        //echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);
         $applicants = $query->getResult();

@@ -289,8 +289,8 @@ class GoogleFormConfigController extends OrderAbstractController
         //if live
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $forceUpdate || $environment == "live" ) { //live
-            $updatedFile = $this->updateFileContent($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
-            if( $updatedFile ) {
+            $updatedResArr = $this->updateFileContent($service, $configFile->getId(), $newTitle, $newDescription, $newMimeType, $configJson, $newRevision);
+            if( $updatedResArr['error'] === false ) {
                 //echo "Config file has been updated <br>";
                 $eventMsg = "Fellowship Form Configuration file has been updated on the Google Drive by " . $user;
                 $eventType = 'Fellowship Application Config Updated On Google Drive';
@@ -300,7 +300,7 @@ class GoogleFormConfigController extends OrderAbstractController
                     $eventMsg
                 );
             } else {
-                $eventMsg = "Fellowship Form Configuration file update to Google Drive failed";
+                $eventMsg = "Fellowship Form Configuration file update to Google Drive failed: ".$updatedResArr['msg'];
                 $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
                 //throw new \Exception( $msg );
 
@@ -409,8 +409,16 @@ class GoogleFormConfigController extends OrderAbstractController
                 'mimeType' => $newMimeType, //'application/json', //application/json
                 'uploadType' => 'media'
             ));
+            return array(
+                'error' => false,
+                'msg' => ''
+            );
         } catch (Exception $e) {
-            print "An error occurred: " . $e->getMessage();
+            //print "An error occurred: " . $e->getMessage();
+            return array(
+                'error' => true,
+                'msg' => $e->getMessage()
+            );
         }
     }
 

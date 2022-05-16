@@ -182,6 +182,8 @@ class ResAppUtil {
             $dql->andWhere("interviewer.id=".$interviewer->getId());
         }
 
+        $dql->orderBy("resapp.id","ASC");
+        
         //echo "dql=".$dql."<br>";
 
         $query = $this->em->createQuery($dql);

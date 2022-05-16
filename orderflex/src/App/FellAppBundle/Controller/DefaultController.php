@@ -208,24 +208,24 @@ class DefaultController extends OrderAbstractController
 //        dump($response);
 //        exit('111');
 
-        //fellapp interview and feedback count
-        $fellappUtil = $this->container->get('fellapp_util');
-        $yearRange = '2021';
-        $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
-        $totalInterviews = 0;
-        $totalFeedbacks = 0;
-        foreach($fellapps as $fellapp) {
-            $interviews = $fellapp->getInterviews();
-            echo $fellapp->getId().": ".$fellapp->getStartDate()->format('Y-m-d')."-".$fellapp->getEndDate()->format('Y-m-d')."; interviews=".count($interviews)."<br>";
-            $totalInterviews = $totalInterviews + count($interviews);
-            foreach($interviews as $interview) {
-                if( $interview->isEmpty() === true ) {
-                    $totalFeedbacks = $totalFeedbacks + 1;
-                }
-            }
-        }
-        echo "fellapps=".count($fellapps)."; interviews=".$totalInterviews."; totalFeedbacks=".$totalFeedbacks."<br>";
-        exit('111');
+//        //fellapp interview and feedback count
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $yearRange = '2021';
+//        $fellapps = $fellappUtil->getFellAppByStatusAndYear(null,null,$yearRange);
+//        $totalInterviews = 0;
+//        $totalFeedbacks = 0;
+//        foreach($fellapps as $fellapp) {
+//            $interviews = $fellapp->getInterviews();
+//            echo $fellapp->getId().": ".$fellapp->getStartDate()->format('Y-m-d')."-".$fellapp->getEndDate()->format('Y-m-d')."; interviews=".count($interviews)."<br>";
+//            $totalInterviews = $totalInterviews + count($interviews);
+//            foreach($interviews as $interview) {
+//                if( $interview->isEmpty() === true ) {
+//                    $totalFeedbacks = $totalFeedbacks + 1;
+//                }
+//            }
+//        }
+//        echo "fellapps=".count($fellapps)."; interviews=".$totalInterviews."; totalFeedbacks=".$totalFeedbacks."<br>";
+//        exit('111');
 
         /////////// EOF testing ///////////
 
