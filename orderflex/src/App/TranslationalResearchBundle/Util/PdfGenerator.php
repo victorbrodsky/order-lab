@@ -256,6 +256,10 @@ class PdfGenerator
         session_write_close();
         $PHPSESSID = $session->getId();
 
+        ///usr/bin/xvfb-run: line 186: kill No such process stdout
+        //https://stackoverflow.com/questions/30504274/xvfb-run-line-171-kill-25939-no-such-process
+        //fet log: -e /tmp/xvfb.log
+        //fix:  add the -a flag to the command: /usr/bin/xvfb-run -a /usr/bin/wkhtmltopdf
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath,

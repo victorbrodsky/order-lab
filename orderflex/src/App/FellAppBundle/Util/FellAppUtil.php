@@ -164,6 +164,8 @@ class FellAppUtil {
 
         //echo "dql=".$dql."<br>";
 
+        $dql->orderBy("fellapp.id","ASC");
+
         $query = $this->em->createQuery($dql);
         $applicants = $query->getResult();
         
