@@ -8881,7 +8881,7 @@ class DashboardUtil
 
                         $grandTotalResappInterviewsCount++;
 
-                        if( $resappUtil->isResAppInterviewed($fellapp) ) {
+                        if( $resappUtil->isResAppInterviewed($resapp) ) {
                             $interviewedResappCount++;
                         }
 

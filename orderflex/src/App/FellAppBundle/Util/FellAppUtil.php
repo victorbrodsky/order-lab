@@ -2168,6 +2168,10 @@ class FellAppUtil {
         // (c) does not have an interview date field value AND
         // (d) never had any interviewer evaluation emails sent to interviewers
 
+        if( !$fellapp ) {
+            return false;
+        }
+        
         // (a) was never set to the “Interviewee” status AND
         // (b) does not have any interview feedback AND
         // (c) does not have an interview date field value AND
