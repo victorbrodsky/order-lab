@@ -8606,6 +8606,11 @@ class DashboardUtil
         }
 
         //"67. Scheduled residency and fellowship interviews by interviewer" => "fellapp-resapp-interviews",
+        //"69. Scheduled residency interviews by interviewer" => "resapp-interviews",
+        //"70. Scheduled fellowship interviews by interviewer" => "fellapp-interviews",
+        //"68. Total candidate interview feedback comments provided via the system, by interviewer" => "fellapp-resapp-interviews-feedback",
+        //"71. Residency interview feedback comments provided via the system, by interviewer" => "resapp-interviews-feedback",
+        //"72. Fellowship interview feedback comments provided via the system, by interviewer" => "fellapp-interviews-feedback",
         if(
             $chartType == "fellapp-resapp-interviews" ||            //fell+resapp interview
             $chartType == "fellapp-interviews" ||                   //fell interview

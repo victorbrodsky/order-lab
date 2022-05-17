@@ -1450,7 +1450,7 @@ class DashboardInit
             exit("Error: not found: Clinical->Call log site utilization");
         }
 
-        //TODO: 10) "67. ", "68. ": "Education" -> "Interview Statistics"
+        //10) "67. ", "68. ": "Education" -> "Interview Statistics"
         $charts10Arr = array();
         $addChart10Arr = array("67. ", "68. ");
         $educational = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
@@ -1467,7 +1467,29 @@ class DashboardInit
             $mapper
         );
         if( !$educationalInterviewStats ) {
-            exit("Error: not found: Educational->Interview Statistics");
+            exit("Error: not found: Educational->Residency Interview Statistics");
+        }
+        //11) "69. ", "71. ": "Education" -> "Interview Statistics"
+        $charts11Arr = array();
+        $addChart11Arr = array("69. ", "71. ");
+        $educationalResidencyInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Residency Interview Statistics",
+            $educational,
+            $mapper
+        );
+        if( !$educationalResidencyInterviewStats ) {
+            exit("Error: not found: Educational->Residency Interview Statistics");
+        }
+        //12) "70. ", "72. ": "Education" -> "Fellowship Interview Statistics"
+        $charts12Arr = array();
+        $addChart12Arr = array("70. ", "72. ");
+        $educationalFellowshipInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+            "Fellowship Interview Statistic",
+            $educational,
+            $mapper
+        );
+        if( !$educationalFellowshipInterviewStats ) {
+            exit("Error: not found: Educational->Fellowship Interview Statistic");
         }
 
         foreach($charts as $chart) {
@@ -1516,6 +1538,12 @@ class DashboardInit
             //10) Educational->Interview Statistics
             $charts10Arr = $this->addSpecificTopic($chart,$educationalInterviewStats,$addChart10Arr,$charts10Arr);
 
+            //11) Educational->Residency Interview Statistics
+            $charts11Arr = $this->addSpecificTopic($chart,$educationalResidencyInterviewStats,$addChart11Arr,$charts11Arr);
+
+            //12) Educational->Fellowship Interview Statistics
+            $charts12Arr = $this->addSpecificTopic($chart,$educationalFellowshipInterviewStats,$addChart12Arr,$charts12Arr);
+
 //            if( $chart->getName() == '55. Number of reminder emails sent per month (linked)' ) {
 //                foreach($chart->getTopics() as $topic) {
 //                    echo $chart->getName().": topic=".$topic->getTreeName()."<br>";
@@ -1549,7 +1577,8 @@ class DashboardInit
 
 
         $count = count($charts1Arr) + count($charts2Arr) + count($charts3Arr) + count($charts4Arr) + count($charts5Arr)
-        +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr)+count($charts9Arr)+count($charts10Arr);
+            +count($charts6Arr)+count($charts7Arr)+count($charts7aArr)+count($charts8Arr)+count($charts9Arr)
+            +count($charts10Arr)+count($charts11Arr)+count($charts12Arr);
 
         if( $count > 0 ) {
             if( $testing ) {
@@ -1564,6 +1593,8 @@ class DashboardInit
                 dump($charts8Arr);
                 dump($charts9Arr);
                 dump($charts10Arr);
+                dump($charts11Arr);
+                dump($charts12Arr);
             } else {
                 $this->em->flush();
             }

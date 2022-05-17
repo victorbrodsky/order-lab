@@ -10630,7 +10630,9 @@ class AdminController extends OrderAbstractController
             "Educational" => array(
                 "Fellowship Candidate Statistics" => array(),
                 "Residency Candidate Statistics" => array(),
-                "Interview Statistics" => array()
+                "Interview Statistics" => array(),
+                "Residency Interview Statistics" => array(),
+                "Fellowship Interview Statistic" => array()
             ),
             "Site Utilization" => array(
                 "Platform" => array(),
