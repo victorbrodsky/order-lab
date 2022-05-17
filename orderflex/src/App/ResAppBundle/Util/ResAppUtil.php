@@ -2635,8 +2635,8 @@ class ResAppUtil {
             return true;
         }
 
-        //TODO: (d) never had any interviewer evaluation emails sent to interviewers
-        if( 0 ) {
+        //(d) never had any interviewer evaluation emails sent to interviewers
+        if( $this->isInterviewInvitationEmailSent($resapp) ) {
             return true;
         }
 

@@ -8776,11 +8776,13 @@ class DashboardUtil
             /////////////// EOF residency applications //////////////////
 
             $totalInterviewsCount = $totalFellappInterviewsCount + $totalResappInterviewsCount;
-            $interviewedCount = $interviewedFellappCount + $interviewedResappCount;
+            $interviewedAppCount = $interviewedFellappCount + $interviewedResappCount;
 
             $fellappCount = count($fellapps);
             $resappCount = count($resapps);
             $totalAppCount = $fellappCount + $resappCount;
+
+            $notInterviewedAppCount = $totalAppCount - $interviewedAppCount;
 
             if( strpos((string)$yearRange, ",") !== false ) {
                 $yearRangeStr = "$startYear-$endYear";
@@ -8805,7 +8807,7 @@ class DashboardUtil
             //67. Scheduled residency and fellowship interviews by interviewer
             // – 908 interviews for 250 applications (X not interviewed) in total for 2021-2022
             $addTitle = "$totalInterviewsCount interviews for $totalAppCount".
-                " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
 
             //$addTitle = $addTitle.", fellapps=".count($fellapps).", resapps=".count($resapps); //.", yearRange=".$yearRange;
 
@@ -8813,42 +8815,42 @@ class DashboardUtil
                 //67. Scheduled residency and fellowship interviews by interviewer
                 // – 908 interviews for 250 applications (X not interviewed) in total for 2021-2022
                 $addTitle = "$totalInterviewsCount interviews for $totalAppCount".
-                " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             if( $chartType == "fellapp-resapp-interviews-feedback" ) {
                 //68. Total candidate interview feedback comments provided via the system, by interviewer –
                 // 506 feedback comments for 250 applications (X not interviewed) for 2021-2022
                 $addTitle = "$totalInterviewsCount feedback comments for $totalAppCount".
-                    " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                    " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             if( $chartType == "resapp-interviews" ) {
                 //69. Scheduled residency interviews by interviewer –
                 // 504 interviews for 72 applications (X not interviewed) in total for 2021-2022
                 $addTitle = "$totalInterviewsCount interviews for $totalAppCount".
-                    " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                    " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             if( $chartType == "fellapp-interviews" ) {
                 //70. Scheduled fellowship interviews by interviewer –
                 // 363 interviews for 178 applications (X not interviewed) in total for 2021-2022
                 $addTitle = "$totalInterviewsCount interviews for $totalAppCount".
-                    " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                    " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             if( $chartType == "resapp-interviews-feedback" ) {
                 //71. Residency interview feedback comments provided via the system, by interviewer –
                 // 545 feedback comments for 72 applications (X not interviewed) in total for 2021-2022
                 $addTitle = "$totalInterviewsCount feedback comments for $totalAppCount".
-                    " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                    " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             if( $chartType == "fellapp-interviews-feedback" ) {
                 //72. Fellowship interview feedback comments provided via the system, by interviewer –
                 // 191 feedback comments for 178 applications (X not interviewed) in total for 2021-2022
                 $addTitle = "$totalInterviewsCount feedback comments for $totalAppCount".
-                    " applications ($interviewedCount not interviewed) in total for $yearRangeStr";
+                    " applications ($notInterviewedAppCount not interviewed) in total for $yearRangeStr";
             }
 
             $titleDivider = "<br>";
