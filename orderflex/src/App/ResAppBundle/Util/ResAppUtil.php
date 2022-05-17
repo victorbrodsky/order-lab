@@ -2636,9 +2636,44 @@ class ResAppUtil {
         }
 
         //TODO: (d) never had any interviewer evaluation emails sent to interviewers
-//        if( 0 ) {
-//            return true;
-//        }
+        if( 0 ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isInterviewInvitationEmailSent($resapp) {
+        //get the date from event log
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        $dql = $repository->createQueryBuilder("logger");
+
+        $dql->innerJoin('logger.eventType', 'eventType');
+        $dql->where("logger.entityName = 'ResidencyApplication' AND logger.entityId = '".$resapp->getId()."'");
+
+        //$dql->andWhere("logger.event LIKE :eventStr AND logger.event LIKE :eventStr2");
+        $dql->andWhere("eventType.name = :eventType OR logger.event LIKE :eventStr");
+
+        //$dql->andWhere("logger.event LIKE :eventStr");
+
+        $dql->orderBy("logger.id","DESC");
+        $query = $this->em->createQuery($dql);
+
+        //$search = "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate";
+        $search = "Invited interviewers to rate residency application ID";
+        $eventType = "Residency Application Rating Invitation Emails Resent";
+        $query->setParameters(
+            array(
+                'eventType' => $eventType,
+                'eventStr' => '%'.$search.'%',
+            )
+        );
+
+        $loggers = $query->getResult();
+
+        if( count($loggers) > 0 ) {
+            return true;
+        }
 
         return false;
     }
