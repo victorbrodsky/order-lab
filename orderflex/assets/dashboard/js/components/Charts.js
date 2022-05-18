@@ -5,6 +5,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
+import { unmountComponentAtNode, render } from "react-dom";
 //import { Routes ,Route, Redirect, Link, withRouter } from 'react-router-dom';
 import SingleChart from './SingleChart';
 
@@ -48,7 +49,10 @@ class Charts extends Component {
     }
 
     removeErrorLine() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
+        var errorMsg = document.getElementById('error-message');
+        if( typeof(errorMsg) != 'undefined' && errorMsg != null) {
+            ReactDOM.unmountComponentAtNode(errorMsg);
+        }
     }
 
 
@@ -59,8 +63,6 @@ class Charts extends Component {
         document.getElementById("charts").innerHTML = "";
 
         //removeErrorLine();
-        //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-        //document.getElementById("error-message").innerHTML = "";
 
         let startDate = $("#filter_startDate").val();
         //console.log("startDate="+startDate);
