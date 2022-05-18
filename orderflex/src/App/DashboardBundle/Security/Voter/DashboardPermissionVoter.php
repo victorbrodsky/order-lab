@@ -336,6 +336,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         $dql->leftJoin("list.accessRoles", "accessRoles");
         $dql->leftJoin("list.charts", "charts");
+        //$dql->leftJoin("list.parent", "parent");
+        //$dql->leftJoin("list.parent", "parent");
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->andWhere("accessRoles IN (:userRoles)");
@@ -356,12 +358,12 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         $query->setParameters($parameters);
 
-        $charts = $query->getResult();
+        $topics = $query->getResult();
 
         //echo "chart id=".$chart->getId()."<br>";
-        //echo "charts=".count($charts)."<br>";
+        //echo "topics=".count($topics)."<br>";
 
-        if( count($charts) > 0 ) {
+        if( count($topics) > 0 ) {
             return true;
         }
 
