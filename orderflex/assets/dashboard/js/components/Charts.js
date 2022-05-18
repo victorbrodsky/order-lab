@@ -39,14 +39,17 @@ class Charts extends Component {
     addErrorLine(msg, type) {
         let error;
         if( type == 'error' ) {
-            error = <div className={'alert alert-danger'}>{msg}</div>
+            error = <div id="dashboard-alert-msg" className={'alert alert-danger dashboard-alert-msg added-by-charts-js'}>{msg}</div>
         }
         if( type == 'warning' ) {
-            error = <div className={'alert alert-warning'}>{msg}</div>
+            error = <div id="dashboard-alert-msg" className={'alert alert-warning dashboard-alert-msg added-by-charts-js'}>{msg}</div>
         }
         ReactDOM.render(error, document.getElementById('error-message'));
     }
 
+    removeErrorLine() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
+    }
 
 
     getCharts(thisSitename) {
@@ -54,6 +57,10 @@ class Charts extends Component {
         //console.log("getCharts thisSitename="+thisSitename);
 
         document.getElementById("charts").innerHTML = "";
+
+        //removeErrorLine();
+        //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
+        //document.getElementById("error-message").innerHTML = "";
 
         let startDate = $("#filter_startDate").val();
         //console.log("startDate="+startDate);

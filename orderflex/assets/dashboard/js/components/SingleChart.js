@@ -24,10 +24,10 @@ class SingleChart extends Component {
     addErrorLine(msg, type) {
         let error
         if( type == 'error' ) {
-            error = <div className={'alert alert-danger'}>{msg}</div>
+            error = <div id="dashboard-alert-msg" className={'alert alert-danger dashboard-alert-msg added-by-singlechart-js'}>{msg}</div>
         }
         if( type == 'warning' ) {
-            error = <div className={'alert alert-warning'}>{msg}</div>
+            error = <div id="dashboard-alert-msg" className={'alert alert-warning dashboard-alert-msg added-by-singlechart-js'}>{msg}</div>
         }
         ReactDOM.render(error, document.getElementById('error-message'));
     }

@@ -167,6 +167,7 @@ class DashboardPermissionVoter extends BasePermissionVoter
         //$sitename = $this->getSitename();
 
         //denyUsers: if user is in denyUsers => return false;
+        //TODO: test all below
         //$this->setPermissionErrorSession($subject,"Session attribute testing");
         //return false;
         if( $this->userIsDeniedByChart($user,$subject) ) {
@@ -332,10 +333,15 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $repository = $this->em->getRepository('AppDashboardBundle:TopicList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
+
         $dql->leftJoin("list.accessRoles", "accessRoles");
+        $dql->leftJoin("list.charts", "charts");
+
         $dql->where("list.type = :typedef OR list.type = :typeadd");
-        $dql->andWhere("list.id = :chartId");
         $dql->andWhere("accessRoles IN (:userRoles)");
+
+        //check if topic has this chart
+        $dql->andWhere("charts.id = :chartId");
 
         $dql->orderBy("list.orderinlist","ASC");
 
@@ -351,6 +357,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $query->setParameters($parameters);
 
         $charts = $query->getResult();
+
+        //echo "chart id=".$chart->getId()."<br>";
         //echo "charts=".count($charts)."<br>";
 
         if( count($charts) > 0 ) {

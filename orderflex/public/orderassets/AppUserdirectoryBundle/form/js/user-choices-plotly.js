@@ -502,11 +502,15 @@ function dashboardClearAlertMessages() {
     //console.log("dashboardClearAlertMessages");
     //clear alert alert-danger
     //$('.dashboard-alert-msg').remove();
-    $('#error-message').empty();
+    //$('#error-message').empty();
     //$('.dashboard-alert-msg').remove();
 
     //clear charts
     //document.getElementById("charts").innerHTML = "";
     //$('#charts').html(null);
+
+    //It looks like the React-rendered content of this container was removed without using React. This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
+    //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
+    //window.ChartsComponent.removeErrorLine();
 }
 
