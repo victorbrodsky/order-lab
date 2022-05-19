@@ -336,18 +336,43 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $dql->leftJoin("list.accessRoles", "accessRoles");
         $dql->leftJoin("list.charts", "charts");
 
-        $dql->leftJoin("list.parent", "parent");
-        $dql->leftJoin("parent.accessRoles", "parentAccessRoles");
-        $dql->leftJoin("parent.charts", "parentCharts");
+        //parent level 1 (L1)
+        $dql->leftJoin("list.parent", "L1parent");
+        $dql->leftJoin("L1parent.accessRoles", "L1parentAccessRoles");
+        $dql->leftJoin("L1parent.charts", "L1parentCharts");
+
+        //parent level 2 (L2)
+        $dql->leftJoin("L1parent.parent", "L2parent");
+        $dql->leftJoin("L2parent.accessRoles", "L2parentAccessRoles");
+        $dql->leftJoin("L2parent.charts", "L2parentCharts");
+
+        //parent level 3 (L3)
+        $dql->leftJoin("L2parent.parent", "L3parent");
+        $dql->leftJoin("L3parent.accessRoles", "L3parentAccessRoles");
+        $dql->leftJoin("L3parent.charts", "L3parentCharts");
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
 
         //$dql->andWhere("accessRoles IN (:userRoles)");
-        $dql->andWhere("accessRoles IN (:userRoles) OR parentAccessRoles IN (:userRoles)");
+        $dql->andWhere(
+            "
+            accessRoles IN (:userRoles) 
+            OR L1parentAccessRoles IN (:userRoles) 
+            OR L2parentAccessRoles IN (:userRoles)
+            OR L3parentAccessRoles IN (:userRoles)
+            "
+        );
 
         //check if topic has this chart
         //$dql->andWhere("charts.id = :chartId");
-        $dql->andWhere("charts.id = :chartId OR parentCharts.id = :chartId");
+        $dql->andWhere(
+            "
+            charts.id = :chartId 
+            OR L1parentCharts.id = :chartId 
+            OR L2parentCharts.id = :chartId
+            OR L3parentCharts.id = :chartId
+            "
+        );
 
         $dql->orderBy("list.orderinlist","ASC");
 
