@@ -8802,7 +8802,7 @@ class DashboardUtil
                         if(
                             (
                                 $chartType == "fellapp-resapp-interviews-feedback" ||
-                                $chartType == "fellapp-interviews-feedback"
+                                $chartType == "resapp-interviews-feedback"
                             ) &&
                             $interview->isEmpty() === true )
                         {
