@@ -120,13 +120,31 @@ class LargeFileDownloader {
             }
         }
 
+        //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."; size=".$size."<br>";
+        //echo "readfile filenameClean=".$filenameClean."; size=".$size."<br>";
+        //dump($this->getFileContent($filenameClean));
+        //exit('111');
+
+//        $size = $size."000";
+//        //$size = 1460000;
+//        header('Content-Disposition: inline; filename=' . $filename);
+//        header('Accept-Ranges: bytes');
+//        header('Content-Type: ' . $mimeType);
+//        //header('Expires: 0');
+//        //header('Cache-Control: must-revalidate');
+//        //header('Pragma: public');
+//        //header('Content-Length: ' . $size);
+//        echo $this->getFileContent($filenameClean);
+//        exit;
+
         if(1) {
             //header('Content-Description: File Transfer');
             header('Content-Type: ' . $mimeType);
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
-            header('Content-Length: ' . $size);
+            //header('Content-Length: ' . $size); //this caused the error viewing file
+            //header("Content-Range: 0-".($size-1)."/".$size);
 
             if ($action == "download") {
                 header('Content-Disposition: attachment; filename=' . $filename);

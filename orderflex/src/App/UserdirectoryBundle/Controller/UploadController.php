@@ -221,6 +221,7 @@ class UploadController extends OrderAbstractController {
 
         $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
 
+        //exit("id=".$document->getId());
         //$response = new Response();
 
         if( $document ) {
