@@ -166,6 +166,12 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $siteRoleBase = $this->getSiteRoleBase();
         //$sitename = $this->getSitename();
 
+        //ROLE_DASHBOARD_ADMIN can do anything
+        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
+            //exit('admin!');
+            return true; //remove for testing
+        }
+
         //denyUsers: if user is in denyUsers => return false;
         //TODO: test all below
         //$this->setPermissionErrorSession($subject,"Session attribute testing");
@@ -184,13 +190,6 @@ class DashboardPermissionVoter extends BasePermissionVoter
             //exit('user has deny role!');
             return false;
         }
-
-        //ROLE_DASHBOARD_ADMIN can do anything
-        if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
-            //exit('admin!');
-            return true; //remove for testing
-        }
-        //exit('dashboard canView false');
 
         //accessRoles: if user has accessRoles => return true;
         if( $this->userHasChartAccessRoles($user,$subject) || $this->userHasTopicAccessRoles($user,$subject) ) {
@@ -336,14 +335,19 @@ class DashboardPermissionVoter extends BasePermissionVoter
 
         $dql->leftJoin("list.accessRoles", "accessRoles");
         $dql->leftJoin("list.charts", "charts");
-        //$dql->leftJoin("list.parent", "parent");
-        //$dql->leftJoin("list.parent", "parent");
+
+        $dql->leftJoin("list.parent", "parent");
+        $dql->leftJoin("parent.accessRoles", "parentAccessRoles");
+        $dql->leftJoin("parent.charts", "parentCharts");
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
-        $dql->andWhere("accessRoles IN (:userRoles)");
+
+        //$dql->andWhere("accessRoles IN (:userRoles)");
+        $dql->andWhere("accessRoles IN (:userRoles) OR parentAccessRoles IN (:userRoles)");
 
         //check if topic has this chart
-        $dql->andWhere("charts.id = :chartId");
+        //$dql->andWhere("charts.id = :chartId");
+        $dql->andWhere("charts.id = :chartId OR parentCharts.id = :chartId");
 
         $dql->orderBy("list.orderinlist","ASC");
 
@@ -366,6 +370,17 @@ class DashboardPermissionVoter extends BasePermissionVoter
         if( count($topics) > 0 ) {
             return true;
         }
+
+//        //check parents
+//        foreach($topics as $topic) {
+//            $parent = $topic->getParent();
+//            //check accessRoles (Roles)
+//            if( $parent ) {
+//                foreach($parent->getAccessRoles() as $role) {
+//
+//                }
+//            }
+//        }
 
         return false;
     }
