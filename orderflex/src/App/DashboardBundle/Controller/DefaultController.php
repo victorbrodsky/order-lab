@@ -160,6 +160,20 @@ class DefaultController extends OrderAbstractController
 //        dump($charts);
 //        exit();
 
+//        $dashboardUtil = $this->container->get('dashboard_util');
+//        $em = $this->getDoctrine()->getManager();
+//        //$root = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+//        $root = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Educational");
+//        //$chilrdenTopics = $root->getFullTreeAsEntity();
+//        //$nodes = $root->printTree("<br>");
+//        //$nodes = $root->printTreeSelectList(array(),'getId');
+//        //$nodes = $root->getFullTreeAsEntity();
+//        //dump($nodes);
+//        //exit('111');
+//        $charts = $dashboardUtil->getChartsByTopic($root,true);
+//        dump($charts);
+//        exit('111');
+
         return array('sitename'=>$this->getParameter('dashboard.sitename'));
     }
 

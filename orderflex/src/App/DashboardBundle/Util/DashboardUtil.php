@@ -601,20 +601,18 @@ class DashboardUtil
         return $key;
     }
 
-    public function getChartsByTopic( $topic ) {
+    //get charts by topic and all children topic's charts
+    public function getChartsByTopic_ORIG( $topic, $children=false ) {
         //echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
-
-//        $public = false;
-//        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
-//            $public = true;
-//        }
 
         $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        //$dql->andWhere("topics = :topicId");
         $dql->andWhere("topics = :topicId");
 
 //        if( $public == true ) {
@@ -634,6 +632,54 @@ class DashboardUtil
         $query->setParameters($parameters);
 
         $charts = $query->getResult();
+        //echo "charts count=".count($charts)."<br>";
+
+        return $charts;
+    }
+    //get charts by topic and all children topic's charts
+    public function getChartsByTopic( $topic, $children=false ) {
+        //echo "getChartsByTopic: topic=".$topic."<br>";
+
+        $topicsArr = array();
+
+        if( $children ) {
+            $topicNodes = $topic->printTreeSelectList(array(), 'getId');
+            //dump($topicNodes);exit('111');
+            foreach ($topicNodes as $topicNodeId => $topicName) {
+                $topicsArr[] = $topicNodeId;
+            }
+        } else {
+            $topicsArr[] = $topic->getId();
+        }
+        //dump($topicsArr);exit('111');
+        
+        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin('list.topics','topics');
+
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        //$dql->andWhere("topics = :topicId");
+        $dql->andWhere("topics IN (:topicIdsArr)");
+
+//        if( $public == true ) {
+//            $dql->andWhere("topics.publicAccess = TRUE");
+//        }
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+            "topicIdsArr" => $topicsArr
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $charts = $query->getResult();
+        //dump($charts);
         //echo "charts count=".count($charts)."<br>";
 
         return $charts;

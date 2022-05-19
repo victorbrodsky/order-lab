@@ -440,7 +440,9 @@ class DashboardController extends OrderAbstractController
 
         //find charts by $topic
         $dashboardUtil = $this->container->get('dashboard_util');
-        $chartsArray = $dashboardUtil->getChartsByTopic($topic);
+        //$children = false;
+        $children = true;
+        $chartsArray = $dashboardUtil->getChartsByTopic($topic,$children);
 
         //dump($chartsArray);
         //exit('111');
