@@ -62,6 +62,11 @@ DirectoryIndex index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ %{ENV:BASE}/index.php [L]
 
+    #https://stackoverflow.com/questions/10236717/how-to-prevent-a-file-from-direct-url-access
+    #RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost [NC]
+    #RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost.*$ [NC]
+    #RewriteRule \.(gif|jpg|pdf)$ - [F]
+
 </IfModule>
 
 <IfModule !mod_rewrite.c>
