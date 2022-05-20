@@ -30,7 +30,7 @@
 #http://127.0.0.1/Uploaded/fellapp/FellowshipApplicantUploads/1648737953ID1eKhRk08EVT7G0njSrZnOAA7cFKfNAjIt.pdf
 #http://view-test.med.cornell.edu/Uploaded/fellapp/FellowshipApplicantUploads/1648817110ID1SgllJ64fBKjh5tMyfGZHRLuoXAtDi5cN.pdf
 #Order Allow,Deny
-Order Deny,Allow
+#Order Deny,Allow
 Allow from 127.0.0.1
 #Deny from All
 
