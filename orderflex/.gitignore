@@ -12,6 +12,7 @@
 /public/test/
 /public/Uploaded/
 /public/.well-known/
+!/public/Uploaded/.htaccess
 
 /var/
 /vendor/
