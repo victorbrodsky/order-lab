@@ -34,11 +34,17 @@
 #Order Allow,Deny
 
 #https://httpd.apache.org/docs/2.4/mod/mod_access_compat.html#allow
-Order Deny,Allow
-Deny from all
+#Order Deny,Allow
+#Deny from all
 #Allow from 127.0.0.1
-Allow from 157.139.226.86       #test server
-Allow from 157.139.226.124      #live server
+#test server
+#Allow from 157.139.226.86
+#live server
+#Allow from 157.139.226.124
+
+Order Allow,Deny
+Allow from 127.0.0.1
+#Deny from all
 
 
 
