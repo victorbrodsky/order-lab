@@ -29,6 +29,7 @@
 #https://stackoverflow.com/questions/2679524/block-direct-access-to-a-file-over-http-but-allow-php-script-access
 #http://127.0.0.1/Uploaded/fellapp/FellowshipApplicantUploads/1648737953ID1eKhRk08EVT7G0njSrZnOAA7cFKfNAjIt.pdf
 #http://view-test.med.cornell.edu/Uploaded/fellapp/FellowshipApplicantUploads/1648817110ID1SgllJ64fBKjh5tMyfGZHRLuoXAtDi5cN.pdf
+#http://view.med.cornell.edu/Uploaded/fellapp/FellowshipApplicantUploads/1652976018ID1b1dC3DknQgjtNG4o-WnW0x2cLKXZOm7c.pdf
 #Order Allow,Deny
 #Require all denied
 #Order Allow,Deny
