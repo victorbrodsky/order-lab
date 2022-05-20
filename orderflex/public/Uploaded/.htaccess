@@ -45,9 +45,9 @@
 
 Order Allow,Deny
 Allow from 127.0.0.1
-Allow from 157.139.226.86
-Allow from 157.139.226.124
-#Deny from all
+#Allow from 157.139.226.86
+#Allow from 157.139.226.124
+##Deny from all
 
 
 
