@@ -1,0 +1,37 @@
+#AllowOverride All
+#Order Allow,Deny
+#Allow from All
+#Require all denied
+#Require all granted
+#Require valid-user
+
+#<IfModule mod_rewrite.c>
+   #Using the rewrite engine
+   #RewriteEngine On
+   #RewriteCond %{REQUEST_FILENAME} !-d
+   #RewriteCond %{REQUEST_FILENAME} !-f
+   #Rewrite rule to redirect the request
+   #RewriteRule ^(.*)$ web/$1 [QSA,L]
+#<IfModule>
+
+
+#RewriteEngine on
+#RewriteCond %{HTTP_REFERER} !^http://(www\.)?127.0.0.1\.ltd [NC]
+#RewriteCond %{HTTP_REFERER} !^http://(www\.)?127.0.0.1\.ltd.*$ [NC]
+#RewriteRule \.(gif|jpg|js|txt|pdf)$ /messageforcurious [L]
+
+#RewriteCond %{HTTP_REFERER} !^http://(www\.)?localhost/ [NC]
+#RewriteRule \.(jpe?g|gif|bmp|png|pdf)$ - [F,NC]
+
+#Order deny,allow
+#Deny from all
+
+#https://stackoverflow.com/questions/2679524/block-direct-access-to-a-file-over-http-but-allow-php-script-access
+#http://127.0.0.1/Uploaded/fellapp/FellowshipApplicantUploads/1648737953ID1eKhRk08EVT7G0njSrZnOAA7cFKfNAjIt.pdf
+#http://view-test.med.cornell.edu/Uploaded/fellapp/FellowshipApplicantUploads/1648817110ID1SgllJ64fBKjh5tMyfGZHRLuoXAtDi5cN.pdf
+#Order Allow,Deny
+Order Deny,Allow
+Allow from 127.0.0.1
+#Deny from All
+
+

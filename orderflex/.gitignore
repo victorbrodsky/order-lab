@@ -11,8 +11,9 @@
 /public/js/
 /public/log/
 /public/test/
-/public/Uploaded/
 /public/.well-known/
+
+/public/Uploaded/*
 !/public/Uploaded/.htaccess
 
 /var/
