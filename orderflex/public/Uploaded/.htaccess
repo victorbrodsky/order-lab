@@ -31,7 +31,9 @@
 #http://view-test.med.cornell.edu/Uploaded/fellapp/FellowshipApplicantUploads/1648817110ID1SgllJ64fBKjh5tMyfGZHRLuoXAtDi5cN.pdf
 #Order Allow,Deny
 #Order Deny,Allow
-Allow from 127.0.0.1
+Order deny,allow
+#Allow from 127.0.0.1
+#Allow from 157.139.226.86
 #Deny from All
 
 
