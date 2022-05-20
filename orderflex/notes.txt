@@ -1053,3 +1053,5 @@ select2 v4
 http://127.0.0.1/order/index_dev.php/directory/tree-util/common/composition-tree/?thisid=undefined&id=null&bundlename=UserdirectoryBundle&classname=Institution&opt=combobox&userid=4689&type=default,user-added&orderformtype=undefined&cycle=new
 var thisid = comboboxEl.val();
 
+Check postgresql version (current 12.10)
+psql --version
