@@ -41,6 +41,7 @@ $ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
   
   
 //https://www.uxlinux.com/how-to-upgrade-postgresql-to-latest-version-postgresql-in-cwp-centos-7-8-el7-el8/
+//https://www.postgresql.org/docs/current/upgrading.html - Create DB backup, install new postgre, restore data
 
 
   
