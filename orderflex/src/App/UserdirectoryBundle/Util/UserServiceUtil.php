@@ -1558,6 +1558,10 @@ Pathology and Laboratory Medicine",
         $phpVersion2 = PHP_VERSION;
         $res = $res . "<br>" . "PHP_VERSION: ".$phpVersion2;
 
+        //Get DB version
+        $dbInfo = $this->getDbVersion();
+        $res = $res . "<br>" . "DB: ".$dbInfo;
+
         return $res;
     }
 
@@ -1633,6 +1637,37 @@ Pathology and Laboratory Medicine",
         }
 
         return $phpPath;
+    }
+
+    public function getDbVersion() {
+        //php bin/console dbal:run-sql 'SELECT version()'
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $phpPath = $this->getPhpPath();
+
+        if( $this->isWinOs() ) {
+            $command = $phpPath . " " . $projectRoot . "/bin/console" . " dbal:run-sql" . ' "SELECT version()"';
+        } else {
+            $command = $phpPath . " " . $projectRoot . "/bin/console" . " dbal:run-sql" . " 'SELECT version()'";
+        }
+
+        //$process = new Process($command);
+        $process = Process::fromShellCommandline($command);
+        $process->setTimeout(1800); //sec; 1800 sec => 30 min
+        $process->run();
+        if( !$process->isSuccessful() ) {
+            throw new ProcessFailedException($process);
+        }
+        $info = $process->getOutput();
+
+        //dump($info);
+        //exit('111');
+
+        if( $info ) {
+            $dbInfo = $this->getStringBetween($info,') "','"');
+            return $dbInfo;
+        }
+
+        return $info;
     }
 
 //    public function gitVersion() {
