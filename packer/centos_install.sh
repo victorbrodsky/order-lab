@@ -69,11 +69,12 @@ f_install_postgresql14 () {
 	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
 	#After repository has been added, list available repositories, update system and reboot
-	echo @### List available repositories, update system and reboot ###	
+	echo @### List available repositories, update system ###	
 	sudo yum repolist -y
 	sudo yum -y update 
-	sudo systemctl reboot
+	#sudo systemctl reboot
 	
+	echo @### Install postgresql 14 ###	
 	yum install -y postgresql14
 	yum install -y postgresql14-server
 
