@@ -1,0 +1,48 @@
+http://www.dbaglobe.com/2021/10/upgrade-postgresql-13-to-postgresql-14.html
+
+ Upgrade PostgreSQL 13 to PostgreSQL 14 on Oracle Linux 8 using YUM/RPM
+
+ 1. Install the PostgreSQL 14 Packages
+#  yum install postgresql14-server.x86_64  postgresql14.x86_64  postgresql14-contrib.x86_64
+
+2. Initialize PostgreSQL 14 database
+# /usr/pgsql-14/bin/postgresql-14-setup initdb
+
+3. Start PostgreSQL 13 database (required for pre-upgrade check) su - postgres
+ $ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ start
+
+
+4. Run pre-upgrade check:
+
+/usr/pgsql-14/bin/pg_upgrade \
+  --old-bindir=/usr/pgsql-12/bin \
+  --new-bindir=/usr/pgsql-14/bin \
+  --old-datadir=/var/lib/pgsql/12/data \
+  --new-datadir=/var/lib/pgsql/14/data \
+  --user=postgres \
+  --check
+  
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres --check
+  
+5. Shutdown original PostgreSQL 13
+ 
+$ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+
+6. Run the actual upgrade
+
+/usr/pgsql-14/bin/pg_upgrade \
+  --old-bindir=/usr/pgsql-12/bin \
+  --new-bindir=/usr/pgsql-14/bin \
+  --old-datadir=/var/lib/pgsql/12/data \
+  --new-datadir=/var/lib/pgsql/14/data \
+  --user=postgres 
+  
+  /usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres
+  
+  
+//https://www.uxlinux.com/how-to-upgrade-postgresql-to-latest-version-postgresql-in-cwp-centos-7-8-el7-el8/
+
+
+  
+  
+  

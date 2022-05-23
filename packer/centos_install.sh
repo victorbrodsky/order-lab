@@ -60,29 +60,32 @@ f_install_apache () {
     sleep 1
 }
 
-f_install_postgresql12 () {
-	#This causes error: Undefined column: 7 ERROR: column min_value does not exists (FROM "scan_accession_id_seq")
+f_install_postgresql14 () {
     ########## INSTALL Postgresql ##########
-    echo -e "${COLOR} Installing Postgresql 12 ... ${NC}"
+    echo -e "${COLOR} Installing Postgresql 14 ... ${NC}"
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
 	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	
-	yum install -y postgresql12
-	yum install -y postgresql12-server
-	#sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib postgresql11-libs
+	#After repository has been added, list available repositories, update system and reboot
+	echo @### List available repositories, update system and reboot ###	
+	sudo yum repolist -y
+	sudo yum -y update 
+	sudo systemctl reboot
+	
+	yum install -y postgresql14
+	yum install -y postgresql14-server
 
 	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
 	#sudo yum install -y oidentd
 	sudo yum install -y authd
 	sudo yum install -y xinetd
 
-	#echo @### (use this???) /usr/pgsql-11/bin/postgresql-11-setup initdb ###
 	echo @### Optionally initialize the database and enable automatic start ###	
-	sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
-	sudo systemctl enable postgresql-12
-	sudo systemctl start postgresql-12
+	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
+	sudo systemctl enable postgresql-14
+	sudo systemctl start postgresql-14
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
@@ -90,83 +93,27 @@ f_install_postgresql12 () {
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
-	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
 	
 	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/14/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
-	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/14/data/pg_hba.conf
 	
 	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/14/data/postgresql.conf
 	
 	echo -e ${COLOR} Set port ${NC}
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/14/data/postgresql.conf
 		
-	sudo systemctl restart postgresql-12
-	
-	echo ""
-    sleep 1
-}
-
-f_install_php74 () {
-    ########## INSTALL APACHE 7.4 ##########
-    echo "Installing apache 7.4 ..."
-    sleep 1
-
-	echo @### Install yum-utils and epel repository ###
-	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
-
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum -y install yum-utils
-	sudo yum-config-manager --enable remi-php74
-
-	echo @### PHP2: sudo yum-config-manager --enable remi-php74 ###
-	sudo yum -y update
-
-	#echo @### PHP3: Search for PHP 7.4 packages ###
-	#sudo yum search php74 | more
-	#sudo yum search php74 | egrep 'fpm|gd|mysql|memcache'
-	
-	echo @### PHP3: Install PHP 7.4 ###
-	#sudo yum -y install php72
-	#sudo yum -y install php php-opcache
-	sudo yum -y install php php-cli
-	
-	echo @### PHP4: Install PHP packages ###
-	#sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-ldap php-zip php-fileinfo php-opcache php-fpm php-mbstring php-xml php-json
-	sudo yum -y install php-pgsql php-xmlreader php-pdo php-dom php-intl
-	
-	# Config to fix error Apache not load PHP file
-    #chown -R apache:apache /var/www
-    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
-    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
-
-	# Restart Apache
-    #systemctl restart httpd.service
-
-	#echo @### PHP3: sudo yum install php-common -y ###
-	#sudo yum update
-	#sudo yum install php-common -y
-
-	#echo @### PHP4: sudo yum install php-cli and others -y ###
-	#TODO: error: No package vailable
-	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	
-	#sudo systemctl enable php-php-fpm.service
-	#sudo systemctl start php-php-fpm.service
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
+	sudo systemctl restart postgresql-14
 	
 	echo ""
     sleep 1
@@ -395,8 +342,7 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-f_install_postgresql12
-#f_install_php74
+f_install_postgresql14
 f_install_php81
 f_install_util
 f_install_order
@@ -405,322 +351,6 @@ f_install_prepare
 
 
 
-
-f_install_pgloader () {
-	echo -e ${COLOR} Install pgloader ${NC}
-	#yum install -y pgloader
-	sudo mkdir /usr/local/bin/temp
-	sudo chown -R apache:apache /usr/local/bin/temp
-	cd /usr/local/bin/temp
-	git clone https://github.com/dimitri/pgloader.git
-	cd pgloader
-	chmod +x ./bootstrap-centos7.sh
-	sudo ./bootstrap-centos7.sh
-	make pgloader
-	cd /usr/local/bin/
-}
-
-#https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-centos-7
-f_install_postgresql_9.2_12 () {
-	echo -e "${COLOR} Installing Postgresql (9.2?) ... ${NC}"
-    sleep 1
-
-	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-	
-	sudo yum install -y postgresql-server postgresql-contrib
-	
-	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
-	#sudo yum install -y oidentd
-	sudo yum install -y authd
-	sudo yum install -y xinetd
-	
-	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
-	sudo postgresql-setup initdb
-	
-	echo -e ${COLOR} Start and enable postgresql ${NC}
-	sudo systemctl start postgresql
-	sudo systemctl enable postgresql
-	sudo systemctl status postgresql
-	
-	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
-	sudo -Hiu postgres createdb scanorder
-	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
-	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
-	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
-	
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/12/data to replace "ident" to "md5"
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
-	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
-	
-	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf
-	
-	sudo systemctl restart postgresql-12
-	
-	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
-	psql --version
-	
-	echo ""
-    sleep 1
-}
-#https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-relational-databases-on-centos-7/
-f_install_postgresql () {
-	echo -e "${COLOR} Installing Postgresql (9.2.24) ... ${NC}"
-    sleep 1
-
-	#echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	#sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-	
-	sudo yum install -y postgresql-server postgresql-contrib
-	
-	echo -e ${COLOR} Optionally initialize the database and enable automatic start ${NC}
-	sudo postgresql-setup initdb
-	
-	echo -e ${COLOR} Start and enable postgresql ${NC}
-	sudo systemctl start postgresql
-	sudo systemctl enable postgresql
-	sudo systemctl status postgresql
-	
-	echo -e ${COLOR} Create DB and create user $bashdbuser with password $bashdbpass ${NC}
-	sudo -Hiu postgres createdb scanorder
-	#sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
-	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
-	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
-	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
-	
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/data/pg_hba.conf
-	sed -i -e "s/TEXTTOEND/host all all 0.0.0.0/0 md5/g" /var/lib/pgsql/data/pg_hba.conf
-	
-	echo -e ${COLOR} postgresql.conf to listen all addresses on specified port ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/data/postgresql.conf
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/data/postgresql.conf
-	
-	sudo systemctl restart postgresql
-	
-	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
-	psql --version
-	
-	echo ""
-    sleep 1
-}
-
-f_install_php72_ORIG () {
-    ########## INSTALL APACHE 7.2 ##########
-    echo "Installing apache 7.2 ..."
-    sleep 1
-
-	echo @### Install yum-utils and enable epel repository ###
-	sudo yum -y install epel-release - 
-	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
-
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum install yum-utils -y
-
-	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
-	yum-config-manager --enable remi-php72 -y
-
-	echo @### PHP3: sudo yum install php72 -y ###
-	yum install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear -y
-	
-	# Config to fix error Apache not load PHP file
-    chown -R apache:apache /var/www
-    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
-    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
-
-	# Restart Apache
-    sudo systemctl restart httpd.service
-
-	#echo @### PHP3: sudo yum install php-common -y ###
-	#sudo yum update
-	#sudo yum install php-common -y
-
-	#echo @### PHP4: sudo yum install php-cli and others -y ###
-	#TODO: error: No package vailable
-	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	
-	sudo systemctl enable php72-php-fpm.service
-	sudo systemctl start php72-php-fpm.service
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	echo ""
-    sleep 1
-}
-f_install_php72 () {
-    ########## INSTALL APACHE 7.2 ##########
-    echo "Installing apache 7.2 ..."
-    sleep 1
-
-	echo @### Install yum-utils and enable epel repository ###
-	sudo yum -y install epel-release
-	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
-
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum install yum-utils -y
-
-	echo @### PHP2: sudo yum-config-manager --enable remi-php72 ###
-	sudo yum-config-manager --enable remi-php72 -y
-	#created /var/lib/yum/repos/x86_64/7/remi-php72
-	sudo yum update -y
-
-	#echo @### PHP3: Search for PHP 7.2 packages ###
-	#sudo yum search php72 | more
-	#sudo yum search php72 | egrep 'fpm|gd|mysql|memcache'
-	
-	echo @### PHP4: Install PHP 7.2 ###
-	#sudo yum -y install php72
-	sudo yum -y install php php-opcache
-	
-	echo @### PHP4: Install PHP packages ###
-	#sudo yum -y install php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	sudo yum -y install php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
-	
-	# Config to fix error Apache not load PHP file
-    #chown -R apache:apache /var/www
-    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
-    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
-
-	# Restart Apache
-    #systemctl restart httpd.service
-
-	#echo @### PHP3: sudo yum install php-common -y ###
-	#sudo yum update
-	#sudo yum install php-common -y
-
-	#echo @### PHP4: sudo yum install php-cli and others -y ###
-	#TODO: error: No package vailable
-	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	
-	sudo systemctl enable php-php-fpm.service
-	sudo systemctl start php-php-fpm.service
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	echo ""
-    sleep 1
-}
-#https://www.svnlabs.com/blogs/install-apache-mysql-php-5-6-on-centos-7/
-f_install_php56 () {
-    ########## INSTALL PHP 5.6 ##########
-    echo -e "${COLOR} Installing php 5.6 ... ${NC}"
-    sleep 1
-	
-	#Install EPEL repository
-	#sudo rpm -Uvh http://vault.centos.org/7.0.1406/extras/x86_64/Packages/epel-release-7-5.noarch.rpm
-	#Install remi repository
-	#sudo rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm	
-	
-	#https://www.tecmint.com/install-php-5-6-on-centos-7/
-	echo -e ${COLOR} Install: noarch and remi ${NC}	
-	sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-	
-	echo -e ${COLOR} Install: yum install -y yum-utils ${NC}		
-	sudo yum install -y yum-utils
-	
-	#Enable remi
-	#echo "Enable remi"
-	#yum -y --enablerepo=remi,remi-php56 install php php-common
-	
-	echo -e  ${COLOR} Enable remi-php56 ${NC}
-	yum-config-manager --enable remi-php56
-	
-	echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring php-intl
-	
-	#echo -e ${COLOR} Install php 5.6: install -y php ${NC}	
-	#sudo yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap 
-
-	#echo -e ${COLOR} Install php extensions ${NC}	
-	#sudo yum install -y php-zip php-fileinfo php-pear php-pdo php-pgsql php-xml php-simplexml php-zip php-mbstring
-
-	#Install php 5.6 on Centos 7
-	#echo "Enable remi and Install php 5.6 on Centos 7"
-	#sudo yum -y --enablerepo=remi,remi-php56 install php-cli php-pear php-pdo php-mysql php-mysqlnd php-pgsql php-sqlite php-gd php-mbstring php-mcrypt php-xml php-simplexml php-curl php-zip
-	
-	#Install php 5.6 on Rhel 7
-	#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
-	#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
-	#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
-	#3) sudo yum install rh-php56-php-pgsql
-	#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
-	#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
-	#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/
-	#yum install php56-php-cli
-	
-	#/opt/rh/rh-php56/root/usr/bin/php -v
-	#ln -s /usr/bin/php56 /usr/bin/php
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	#chown -R apache:apache /var/www/html/
-	#chmod -R 775 /var/www/
-
-	echo -e  ${COLOR} php -v ${NC}
-	php -v
-	
-	echo ""
-    sleep 1
-}
-f_install_php54 () {
-    ########## INSTALL APACHE 5.4 ##########
-    echo -e "${COLOR} Installing apache 5.4 ... ${NC}"
-    sleep 1
-
-	echo @### Install yum-utils and enable epel repository ###
-	sudo yum -y install epel-release
-	sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y
-
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum install yum-utils -y
-
-	echo @### PHP2: sudo yum-config-manager --enable remi-php56 ###
-	sudo yum-config-manager --enable remi-php56 -y
-	sudo yum update -y
-	
-	echo @### PHP4: Install PHP 5.4 ###
-	sudo yum -y install php php-opcache
-	
-	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo
-	
-	# Config to fix error Apache not load PHP file
-    #chown -R apache:apache /var/www
-    #sed -i '/<Directory \/>/,/<\/Directory/{//!d}' /etc/httpd/conf/httpd.conf
-    #sed -i '/<Directory \/>/a\    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted' /etc/httpd/conf/httpd.conf
-
-	# Restart Apache
-    #systemctl restart httpd.service
-
-	#echo @### PHP3: sudo yum install php-common -y ###
-	#sudo yum update
-	#sudo yum install php-common -y
-
-	#echo @### PHP4: sudo yum install php-cli and others -y ###
-	#TODO: error: No package vailable
-	#sudo yum install -y php72 php72-php-fpm php72-php-gd php72-php-json php72-php-mbstring php72-php-mysqlnd php72-php-xml php72-php-xmlrpc php72-php-opcache
-	
-	#sudo systemctl enable php-php-fpm.service
-	#sudo systemctl start php-php-fpm.service
-	
-	# Restart Apache
-    sudo systemctl restart httpd.service
-	
-	echo ""
-    sleep 1
-}
 
 
 	  
