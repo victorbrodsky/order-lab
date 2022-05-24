@@ -135,7 +135,8 @@ class LargeFileDownloader {
 //        //header('Pragma: public');
 //        //header('Content-Length: ' . $size);
         //echo $this->getFileContent($filenameClean);
-        echo file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
+        $filecontent = file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
+        dump($filecontent);
         exit;
 
         if(1) {
