@@ -244,9 +244,13 @@ class LargeFileDownloader {
                 "verify_peer_name"=>false,
             ),
         );
+
+        $use_include_path = FILE_USE_INCLUDE_PATH; //or true
+        //$use_include_path = false;
+
         //echo "before get content <br>";
         //exit('000');
-        $response = file_get_contents($filenameClean, false, stream_context_create($arrContextOptions));
+        $response = file_get_contents($filenameClean, $use_include_path, stream_context_create($arrContextOptions));
         //exit('111');
         return $response;
     }
