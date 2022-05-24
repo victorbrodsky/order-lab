@@ -245,8 +245,8 @@ class LargeFileDownloader {
             ),
         );
 
-        $use_include_path = FILE_USE_INCLUDE_PATH; //or true
-        //$use_include_path = false;
+        //$use_include_path = FILE_USE_INCLUDE_PATH; //or true
+        $use_include_path = false;
 
         //echo "before get content <br>";
         //exit('000');
