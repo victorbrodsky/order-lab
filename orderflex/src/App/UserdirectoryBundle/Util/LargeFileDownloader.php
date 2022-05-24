@@ -120,10 +120,10 @@ class LargeFileDownloader {
             }
         }
 
-        echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."; size=".$size."<br>";
-        echo "readfile filenameClean=".$filenameClean."; size=".$size."<br>";
-        dump($this->getFileContent($filenameClean));
-        exit('111');
+        //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."; size=".$size."<br>";
+        //echo "readfile filenameClean=".$filenameClean."; size=".$size."<br>";
+        //dump($this->getFileContent($filenameClean));
+        //exit('111');
 
 //        $size = $size."000";
 //        //$size = 1460000;
