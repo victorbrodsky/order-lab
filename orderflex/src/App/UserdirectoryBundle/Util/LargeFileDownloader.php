@@ -129,14 +129,14 @@ class LargeFileDownloader {
 //        //$size = 1460000;
 //        header('Content-Disposition: inline; filename=' . $filename);
 //        header('Accept-Ranges: bytes');
-        header('Content-Type: ' . $mimeType);
+//        header('Content-Type: ' . $mimeType);
 //        //header('Expires: 0');
 //        //header('Cache-Control: must-revalidate');
 //        //header('Pragma: public');
 //        //header('Content-Length: ' . $size);
         //echo $this->getFileContent($filenameClean);
-        $filecontent = file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
-        dump($filecontent);
+        //$filecontent = file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
+        dump(file_get_contents($filenameClean));
         exit;
 
         if(1) {
