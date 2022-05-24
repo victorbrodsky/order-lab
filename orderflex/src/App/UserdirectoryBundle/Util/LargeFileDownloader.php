@@ -136,8 +136,8 @@ class LargeFileDownloader {
 //        //header('Content-Length: ' . $size);
         //echo $this->getFileContent($filenameClean);
         //$filecontent = file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
-        dump(file_get_contents($filenameClean));
-        exit;
+        //dump(file_get_contents($filenameClean));
+        //exit;
 
         if(1) {
             //header('Content-Description: File Transfer');
