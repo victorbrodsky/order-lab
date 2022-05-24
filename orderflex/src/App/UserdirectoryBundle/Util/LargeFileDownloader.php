@@ -129,13 +129,14 @@ class LargeFileDownloader {
 //        //$size = 1460000;
 //        header('Content-Disposition: inline; filename=' . $filename);
 //        header('Accept-Ranges: bytes');
-//        header('Content-Type: ' . $mimeType);
+        header('Content-Type: ' . $mimeType);
 //        //header('Expires: 0');
 //        //header('Cache-Control: must-revalidate');
 //        //header('Pragma: public');
 //        //header('Content-Length: ' . $size);
-//        echo $this->getFileContent($filenameClean);
-//        exit;
+        //echo $this->getFileContent($filenameClean);
+        echo file_get_contents($filenameClean); //, false, stream_context_create($arrContextOptions));
+        exit;
 
         if(1) {
             //header('Content-Description: File Transfer');
@@ -143,7 +144,7 @@ class LargeFileDownloader {
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
-            header('Content-Length: ' . $size); //this caused the error viewing file
+            //header('Content-Length: ' . $size); //this caused the error viewing file
             //header("Content-Range: 0-".($size-1)."/".$size);
 
             if ($action == "download") {
