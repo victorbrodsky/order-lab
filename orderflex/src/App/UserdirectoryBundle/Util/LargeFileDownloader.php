@@ -143,7 +143,7 @@ class LargeFileDownloader {
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
-            //header('Content-Length: ' . $size); //this caused the error viewing file
+            header('Content-Length: ' . $size); //this caused the error viewing file
             //header("Content-Range: 0-".($size-1)."/".$size);
 
             if ($action == "download") {
