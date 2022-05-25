@@ -1,7 +1,16 @@
 Windows:
+//http://lampblogs.com/blog/install-postgresql-in-xampp-on-windows-and-integrate-phppgadmin
 1) Install new postgresql, for example to a new folder C:\xampp\pgsql\14
-2) In php.ini add line:
+2) In httpd-xampp.conf (httpd.conf?) add line:
 LoadFile "C:\xampp\pgsql\14\bin\libpq.dll"
+3) Bind postgresql 14 in C:\xampp\phpMyAdmin\config.inc.php
+$cfg['Servers'][0]['pg_dump_path'] = 'C:\\xampp\\pgsql\\14\\bin\\pg_dump.exe';
+$cfg['Servers'][0]['pg_dumpall_path'] = 'C:\\xampp\\pgsql\\14\\bin\\pg_dumpall.exe';
+4) Restart apache server
+5a) Start cmd as admin. Stop: C:\xampp\pgsql\14\bin\pg_ctl -D "C:\xampp\pgsql\12\data" stop
+5b) Start cmd as admin. Start: C:\xampp\pgsql\14\bin\pg_ctl.exe -D "C:\xampp\pgsql\14\data" start
+
+
 3) Use backup
 
 http://www.dbaglobe.com/2021/10/upgrade-postgresql-13-to-postgresql-14.html
