@@ -1055,3 +1055,92 @@ var thisid = comboboxEl.val();
 
 Check postgresql version (current 12.10) => 14.3
 psql --version
+
+Change PATH:
+In /etc/profile.d add any .sh file, for example, rh_php81.sh:
+export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/opt/remi/php81/root/usr/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export MANPATH=/opt/remi/php81/root/usr/share/man:${MANPATH}
+
+Remove old php path:
+Search for content: grep --exclude-dir={.cache,.symfony,scanorder*} -rnw './' -e 'php74'
+grep --exclude-dir={.cache,.symfony,scanorder*} -rnw './' -e '/opt/remi/php74/root'
+remove rh-php74.sh in /etc/profile.d
+
+###!!! DO NOT: sudo yum -y update => it will result to the default php 7 and postgresql 9
+
+########## Postgresql upgrade Rhel ##########
+0a) Shutdown apache server
+systemctl stop httpd.service
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+sudo systemctl stop postgresql-12
+
+0b) Create DB backup:
+pg_dump -U symfony ScanOrder > scanorder_26may2022.sql
+pg_dump --file scanorder_26may2022.sql --username "symfony" --no-password --verbose --format=c --blobs "ScanOrder"
+
+1. As root: Install the PostgreSQL 14 Packages
+sudo yum install postgresql14-server.x86_64  postgresql14.x86_64  postgresql14-contrib.x86_64
+//On Live: https://computingforgeeks.com/how-to-install-postgresql-14-centos-rhel-7/
+//add PostgreSQL repository to our CentOS 7 / RHEL 7:
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+yum reinstall https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-7-x86_64/postgresql14-contrib-14.3-1PGDG.rhel7.x86_64.rpm
+//List available repositories on the system:
+sudo yum repolist -y
+
+2. Initialize PostgreSQL 14 database
+/usr/pgsql-14/bin/postgresql-14-setup initdb
+
+Add to /var/lib/pgsql/14/data/pg_hba.conf: host    all             all        157.139.46.96/32             md5
+Change in /var/lib/pgsql/14/data/postgresql.conf: #port = 5432
+Change in /var/lib/pgsql/14/data/postgresql.conf: listen_addresses='*'
+
+3. Start PostgreSQL 12 database (required for pre-upgrade check) sudo su -, su - postgres
+ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ start
+
+4. Run pre-upgrade check:
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres --check
+
+If error: //Error: PGSQL.5432 failed: fe_sendauth: no password supplied Failure
+          vi /var/lib/pgsql/12/data/pg_hba.conf (temporary change all to trust for pg_hba.conf in 12 and 14)
+          #NO NEED: add: host    all             all             localhost            trust
+          restart: /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ restart
+
+5. Shutdown original PostgreSQL 12
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+
+6. Run the actual upgrade
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres
+
+7a. in /var/lib/pgsql/12/data/pg_hba.conf change back trust to md5
+
+7. Start PostgreSQL 14 cluster
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ start
+
+8. Upgrade the extension (optional)
+There are no extenstions.
+get extension list: 1) psql 2) \dx
+plpgsql | 1.0     | pg_catalog | PL/pgSQL procedural language
+exit;
+
+9. Update optimiser statistics
+/usr/pgsql-14/bin/vacuumdb -U postgres --all --analyze-in-stages
+
+10. Clean up PostgreSQL 12
+#Get postgres library: rpm -qa|grep postgres
+yum remove postgresql12-server-12.11-1PGDG.rhel7.x86_64 postgresql12-libs-12.11-1PGDG.rhel7.x86_64 postgresql12-12.11-1PGDG.rhel7.x86_64
+yum remove postgresql12-server-12.10-1PGDG.rhel7.x86_64 postgresql12-libs-12.10-1PGDG.rhel7.x86_64 postgresql12-12.10-1PGDG.rhel7.x86_64
+# rm -rf '/var/lib/pgsql/12/data'
+
+Running this script will delete the old cluster's data files:
+./delete_old_cluster.sh
+
+########## EOF Postgresql upgrade Rhel ##########
+
+postgreSQL 14 package is not available
+cat /etc/redhat-release => Red Hat Enterprise Linux Server release 7.9 (Maipo)
+
+
+

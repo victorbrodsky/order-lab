@@ -1,10 +1,13 @@
 security:
+    #enable_authenticator_manager: true
+
     # affirmative (default) - This grants access as soon as there is one voter granting access;
     # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous
     access_decision_manager:
         strategy: affirmative
 
-    encoders:
+    #encoders: - deprecated
+    password_hashers:
         App\UserdirectoryBundle\Entity\User:
             algorithm: auto
         #FOS\UserBundle\Model\UserInterface: sha512

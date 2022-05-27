@@ -45,7 +45,9 @@ chown -R apache:apache cache
 /etc/opt/remi/php81/php.ini
 
 #Set new PHP path: 
-export PATH=/usr/bin/php:/etc/php.d:/etc/php.ini:/opt/remi/php81/root/usr/bin/php:/usr/share/man/man1/php.1.gz
+export PATH=/usr/bin/php:/etc/php.d:/etc/php.ini:/opt/remi/php81/root/usr/bin/php:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/share/man/man1/php.1.gz
+
+/usr/local/bin:/usr/bin:/usr/local/sbin
 
 systemctl restart httpd.service
 ############ end of upgrade ###############

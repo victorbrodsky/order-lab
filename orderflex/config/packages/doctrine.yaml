@@ -51,7 +51,7 @@ doctrine:
         entity_managers:
             default:
 #                auto_mapping: true
-                metadata_cache_driver: ~
+#                metadata_cache_driver: ~
 #                    array
 #                    type: service
 #                    id: doctrine.system_cache_provider

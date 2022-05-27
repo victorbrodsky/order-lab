@@ -38,6 +38,7 @@ class DefaultController extends OrderAbstractController
 {
 
     /**
+     * @Route("/user-thanks-for-downloading/{id}/{sitename}", name="employees_thankfordownloading", methods={"GET"})
      * @Route("/thanks-for-downloading/{id}/{sitename}", name="common_thankfordownloading", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Default/thanksfordownloading.html.twig")
      */

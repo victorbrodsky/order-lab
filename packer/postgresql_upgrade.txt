@@ -1,5 +1,6 @@
 Windows:
 //http://lampblogs.com/blog/install-postgresql-in-xampp-on-windows-and-integrate-phppgadmin
+0) Create DB backup. Shutdown apache.
 1) Install new postgresql, for example to a new folder C:\xampp\pgsql\14
 2) In httpd-xampp.conf (httpd.conf?) add line:
 LoadFile "C:\xampp\pgsql\14\bin\libpq.dll"
@@ -9,6 +10,7 @@ $cfg['Servers'][0]['pg_dumpall_path'] = 'C:\\xampp\\pgsql\\14\\bin\\pg_dumpall.e
 4) Restart apache server
 5a) Start cmd as admin. Stop: C:\xampp\pgsql\14\bin\pg_ctl -D "C:\xampp\pgsql\12\data" stop
 5b) Start cmd as admin. Start: C:\xampp\pgsql\14\bin\pg_ctl.exe -D "C:\xampp\pgsql\14\data" start
+6) Create DB 'ScanOrder' and user. Restore DB from backup.
 
 
 3) Use backup
