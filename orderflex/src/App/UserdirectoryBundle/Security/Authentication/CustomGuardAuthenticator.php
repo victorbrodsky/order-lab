@@ -45,6 +45,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -58,10 +59,13 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 
-class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
+class CustomGuardAuthenticator extends AbstractAuthenticator
 {
     //private $encoder;
     private $container;
@@ -71,6 +75,7 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
     private $sitename;
     private $userProvider;
     private $passwordToken;
+    //private $credentials;
 
     public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
     {
@@ -135,10 +140,7 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         return false;
     }
 
-    /**
-     * Called on every request. Return whatever credentials you want to
-     * be passed to getUser() as $credentials.
-     */
+    //Authentication Diagram: https://symfony.com/doc/6.0/security.html#authentication-events
     /**
      * Create a passport for the current request.
      *
@@ -157,130 +159,152 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         //dump($request->request);
         //exit('authenticate');
 
-        $credentials = [
-            'username' => $request->request->get('_username'),
-            'password' => $request->request->get('_password'),
-            'usernametype' => $request->request->get('_usernametype'),
-            'sitename' => $request->request->get('_sitename'),
-            'csrf_token' => $request->request->get('_csrf_token'),
-        ];
-        $this->sitename = $credentials['sitename'];
+        $credentials = $this->getCredentials($request);
 
         //dump($credentials);
         //exit('111');
 
-        $user = $this->getUser($credentials);
-
         return new Passport(
-            new UserBadge(
-                $credentials['username'],
-                //$user
-                function ($userIdentifier) {
-                    //return $this->userRepository->findOneBy(['email' => $userIdentifier]);
-                    //return $this->getUser($credentials);
-                    return $entity = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($userIdentifier);
-                }
-            ),
-            $credentials
+            new UserBadge($credentials['username']),
+            new CustomCredentials(
+                // If this function returns anything else than `true`, the credentials are marked as invalid.
+                function( $credentials ) {
+                    //return true; //$user->getApiToken() === $credentials;
+                    $user = $this->getAuthUser($credentials);
+                    if( $user ) {
+                        //if user exists here then it's already authenticated
+                        //return true; //this enough
+
+                        //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
+                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
+                        return $user->getUserIdentifier() === $credentials['username'];
+                    }
+                    return false;
+                },
+                // The custom credentials
+                $credentials
+            )
         );
+
+
+//        $user = $this->getAuthUser($credentials);
+//        if( $user ) {
+//            return new SelfValidatingPassport(new UserBadge($credentials['username']));
+//
+//            return new Passport(
+//                new UserBadge($credentials['username']),
+//                new CustomCredentials(
+//                    // If this function returns anything else than `true`, the credentials
+//                    // are marked as invalid.
+//                    // The $credentials parameter is equal to the next argument of this class
+//                    function ($credentials, UserInterface $user) {
+//                        return true; //$user->getApiToken() === $credentials;
+//                    },
+//                    // The custom credentials
+//                    $credentials
+//            ));
+//
+//        } else {
+//            throw new CustomUserMessageAuthenticationException('Authentication failed');
+//        }
+
     }
 
 
-    protected function getLoginUrl(Request $request) : string
-    {
-        $url = $this->container->get('router')->generate('directory_login'); //employees_login
-        return $url;
-    }
-
-    /**
-     * Called when authentication is needed, but it's not sent
-     */
-    public function start(Request $request, AuthenticationException $authException = null) : RedirectResponse
-    {
-        $route = $request->attributes->get('_route');
-        //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
-        //echo 'sitename='.$this->sitename."<br>";
-        //exit('111');
-
-        $url = NULL;
-
-        if(
-            $route == 'setserveractive' ||
-            $route == 'keepalive' ||
-            $route == 'getmaxidletime'
-        ) {
-            $url = $this->container->get('router')->generate($route);
-        }
-
-        if( !$url && $route == 'main_maintenance' ) {
-            $url = $this->container->get('router')->generate('main_maintenance');
-        }
-
-        if( !$url ) {
-            $sitename = $this->getSiteNameByRoute($route);
-            $url = $this->container->get('router')->generate($sitename . '_login');
-        }
-
-        return new RedirectResponse($url);
-    }
-
-    public function getSiteNameByRoute($route) : string
-    {
-        //sitename is the first string before '_';
-        //$sitenameArr = explode('_',$route);
-        //return $sitenameArr[0];
-
-        //echo "route=$route <br>";
-        //exit('111');
-
-        if( strpos((string)$route,'translationalresearch') !== false ) {
-            return "translationalresearch";
-        }
-        if( strpos((string)$route,'vacreq') !== false ) {
-            return "vacreq";
-        }
-        if( strpos((string)$route,'calllog') !== false ) {
-            return "calllog";
-        }
-        if( strpos((string)$route,'crn') !== false ) {
-            return "crn";
-        }
-
-        if( strpos((string)$route,'fellapp') !== false ) {
-            return "fellapp";
-        }
-        if( strpos((string)$route,'resapp') !== false ) {
-            return "resapp";
-        }
-
-        if( strpos((string)$route,'employees') !== false ) {
-            return "employees";
-        }
-
-        if( strpos((string)$route,'user') !== false ) {
-            return "employees";
-        }
-
-        if( strpos((string)$route,'deidentifier') !== false ) {
-            return "deidentifier";
-        }
-        if( strpos((string)$route,'scan') !== false ) {
-            return "scan";
-        }
-        if( strpos((string)$route,'dashboard') !== false ) {
-            return "dashboard";
-        }
-
-        //get first element before '_'
-        if( strpos((string)$route,'_') !== false ) {
-            $routeArr = explode('_',$route);
-            if( count($routeArr) > 0 ) {
-                return $routeArr[0];
-            }
-        }
-
-        return "employees";
-    }
+//    protected function getLoginUrl(Request $request) : string
+//    {
+//        $url = $this->container->get('router')->generate('directory_login'); //employees_login
+//        return $url;
+//    }
+//    /**
+//     * Called when authentication is needed, but it's not sent
+//     */
+//    public function start(Request $request, AuthenticationException $authException = null) : RedirectResponse
+//    {
+//        $route = $request->attributes->get('_route');
+//        //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
+//        //echo 'sitename='.$this->sitename."<br>";
+//        //exit('111');
+//
+//        $url = NULL;
+//
+//        if(
+//            $route == 'setserveractive' ||
+//            $route == 'keepalive' ||
+//            $route == 'getmaxidletime'
+//        ) {
+//            $url = $this->container->get('router')->generate($route);
+//        }
+//
+//        if( !$url && $route == 'main_maintenance' ) {
+//            $url = $this->container->get('router')->generate('main_maintenance');
+//        }
+//
+//        if( !$url ) {
+//            $sitename = $this->getSiteNameByRoute($route);
+//            $url = $this->container->get('router')->generate($sitename . '_login');
+//        }
+//
+//        return new RedirectResponse($url);
+//    }
+//
+//    public function getSiteNameByRoute($route) : string
+//    {
+//        //sitename is the first string before '_';
+//        //$sitenameArr = explode('_',$route);
+//        //return $sitenameArr[0];
+//
+//        //echo "route=$route <br>";
+//        //exit('111');
+//
+//        if( strpos((string)$route,'translationalresearch') !== false ) {
+//            return "translationalresearch";
+//        }
+//        if( strpos((string)$route,'vacreq') !== false ) {
+//            return "vacreq";
+//        }
+//        if( strpos((string)$route,'calllog') !== false ) {
+//            return "calllog";
+//        }
+//        if( strpos((string)$route,'crn') !== false ) {
+//            return "crn";
+//        }
+//
+//        if( strpos((string)$route,'fellapp') !== false ) {
+//            return "fellapp";
+//        }
+//        if( strpos((string)$route,'resapp') !== false ) {
+//            return "resapp";
+//        }
+//
+//        if( strpos((string)$route,'employees') !== false ) {
+//            return "employees";
+//        }
+//
+//        if( strpos((string)$route,'user') !== false ) {
+//            return "employees";
+//        }
+//
+//        if( strpos((string)$route,'deidentifier') !== false ) {
+//            return "deidentifier";
+//        }
+//        if( strpos((string)$route,'scan') !== false ) {
+//            return "scan";
+//        }
+//        if( strpos((string)$route,'dashboard') !== false ) {
+//            return "dashboard";
+//        }
+//
+//        //get first element before '_'
+//        if( strpos((string)$route,'_') !== false ) {
+//            $routeArr = explode('_',$route);
+//            if( count($routeArr) > 0 ) {
+//                return $routeArr[0];
+//            }
+//        }
+//
+//        return "employees";
+//    }
 
     /**
      * Called on every request. Return whatever credentials you want to
@@ -308,7 +332,7 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
 
     //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
     // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
-    public function getUser($credentials) : mixed
+    public function getAuthUser($credentials) : mixed
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -332,59 +356,13 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
+            //exit('return user='.$user);
             return $user;
         }
 
         $this->passwordToken = NULL;
         return NULL;
     }
-//    public function getUserOrig($credentials, UserProviderInterface $userProvider)
-//    {
-//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-//        if( !$this->csrfTokenManager->isTokenValid($token) ) {
-//            throw new InvalidCsrfTokenException();
-//        }
-//
-//        $this->userProvider = $userProvider;
-//        $username = $credentials['username'];
-//
-//        if( null === $username ) {
-//            return false;
-//        }
-//
-//        $authUtil = $this->container->get('authenticator_utility');
-//        $user = $authUtil->findUserByUsername($username);
-//
-//        return $user;
-//    }
-
-    //Just check if passwordToken is set by getUser()
-    public function checkCredentials($credentials, UserInterface $user) : bool
-    {
-        if( $this->passwordToken ) {
-            return true;
-        }
-
-        return false;
-    }
-//    public function checkCredentialsOrig($credentials, UserInterface $user)
-//    {
-//        //Request $request, $username, $password, $providerKey
-//        $request = null;
-//        $username = $credentials['username'];
-//        $password = $credentials['password'];
-//        $providerKey = 'ldap_employees_firewall'; //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
-//        $unauthenticatedToken = new UsernamePasswordToken(
-//            $username,
-//            $password,
-//            $providerKey
-//        );
-//        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
-//        if( $usernamePasswordToken ) {
-//            return true;
-//        }
-//        return false;
-//    }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) : Response
     {
@@ -397,13 +375,6 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         $authenticationSuccess = $this->container->get('employees_authentication_handler');
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
     }
-
-    public function supportsRememberMe() : bool
-    {
-        return true;
-    }
-
-
 
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     public function authenticateToken($token, $providerKey)
@@ -509,35 +480,8 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         throw new AuthenticationException('Invalid username or password');
     }
 
-
-
-    public function supportsToken(TokenInterface $token, $providerKey)
-    {
-        return $token instanceof UsernamePasswordToken
-        && $token->getProviderKey() === $providerKey;
-    }
-
-//    public function createToken(Request $request, $username, $password, $providerKey)
-//    {
-//        return new UsernamePasswordToken($username, $password, $providerKey);
-//    }
-//    public function createToken(PassportInterface $passport, string $firewallName): TokenInterface
-//    {
-//        return new UsernamePasswordToken($passport->getUser(), $passport->getToken(), $providerKey);
-//        //return new CustomOauthToken($passport->getUser(), $passport->getAttribute('scope'));
-//    }
-//    /**
-//     * Shortcut to create a PostAuthenticationToken for you, if you don't really
-//     * care about which authenticated token you're using.
-//     */
-//    public function createToken(Passport $passport, string $firewallName): TokenInterface
-//    {
-//        return new PostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles());
-//    }
-
-
-
     public function getUsernamePasswordToken($user,$providerKey) {
+        //exit('getUsernamePasswordToken '.$user);
         return new UsernamePasswordToken(
             $user,
             NULL,   //$user->getPassword(),

@@ -61,7 +61,7 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 //excluded in Authentication in services.yaml
 //Deprecated since Symfony 5.2. Use Passport
 
-class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator #AbstractAuthenticator #AbstractFormLoginAuthenticator {
+class CustomGuardAuthenticator_Old extends AbstractFormLoginAuthenticator #AbstractAuthenticator #AbstractFormLoginAuthenticator {
 {
     private $encoder;
     private $container;

@@ -1,5 +1,5 @@
 security:
-    #enable_authenticator_manager: true
+    enable_authenticator_manager: true
 
     # affirmative (default) - This grants access as soon as there is one voter granting access;
     # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous
@@ -193,7 +193,6 @@ security:
                 class: 'App\UserdirectoryBundle\Entity\User'
                 property: 'username'
 
-
     firewalls:
 
         #this firewall name must be the same as in the bundle's service.yml.
@@ -201,12 +200,12 @@ security:
             pattern: ^/scan
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                   authenticator: custom_guard_authenticator
             logout:
                 path:   /scan/logout
                 target: /scan/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
             remember_me:
                 secret:      "%secret%"
@@ -218,12 +217,12 @@ security:
               pattern: ^/directory
               context: scan_auth
               switch_user: true
-              guard:
+              custom_authenticators:
                   authenticator: custom_guard_authenticator
               logout:
                   path:   /directory/logout
                   target: /directory/login
-              anonymous:  true
+              #anonymous:  true
               access_denied_url: /directory/access-requests/new/create
               remember_me:
                   secret:      "%secret%"
@@ -234,13 +233,12 @@ security:
             pattern: ^/fellowship-applications
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
-                #entry_point: custom_guard_authenticator
             logout:
                 path:   /fellowship-applications/logout
                 target: /fellowship-applications/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /fellowship-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -252,12 +250,12 @@ security:
             pattern: ^/residency-applications
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /residency-applications/logout
                 target: /residency-applications/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /residency-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -268,12 +266,12 @@ security:
             pattern: ^/deidentifier
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /deidentifier/logout
                 target: /deidentifier/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /deidentifier/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -285,12 +283,12 @@ security:
             pattern: ^/vacation-request
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /vacation-request/logout
                 target: /vacation-request/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /vacation-request/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -302,12 +300,12 @@ security:
             pattern: ^/call-log-book
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /call-log-book/logout
                 target: /call-log-book/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /call-log-book/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -319,12 +317,12 @@ security:
             pattern: ^/critical-result-notifications
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /critical-result-notifications/logout
                 target: /critical-result-notifications/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /critical-result-notifications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -335,12 +333,12 @@ security:
             pattern: ^/translational-research
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /translational-research/logout
                 target: /translational-research/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /translational-research/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -352,12 +350,12 @@ security:
             pattern: ^/dashboards
             context: scan_auth
             switch_user: true
-            guard:
+            custom_authenticators:
                 authenticator: custom_guard_authenticator
             logout:
                 path:   /dashboards/logout
                 target: /dashboards/login
-            anonymous:  true
+            #anonymous:  true
             access_denied_url: /dashboards/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -368,7 +366,7 @@ security:
             pattern: ^/api
             #logout_on_user_change: true
             context: scan_auth
-            anonymous:  true
+            #anonymous:  true
 #            remember_me:
 #                secret:      "%secret%"
 #                lifetime: 604800 # 1 week in seconds

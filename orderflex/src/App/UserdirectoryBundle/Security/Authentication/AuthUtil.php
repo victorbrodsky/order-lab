@@ -190,6 +190,7 @@ class AuthUtil {
     public function LdapAuthenticationByUsernamePassword($username, $password, $ldapType=1) {
 
         $this->logger->notice("Ldap Authentication: ldapType=[$ldapType]");
+        //exit("Ldap Authentication: ldapType=[$ldapType]");
 
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
@@ -234,6 +235,7 @@ class AuthUtil {
                 return NULL;
             }
 
+            //exit('ldap user return');
             return $user;
         } else {
             $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$username);
