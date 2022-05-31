@@ -24,8 +24,13 @@ framework:
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
         #storage_id: session.storage.filesystem
+        storage_factory_id: session.storage.factory.native
     #fragments: ~
     fragments: {path: /_fragment}
     http_method_override: true
     profiler:
         collect: false
+
+    #Testing http cache: With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass your application entirely on subsequent requests
+    #http_cache: true
+

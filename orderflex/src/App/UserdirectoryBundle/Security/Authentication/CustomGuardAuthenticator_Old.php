@@ -30,7 +30,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-//use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
 //use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 //use Symfony\Component\Security\Core\User\UserInterface;
@@ -54,16 +54,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 //use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-//use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
+use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
 
-class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
+//excluded in Authentication in services.yaml
+//Deprecated since Symfony 5.2. Use Passport
+
+class CustomGuardAuthenticator extends AbstractFormLoginAuthenticator #AbstractAuthenticator #AbstractFormLoginAuthenticator {
 {
-    //private $encoder;
+    private $encoder;
     private $container;
     private $em;
     private $security;
@@ -72,15 +72,25 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
     private $userProvider;
     private $passwordToken;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
+    public function __construct(UserPasswordEncoderInterface $encoder, ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
     {
-        //$this->encoder = $encoder;
+        $this->encoder = $encoder;
         $this->container = $container;                //Service Container
         $this->em = $em;                //Entity Manager
         $this->security = $security;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordToken = NULL;
     }
+
+//    public function __construct(UserPasswordHasherInterface $encoder, ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
+//    {
+//        $this->encoder = $encoder;
+//        $this->container = $container;                //Service Container
+//        $this->em = $em;                //Entity Manager
+//        $this->security = $security;
+//        $this->csrfTokenManager = $csrfTokenManager;
+//        $this->passwordToken = NULL;
+//    }
 
     /**
      * Called on every request to decide if this authenticator should be
@@ -135,58 +145,7 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         return false;
     }
 
-    /**
-     * Called on every request. Return whatever credentials you want to
-     * be passed to getUser() as $credentials.
-     */
-    /**
-     * Create a passport for the current request.
-     *
-     * The passport contains the user, credentials and any additional information
-     * that has to be checked by the Symfony Security system. For example, a login
-     * form authenticator will probably return a passport containing the user, the
-     * presented password and the CSRF token value.
-     *
-     * You may throw any AuthenticationException in this method in case of error (e.g.
-     * a UserNotFoundException when the user cannot be found).
-     *
-     * @throws AuthenticationException
-     */
-    public function authenticate(Request $request) : Passport
-    {
-        //dump($request->request);
-        //exit('authenticate');
-
-        $credentials = [
-            'username' => $request->request->get('_username'),
-            'password' => $request->request->get('_password'),
-            'usernametype' => $request->request->get('_usernametype'),
-            'sitename' => $request->request->get('_sitename'),
-            'csrf_token' => $request->request->get('_csrf_token'),
-        ];
-        $this->sitename = $credentials['sitename'];
-
-        //dump($credentials);
-        //exit('111');
-
-        $user = $this->getUser($credentials);
-
-        return new Passport(
-            new UserBadge(
-                $credentials['username'],
-                //$user
-                function ($userIdentifier) {
-                    //return $this->userRepository->findOneBy(['email' => $userIdentifier]);
-                    //return $this->getUser($credentials);
-                    return $entity = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($userIdentifier);
-                }
-            ),
-            $credentials
-        );
-    }
-
-
-    protected function getLoginUrl(Request $request) : string
+    protected function getLoginUrl() : string
     {
         $url = $this->container->get('router')->generate('directory_login'); //employees_login
         return $url;
@@ -308,7 +267,7 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
 
     //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
     // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
-    public function getUser($credentials) : mixed
+    public function getUser($credentials, UserProviderInterface $userProvider) : mixed
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -517,22 +476,14 @@ class CustomGuardAuthenticator extends AbstractLoginFormAuthenticator
         && $token->getProviderKey() === $providerKey;
     }
 
-//    public function createToken(Request $request, $username, $password, $providerKey)
-//    {
-//        return new UsernamePasswordToken($username, $password, $providerKey);
-//    }
+    public function createToken(Request $request, $username, $password, $providerKey)
+    {
+        return new UsernamePasswordToken($username, $password, $providerKey);
+    }
 //    public function createToken(PassportInterface $passport, string $firewallName): TokenInterface
 //    {
 //        return new UsernamePasswordToken($passport->getUser(), $passport->getToken(), $providerKey);
 //        //return new CustomOauthToken($passport->getUser(), $passport->getAttribute('scope'));
-//    }
-//    /**
-//     * Shortcut to create a PostAuthenticationToken for you, if you don't really
-//     * care about which authenticated token you're using.
-//     */
-//    public function createToken(Passport $passport, string $firewallName): TokenInterface
-//    {
-//        return new PostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles());
 //    }
 
 

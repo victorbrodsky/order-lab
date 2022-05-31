@@ -395,6 +395,11 @@ class DashboardController extends OrderAbstractController
         //$response->headers->set('Access-Control-Allow-Origin', '*');
         $response->setStatusCode(200);
         $response->setContent(json_encode($chartsArray));
+
+        //#Testing http cache. cache publicly for 3600 seconds (1 hour)
+        //$response->setPublic();
+        //$response->setMaxAge(3600);
+
         return $response;
     }
 

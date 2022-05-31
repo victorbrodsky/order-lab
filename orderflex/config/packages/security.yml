@@ -8,6 +8,7 @@ security:
 
     #encoders: - deprecated
     password_hashers:
+        #Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\UserdirectoryBundle\Entity\User:
             algorithm: auto
         #FOS\UserBundle\Model\UserInterface: sha512
@@ -190,22 +191,8 @@ security:
             entity:
                 # the class of the entity that represents users
                 class: 'App\UserdirectoryBundle\Entity\User'
-                # the property to query by - e.g. username, email, etc
                 property: 'username'
-                #property: 'primaryPublicUserId'
-#        fos_userbundle:
-#            id: fos_user.user_provider.username
 
-#        chain_provider:
-#            chain:
-#                providers: [fos_userbundle, fr3d_ldapbundle]
-#        fr3d_ldapbundle:
-#            id: fr3d_ldap.security.user.provider
-#        in_memory:
-#            memory:
-#                users:
-#                    systemuser:  { password: systempassword, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
-#                   admin: { password: adminpass123, roles: [ 'ROLE_PLATFORM_DEPUTY_ADMIN' ] }
 
     firewalls:
 
@@ -216,13 +203,6 @@ security:
             switch_user: true
             guard:
                   authenticator: custom_guard_authenticator
-#            simple_form:
-#                 authenticator: custom_authenticator
-#                 use_referer: true
-#                 success_handler: authentication_handler
-#                 failure_handler: authentication_handler
-#                 check_path: /scan/login_check
-#                 login_path: /scan/login
             logout:
                 path:   /scan/logout
                 target: /scan/login
@@ -234,34 +214,12 @@ security:
                 path:     /scan
 #                always_remember_me: true
 
-#        ldap_employees_firewall:
-#            pattern: ^/directory
-#            context: scan_auth
-#            switch_user: true
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: employees_authentication_handler
-#                failure_handler: employees_authentication_handler
-#                check_path: /directory/login_check
-#                login_path: /directory/login
-#            logout:
-#                path:   /directory/logout
-#                target: /directory/login
-#            anonymous:  true
-#            access_denied_url: /directory/access-requests/new/create
-#            remember_me:
-#                secret:      "%secret%"
-#                lifetime: 28800 # 8 hours in seconds
-#                path:     /directory
-
         ldap_employees_firewall:
               pattern: ^/directory
               context: scan_auth
               switch_user: true
               guard:
                   authenticator: custom_guard_authenticator
-                  #entry_point: custom_guard_authenticator
               logout:
                   path:   /directory/logout
                   target: /directory/login
@@ -276,22 +234,9 @@ security:
             pattern: ^/fellowship-applications
             context: scan_auth
             switch_user: true
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: fellapp_authentication_handler
-#                failure_handler: fellapp_authentication_handler
-#                check_path: /fellowship-applications/login_check
-#                login_path: /fellowship-applications/login
             guard:
                 authenticator: custom_guard_authenticator
                 #entry_point: custom_guard_authenticator
-#            form_login:
-#                  use_referer: true
-#                  success_handler: fellapp_authentication_handler
-#                  failure_handler: fellapp_authentication_handler
-#                  check_path: /fellowship-applications/login_check
-#                  login_path: /fellowship-applications/login
             logout:
                 path:   /fellowship-applications/logout
                 target: /fellowship-applications/login
@@ -325,13 +270,6 @@ security:
             switch_user: true
             guard:
                 authenticator: custom_guard_authenticator
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: deidentifier_authentication_handler
-#                failure_handler: deidentifier_authentication_handler
-#                check_path: /deidentifier/login_check
-#                login_path: /deidentifier/login
             logout:
                 path:   /deidentifier/logout
                 target: /deidentifier/login
@@ -349,15 +287,6 @@ security:
             switch_user: true
             guard:
                 authenticator: custom_guard_authenticator
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: vacreq_authentication_handler
-#                failure_handler: vacreq_authentication_handler
-#                check_path: /vacation-request/login_check
-#                login_path: /vacation-request/login
-#            guard:
-#                authenticator: custom_guard_authenticator
             logout:
                 path:   /vacation-request/logout
                 target: /vacation-request/login
@@ -375,13 +304,6 @@ security:
             switch_user: true
             guard:
                 authenticator: custom_guard_authenticator
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: calllog_authentication_handler
-#                failure_handler: calllog_authentication_handler
-#                check_path: /call-log-book/login_check
-#                login_path: /call-log-book/login
             logout:
                 path:   /call-log-book/logout
                 target: /call-log-book/login
@@ -415,13 +337,6 @@ security:
             switch_user: true
             guard:
                 authenticator: custom_guard_authenticator
-#            simple_form:
-#                authenticator: custom_authenticator
-#                use_referer: true
-#                success_handler: translationalresearch_authentication_handler
-#                failure_handler: translationalresearch_authentication_handler
-#                check_path: /translational-research/login_check
-#                login_path: /translational-research/login
             logout:
                 path:   /translational-research/logout
                 target: /translational-research/login

@@ -14,6 +14,7 @@ namespace App\UserdirectoryBundle\User\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 //https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/config/doctrine-mapping/User.orm.xml
 //<field name="username" column="username" type="string" length="180" />
@@ -35,7 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Thibault Duplessis <thibault.duplessis@gmail.com>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-abstract class UserBase implements UserInterface #, GroupableInterface
+abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInterface #, GroupableInterface
 {
 
 //    const ROLE_DEFAULT = 'ROLE_USER';
