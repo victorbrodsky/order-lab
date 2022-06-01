@@ -148,9 +148,9 @@ class WebTestBase extends WebTestCase
 
     public function getTestClient(array $options = array(), array $server = array()) {
 
-        $client = static::createClient();
-        $this->client = $client;
-        return $client;
+        //$client = static::createClient();
+        //$this->client = $client;
+        //return $client;
 
         //Set HTTPS if required
 //        $client = static::createClient([], [
