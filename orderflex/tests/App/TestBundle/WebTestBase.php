@@ -187,7 +187,7 @@ class WebTestBase extends WebTestCase
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            //'HTTPS' => $httpsChannel
+            'HTTPS' => $httpsChannel
         ]);
 
         $this->client = $client;
