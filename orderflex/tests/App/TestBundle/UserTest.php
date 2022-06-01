@@ -14,14 +14,16 @@ class UserTest extends WebTestBase
 
     public function testLoginPageAction() {
 
-        $phpVersion = phpversion();
-        echo "[User,PHP=".$phpVersion."]";
+        //$phpVersion = phpversion();
+        //echo "[User,PHP=".$phpVersion."]";
 
-        $userServiceUtil = $this->testContainer->get('user_service_utility');
-        echo "[DB=".$userServiceUtil->getDbVersion()."]";
-
-        //$this->getTestClient();
+        //$userServiceUtil = $this->testContainer->get('user_service_utility');
+        //echo "[DB=".$userServiceUtil->getDbVersion()."]";
+        //$this->logIn();
         $crawler = $this->client->request('GET', '/directory/login');
+
+        //$client = static::createClient();
+        //$crawler = $client->request('GET', '/directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");

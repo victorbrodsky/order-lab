@@ -55,21 +55,20 @@ class WebTestBase extends WebTestCase
     protected $environment = null;
 
 
-//    public function testGetLink($linkName,$expectedText) {
-//        $this->logIn();
+//    public function getInit() : void
+//    {
+//        $this->getTestClient();
 //
-//        //echo "linkName=$linkName \n\r";
-//        $crawler = $this->client->request('GET',$linkName);
-//        //$crawler = $this->client->request('GET', '/translational-research/about');
+//        $this->testContainer = self::$container;
+//        //$this->container = $this->client->getContainer();
 //
-//        //$content = $this->client->getResponse()->getContent();
-//        //exit("content=$content");
+//        $this->em = self::$container->get('doctrine.orm.entity_manager');
+//        //$this->em = $this->getService('doctrine.orm.entity_manager');
+//        //$this->em = $this->getService('user_security_utility');
 //
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains('.$expectedText.')')->count()
-//            //$crawler->filter('html:contains("Current Version")')->count()
-//        );
+//        $this->user = $this->getUser();
+//
+//        $this->getParam();
 //    }
 
     public function getParam() {
@@ -86,50 +85,12 @@ class WebTestBase extends WebTestCase
 //        }
     }
 
-//    public function getService(string $service)
-//    {
-//        self::bootKernel();
-//
-//        $container = self::$kernel->getContainer();
-//
-//        // gets the special container that allows fetching private services
-//        //$container = self::$container;
-//
-//        return $container->get($service);
-//        //return self::$container->get($service);
-//    }
-
-//    /**
-//     * {@inheritDoc}
-//     */
-//    public function setUp2()
-//    {
-//        $this->client = static::createClient();
-//        //$this->container = $this->client->getContainer();
-//        $this->entityManager = $this->getService('doctrine.orm.entity_manager');
-//
-//        parent::setUp();
-//    }
-
-
     protected function setUp(): void {
 
         $this->getTestClient();
 
-        //testing
-        //$logger = $this->getService('user_download_utility');
-        //$container = self::$container;
-        //$em = $container->get('doctrine.orm.object_manager');
-
         $this->testContainer = self::$container;
-        //$test = $container->get('user_service_utility');
-        //$realContainer = $container->get('test.service_container');
-        //$this->em = $realContainer->get('doctrine.orm.entity_manager');
-
         //$this->container = $this->client->getContainer();
-        //self::$container = $this->client->getContainer();
-
-        //$this->getTestClient();
 
         $this->em = self::$container->get('doctrine.orm.entity_manager');
         //$this->em = $this->getService('doctrine.orm.entity_manager');
@@ -187,6 +148,10 @@ class WebTestBase extends WebTestCase
 
     public function getTestClient(array $options = array(), array $server = array()) {
 
+        $client = static::createClient();
+        $this->client = $client;
+        return $client;
+
         //Set HTTPS if required
 //        $client = static::createClient([], [
 //            'HTTP_HOST'       => '127.0.0.1',
@@ -222,7 +187,7 @@ class WebTestBase extends WebTestCase
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
             'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-            'HTTPS' => $httpsChannel
+            //'HTTPS' => $httpsChannel
         ]);
 
         $this->client = $client;
