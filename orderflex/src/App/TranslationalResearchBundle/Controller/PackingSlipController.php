@@ -295,7 +295,8 @@ class PackingSlipController extends OrderAbstractController
     public function showPackingSlipAsPdfAction(Request $request, TransResRequest $transresRequest)
     {
         //$em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');

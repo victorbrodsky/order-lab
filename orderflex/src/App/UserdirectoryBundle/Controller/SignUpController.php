@@ -585,7 +585,8 @@ class SignUpController extends OrderAbstractController
 //            ////////////////////// EOF auth /////////////////////////
         }//if user is not created yet
 
-        $userAuth = $this->get('security.token_storage')->getToken()->getUser();
+        //$userAuth = $this->get('security.token_storage')->getToken()->getUser();
+        $userAuth = $this->getUser();
         if( $userAuth instanceof User) {
             //echo "already auth <br>";
         } else {

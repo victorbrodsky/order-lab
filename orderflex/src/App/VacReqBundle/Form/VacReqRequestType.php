@@ -372,7 +372,9 @@ class VacReqRequestType extends AbstractType
                 //echo "set org inst <br>";
                 $requiredInst = true;
             }
-            //$requiredInst = false; //testing
+            if( $this->params['roleAdmin'] ) {
+                $requiredInst = false;
+            }
 
             //$requiredInst = true;
             $institutionAttr = array('class' => 'combobox combobox-width vacreq-institution');
@@ -422,6 +424,11 @@ class VacReqRequestType extends AbstractType
             } else {
                 //$readonlyTentativeInstitution = false;
             }
+
+            if( $this->params['roleAdmin'] ) {
+                $requiredTentInst = false;
+            }
+
             //$requiredTentInst = true;
             $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution');
             if( $this->params['review'] ) {

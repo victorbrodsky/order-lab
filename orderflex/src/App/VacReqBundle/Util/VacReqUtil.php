@@ -3036,10 +3036,13 @@ class VacReqUtil
                     if( $approverStr ) {
                         $orgName = $institution . " (for review by " . $approverStr . ")";
                         if( $this->security->isGranted('ROLE_PLATFORM_ADMIN') || $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-                            $orgName = $institution->getId()." ".$institution . " (for review by " . $approverStr . ")";
+                            $orgName = "ID#".$institution->getId()." ".$institution . " (for review by " . $approverStr . ")";
                         }
                     } else {
                         $orgName = $institution;
+                        if( $this->security->isGranted('ROLE_PLATFORM_ADMIN') || $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                            $orgName = "ID#".$institution->getId()." ".$institution;
+                        }
                     }
                     //echo "orgName=".$orgName."<br>";
 

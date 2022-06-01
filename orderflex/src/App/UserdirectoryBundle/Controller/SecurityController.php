@@ -595,8 +595,9 @@ class SecurityController extends OrderAbstractController
         //return $response;
         ///////// EOF temp testing ///////////
 
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser(); //oli2002_@_local-user
+        //$em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.token_storage')->getToken()->getUser(); //oli2002_@_local-user
+        $user = $this->getUser();
 
         $res = "NOTOK";
 

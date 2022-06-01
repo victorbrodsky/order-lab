@@ -1299,7 +1299,8 @@ class InvoiceController extends OrderAbstractController
     public function downloadPdfAction(Request $request, Invoice $invoice)
     {
         //$em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
