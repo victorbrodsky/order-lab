@@ -252,7 +252,7 @@
 
                 {% endif %}
 
-                {% if is_granted('IS_AUTHENTICATED_ANONYMOUSLY') and not is_granted('ROLE_DASHBOARD_USER') %}
+                {% if is_granted('PUBLIC_ACCESS') and not is_granted('ROLE_DASHBOARD_USER') %}
                     {#Show login page link#}
                     <li><a href="{{ path(dashboard_sitename~'_login') }}">Log In</a></li>
                 {% endif %}

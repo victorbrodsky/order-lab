@@ -75,7 +75,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) { //ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) { //ROLE_USER, PUBLIC_ACCESS, ROLE_TRANSRES_REQUESTER
             //exit('NOT GRANTED: new project '.$specialtyStr);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }

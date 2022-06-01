@@ -3473,8 +3473,8 @@ class FormNodeUtil
     }
 
     public function createandLinkOtherIssueSection( $parentNode ) {
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
-        $em = $this->em;
+        //$username = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$em = $this->em;
         $count = null;
 
         //Create "Other Issue" form node for all "Other"

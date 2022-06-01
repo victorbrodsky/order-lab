@@ -798,6 +798,10 @@ class UserUtil {
             return;
         }
 
+        if( !$secTokenStorage->getToken() ) {
+            return;
+        }
+
         $user = $secTokenStorage->getToken()->getUser();
 
         $author = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());

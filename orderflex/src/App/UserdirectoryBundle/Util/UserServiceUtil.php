@@ -3313,7 +3313,7 @@ Pathology and Laboratory Medicine",
         $testing = true;
         $testing = false;
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         $newline =  "\n"; //"<br>\n";

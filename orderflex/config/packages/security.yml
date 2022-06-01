@@ -202,10 +202,14 @@ security:
             switch_user: true
             custom_authenticators:
                   authenticator: custom_guard_authenticator
+            form_login:
+                # "login" is the name of the route created previously
+                login_path: /scan/login
+                check_path: /scan/login
             logout:
                 path:   /scan/logout
                 target: /scan/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
             remember_me:
                 secret:      "%secret%"
@@ -219,10 +223,14 @@ security:
               switch_user: true
               custom_authenticators:
                   authenticator: custom_guard_authenticator
+              form_login:
+                  # "login" is the name of the route created previously
+                  login_path: /directory/login
+                  check_path: /directory/login
               logout:
                   path:   /directory/logout
                   target: /directory/login
-              #anonymous:  true
+              lazy:  true
               access_denied_url: /directory/access-requests/new/create
               remember_me:
                   secret:      "%secret%"
@@ -235,10 +243,14 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /fellowship-applications/login
+                check_path: /fellowship-applications/login
             logout:
                 path:   /fellowship-applications/logout
                 target: /fellowship-applications/login
             #anonymous:  true
+            lazy: true
             access_denied_url: /fellowship-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -252,10 +264,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /residency-applications/login
+                check_path: /residency-applications/login
             logout:
                 path:   /residency-applications/logout
                 target: /residency-applications/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /residency-applications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -268,10 +283,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /deidentifier/login
+                check_path: /deidentifier/login
             logout:
                 path:   /deidentifier/logout
                 target: /deidentifier/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /deidentifier/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -285,10 +303,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /vacation-request/login
+                check_path: /vacation-request/login
             logout:
                 path:   /vacation-request/logout
                 target: /vacation-request/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /vacation-request/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -302,10 +323,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /call-log-book/login
+                check_path: /call-log-book/login
             logout:
                 path:   /call-log-book/logout
                 target: /call-log-book/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /call-log-book/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -319,10 +343,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /critical-result-notifications/login
+                check_path: /critical-result-notifications/login
             logout:
                 path:   /critical-result-notifications/logout
                 target: /critical-result-notifications/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /critical-result-notifications/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -335,10 +362,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /translational-research/login
+                check_path: /translational-research/login
             logout:
                 path:   /translational-research/logout
                 target: /translational-research/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /translational-research/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -352,10 +382,13 @@ security:
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
+            form_login:
+                login_path: /dashboards/login
+                check_path: /dashboards/login
             logout:
                 path:   /dashboards/logout
                 target: /dashboards/login
-            #anonymous:  true
+            lazy:  true
             access_denied_url: /dashboards/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
@@ -366,7 +399,7 @@ security:
             pattern: ^/api
             #logout_on_user_change: true
             context: scan_auth
-            #anonymous:  true
+            lazy:  true
 #            remember_me:
 #                secret:      "%secret%"
 #                lifetime: 604800 # 1 week in seconds
@@ -382,10 +415,10 @@ security:
     access_control:
 
        ##################### Uncomment this line to use https for all pages ##########################
-#       - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: '%connection_channel%' }
+#       - { path: ^/, role: PUBLIC_ACCESS }
+#       - { path: ^/, role: [PUBLIC_ACCESS], requires_channel: '%connection_channel%' }
 #       - path: ^/
-#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
+#         roles: [PUBLIC_ACCESS,ROLE_USER,
 #                ROLE_TRANSRES_USER,
 #                ROLE_CALLLOG_USER,
 #                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
@@ -396,13 +429,13 @@ security:
 #         requires_channel: '%connection_channel%'
 
 
-#       - { path: ^/directory/login/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#       - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/directory/login/, role: PUBLIC_ACCESS }
+#       - { path: ^/, role: PUBLIC_ACCESS }
 
        ############################## local system user init ##############################
-       - { path: ^/directory/admin/first-time-login-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/first-time-user-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/admin/first-time-login-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^/first-time-user-generation-init/, role: PUBLIC_ACCESS }
+       - { path: ^/directory/first-time-user-generation-init/, role: PUBLIC_ACCESS }
 
        - { path: ^/access-requests/change-status/, role: ROLE_EDITOR }
 
@@ -419,22 +452,22 @@ security:
        - { path: ^/api/threads/, role: ROLE_USER }
 
        ################################# telephony verification ####################################
-       - { path: ^/directory/verify-mobile-code, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/verify-mobile-phone/account-request/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/verify-mobile-phone-account-request-ajax, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/verify-code-account-request-ajax, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/verify-mobile-code, role: PUBLIC_ACCESS }
+       - { path: ^/directory/verify-mobile-phone/account-request/, role: PUBLIC_ACCESS }
+       - { path: ^/directory/verify-mobile-phone-account-request-ajax, role: PUBLIC_ACCESS }
+       - { path: ^/directory/verify-code-account-request-ajax, role: PUBLIC_ACCESS }
 
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
-       - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-#       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-       - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/directory/login, role: PUBLIC_ACCESS }
+#       - { path: ^/directory/login, role: PUBLIC_ACCESS, requires_channel: https }
+       - { path: ^/directory/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/directory/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/directory/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/directory/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/directory/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/directory/reset-password, role: PUBLIC_ACCESS }
 
        - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
@@ -446,21 +479,21 @@ security:
        - { path: ^/directory/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
 
       #tree hierarchy: need for all users for public user access request page
-       - { path: ^/directory/tree-util/common/composition-tree/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/tree-util/common/composition-tree/, role: PUBLIC_ACCESS }
 
        #All other urls: make all /employees accessible only limited special roles
   #     - { path: ^/directory/, allow_if: "has_role('ROLE_USERDIRECTORY_OBSERVER') and !has_role('ROLE_USERDIRECTORY_UNAPPROVED') and !has_role('ROLE_USERDIRECTORY_BANNED')" }
        - { path: ^/directory/, role: ROLE_USERDIRECTORY_OBSERVER }
 
        ############################## SCAN SITE SETTINGS ##############################
-       - { path: ^/scan/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/scan/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/scan/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/scan/login, role: PUBLIC_ACCESS }
+       - { path: ^/scan/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/scan/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/scan/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/scan/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/scan/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/scan/reset-password, role: PUBLIC_ACCESS }
 
        - { path: ^/scan/admin/populate-all-lists-with-default-values, role: ROLE_SCANORDER_ADMIN }
        - { path: ^/scan/users/generate, role: ROLE_SCANORDER_ADMIN }
@@ -495,125 +528,125 @@ security:
 
 
       ############################## Fellowship Applications SITE SETTINGS ##############################
-       - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/fellowship-applications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
-       - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
 
        - { path: ^/fellowship-applications/, role: ROLE_FELLAPP_USER }
 
        ############################## Residency Applications SITE SETTINGS ##############################
-       - { path: ^/residency-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/residency-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/residency-applications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/login, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/residency-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^/residency-applications/download/, roles: ROLE_RESAPP_USER }
        - { path: ^/residency-applications/, role: ROLE_RESAPP_USER }
 
 
        ############################## Deidentifier SITE SETTINGS ##############################
-       - { path: ^/deidentifier/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/deidentifier/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/deidentifier/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/login, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/deidentifier/reset-password, role: PUBLIC_ACCESS }
        - { path: ^/deidentifier/, role: ROLE_DEIDENTIFICATOR_USER }
 #       - { path: ^/deidentifier/, allow_if: "has_role('ROLE_DEIDENTIFICATOR_USER') and !has_role('ROLE_DEIDENTIFICATOR_UNAPPROVED') and !has_role('ROLE_DEIDENTIFICATOR_BANNED')" }
   #    - { path: ^/deidentifier/, allow_if: "is_granted('ROLE_DEIDENTIFICATOR_USER')" }
 
 
        ############################## VacReq SITE SETTINGS ##############################
-       - { path: ^/vacation-request/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/vacation-request/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/vacation-request/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/login, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/vacation-request/reset-password, role: PUBLIC_ACCESS }
        - { path: ^/vacation-request/, role: ROLE_VACREQ_USER }
 
       ############################## CallLog SITE SETTINGS ##############################
-       - { path: ^/call-log-book/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/call-log-book/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/call-log-book/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/login, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/call-log-book/reset-password, role: PUBLIC_ACCESS }
        - { path: ^/call-log-book/, role: ROLE_CALLLOG_USER }
-#       - { path: ^/call-log-book/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/call-log-book/, role: PUBLIC_ACCESS }
 
       ############################## Crn SITE SETTINGS ##############################
-       - { path: ^/critical-result-notifications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/critical-result-notifications/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/critical-result-notifications/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/login, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/critical-result-notifications/reset-password, role: PUBLIC_ACCESS }
        - { path: ^/critical-result-notifications/, role: ROLE_CRN_USER }
 
       ############################## TranslationalResearch SITE SETTINGS ##############################
-       - { path: ^/translational-research/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/translational-research/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/login, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/translational-research/reset-password, role: PUBLIC_ACCESS }
 
 #       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
 #       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
 #       - { path: ^/translational-research/project/new, role: ROLE_TRANSRES_USER }
-       - { path: ^/translational-research/project/new, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/project/new, role: PUBLIC_ACCESS }
 #       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
 
-       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
 
-       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
+       - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
 
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
 
 
        ############################## Dashboard SITE SETTINGS ##############################
-       - { path: ^/dashboards/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/public, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/single-chart/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/dashboards/topic/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/dashboards/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/login, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/public, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/single-chart/, role: PUBLIC_ACCESS }
+       - { path: ^/dashboards/topic/, role: PUBLIC_ACCESS }
        - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
-#       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/dashboards, role: PUBLIC_ACCESS }
       #https://stackoverflow.com/questions/21020550/symfony-access-control-for-site-root/21023494
 #       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
-#       - { path: ^/dashboards, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/dashboards, role: PUBLIC_ACCESS }
 
 
 

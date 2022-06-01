@@ -1307,7 +1307,7 @@ class InvoiceController extends OrderAbstractController
 
         //download: user or localhost
         //$user = $this->get('security.token_storage')->getToken()->getUser();
-        //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually
+        //download link can be accessed by a console as localhost with role PUBLIC_ACCESS, so simulate login manually
         if( !($user instanceof User) ) {
             $firewall = 'ldap_translationalresearch_firewall';
             $systemUser = $userSecUtil->findSystemUser();

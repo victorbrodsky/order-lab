@@ -68,6 +68,10 @@ class UserSecurityUtil {
 
     public function isCurrentUser( $id ) {
 
+        if( !$this->secToken->getToken() ) {
+            return false;
+        }
+
         $user = $this->secToken->getToken()->getUser();
 
         $entity = $this->em->getRepository('AppUserdirectoryBundle:User')->find($id);
@@ -228,10 +232,12 @@ class UserSecurityUtil {
         //get user from DB?
 
         if( $user == null ) {
-            $user = $this->secToken->getToken()->getUser();
+            if( $this->secToken->getToken() ) {
+                $user = $this->secToken->getToken()->getUser();
+            }
         }
 
-//        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
+//        if( $this->secAuth->isGranted('PUBLIC_ACCESS') )
 //            return false;
 
         if( !is_object($user) ) {
@@ -2447,17 +2453,19 @@ class UserSecurityUtil {
         }
 
         //show login page, but not allowed when authenticated and visit the not accessible sites
-        $user = $this->secToken->getToken()->getUser();
-        //exit("user=".$user);
-        if( $user && $user instanceof User ) {
-            if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-                //echo "admin <br>";
+        if( $this->secToken->getToken() ) {
+            $user = $this->secToken->getToken()->getUser();
+            //exit("user=".$user);
+            if ($user && $user instanceof User) {
+                if ($this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                    //echo "admin <br>";
+                    return true;
+                }
+            }
+            if ($user && !($user instanceof User)) {
+                //anon. user -> not logged in (login page)
                 return true;
             }
-        }
-        if( $user && !($user instanceof User) ) {
-            //anon. user -> not logged in (login page)
-            return true;
         }
 
         return false;
@@ -3077,7 +3085,10 @@ class UserSecurityUtil {
             return NULL;
         }
 
-        $user = $this->secToken->getToken()->getUser();
+        $user = NULL;
+        if( $this->secToken->getToken() ) {
+            $user = $this->secToken->getToken()->getUser();
+        }
 
         $entity = new Roles();
 

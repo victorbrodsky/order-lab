@@ -64,7 +64,8 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $route = $request->get('_route');
         //echo "route".$route."<br>";
@@ -758,7 +759,8 @@ class ResAppController extends OrderAbstractController {
         //exit("echo=".$uri);
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $logger = $this->container->get('logger');
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -775,7 +777,7 @@ class ResAppController extends OrderAbstractController {
         //download: user or localhost
         if( $routeName == 'resapp_download' ) {
             //$user = $this->get('security.token_storage')->getToken()->getUser();
-            //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
+            //download link can be accessed by a console as localhost with role PUBLIC_ACCESS, so simulate login manually           
             if( !($user instanceof User) ) {
                 $firewall = 'ldap_resapp_firewall';               
                 $systemUser = $userSecUtil->findSystemUser();
@@ -859,7 +861,8 @@ class ResAppController extends OrderAbstractController {
         }
 
         $resappUtil = $this->container->get('resapp_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //$user = new User();
         $addobjects = true;
@@ -920,7 +923,8 @@ class ResAppController extends OrderAbstractController {
 
     public function getShowParameters($routeName, $entity) {
              
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 //        echo "user=".$user."<br>";
 //        if( !($user instanceof User) ) {
@@ -1301,7 +1305,8 @@ class ResAppController extends OrderAbstractController {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
 
         //user who has the same res type can view or edit
@@ -1484,7 +1489,8 @@ class ResAppController extends OrderAbstractController {
     }
     private function createResAppEditForm( ResidencyApplication $entity, $cycle )
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $resappUtil = $this->container->get('resapp_util');
 
 //        echo "training1 count=".count($entity->getTrainings())."<br>";
@@ -1690,7 +1696,8 @@ class ResAppController extends OrderAbstractController {
 
         //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $residencyApplication = new ResidencyApplication($user);
 
@@ -2023,7 +2030,8 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         $logger = $this->container->get('logger');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
@@ -2143,7 +2151,8 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
 
@@ -2258,7 +2267,8 @@ class ResAppController extends OrderAbstractController {
         }
 
         $resappUtil = $this->container->get('resapp_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $cycle = "show";
 
@@ -2333,7 +2343,8 @@ class ResAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application Interview by id='.$id);
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if the interviewer is the same as current user
         $interviewer = $interview->getInterviewer();
@@ -2426,7 +2437,8 @@ class ResAppController extends OrderAbstractController {
 
         $interview = $em->getRepository('AppResAppBundle:Interview')->find($id);
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $resapp = $interview->getResapp();
         $applicant = $resapp->getUser();
         $interviewer = $interview->getInterviewer();
@@ -2851,7 +2863,8 @@ class ResAppController extends OrderAbstractController {
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);

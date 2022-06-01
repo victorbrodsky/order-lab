@@ -190,7 +190,10 @@ class UserDownloadUtil {
             $this->headerSize = $sheetSize;
         }
 
-        $author = $this->secTokenStorage->getToken()->getUser();
+        $author = NULL;
+        if( $this->secTokenStorage->getToken() ) {
+            $author = $this->secTokenStorage->getToken()->getUser();
+        }
 
         $row = 1;
         //$withheader = false;
