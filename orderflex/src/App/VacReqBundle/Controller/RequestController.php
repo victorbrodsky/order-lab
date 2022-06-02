@@ -1371,7 +1371,8 @@ class RequestController extends OrderAbstractController
 
 
 
-    public function createRequestForm( $entity, $cycle, $request ) {
+    public function createRequestForm( $entity, $cycle, $request )
+    {
 
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
@@ -1386,12 +1387,12 @@ class RequestController extends OrderAbstractController
         $roleCarryOverApprover = false;
 
         $admin = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')) {
             $admin = true;
         }
 
         $roleApprover = false;
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if ($this->get('security.authorization_checker')->isGranted("changestatus", $entity)) {
             $roleApprover = true;
         }
 
@@ -1400,16 +1401,16 @@ class RequestController extends OrderAbstractController
         //get submitter groups: VacReqRequest, create
         $tentativeInstitutions = null;
         $groupParams = array();
-        if( $requestType->getAbbreviation() == "carryover" ) {
+        if ($requestType->getAbbreviation() == "carryover") {
 
             //tentative institutions
             $tentativeGroupParams = array();
-            if( $entity->getUser() ) {
+            if ($entity->getUser()) {
                 $userExecutiveSubmitter = $entity->getUser()->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
             } else {
                 $userExecutiveSubmitter = $user->hasRole("ROLE_VACREQ_SUBMITTER_EXECUTIVE");
             }
-            if( !$userExecutiveSubmitter ) {
+            if (!$userExecutiveSubmitter) {
                 $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
                 if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
                     $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
@@ -1418,45 +1419,59 @@ class RequestController extends OrderAbstractController
             }
 
             //carry-over institution
-            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
 
             $roleCarryOverApprover = false;
-            if( $this->get('security.authorization_checker')->isGranted("changestatus-carryover", $entity) ) {
+            if ($this->get('security.authorization_checker')->isGranted("changestatus-carryover", $entity)) {
                 $roleCarryOverApprover = true;
             }
 
         } else {
-            $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
         }
 
-        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-        //echo "1 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user, $groupParams);
+//        echo "1 organizationalInstitutions count=" . count($organizationalInstitutions) . "<br>";
+//        foreach ($organizationalInstitutions as $organizationalInstitution) {
+//            echo "1 organizationalInstitution=" . $organizationalInstitution . "<br>";
+//        }
 
         //include this request institution to the $organizationalInstitutions array
-        $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
-        //echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+        $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup($entity, $organizationalInstitutions);
+//        echo "2 organizationalInstitutions count=" . count($organizationalInstitutions) . "<br>";
+//        foreach ($organizationalInstitutions as $organizationalInstitution) {
+//            echo "2 organizationalInstitution=" . $organizationalInstitution . "<br>";
+//        }
 
         //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
         //set $organizationalInstitutions to empty if entity has only tentative institution and does not have org institution
-        if( $requestType->getAbbreviation() == "carryover" ) {
+        if( $requestType->getAbbreviation() == "carryover") {
             if( $entity->getTentativeInstitution() && !$entity->getInstitution() ) {
                 $organizationalInstitutions = array();
             }
         }
 
         //include this request institution to the $tentativeInstitutions array
-        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
+        $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup($entity, $tentativeInstitutions, "tentativeInstitution");
 
         //testing Institutions
-//        dump($tentativeInstitutions);
-//        foreach( $tentativeInstitutions as $tentativeInstitution ) {
-//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+//        if ($tentativeInstitutions) {
+//            //dump($tentativeInstitutions);
+//            foreach ($tentativeInstitutions as $tentativeInstitution) {
+//                echo "tentativeInstitution=" . $tentativeInstitution . "<br>";
+//            }
+//        } else {
+//            echo "NO tentativeInstitution<br>";
 //        }
-//        foreach( $organizationalInstitutions as $orginstitution ) {
-//            echo "orginstitution=".$orginstitution."<br>";
+//        if( $organizationalInstitutions ) {
+//            foreach ($organizationalInstitutions as $orginstitution) {
+//                echo "orginstitution=" . $orginstitution . "<br>";
+//            }
+//        } else {
+//            echo "NO orginstitution<br>";
 //        }
         //exit('1');
 

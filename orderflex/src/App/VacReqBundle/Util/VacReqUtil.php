@@ -5008,11 +5008,11 @@ class VacReqUtil
 
         if( $institutionType == "institution" ) {
             $institution = $entity->getInstitution();
-            //echo "institution <br>";
+            //echo "add institution=$institution<br>";
         }
         if( $institutionType == "tentativeInstitution" ) {
             $institution = $entity->getTentativeInstitution();
-            //echo "tentativeInstitution <br>";
+            //echo "add tentativeInstitution=$institution <br>";
         }
 
         //if( $organizationalInstitutions && $institution ) { //$organizationalInstitutions &&

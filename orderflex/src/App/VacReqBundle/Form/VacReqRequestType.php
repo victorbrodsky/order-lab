@@ -359,14 +359,17 @@ class VacReqRequestType extends AbstractType
         $tentativeInstitutionLabel = "Tentative Approval:";
         if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
             $entity = $this->params['entity'];
-            if( !$entity->getInstitution() ) {
+            if( count($this->params['organizationalInstitutions']) > 0 || $entity->getInstitution() ) {
+                //show Org Group (Institution)
+            } else {
                 $showInstitution = false;
-                $tentativeInstitutionLabel = "Organizational Group:";
+                //$tentativeInstitutionLabel = "Organizational Group:";
+                //$tentativeInstitutionLabel = "Organizational Group (Final Approval):"; //testing
+                $tentativeInstitutionLabel = "Tentative and Final Approval:"; //testing
             }
         }
 
         if( $showInstitution ) {
-            //organizationalInstitutions
             $requiredInst = false;
             if (count($this->params['organizationalInstitutions']) == 1) {
                 //echo "set org inst <br>";

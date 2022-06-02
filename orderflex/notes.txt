@@ -1068,6 +1068,14 @@ grep --exclude-dir={.cache,.symfony,scanorder*} -rnw './' -e '/opt/remi/php74/ro
 remove rh-php74.sh in /etc/profile.d
 
 ###!!! DO NOT: sudo yum -y update => it will result to the default php 7 and postgresql 9
+If updated and to restore php8:
+#Disable loading the old PHP 7.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/php74-php.conf /etc/httpd/conf.d/php74-php.off
+mv /etc/httpd/conf.modules.d/15-php74-php.conf /etc/httpd/conf.modules.d/15-php74-php.off
+
+//List available repositories on the system:
+sudo yum repolist -y
+subscription-manager register --auto-attach
 
 ########## Postgresql upgrade Rhel ##########
 0a) Shutdown apache server
@@ -1081,18 +1089,20 @@ pg_dump --file scanorder_26may2022.sql --username "symfony" --no-password --verb
 
 1. As root: Install the PostgreSQL 14 Packages
 sudo yum install postgresql14-server.x86_64  postgresql14.x86_64  postgresql14-contrib.x86_64
+sudo yum install postgresql14 postgresql14-server postgresql14-contrib
+sudo yum install postgresql14-contrib
 //On Live: https://computingforgeeks.com/how-to-install-postgresql-14-centos-rhel-7/
 //add PostgreSQL repository to our CentOS 7 / RHEL 7:
 sudo yum -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum reinstall https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 sudo yum -y install https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-7-x86_64/postgresql14-contrib-14.3-1PGDG.rhel7.x86_64.rpm
-//List available repositories on the system:
-sudo yum repolist -y
 
 2. Initialize PostgreSQL 14 database
 /usr/pgsql-14/bin/postgresql-14-setup initdb
 
 Add to /var/lib/pgsql/14/data/pg_hba.conf: host    all             all        157.139.46.96/32             md5
+Live: host    all             all        157.139.226.124/32             md5
+Add to /var/lib/pgsql/14/data/pg_hba.conf (for pgAdmin): host    all             all             0.0.0.0/0            md5
 Change in /var/lib/pgsql/14/data/postgresql.conf: #port = 5432
 Change in /var/lib/pgsql/14/data/postgresql.conf: listen_addresses='*'
 
@@ -1144,5 +1154,12 @@ cat /etc/redhat-release => Red Hat Enterprise Linux Server release 7.9 (Maipo)
 
 Upgrade Symfony: https://fossies.org/linux/symfony/UPGRADE-5.4.md
 
+systemctl stop httpd.service
+systemctl start httpd.service
+systemctl restart httpd.service
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ stop
+/usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ start
+sudo systemctl status postgresql-14
+sudo systemctl restart postgresql-14
 
-
+Configure /var/lib/pgsql/14/data/pg_hba.conf for pgAdmin: host all all all md5
