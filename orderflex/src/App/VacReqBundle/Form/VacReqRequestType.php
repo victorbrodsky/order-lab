@@ -331,17 +331,34 @@ class VacReqRequestType extends AbstractType
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
             $userAttr = array('class' => 'combobox combobox-width');
+
+//            if( $this->params['roleAdmin'] ) {
+//                echo "roleAdmin <br>";
+//            } else {
+//                echo "not roleAdmin <br>";
+//            }
+//            if( $this->params['roleApprover'] ) {
+//                echo "roleApprover <br>";
+//            } else {
+//                echo "not roleApprover <br>";
+//            }
+
+            //readonly if not admin or not roleApprover
+            //if roleAdmin or roleApprover => readonly = false :^ !roleAdmin and !roleApprover => readonly = true
+            if( $this->params['roleAdmin'] === false && $this->params['roleApprover'] === false ) {
+                $userAttr['readonly'] = true;
+            }
+
             if( $this->params['review'] ) {
                 $userAttr['readonly'] = true;
             }
+
             $builder->add('user', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Person Away:",
                 'required' => true,
                 'multiple' => false,
-                //'choice_label' => 'name',
                 'attr' => $userAttr,    //array('class' => 'combobox combobox-width'),
-                //'disabled' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")

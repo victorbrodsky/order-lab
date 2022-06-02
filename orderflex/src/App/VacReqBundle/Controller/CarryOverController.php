@@ -360,6 +360,13 @@ class CarryOverController extends OrderAbstractController
         }
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////
+
+        $step = 'first-step';
+        //if org inst is null => always second step
+        if( !$entity->getInstitution() ) {
+            $step = 'second-step';
+        }
+
         //$withRedirect=true; $update=true;
         //main logic to change status and send emails
         $action = $vacreqUtil->processChangeStatusCarryOverRequest(
@@ -369,7 +376,7 @@ class CarryOverController extends OrderAbstractController
             $request,
             true,           //$withRedirect
             true,           //$update
-            'second-step'  //$step
+            $step           //$step
         ); //vacreq_status_change_carryover, vacreq_status_email_change_carryover
 
         if( $action == 'vacreq_review' ) {

@@ -600,7 +600,7 @@ class RequestController extends OrderAbstractController
                     }
                     $newStatus = $entity->getStatus();
                     //echo "$originalStatus=?".$newStatus."<br>"; //testing
-                    if(  $newStatus && $originalStatus != $newStatus ) {
+                    if( $newStatus && $originalStatus != $newStatus ) {
                         $status = $newStatus;
                         $changedStatusCount++;
                         $step = 'second-step';
