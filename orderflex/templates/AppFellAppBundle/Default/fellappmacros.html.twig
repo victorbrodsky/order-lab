@@ -125,11 +125,13 @@
             {#avatar form modal#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
                 {% if cycle == "download" %}
-                    {% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}
-                    <img src="{{ avatarPath }}"
-                         alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"
-                         style="max-width: 250px;"
-                    >
+                    {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
+                    {#<img src="{{ avatarPath }}"#}
+                         {#alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"#}
+                         {#style="max-width: 250px;"#}
+                    {#>#}
+
+                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
                 {% else %}
                     {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
                     {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
