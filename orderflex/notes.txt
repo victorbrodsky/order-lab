@@ -468,6 +468,7 @@ Fellapp:
 "status":127,"stdout":"/usr/bin/xvfb-run: line 181: wkhtmltopdf: command not found\n","stderr":""} []
 
 /usr/bin/xvfb-run /usr/local/bin/wkhtmltopdf
+/usr/bin/xvfb-run -a /usr/local/bin/wkhtmltopdf
 
 [2020-04-27 19:00:14] console.ERROR: Error thrown while running command "cron:importfellapp --env=prod".
 Message: "The file '/srv/order-lab/orderflex/public/Uploaded/fellapp/Reports/temp_1510/application_ID1510.pdf'
