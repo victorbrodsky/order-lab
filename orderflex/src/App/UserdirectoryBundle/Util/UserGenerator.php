@@ -47,7 +47,8 @@ use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Container\ContainerInterface;
+#use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UserGenerator {
 

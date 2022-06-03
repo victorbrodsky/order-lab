@@ -38,8 +38,6 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -57,7 +55,6 @@ class ReportGenerator {
 
     protected $em;
     protected $container;
-    protected $session;
     //protected $templating;
     protected $uploadDir;
     protected $processes;
@@ -68,10 +65,9 @@ class ReportGenerator {
     //protected $env;
 
     //public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, SessionInterface $session ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
-        $this->session = $session;
         //$this->templating = $templating;
 
         $this->uploadDir = 'Uploaded';

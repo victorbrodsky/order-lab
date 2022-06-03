@@ -62,29 +62,4 @@ class TestController extends TestBaseController
             'title' => "TestController"
         );
     }
-
-//    //Check for auto-injection deprecation notice
-//    //1) Create OrderAbstarctController extends OrderAbstractController
-//    //2) Override getSubscribedServices adding util services
-//    //3) replace in controller $this->get by $this->container->get
-//    public static function getSubscribedServices()
-//    {
-//        return [
-//            'router' => '?'.RouterInterface::class,
-//            'request_stack' => '?'.RequestStack::class,
-//            'http_kernel' => '?'.HttpKernelInterface::class,
-//            'serializer' => '?'.SerializerInterface::class,
-//            'session' => '?'.SessionInterface::class,
-//            'security.authorization_checker' => '?'.AuthorizationCheckerInterface::class,
-//            'twig' => '?'.Environment::class,
-//            'doctrine' => '?'.ManagerRegistry::class,
-//            'form.factory' => '?'.FormFactoryInterface::class,
-//            'security.token_storage' => '?'.TokenStorageInterface::class,
-//            'security.csrf.token_manager' => '?'.CsrfTokenManagerInterface::class,
-//            'parameter_bag' => '?'.ContainerBagInterface::class,
-//            'message_bus' => '?'.MessageBusInterface::class,
-//            'messenger.default_bus' => '?'.MessageBusInterface::class,
-//            'calllog_util' => '?'.CallLogUtil::class,
-//        ];
-//    }
 }

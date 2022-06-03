@@ -26,9 +26,7 @@
 namespace App\UserdirectoryBundle\Services;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-//use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -38,15 +36,13 @@ class SessionIdleHandler
 {
 
     protected $container;
-    protected $session;
     protected $router;
     protected $maxIdleTime;
     protected $em;
 
-    public function __construct($container, SessionInterface $session, RouterInterface $router, $em )
+    public function __construct($container, RouterInterface $router, $em )
     {
         $this->container = $container;
-        $this->session = $session;
         $this->router = $router;
         $this->em = $em;
 
@@ -56,6 +52,9 @@ class SessionIdleHandler
 
     public function onKernelRequest(RequestEvent $event)
     {
+        //echo "maxIdleTime=".$this->maxIdleTime."<br>";exit('111');
+        $request = $event->getRequest();
+        $session = $request->getSession();
 
         if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
             return;
@@ -64,37 +63,39 @@ class SessionIdleHandler
         //*************** set url for redirection ***************//
         $dontSetRedirect = $this->setSessionLastRoute( $event );
         if( $dontSetRedirect > 0 ) {
+            //exit('$dontSetRedirect');
             return;
         }
         //*************** end of set url for redirection ***************//
 
         if( $this->maxIdleTime > 0 ) {
 
-            $this->session->start();
+            $session->start();
             
-        if( 0 ) {
-                //Don't use getLastUsed(). But it is the same until page is closed.
-                $lapse = time() - $this->session->getMetadataBag()->getLastUsed();
+            if( 0 ) {
+                    //Don't use getLastUsed(). But it is the same until page is closed.
+                    $lapse = time() - $session->getMetadataBag()->getLastUsed();
 
-                //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
-                //echo $msg;
-                //exit();
+                    //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
+                    //echo $msg;
+                    //exit();
 
-        } else {
-                //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
-                $lastRequest = $this->session->get('lastRequest');
-                //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
-                //echo "Handler: pingCheck=".$this->session->get('pingCheck')."<br>";
-                if( !$lastRequest ) {
-                    $logger = $this->container->get('logger');
-                    $logger->notice("onKernelRequest: set lastRequest to ".time());
-                    $this->session->set('lastRequest',time());
-                    //$this->session->set('pingCheck','Yes!');
-                }
+            } else {
+                    //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
+                    $lastRequest = $session->get('lastRequest');
+                    //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
+                    //echo "Handler: pingCheck=".$session->get('pingCheck')."<br>";
+                    //exit('111');
+                    if( !$lastRequest ) {
+                        $logger = $this->container->get('logger');
+                        $logger->notice("onKernelRequest: set lastRequest to ".time());
+                        $session->set('lastRequest',time());
+                        //$session->set('pingCheck','Yes!');
+                    }
 
-                $lapse = time() - $this->session->get('lastRequest');
-                $this->session->set('lastRequest',time());
-        }
+                    $lapse = time() - $session->get('lastRequest');
+                    $session->set('lastRequest',time());
+            }
 
             if ($lapse > $this->maxIdleTime) {
 

@@ -89,7 +89,7 @@ class AccessRequestController extends OrderAbstractController
 
         if( $userSecUtil->isSiteAccessible($this->siteName) === false ) {
             $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 "This site is currently not accessible. Please try it later. If you have any questions, please contact the ".$systemEmail."."
             );
@@ -156,7 +156,7 @@ class AccessRequestController extends OrderAbstractController
                 return $this->redirect( $this->generateUrl($lastRoute) );
 
             } else {
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'notice',
                     "This site has not gone live yet."
                 );
@@ -181,7 +181,7 @@ class AccessRequestController extends OrderAbstractController
             //relogin the user, because when admin approves accreq, the user must relogin to update the role in security context. Or update security context (How?)
             //return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'_login'));
 
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
                 "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
@@ -194,7 +194,7 @@ class AccessRequestController extends OrderAbstractController
             "banned" => $this->roleBanned,
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$this->siteName,$roles);
+        return $this->accessRequestCreateNew($request,$user->getId(),$this->siteName,$roles);
     }
 
 
@@ -220,7 +220,7 @@ class AccessRequestController extends OrderAbstractController
      * @Route("/access-requests/new", name="employees_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
-    public function accessRequestCreateAction()
+    public function accessRequestCreateAction(Request $request)
     {
 
         $sitename = $this->siteName;
@@ -238,7 +238,7 @@ class AccessRequestController extends OrderAbstractController
             "banned" => $this->roleBanned,
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$sitename,$roles);
+        return $this->accessRequestCreateNew($request,$user->getId(),$sitename,$roles);
     }
 
 
@@ -247,7 +247,7 @@ class AccessRequestController extends OrderAbstractController
     // 2) user has accreq but it was declined
     // 3) user has role banned
     // 4) user has approved accreq, but user has ROLE_UNAPPROVED
-    public function accessRequestCreateNew($id,$sitename,$roles) {
+    public function accessRequestCreateNew($request,$id,$sitename,$roles) {
 
         //echo "create new accreq <br>";
 
@@ -293,7 +293,7 @@ class AccessRequestController extends OrderAbstractController
         $userSecUtil = $this->get('user_security_utility');
         if( $userSecUtil->hasGlobalUserRole($roles['banned'],$user) ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'warning',
                 "You were banned to visit this site."."<br>".
                 "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
@@ -304,7 +304,7 @@ class AccessRequestController extends OrderAbstractController
         // Case 4: user has approved accreq, but user has ROLE_UNAPPROVED
         if( $userAccessReq && $userAccessReq->getStatus() == AccessRequest::STATUS_APPROVED && $userSecUtil->hasGlobalUserRole($roles['unnaproved'],$user) ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
                 "Please contact site system administrator ".$this->getParameter('default_system_email')."<br>".
@@ -498,7 +498,7 @@ class AccessRequestController extends OrderAbstractController
         if( $userAccessReq ) {
 
             if( $userAccessReq->getStatus() == AccessRequest::STATUS_APPROVED ) {
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'warning',
                     "The status of your request is " . $userAccessReq->getStatusStr() . ". " .
                     "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
@@ -656,7 +656,7 @@ class AccessRequestController extends OrderAbstractController
         //$request = $this->get('request');
         $session = $request->getSession();
         if( $session->get('sitename') == $sitename ) {
-            $this->get('session')->getFlashBag()->add(
+            $session->getFlashBag()->add(
                 'notice',
                 $text
             );
@@ -676,7 +676,7 @@ class AccessRequestController extends OrderAbstractController
             //TODO: show verify button on the request_confirmation.html.twig page
             //redirect to verify mobile phone number if isRequireVerifyMobilePhone
             if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
-                $this->get('session')->getFlashBag()->add(
+                $session->getFlashBag()->add(
                     'notice',
                     $text
                 );
@@ -1533,7 +1533,7 @@ class AccessRequestController extends OrderAbstractController
 
         if( count($users) == 0 ) {
             $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($keytype);
-            $this->get('session')->getFlashBag()->set(
+            $request->getSession()->getFlashBag()->set(
                 'notice',
                 'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".
                 "Please use the 'Create New User' form to add a new user."
@@ -1836,7 +1836,7 @@ class AccessRequestController extends OrderAbstractController
 
             $msg = "Manually created user $user has been reviewed. Status: ".$lockedStr;
 
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $msg
             );
@@ -1925,7 +1925,7 @@ class AccessRequestController extends OrderAbstractController
 
         $msg = "Manually created user $user has been approved. Status: ".$lockedStr;
 
-        $this->get('session')->getFlashBag()->add(
+        $request->getSession()->getFlashBag()->add(
             'notice',
             $msg
         );

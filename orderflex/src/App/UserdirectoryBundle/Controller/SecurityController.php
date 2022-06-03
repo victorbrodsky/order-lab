@@ -28,8 +28,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
+//use Symfony\Component\HttpFoundation\Session\Session;
+//use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -176,7 +176,7 @@ class SecurityController extends OrderAbstractController
         $formArr['environment'] = $environment;
         $formArr['inputStyle'] = "";
         if( $environment != 'live' ) {
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'pnotify-error',
                 "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
             );

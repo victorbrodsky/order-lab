@@ -92,7 +92,7 @@ class ScanAccessRequestController extends AccessRequestController
      * @Route("/access-requests/new", name="scan_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
-    public function accessRequestCreateAction()
+    public function accessRequestCreateAction(Request $request)
     {
 
         $sitename = $this->getParameter('scan.sitename');

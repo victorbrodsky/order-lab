@@ -58,9 +58,9 @@ class DeidentifierAccessRequestController extends AccessRequestController
      * @Route("/access-requests/new", name="deidentifier_access_request_new", methods={"GET"})
      * @Template("AppUserdirectoryBundle/AccessRequest/access_request.html.twig")
      */
-    public function accessRequestCreateAction()
+    public function accessRequestCreateAction(Request $request)
     {
-        return parent::accessRequestCreateAction();
+        return parent::accessRequestCreateAction($request);
     }
 
     /**

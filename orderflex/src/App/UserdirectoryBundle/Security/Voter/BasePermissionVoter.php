@@ -26,7 +26,8 @@ namespace App\UserdirectoryBundle\Security\Voter;
 
 
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Container\ContainerInterface;
+//use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

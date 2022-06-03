@@ -36,7 +36,7 @@ services:
         public: true
         class: App\ResAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
-        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@session"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_googlesheetmanagement:
         autowire: true
@@ -58,7 +58,7 @@ services:
         autoconfigure: true
         public: true
         class: App\ResAppBundle\Util\PdfUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@session"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     resapp_role_voter:

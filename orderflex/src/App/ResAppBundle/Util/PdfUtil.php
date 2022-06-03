@@ -38,16 +38,10 @@ use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
-//use Symfony\Component\Process\Exception\ProcessFailedException;
-//use Symfony\Component\Process\Process as SymfonyProcess;
 
 use App\ResAppBundle\Entity\ReportQueue;
 use App\ResAppBundle\Entity\Process;
@@ -60,15 +54,15 @@ class PdfUtil {
 
     protected $em;
     protected $container;
-    protected $session;
+    //protected $session;
     protected $uploadDir;
 
 
     //public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, SessionInterface $session ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->em = $em;
         $this->container = $container;
-        $this->session = $session;
+        //$this->session = $session;
 
         $this->uploadDir = 'Uploaded';
 
