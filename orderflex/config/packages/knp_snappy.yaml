@@ -17,10 +17,10 @@ knp_snappy:
             load-error-handling: ignore
             load-media-error-handling: ignore
     image:
-          enabled:    true
-          binary:     '%wkhtmltopdfpath%'
-          options:    []
-          options:
-              javascript-delay: 18000 #9000    #Wait some milliseconds for javascript finish (default 200)
-              load-error-handling: ignore
-              load-media-error-handling: ignore
+        enabled:    true
+        binary:     '%wkhtmltopdfpath%'
+        #options:    []
+        options:
+            javascript-delay: 18000 #9000    #Wait some milliseconds for javascript finish (default 200)
+            load-error-handling: ignore
+            load-media-error-handling: ignore
