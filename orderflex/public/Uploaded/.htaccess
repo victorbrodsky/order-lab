@@ -43,6 +43,7 @@
 #live server
 #Allow from 157.139.226.124
 
+
 Order Allow,Deny
 Allow from localhost
 Allow from 127.0.0.1
