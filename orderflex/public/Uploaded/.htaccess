@@ -45,7 +45,7 @@
 
 
 Order Allow,Deny
-Allow from localhost
+#Allow from localhost
 Allow from 127.0.0.1
 Allow from 157.139.226.86
 Allow from 157.139.226.124
