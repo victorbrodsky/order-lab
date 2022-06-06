@@ -45,7 +45,7 @@ class DashboardLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
+        if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 
@@ -95,7 +95,7 @@ class DashboardLoggerController extends LoggerController
      */
     public function generationLogAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("create", "Accession") ){
+        if( false == $this->isGranted("create", "Accession") ){
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 
@@ -156,7 +156,7 @@ class DashboardLoggerController extends LoggerController
      */
     public function myGenerationLogAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_DEIDENTIFICATOR_USER") ){
+        if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_USER") ){
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 
@@ -184,7 +184,7 @@ class DashboardLoggerController extends LoggerController
         //exit('1');
 
         //a user without Admin level role (ROLE_DEIDENTIFICATOR_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
+        if( false == $this->isGranted("ROLE_DEIDENTIFICATOR_ADMIN") ){
             foreach( $users as $thisUserId ) {
                 //echo "thisUserId=".$thisUserId."<br>";
                 if( $thisUserId != $user->getId() ) {

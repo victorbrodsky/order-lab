@@ -118,7 +118,7 @@ class DefaultController extends OrderAbstractController
 //     */
 //    public function indexAction()
 //    {
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+//        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 //
@@ -165,7 +165,7 @@ class DefaultController extends OrderAbstractController
     }
     public function viewDiskFileMethod($filename,$bundleFileName) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+        if( false == $this->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -308,7 +308,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/download-spreadsheet/", name="vacreq_download_spreadsheet", methods={"POST"})
      */
     public function downloadExcelAction( Request $request ) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -349,7 +349,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/download-summary-report-spreadsheet/", name="vacreq_download_summary_report_spreadsheet", methods={"GET","POST"})
      */
     public function downloadSummaryReportExcelAction( Request $request ) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -388,7 +388,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")
      */
     public function multipleCarryOverRequestsAction( Request $request ) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -501,7 +501,7 @@ class DefaultController extends OrderAbstractController
      */
     public function diffCarryOverDaysAction( Request $request )
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER')) {
+        if (false == $this->isGranted('ROLE_VACREQ_USER')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 

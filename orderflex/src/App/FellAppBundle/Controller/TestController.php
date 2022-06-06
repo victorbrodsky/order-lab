@@ -114,7 +114,7 @@ class TestController extends OrderAbstractController
 
         //exit("not allowed");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
@@ -187,7 +187,7 @@ class TestController extends OrderAbstractController
             exit("googleFileAction: not allowed for live server");
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
@@ -247,7 +247,7 @@ class TestController extends OrderAbstractController
             exit("testLatestReferenceLetterAction: not allowed for live server");
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
@@ -279,7 +279,7 @@ class TestController extends OrderAbstractController
             exit("testVerifyImportAction: not allowed for live server");
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
@@ -307,7 +307,7 @@ class TestController extends OrderAbstractController
             exit("testPopulateFellAppAction: not allowed for live server");
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 

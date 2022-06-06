@@ -25,7 +25,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function indexAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -66,7 +66,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function stateDefaultReviewerIndexAction(Request $request, $stateStr, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -132,7 +132,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function newAction(Request $request, $stateStr, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -193,7 +193,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function showAction(DefaultReviewer $defaultReviewer)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -225,7 +225,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -285,7 +285,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function deleteAction(Request $request, DefaultReviewer $defaultReviewer)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -390,7 +390,7 @@ class DefaultReviewerController extends OrderAbstractController
      */
     public function substituteUserAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

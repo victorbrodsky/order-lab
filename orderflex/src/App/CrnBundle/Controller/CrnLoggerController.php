@@ -46,7 +46,7 @@ class CrnLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_ADMIN") ){
+        if( false == $this->isGranted("ROLE_CRN_ADMIN") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -103,7 +103,7 @@ class CrnLoggerController extends LoggerController
      * @Template("AppCrnBundle/Logger/index.html.twig")
      */
     public function myGenerationLogAction(Request $request) {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -149,7 +149,7 @@ class CrnLoggerController extends LoggerController
         //exit('1');
 
         //a user without Admin level role (ROLE_CRN_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_ADMIN") ){
+        if( false == $this->isGranted("ROLE_CRN_ADMIN") ){
             foreach( $users as $thisUserId ) {
                 //echo "thisUserId=".$thisUserId."<br>";
                 if( $thisUserId != $user->getId() ) {
@@ -325,7 +325,7 @@ class CrnLoggerController extends LoggerController
      */
     public function crnEventLogPerObjectAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER")) {
+        if (false == $this->isGranted("ROLE_CRN_USER")) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 

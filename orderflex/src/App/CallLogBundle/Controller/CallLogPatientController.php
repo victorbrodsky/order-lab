@@ -72,7 +72,7 @@ class CallLogPatientController extends PatientController {
     public function showAction( Request $request, $id )
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -101,7 +101,7 @@ class CallLogPatientController extends PatientController {
      */
     public function viewPatientByMrnAction( Request $request )
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -186,7 +186,7 @@ class CallLogPatientController extends PatientController {
      */
     public function editAction( Request $request, $id )
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -218,7 +218,7 @@ class CallLogPatientController extends PatientController {
      */
     public function editPatientByMrnAction( Request $request )
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -312,7 +312,7 @@ class CallLogPatientController extends PatientController {
      */
     public function updateAction( Request $request, $id )
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -335,7 +335,7 @@ class CallLogPatientController extends PatientController {
      */
     public function patientSingleViewAction(Request $request, Patient $patient)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -364,7 +364,7 @@ class CallLogPatientController extends PatientController {
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -792,7 +792,7 @@ class CallLogPatientController extends PatientController {
      */
     public function complexPatientListAction(Request $request, $listid, $listname)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -890,7 +890,7 @@ class CallLogPatientController extends PatientController {
      */
     public function recentPatientsAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -978,7 +978,7 @@ class CallLogPatientController extends PatientController {
      * @Route("/patient/remove-patient-from-list/{patientId}/{patientListId}", name="calllog_remove_patient_from_list")
      */
     public function removePatientFromListAction(Request $request, $patientId, $patientListId) {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -1036,7 +1036,7 @@ class CallLogPatientController extends PatientController {
      * @Template("AppCallLogBundle/PatientList/complex-patient-list.html.twig")
      */
     public function addPatientToListAction(Request $request, $patientListId, $patientId) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -1094,7 +1094,7 @@ class CallLogPatientController extends PatientController {
      */
     public function listPatientPreviousEntriesAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+        if( false === $this->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1392,7 +1392,7 @@ class CallLogPatientController extends PatientController {
      */
     public function listPatientPreviousTasksAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+        if( false === $this->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1634,7 +1634,7 @@ class CallLogPatientController extends PatientController {
      */
     public function getPreviousEncountersAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+        if (false == $this->isGranted("ROLE_CALLLOG_USER")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -1673,7 +1673,7 @@ class CallLogPatientController extends PatientController {
      */
     public function getEncounterByIdAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+        if (false == $this->isGranted("ROLE_CALLLOG_USER")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -1752,7 +1752,7 @@ class CallLogPatientController extends PatientController {
      */
     public function exportPatientsCsvAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

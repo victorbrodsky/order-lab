@@ -32,8 +32,8 @@ class DashboardSimpleController extends OrderAbstractController
     public function projectStatisticsAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -283,8 +283,8 @@ class DashboardSimpleController extends OrderAbstractController
     public function requestStatisticsAction( Request $request )
     {
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if ($this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -559,8 +559,8 @@ class DashboardSimpleController extends OrderAbstractController
     public function requestFinancialStatisticsAction( Request $request )
     {
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if ($this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -799,8 +799,8 @@ class DashboardSimpleController extends OrderAbstractController
     public function invoiceFinancialStatisticsAction( Request $request )
     {
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if ($this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -1104,8 +1104,8 @@ class DashboardSimpleController extends OrderAbstractController
      */
     public function piStatisticsAction( Request $request ) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
             //ok
         } else {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -1320,8 +1320,8 @@ class DashboardSimpleController extends OrderAbstractController
      */
     public function compareStatisticsAction( Request $request )
     {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
             //ok
         } else {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -2042,7 +2042,7 @@ class DashboardSimpleController extends OrderAbstractController
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //

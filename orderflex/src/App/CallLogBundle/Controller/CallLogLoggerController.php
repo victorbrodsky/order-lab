@@ -46,7 +46,7 @@ class CallLogLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN") ){
+        if( false == $this->isGranted("ROLE_CALLLOG_ADMIN") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -103,7 +103,7 @@ class CallLogLoggerController extends LoggerController
      * @Template("AppCallLogBundle/Logger/index.html.twig")
      */
     public function myGenerationLogAction(Request $request) {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -149,7 +149,7 @@ class CallLogLoggerController extends LoggerController
         //exit('1');
 
         //a user without Admin level role (ROLE_CALLLOG_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN") ){
+        if( false == $this->isGranted("ROLE_CALLLOG_ADMIN") ){
             foreach( $users as $thisUserId ) {
                 //echo "thisUserId=".$thisUserId."<br>";
                 if( $thisUserId != $user->getId() ) {
@@ -325,7 +325,7 @@ class CallLogLoggerController extends LoggerController
      */
     public function calllogEventLogPerObjectAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+        if (false == $this->isGranted("ROLE_CALLLOG_USER")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 

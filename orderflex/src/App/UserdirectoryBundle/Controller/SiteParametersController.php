@@ -51,7 +51,7 @@ class SiteParametersController extends OrderAbstractController
      */
     public function indexIdAction(Request $request, $id=null)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -68,7 +68,7 @@ class SiteParametersController extends OrderAbstractController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -90,7 +90,7 @@ class SiteParametersController extends OrderAbstractController
 
     public function indexParameters($request) {
 
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
 
@@ -121,11 +121,11 @@ class SiteParametersController extends OrderAbstractController
 
 //        if( $sitename == "translationalresearch" ) {
 //            //exception for transres site
-//            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //                return $this->redirect( $this->generateUrl('employees-nopermission') );
 //            }
 //        } else {
-//            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //                return $this->redirect( $this->generateUrl('employees-nopermission') );
 //            }
 //        }
@@ -216,11 +216,11 @@ class SiteParametersController extends OrderAbstractController
         //exit('role='.$role."; sitename=".$sitename);
 
         if( $role ) {
-            if( false === $this->get('security.authorization_checker')->isGranted($role) ) {
+            if( false === $this->isGranted($role) ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         } else {
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         }
@@ -268,11 +268,11 @@ class SiteParametersController extends OrderAbstractController
         $sitename = $routeArr[0];
 
         if( $role ) {
-            if( false === $this->get('security.authorization_checker')->isGranted($role) ) {
+            if( false === $this->isGranted($role) ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         } else {
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         }
@@ -381,7 +381,7 @@ class SiteParametersController extends OrderAbstractController
     public function manageOrgGroupDefaultAction(Request $request, $id)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -581,7 +581,7 @@ class SiteParametersController extends OrderAbstractController
     public function initialConfigurationAction(Request $request)
     {
         //exit('EXIT: initialConfigurationAction');
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

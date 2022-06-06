@@ -180,7 +180,7 @@ class LoggerController extends OrderAbstractController
 
         $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
-        //if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        //if( $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
             }
@@ -664,7 +664,7 @@ class LoggerController extends OrderAbstractController
      */
     public function permissionActionSubjectEntityAction($action, $objectNamespace, $objectType, $objectId) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
+        if( false == $this->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -681,7 +681,7 @@ class LoggerController extends OrderAbstractController
 
         $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
 
-        if( $this->get('security.authorization_checker')->isGranted($action,$subjectEntity) ) {
+        if( $this->isGranted($action,$subjectEntity) ) {
             $res = 1;
         } else {
             $res = 0;

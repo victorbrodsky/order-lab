@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class FilterInvoiceType extends AbstractType
 {
@@ -219,10 +220,7 @@ class FilterInvoiceType extends AbstractType
 //            'attr' => array('class' => 'form-control', 'placeholder' => "Optional Complex Filter")
 //        ));
 
-        if (
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
+        if( $this->params['trpAdminOrTech'] ) {
             $builder->add('priceList',ChoiceType::class, array(
                 'label' => false,
                 'required' => true,

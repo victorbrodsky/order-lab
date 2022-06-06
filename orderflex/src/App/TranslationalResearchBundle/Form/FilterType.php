@@ -288,8 +288,9 @@ class FilterType extends AbstractType
         ));
 
         if (
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            $this->params['trpAdminOrTech']
         ) {
             if(0) {
                 $builder->add('priceList', EntityType::class, array(
@@ -320,8 +321,9 @@ class FilterType extends AbstractType
         }
 
         if (
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            $this->params['trpAdminOrTech']
         ) {
             $overBudgetArr = array();
             $overBudgetArr['All'] = 'all';

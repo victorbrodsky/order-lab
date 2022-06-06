@@ -41,7 +41,7 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
      */
     public function telephonySiteParameterPreviewAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -66,7 +66,7 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
      */
     public function telephonySiteParameterShowAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -93,7 +93,7 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
 
         //exit('telephonySiteParameterEditAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

@@ -56,7 +56,7 @@ class DefaultController extends OrderAbstractController
      */
     public function showSystemLogAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -88,7 +88,7 @@ class DefaultController extends OrderAbstractController
      */
     public function showSystemTestLogAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -123,8 +123,8 @@ class DefaultController extends OrderAbstractController
 //    {
 //
 //        if(
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+//            false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+//            false == $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
 //        ){
 //            return $this->redirect( $this->generateUrl('login') );
 //        }
@@ -146,7 +146,7 @@ class DefaultController extends OrderAbstractController
 //
 //    //check for active access requests
 //    public function getActiveAccessReq() {
-//        if( !$this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+//        if( !$this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
 //            return null;
 //        }
 //        $userSecUtil = $this->get('user_security_utility');
@@ -185,7 +185,7 @@ class DefaultController extends OrderAbstractController
     {
         exit("Not allowed. This is one time run script to fix added by for already generated users.");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -263,7 +263,7 @@ class DefaultController extends OrderAbstractController
 
         //exit("disabled");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -378,7 +378,7 @@ class DefaultController extends OrderAbstractController
 
         exit("disabled");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -596,7 +596,7 @@ class DefaultController extends OrderAbstractController
 //        dump($inputEmailArr);
 //        exit("emailTestingAction");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

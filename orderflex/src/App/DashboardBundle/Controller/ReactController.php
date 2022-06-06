@@ -99,7 +99,7 @@ class ReactController extends OrderAbstractController
      */
     public function getSessionFlashBagAction()
     {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));

@@ -778,7 +778,7 @@ class DefaultController extends OrderAbstractController
      */
     public function importOldDataAction(Request $request, $startRow=null) {
 
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -971,7 +971,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/generate-antibody-list/{filename}", name="translationalresearch_generate_antibody_list")
      */
     public function generateAntibodyListAction(Request $request, $filename) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1005,7 +1005,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/set-properties-antibody-list/", name="translationalresearch_set_properties_antibody_list")
      */
     public function setPropertiesAntibodyListAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1036,7 +1036,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-insert-antibody-list", name="translationalresearch_update_insert_antibody_list")
      */
     public function updateInsertAntibodyListAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1063,7 +1063,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/sync-id-antibody-list", name="translationalresearch_sync_id_antibody_list")
      */
     public function syncIdAntibodyListAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1088,7 +1088,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-projects-implicit-date", name="translationalresearch_update_projects_implicit_date")
      */
     public function updateProjectsImplicitDateAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1135,7 +1135,7 @@ class DefaultController extends OrderAbstractController
 //     * @Route("/update-invoice-paid-due", name="translationalresearch_update_invoice_paid_due")
 //     */
     public function updateInvoicePaidDue( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1165,7 +1165,7 @@ class DefaultController extends OrderAbstractController
     }
 
     public function updateCommentObject(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1234,7 +1234,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-fees", name="translationalresearch_update_fees")
      */
     public function updateFeesAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1279,7 +1279,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
     public function addMisiFeesAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1319,7 +1319,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/merge-project-info", name="translationalresearch_merge-project-info")
      */
     public function mergeProjectInfoAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1375,7 +1375,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
     public function updateMultipleFeesAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1414,7 +1414,7 @@ class DefaultController extends OrderAbstractController
  * @Route("/update-project-price-list", name="translationalresearch_update_project_list")
  */
     public function updateProjectPriceListAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1488,7 +1488,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-remove-external-price-list", name="translationalresearch_update_remove_external_price_list")
      */
     public function removeExternalPriceListAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1544,7 +1544,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-project-budget", name="translationalresearch_update_project_budget")
      */
     public function updateProjectBudgetAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1586,7 +1586,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-project-total", name="translationalresearch_update_project_total")
      */
     public function updateProjectTotalAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1653,7 +1653,7 @@ class DefaultController extends OrderAbstractController
 //     * @Route("/batch-close-projects", name="translationalresearch_batch_close_projects")
 //     */
 //    public function closeProjectsAction1( Request $request ) {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
 //        }
 //
@@ -1716,7 +1716,7 @@ class DefaultController extends OrderAbstractController
      * @Template("AppTranslationalResearchBundle/Default/upload-csv-file.html.twig")
      */
     public function closeProjectsAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1755,7 +1755,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/email-notation-test", name="translationalresearch_email_notation_test")
      */
     public function emailNotationTestAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2036,7 +2036,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/test-trp-site-parameters", name="translationalresearch_test_trp_site_parameters")
      */
     public function testTrpSiteParametersAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2121,7 +2121,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/reverse-fee-schedule-list/", name="translationalresearch_reverse_fee_schedule_list")
      */
     public function reverseFeeScheduleListAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2277,7 +2277,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-products-in-work-requests/", name="translationalresearch_update_products_in_work_requests")
      */
     public function updateProductsInWorkRequestsAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2421,7 +2421,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/update-not-completed-products-in-work-requests/", name="translationalresearch_update_not_completed_products_in_work_requests")
      */
     public function updateNotCompletedProductsInWorkRequestsAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2568,7 +2568,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/populate-project-expiration-date/", name="translationalresearch_populate_project_expiration_date")
      */
     public function populateProjectExpectedExpirationDateAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2658,7 +2658,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/reset-project-expiration-date/", name="translationalresearch_reset_project_expiration_date")
      */
     public function resetProjectExpectedExpirationDateAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2793,7 +2793,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/clear-funded-project-expiration-date/", name="translationalresearch_clear_funded_project_expiration_date")
      */
     public function clearFundedProjectExpectedExpirationDateAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -2920,7 +2920,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/clear-nonfunded-project-expdate-without-approvaldate/", name="translationalresearch_clear_nonfunded_project_expdate_without_approvaldate")
      */
     public function clearNonFundedProjectExpectedExpdateAction(Request $request) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 

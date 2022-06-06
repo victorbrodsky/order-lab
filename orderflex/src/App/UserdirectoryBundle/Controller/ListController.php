@@ -292,7 +292,7 @@ class ListController extends OrderAbstractController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -961,7 +961,7 @@ class ListController extends OrderAbstractController
      */
     public function createAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1047,7 +1047,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
-        $options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
+        //$options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
 
         //exit("this->postPath=".$this->postPath);
         //$path = $pathbase.'_create'.$this->postPath;
@@ -1312,7 +1312,7 @@ class ListController extends OrderAbstractController
      */
     public function newAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -1610,12 +1610,12 @@ class ListController extends OrderAbstractController
     public function showAction(Request $request,$id)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
         $showEditBtn = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $showEditBtn = true;
         }
 
@@ -1900,7 +1900,7 @@ class ListController extends OrderAbstractController
      */
     public function editAction(Request $request,$id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
         
@@ -1980,7 +1980,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
-        $options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
+        //$options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
 
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())),
@@ -2242,7 +2242,7 @@ class ListController extends OrderAbstractController
      */
     public function updateAction(Request $request, $id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -4007,7 +4007,7 @@ class ListController extends OrderAbstractController
      */
     public function deleteAction(Request $request, $id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -4156,23 +4156,23 @@ class ListController extends OrderAbstractController
         if( $pathbase == "translationalresearchfeesschedule" || $pathbase == "antibodies" || $pathbase == "transresrequestcategorytypes") {
             $additionalSitename = $this->getParameter('translationalresearch.sitename');
             if (
-                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+                false === $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+                false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
             ) {
                 return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
             }
         } elseif( $pathbase == "visastatus" ) {
             $additionalSitename = $this->getParameter('fellapp.sitename');
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
                 return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
             }
         } elseif( $pathbase == "resappvisastatus" ) {
             $additionalSitename = $this->getParameter('resapp.sitename');
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+            if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
                 return $this->redirect($this->generateUrl($this->getParameter('resapp.sitename') . '-nopermission'));
             }
         } else {
-            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
                 return $this->redirect($this->generateUrl($this->getParameter('employees.sitename').'-nopermission'));
             }
         }

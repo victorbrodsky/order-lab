@@ -30,7 +30,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //     */
 //    public function indexAction(Request $request, $specialtyStr)
 //    {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
@@ -49,7 +49,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //     */
 //    public function newAction(Request $request, $specialtyStr)
 //    {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
@@ -102,7 +102,7 @@ class TransResSiteParametersController extends OrderAbstractController
      */
     public function showAction(Request $request, $specialtyStr=NULL)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -134,7 +134,7 @@ class TransResSiteParametersController extends OrderAbstractController
      */
     public function showContentAction(Request $request, $specialtyStr=NULL)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -166,7 +166,7 @@ class TransResSiteParametersController extends OrderAbstractController
     public function editAction(Request $request, $specialtyStr=NULL)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

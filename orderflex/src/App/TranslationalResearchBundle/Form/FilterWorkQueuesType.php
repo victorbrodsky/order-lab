@@ -236,8 +236,9 @@ class FilterWorkQueuesType extends AbstractType
         ));
 
         if (
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            $this->params['trpAdminOrTech']
         ) {
             $builder->add('priceList',ChoiceType::class, array(
                 'label' => false,

@@ -41,7 +41,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
@@ -107,13 +107,22 @@ class InvoiceController extends OrderAbstractController
         $versions = $transresRequestUtil->getInvoiceComplexVersions(100);
         $transresPricesList = $transresUtil->getPricesList();
 
+        $trpAdminOrTech = false;
+        if(
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            $trpAdminOrTech = true;
+        }
+
         $params = array(
             'routeName' => $routeName,
             'transresRequest' => $transresRequest,
             'versions' => $versions,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets"),
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container, //$this->get('security.authorization_checker'),
+            'trpAdminOrTech' => $trpAdminOrTech,
             'transresPricesList' => $transresPricesList
         );
         $filterform = $this->createForm(FilterInvoiceType::class, null, array(
@@ -138,11 +147,11 @@ class InvoiceController extends OrderAbstractController
 //        ) {
 //            if(
 //                $transresUtil->isAdminOrPrimaryReviewer() ||
-//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
-//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-//                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//                $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+//                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
 //            ) {
 //                //show
 //            } else {
@@ -480,11 +489,11 @@ class InvoiceController extends OrderAbstractController
         if ($onlyForAdmin) {
             if (
                 $transresUtil->isAdminOrPrimaryReviewer() ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+                $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
             ) {
                 //show
             } else {
@@ -796,7 +805,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
-        //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        //if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
         //    return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         //}
 
@@ -893,7 +902,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function showAction(Request $request, $oid)
     {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
@@ -964,7 +973,7 @@ class InvoiceController extends OrderAbstractController
     public function editAction(Request $request, $oid)
     {
 
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
@@ -1191,7 +1200,7 @@ class InvoiceController extends OrderAbstractController
     {
         //exit("Delete is not allowed.");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -1376,7 +1385,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function downloadRecentPdfAction(Request $request, Invoice $invoice)
     {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
@@ -1400,8 +1409,8 @@ class InvoiceController extends OrderAbstractController
 //        if(
 //            false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) &&
 //            false === $transresUtil->isProjectRequester($project) &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+//            false === $this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
+//            false === $this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
 //        ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
@@ -1497,7 +1506,7 @@ class InvoiceController extends OrderAbstractController
             'invoice' => $invoice,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'principalInvestigators' => $principalInvestigators,
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transres_request_util' => $transresRequestUtil
         );
 
@@ -1533,7 +1542,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function getBillToInfoAction( Request $request ) {
         //set permission: project irb reviewer or admin
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -1676,7 +1685,7 @@ class InvoiceController extends OrderAbstractController
      */
     public function changeStatusAction( Request $request, $oid ) {
 
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
@@ -1755,7 +1764,7 @@ class InvoiceController extends OrderAbstractController
      * @Route("/update-invoice-ajax/", name="translationalresearch_invoice_update_ajax", methods={"POST"}, options={"expose"=true})
      */
     public function updateInvoiceAjaxAction( Request $request ) {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
@@ -1902,7 +1911,7 @@ class InvoiceController extends OrderAbstractController
      * @Route("/download-spreadsheet/", name="translationalresearch_download_invoice_spreadsheet", methods={"POST"})
      */
     public function downloadInvoicesCsvAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -1930,7 +1939,7 @@ class InvoiceController extends OrderAbstractController
      * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"POST"})
      */
     public function downloadUnpaidInvoicesCsvAction( Request $request ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -1961,7 +1970,7 @@ class InvoiceController extends OrderAbstractController
 //     */
 //    public function unpaidInvoiceReminderAction( Request $request )
 //    {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 //

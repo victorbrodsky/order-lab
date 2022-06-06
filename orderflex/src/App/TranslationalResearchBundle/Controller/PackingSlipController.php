@@ -69,8 +69,8 @@ class PackingSlipController extends OrderAbstractController
         $project = $transresRequest->getProject();
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -154,8 +154,8 @@ class PackingSlipController extends OrderAbstractController
         $project = $transresRequest->getProject();
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -225,8 +225,8 @@ class PackingSlipController extends OrderAbstractController
         $project = $transresRequest->getProject();
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -318,7 +318,7 @@ class PackingSlipController extends OrderAbstractController
             $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

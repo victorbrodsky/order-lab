@@ -209,8 +209,8 @@ class PatientController extends OrderAbstractController
     public function showAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if (false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
@@ -363,8 +363,8 @@ class PatientController extends OrderAbstractController
      */
     public function editAction( Request $request, $id )
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if (false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
@@ -500,8 +500,8 @@ class PatientController extends OrderAbstractController
      */
     public function updateAction( Request $request, $id )
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if (false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
@@ -739,7 +739,7 @@ class PatientController extends OrderAbstractController
      */
     public function newTestPatientAction() {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 

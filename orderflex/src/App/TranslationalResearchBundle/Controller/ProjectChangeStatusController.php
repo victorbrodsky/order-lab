@@ -540,7 +540,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         }
 
         //Project reactivation approver: ROLE_TRANSRES_REACTIVATION_APPROVER
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER')) {
+        if (false === $this->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER')) {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
@@ -640,7 +640,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         }
 
         //Project reactivation approver: ROLE_TRANSRES_REACTIVATION_APPROVER
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -725,7 +725,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     public function projectStateConfirmationAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -793,7 +793,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     public function deleteAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -814,7 +814,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     public function deleteProjectAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -849,7 +849,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     public function deleteMultipleProjectsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -931,7 +931,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     public function setStateAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

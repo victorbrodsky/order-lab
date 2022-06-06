@@ -193,7 +193,7 @@ class SecurityController extends OrderAbstractController
     public function loginPage($sitename,$authenticationUtils) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return null;
         }
@@ -585,7 +585,7 @@ class SecurityController extends OrderAbstractController
     public function authenticateUserAction( Request $request )
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

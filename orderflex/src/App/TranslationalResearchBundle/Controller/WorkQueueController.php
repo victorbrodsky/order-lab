@@ -146,9 +146,18 @@ class WorkQueueController extends OrderAbstractController
 
         //TODO: add "not completed" dummy select
         $orderableStatusArr = $transresRequestUtil->getFilterOrderableStatuses();
+
+        $trpAdminOrTech = false;
+        if(
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            $trpAdminOrTech = true;
+        }
         
         $params = array(
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'trpAdminOrTech' => $trpAdminOrTech,
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
             'orderableStatusArr' => $orderableStatusArr,

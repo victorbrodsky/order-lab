@@ -132,7 +132,7 @@ class ScanSecurityController extends SecurityController
     public function loadRolesFromPacsvendorAction()
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to visit this page'

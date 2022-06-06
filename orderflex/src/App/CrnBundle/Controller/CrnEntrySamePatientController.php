@@ -66,7 +66,7 @@ class CrnEntrySamePatientController extends CrnEntryController
      */
     public function crnEntrySamePatientAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -302,7 +302,7 @@ class CrnEntrySamePatientController extends CrnEntryController
      */
     public function saveEntrySamePatientAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 

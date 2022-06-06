@@ -46,10 +46,10 @@ class CalendarController extends OrderAbstractController
     public function awayCalendarAction(Request $request) {
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_OBSERVER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUBMITTER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+            false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -61,7 +61,7 @@ class CalendarController extends OrderAbstractController
 
         $params = array();
         $params['em'] = $em;
-        $params['supervisor'] = $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR');
+        $params['supervisor'] = $this->isGranted('ROLE_VACREQ_SUPERVISOR');
 
         ///// NOT USED /////
 //        if(0) {
@@ -70,12 +70,12 @@ class CalendarController extends OrderAbstractController
 //
 //            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
 //            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
-//            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+//            if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
 //                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
 //            }
 //
 //            //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-//            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//            if ($this->isGranted('ROLE_VACREQ_SUPERVISOR')) {
 //                $subjectUser = $user;
 //            } else {
 //                $groupParams['asSupervisor'] = true;

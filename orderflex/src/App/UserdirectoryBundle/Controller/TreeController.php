@@ -596,7 +596,7 @@ class TreeController extends OrderAbstractController {
      * @Route("/tree/create-root/", name="employees_tree_create_root", methods={"GET","POST"}, options={"expose"=true})
      */
     public function createTopLevelRoot(Request $request) {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+//        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-order-nopermission') );
 //        }
 

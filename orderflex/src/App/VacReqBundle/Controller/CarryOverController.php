@@ -52,7 +52,7 @@ class CarryOverController extends OrderAbstractController
 //    public function carryOverRequestReviewAction(Request $request, $id)
 //    {
 //
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+//        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 //
@@ -114,7 +114,7 @@ class CarryOverController extends OrderAbstractController
     public function carryOverAction(Request $request, $userId)
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -286,7 +286,7 @@ class CarryOverController extends OrderAbstractController
         }
 
         /////////////// check permission: if user is in approvers => ok ///////////////
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
             $approvers = $vacreqUtil->getRequestApprovers($entity);
 //            if( count($approvers) == 0 ) {
@@ -314,7 +314,7 @@ class CarryOverController extends OrderAbstractController
 
         //echo "tent status=".$entity->getTentativeStatus()."<br>";
         if(
-            $this->get('security.authorization_checker')->isGranted("changestatus", $entity)
+            $this->isGranted("changestatus", $entity)
         ) {
             //OK
         } else {

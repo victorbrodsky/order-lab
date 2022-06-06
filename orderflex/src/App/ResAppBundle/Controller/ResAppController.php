@@ -72,7 +72,7 @@ class ResAppController extends OrderAbstractController {
         //exit();
 
         if( $route == "resapp_home" ) {
-            if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ) {
+            if( false == $this->isGranted("read","ResidencyApplication") ) {
                 //echo 'no permission home <br>';
 //                if(0) {
 //                    //TODO: check if user has Interview or Observer role
@@ -86,7 +86,7 @@ class ResAppController extends OrderAbstractController {
 //                    return $this->redirect($this->generateUrl('resapp-nopermission'));
 //                }
                 //check if user can Interview
-                if( $this->get('security.authorization_checker')->isGranted("create","Interview") ) {
+                if( $this->isGranted("create","Interview") ) {
                     return $this->redirect($this->generateUrl('resapp_myinterviewees'));
                 }
             }
@@ -94,8 +94,8 @@ class ResAppController extends OrderAbstractController {
 
         if( $route == "resapp_myinterviewees" ) {
             if(
-                false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") &&
-                false == $this->get('security.authorization_checker')->isGranted("create","Interview")
+                false == $this->isGranted("read","ResidencyApplication") &&
+                false == $this->isGranted("create","Interview")
             ){
                 return $this->redirect( $this->generateUrl('resapp-nopermission') );
             }
@@ -103,18 +103,18 @@ class ResAppController extends OrderAbstractController {
 
         if( $route == "resapp_send_rejection_emails" ) {
             if(
-                false == $this->get('security.authorization_checker')->isGranted("ROLE_RESAPP_COORDINATOR") &&
-                false == $this->get('security.authorization_checker')->isGranted("ROLE_RESAPP_DIRECTOR")
+                false == $this->isGranted("ROLE_RESAPP_COORDINATOR") &&
+                false == $this->isGranted("ROLE_RESAPP_DIRECTOR")
             ) {
                 return $this->redirect( $this->generateUrl('resapp-nopermission') );
             }
-            if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+            if( false == $this->isGranted("read","ResidencyApplication") ){
                 return $this->redirect( $this->generateUrl('resapp-nopermission') );
             }
         }
 
         if( $route == "resapp_accepted_residents" ) {
-            if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+            if( false == $this->isGranted("read","ResidencyApplication") ){
                 return $this->redirect( $this->generateUrl('resapp-nopermission') );
             }
         }
@@ -723,7 +723,7 @@ class ResAppController extends OrderAbstractController {
 
 //    //check for active access requests
 //    public function getActiveAccessReq() {
-//        if( !$this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+//        if( !$this->isGranted('ROLE_RESAPP_ADMIN') ) {
 //            return null;
 //        }
 //        $userSecUtil = $this->get('user_security_utility');
@@ -747,7 +747,7 @@ class ResAppController extends OrderAbstractController {
         //$ip = $this->container->get('request')->getClientIp();
         //echo "ip=".$ip."<br>";
 
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+//        if( false == $this->isGranted("read","ResidencyApplication") ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 
@@ -806,7 +806,7 @@ class ResAppController extends OrderAbstractController {
         //$resappRecLetterUtil->generateResappRecLetterId($entity);
         //exit('testing');
 
-//        if( false == $this->get('security.authorization_checker')->isGranted("interview",$entity) ) {
+//        if( false == $this->isGranted("interview",$entity) ) {
 //            exit('resapp interview permission not ok ID:'.$entity->getId());
 //        }
 
@@ -814,19 +814,19 @@ class ResAppController extends OrderAbstractController {
         //can use hasResappPermission or isGranted("read",$entity). isGranted("read",$entity) resapp voter contains hasResappPermission
         //$resappUtil = $this->container->get('resapp_util');
         //if( $resappUtil->hasResappPermission($user,$entity) == false ) {
-        if( false == $this->get('security.authorization_checker')->isGranted("read",$entity) ) {
+        if( false == $this->isGranted("read",$entity) ) {
             //exit('resapp read permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
         //exit('resapp permission ok ID:'.$entity->getId());
 
         if( $routeName == "resapp_edit" ) {
-            if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ) {
+            if( false == $this->isGranted("update",$entity) ) {
                 return $this->redirect( $this->generateUrl('resapp-nopermission') );
             }
         }
 //        else {
-//            if( false == $this->get('security.authorization_checker')->isGranted("read",$entity) ) {
+//            if( false == $this->isGranted("read",$entity) ) {
 //                return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //            }
 //        }
@@ -853,10 +853,10 @@ class ResAppController extends OrderAbstractController {
     public function newAction(Request $request) {
 
         //coordinator and director can create
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+//        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted("create","ResidencyApplication") ){
+        if( false == $this->isGranted("create","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -1085,10 +1085,10 @@ class ResAppController extends OrderAbstractController {
 //     */
 //    public function updateNotUsedAction(Request $request, $id) {
 //
-////        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+////        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
 ////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 ////        }
-////        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ){
+////        if( false == $this->isGranted("update","ResidencyApplication") ){
 ////            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 ////        }
 //
@@ -1112,7 +1112,7 @@ class ResAppController extends OrderAbstractController {
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 //
-//        if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
+//        if( false == $this->isGranted("update",$entity) ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 //
@@ -1315,7 +1315,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
+        if( false == $this->isGranted("update",$entity) ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -1690,7 +1690,7 @@ class ResAppController extends OrderAbstractController {
     public function createApplicantAction( Request $request )
     {
         //exit("create form");
-        if( false == $this->get('security.authorization_checker')->isGranted("create","ResidencyApplication") ){
+        if( false == $this->isGranted("create","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2000,7 +2000,7 @@ class ResAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ) {
+        if( false == $this->isGranted("update","ResidencyApplication") ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2160,7 +2160,7 @@ class ResAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ) {
+        if( false == $this->isGranted("update","ResidencyApplication") ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2262,7 +2262,7 @@ class ResAppController extends OrderAbstractController {
 
         //echo "status <br>";
 
-        if( false == $this->get('security.authorization_checker')->isGranted("create", "Interview") ) {
+        if( false == $this->isGranted("create", "Interview") ) {
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
 
@@ -2300,9 +2300,9 @@ class ResAppController extends OrderAbstractController {
 
         } else {
             //this user is not interviewer for this application
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ||
-                $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+            if ($this->isGranted('ROLE_RESAPP_COORDINATOR') ||
+                $this->isGranted('ROLE_RESAPP_DIRECTOR') ||
+                $this->isGranted('ROLE_RESAPP_ADMIN')
             ) {
                 //show all interviews selector
                 $interviews = $resapp->getInterviews();
@@ -2327,10 +2327,10 @@ class ResAppController extends OrderAbstractController {
 
         //echo "status <br>";
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_INTERVIEWER') ){
+//        if( false == $this->isGranted('ROLE_RESAPP_INTERVIEWER') ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted("create","Interview") ){
+        if( false == $this->isGranted("create","Interview") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2357,9 +2357,9 @@ class ResAppController extends OrderAbstractController {
         }
         //echo $user->getId()."?=".$interviewerId."<br>";
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+        if( $this->isGranted('ROLE_RESAPP_COORDINATOR') ||
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') ||
+            $this->isGranted('ROLE_RESAPP_ADMIN')
         ){
             //allow
         } else {
@@ -2428,7 +2428,7 @@ class ResAppController extends OrderAbstractController {
 
         //echo "status <br>";
 
-        if( false == $this->get('security.authorization_checker')->isGranted("create","Interview") ){
+        if( false == $this->isGranted("create","Interview") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2448,9 +2448,9 @@ class ResAppController extends OrderAbstractController {
         }
 
         //check if the interviewer is the same as current user (except Admin)
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+        if( $this->isGranted('ROLE_RESAPP_COORDINATOR') ||
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') ||
+            $this->isGranted('ROLE_RESAPP_ADMIN')
         ){
             //allow
         } else {
@@ -2558,7 +2558,7 @@ class ResAppController extends OrderAbstractController {
 //
 //        //echo "status <br>";
 //
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_INTERVIEWER') ){
+//        if( false == $this->isGranted('ROLE_RESAPP_INTERVIEWER') ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 //
@@ -2600,7 +2600,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function removeAction($id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2620,7 +2620,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function importAndPopulateAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2682,7 +2682,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function importAndPopulateLettersAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2705,7 +2705,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function populateSpreadsheetAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2736,7 +2736,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function importAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -2856,10 +2856,10 @@ class ResAppController extends OrderAbstractController {
      */
     public function downloadReportAction(Request $request, $id) {
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
+//        if( false == $this->isGranted('ROLE_RESAPP_USER') ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+//        if( false == $this->isGranted("read","ResidencyApplication") ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 
@@ -2879,8 +2879,8 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
         if(
-            false == $this->get('security.authorization_checker')->isGranted("read",$entity) &&
-            false == $this->get('security.authorization_checker')->isGranted("create","Interview")
+            false == $this->isGranted("read",$entity) &&
+            false == $this->isGranted("create","Interview")
         ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -2909,7 +2909,7 @@ class ResAppController extends OrderAbstractController {
             //create report
             $resappRepGen = $this->container->get('resapp_reportgenerator');
             $argument = 'asap';
-            //if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+            //if( $this->isGranted('ROLE_RESAPP_COORDINATOR') ) {
                 //$argument = 'overwrite';
             //}
             $resappRepGen->addResAppReportToQueue( $id, $argument );
@@ -2959,7 +2959,7 @@ class ResAppController extends OrderAbstractController {
 
         exit("This method is disabled for security reason.");
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -3007,7 +3007,7 @@ class ResAppController extends OrderAbstractController {
 
         //exit("This method is disabled for security reason.");
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -3034,7 +3034,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function resetQueueRunAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -3085,14 +3085,14 @@ class ResAppController extends OrderAbstractController {
      */
     public function downloadApplicantListExcelAction(Request $request, $currentYear, $resappTypeId, $resappIds) {
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') &&
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') &&
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_INTERVIEWER') &&
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_OBSERVER')
+//        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
+//            false == $this->isGranted('ROLE_RESAPP_DIRECTOR') &&
+//            false == $this->isGranted('ROLE_RESAPP_INTERVIEWER') &&
+//            false == $this->isGranted('ROLE_RESAPP_OBSERVER')
 //        ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+        if( false == $this->isGranted("read","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
        
@@ -3155,7 +3155,7 @@ class ResAppController extends OrderAbstractController {
      */
     public function sendRejectionEmailsAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

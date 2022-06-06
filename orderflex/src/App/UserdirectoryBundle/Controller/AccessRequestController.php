@@ -744,7 +744,7 @@ class AccessRequestController extends OrderAbstractController
      */
     public function accessRequestIndexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted($this->roleEditor) ) {
+        if( false === $this->isGranted($this->roleEditor) ) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -817,7 +817,7 @@ class AccessRequestController extends OrderAbstractController
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1001,7 +1001,7 @@ class AccessRequestController extends OrderAbstractController
     public function accessRequestManagementAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1071,7 +1071,7 @@ class AccessRequestController extends OrderAbstractController
     public function accessRequestManagementSubmitAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1187,7 +1187,7 @@ class AccessRequestController extends OrderAbstractController
     public function accessRequestRemoveAction(Request $request,$userId)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1203,7 +1203,7 @@ class AccessRequestController extends OrderAbstractController
     public function authorizationRemoveAction(Request $request, $userId)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1253,7 +1253,7 @@ class AccessRequestController extends OrderAbstractController
     public function authorizationManagementAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1309,7 +1309,7 @@ class AccessRequestController extends OrderAbstractController
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1385,7 +1385,7 @@ class AccessRequestController extends OrderAbstractController
     public function authorizedUsersAction( Request $request )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1496,7 +1496,7 @@ class AccessRequestController extends OrderAbstractController
     public function addAuthorizedUserAction( Request $request )
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1622,7 +1622,7 @@ class AccessRequestController extends OrderAbstractController
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {
 //
-//        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+//        if (false === $this->isGranted($this->roleEditor)) {
 //            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
 //        }
 //
@@ -1639,10 +1639,10 @@ class AccessRequestController extends OrderAbstractController
      */
     public function generatedUsersAction(Request $request)
     {
-//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+//        if (false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1707,7 +1707,7 @@ class AccessRequestController extends OrderAbstractController
      */
     public function generatedUserManagementAction(Request $request, User $user)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1865,7 +1865,7 @@ class AccessRequestController extends OrderAbstractController
      */
     public function generatedUserApproveAction(Request $request, User $user)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect($this->generateUrl($this->siteName . "-nopermission"));
         }
 

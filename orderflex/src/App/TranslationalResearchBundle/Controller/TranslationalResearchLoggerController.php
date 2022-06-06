@@ -45,7 +45,7 @@ class TranslationalResearchLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_ADMIN") ){
+        if( false == $this->isGranted("ROLE_TRANSRES_ADMIN") ){
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
@@ -113,7 +113,7 @@ class TranslationalResearchLoggerController extends LoggerController
      */
     public function transresEventLogPerObjectAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_ADMIN")) {
+        if (false == $this->isGranted("ROLE_TRANSRES_ADMIN")) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

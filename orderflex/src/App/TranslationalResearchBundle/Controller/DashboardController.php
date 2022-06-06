@@ -33,8 +33,8 @@ class DashboardController extends OrderAbstractController
     public function dashboardChoicesAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -93,8 +93,8 @@ class DashboardController extends OrderAbstractController
     public function singleChartAction( Request $request )
     {
 
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if ($this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {
@@ -694,7 +694,7 @@ class DashboardController extends OrderAbstractController
 //     */
 //    public function fundedLevelAction( Request $request ) {
 //
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 //
@@ -971,7 +971,7 @@ class DashboardController extends OrderAbstractController
     {
         exit("Disabled Invoice's IssuedDate");
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
@@ -1032,7 +1032,7 @@ class DashboardController extends OrderAbstractController
     {
         exit("Disabled Request's CompletedDate");
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
@@ -1294,7 +1294,7 @@ class DashboardController extends OrderAbstractController
     {
         exit("Disabled Request's CompletedBy");
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
@@ -1557,7 +1557,7 @@ class DashboardController extends OrderAbstractController
     {
         //exit("Disabled Project's startReviewDate");
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));

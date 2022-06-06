@@ -42,7 +42,7 @@ class SectionUserController extends UserController
      */
     public function myTeamAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -87,7 +87,7 @@ class SectionUserController extends UserController
      */
     public function userWrapperAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

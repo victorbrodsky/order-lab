@@ -43,7 +43,7 @@ class CrnEditController extends CrnEntryController
      */
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -77,7 +77,7 @@ class CrnEditController extends CrnEntryController
      */
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -180,7 +180,7 @@ class CrnEditController extends CrnEntryController
     public function getCrnEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -454,7 +454,7 @@ class CrnEditController extends CrnEntryController
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -931,7 +931,7 @@ class CrnEditController extends CrnEntryController
      */
     public function checkMessageVersionAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER")) {
+        if (false == $this->isGranted("ROLE_CRN_USER")) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 

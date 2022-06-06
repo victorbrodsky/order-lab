@@ -54,8 +54,8 @@ class ResAppBulkUploadController extends OrderAbstractController
     {
         //exit('test uploadCsvMultipleApplicationsAction');
         if (
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false
         ) {
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
@@ -1506,8 +1506,8 @@ class ResAppBulkUploadController extends OrderAbstractController
     {
 
         if (
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false
         ) {
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
@@ -1651,7 +1651,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     {
         exit("not allowed. one time run method.");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
         }
 

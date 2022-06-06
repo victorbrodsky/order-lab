@@ -211,7 +211,7 @@ class CheckController extends OrderAbstractController {
      */
     public function createPatientAction(Request $request) {
 
-//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+//        if (false === $this->isGranted('ROLE_USER')) {
 //            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 
@@ -463,7 +463,7 @@ class CheckController extends OrderAbstractController {
      */
     public function createAccessionAction(Request $request) {
 
-//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+//        if (false === $this->isGranted('ROLE_USER')) {
 //            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 

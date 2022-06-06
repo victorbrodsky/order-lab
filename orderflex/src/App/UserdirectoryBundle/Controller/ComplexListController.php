@@ -52,7 +52,7 @@ class ComplexListController extends OrderAbstractController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -216,7 +216,7 @@ class ComplexListController extends OrderAbstractController
             $routeName == "employees_researchlabs_pathaction_edit_standalone" ||
             $routeName == "employees_grants_pathaction_edit_standalone"
         ) {
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
                 return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
             }
         }
@@ -268,7 +268,7 @@ class ComplexListController extends OrderAbstractController
     public function newListAction(Request $request)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -315,7 +315,7 @@ class ComplexListController extends OrderAbstractController
     public function createListAction( Request $request )
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -430,7 +430,7 @@ class ComplexListController extends OrderAbstractController
     public function updateListAction( Request $request, $id )
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -585,7 +585,7 @@ class ComplexListController extends OrderAbstractController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR');
+        $isAdmin = $this->isGranted('ROLE_USERDIRECTORY_EDITOR');
 
         $params = array('disabled'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
 

@@ -46,7 +46,7 @@ class DashboardSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
         return $this->indexParameters($request);
@@ -83,7 +83,7 @@ class DashboardSiteParametersController extends SiteParametersController
      */
     public function dashboardSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_DASHBOARD_ADMIN') ) {
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 
@@ -110,7 +110,7 @@ class DashboardSiteParametersController extends SiteParametersController
 
         //exit('dashboardSiteParameterEditAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_DASHBOARD_ADMIN') ) {
             return $this->redirect( $this->generateUrl('dashboard-nopermission') );
         }
 

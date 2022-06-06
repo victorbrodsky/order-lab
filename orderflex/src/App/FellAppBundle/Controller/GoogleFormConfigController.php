@@ -38,7 +38,7 @@ class GoogleFormConfigController extends OrderAbstractController
      */
     public function GoogleFormConfigAction(Request $request) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+        if( $this->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -111,7 +111,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //link to http://127.0.0.1/order/fellowship-applications/fellowship-types-settings
         $fellappTypesListLink = NULL;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             $fellappTypesListUrl = $this->container->get('router')->generate(
                 'fellapp_fellowshiptype_settings',
                 array(),
@@ -122,7 +122,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //link to the fellappVisaStatusesLink
         $fellappVisaStatusesListLink = NULL;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             $fellappVisaStatusesListUrl = $this->container->get('router')->generate(
                 //'visastatus-list',
                 'visastatus-list_fellapp',
@@ -161,7 +161,7 @@ class GoogleFormConfigController extends OrderAbstractController
      */
     public function GoogleFormConfigUpdateDriveAction(Request $request) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+        if( $this->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -330,7 +330,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
 //    //Generate config.json file and upload the file to the Google Drive
 //    public function updateConfigOnGoogleDrive($configEntity) {
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+//        if( $this->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
 //            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //            return NULL;
 //        }
@@ -429,7 +429,7 @@ class GoogleFormConfigController extends OrderAbstractController
 //    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
 //    public function getConfigOnGoogleDrive() {
 //
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+//        if( $this->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
 //            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //            return NULL;
 //        }

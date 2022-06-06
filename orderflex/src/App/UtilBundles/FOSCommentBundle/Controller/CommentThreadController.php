@@ -46,7 +46,7 @@ class CommentThreadController extends OrderAbstractController
         //echo "comments id=".$id."<br>";
         //exit('1');
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             //exit("comments no permission");
             return $this->redirect($this->generateUrl('user-nopermission'));
         }
@@ -213,7 +213,7 @@ class CommentThreadController extends OrderAbstractController
 //     */
 //    public function threadCommentsAction(Request $request, $id)
 //    {
-//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
 //            return $this->redirect($this->generateUrl('user-nopermission'));
 //        }
 //

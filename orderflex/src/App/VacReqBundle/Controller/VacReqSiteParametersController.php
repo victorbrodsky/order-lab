@@ -47,7 +47,7 @@ class VacReqSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         return $this->indexParameters($request);
@@ -89,7 +89,7 @@ class VacReqSiteParametersController extends SiteParametersController
 
         //exit('vacreqSiteParameterEditAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -127,7 +127,7 @@ class VacReqSiteParametersController extends SiteParametersController
      */
     public function vacreqSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 

@@ -50,7 +50,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newProjectSelectorAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+        if (false == $this->isGranted('ROLE_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -75,7 +75,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) { //ROLE_USER, PUBLIC_ACCESS, ROLE_TRANSRES_REQUESTER
+        if (false == $this->isGranted('ROLE_USER')) { //ROLE_USER, PUBLIC_ACCESS, ROLE_TRANSRES_REQUESTER
             //exit('NOT GRANTED: new project '.$specialtyStr);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -110,9 +110,9 @@ class ProjectFormNodeController extends ProjectController
 
 //        $defaultReviewersAdded = false;
 //        if(
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+//            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+//            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
 //        ) {
 //            //add all default reviewers
 //            $transresUtil->addDefaultStateReviewers($project);
@@ -273,7 +273,7 @@ class ProjectFormNodeController extends ProjectController
     public function editAction(Request $request, Project $project)
     {
 
-//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
         $transresUtil = $this->container->get('transres_util');
@@ -530,7 +530,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function generateFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

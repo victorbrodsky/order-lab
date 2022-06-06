@@ -30,7 +30,7 @@ class TestController extends TestBaseController
      */
     public function testContainerAction() {
     //public function testContainerAction( CallLogUtil $calllogUtil ) {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

@@ -307,9 +307,12 @@ class AdminController extends OrderAbstractController
      * @Route("/update-system-source-code/", name="user_update_system_source_code")
      */
     public function updateSourceCodeAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if(
+            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
+        ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+        //exit('updateSourceCodeAction ok');
 
         set_time_limit(0);
         ini_set('memory_limit', '512M');
@@ -329,7 +332,7 @@ class AdminController extends OrderAbstractController
      * @Route("/update-system-source-composer/", name="user_update_system_source_composer")
      */
     public function updateComposerAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -351,7 +354,7 @@ class AdminController extends OrderAbstractController
      * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
      */
     public function updateSystemAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -7942,7 +7945,7 @@ class AdminController extends OrderAbstractController
     public function setInstitutionEmploymentPeriodAction()
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -7984,7 +7987,7 @@ class AdminController extends OrderAbstractController
     public function setDefaultOrgGroupAction()
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -8075,7 +8078,7 @@ class AdminController extends OrderAbstractController
      */
     public function convertLoggerSitenameToSiteObectAction() {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8131,7 +8134,7 @@ class AdminController extends OrderAbstractController
      */
     public function syncVacreqRolesAction()
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -8168,7 +8171,7 @@ class AdminController extends OrderAbstractController
      */
     public function syncEventTypeListDbAction()
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -8503,7 +8506,7 @@ class AdminController extends OrderAbstractController
      */
     public function institutionTreeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8651,7 +8654,7 @@ class AdminController extends OrderAbstractController
     public function generateAdministratorAction($force=false) {
 
         if( $force == false ) {
-            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
                 //exit('testing0');
                 return $this->redirect($this->generateUrl('employees-nopermission'));
             }
@@ -8808,7 +8811,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8829,7 +8832,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateFormNodeDermatopathologyAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8850,7 +8853,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateTestFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8865,7 +8868,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateCronJobsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8886,7 +8889,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateCronStatusJobAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8911,7 +8914,7 @@ class AdminController extends OrderAbstractController
      */
     public function generateCronStatusTestJobAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8934,7 +8937,7 @@ class AdminController extends OrderAbstractController
      */
     public function removeCronJobAction(Request $request, $cronJobName)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -8966,7 +8969,7 @@ class AdminController extends OrderAbstractController
      */
     public function initDashboardChartsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -11106,7 +11109,7 @@ class AdminController extends OrderAbstractController
      */
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -11250,7 +11253,7 @@ class AdminController extends OrderAbstractController
      * @Route("/generate-patient-metaphone-name/", name="user_generate-patient-metaphone-name")
      */
     public function generatePatientMetaphoneNameKeyAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
@@ -11315,7 +11318,7 @@ class AdminController extends OrderAbstractController
      */
     public function opcacheResetAction()
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -11330,7 +11333,7 @@ class AdminController extends OrderAbstractController
      */
     public function updateUserRolesAction()
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 
@@ -11449,7 +11452,7 @@ class AdminController extends OrderAbstractController
      */
     public function updateUserPostfixAction()
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
         }
 

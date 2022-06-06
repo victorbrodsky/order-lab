@@ -44,7 +44,7 @@ class ScanListController extends ListController
     public function downloadStainExcelAction(Request $request)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -83,7 +83,7 @@ class ScanListController extends ListController
     public function updateFullTitleListAction(Request $request)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -193,7 +193,7 @@ class ScanListController extends ListController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -258,7 +258,7 @@ class ScanListController extends ListController
      */
     public function createAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -323,7 +323,7 @@ class ScanListController extends ListController
      */
     public function newAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -388,7 +388,7 @@ class ScanListController extends ListController
      */
     public function showAction(Request $request,$id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -453,7 +453,7 @@ class ScanListController extends ListController
      */
     public function editAction(Request $request,$id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -518,7 +518,7 @@ class ScanListController extends ListController
      */
     public function updateAction(Request $request, $id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 

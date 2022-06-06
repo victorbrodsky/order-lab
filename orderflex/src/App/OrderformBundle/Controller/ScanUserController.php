@@ -45,7 +45,7 @@ class ScanUserController extends UserController
      */
     public function indexUserAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+        if( false === $this->isGranted('ROLE_USER') ) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
 
@@ -72,7 +72,7 @@ class ScanUserController extends UserController
     public function showUserAction(Request $request, $id)
     {
         //$secUtil = $this->get('user_security_utility');
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
+        if( false === $this->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -105,7 +105,7 @@ class ScanUserController extends UserController
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -138,7 +138,7 @@ class ScanUserController extends UserController
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -183,7 +183,7 @@ class ScanUserController extends UserController
         $form = $userViewArr['form'];
         $entity = $userViewArr['entity'];
 
-        if( count($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope()) == 0 && $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN')) { //&& $entity->getUser()->getUsername() != 'system'
+        if( count($entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope()) == 0 && $this->isGranted('ROLE_SCANORDER_ADMIN')) { //&& $entity->getUser()->getUsername() != 'system'
             //exit('no inst');
             $instLink = '<a href="'.$this->generateUrl('institutions-list').'">add the new institution name directly.</a>';
             $error = new FormError("Please add at least one permitted institution. If you do not see your institution listed, please inform the System Administrator or ".$instLink);
@@ -195,7 +195,7 @@ class ScanUserController extends UserController
         if( 0==1 && $form->isValid() ) { //test: remove permittedInstitutionalPHIScope processing from scan and move it to user controller
 
             //check if insts were changed and user is not admin
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
                 $currentInsts = $entity->getPermittedInstitutionalPHIScope();
                 if( count($currentInsts) != count($originalInsts) ) {
                     $this->setSessionForbiddenNote("Change Institutions");
@@ -280,7 +280,7 @@ class ScanUserController extends UserController
      */
     public function lockUnlockChangeAction(Request $request, $id, $status) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -311,7 +311,7 @@ class ScanUserController extends UserController
     public function showScanSettingsAction($id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -324,7 +324,7 @@ class ScanUserController extends UserController
      */
     public function editScanSettingsAction($id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -374,10 +374,10 @@ class ScanUserController extends UserController
         }
 
         $params = array('em' => $em );
-        //PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN')
+        //PerSiteSettingsType($user,$this->isGranted('ROLE_SCANORDER_ADMIN')
         $form = $this->createForm(PerSiteSettingsType::class, $entity, array(
             'form_custom_value_user' => $user,
-            'form_custom_value_roleAdmin' => $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),
+            'form_custom_value_roleAdmin' => $this->isGranted('ROLE_SCANORDER_ADMIN'),
             'form_custom_value' => $params,
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
@@ -399,7 +399,7 @@ class ScanUserController extends UserController
     public function updateScanSettingsAction(Request $request, $id)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -414,7 +414,7 @@ class ScanUserController extends UserController
 
         $secUtil = $secUtil = $this->get('user_security_utility');
 
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -436,10 +436,10 @@ class ScanUserController extends UserController
         $entity->setUpdateAuthorRoles($user->getRoles());
 
         $params = array('em' => $em );
-        //PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),$params)
+        //PerSiteSettingsType($user,$this->isGranted('ROLE_SCANORDER_ADMIN'),$params)
         $form = $this->createForm(PerSiteSettingsType::class, $entity, array(
             'form_custom_value_user' => $user,
-            'form_custom_value_roleAdmin' => $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),
+            'form_custom_value_roleAdmin' => $this->isGranted('ROLE_SCANORDER_ADMIN'),
             'form_custom_value' => $params,
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',

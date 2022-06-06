@@ -108,7 +108,7 @@ class CrnEntryController extends OrderAbstractController
 //    public function homeAction(Request $request, PaginatorInterface $paginator, CrnUtil $crnUtil)
     public function homeAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -1182,7 +1182,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function listTasksAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER")) {
+        if (false == $this->isGranted("ROLE_CRN_USER")) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -1228,7 +1228,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function crnEntryAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -1516,7 +1516,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function saveEntryAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -2287,7 +2287,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function searchCrnEntryAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ){
+        if( false == $this->isGranted('ROLE_CRN_USER') ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -2341,7 +2341,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function patientSearchAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -2581,7 +2581,7 @@ class CrnEntryController extends OrderAbstractController
     public function createPatientAction(Request $request)
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -2600,7 +2600,7 @@ class CrnEntryController extends OrderAbstractController
         //return $response;
 
         //TODO: The server should DOUBLECHECK that the user has a role with a permission of "Create Patient Record"
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->isGranted('ROLE_CRN_USER')) {
             //return $this->redirect($this->generateUrl('crn-nopermission'));
             $res['patients'] = null;
             $res['output'] = "You don't have a permission to create a new patient record";
@@ -3082,7 +3082,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function getPatientTitleAction(Request $request) {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -3130,7 +3130,7 @@ class CrnEntryController extends OrderAbstractController
     public function getCrnEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER')) {
+        if (false == $this->isGranted('ROLE_CRN_USER')) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -3415,7 +3415,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function exportSingleCsvAction(Request $request, $messageOid, $messageVersion=null)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_ADMIN")) {
+        if (false == $this->isGranted("ROLE_CRN_ADMIN")) {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
@@ -3469,7 +3469,7 @@ class CrnEntryController extends OrderAbstractController
      */
     public function exportCsvAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CRN_USER") ){
+        if( false == $this->isGranted("ROLE_CRN_USER") ){
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 

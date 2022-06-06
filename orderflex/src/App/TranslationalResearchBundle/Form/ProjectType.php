@@ -79,7 +79,8 @@ class ProjectType extends AbstractType
 
         if(
             $this->params['cycle'] != 'new' &&
-            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
+            //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
+            $this->params['trpAdmin'] && 
             $this->project->getCreateDate()
         ) {
             $builder->add('createDate', DateType::class, array(
@@ -94,7 +95,8 @@ class ProjectType extends AbstractType
 
             if(
                 $this->params['cycle'] == 'edit' &&
-                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
+                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
+                $this->params['trpAdmin']
             ) {
                 //enable edit submitter for admin
                 $builder->add('submitter', null, array(
@@ -135,8 +137,10 @@ class ProjectType extends AbstractType
         //visible only to TRP Admin, TRP Tech, Deputy Platform Admin, and Platform Admin
         if( 1 ) {
             if (
-                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
+                $this->params['trpAdmin'] ||
+                $this->params['trpTech']
             ) {
                 //if( $this->params['cycle'] == "new" ) {
                 if( 1 ) {
@@ -306,8 +310,10 @@ class ProjectType extends AbstractType
             ));
 
             if(
-                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
-                $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER')
+                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER')
+                $this->params['trpAdmin'] ||
+                $this->params['trpCommitteeReviewer']
             ) {
                 $builder->add('noBudgetLimit', CheckboxType::class, array(
                     'label' => 'No Budget Limit:',

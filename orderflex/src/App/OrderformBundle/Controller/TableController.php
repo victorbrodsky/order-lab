@@ -127,8 +127,8 @@ class TableController extends OrderAbstractController {
      */
     public function multiTableShowAction( Request $request, $id ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -489,7 +489,7 @@ class TableController extends OrderAbstractController {
     public function multiTableCreationAction()
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 

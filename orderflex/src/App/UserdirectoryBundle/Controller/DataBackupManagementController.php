@@ -52,7 +52,7 @@ class DataBackupManagementController extends OrderAbstractController
      */
     public function dataBackupManagementAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -91,7 +91,7 @@ class DataBackupManagementController extends OrderAbstractController
      */
     public function createBackupAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -149,7 +149,7 @@ class DataBackupManagementController extends OrderAbstractController
      */
     public function restoreBackupAction( Request $request, $backupFilePath ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

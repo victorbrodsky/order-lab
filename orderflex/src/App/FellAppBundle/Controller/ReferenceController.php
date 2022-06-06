@@ -39,8 +39,8 @@ class ReferenceController extends OrderAbstractController
     public function InviteReferencesToSubmitLettersAction(Request $request, FellowshipApplication $fellapp) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -118,8 +118,8 @@ class ReferenceController extends OrderAbstractController
     public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, $referenceid) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -158,13 +158,13 @@ class ReferenceController extends OrderAbstractController
     public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update","FellowshipApplication") ) {
+        if( false == $this->isGranted("update","FellowshipApplication") ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

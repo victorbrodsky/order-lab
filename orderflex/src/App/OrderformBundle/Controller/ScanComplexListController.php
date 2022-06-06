@@ -49,7 +49,7 @@ class ScanComplexListController extends ComplexListController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -73,7 +73,7 @@ class ScanComplexListController extends ComplexListController
         if(
             $routeName == $this->getParameter('scan.sitename')."_labtests_pathaction_edit_standalone"
         ) {
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
                 return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
             }
         }
@@ -90,7 +90,7 @@ class ScanComplexListController extends ComplexListController
     public function newListAction(Request $request)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -107,7 +107,7 @@ class ScanComplexListController extends ComplexListController
     public function createListAction( Request $request )
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -125,7 +125,7 @@ class ScanComplexListController extends ComplexListController
     public function updateListAction( Request $request, $id )
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 

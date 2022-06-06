@@ -73,7 +73,7 @@ class DefaultController extends OrderAbstractController
      */
     public function resourcesAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ) {
+        if( false === $this->isGranted('ROLE_CALLLOG_USER') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -134,7 +134,7 @@ class DefaultController extends OrderAbstractController
     {
         exit("This is one time run method to assign the calllog roles");
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -281,7 +281,7 @@ class DefaultController extends OrderAbstractController
      */
     public function populateEntryCacheAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -355,7 +355,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateCacheManuallyAction(Request $request, Message $message)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_CALLLOG_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -413,7 +413,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateTextHtmlAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -737,7 +737,7 @@ class DefaultController extends OrderAbstractController
     {
         exit("Permitted only once");
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -789,7 +789,7 @@ class DefaultController extends OrderAbstractController
     {
         exit("updatePatientMrnAction. Execute only once.");
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -1094,7 +1094,7 @@ class DefaultController extends OrderAbstractController
     {
         exit("Permitted only once");
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -1185,7 +1185,7 @@ class DefaultController extends OrderAbstractController
 
         set_time_limit(600); //sec => 10 min
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

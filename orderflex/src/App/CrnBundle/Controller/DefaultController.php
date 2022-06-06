@@ -62,7 +62,7 @@ class DefaultController extends OrderAbstractController
      */
     public function resourcesAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_USER') ) {
+        if( false === $this->isGranted('ROLE_CRN_USER') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -121,7 +121,7 @@ class DefaultController extends OrderAbstractController
      */
     public function assignUsersAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -268,7 +268,7 @@ class DefaultController extends OrderAbstractController
      */
     public function populateEntryCacheAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -342,7 +342,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateCacheManuallyAction(Request $request, Message $message)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_CRN_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -400,7 +400,7 @@ class DefaultController extends OrderAbstractController
      */
     public function updateTextHtmlAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

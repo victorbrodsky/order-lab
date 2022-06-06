@@ -48,7 +48,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function indexSiteSettingsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -62,7 +62,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -99,7 +99,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function fellappSiteParameterEditAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -154,7 +154,7 @@ class FellAppSiteParametersController extends SiteParametersController
      */
     public function fellappSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

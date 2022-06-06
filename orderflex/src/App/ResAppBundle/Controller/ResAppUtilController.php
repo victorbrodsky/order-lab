@@ -36,8 +36,8 @@ class ResAppUtilController extends OrderAbstractController
     public function GetNotificationEmailInfosAction(Request $request) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -50,7 +50,7 @@ class ResAppUtilController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappId);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update",$resapp) ) {
+        if( false == $this->isGranted("update",$resapp) ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

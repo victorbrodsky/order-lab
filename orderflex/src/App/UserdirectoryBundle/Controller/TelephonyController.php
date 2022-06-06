@@ -30,7 +30,7 @@ class TelephonyController extends OrderAbstractController {
         //$em = $this->getDoctrine()->getManager();
 
 //        //if not admin, only logged in user can verify its own mobile phone number
-//        //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        //if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            if( $userId != $user->getId() ) {
 //                return $this->redirect($this->generateUrl('employees-nopermission'));
 //            }
@@ -425,7 +425,7 @@ class TelephonyController extends OrderAbstractController {
 //        }
 
         //if not admin, only logged in user can verify its own mobile phone number
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            if( $userId != $user->getId() ) {
 //                return $this->redirect($this->generateUrl('employees-nopermission'));
 //            }

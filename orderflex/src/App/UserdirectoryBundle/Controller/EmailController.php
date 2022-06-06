@@ -37,7 +37,7 @@ class EmailController extends OrderAbstractController
     public function sendSpooledEmailsAction(Request $request)
     {
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -72,7 +72,7 @@ class EmailController extends OrderAbstractController
     public function emailTestAction(Request $request)
     {
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 

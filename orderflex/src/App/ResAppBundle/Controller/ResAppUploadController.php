@@ -37,7 +37,7 @@ class ResAppUploadController extends UploadController {
      * @Route("/file-delete", name="resapp_file_delete", methods={"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             //exit('no resapp permission');
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -52,7 +52,7 @@ class ResAppUploadController extends UploadController {
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
+        if( false == $this->isGranted('ROLE_RESAPP_USER') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -75,7 +75,7 @@ class ResAppUploadController extends UploadController {
      */
     public function viewFileAction(Request $request,$id,$eventtype=null,$viewType=null) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_USER') ){
+        if( false == $this->isGranted('ROLE_RESAPP_USER') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

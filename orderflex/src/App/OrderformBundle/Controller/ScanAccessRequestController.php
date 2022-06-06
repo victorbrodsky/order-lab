@@ -135,7 +135,7 @@ class ScanAccessRequestController extends AccessRequestController
      */
     public function accessRequestIndexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 

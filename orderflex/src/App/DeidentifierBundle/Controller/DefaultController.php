@@ -60,7 +60,7 @@ class DefaultController extends OrderAbstractController
      */
     public function deidentifierNavbarAction( Request $request, $accessionTypeStr, $accessionTypeId, $accessionNumber ) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
+        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
@@ -94,7 +94,7 @@ class DefaultController extends OrderAbstractController
      */
     public function indexAction( Request $request ) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
+        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_USER') ){
             //exit('deidentifier: no permission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
@@ -189,10 +189,10 @@ class DefaultController extends OrderAbstractController
      */
     public function searchAction( Request $request ) {
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_ENQUIRER') ){
+//        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_ENQUIRER') ){
 //            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted("read", "Accession") ){
+        if( false == $this->isGranted("read", "Accession") ){
             //exit('nopermission');
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
@@ -290,10 +290,10 @@ class DefaultController extends OrderAbstractController
      */
     public function generateAction( Request $request ) {
 
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){
+//        if( false == $this->isGranted('ROLE_DEIDENTIFICATOR_GENERATOR') ){
 //            return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted("create", "Accession") ){
+        if( false == $this->isGranted("create", "Accession") ){
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
 
@@ -593,7 +593,7 @@ class DefaultController extends OrderAbstractController
     //get a new deidentifier number
     public function getNewDeidentificator($accessionId) {
 
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
+        if( !$this->isGranted('ROLE_DEIDENTIFICATOR_USER') ) {
             return null;
         }
 
@@ -722,7 +722,7 @@ class DefaultController extends OrderAbstractController
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') ) {
+        if( !$this->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');

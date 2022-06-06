@@ -49,7 +49,7 @@ class CrnSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -94,7 +94,7 @@ class CrnSiteParametersController extends SiteParametersController
     {
         //exit('editResourcesAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -145,7 +145,7 @@ class CrnSiteParametersController extends SiteParametersController
 
         //exit('crnSiteParameterEditAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
@@ -183,7 +183,7 @@ class CrnSiteParametersController extends SiteParametersController
      */
     public function crnSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CRN_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 

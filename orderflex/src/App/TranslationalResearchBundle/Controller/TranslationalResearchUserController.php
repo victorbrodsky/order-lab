@@ -45,7 +45,7 @@ class TranslationalResearchUserController extends UserController
     public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
@@ -65,7 +65,7 @@ class TranslationalResearchUserController extends UserController
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
         }
 
@@ -77,7 +77,7 @@ class TranslationalResearchUserController extends UserController
      */
     public function addNewUserAjaxAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

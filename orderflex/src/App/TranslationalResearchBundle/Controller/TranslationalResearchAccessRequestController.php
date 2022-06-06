@@ -199,7 +199,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      */
     public function generatedUsersAction(Request $request)
     {
-//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+//        if (false === $this->isGranted('ROLE_TRANSRES_ADMIN')) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
@@ -231,7 +231,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     public function accountConfirmationAction(Request $request, $redirectPath, $specialty=null)
     {
         //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

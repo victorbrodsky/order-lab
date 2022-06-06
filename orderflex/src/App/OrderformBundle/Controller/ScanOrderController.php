@@ -62,8 +62,8 @@ class ScanOrderController extends OrderAbstractController {
     public function indexAction( Request $request ) {
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return $this->redirect( $this->generateUrl('login') );
         }
@@ -106,7 +106,7 @@ class ScanOrderController extends OrderAbstractController {
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName."<br>";
 
-        if( $routeName == "incoming-scan-orders" && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+        if( $routeName == "incoming-scan-orders" && false === $this->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('my-scan-orders') );
         }
 
@@ -291,7 +291,7 @@ class ScanOrderController extends OrderAbstractController {
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN')) {
+        if (false === $this->isGranted('ROLE_SCANORDER_ADMIN')) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -329,7 +329,7 @@ class ScanOrderController extends OrderAbstractController {
      */
     public function statusAction(Request $request, $id, $status) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
         
@@ -394,7 +394,7 @@ class ScanOrderController extends OrderAbstractController {
     public function getStatusFilter($routeName) {
         $em = $this->getDoctrine()->getManager();
 
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//        if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $routeName == "incoming-scan-orders" ) {
             $statuses = $em->getRepository('AppOrderformBundle:Status')->findAll();
         } else {
@@ -470,7 +470,7 @@ class ScanOrderController extends OrderAbstractController {
     public function getServiceFilter() {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             $statuses = $em->getRepository('AppUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
         } 
 
@@ -499,7 +499,7 @@ class ScanOrderController extends OrderAbstractController {
         $criteriastr = "";
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+        if( $this->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
             return $criteriastr;
         }
 
@@ -516,7 +516,7 @@ class ScanOrderController extends OrderAbstractController {
             $userServices = $userSiteSettings->getScanOrdersServicesScope();
             //echo "userServices count=".count($userServices)."<br>";
 
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+            if( $this->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $userSiteSettings->getChiefServices();
                 //echo "chief services count=".count($chiefServices)."<br>";
                 //if( $userServices && count($userServices) > 0 ) {
@@ -575,7 +575,7 @@ class ScanOrderController extends OrderAbstractController {
 //        $criteriastr = "";
 //        $em = $this->getDoctrine()->getManager();
 //
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+//        if( $this->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
 //            return $criteriastr;
 //        }
 //
@@ -593,7 +593,7 @@ class ScanOrderController extends OrderAbstractController {
 //            $userScanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 //            $criteriastr .= " scanorder.scanOrderInstitutionScope=".$userScanOrderInstitutionScope->getId();
 //
-//            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+//            if( $this->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
 //                $chiefServices = $userSiteSettings->getChiefServices();
 //                if( $userScanOrderInstitutionScope && count($userServices)>0 ) {
 //                    //$services = array_merge($userServices, $chiefServices);
@@ -741,7 +741,7 @@ class ScanOrderController extends OrderAbstractController {
     public function getActiveAccountReq() {
         $em = $this->getDoctrine()->getManager();
         $accountreqs = array();
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findByStatus("active");
             $accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findBy(
                 array(
@@ -755,7 +755,7 @@ class ScanOrderController extends OrderAbstractController {
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
@@ -1386,7 +1386,7 @@ class ScanOrderController extends OrderAbstractController {
         //***************** END of Status filetr ***************************//
 
         //***************** Superseded filter ***************************//
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$superseded_status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Superseded');
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
@@ -1425,7 +1425,7 @@ class ScanOrderController extends OrderAbstractController {
             }
 
             //show all for ROLE_SCANORDER_DIVISION_CHIEF: remove all user's restriction
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+            if( $this->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
                 //echo "ROLE_SCANORDER_DIVISION_CHIEF";
                 $crituser = "";
             }

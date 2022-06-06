@@ -33,8 +33,8 @@ class DashboardTurnAroundStatController extends DashboardController
     public function dashboardChoicesAction( Request $request )
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             //ok
         } else {

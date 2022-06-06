@@ -48,7 +48,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -91,7 +91,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function editResourcesAction( Request $request )
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -119,7 +119,7 @@ class CallLogSiteParametersController extends SiteParametersController
 
         //exit('calllogSiteParameterEditAction');
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -157,7 +157,7 @@ class CallLogSiteParametersController extends SiteParametersController
      */
     public function calllogSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

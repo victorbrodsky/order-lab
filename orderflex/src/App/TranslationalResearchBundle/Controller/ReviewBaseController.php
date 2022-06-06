@@ -109,7 +109,7 @@ class ReviewBaseController extends OrderAbstractController
      */
     public function editAction(Request $request, $stateStr, $reviewId)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -138,9 +138,9 @@ class ReviewBaseController extends OrderAbstractController
 
 //        $disabled = true;
 //        if(
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+//            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+//            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
 //        ) {
 //            $disabled = false;
 //        }
@@ -242,7 +242,7 @@ class ReviewBaseController extends OrderAbstractController
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'review' => $review,
             'routeName' => $routeName,
             'stateStr' => $stateStr,
@@ -256,8 +256,8 @@ class ReviewBaseController extends OrderAbstractController
 
         $params['admin'] = false;
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             $params['admin'] = true;
         }

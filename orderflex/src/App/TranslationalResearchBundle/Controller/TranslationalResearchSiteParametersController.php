@@ -45,7 +45,7 @@ class TranslationalResearchSiteParametersController extends SiteParametersContro
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
         return $this->indexParameters($request);

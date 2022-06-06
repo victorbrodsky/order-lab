@@ -35,8 +35,8 @@ class FellAppUtilController extends OrderAbstractController
     public function GetNotificationEmailInfosAction(Request $request) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -49,7 +49,7 @@ class FellAppUtilController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappId);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update",$fellapp) ) {
+        if( false == $this->isGranted("update",$fellapp) ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

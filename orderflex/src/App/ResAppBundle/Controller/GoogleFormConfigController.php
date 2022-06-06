@@ -38,7 +38,7 @@ class GoogleFormConfigController extends OrderAbstractController
      */
     public function GoogleFormConfigAction(Request $request) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') === false ) {
+        if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -111,7 +111,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //link to http://127.0.0.1/order/residency-applications/residency-types-settings
         $resappTypesListLink = NULL;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             $resappTypesListUrl = $this->container->get('router')->generate(
                 'resapp_residencytype_settings',
                 array(),
@@ -122,7 +122,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         //link to the resappVisaStatusesLink
         $resappVisaStatusesListLink = NULL;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             $resappVisaStatusesListUrl = $this->container->get('router')->generate(
                 //'visastatus-list',
                 'visastatus-list_resapp',
@@ -161,7 +161,7 @@ class GoogleFormConfigController extends OrderAbstractController
      */
     public function GoogleFormConfigUpdateDriveAction(Request $request) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') === false ) {
+        if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -324,7 +324,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
 //    //Generate residency-config.json file and upload the file to the Google Drive
 //    public function updateConfigOnGoogleDrive($configEntity) {
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') === false ) {
+//        if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {
 //            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //            return NULL;
 //        }
@@ -394,7 +394,7 @@ class GoogleFormConfigController extends OrderAbstractController
 //    //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
 //    public function getConfigOnGoogleDrive() {
 //
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') === false ) {
+//        if( $this->isGranted('ROLE_RESAPP_ADMIN') === false ) {
 //            //return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //            return NULL;
 //        }

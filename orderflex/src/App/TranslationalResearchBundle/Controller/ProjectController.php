@@ -50,17 +50,17 @@ class ProjectController extends OrderAbstractController
      */
     public function homeAction()
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
         if(
             $transresUtil->isAdminOrPrimaryReviewer() === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false
+            $this->isGranted('ROLE_TRANSRES_TECHNICIAN') === false
         ) {
             //exit('not admin');
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+            if( $this->isGranted('ROLE_TRANSRES_REQUESTER') ) {
                 return $this->redirectToRoute('translationalresearch_my_project_index');
             }
         }
@@ -94,7 +94,7 @@ class ProjectController extends OrderAbstractController
     {
 
         //TODO: check performance   scan_perSiteSettings?
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -116,19 +116,19 @@ class ProjectController extends OrderAbstractController
 //        foreach( $roles as $role ) {
 //            echo "role=$role <br>";
 //        }
-//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+//        if( $this->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
 //            echo "covid role is OK <br>";
 //        }
-//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+//        if( $this->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
 //            echo "apcp role is OK <br>";
 //        }
 
         if( $routeName == "translationalresearch_project_index" ) {
             if( 
                 $transresUtil->isAdminOrPrimaryReviewer() === false && 
-                $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false 
+                $this->isGranted('ROLE_TRANSRES_TECHNICIAN') === false 
             ) {
-                if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+                if ($this->isGranted('ROLE_TRANSRES_REQUESTER')) {
                     return $this->redirectToRoute('translationalresearch_my_project_index');
                 }
             }
@@ -235,8 +235,17 @@ class ProjectController extends OrderAbstractController
 
         $expectedExpirationDateChoices = $transresUtil->getExpectedExpirationDateChoices();
 
+        $trpAdminOrTech = false;
+        if(
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            $trpAdminOrTech = true;
+        }
+        
         $params = array(
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'trpAdminOrTech' => $trpAdminOrTech,
             'transresUsers' => $transresUsers,
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
@@ -436,9 +445,9 @@ class ProjectController extends OrderAbstractController
         // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
 //        if(
 //            $transresUtil->isAdminOrPrimaryReviewer() === false &&
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false &&
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
-//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') === false
+//            $this->isGranted('ROLE_TRANSRES_TECHNICIAN') === false &&
+//            $this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
+//            $this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') === false
 //        ) {
 //
 //        }
@@ -452,7 +461,7 @@ class ProjectController extends OrderAbstractController
         // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
         if (
             $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
-            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            || $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
             || $transresUtil->hasReviewerRoles()
         ) {
             $showOnlyMyProjects = false;
@@ -884,7 +893,7 @@ class ProjectController extends OrderAbstractController
 //        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
 //        if (
 //            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
-//            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//            || $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
 //            || $transresUtil->hasReviewerRoles()
 //        ) {
 //            $showOnlyMyProjects = false;
@@ -1080,7 +1089,7 @@ class ProjectController extends OrderAbstractController
 //        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
 //        if (
 //            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() //index
-//            || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//            || $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
 //            || $transresUtil->hasReviewerRoles()
 //        ) {
 //            $showOnlyMyProjects = false;
@@ -1230,7 +1239,7 @@ class ProjectController extends OrderAbstractController
      */
     public function newProjectSelectorAction(Request $request)
     {
-//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+//        if (false == $this->isGranted('ROLE_USER')) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
@@ -1273,10 +1282,10 @@ class ProjectController extends OrderAbstractController
 //        foreach( $roles as $role ) {
 //            echo "role=$role <br>";
 //        }
-//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+//        if( $this->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
 //            echo "covid role is OK <br>";
 //        }
-//        if( $this->get('security.authorization_checker')->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+//        if( $this->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
 //            echo "apcp role is OK <br>";
 //        }
 
@@ -1846,7 +1855,7 @@ class ProjectController extends OrderAbstractController
      */
     public function showAction(Request $request, Project $project)
     {
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
@@ -2242,12 +2251,28 @@ class ProjectController extends OrderAbstractController
         );
         $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
 
+        $trpAdmin = false;
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $trpAdmin = true;
+        }
+        $trpTech = false;
+        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $trpTech = true;
+        }
+        $trpCommitteeReviewer = false;
+        if( $this->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
+            $trpCommitteeReviewer = true;
+        }
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'trpAdmin' => $trpAdmin,
+            'trpTech' => $trpTech,
+            'trpCommitteeReviewer' => $trpCommitteeReviewer,
             'project' => $project,
             'otherUserParam' => $otherUserParam,
             'routeName' => $routeName,
@@ -2270,8 +2295,8 @@ class ProjectController extends OrderAbstractController
         $params['showCommitteeReviewer'] = true;
         $params['showFinalReviewer'] = true;
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             $params['admin'] = true;
 //            $params['showIrbReviewer'] = true;
@@ -2399,7 +2424,7 @@ class ProjectController extends OrderAbstractController
      */
     public function getProjectAction(Request $request, Project $project)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -2465,7 +2490,7 @@ class ProjectController extends OrderAbstractController
      */
     public function downloadApplicantListExcelAction(Request $request, $ids=null, $limit=null) {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -2556,7 +2581,7 @@ class ProjectController extends OrderAbstractController
      */
     public function downloadApplicantListExcelPostAction(Request $request) {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

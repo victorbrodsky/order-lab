@@ -41,8 +41,8 @@ class ReferenceController extends OrderAbstractController
     public function InviteReferencesToSubmitLettersAction(Request $request, ResidencyApplication $resapp) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -113,8 +113,8 @@ class ReferenceController extends OrderAbstractController
     public function InviteReferenceToSubmitLetterAction(Request $request, ResidencyApplication $resapp, $referenceid) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
@@ -153,13 +153,13 @@ class ReferenceController extends OrderAbstractController
     public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') === false )
+            $this->isGranted('ROLE_RESAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_RESAPP_DIRECTOR') === false )
         {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("update","ResidencyApplication") ) {
+        if( false == $this->isGranted("update","ResidencyApplication") ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

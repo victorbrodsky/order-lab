@@ -45,13 +45,13 @@ class ResAppLoggerController extends LoggerController
     public function indexAction(Request $request)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+            false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
+            false == $this->isGranted('ROLE_RESAPP_DIRECTOR') &&
+            false == $this->isGranted('ROLE_RESAPP_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+//        if( false == $this->isGranted("read","ResidencyApplication") ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 
@@ -75,14 +75,14 @@ class ResAppLoggerController extends LoggerController
     public function applicationLogAction(Request $request,$id) {
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN')
+            false == $this->isGranted('ROLE_RESAPP_COORDINATOR') &&
+            false == $this->isGranted('ROLE_RESAPP_DIRECTOR') &&
+            false == $this->isGranted('ROLE_RESAPP_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-//        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+//        if( false == $this->isGranted("read","ResidencyApplication") ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 
@@ -93,7 +93,7 @@ class ResAppLoggerController extends LoggerController
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read",$resApp) ) {
+        if( false == $this->isGranted("read",$resApp) ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -167,7 +167,7 @@ class ResAppLoggerController extends LoggerController
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$objectId);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read",$resApp) ) {
+        if( false == $this->isGranted("read",$resApp) ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -213,7 +213,7 @@ class ResAppLoggerController extends LoggerController
 //    public function addCustomDql($dql) {
 //
 //        //show all for admin
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+//        if( $this->isGranted('ROLE_RESAPP_ADMIN') ) {
 //            $dql->select('logger');
 //            return $dql;
 //        }

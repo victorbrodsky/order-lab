@@ -881,19 +881,19 @@ class SignUpController extends OrderAbstractController
         if( count($entity->getPublicComments()) == 0 ) {
             $entity->addPublicComment( new PublicComment($user) );
         }
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
             $entity->getId() && $entity->getId() == $user->getId()
         ) {
             if( count($entity->getPrivateComments()) == 0 ) {
                 $entity->addPrivateComment( new PrivateComment($user) );
             }
         }
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getAdminComments()) == 0 ) {
                 $entity->addAdminComment( new AdminComment($user) );
             }
         }
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getConfidentialComments()) == 0 ) {
                 $entity->addConfidentialComment( new ConfidentialComment($user) );
             }

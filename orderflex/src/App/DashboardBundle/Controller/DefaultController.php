@@ -105,7 +105,7 @@ class DefaultController extends OrderAbstractController
 //            $error = "Logical error: chart not found by id 60";
 //            exit($error);
 //        }
-//        if( $this->get('security.authorization_checker')->isGranted('read', $chartObject) === false ) {
+//        if( $this->isGranted('read', $chartObject) === false ) {
 //            //$flashBagStr = $this->getSessionFlashBag();
 //            //$permissionErrorStr = $dashboardUtil->getPermissionErrorSession($chartObject);
 //        }

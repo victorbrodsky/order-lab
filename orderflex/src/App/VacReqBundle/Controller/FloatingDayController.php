@@ -44,7 +44,7 @@ class FloatingDayController extends OrderAbstractController
      */
     public function incomingFloatingRequestsAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_APPROVER') && false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -90,12 +90,12 @@ class FloatingDayController extends OrderAbstractController
      */
     public function myFloatingRequestsAction(Request $request)
     {
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-//            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+//        if( false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+//            false == $this->isGranted('ROLE_VACREQ_SUPERVISOR')
 //        ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -151,8 +151,8 @@ class FloatingDayController extends OrderAbstractController
         $params['requestTypeAbbreviation'] = $requestTypeAbbreviation;
 
         $supervisorRole = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
+        if( $this->isGranted('ROLE_VACREQ_SUPERVISOR') ||
+            $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             $supervisorRole = true;
         }
@@ -178,7 +178,7 @@ class FloatingDayController extends OrderAbstractController
 
         //incoming requests: show all requests with institutions in vacreq roles institutions
         //filter by institutions for any user by using a general sub role name "ROLE_VACREQ_"
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
                 $vacreqRoles = $em->getRepository('AppUserdirectoryBundle:User')->
@@ -318,7 +318,7 @@ class FloatingDayController extends OrderAbstractController
         }
         if( $request->get('_route') == "vacreq_floatingrequests" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+            if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
         }
@@ -331,7 +331,7 @@ class FloatingDayController extends OrderAbstractController
         //}
 
         if( count($organizationalInstitutions) == 0 ) {
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
                     array(),
@@ -372,7 +372,7 @@ class FloatingDayController extends OrderAbstractController
 //        //tentative institutions
 //        $tentativeGroupParams = array(); //'asObject'=>true
 //        $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+//        if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
 //            $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
 //        }
 //        $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
@@ -392,16 +392,16 @@ class FloatingDayController extends OrderAbstractController
         $params['routeName'] = $request->get('_route');
 
         $approverRole = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
+        if( $this->isGranted('ROLE_VACREQ_APPROVER') ||
+            $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             $approverRole = true;
         }
         $params['approverRole'] = $approverRole;
 
         $supervisorRole = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
+        if( $this->isGranted('ROLE_VACREQ_SUPERVISOR') ||
+            $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             $supervisorRole = true;
         }
@@ -722,10 +722,10 @@ class FloatingDayController extends OrderAbstractController
     public function FloatingDayAction(Request $request) {
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_OBSERVER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUBMITTER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+            false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -743,7 +743,7 @@ class FloatingDayController extends OrderAbstractController
         
         $params = array();
         $params['em'] = $em;
-        //$params['supervisor'] = $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR');
+        //$params['supervisor'] = $this->isGranted('ROLE_VACREQ_SUPERVISOR');
 
 //        $floatingNote = "The Juneteenth Holiday may be used as a floating holiday
 //        only if you have an NYPH appointment. You can request a floating holiday however,
@@ -850,7 +850,7 @@ class FloatingDayController extends OrderAbstractController
      */
     public function showAction(Request $request, $id)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -864,7 +864,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //TODO: adjust the permission: AdminController->addVacReqPermission
-        if( false == $this->get('security.authorization_checker')->isGranted("read", $entity) ) {
+        if( false == $this->isGranted("read", $entity) ) {
             //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -911,9 +911,9 @@ class FloatingDayController extends OrderAbstractController
 
         //check permission
         $routName = $request->get('_route');
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if ($routName == 'vacreq_floating_review') {
-                if (false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity)) {
+                if (false == $this->isGranted("changestatus", $entity)) {
                     //exit("vacreq_floating_review: no permission to changestatus");
                     $this->get('session')->getFlashBag()->add(
                         'warning',
@@ -922,7 +922,7 @@ class FloatingDayController extends OrderAbstractController
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
             } else {
-                if (false == $this->get('security.authorization_checker')->isGranted("update", $entity)) {
+                if (false == $this->isGranted("update", $entity)) {
                     //exit('vacreq_edit: no permission to update');
                     $this->get('session')->getFlashBag()->add(
                         'warning',
@@ -1100,7 +1100,7 @@ class FloatingDayController extends OrderAbstractController
      */
     public function statusAction(Request $request, $id, $status) {
 
-        //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
+        //if( false == $this->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
         //exit("statusAction: ".$status); //testing action
@@ -1124,9 +1124,9 @@ class FloatingDayController extends OrderAbstractController
         $logger->notice("RequestController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
         /////////////// EOF log status ////////////////////////
 
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( $this->isGranted("changestatus", $entity) ) {
             //Approvers can change status to anything
-        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+        } elseif( $this->isGranted("update", $entity) ) {
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 //Flash
@@ -1247,9 +1247,9 @@ class FloatingDayController extends OrderAbstractController
             return $response;
         }
 
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( $this->isGranted("changestatus", $entity) ) {
             //Approvers can change status to anything
-        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+        } elseif( $this->isGranted("update", $entity) ) {
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 $errorMsg = "You can not change status of this ".$entity->getRequestName().
@@ -1420,7 +1420,7 @@ class FloatingDayController extends OrderAbstractController
 
         //check permissions
         if(
-            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            false == $this->isGranted("update", $entity) &&
             $entity->getUser()->getId() != $user->getId() //author can request cancellation
         ) {
             //exit("No permission");
@@ -1489,9 +1489,9 @@ class FloatingDayController extends OrderAbstractController
             return $response;
         }
 
-//        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+//        if( $this->isGranted("changestatus", $entity) ) {
 //            //Approvers can change status to anything
-//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+//        } elseif( $this->isGranted("update", $entity) ) {
 //            //Owner can only set status to: canceled, pending
 //            if( $status != "canceled" && $status != "pending" ) {
 //                $errorMsg = "You can not change status of this ".$entity->getRequestName().
@@ -1519,7 +1519,7 @@ class FloatingDayController extends OrderAbstractController
 
         //check permissions
         if(
-            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            false == $this->isGranted("update", $entity) &&
             $entity->getUser()->getId() != $user->getId() //author can request cancellation
         ) {
             //exit("No permission");
@@ -1653,7 +1653,7 @@ class FloatingDayController extends OrderAbstractController
         $logger->notice("FloatingDayRequestController statusCancellationRequestChangeAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
 
         //check permissions
-        if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( false == $this->isGranted("changestatus", $entity) ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -1732,14 +1732,14 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //check permissions
-//        if( false == $this->get('security.authorization_checker')->isGranted("update", $entity) && false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//        if( false == $this->isGranted("update", $entity) && false === $this->isGranted('ROLE_VACREQ_SUPERVISOR')) {
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
         if(
-            $this->get('security.authorization_checker')->isGranted("read", $entity) ||
-            $this->get('security.authorization_checker')->isGranted("update", $entity) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+            $this->isGranted("read", $entity) ||
+            $this->isGranted("update", $entity) ||
+            $this->isGranted('ROLE_VACREQ_ADMIN') ||
+            $this->isGranted('ROLE_VACREQ_SUPERVISOR')
         )
         {
             //OK send reminder email: read, supervisor
@@ -1775,7 +1775,7 @@ class FloatingDayController extends OrderAbstractController
      */
     public function checkExistedFloatingDayAjaxAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -1858,14 +1858,14 @@ class FloatingDayController extends OrderAbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $admin = false;
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             $admin = true;
             //echo "admin! <br>";
         }
         //echo "admin=$admin <br>";exit();
 
         $roleApprover = false;
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( $this->isGranted("changestatus", $entity) ) {
             $roleApprover = true;
         }
 
@@ -1878,7 +1878,7 @@ class FloatingDayController extends OrderAbstractController
         $groupParams = array();
 
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+        if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
             $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
         }
 
@@ -1897,7 +1897,7 @@ class FloatingDayController extends OrderAbstractController
         if( count($organizationalInstitutions) == 0 ) {
             //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/
 
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //admin user
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",

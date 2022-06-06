@@ -2,11 +2,11 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use App\TranslationalResearchBundle\Entity\Invoice;
-use App\TranslationalResearchBundle\Entity\TransResRequest;
-use App\TranslationalResearchBundle\Form\FilterInvoiceType;
-use App\TranslationalResearchBundle\Form\InvoiceType;
+//use Doctrine\Common\Collections\ArrayCollection;
+//use App\TranslationalResearchBundle\Entity\Invoice;
+//use App\TranslationalResearchBundle\Entity\TransResRequest;
+//use App\TranslationalResearchBundle\Form\FilterInvoiceType;
+//use App\TranslationalResearchBundle\Form\InvoiceType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,9 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
-use App\UserdirectoryBundle\Entity\User;
+//use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+//use App\UserdirectoryBundle\Entity\User;
 
 
 class ReminderController extends OrderAbstractController
@@ -28,7 +27,7 @@ class ReminderController extends OrderAbstractController
      */
     public function unpaidInvoiceReminderAction( Request $request )
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -108,7 +107,7 @@ class ReminderController extends OrderAbstractController
      */
     public function projectReminderAction( Request $request )
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -227,7 +226,7 @@ class ReminderController extends OrderAbstractController
      */
     public function delayedRequestReminderAction( Request $request )
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

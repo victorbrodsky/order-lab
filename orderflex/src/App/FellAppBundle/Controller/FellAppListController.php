@@ -36,7 +36,7 @@ class FellAppListController extends ListController
      */
     public function indexVisaStatusesAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
@@ -50,7 +50,7 @@ class FellAppListController extends ListController
      */
     public function createAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
@@ -64,7 +64,7 @@ class FellAppListController extends ListController
      */
     public function newAction(Request $request)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
@@ -79,7 +79,7 @@ class FellAppListController extends ListController
     public function showAction(Request $request,$id)
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
@@ -93,7 +93,7 @@ class FellAppListController extends ListController
      */
     public function editAction(Request $request,$id)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
@@ -107,7 +107,7 @@ class FellAppListController extends ListController
      */
     public function updateAction(Request $request, $id)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 

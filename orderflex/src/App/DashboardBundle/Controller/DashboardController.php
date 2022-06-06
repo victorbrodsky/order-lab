@@ -32,7 +32,7 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardChoicesAction( Request $request )
     {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -53,7 +53,7 @@ class DashboardController extends OrderAbstractController
         //echo "title=$title<br>";
 
         //check if user is not authenticated IS_AUTHENTICATED_FULLY
-//        if( !$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+//        if( !$this->isGranted('IS_AUTHENTICATED_FULLY') ) {
 //            $initHomePage = false;
 //        }
 
@@ -104,7 +104,7 @@ class DashboardController extends OrderAbstractController
         }//if $initHomePage
 
 
-        //if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        //if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
             $filterform = $this->getFilter();
         //} else {
@@ -230,7 +230,7 @@ class DashboardController extends OrderAbstractController
         //B- checks if the user is logged in and forwards to the usual URL
         // if the user is logged in (making use of the chart ID array in the URL,
         // so the logged in user still sees the same charts with one click).
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             return $this->redirectToRoute('dashboard_home');
         }
 
@@ -374,7 +374,7 @@ class DashboardController extends OrderAbstractController
     public function singleOrigChartAction( Request $request )
     {
 
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
 //            //ok
 //        } else {
 //            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -413,7 +413,7 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTopicByIdAction( Request $request, $id ) {
 
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+//        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
 //            //ok
 //        } else {
 //            return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -492,7 +492,7 @@ class DashboardController extends OrderAbstractController
      */
     public function singleServiceAction( Request $request, $id ) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -566,7 +566,7 @@ class DashboardController extends OrderAbstractController
      */
     public function singleTypeAction( Request $request, $id ) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -639,7 +639,7 @@ class DashboardController extends OrderAbstractController
      */
     public function singleFavoritesAction( Request $request, $id ) {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));
@@ -748,7 +748,7 @@ class DashboardController extends OrderAbstractController
             return true;
         }
         
-        if( $this->get('security.authorization_checker')->isGranted('read', $chart) === true ) {
+        if( $this->isGranted('read', $chart) === true ) {
             return true;
         }
 
@@ -771,7 +771,7 @@ class DashboardController extends OrderAbstractController
      */
     public function dashboardToggleFavoriteAction( Request $request )
     {
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( $this->isGranted('ROLE_DASHBOARD_USER') ) {
             //ok
         } else {
             return $this->redirect($this->generateUrl($this->getParameter('dashboard.sitename') . '-nopermission'));

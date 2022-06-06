@@ -1087,7 +1087,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkCwidAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1114,7 +1114,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkSsnAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1155,7 +1155,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkEinAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1196,7 +1196,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkUsertypeUseridAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1228,7 +1228,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkCWIDUsertypeUseridAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
        
@@ -1424,7 +1424,7 @@ class UtilController extends OrderAbstractController {
         $criteriastr .= " AND (employmentStatus.id IS NULL OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')";
 
         //filter out users with excludeFromSearch set to true
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $criteriastr .= " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
             //$criteriastr .= " AND (preferences.excludeFromSearch = TRUE)";
         }
@@ -1452,7 +1452,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkMrntypeIdentifierAction(Request $request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1501,7 +1501,7 @@ class UtilController extends OrderAbstractController {
      */
     public function checkUserPasswordAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

@@ -42,9 +42,9 @@ class TransResListController extends ListController
     public function indexAction(Request $request)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            false === $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -60,9 +60,9 @@ class TransResListController extends ListController
     public function indexAntibodiesAction(Request $request)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            false === $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -87,8 +87,8 @@ class TransResListController extends ListController
         //exit("trp createList");
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -131,8 +131,8 @@ class TransResListController extends ListController
     public function newAction(Request $request)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -154,8 +154,8 @@ class TransResListController extends ListController
     {
 
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -175,8 +175,8 @@ class TransResListController extends ListController
     public function editAction(Request $request,$id)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -194,8 +194,8 @@ class TransResListController extends ListController
     public function updateAction(Request $request, $id)
     {
         if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            false == $this->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }

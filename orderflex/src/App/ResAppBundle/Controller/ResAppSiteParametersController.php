@@ -48,7 +48,7 @@ class ResAppSiteParametersController extends SiteParametersController
      */
     public function indexSiteSettingsAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -62,7 +62,7 @@ class ResAppSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
         return $this->indexParameters($request);
@@ -99,7 +99,7 @@ class ResAppSiteParametersController extends SiteParametersController
      */
     public function resappSiteParameterEditAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -136,7 +136,7 @@ class ResAppSiteParametersController extends SiteParametersController
      */
     public function resappSiteParameterShowAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_RESAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

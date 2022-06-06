@@ -53,7 +53,7 @@ class ResAppRankController extends OrderAbstractController {
      */
     public function rankEditAction(Request $request, $resappid) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+        if( false == $this->isGranted("read","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -90,7 +90,7 @@ class ResAppRankController extends OrderAbstractController {
      */
     public function rankUpdateAjaxAction(Request $request, $resappid) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+        if( false == $this->isGranted("read","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -157,7 +157,7 @@ class ResAppRankController extends OrderAbstractController {
      */
     public function rankUpdateAction(Request $request, $resappid) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read","ResidencyApplication") ){
+        if( false == $this->isGranted("read","ResidencyApplication") ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 

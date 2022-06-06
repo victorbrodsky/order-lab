@@ -52,10 +52,10 @@ class RequestController extends OrderAbstractController
     public function newAction(Request $request)
     {
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_OBSERVER') &&
-            !$this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUBMITTER') &&
-            !$this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
-            !$this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+        if( $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+            !$this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            !$this->isGranted('ROLE_VACREQ_APPROVER') &&
+            !$this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {
             return $this->redirect( $this->generateUrl('vacreq_awaycalendar') );
         }
@@ -68,10 +68,10 @@ class RequestController extends OrderAbstractController
 
         $entity = new VacReqRequest($user);
 
-        if( false == $this->get('security.authorization_checker')->isGranted("create", $entity) ) {
+        if( false == $this->isGranted("create", $entity) ) {
             //since this is a home page redirect users according to the roles
             //approvers - redirect to incoming requests page
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
+            if( $this->isGranted('ROLE_VACREQ_APPROVER') ) {
                 //Flash
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -170,7 +170,7 @@ class RequestController extends OrderAbstractController
 
         //check carry over days limit
         if( $routeName == "vacreq_carryoverrequest" ) {
-            if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
                 $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
                 $carryOverDays = $entity->getCarryOverDays();
@@ -370,7 +370,7 @@ class RequestController extends OrderAbstractController
      */
     public function showAction(Request $request, $id)
     {
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
             //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -383,7 +383,7 @@ class RequestController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
         }
 
-        if( false == $this->get('security.authorization_checker')->isGranted("read", $entity) ) {
+        if( false == $this->isGranted("read", $entity) ) {
             //exit('show: no permission');
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
@@ -457,9 +457,9 @@ class RequestController extends OrderAbstractController
 
         //check permission
         $routName = $request->get('_route');
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if ($routName == 'vacreq_review') {
-                if (false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity)) {
+                if (false == $this->isGranted("changestatus", $entity)) {
                     //exit("vacreq_review: no permission to changestatus");
                     $this->get('session')->getFlashBag()->add(
                         'warning',
@@ -468,7 +468,7 @@ class RequestController extends OrderAbstractController
                     return $this->redirect($this->generateUrl('vacreq-nopermission'));
                 }
             } else {
-                if (false == $this->get('security.authorization_checker')->isGranted("update", $entity)) {
+                if (false == $this->isGranted("update", $entity)) {
                     //exit('vacreq_edit: no permission to update');
                     $this->get('session')->getFlashBag()->add(
                         'warning',
@@ -548,7 +548,7 @@ class RequestController extends OrderAbstractController
 
         //check carry over days limit (edit). Should we have this only for "new" request?
         if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
-            if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
                 $userSecUtil = $this->container->get('user_security_utility');
                 $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
@@ -829,7 +829,7 @@ class RequestController extends OrderAbstractController
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 
-        //if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
+        //if( false == $this->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         //}
 
@@ -846,11 +846,11 @@ class RequestController extends OrderAbstractController
         }
 
         //check permissions
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+//        if( $this->isGranted('ROLE_VACREQ_APPROVER') || $this->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->isGranted("changestatus", $entity) ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }
-//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+//        } elseif( $this->isGranted("update", $entity) ) {
 //            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }
@@ -864,9 +864,9 @@ class RequestController extends OrderAbstractController
         $logger->notice("RequestController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
         /////////////// EOF log status ////////////////////////
 
-        if( $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( $this->isGranted("changestatus", $entity) ) {
             //Approvers can change status to anything
-        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+        } elseif( $this->isGranted("update", $entity) ) {
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 //Flash
@@ -1144,7 +1144,7 @@ class RequestController extends OrderAbstractController
 
         //check permissions
         if(
-            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            false == $this->isGranted("update", $entity) &&
             $entity->getUser()->getId() != $user->getId() //author can request cancellation
         ) {
             //exit("No permission");
@@ -1259,7 +1259,7 @@ class RequestController extends OrderAbstractController
         $logger->notice("RequestController statusCancellationRequestChangeAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
 
         //check permissions
-        if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
+        if( false == $this->isGranted("changestatus", $entity) ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -1339,14 +1339,14 @@ class RequestController extends OrderAbstractController
         }
 
         //check permissions
-//        if( false == $this->get('security.authorization_checker')->isGranted("update", $entity) && false === $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+//        if( false == $this->isGranted("update", $entity) && false === $this->isGranted('ROLE_VACREQ_SUPERVISOR')) {
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
         if(
-            $this->get('security.authorization_checker')->isGranted("read", $entity) ||
-            $this->get('security.authorization_checker')->isGranted("update", $entity) ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR')
+            $this->isGranted("read", $entity) ||
+            $this->isGranted("update", $entity) ||
+            $this->isGranted('ROLE_VACREQ_ADMIN') ||
+            $this->isGranted('ROLE_VACREQ_SUPERVISOR')
         )
         {
             //OK send reminder email: read, supervisor
@@ -1387,12 +1387,12 @@ class RequestController extends OrderAbstractController
         $roleCarryOverApprover = false;
 
         $admin = false;
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')) {
+        if ($this->isGranted('ROLE_VACREQ_ADMIN')) {
             $admin = true;
         }
 
         $roleApprover = false;
-        if ($this->get('security.authorization_checker')->isGranted("changestatus", $entity)) {
+        if ($this->isGranted("changestatus", $entity)) {
             $roleApprover = true;
         }
 
@@ -1412,7 +1412,7 @@ class RequestController extends OrderAbstractController
             }
             if (!$userExecutiveSubmitter) {
                 $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-                if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+                if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
                     $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 }
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user, $tentativeGroupParams);
@@ -1422,13 +1422,13 @@ class RequestController extends OrderAbstractController
             $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
 
             $roleCarryOverApprover = false;
-            if ($this->get('security.authorization_checker')->isGranted("changestatus-carryover", $entity)) {
+            if ($this->isGranted("changestatus-carryover", $entity)) {
                 $roleCarryOverApprover = true;
             }
 
         } else {
             $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+            if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
         }
@@ -1487,7 +1487,7 @@ class RequestController extends OrderAbstractController
         if( count($organizationalInstitutions) == 0 && ($tentativeInstitutions === null or count($tentativeInstitutions) == 0) ) {
             //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/
 
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //admin user
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
@@ -1637,7 +1637,7 @@ class RequestController extends OrderAbstractController
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( !$this->isGranted('ROLE_VACREQ_ADMIN') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
@@ -1655,7 +1655,7 @@ class RequestController extends OrderAbstractController
      */
     public function importOldDataAction(Request $request) {
 
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -1679,7 +1679,7 @@ class RequestController extends OrderAbstractController
      */
     public function deleteImportedOldDataAction(Request $request) {
 
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -1740,7 +1740,7 @@ class RequestController extends OrderAbstractController
      */
     public function setdatesImportedOldDataAction(Request $request) {
 
-        if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -1810,7 +1810,7 @@ class RequestController extends OrderAbstractController
     public function getOverlapRequestsAction(Request $request)
     {
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
@@ -1884,7 +1884,7 @@ class RequestController extends OrderAbstractController
     public function getUpdateCarryOverRequestsAction(Request $request)
     {
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             //exit('no permission');
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
@@ -1926,7 +1926,7 @@ class RequestController extends OrderAbstractController
                 $tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
                 $tentativeGroupParams['asUser'] = true;
                 //$tentativeGroupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-                //if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                //if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                     //$tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 //}
                 $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($submitter, $tentativeGroupParams);

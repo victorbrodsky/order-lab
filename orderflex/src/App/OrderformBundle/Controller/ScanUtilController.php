@@ -94,8 +94,8 @@ class ScanUtilController extends UtilController {
 
         //echo "opt=".$opt."<br>";
 
-//        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
-//            $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
+//        if( $this->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ||
+//            $this->isGranted('ROLE_SCANORDER_SERVICE_CHIEF')
 //        ) {
 //            $addwhere = " OR list.type = 'user-added' ";
 //        }
@@ -714,7 +714,7 @@ class ScanUtilController extends UtilController {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);
         } else {
             $query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);

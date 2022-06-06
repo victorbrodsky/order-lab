@@ -55,7 +55,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+        if (false == $this->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -184,7 +184,7 @@ class RequestFormNodeController extends OrderAbstractController
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+        if( false == $this->isGranted('ROLE_TRANSRES_REQUESTER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -322,7 +322,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -378,7 +378,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function indexAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -392,7 +392,11 @@ class RequestFormNodeController extends OrderAbstractController
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
-        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr,'routeName'=>$routeName);
+        $params = array(
+            'progressStateArr'=>$progressStateArr,
+            'billingStateArr'=>$billingStateArr,
+            'routeName'=>$routeName
+        );
         $filterform = $this->createForm(FilterRequestType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -507,7 +511,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function myRequestsAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+        if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
@@ -672,12 +676,20 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 
+        $trpAdmin = false;
+        if(
+            $this->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
+            $trpAdmin = true;
+        }
+        
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'trpAdmin' => $trpAdmin,
             'transresRequest' => $transresRequest,
             'routeName' => $routeName,
             'saveAsDraft' => false,
@@ -690,8 +702,8 @@ class RequestFormNodeController extends OrderAbstractController
         $params['admin'] = false;
 
         if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+            $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             $params['admin'] = true;
         } else {
@@ -741,7 +753,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function generateFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -835,7 +847,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

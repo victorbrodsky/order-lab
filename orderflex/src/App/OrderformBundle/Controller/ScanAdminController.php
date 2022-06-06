@@ -151,7 +151,7 @@ class ScanAdminController extends AdminController
     public function generateAllAction()
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -298,7 +298,7 @@ class ScanAdminController extends AdminController
     public function generateStainAction()
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -688,7 +688,7 @@ class ScanAdminController extends AdminController
 //
 //        exit('disabled');
 //
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
 //        }
 //
@@ -722,7 +722,7 @@ class ScanAdminController extends AdminController
      */
     public function removeAllOrdersStainsAction() {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
@@ -2824,7 +2824,7 @@ class ScanAdminController extends AdminController
      */
     public function institutionTreeAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 

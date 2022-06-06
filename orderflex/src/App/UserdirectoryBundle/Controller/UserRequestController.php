@@ -59,7 +59,7 @@ class UserRequestController extends OrderAbstractController
      */
     public function indexAction( Request $request )
     {
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
@@ -249,7 +249,7 @@ class UserRequestController extends OrderAbstractController
      */
     public function showAction($id)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -280,7 +280,7 @@ class UserRequestController extends OrderAbstractController
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
@@ -308,7 +308,7 @@ class UserRequestController extends OrderAbstractController
     public function approveUserAccountRequestAction(Request $request)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -537,7 +537,7 @@ class UserRequestController extends OrderAbstractController
      */
     public function editAction($id)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -572,7 +572,7 @@ class UserRequestController extends OrderAbstractController
     public function updateAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -617,7 +617,7 @@ class UserRequestController extends OrderAbstractController
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+        if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
