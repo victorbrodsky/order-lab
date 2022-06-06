@@ -85,7 +85,7 @@ class ScanAccessRequestController extends AccessRequestController
             "banned" => "ROLE_SCANORDER_BANNED",
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$this->getParameter('scan.sitename'),$roles);
+        return $this->accessRequestCreateNew($request,$user->getId(),$this->getParameter('scan.sitename'),$roles);
     }
 
     /**
@@ -109,7 +109,7 @@ class ScanAccessRequestController extends AccessRequestController
             "banned" => "ROLE_SCANORDER_BANNED",
         );
 
-        return $this->accessRequestCreateNew($user->getId(),$sitename,$roles);
+        return $this->accessRequestCreateNew($request,$user->getId(),$sitename,$roles);
     }
 
     /**

@@ -81,10 +81,6 @@ services:
 #    App\UserdirectoryBundle\Controller\TestController: ~
     #        arguments: ["@calllog_util","@user_service_utility"]
 
-#    custom_authenticator:
-#        class:     App\UserdirectoryBundle\Security\Authentication\CustomAuthenticator
-#        arguments: ["@security.password_encoder","@service_container","@doctrine.orm.entity_manager"]
-
 #    custom_guard_authenticator:
 #        class:     App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
 #        arguments: ["@security.password_encoder","@service_container","@doctrine.orm.entity_manager"]
