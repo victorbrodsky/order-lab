@@ -989,7 +989,7 @@ class ListController extends OrderAbstractController
             //the date from the form does not contain time, so set createdate with date and time.
             $entity->setCreatedate(new \DateTime());
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $entity->setCreator($user);
 
             if( $entity instanceof UsernameType ) {
@@ -1043,7 +1043,7 @@ class ListController extends OrderAbstractController
         }
 
         //use $timezone = $user->getTimezone(); ?
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
@@ -1333,7 +1333,7 @@ class ListController extends OrderAbstractController
 
         $entity = new $entityClass();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $entity->setCreatedate(new \DateTime());
         $entity->setType('user-added');
         $entity->setCreator($user);
@@ -1976,7 +1976,7 @@ class ListController extends OrderAbstractController
         }
 
         //use $timezone = $user->getTimezone(); ?
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
@@ -2305,7 +2305,7 @@ class ListController extends OrderAbstractController
             $entity->setCreator($originalEntity->getCreator());
             $entity->setCreatedate($originalEntity->getCreatedate());
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $entity->setUpdatedby($user);
             //$entity->setUpdatedon(new \DateTime());
             $entity->setUpdateAuthorRoles($user->getRoles());
@@ -4179,7 +4179,7 @@ class ListController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //echo "data: $pathbase, $entityId, $type <br>";
 

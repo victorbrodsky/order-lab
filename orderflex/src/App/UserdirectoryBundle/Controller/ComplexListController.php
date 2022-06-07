@@ -285,7 +285,7 @@ class ComplexListController extends OrderAbstractController
 
         $cycle = 'new_standalone';
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = new $entityClass($user);
 
@@ -329,7 +329,7 @@ class ComplexListController extends OrderAbstractController
 
         $cycle = 'new_post_standalone';
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $routeName = $request->get('_route');
 
@@ -583,7 +583,7 @@ class ComplexListController extends OrderAbstractController
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $isAdmin = $this->isGranted('ROLE_USERDIRECTORY_EDITOR');
 

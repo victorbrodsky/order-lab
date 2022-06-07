@@ -111,7 +111,7 @@ class ScanOrderController extends OrderAbstractController {
         }
 
         //by user
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //echo "user=".$user;
         if( !is_object($user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -335,7 +335,7 @@ class ScanOrderController extends OrderAbstractController {
         
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $orderUtil = $this->get('scanorder_utility');
 
@@ -653,7 +653,7 @@ class ScanOrderController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         /////////// institution ///////////
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $orderUtil = $this->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
@@ -702,7 +702,7 @@ class ScanOrderController extends OrderAbstractController {
         //$slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->findByStatus('active');
 
         /////////// institution ///////////
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $orderUtil = $this->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
@@ -833,7 +833,7 @@ class ScanOrderController extends OrderAbstractController {
         //////// record to EventLog ////////
         if( !$page || $page == "" ) {
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $roles = $user->getRoles();
 
             $count = count($viewArr['pagination']);
@@ -886,7 +886,7 @@ class ScanOrderController extends OrderAbstractController {
         //////// record to EventLog ////////
         if( !$page || $page == "" ) {
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $roles = $user->getRoles();
 
             $count = count($viewArr['pagination']);
@@ -1227,7 +1227,7 @@ class ScanOrderController extends OrderAbstractController {
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if( $routeName == "incoming-scan-orders" ) {
             $commentFlag = 'admin';

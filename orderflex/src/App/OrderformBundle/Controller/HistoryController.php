@@ -58,7 +58,7 @@ class HistoryController extends OrderAbstractController
 //
 //        /////////// institution ///////////
 //        $instStr = "";
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //        foreach( $user->getInstitutions() as $inst ) {
 //            if( $instStr != "" ) {
 //                $instStr = $instStr . " OR ";
@@ -171,7 +171,7 @@ class HistoryController extends OrderAbstractController
         }
 
         $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -201,7 +201,7 @@ class HistoryController extends OrderAbstractController
         }
 
         $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -251,7 +251,7 @@ class HistoryController extends OrderAbstractController
         }
 
         $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         if( $entity && !$securityUtil->hasUserPermission($entity->getMessage(),$user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -335,7 +335,7 @@ class HistoryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entities = $em->getRepository('AppOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
         //echo "hist count=".count($entities)."<br>";
@@ -501,7 +501,7 @@ class HistoryController extends OrderAbstractController
         } else {
 
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
 
             $history = new History();

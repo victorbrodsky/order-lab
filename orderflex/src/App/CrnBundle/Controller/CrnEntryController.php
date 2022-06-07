@@ -1186,7 +1186,7 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routename = $request->get('_route');
 
         if( $routename == "crn_tasks_todo" ) {
@@ -1234,7 +1234,7 @@ class CrnEntryController extends OrderAbstractController
 
         //1) search box: MRN,Name...
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -1525,7 +1525,7 @@ class CrnEntryController extends OrderAbstractController
         //add patient id field to the form (id="oleg_CrnBundle_patienttype_id") or use class="crn-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
@@ -2096,7 +2096,7 @@ class CrnEntryController extends OrderAbstractController
     }//save
 
     public function createCrnEntryForm($message, $mrntype=null, $mrn=null, $cycle='show', $readonlyEncounter=false, $showPreviousEncounters=false) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -2609,7 +2609,7 @@ class CrnEntryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
 
@@ -3348,7 +3348,7 @@ class CrnEntryController extends OrderAbstractController
 
         //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $eventType = "Critical Result Notification Entry Viewed";
         $eventStr = "Critical Result Notification Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
         $userSecUtil->createUserEditEvent($this->getParameter('crn.sitename'), $eventStr, $user, $message, $request, $eventType); //View Critical Result Notification Entry
@@ -3420,7 +3420,7 @@ class CrnEntryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
             $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
@@ -3475,7 +3475,7 @@ class CrnEntryController extends OrderAbstractController
 
         set_time_limit(600); //600 seconds => 10 mins
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
         //$logger = $this->container->get('logger');
 

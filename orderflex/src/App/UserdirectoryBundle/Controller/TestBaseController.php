@@ -36,7 +36,7 @@ class TestBaseController extends OrderAbstractController
         $msg = "Container Test";
         $em = $this->getDoctrine()->getManager();
         //$calllogUtil = $this->get('calllog_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
         $msg = $msg . "; user=$user";

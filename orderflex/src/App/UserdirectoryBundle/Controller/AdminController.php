@@ -810,7 +810,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Start generateAll");
 
         $userutil = new UserUtil();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //ini_set('memory_limit', '3072M');
         //$max_exec_time = ini_get('max_execution_time');
@@ -2222,7 +2222,7 @@ class AdminController extends OrderAbstractController
 
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $role => $aliasDescription ) {
@@ -2915,7 +2915,7 @@ class AdminController extends OrderAbstractController
         );
 
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2957,7 +2957,7 @@ class AdminController extends OrderAbstractController
             'Research Lab' => -22
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -2981,7 +2981,7 @@ class AdminController extends OrderAbstractController
     //https://bitbucket.org/weillcornellpathology/scanorder/issue/221/multiple-office-locations-and-phone
     public function generateInstitutions() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3305,7 +3305,7 @@ class AdminController extends OrderAbstractController
     public function generateAuxiliaryInstitutions() {
 
         $em = $this->getDoctrine()->getManager();
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $count = 0;
 
         //echo 'generate Auxiliary Institutions <br>';
@@ -3469,7 +3469,7 @@ class AdminController extends OrderAbstractController
             'WY'=>"Wyoming"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $states as $key => $value ) {
@@ -3535,7 +3535,7 @@ class AdminController extends OrderAbstractController
 
 
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3560,7 +3560,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $inputFileName = __DIR__ . '/../Util/Cities.xlsx';
 
@@ -3680,7 +3680,7 @@ class AdminController extends OrderAbstractController
         //exit();
         $logger->notice("Start generateLanguages. count=".count($entities));
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $abbreviation=>$name ) {
@@ -3756,7 +3756,7 @@ class AdminController extends OrderAbstractController
         //exit();
         $logger->notice("Start generateLocales. after getLocaleNames. count=".count($elements));
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $locale=>$description ) {
@@ -3815,7 +3815,7 @@ class AdminController extends OrderAbstractController
         );
 
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3863,7 +3863,7 @@ class AdminController extends OrderAbstractController
         );
 
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3895,7 +3895,7 @@ class AdminController extends OrderAbstractController
             'Empowered'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3964,7 +3964,7 @@ class AdminController extends OrderAbstractController
         );
 
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4005,7 +4005,7 @@ class AdminController extends OrderAbstractController
             'Download'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4040,7 +4040,7 @@ class AdminController extends OrderAbstractController
             'Pathology Residency Applicant' //should we filter users similarly as employmentType.name != 'Pathology Fellowship Applicant'?
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4080,7 +4080,7 @@ class AdminController extends OrderAbstractController
             'Fired'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4157,7 +4157,7 @@ class AdminController extends OrderAbstractController
             'Error'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4198,7 +4198,7 @@ class AdminController extends OrderAbstractController
             'WCM CWID'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4253,7 +4253,7 @@ class AdminController extends OrderAbstractController
             "Surgical/Oncologic pathology"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4273,7 +4273,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateResidencyTrackList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
 //        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findAll();
@@ -4338,7 +4338,7 @@ class AdminController extends OrderAbstractController
             'Fellow'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4390,7 +4390,7 @@ class AdminController extends OrderAbstractController
             'Transfusion Medicine'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4449,7 +4449,7 @@ class AdminController extends OrderAbstractController
             'WCM Pathology Department Common Location For Phone Directory'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -4473,7 +4473,7 @@ class AdminController extends OrderAbstractController
 
     public function generateEquipmentType() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4518,7 +4518,7 @@ class AdminController extends OrderAbstractController
 
     public function generateEquipment() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4575,7 +4575,7 @@ class AdminController extends OrderAbstractController
 
     public function generateLocationPrivacy() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findAll();
@@ -4610,7 +4610,7 @@ class AdminController extends OrderAbstractController
 
     public function generateResLabs_OLD() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findAll();
@@ -4656,7 +4656,7 @@ class AdminController extends OrderAbstractController
     //"Skeletal Biology", "Dr. Inghirami's Lab", "Wayne Tam Lab"
     public function generateResLabs() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         $em = $this->getDoctrine()->getManager();
@@ -4807,7 +4807,7 @@ class AdminController extends OrderAbstractController
 
     public function generateBuildings() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findAll();
@@ -4911,7 +4911,7 @@ class AdminController extends OrderAbstractController
     public function generateLocations() {
 
         $userSecUtil = $this->get('user_security_utility');
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4994,7 +4994,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateLocationsFromExcel( $count=null ) {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
 //        $entities = $em->getRepository('AppUserdirectoryBundle:Location')->findAll();
@@ -5155,7 +5155,7 @@ class AdminController extends OrderAbstractController
         $userGenerator = $this->container->get('user_generator');
         $userUtil = new UserUtil();
         $em = $this->getDoctrine()->getManager();
-        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.token_storage')->getToken()->getUser();
+        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->getUser();
         $default_time_zone = $this->getParameter('default_time_zone');
         //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 
@@ -5262,7 +5262,7 @@ class AdminController extends OrderAbstractController
 
     public function generateCompletionReasons() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:CompletionReasonList')->findAll();
@@ -5293,7 +5293,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTrainingDegrees() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:TrainingDegreeList')->findAll();
@@ -5335,7 +5335,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateResidencySpecialties() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
@@ -5390,7 +5390,7 @@ class AdminController extends OrderAbstractController
     //NOT USED
     public function generateSpreadsheetResidencySpecialties() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -5513,7 +5513,7 @@ class AdminController extends OrderAbstractController
     //Create default Fellowship Subspecialty 'Clinical Informatics'
     public function generateDefaultFellowshipSubspecialties() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -5560,7 +5560,7 @@ class AdminController extends OrderAbstractController
 
     public function generateHonorTrainings() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:HonorTrainingList')->findAll();
@@ -5591,7 +5591,7 @@ class AdminController extends OrderAbstractController
     //Professional Fellowship Title
     public function generateFellowshipTitles() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:FellowshipTitleList')->findAll();
@@ -5641,7 +5641,7 @@ class AdminController extends OrderAbstractController
 
     public function generatesourceOrganizations() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:SourceOrganization')->findAll();
@@ -5674,7 +5674,7 @@ class AdminController extends OrderAbstractController
 
     public function generateImportances() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:ImportanceList')->findAll();
@@ -5710,7 +5710,7 @@ class AdminController extends OrderAbstractController
 
     public function generateAuthorshipRoles() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:AuthorshipRoles')->findAll();
@@ -5742,7 +5742,7 @@ class AdminController extends OrderAbstractController
 
 //    public function generateTitlePositionTypes() {
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppUserdirectoryBundle:TitlePositionType')->findAll();
@@ -5795,7 +5795,7 @@ class AdminController extends OrderAbstractController
 
     public function generateSex() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:SexList')->findAll();
@@ -5830,7 +5830,7 @@ class AdminController extends OrderAbstractController
 
     public function generatePositionTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:PositionTypeList')->findAll();
@@ -5891,7 +5891,7 @@ class AdminController extends OrderAbstractController
             'Comment Name' => 1,
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -5931,7 +5931,7 @@ class AdminController extends OrderAbstractController
 //            'Slide'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5964,7 +5964,7 @@ class AdminController extends OrderAbstractController
             'No',
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5997,7 +5997,7 @@ class AdminController extends OrderAbstractController
             'American Board of Pathology',
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6035,7 +6035,7 @@ class AdminController extends OrderAbstractController
             'Other'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6078,7 +6078,7 @@ class AdminController extends OrderAbstractController
             'Research Associate'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6128,7 +6128,7 @@ class AdminController extends OrderAbstractController
 
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$action ) {
@@ -6170,7 +6170,7 @@ class AdminController extends OrderAbstractController
             '3 (Below Average)'=>3
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$value ) {
@@ -6208,7 +6208,7 @@ class AdminController extends OrderAbstractController
             "Other-please contact the program coordinator"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6243,7 +6243,7 @@ class AdminController extends OrderAbstractController
             "N/A"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6283,7 +6283,7 @@ class AdminController extends OrderAbstractController
 
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$action ) {
@@ -6325,7 +6325,7 @@ class AdminController extends OrderAbstractController
             '3 (Below Average)'=>3
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$value ) {
@@ -6363,7 +6363,7 @@ class AdminController extends OrderAbstractController
             "Other-please contact the program coordinator"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6396,7 +6396,7 @@ class AdminController extends OrderAbstractController
             "None"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6436,7 +6436,7 @@ class AdminController extends OrderAbstractController
             "N/A"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6471,7 +6471,7 @@ class AdminController extends OrderAbstractController
             "Do not rank" => 4
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$abbreviation ) {
@@ -6501,7 +6501,7 @@ class AdminController extends OrderAbstractController
             "AP/Physician Scientist Training Program (PSTP)"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6551,7 +6551,7 @@ class AdminController extends OrderAbstractController
             "Transfusion Medicine"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6580,7 +6580,7 @@ class AdminController extends OrderAbstractController
         //blank list, no default values
         $elements = array();
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -6608,7 +6608,7 @@ class AdminController extends OrderAbstractController
 
     public function generateVacReqRequestTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6641,7 +6641,7 @@ class AdminController extends OrderAbstractController
     }
     public function generateVacReqFloatingTextList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6671,7 +6671,7 @@ class AdminController extends OrderAbstractController
     }
     public function generateVacReqFloatingTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6701,7 +6701,7 @@ class AdminController extends OrderAbstractController
 
     public function generateHealthcareProviderSpecialtiesList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6758,7 +6758,7 @@ class AdminController extends OrderAbstractController
 
     public function generateHealthcareProviderCommunicationsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6810,7 +6810,7 @@ class AdminController extends OrderAbstractController
                                         'If the user enters an existing MRN number and click check button it will retrieve empty data, so the user can enter a new data which will marked as "invalid".'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name => $description ) {
@@ -6836,7 +6836,7 @@ class AdminController extends OrderAbstractController
     //As the final step, this permission will be attached to the role.
     public function generatePermissions() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionList')->findAll();
@@ -6926,7 +6926,7 @@ class AdminController extends OrderAbstractController
     //2) create permission objects associated with sites (i.e. "ResidencyApplication" has site "resapp")
     public function generatePermissionObjects() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -7026,7 +7026,7 @@ class AdminController extends OrderAbstractController
     //1) create independent actions
     public function generatePermissionActions() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findAll();
@@ -7073,7 +7073,7 @@ class AdminController extends OrderAbstractController
 
     public function generateObjectTypeActions() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findAll();
@@ -7338,7 +7338,7 @@ class AdminController extends OrderAbstractController
 
     public function generateEventObjectTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -7463,7 +7463,7 @@ class AdminController extends OrderAbstractController
      */
     public function generatePlatformListManagerList( Request $request=null, $withcustom=null ) {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -8663,7 +8663,7 @@ class AdminController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $primaryPublicUserId = 'administrator';
         //$primaryPublicUserId = 'Administrator1';
 
@@ -8992,7 +8992,7 @@ class AdminController extends OrderAbstractController
     //Blood Product Transfused
     public function generateBloodProductTransfused() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9028,7 +9028,7 @@ class AdminController extends OrderAbstractController
     //ClericalErrorList
     public function generateClericalErrorList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9059,7 +9059,7 @@ class AdminController extends OrderAbstractController
 
     //LabResultNames
     public function generateLabResultNames() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AppUserdirectoryBundle:LabResultNameList')->findAll();
@@ -9147,7 +9147,7 @@ class AdminController extends OrderAbstractController
     //LabResultUnitsMeasureList
     public function generateLabResultUnitsMeasureList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AppUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
@@ -9218,7 +9218,7 @@ class AdminController extends OrderAbstractController
     //LabResultFlagList
     public function generateLabResultFlagList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9265,7 +9265,7 @@ class AdminController extends OrderAbstractController
     //PathologyResultSignatoriesList
     public function generatePathologyResultSignatoriesList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9295,7 +9295,7 @@ class AdminController extends OrderAbstractController
     //Transfusion Reaction Type
     public function generateTransfusionReactionType() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9337,7 +9337,7 @@ class AdminController extends OrderAbstractController
     //BloodTypeList
     public function generateBloodTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9374,7 +9374,7 @@ class AdminController extends OrderAbstractController
 
     public function generateAdditionalCommunicationList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9406,7 +9406,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransfusionAntibodyScreenResultsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9437,7 +9437,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransfusionDATResultsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9468,7 +9468,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransfusionCrossmatchResultsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9499,7 +9499,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransfusionHemolysisCheckResultsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9530,7 +9530,7 @@ class AdminController extends OrderAbstractController
 
     public function generateComplexPlateletSummaryAntibodiesList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9564,7 +9564,7 @@ class AdminController extends OrderAbstractController
 
     public function generateCCIUnitPlateletCountDefaultValueList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9594,7 +9594,7 @@ class AdminController extends OrderAbstractController
 
     public function generateCCIPlateletTypeTransfusedList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9627,7 +9627,7 @@ class AdminController extends OrderAbstractController
 
     public function generatePlateletTransfusionProductReceivingList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9660,7 +9660,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransfusionProductStatusList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9694,7 +9694,7 @@ class AdminController extends OrderAbstractController
 
     public function generateWeekDaysList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9730,7 +9730,7 @@ class AdminController extends OrderAbstractController
 
     public function generateMonthsList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9772,7 +9772,7 @@ class AdminController extends OrderAbstractController
 
     public function generateLifeForm() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9805,7 +9805,7 @@ class AdminController extends OrderAbstractController
 
         //$userSecUtil = $this->get('user_security_utility');
         $transresUtil = $this->get('transres_util');
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //                                                                  ROLE_               OID      project specialty shown to users as user friendly name
@@ -9891,7 +9891,7 @@ class AdminController extends OrderAbstractController
     public function generateWorkQueueList() {
         //$userSecUtil = $this->get('user_security_utility');
         $transresUtil = $this->get('transres_util');
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -9931,7 +9931,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateOrderableStatusList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //“Requested”, “Pending Additional Info”, “In Progress”, and “Completed”
@@ -9972,7 +9972,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransResPriceTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10005,7 +10005,7 @@ class AdminController extends OrderAbstractController
 
     public function generateTransResProjectTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10039,7 +10039,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateIrbApprovalTypeList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10069,7 +10069,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateTissueProcessingServiceList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10100,7 +10100,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateRestrictedServiceList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10148,7 +10148,7 @@ class AdminController extends OrderAbstractController
 //            "Squamous Cell Carcinoma"
 //        );
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $count = 10;
 //        foreach( $elements as $name ) {
@@ -10173,7 +10173,7 @@ class AdminController extends OrderAbstractController
 //    }
 
     public function generateBusinessPurposes() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10206,7 +10206,7 @@ class AdminController extends OrderAbstractController
 
     public function generateDashboardRoles() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $dashboardInit = $this->get('dashboard_init');
@@ -10270,7 +10270,7 @@ class AdminController extends OrderAbstractController
     public function generateChartTypeList() {
         //return NULL; //TODO: hierarchy
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //On this list add the “top”/root” category item titled “All Chart Types”
@@ -10343,7 +10343,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
     public function generateSingleChartTypeList($name) {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
@@ -10365,7 +10365,7 @@ class AdminController extends OrderAbstractController
 //    public function generateChartTopicList_OLD() {
 //        //return NULL; //TODO: hierarchy
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //        $em = $this->getDoctrine()->getManager();
 //
 //        //On this list add the “top”/root” category item titled “All Charts”
@@ -10456,7 +10456,7 @@ class AdminController extends OrderAbstractController
 //    public function generateChartTopicList_OLD1() {
 //        //return NULL;
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //        $em = $this->getDoctrine()->getManager();
 //
 //        //On this list add the “top”/root” category item titled “All Charts”
@@ -10676,7 +10676,7 @@ class AdminController extends OrderAbstractController
     }
     public function generateHierarchyTopics( $parentEntity, $name, $level, $childrens, $mapper, $addedCount=0 )
     {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         if (!$name) {
@@ -10733,7 +10733,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateSingleChartTopicList($name) {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
@@ -10755,7 +10755,7 @@ class AdminController extends OrderAbstractController
     //chartfilters
     public function generateChartFilterList() {
         //return NULL; //testing
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10790,7 +10790,7 @@ class AdminController extends OrderAbstractController
     //"Dashboard Charts" - list of existing charts from DashboardUtil.php (charts)
     public function generateChartsList() {
         //return NULL; //testing
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //get charts from DashboardUtil.php getChartTypes()
@@ -10859,7 +10859,7 @@ class AdminController extends OrderAbstractController
     //chartdatasources
     public function generateChartDataSourceList() {
         //return NULL; //testing
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10888,7 +10888,7 @@ class AdminController extends OrderAbstractController
     //chartupdatefrequencies
     public function generateChartUpdateFrequencyList() {
         //return NULL; //testing
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10920,7 +10920,7 @@ class AdminController extends OrderAbstractController
     //Dashboard Visualization Method (chartvisualizations)
     public function generateChartVisualizationList() {
         //return NULL; //testing
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -10951,7 +10951,7 @@ class AdminController extends OrderAbstractController
     public function generateTransResRequestCategoryType() {
 
         $transresUtil = $this->get('transres_util');
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
 
@@ -11114,7 +11114,7 @@ class AdminController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $creator = $this->get('security.token_storage')->getToken()->getUser();
+        $creator = $this->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
 
         //user_trainings_0_degree

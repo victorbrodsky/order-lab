@@ -61,7 +61,7 @@ class DataQualityController extends CallEntryController
     public function mergePatientAction(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -113,7 +113,7 @@ class DataQualityController extends CallEntryController
     public function mergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -348,7 +348,7 @@ class DataQualityController extends CallEntryController
     //public function unmergePatientAction(Request $request, UserSecurityUtil $securityUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -408,7 +408,7 @@ class DataQualityController extends CallEntryController
     public function setMasterPatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         //$calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -452,7 +452,7 @@ class DataQualityController extends CallEntryController
     public function unmergePatientAjaxAction(Request $request, CallLogUtil $calllogUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         //$calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -549,7 +549,7 @@ class DataQualityController extends CallEntryController
      */
     public function findAndEditPatientAction(Request $request) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -605,7 +605,7 @@ class DataQualityController extends CallEntryController
 
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $patientId = trim((string)$request->get('patientId'));
         $mrn = trim((string)$request->get('mrn'));
@@ -638,7 +638,7 @@ class DataQualityController extends CallEntryController
     public function addNewPatientToListAction_TODEL(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -686,7 +686,7 @@ class DataQualityController extends CallEntryController
 
 
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -749,7 +749,7 @@ class DataQualityController extends CallEntryController
     public function updateTaskAction(Request $request, $taskId, $status)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 

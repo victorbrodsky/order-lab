@@ -72,7 +72,7 @@ class ReviewBaseController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $cycle = "show";
 
@@ -114,7 +114,7 @@ class ReviewBaseController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $cycle = "edit";
 
@@ -226,7 +226,7 @@ class ReviewBaseController extends OrderAbstractController
     private function createReviewForm( $request, $review, $cycle, $stateStr )
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 

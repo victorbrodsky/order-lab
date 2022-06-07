@@ -62,7 +62,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $cycle = "new";
 
@@ -191,7 +191,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $cycle = "edit";
@@ -329,7 +329,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $cycle = "show";
 
@@ -385,7 +385,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $title = "Requests for the project ID ".$project->getOid();
 
@@ -518,7 +518,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $title = "My Requests";
 
@@ -672,7 +672,7 @@ class RequestFormNodeController extends OrderAbstractController
     public function createRequestForm( TransResRequest $transresRequest, $cycle, $request )
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 
@@ -852,7 +852,7 @@ class RequestFormNodeController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $res = "NotOK";

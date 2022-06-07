@@ -499,7 +499,7 @@ class ScanAdminController extends AdminController
 //        $helper = new FormHelper();
 //        $stains = $helper->getStains();
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppOrderformBundle:StainList')->findAll();
@@ -526,7 +526,7 @@ class ScanAdminController extends AdminController
     //populate stains from Excel sheet downloaded from the system
     public function generateStains() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -753,7 +753,7 @@ class ScanAdminController extends AdminController
 //    //populate stains from Excel sheet
 //    public function generateStainsV1() {
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
 //
@@ -881,7 +881,7 @@ class ScanAdminController extends AdminController
         $helper = new FormHelper();
         $organs = $helper->getSourceOrgan();
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $organs as $organ ) {
@@ -912,7 +912,7 @@ class ScanAdminController extends AdminController
         $helper = new FormHelper();
         $procedures = $helper->getProcedure();
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $procedures as $procedure ) {
@@ -931,7 +931,7 @@ class ScanAdminController extends AdminController
 
     public function generateStatuses() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:Status')->findAll();
@@ -1014,7 +1014,7 @@ class ScanAdminController extends AdminController
         $helper = new FormHelper();
         $types = $helper->getSlideType();
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:SlideType')->findAll();
@@ -1046,7 +1046,7 @@ class ScanAdminController extends AdminController
     //admin/genmrntype
     public function generateMrnType() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('AppOrderformBundle:MrnType')->findAll();
@@ -1105,7 +1105,7 @@ class ScanAdminController extends AdminController
     //negative level - all other title
     public function generateMessageTypeClassifiers() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1142,7 +1142,7 @@ class ScanAdminController extends AdminController
 
     public function generateMessageCategory() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $categories = array(
 
@@ -1383,7 +1383,7 @@ class ScanAdminController extends AdminController
             'Special Hematology'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $type ) {
@@ -1427,7 +1427,7 @@ class ScanAdminController extends AdminController
             'NYH Epic Beaker Accession Number' => '',
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $type => $abbreviation ) {
@@ -1473,7 +1473,7 @@ class ScanAdminController extends AdminController
             'Existing Auto-generated Encounter Number'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $type ) {
@@ -1505,7 +1505,7 @@ class ScanAdminController extends AdminController
             'Critical Result Notification'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $type ) {
@@ -1537,7 +1537,7 @@ class ScanAdminController extends AdminController
             'Existing Auto-generated Procedure Number'
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $types as $type ) {
@@ -1559,7 +1559,7 @@ class ScanAdminController extends AdminController
 
     public function generateOrderDelivery() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:OrderDelivery')->findAll();
@@ -1600,7 +1600,7 @@ class ScanAdminController extends AdminController
 
     public function generateRegionToScan() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:RegionToScan')->findAll();
@@ -1633,7 +1633,7 @@ class ScanAdminController extends AdminController
 
     public function generateProcessorComments() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
@@ -1666,7 +1666,7 @@ class ScanAdminController extends AdminController
 
     public function generateUrgency() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:Urgency')->findAll();
@@ -1695,7 +1695,7 @@ class ScanAdminController extends AdminController
     }
 
     public function generateProgressCommentsEventType() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findAll();
@@ -1734,7 +1734,7 @@ class ScanAdminController extends AdminController
 
 
     public function generateMagnifications() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:Magnification')->findAll();
@@ -1765,7 +1765,7 @@ class ScanAdminController extends AdminController
 
     //http://indicalab.com/products/ except Image Analysis Hyper-Cluster
     public function generateImageAnalysisAlgorithmList() {
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:ImageAnalysisAlgorithmList')->findAll();
@@ -1833,7 +1833,7 @@ class ScanAdminController extends AdminController
 
     public function generateRace() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:RaceList')->findAll();
@@ -1870,7 +1870,7 @@ class ScanAdminController extends AdminController
 
     public function generateDiseaseTypeList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findAll();
@@ -1903,7 +1903,7 @@ class ScanAdminController extends AdminController
 
     public function generateDiseaseOriginList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findAll();
@@ -1936,7 +1936,7 @@ class ScanAdminController extends AdminController
 
     public function generateEmbedderInstructionList() {
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppOrderformBundle:EmbedderInstructionList')->findAll();
@@ -1979,7 +1979,7 @@ class ScanAdminController extends AdminController
             'Research Set Title' => 1,
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -2015,7 +2015,7 @@ class ScanAdminController extends AdminController
             'Lesson Title' => 1,
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -2051,7 +2051,7 @@ class ScanAdminController extends AdminController
             "Information Added"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2085,7 +2085,7 @@ class ScanAdminController extends AdminController
             "Deleted"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2119,7 +2119,7 @@ class ScanAdminController extends AdminController
             "Deleted" => "D"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
@@ -2155,7 +2155,7 @@ class ScanAdminController extends AdminController
             "Post-deletion Draft"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2189,7 +2189,7 @@ class ScanAdminController extends AdminController
 //            "Red Book"
 //        );
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $count = 10;
 //        foreach( $elements as $name ) {
@@ -2221,7 +2221,7 @@ class ScanAdminController extends AdminController
             "Critical Result Notifications"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2265,7 +2265,7 @@ class ScanAdminController extends AdminController
             "Squamous Cell Carcinoma"=>"Critical Result Notifications"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $tagName=>$tagType ) {
@@ -2306,7 +2306,7 @@ class ScanAdminController extends AdminController
 ////            "Red Book"
 //        );
 //
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->getUser();
 //
 //        $count = 10;
 //        foreach( $elements as $name ) {
@@ -2342,7 +2342,7 @@ class ScanAdminController extends AdminController
             "Multiple Attachment Types"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2378,7 +2378,7 @@ class ScanAdminController extends AdminController
             "Other"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2419,7 +2419,7 @@ class ScanAdminController extends AdminController
             4 => "Patient",
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $level=>$name ) {
@@ -2449,7 +2449,7 @@ class ScanAdminController extends AdminController
     public function generatePatientListHierarchy() {
 
         $em = $this->getDoctrine()->getManager();
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         //$levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
 
@@ -2533,7 +2533,7 @@ class ScanAdminController extends AdminController
             1 => "Accession",
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $level=>$name ) {
@@ -2562,7 +2562,7 @@ class ScanAdminController extends AdminController
     public function generateAccessionListHierarchy() {
 
         $em = $this->getDoctrine()->getManager();
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         //add all Accession Lists as links (similar to patient lists) except at this point there should only be one: “Accessions for Follow-Up” link
         $items = array(
@@ -2642,7 +2642,7 @@ class ScanAdminController extends AdminController
             "Critical Result Notifications"
         );
 
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2670,7 +2670,7 @@ class ScanAdminController extends AdminController
     public function generateCrnPatientListHierarchy() {
 
         $em = $this->getDoctrine()->getManager();
-        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $username = $this->getUser();
 
         //$levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient List');
 

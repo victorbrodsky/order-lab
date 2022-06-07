@@ -107,7 +107,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $title = "Project Requests";
 
@@ -1274,7 +1274,7 @@ class ProjectController extends OrderAbstractController
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //testing
@@ -1513,7 +1513,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         //$userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $formnode = false;
@@ -1861,7 +1861,7 @@ class ProjectController extends OrderAbstractController
 
 //        $transresUtil = $this->container->get('transres_util');
 //        $em = $this->getDoctrine()->getManager();
-//        //$user = $this->get('security.token_storage')->getToken()->getUser();
+//        //$user = $this->getUser();
 //
 //        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
 //            $this->get('session')->getFlashBag()->add(
@@ -2085,7 +2085,7 @@ class ProjectController extends OrderAbstractController
 //        //1) requester => project is on the draft stage or in the reject stage
 //        //2) admin => any stage
 //
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //        $transresUtil = $this->container->get('transres_util');
 //        $em = $this->getDoctrine()->getManager();
 //        //$routeName = $request->get('_route');
@@ -2223,7 +2223,7 @@ class ProjectController extends OrderAbstractController
     public function createProjectForm( Project $project, $cycle, $request )
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 

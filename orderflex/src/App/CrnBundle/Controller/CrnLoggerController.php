@@ -108,7 +108,7 @@ class CrnLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("New Critical Result Notification Entry Submitted");
@@ -260,7 +260,7 @@ class CrnLoggerController extends LoggerController
 
         //echo "CrnLoggerController: capacity=".$capacity."<br>";
         //echo "process Optional Fields <br>";
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
         $currentUserName = "Attending Physician: ".$currentUser."";
         //$currentUserName = $currentUser->getPrimaryPublicUserId()."";
         //echo "CrnLoggerController: currentUserName=".$currentUserName."<br>";

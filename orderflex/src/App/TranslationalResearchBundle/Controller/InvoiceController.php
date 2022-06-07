@@ -46,7 +46,11 @@ class InvoiceController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        //replace $this->get('security.token_storage')
+        $user = $this->getUser();
+        //exit('user='.$user);
+
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
         $routeName = $request->get('_route');
@@ -812,7 +816,7 @@ class InvoiceController extends OrderAbstractController
         //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$user = null; //testing
         $cycle = "new";
 
@@ -1030,7 +1034,7 @@ class InvoiceController extends OrderAbstractController
         //Get $transresRequest (Assume invoice has a single $transresRequest)
         $transresRequest = $invoice->getTransresRequest();
         
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $cycle = "edit";
 
         $originalInvoiceStatus = $invoice->getStatus();
@@ -1241,7 +1245,7 @@ class InvoiceController extends OrderAbstractController
         $transresRequestUtil = $this->get('transres_request_util');
         //$transresPermissionUtil = $this->get('transres_permission_util');
         $transresUtil = $this->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($id);
@@ -1308,7 +1312,7 @@ class InvoiceController extends OrderAbstractController
     public function downloadPdfAction(Request $request, Invoice $invoice)
     {
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
@@ -1316,7 +1320,7 @@ class InvoiceController extends OrderAbstractController
         $transresRequestUtil = $this->get('transres_request_util');
 
         //download: user or localhost
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //download link can be accessed by a console as localhost with role PUBLIC_ACCESS, so simulate login manually
         if( !($user instanceof User) ) {
             $firewall = 'ldap_translationalresearch_firewall';
@@ -1390,7 +1394,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //$logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -1476,7 +1480,7 @@ class InvoiceController extends OrderAbstractController
     public function createInvoiceForm( $invoice, $cycle, $transresRequest=null ) {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
 
         if( !$transresRequest ) {
@@ -1566,7 +1570,7 @@ class InvoiceController extends OrderAbstractController
      * @Route("/send-invoice-pdf-by-email/{oid}", name="translationalresearch_invoice_send_pdf_email", methods={"GET"})
      */
     public function sendByEmailAction( Request $request, $oid ) {
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
         //$transresPermissionUtil = $this->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
@@ -1689,7 +1693,7 @@ class InvoiceController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
         $em = $this->getDoctrine()->getManager();
@@ -1772,7 +1776,7 @@ class InvoiceController extends OrderAbstractController
         $transresUtil = $this->get('transres_util');
         $transresPdfUtil = $this->get('transres_pdf_generator');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $res = "NotOK";
 

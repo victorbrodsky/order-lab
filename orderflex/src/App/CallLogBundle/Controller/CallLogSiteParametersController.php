@@ -177,7 +177,7 @@ class CallLogSiteParametersController extends SiteParametersController
     }
 
     public function createCalllogSiteParameterForm($entity, $cycle) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $disabled = false;

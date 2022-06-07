@@ -83,7 +83,7 @@ class DefaultController extends OrderAbstractController
 //        //testing review
 //        $transresUtil = $this->get('transres_util');
 //        $em = $this->getDoctrine()->getManager();
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //        echo "$user<br>";
 //        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3359);
 //        echo "project=".$project->getOid().":<br><br>";
@@ -201,6 +201,12 @@ class DefaultController extends OrderAbstractController
 //            $res = $invoice->getId() . ": attachmentPath=$attachmentPath <br>";
 //            exit($res);
 //        }
+
+        //$secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->container->get('security.token_storage');
+        //$secTokenStorage = $this->get('security.context')->getToken();
+        //$user = $secTokenStorage->getToken()->getUser();
+        //exit('$user='.$user);
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
@@ -2359,7 +2365,7 @@ class DefaultController extends OrderAbstractController
             }
             echo "flushed <br>";
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $eventType = "Request Updated";
             $transresUtil = $this->container->get('transres_util');
             $msgInfo = "Products have been set to 'Completed' by updateProductsInWorkRequestsAction by " . $user . " (total products ".count($updatedProducts)."): <br>" . implode(", ",$updatedProducts);
@@ -2529,7 +2535,7 @@ class DefaultController extends OrderAbstractController
             echo "flushed <br>";
 
             $transresUtil = $this->container->get('transres_util');
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $eventType = "Request Updated";
 
             //Canceled

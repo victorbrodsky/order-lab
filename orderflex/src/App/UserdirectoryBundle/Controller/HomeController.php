@@ -225,7 +225,7 @@ class HomeController extends OrderAbstractController {
         );
 
 
-        //$username = $this->get('security.token_storage')->getToken()->getUser();
+        //$username = $this->getUser();
 
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {

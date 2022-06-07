@@ -64,7 +64,7 @@ class ResAppRankController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $rank = $resApp->getRank();
 
@@ -108,7 +108,7 @@ class ResAppRankController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $rank = $resApp->getRank();
 
@@ -171,7 +171,7 @@ class ResAppRankController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $rank = $resApp->getRank();
 

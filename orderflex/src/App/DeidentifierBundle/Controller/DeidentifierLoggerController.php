@@ -168,7 +168,7 @@ class DeidentifierLoggerController extends LoggerController
         }
 
         ///////////// make sure eventTypes and users are set /////////////
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $eventTypes = array();
         $users = array();

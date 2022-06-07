@@ -57,7 +57,7 @@ class CrnAccessionController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
         //$securityUtil = $this->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -158,7 +158,7 @@ class CrnAccessionController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         //$securityUtil = $this->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //listing Accessions whose notes have been updated in the last 96 hours
 
@@ -227,7 +227,7 @@ class CrnAccessionController extends OrderAbstractController {
 
 
     public function createAccessionForm() {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         //$crnUtil = $this->get('crn_util');
         $userSecUtil = $this->container->get('user_security_utility');

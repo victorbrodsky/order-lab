@@ -64,7 +64,7 @@ class PackingSlipController extends OrderAbstractController
         $transresPdfUtil = $this->get('transres_pdf_generator');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $project = $transresRequest->getProject();
 
@@ -149,7 +149,7 @@ class PackingSlipController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $project = $transresRequest->getProject();
 
@@ -220,7 +220,7 @@ class PackingSlipController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $project = $transresRequest->getProject();
 
@@ -295,7 +295,7 @@ class PackingSlipController extends OrderAbstractController
     public function showPackingSlipAsPdfAction(Request $request, TransResRequest $transresRequest)
     {
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
@@ -303,7 +303,7 @@ class PackingSlipController extends OrderAbstractController
         $transresRequestUtil = $this->get('transres_request_util');
 
         //download: user or localhost
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //download link can be accessed by a console as localhost with role PUBLIC_ACCESS, so simulate login manually
         if( !($user instanceof User) ) {
             $firewall = 'ldap_translationalresearch_firewall';

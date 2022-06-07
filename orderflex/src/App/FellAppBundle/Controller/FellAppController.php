@@ -108,7 +108,7 @@ class FellAppController extends OrderAbstractController {
 
         //echo "fellapp user ok <br>";
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
         $userServiceUtil = $this->get('user_service_utility');
@@ -714,7 +714,7 @@ class FellAppController extends OrderAbstractController {
 //        }
 //        $user = NULL;
 //        //if( $this->get('security.token_storage')->getToken() ) {
-//            $user = $this->get('security.token_storage')->getToken()->getUser();
+//            $user = $this->getUser();
 //        //}
 
 
@@ -729,7 +729,7 @@ class FellAppController extends OrderAbstractController {
 
         //download: user or localhost
         if( $routeName == 'fellapp_download' ) {
-            //$user = $this->get('security.token_storage')->getToken()->getUser();
+            //$user = $this->getUser();
             //download link can be accessed by a console as localhost with role PUBLIC_ACCESS, so simulate login manually           
             if( !($user instanceof User) ) {
                 $firewall = 'ldap_fellapp_firewall';               
@@ -814,7 +814,7 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         //$user = new User();
@@ -856,7 +856,7 @@ class FellAppController extends OrderAbstractController {
 
     public function getShowParameters($routeName, $entity) {
              
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
 //        echo "user=".$user."<br>";
@@ -1010,7 +1010,7 @@ class FellAppController extends OrderAbstractController {
         //ini_set('memory_limit', '3072M'); //3072M
 
         $userSecUtil = $this->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
@@ -1041,7 +1041,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $cycle = 'edit';
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         $params = array(
@@ -1219,7 +1219,7 @@ class FellAppController extends OrderAbstractController {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $routeName = $request->get('_route');
 
@@ -1389,7 +1389,7 @@ class FellAppController extends OrderAbstractController {
     }
     private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
     {
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
@@ -1575,7 +1575,7 @@ class FellAppController extends OrderAbstractController {
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         $fellowshipApplication = new FellowshipApplication($user);
@@ -1863,7 +1863,7 @@ class FellAppController extends OrderAbstractController {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $logger = $this->container->get('logger');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -1956,7 +1956,7 @@ class FellAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
@@ -2056,7 +2056,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $fellappUtil = $this->container->get('fellapp_util');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $routeName = $request->get('_route');
         $cycle = "show";
@@ -2132,7 +2132,7 @@ class FellAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
 
         //check if the interviewer is the same as current user
@@ -2226,7 +2226,7 @@ class FellAppController extends OrderAbstractController {
 
         $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $fellapp = $interview->getFellapp();
         $applicant = $fellapp->getUser();
@@ -2654,7 +2654,7 @@ class FellAppController extends OrderAbstractController {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 

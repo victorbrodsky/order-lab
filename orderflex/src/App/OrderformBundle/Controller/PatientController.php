@@ -112,7 +112,7 @@ class PatientController extends OrderAbstractController
     public function newPatientAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if user has at least one institution
         $securityUtil = $this->get('user_security_utility');
@@ -237,7 +237,7 @@ class PatientController extends OrderAbstractController
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes;
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
 
@@ -389,7 +389,7 @@ class PatientController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -526,7 +526,7 @@ class PatientController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Patient entity.');
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         if ($entity && !$securityUtil->hasUserPermission($entity, $user, array("Union"), array("edit"))) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
@@ -747,7 +747,7 @@ class PatientController extends OrderAbstractController
         $status = 'valid';
         $system = $securityUtil->getDefaultSourceSystem();
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -1065,7 +1065,7 @@ class PatientController extends OrderAbstractController
 
         $system = $securityUtil->getDefaultSourceSystem();
         $status = 'valid';
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 
         //////////////////////////// get lists ////////////////////////////////////
@@ -1598,7 +1598,7 @@ class PatientController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('user_security_utility');
 
-        $userSecurity = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecurity = $this->getUser();
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
 
         $system = $securityUtil->getDefaultSourceSystem();
@@ -1833,7 +1833,7 @@ class PatientController extends OrderAbstractController
     public function addTwoSigningProviders($message) {
         $em = $this->getDoctrine()->getManager();
 
-        $userSecurity = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecurity = $this->getUser();
         //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
         $user = $em->getReference('AppUserdirectoryBundle:User',$userSecurity->getId());
 

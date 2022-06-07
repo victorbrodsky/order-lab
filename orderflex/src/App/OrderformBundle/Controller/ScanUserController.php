@@ -244,7 +244,7 @@ class ScanUserController extends UserController
 
             if( count($eventArr) > 0 ) {
                 $subjectuser = $userViewArr['entity'];
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->getUser();
                 $event = "User information of ".$subjectuser." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $eventArr);
                 $secUtil->createUserEditEvent($this->getParameter('scan.sitename'),$event,$user,$subjectuser,$request,'User record updated');
@@ -359,7 +359,7 @@ class ScanUserController extends UserController
 
         $entity = $secUtil->getUserPerSiteSettings($id);
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if( !$entity ) {
 
@@ -410,7 +410,7 @@ class ScanUserController extends UserController
     public function updateScanSettings(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $secUtil = $secUtil = $this->get('user_security_utility');
 

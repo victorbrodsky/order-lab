@@ -81,7 +81,7 @@ class ProjectFormNodeController extends ProjectController
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
@@ -296,7 +296,7 @@ class ProjectFormNodeController extends ProjectController
         }
 
         //$userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $cycle = "edit";

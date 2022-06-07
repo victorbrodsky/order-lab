@@ -514,7 +514,7 @@ class TreeController extends OrderAbstractController {
 
             if( !$node ) {
 
-                $username = $this->get('security.token_storage')->getToken()->getUser();
+                $username = $this->getUser();
 
                 $parent = NULL;
                 if( $pid ) {
@@ -601,7 +601,7 @@ class TreeController extends OrderAbstractController {
 //        }
 
         //$cycle = "new";
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $data = $request->request->all();
         print_r($data);

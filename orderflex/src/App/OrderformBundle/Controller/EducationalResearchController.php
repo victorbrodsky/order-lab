@@ -160,7 +160,7 @@ class EducationalResearchController extends OrderAbstractController {
             );
 
             //add event log to History
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $history = new History();
 
             $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');

@@ -61,7 +61,7 @@ class DataQualityController extends CrnEntryController
     public function mergePatientAction(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -113,7 +113,7 @@ class DataQualityController extends CrnEntryController
     public function mergePatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -348,7 +348,7 @@ class DataQualityController extends CrnEntryController
     //public function unmergePatientAction(Request $request, UserSecurityUtil $securityUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -408,7 +408,7 @@ class DataQualityController extends CrnEntryController
     public function setMasterPatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         //$crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -452,7 +452,7 @@ class DataQualityController extends CrnEntryController
     public function unmergePatientAjaxAction(Request $request, CrnUtil $crnUtil)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         //$crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -549,7 +549,7 @@ class DataQualityController extends CrnEntryController
      */
     public function findAndEditPatientAction(Request $request) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
@@ -605,7 +605,7 @@ class DataQualityController extends CrnEntryController
 
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $patientId = trim((string)$request->get('patientId'));
         $mrn = trim((string)$request->get('mrn'));
@@ -638,7 +638,7 @@ class DataQualityController extends CrnEntryController
     public function addNewPatientToListAction_TODEL(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -686,7 +686,7 @@ class DataQualityController extends CrnEntryController
 
 
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
         //$crnUtil = $this->crnUtil;
@@ -749,7 +749,7 @@ class DataQualityController extends CrnEntryController
     public function updateTaskAction(Request $request, $taskId, $status)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$crnUtil = $this->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 

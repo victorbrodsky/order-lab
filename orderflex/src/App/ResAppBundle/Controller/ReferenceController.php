@@ -50,7 +50,7 @@ class ReferenceController extends OrderAbstractController
         $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //testing
         //$res = $resappRecLetterUtil->sendInvitationEmailsToReferences($resapp,true);
@@ -122,7 +122,7 @@ class ReferenceController extends OrderAbstractController
         $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $reference = $this->getDoctrine()->getRepository('AppResAppBundle:Reference')->find($referenceid);
         if( !$reference ) {
@@ -177,7 +177,7 @@ class ReferenceController extends OrderAbstractController
         //Event Log
         $eventType = 'Residency Application Updated';
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,$reference,$request,$eventType);
 
         $this->get('session')->getFlashBag()->add(

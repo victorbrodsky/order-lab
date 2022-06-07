@@ -135,7 +135,7 @@ class CheckController extends OrderAbstractController {
      */
     public function getPatientAction(Request $request) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $key = trim((string)$request->get('key') );
         $keytype = trim((string)$request->get('extra') );
@@ -161,7 +161,7 @@ class CheckController extends OrderAbstractController {
         $element = array();
         
         //$security_content = $this->get('security.context');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
@@ -217,7 +217,7 @@ class CheckController extends OrderAbstractController {
 
         $inst = trim((string)$request->get('inst') );
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $keytypeEntity = $this->getDoctrine()->getRepository('AppOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
         $keytype = $keytypeEntity->getId().""; //id of "New York Hospital MRN" in DB
@@ -262,7 +262,7 @@ class CheckController extends OrderAbstractController {
         //echo "deleteMrnAction key=".$key."<br>";
         //exit('delete finish');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $key = trim((string)$request->get('key') );
         $keytype = trim((string)$request->get('extra') );
@@ -295,7 +295,7 @@ class CheckController extends OrderAbstractController {
      */
     public function getAccessionAction(Request $request) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $key = trim((string)$request->get('key') );
         $keytype = trim((string)$request->get('extra') );  //id or string of accession type
@@ -469,7 +469,7 @@ class CheckController extends OrderAbstractController {
 
         $inst = trim((string)$request->get('inst') );
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -510,7 +510,7 @@ class CheckController extends OrderAbstractController {
      */
     public function deleteAccessionAction(Request $request) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $key = trim((string)$request->get('key') );
         $keytype = trim((string)$request->get('extra') );
@@ -566,7 +566,7 @@ class CheckController extends OrderAbstractController {
             $element = -2;
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
@@ -611,13 +611,13 @@ class CheckController extends OrderAbstractController {
 
         if( $accession && $accession != ""  ) {
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $em = $this->getDoctrine()->getManager();
             $part = $em->getRepository('AppOrderformBundle:Part')->createPartByAccession($inst,$accession,$keytype,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             if( $part ) {
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->getUser();
                 $part->getPartname()->first()->setProvider($user);
                 //$validPartname = $em->getRepository('AppOrderformBundle:Part')->obtainValidField($part->getPartname());
                 $element = array(
@@ -700,7 +700,7 @@ class CheckController extends OrderAbstractController {
                 $element = -2;
             }
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $securityUtil = $this->get('user_security_utility');
             if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
                 $entity = null;
@@ -744,12 +744,12 @@ class CheckController extends OrderAbstractController {
 
         if( $accession != "" && $partname != "" ) {
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $em = $this->getDoctrine()->getManager();
             $block = $em->getRepository('AppOrderformBundle:Block')->createBlockByPartnameAccession($inst,$accession,$keytype,$partname,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $block->getBlockname()->first()->setProvider($user);
 
             //echo "partname=".$part->getPartname()."  ";
@@ -840,7 +840,7 @@ class CheckController extends OrderAbstractController {
 //
 //        $external = 'true';
 //
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //
 //        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') && !$user->hasRole('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER') ) {
 //            $external = 'not_external_role';

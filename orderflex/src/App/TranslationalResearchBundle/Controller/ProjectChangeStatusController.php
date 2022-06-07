@@ -47,7 +47,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $project->setState("canceled");
 
@@ -95,7 +95,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $res = array(); //"NOTOK";
         $res["flag"] = "NOTOK";
@@ -177,7 +177,7 @@ class ProjectChangeStatusController extends OrderAbstractController
     public function closeProject( $project, $reason, $routeName ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $testing = false;
         $originalStateStr = $project->getState();
@@ -256,7 +256,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //Send email to Project reactivation approver
         //sendProjectReactivationRequest
@@ -448,7 +448,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $testing = false;
         $originalStateStr = $project->getState();
@@ -530,7 +530,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -630,7 +630,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if (
             false === $transresPermissionUtil->hasProjectPermission("approve", $project) &&
@@ -731,7 +731,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $cycle = "new";
 
         //Create Form
@@ -820,7 +820,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
         $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true); //after project deleted

@@ -440,7 +440,7 @@ class LoggerController extends OrderAbstractController
             $sites = null;
         }
 
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
 
         //echo "eventTypes=".$eventTypes."<br>";
         //foreach( $eventTypes as $eventType ) {

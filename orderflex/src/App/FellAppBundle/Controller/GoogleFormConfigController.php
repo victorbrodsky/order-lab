@@ -44,7 +44,7 @@ class GoogleFormConfigController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
 
         $cycle = "show";
@@ -168,7 +168,7 @@ class GoogleFormConfigController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $configs = $em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
         if( count($configs) > 0 ) {

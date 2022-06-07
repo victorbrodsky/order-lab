@@ -48,7 +48,7 @@ class CallLogEditController extends CallEntryController
         }
 
         //$userServiceUtil = $this->get('user_service_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //$securityUtil = $this->get('user_security_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$orderUtil = $this->get('scanorder_utility');
@@ -83,7 +83,7 @@ class CallLogEditController extends CallEntryController
 
         $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
@@ -133,7 +133,7 @@ class CallLogEditController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if( $message->getMessageStatus()->getName()."" != "Deleted" ) {
             $message->setMessageStatusPrior($message->getMessageStatus());
@@ -191,7 +191,7 @@ class CallLogEditController extends CallEntryController
         $calllogUtil = $this->get('calllog_util');
         $securityUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$title = "Call Log Entry";
@@ -421,7 +421,7 @@ class CallLogEditController extends CallEntryController
 
         //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
         //$userSecUtil = $this->get('user_security_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         $eventType = "Call Log Book Entry Edit Accessed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed on the edit page by ".$user;
         $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
@@ -469,7 +469,7 @@ class CallLogEditController extends CallEntryController
 
         //exit('update entry');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');

@@ -56,7 +56,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //        //$em = $this->getDoctrine()->getManager();
 //        //$transresUtil = $this->get('transres_util');
 //        $transresRequestUtil = $this->get('transres_request_util');
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //        //$user = null; //testing
 //        $cycle = "new";
 //
@@ -171,7 +171,7 @@ class TransResSiteParametersController extends OrderAbstractController
         }
 
         $cycle = "edit";
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
@@ -236,7 +236,7 @@ class TransResSiteParametersController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         
         $params = array(
             'cycle' => $cycle,
@@ -268,7 +268,7 @@ class TransResSiteParametersController extends OrderAbstractController
 
 //    public function findCreateSiteParameterEntity($specialtyStr) {
 //        $em = $this->getDoctrine()->getManager();
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //
 //        //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
 //

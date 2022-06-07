@@ -585,7 +585,7 @@ class SignUpController extends OrderAbstractController
 //            ////////////////////// EOF auth /////////////////////////
         }//if user is not created yet
 
-        //$userAuth = $this->get('security.token_storage')->getToken()->getUser();
+        //$userAuth = $this->getUser();
         $userAuth = $this->getUser();
         if( $userAuth instanceof User) {
             //echo "already auth <br>";
@@ -643,7 +643,7 @@ class SignUpController extends OrderAbstractController
             $em->flush();
 
             //Event Log
-            //$author = $this->get('security.token_storage')->getToken()->getUser();
+            //$author = $this->getUser();
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Account Activation:<br>".$signUp;
             $userSecUtil = $this->get('user_security_utility');
@@ -804,7 +804,7 @@ class SignUpController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         if( !$user ) {
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
         }
 
         if( count($entity->getAdministrativeTitles()) == 0 ) {
@@ -1079,7 +1079,7 @@ class SignUpController extends OrderAbstractController
 //            $body = $resSent['body'];
 //
 //            //Event Log
-//            //$author = $this->get('security.token_storage')->getToken()->getUser();
+//            //$author = $this->getUser();
 //            $systemuser = $userSecUtil->findSystemUser();
 //            $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
 //            $event = $event . "<br>Email Subject: " . $subject;
@@ -1148,7 +1148,7 @@ class SignUpController extends OrderAbstractController
         $signUpUser = $resetPassword->getUser();
 
         //Event Log
-        //$author = $this->get('security.token_storage')->getToken()->getUser();
+        //$author = $this->getUser();
         $systemuser = $userSecUtil->findSystemUser();
         $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
         $event = $event . "<br>Email Subject: " . $subject;
@@ -1273,7 +1273,7 @@ class SignUpController extends OrderAbstractController
             );
         }
 
-//        $userAuth = $this->get('security.token_storage')->getToken()->getUser();
+//        $userAuth = $this->getUser();
 //        if( $userAuth instanceof User) {
 //            //already authenticated
 //            //exit('already auth');
@@ -1349,7 +1349,7 @@ class SignUpController extends OrderAbstractController
             $em->flush($user);
 
             //Event Log
-            //$author = $this->get('security.token_storage')->getToken()->getUser();
+            //$author = $this->getUser();
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Password Reset:<br>".$resetPassword;
             $userSecUtil = $this->get('user_security_utility');

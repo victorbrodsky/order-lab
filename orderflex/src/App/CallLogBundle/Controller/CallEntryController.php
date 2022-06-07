@@ -1251,7 +1251,7 @@ class CallEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routename = $request->get('_route');
 
         if( $routename == "calllog_tasks_todo" ) {
@@ -1299,7 +1299,7 @@ class CallEntryController extends OrderAbstractController
 
         //1) search box: MRN,Name...
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -1593,7 +1593,7 @@ class CallEntryController extends OrderAbstractController
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
@@ -2171,7 +2171,7 @@ class CallEntryController extends OrderAbstractController
     }//save
 
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle='show', $readonlyEncounter=false, $showPreviousEncounters=false) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
@@ -2680,7 +2680,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $calllogUtil = $this->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
 
@@ -3435,7 +3435,7 @@ class CallEntryController extends OrderAbstractController
 
         //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $eventType = "Call Log Book Entry Viewed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
         $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $eventStr, $user, $message, $request, $eventType); //View Call Log Entry
@@ -3510,7 +3510,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
             $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
@@ -3565,7 +3565,7 @@ class CallEntryController extends OrderAbstractController
 
         set_time_limit(600); //600 seconds => 10 mins
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
         //$logger = $this->container->get('logger');
 

@@ -133,7 +133,7 @@ class TableController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if user has at least one institution
         $securityUtil = $this->get('user_security_utility');
@@ -493,7 +493,7 @@ class TableController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $orderUtil = $this->get('scanorder_utility');
         $userSecUtil = $this->get('user_security_utility');
@@ -642,7 +642,7 @@ class TableController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = new Message();
 
@@ -742,7 +742,7 @@ class TableController extends OrderAbstractController {
 
         //exit('table order testing');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $entity->setProvider($user);
 
         //add dataqualities to entity
@@ -811,7 +811,7 @@ class TableController extends OrderAbstractController {
 
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
-        $provider = $this->get('security.token_storage')->getToken()->getUser();
+        $provider = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $system = $securityUtil->getDefaultSourceSystem();    //'scanorder';
         $em = $this->getDoctrine()->getManager();

@@ -102,7 +102,7 @@ class CrnPatientController extends PatientController {
         //ini_set('memory_limit', '5120M');
         //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -219,7 +219,7 @@ class CrnPatientController extends PatientController {
         ini_set('memory_limit', '5120M');
         //ini_set('memory_limit', '-1');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -364,7 +364,7 @@ class CrnPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $cycle = "edit";
         $invalidStatus = 'invalid';
 
@@ -633,7 +633,7 @@ class CrnPatientController extends PatientController {
         );
     }
     public function createPatientSingleForm($patient,$singlePatient,$cycle) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         //$crnUtil = $this->get('crn_util');
 
@@ -791,7 +791,7 @@ class CrnPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -889,7 +889,7 @@ class CrnPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //listing patients whose notes have been updated in the last 96 hours
 
@@ -1577,7 +1577,7 @@ class CrnPatientController extends PatientController {
 
 
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->get('crn_util');
         $userSecUtil = $this->container->get('user_security_utility');

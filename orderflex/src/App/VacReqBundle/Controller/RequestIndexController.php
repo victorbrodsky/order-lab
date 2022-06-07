@@ -47,7 +47,7 @@ class RequestIndexController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         ///////// redirect to floating list /////////
 //        $em = $this->getDoctrine()->getManager();
@@ -121,7 +121,7 @@ class RequestIndexController extends OrderAbstractController
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //calculate approved vacation days in total.
         //$totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
@@ -222,7 +222,7 @@ class RequestIndexController extends OrderAbstractController
         }
         ///////// EOF redirect to floating list /////////
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array(
             'sitename' => $this->getParameter('vacreq.sitename'),
@@ -544,7 +544,7 @@ class RequestIndexController extends OrderAbstractController
 
     public function processFilter( $dql, $request, $params ) {
 
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $dqlParameters = array();
@@ -630,7 +630,7 @@ class RequestIndexController extends OrderAbstractController
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
             }
         }
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing

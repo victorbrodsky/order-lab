@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Security;
 
 use App\UserdirectoryBundle\Util\UserUtil;
 
@@ -41,19 +42,22 @@ class MaintenanceListener {
     private $container;
     private $em;
     protected $secTokenStorage;
+    protected $security;
     protected $secAuthChecker;
     private $logger;
 
-    private $userUtil;
+    //private $userUtil;
 
-    public function __construct(ContainerInterface $container, $em)
+    public function __construct(ContainerInterface $container, $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
         $this->logger = $this->container->get('logger');
 
-        $this->secAuthChecker = $container->get('security.authorization_checker');
-        $this->secTokenStorage = $container->get('security.token_storage');
+        //$this->secAuthChecker = $container->get('security.authorization_checker');
+        //$this->secTokenStorage = $container->get('security.token_storage');
+
+        $this->security = $security;
 
         //$this->userUtil = new UserUtil();
     }
@@ -61,6 +65,12 @@ class MaintenanceListener {
 
     public function onKernelRequest(RequestEvent $event)
     {
+
+//        if( $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
+//            exit('auth users');
+//        } else {
+//            exit('not auth users');
+//        }
 
 //        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
 //            return;
@@ -175,24 +185,30 @@ class MaintenanceListener {
             //echo "token=".$this->secTokenStorage->getToken()."<br>";
             //exit('maintenance mode');
 
-            if( null === $this->secTokenStorage->getToken() ) {
-                //exit('token not set');
-            } else {
+//            if( null === $this->secTokenStorage->getToken() ) {
+//                //exit('token not set');
+//            } else {
 
-                if( $this->secAuthChecker->isGranted('IS_AUTHENTICATED_FULLY') ) {
+                if(
+                    //$this->secAuthChecker->isGranted('IS_AUTHENTICATED_FULLY')
+                    $this->security->isGranted('IS_AUTHENTICATED_FULLY')
+                ) {
                     //don't kick out already logged in users
                     //exit('do not kick out already logged in users');
                     return;
                 }
 
-                if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                if(
+                    //$this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
+                    $this->security->isGranted('IS_AUTHENTICATED_FULLY')
+                ) {
                     //don't kick out already logged in users
                     //exit('do not kick out already logged in users');
                     return;
                 }
 
                 //exit('token set');
-            }
+//            }
 
 //            if( strpos((string)$event->getRequest()->get('_route'),'login_check') !== false ) {
             if( strpos((string)$event->getRequest()->get('_route'),'login') !== false && $event->getRequest()->isMethod('POST') ) {

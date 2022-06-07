@@ -428,7 +428,7 @@ class DefaultController extends OrderAbstractController
         $em->flush();
 
         //$chartTypeInvalidArr
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $event = "Chart types are not set for invalid charts:<br>".implode('; ',$chartTypeInvalidArr);
         $userSecUtil = $this->get('user_security_utility');
         $sitename = $this->getParameter('dashboard.sitename');

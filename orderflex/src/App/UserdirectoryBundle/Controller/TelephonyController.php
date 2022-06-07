@@ -43,7 +43,7 @@ class TelephonyController extends OrderAbstractController {
 //
 //        }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //$text = random_int(100000, 999999);
         //echo "text=$text <br>";
@@ -91,7 +91,7 @@ class TelephonyController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser(); //user here is undefined
+        //$user = $this->getUser(); //user here is undefined
 
         //testing
         //$code = $userServiceUtil->generateVerificationCode();
@@ -232,7 +232,7 @@ class TelephonyController extends OrderAbstractController {
 //    public function verifyMobileModalAction(Request $request, $phoneNumber)
 //    {
 //
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //
 //        //$text = random_int(100000, 999999);
 //        //echo "text=$text <br>";
@@ -308,7 +308,7 @@ class TelephonyController extends OrderAbstractController {
 //            }
 
             if( $verificationCode && $phoneNumber ) {
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->getUser();
 
                 $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
 
@@ -406,7 +406,7 @@ class TelephonyController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //Testing
 //        $res = 'OK';
@@ -502,7 +502,7 @@ class TelephonyController extends OrderAbstractController {
     public function verifyCodeAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $userServiceUtil = $this->get('user_service_utility');
 
         // Get data
@@ -633,7 +633,7 @@ class TelephonyController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $userRequest = NULL;
         

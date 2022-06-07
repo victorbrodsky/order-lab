@@ -236,7 +236,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $sitename = $this->getParameter('translationalresearch.sitename');
         $cycle = "new";
 
@@ -286,7 +286,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 //    public function createAccountConfirmationForm( $invoice, $cycle, $transresRequest=null ) {
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //
 //        $params = array(
 //            'cycle' => $cycle,

@@ -127,7 +127,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $inputFileName = __DIR__ . '/../../../../../importUserLists/Crn_Users.xlsx';
 
@@ -277,7 +277,7 @@ class DefaultController extends OrderAbstractController
         $formNodeUtil = $this->get('user_formnode_utility');
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $messageIds = array();
@@ -348,7 +348,7 @@ class DefaultController extends OrderAbstractController
 
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array();
 
@@ -411,7 +411,7 @@ class DefaultController extends OrderAbstractController
 
 //        //$em = $this->getDoctrine()->getManager();
 //        //$userSecUtil = $this->get('user_security_utility');
-//        //$user = $this->get('security.token_storage')->getToken()->getUser();
+//        //$user = $this->getUser();
 //
 //        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 //

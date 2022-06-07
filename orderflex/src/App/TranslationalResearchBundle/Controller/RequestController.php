@@ -67,7 +67,7 @@ class RequestController extends OrderAbstractController
         //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
 //        if(
@@ -369,7 +369,7 @@ class RequestController extends OrderAbstractController
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $formnode = false;
@@ -716,7 +716,7 @@ class RequestController extends OrderAbstractController
     //return created/updated array of DataResult objects existing in the Request
     public function processTableData( $transresRequest, $form, $user ) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
 //        echo "<br>datajson:<br>";
@@ -983,7 +983,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $cycle = "show";
         $project = $transresRequest->getProject();
@@ -1151,7 +1151,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $title = "Work Requests";
         $formnode = false;
@@ -2580,7 +2580,7 @@ class RequestController extends OrderAbstractController
     public function createRequestForm( TransResRequest $transresRequest, $cycle, $request, $availableProjects=null )
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         //$transResFormNodeUtil = $this->get('transres_formnode_util');
@@ -2870,7 +2870,7 @@ class RequestController extends OrderAbstractController
 //        }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
@@ -3053,7 +3053,7 @@ class RequestController extends OrderAbstractController
     public function updateApprovedProjectBudgetAction( Request $request ) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $projectId = trim((string)$request->get('projectId') );
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);

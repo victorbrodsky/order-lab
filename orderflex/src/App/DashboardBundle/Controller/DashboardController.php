@@ -778,7 +778,7 @@ class DashboardController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $chartId = trim((string)$request->get('chartId') );
 

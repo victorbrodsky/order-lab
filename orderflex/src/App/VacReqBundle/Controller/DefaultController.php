@@ -184,7 +184,7 @@ class DefaultController extends OrderAbstractController
 //            //event log
 //            //if( $viewType != 'snapshot' ) {
 //            if( strpos((string)$viewType, 'snapshot') === false ) {
-//                $user = $this->get('security.token_storage')->getToken()->getUser();
+//                $user = $this->getUser();
 //                $eventDescription = "Document has been viewed by " . $user;
 //                $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 //            }

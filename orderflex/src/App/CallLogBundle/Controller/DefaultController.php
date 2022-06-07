@@ -140,7 +140,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $inputFileName = __DIR__ . '/../../../../../importUserLists/Calllog_Users.xlsx';
 
@@ -290,7 +290,7 @@ class DefaultController extends OrderAbstractController
         $formNodeUtil = $this->get('user_formnode_utility');
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $messageIds = array();
@@ -361,7 +361,7 @@ class DefaultController extends OrderAbstractController
 
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array();
 
@@ -424,7 +424,7 @@ class DefaultController extends OrderAbstractController
 
 //        //$em = $this->getDoctrine()->getManager();
 //        //$userSecUtil = $this->get('user_security_utility');
-//        //$user = $this->get('security.token_storage')->getToken()->getUser();
+//        //$user = $this->getUser();
 //
 //        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 //
@@ -914,7 +914,7 @@ class DefaultController extends OrderAbstractController
     public function findAndUpdateSinglePatient( $rowData, $oldMrnType, $newMrnType, $count ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $invalidStatus = 'invalid';
 
         $oldMrnNumber = trim((string)$rowData[0][0]);
@@ -1042,7 +1042,7 @@ class DefaultController extends OrderAbstractController
     }
     public function findPatientByMrn( $mrnNumber, $nmrnType ) { //$oldMrnValue, $oldMrnType, $newMrnValue, $newMrnType ) {
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //$invalidStatus = 'invalid';
         $patient = NULL;
 

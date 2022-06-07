@@ -64,7 +64,7 @@ class RequestController extends OrderAbstractController
         $vacreqUtil = $this->get('vacreq_util');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = new VacReqRequest($user);
 
@@ -428,7 +428,7 @@ class RequestController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
@@ -774,7 +774,7 @@ class RequestController extends OrderAbstractController
 
             //set event log for objects
             if( count($changedInfoArr) > 0 ) {
-                //$user = $this->get('security.token_storage')->getToken()->getUser();
+                //$user = $this->getUser();
                 $event .= "Updated Data:".$break;
                 $event .= implode("<br>", $changedInfoArr);
             }
@@ -836,7 +836,7 @@ class RequestController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
@@ -1134,7 +1134,7 @@ class RequestController extends OrderAbstractController
      */
     public function statusCancellationRequestAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
@@ -1247,7 +1247,7 @@ class RequestController extends OrderAbstractController
     public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
@@ -1330,7 +1330,7 @@ class RequestController extends OrderAbstractController
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
@@ -1379,7 +1379,7 @@ class RequestController extends OrderAbstractController
         $vacreqUtil = $this->get('vacreq_util');
         $routeName = $request->get('_route');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 //        if( !$entity ) {
 //            $entity = new VacReqRequest($user);
 //        }

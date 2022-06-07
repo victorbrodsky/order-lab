@@ -79,7 +79,7 @@ class EmailController extends OrderAbstractController
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
         //$toEmail = $user->getSingleEmail();
 
         if( isset($_POST['email']) ) {

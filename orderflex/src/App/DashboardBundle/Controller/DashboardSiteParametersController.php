@@ -141,7 +141,7 @@ class DashboardSiteParametersController extends SiteParametersController
     }
 
     public function createDashboardSiteParameterForm($entity, $cycle) {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $disabled = false;

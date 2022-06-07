@@ -72,7 +72,7 @@ class FloatingDayController extends OrderAbstractController
             );
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array(
             'approver' => $user,
@@ -107,7 +107,7 @@ class FloatingDayController extends OrderAbstractController
             );
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array(
             'sitename' => $this->getParameter('vacreq.sitename'),
@@ -130,7 +130,7 @@ class FloatingDayController extends OrderAbstractController
         //exit('incomingFloatingRequestsAction');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $routeName = $request->get('_route');
         $sitename = $this->getParameter('vacreq.sitename');
         //$filtered = false;
@@ -256,7 +256,7 @@ class FloatingDayController extends OrderAbstractController
 
     public function processFilter( $dql, $request, $params ) {
 
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $dqlParameters = array();
@@ -322,7 +322,7 @@ class FloatingDayController extends OrderAbstractController
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
         }
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
@@ -737,7 +737,7 @@ class FloatingDayController extends OrderAbstractController
         $userServiceUtil = $this->get('user_service_utility');
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = new VacReqRequestFloating($user);
         
@@ -901,7 +901,7 @@ class FloatingDayController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1054,7 +1054,7 @@ class FloatingDayController extends OrderAbstractController
 
             //set event log for objects
             if( count($changedInfoArr) > 0 ) {
-                //$user = $this->get('security.token_storage')->getToken()->getUser();
+                //$user = $this->getUser();
                 $event = "Updated Floating Day Request:".$break;
                 $event .= implode("<br>", $changedInfoArr);
             }
@@ -1108,7 +1108,7 @@ class FloatingDayController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
@@ -1289,7 +1289,7 @@ class FloatingDayController extends OrderAbstractController
         //$logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         //$routeName = $request->get('_route');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         //////////////// change status ////////////////////////
@@ -1409,7 +1409,7 @@ class FloatingDayController extends OrderAbstractController
         //exit("statusCancellationRequestAction ID ".$id); //testing action
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$routeName = $request->get('_route');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
@@ -1466,7 +1466,7 @@ class FloatingDayController extends OrderAbstractController
         $response->headers->set('Content-Type', 'application/json');
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $id = $request->get('id');
         $status = $request->get('status'); //format: floatingDay=02/23/2022
@@ -1553,7 +1553,7 @@ class FloatingDayController extends OrderAbstractController
 
     public function statusCancelationRequest( $entity, $request, $testing=false ) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity->setExtraStatus("Cancellation Requested");
 
@@ -1641,7 +1641,7 @@ class FloatingDayController extends OrderAbstractController
     public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1723,7 +1723,7 @@ class FloatingDayController extends OrderAbstractController
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1855,7 +1855,7 @@ class FloatingDayController extends OrderAbstractController
         $vacreqUtil = $this->get('vacreq_util');
         $routeName = $request->get('_route');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $admin = false;
         if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {

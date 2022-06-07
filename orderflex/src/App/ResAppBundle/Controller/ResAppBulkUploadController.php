@@ -66,7 +66,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $resappRepGen = $this->container->get('resapp_reportgenerator');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -295,7 +295,7 @@ class ResAppBulkUploadController extends OrderAbstractController
             elseif( $form->getClickedButton() === $form->get('addbtn') || $form->getClickedButton() === $form->get('addbtnforce') ) {
                 //exit("Adding Application to the system"); //testing
 
-                //$user = $this->get('security.token_storage')->getToken()->getUser();
+                //$user = $this->getUser();
 
                 $resultArr = $this->processTableData($inputDataFile,$form); //new
                 //$datajson = $form->get('datalocker')->getData();
@@ -374,7 +374,7 @@ class ResAppBulkUploadController extends OrderAbstractController
     }
     public function createDocument( $fileName, $sourcePath, $destinationPath ) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         // it is possible, that two clients send a file with the
         // exact same filename, therefore we have to add the session
@@ -436,7 +436,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $resappPdfUtil = $this->container->get('resapp_pdfutil');
 
         $logger = $this->container->get('logger');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();

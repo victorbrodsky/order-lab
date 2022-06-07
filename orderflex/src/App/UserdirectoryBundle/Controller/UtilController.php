@@ -499,7 +499,7 @@ class UtilController extends OrderAbstractController {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         if( $newCycle ) {
             $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
@@ -847,7 +847,7 @@ class UtilController extends OrderAbstractController {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $query->where("institution.id=".$id);
 
@@ -963,7 +963,7 @@ class UtilController extends OrderAbstractController {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $query->where("list.id=".$id);
 
@@ -1508,7 +1508,7 @@ class UtilController extends OrderAbstractController {
         $userid = trim((string)$request->get('userid') );
         $userpassword = trim((string)$request->get('userpassword') );
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         if( $userid != $user->getId() ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -1559,7 +1559,7 @@ class UtilController extends OrderAbstractController {
         //exit('getUserWrappersAction');
 
         $em = $this->getDoctrine()->getManager();
-        $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
+        $loggedUser = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $cycle = $request->query->get('cycle');
 

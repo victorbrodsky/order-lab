@@ -78,7 +78,7 @@ class WorkQueueController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $routeName = $request->get('_route');
         $singleWorkqueue = NULL;
@@ -727,7 +727,7 @@ class WorkQueueController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         $title = "Product ".$product;
         $cycle = "show";
@@ -768,7 +768,7 @@ class WorkQueueController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //$productPermission = $transresPermissionUtil->hasProductPermission($action,$product);
         if( false === $transresPermissionUtil->hasProductPermission('update',$product) ) {

@@ -57,7 +57,7 @@ class CalendarController extends OrderAbstractController
         $userServiceUtil = $this->get('user_service_utility');
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $params = array();
         $params['em'] = $em;

@@ -84,7 +84,7 @@ class AccessRequestController extends OrderAbstractController
         $userSecUtil = $this->get('user_security_utility');
         //$userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 
         if( $userSecUtil->isSiteAccessible($this->siteName) === false ) {
@@ -225,7 +225,7 @@ class AccessRequestController extends OrderAbstractController
 
         $sitename = $this->siteName;
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
@@ -450,7 +450,7 @@ class AccessRequestController extends OrderAbstractController
 //     */
 //    public function accessRequestDetailsAction()
 //    {
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->getUser();
 //        $id = $user->getId();
 //        $sitename = $this->siteName;
 //
@@ -466,7 +466,7 @@ class AccessRequestController extends OrderAbstractController
       */
     public function accessRequestAction(Request $request)
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $id = $user->getId();
         $sitename = $this->siteName;
 
@@ -907,7 +907,7 @@ class AccessRequestController extends OrderAbstractController
 
         //set updated by and updated author roles
         if( $accReq ) {
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $accReq->setUpdatedby($user);
             $accReq->setUpdateAuthorRoles($user->getRoles());
             $em->persist($accReq);
@@ -939,7 +939,7 @@ class AccessRequestController extends OrderAbstractController
 
         $sitenameFull = $this->siteNameStr." site";
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
         //$newline = "\r\n";
         $newline = "<br>";
@@ -1568,7 +1568,7 @@ class AccessRequestController extends OrderAbstractController
 
         //set Edit event log for removed collection and changed fields or added collection
         if( count($removedCollections) > 0 ) {
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
             $event = $event . "<br>" . implode("<br>", $removedCollections);
             $userSecUtil = $this->get('user_security_utility');
@@ -1712,7 +1712,7 @@ class AccessRequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";
@@ -1870,7 +1870,7 @@ class AccessRequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";

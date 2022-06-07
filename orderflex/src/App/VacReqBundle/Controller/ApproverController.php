@@ -68,7 +68,7 @@ class ApproverController extends OrderAbstractController
 
         //$vacreqUtil = $this->get('vacreq_util');
         $vacreqUtil = $this->vacreqUtil;
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //$em = $this->getDoctrine()->getManager();
 
         //list all organizational group (institution)
@@ -255,7 +255,7 @@ class ApproverController extends OrderAbstractController
         //$onlyWorking = true;
         $onlyWorking = false;
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //find role approvers by institution
         $approvers = array();
@@ -407,7 +407,7 @@ class ApproverController extends OrderAbstractController
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if logged in user has approver role for $instid
         //$vacreqUtil = $this->get('vacreq_util');
@@ -487,7 +487,7 @@ class ApproverController extends OrderAbstractController
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //check if logged in user has approver role for $instid
         //$vacreqUtil = $this->get('vacreq_util');
@@ -617,7 +617,7 @@ class ApproverController extends OrderAbstractController
         //echo "roleId=".$roleId."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
         if( !$role ) {
@@ -698,7 +698,7 @@ class ApproverController extends OrderAbstractController
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 //        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 //
@@ -833,7 +833,7 @@ class ApproverController extends OrderAbstractController
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
@@ -913,7 +913,7 @@ class ApproverController extends OrderAbstractController
             $eventType = "Business/Vacation Group Updated";
             $event = $institutionTreeName.": The role " . $roleName . " has been removed from the users: " . implode(", ", $userNamesArr);
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
         }
 
@@ -944,7 +944,7 @@ class ApproverController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->getUser();
 
         //vacreq_util
         //$vacreqUtil = $this->get('vacreq_util');
@@ -1002,7 +1002,7 @@ class ApproverController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 //        $keytype = $request->query->get('keytype');
 //        $keytype = trim((string)$keytype);
@@ -1079,7 +1079,7 @@ class ApproverController extends OrderAbstractController
         ini_set('memory_limit', '2048M');
 
         //$em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //vacreq_util
         //$vacreqUtil = $this->get('vacreq_util');
@@ -1241,7 +1241,7 @@ class ApproverController extends OrderAbstractController
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //get submitter groups
         $vacreqUtil = $this->vacreqUtil;

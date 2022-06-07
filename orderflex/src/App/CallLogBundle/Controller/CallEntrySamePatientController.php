@@ -72,7 +72,7 @@ class CallEntrySamePatientController extends CallEntryController
 
         //1) search box: MRN,Name...
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->get('user_security_utility');
@@ -311,7 +311,7 @@ class CallEntrySamePatientController extends CallEntryController
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');

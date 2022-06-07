@@ -53,7 +53,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
@@ -97,7 +97,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $sitename = $this->getParameter('scan.sitename');
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED',$user) ) {
@@ -119,7 +119,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestAction(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $id = $user->getId();
         $sitename = $this->getParameter('scan.sitename');
 
@@ -157,7 +157,7 @@ class ScanAccessRequestController extends AccessRequestController
         $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
 
         //add WCMC institional scope to pacsvendor created users
-        $creator = $this->get('security.token_storage')->getToken()->getUser();
+        $creator = $this->getUser();
         $orderSecUtil = $this->container->get('user_security_utility');
         $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
     }

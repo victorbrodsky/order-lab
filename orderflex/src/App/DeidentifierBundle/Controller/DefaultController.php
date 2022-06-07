@@ -126,7 +126,7 @@ class DefaultController extends OrderAbstractController
     public function createGenerateForm() {
         $securityUtil = $this->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         //permittedInstitutions for generation
         //echo "user=".$user."<br>";
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -199,7 +199,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //get search string
         $accessionNumber = $request->query->get('accessionNumber');
@@ -298,7 +298,7 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //get search string
         $institution = $request->query->get('institution');
@@ -446,7 +446,7 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         //parameters
         $extra = array();
@@ -686,7 +686,7 @@ class DefaultController extends OrderAbstractController
             throw $this->createNotFoundException('Accession is not found by ID ' . $accessionId);
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $status = 'deidentified-valid';
         $securityUtil = $this->get('user_security_utility');

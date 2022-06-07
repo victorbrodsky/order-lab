@@ -351,7 +351,7 @@ class SiteParametersController extends OrderAbstractController
             }
 
             //add a new eventlog record for an updated parameter
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $userSecUtil = $this->get('user_security_utility');
             $eventType = "Site Settings Parameter Updated";
             $eventStr = "Site Settings parameter [$param] has been updated by ".$user;
@@ -590,7 +590,7 @@ class SiteParametersController extends OrderAbstractController
         //$userSecUtil = $this->container->get('user_security_utility');
         //$routeName = $request->get('_route');
 
-        $administratorUser = $this->get('security.token_storage')->getToken()->getUser();
+        $administratorUser = $this->getUser();
         if( strtolower($administratorUser->getPrimaryPublicUserId()) != "administrator" ) {
             $administratorUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("administrator");
             if( !$administratorUser ) {

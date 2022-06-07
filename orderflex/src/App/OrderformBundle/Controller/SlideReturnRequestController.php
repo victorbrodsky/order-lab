@@ -53,7 +53,7 @@ class SlideReturnRequestController extends OrderAbstractController
     public function newRequestSlideReturnTableAction(Request $request)
     {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $orderUtil = $this->get('scanorder_utility');
 
@@ -241,7 +241,7 @@ class SlideReturnRequestController extends OrderAbstractController
         if( $form->isValid() ) {
             //echo "form is valid !!! <br>";
 
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
             $em = $this->getDoctrine()->getManager();
 
             //add message with specified id to associated objects to message
@@ -301,7 +301,7 @@ class SlideReturnRequestController extends OrderAbstractController
 
     public function constractSlideRequestForm($slideReturnRequest,$params,$scanorderId) {
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -419,7 +419,7 @@ class SlideReturnRequestController extends OrderAbstractController
             $setParameter = true;
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         /////////// institution ///////////
         $criteriastr = $this->addSlideReturnRequestInstitutionQueryCriterion($user,$criteriastr);
@@ -503,7 +503,7 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("list");
@@ -597,7 +597,7 @@ class SlideReturnRequestController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
         }
 
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $message = $entity->getMessage();
         $securityUtil = $this->get('user_security_utility');
         if( $message && !$securityUtil->hasUserPermission($message,$user,array("Union"),array("changestatus")) ) {
@@ -674,7 +674,7 @@ class SlideReturnRequestController extends OrderAbstractController
 //                throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
 //            }
 //
-//            $user = $this->get('security.token_storage')->getToken()->getUser();
+//            $user = $this->getUser();
 //            $slideReturnRequest->addComment($text_value, $user);
 //
 //            //echo "ok";
@@ -683,7 +683,7 @@ class SlideReturnRequestController extends OrderAbstractController
 //
 //
 //            //record history
-//            $user = $this->get('security.token_storage')->getToken()->getUser();
+//            $user = $this->getUser();
 //            $message = $slideReturnRequest->getMessage();
 //            $slides = $slideReturnRequest->getSlide();
 //            $history = new History();
@@ -726,7 +726,7 @@ class SlideReturnRequestController extends OrderAbstractController
         } else {
 
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $user = $this->getUser();
 
             $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
 
@@ -740,7 +740,7 @@ class SlideReturnRequestController extends OrderAbstractController
             $message = $slideReturnRequest->getMessage();
             if( $message ) {
 
-                $user = $this->get('security.token_storage')->getToken()->getUser();
+                $user = $this->getUser();
                 $slides = $slideReturnRequest->getSlide();
                 $history = new History();
                 $history->setMessage($message);
