@@ -27,6 +27,7 @@ namespace App\VacReqBundle\EventListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Security;
 
 //NOT USED
 //Based on depreciated adesigns/calendar-bundle
@@ -40,10 +41,12 @@ class CalendarEventListener
 
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
     public function loadEvents(CalendarEvent $calendarEvent)
@@ -177,7 +180,9 @@ class CalendarEventListener
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
             } else {
-                if ($this->container->get('security.authorization_checker')->isGranted("read", $requestFull)) {
+                if(
+                    $this->security->isGranted("read", $requestFull)
+                ) {
                     $url = $this->container->get('router')->generate(
                         'vacreq_show',
                         array(

@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 //Based on tattali/calendar-bundle
@@ -26,10 +27,12 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
     public static function getSubscribedEvents() : array
@@ -40,7 +43,6 @@ class CalendarSubscriber implements EventSubscriberInterface
     }
 
     public function onCalendarSetData(CalendarEvent $calendarEvent) {
-
         $startDate = $calendarEvent->getStart();
         $endDate = $calendarEvent->getEnd();
 
@@ -141,6 +143,11 @@ class CalendarSubscriber implements EventSubscriberInterface
             $request = $requestFull->$getMethod(); //sub request
             //echo "ID=".$request->getId();
 
+//            if( $this->security->isGranted("read", $requestFull) ) {
+//                exit('read');
+//            }
+//            exit('111');
+
             //check if dates not exact
             $subjectUserId = $requestFull->getUser()->getId()."-".$requestFull->getId();
             //init array with key as user id
@@ -166,7 +173,10 @@ class CalendarSubscriber implements EventSubscriberInterface
                 //UrlGeneratorInterface::ABSOLUTE_URL
                 );
             } else {
-                if ($this->container->get('security.authorization_checker')->isGranted("read", $requestFull)) {
+                if(
+                    //$this->container->get('security.authorization_checker')->isGranted("read", $requestFull)
+                    $this->security->isGranted("read", $requestFull)
+                ) {
                     $url = $this->container->get('router')->generate(
                         'vacreq_show',
                         array(
@@ -333,7 +343,7 @@ class CalendarSubscriber implements EventSubscriberInterface
                     )
                 );
             } else {
-                if ($this->container->get('security.authorization_checker')->isGranted("read", $floatingRequest)) {
+                if( $this->security->isGranted("read", $floatingRequest) ) {
                     $url = $this->container->get('router')->generate(
                         'vacreq_floating_show',
                         array(

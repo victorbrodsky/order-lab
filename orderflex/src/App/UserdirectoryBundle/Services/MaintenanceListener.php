@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Services;
 
 
 //use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,7 +36,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Security;
 
-use App\UserdirectoryBundle\Util\UserUtil;
 
 class MaintenanceListener {
 
@@ -48,7 +48,7 @@ class MaintenanceListener {
 
     //private $userUtil;
 
-    public function __construct(ContainerInterface $container, $em, Security $security)
+    public function __construct(ContainerInterface $container, EntityManager $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
@@ -56,10 +56,8 @@ class MaintenanceListener {
 
         //$this->secAuthChecker = $container->get('security.authorization_checker');
         //$this->secTokenStorage = $container->get('security.token_storage');
-
+        //$this->getUser();
         $this->security = $security;
-
-        //$this->userUtil = new UserUtil();
     }
 
 
@@ -149,7 +147,6 @@ class MaintenanceListener {
         //echo "route=".$event->getRequest()->get('_route')."<b>";
 
         /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
-        //$userUtil = new UserUtil();
         //$maintenance = $this->userUtil->getSiteSetting($this->em,'maintenance');
         $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
 

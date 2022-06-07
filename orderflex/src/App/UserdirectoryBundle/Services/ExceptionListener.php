@@ -25,35 +25,29 @@
 namespace App\UserdirectoryBundle\Services;
 
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-//use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-//use Symfony\Component\HttpFoundation\Response;
-//use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-//use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-//use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-//use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-//use Symfony\Component\HttpKernel\HttpKernelInterface;
-//use Symfony\Component\HttpFoundation\RedirectResponse;
-
-use App\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Security\Core\Security;
 
 class ExceptionListener {
 
     private $container;
     private $em;
-    protected $secTokenStorage;
-    protected $secAuthChecker;
+    //protected $secTokenStorage;
+    //protected $secAuthChecker;
+    protected $security;
     private $logger;
 
-    public function __construct(ContainerInterface $container, $em)
+    public function __construct(ContainerInterface $container, EntityManager $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
         $this->logger = $this->container->get('logger');
 
-        $this->secAuthChecker = $container->get('security.authorization_checker');
-        $this->secTokenStorage = $container->get('security.token_storage');
+        //$this->secAuthChecker = $container->get('security.authorization_checker');
+        //$this->secTokenStorage = $container->get('security.token_storage');
+        $this->security = $security;
     }
 
 
@@ -63,11 +57,17 @@ class ExceptionListener {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        if( $this->secTokenStorage->getToken() ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
-        } else {
+//        if( $this->secTokenStorage->getToken() ) {
+//            $user = $this->secTokenStorage->getToken()->getUser();
+//        } else {
+//            $user = $userSecUtil->findSystemUser();
+//        }
+
+        $user = $this->security->getUser();
+        if( !$user ) {
             $user = $userSecUtil->findSystemUser();
         }
+        //exit("user=".$user);
 
         $request = $event->getRequest();
 
