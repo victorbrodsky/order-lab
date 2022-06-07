@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 class DashboardUtil
@@ -22,8 +23,9 @@ class DashboardUtil
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
+    //protected $secTokenStorage;
+    //protected $secAuth;
+    protected $security;
 
     private $width = 1200;
     private $height = 600;
@@ -33,13 +35,14 @@ class DashboardUtil
 
     //private $lightFilter = true;
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em, ContainerInterface $container, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
+        //$this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
         //$this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        //$this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        $this->security = $security;
     }
 
     public function getChartViewCount($startDate,$endDate,$chart) {
@@ -154,7 +157,7 @@ class DashboardUtil
 
         //TODO: show only public topics
         $public = false;
-        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( !$this->security->isGranted('ROLE_DASHBOARD_USER') ) {
             $public = true;
         }
 
@@ -291,12 +294,12 @@ class DashboardUtil
 
     public function getFavorites($user=null) {
 
-        if( !$this->secAuth->isGranted('ROLE_DASHBOARD_USER') ) {
+        if( !$this->security->isGranted('ROLE_DASHBOARD_USER') ) {
             return array();
         }
 
         if( !$user ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         //get charts with this user in favoriteUsers
@@ -2630,7 +2633,7 @@ class DashboardUtil
         //exit('111');
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
         //$chartObject = $this->getChartsByChartType($chartType,true);
@@ -2642,7 +2645,7 @@ class DashboardUtil
         }
 
         //check !isChartPublic and read permission
-        if( $this->isChartPublic($chartObject) == false && $this->secAuth->isGranted('read', $chartObject) === false ) {
+        if( $this->isChartPublic($chartObject) == false && $this->security->isGranted('read', $chartObject) === false ) {
             //get admin email
             //$userSecUtil = $this->container->get('user_security_utility');
             $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
@@ -9256,7 +9259,7 @@ class DashboardUtil
             //$chartDataArray['id'] = $chartObject->getId();
             
             //add favorite flag
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             //$chartDataArray['favorite'] = $chartObject->isFavorite($user);
             
             //overwrite $chartsArray['data']
@@ -9271,7 +9274,7 @@ class DashboardUtil
 //                'data' => $dataArray
 //            );
 
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             $chartsArray['chartId'] = $chartObject->getId();
             $chartsArray['favorite'] = $chartObject->isFavorite($user);
         }

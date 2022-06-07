@@ -41,22 +41,14 @@ class MaintenanceListener {
 
     private $container;
     private $em;
-    protected $secTokenStorage;
     protected $security;
-    protected $secAuthChecker;
     private $logger;
-
-    //private $userUtil;
 
     public function __construct(ContainerInterface $container, EntityManager $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
         $this->logger = $this->container->get('logger');
-
-        //$this->secAuthChecker = $container->get('security.authorization_checker');
-        //$this->secTokenStorage = $container->get('security.token_storage');
-        //$this->getUser();
         $this->security = $security;
     }
 

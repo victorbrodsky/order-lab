@@ -58,26 +58,25 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Symfony\Component\Security\Core\Security;
 
 
 class FellAppUtil {
 
     protected $em;
     protected $container;
-
+    protected $security;
     protected $systemEmail;
 
-
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
-
-
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+        if( !$this->security->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
             //exit('not granted ROLE_FELLAPP_COORDINATOR ???!!!'); //testing
             return null;
         } else {
@@ -771,7 +770,7 @@ class FellAppUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$systemUser = $userSecUtil->findSystemUser();
         $user = $fellowshipApplication->getUser();
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         //Pathology Fellowship Applicant in EmploymentStatus
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
@@ -811,7 +810,7 @@ class FellAppUtil {
     //app_fellappbundle_fellowshipapplication_references_0_name
     public function addEmptyReferences($fellowshipApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $references = $fellowshipApplication->getReferences();
         $count = count($references);
 
@@ -828,7 +827,7 @@ class FellAppUtil {
 
     public function addEmptyBoardCertifications($fellowshipApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $boardCertifications = $fellowshipApplication->getBoardCertifications();
         $count = count($boardCertifications);
 
@@ -846,7 +845,7 @@ class FellAppUtil {
     //app_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
     public function addEmptyStateLicenses($fellowshipApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $stateLicenses = $fellowshipApplication->getStateLicenses();
 
@@ -865,7 +864,7 @@ class FellAppUtil {
 
     public function addEmptyNationalBoards($fellowshipApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $examinations = $fellowshipApplication->getExaminations();
 
@@ -879,7 +878,7 @@ class FellAppUtil {
     }
 
     public function addEmptyCitizenships($fellowshipApplication) {
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $citizenships = $fellowshipApplication->getCitizenships();
 
@@ -973,7 +972,7 @@ class FellAppUtil {
 
         //echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
@@ -997,7 +996,7 @@ class FellAppUtil {
 
     public function createApplicantListExcel( $fellappids ) {
         
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         
         $ea = new Spreadsheet(); // ea is short for Excel Application
@@ -1167,7 +1166,7 @@ class FellAppUtil {
     }
     public function createApplicantListExcelSpout( $fellappids, $fileName ) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         //$writer = WriterFactory::create(Type::XLSX);
@@ -1450,7 +1449,7 @@ class FellAppUtil {
 
     public function createInterviewApplicantList( $fellappids ) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $fellapps = array();
 
@@ -1490,7 +1489,7 @@ class FellAppUtil {
     //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
     public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution, $testing=false ) {
         $em = $this->em;
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
@@ -1709,10 +1708,8 @@ class FellAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
+        $user = $this->security->getUser();
+
         if( $user instanceof User) {
             //User OK - do nothing
         } else {
@@ -1791,10 +1788,8 @@ class FellAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
+        $user = $this->security->getUser();
+
         if( $user instanceof User) {
             //User OK - do nothing
         } else {
@@ -2084,8 +2079,8 @@ class FellAppUtil {
                 //check if account is not inactivated/banned (ROLE_FELLAPP_BANNED, ROLE_FELLAPP_UNAPPROVED, ROLE_USERDIRECTORY_BANNED, ROLE_USERDIRECTORY_UNAPPROVED)
                 if (
                     !$director->isEnabled() ||
-                    $this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_BANNED') ||
-                    $this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_UNAPPROVED')
+                    $this->security->isGranted('ROLE_FELLAPP_BANNED') ||
+                    $this->security->isGranted('ROLE_FELLAPP_UNAPPROVED')
                 ) {
                     //user is locked, banned or unapproved
                 } else {

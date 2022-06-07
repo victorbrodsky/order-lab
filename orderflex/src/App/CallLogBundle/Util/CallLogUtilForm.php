@@ -28,15 +28,18 @@ namespace App\CallLogBundle\Util;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class CallLogUtilForm
 {
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
 
@@ -112,7 +115,7 @@ class CallLogUtilForm
             }
 
             //echo "Encounter dateTimezone=".$dateTimezone."<br>";
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
             $user_tz = $user->getPreferences()->getTimezone();
             if( !$user_tz ) {
                 $user_tz = "America/New_York";
@@ -450,7 +453,7 @@ class CallLogUtilForm
 
     public function getCalllogAuthorsHtml( $message, $sitename ) {
 
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $messageVersion = intval($message->getVersion());
 
@@ -558,15 +561,14 @@ class CallLogUtilForm
     }
 
     public function getCalllogAuthorRolesHtml( $message, $sitename ) {
-
-        if( false == $this->container->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_ADMIN") ) {
+        if( false == $this->security->isGranted("ROLE_CALLLOG_ADMIN") ) {
             return NULL;
         }
 
         $router = $this->container->get('router');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecurityUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $html = "";
 

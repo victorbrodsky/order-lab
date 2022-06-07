@@ -58,12 +58,10 @@ class FellAppManagement extends OrderAbstractController {
      */
     public function felltypeSettingsAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
         //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
@@ -102,7 +100,7 @@ class FellAppManagement extends OrderAbstractController {
     public function addFellowshipApplicationTypeAction(Request $request )
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -111,7 +109,7 @@ class FellAppManagement extends OrderAbstractController {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
 //        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 //
@@ -255,7 +253,7 @@ class FellAppManagement extends OrderAbstractController {
     public function removeFellowshipApplicationTypeAction(Request $request, $fellaptypeid )
     {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -263,7 +261,7 @@ class FellAppManagement extends OrderAbstractController {
         //exit('removeFellowshipTypeAction id='.$fellaptypeid);
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
 
         $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
         if( !$subspecialtyType ) {
@@ -312,7 +310,7 @@ class FellAppManagement extends OrderAbstractController {
      */
     public function showAction(Request $request, $id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -349,7 +347,7 @@ class FellAppManagement extends OrderAbstractController {
      */
     public function editAction(Request $request, $id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -509,15 +507,13 @@ class FellAppManagement extends OrderAbstractController {
      */
     public function populateDefaultAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
-
-
+        
         //populate default directors, coordinators, interviewers
 
         //BREASTPATHOLOGY
@@ -726,12 +722,12 @@ class FellAppManagement extends OrderAbstractController {
 
         exit("Only one time run");
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN')) {
+        if (false == $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
 
@@ -815,14 +811,13 @@ class FellAppManagement extends OrderAbstractController {
     public function createDefaultFellowshipTypeAction(Request $request)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')) {
+        if (false == $this->isGranted('ROLE_FELLAPP_ADMIN')) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
         $testing = false;
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(false);
