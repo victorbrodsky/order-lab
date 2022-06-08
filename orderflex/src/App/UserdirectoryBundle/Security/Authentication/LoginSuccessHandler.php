@@ -45,8 +45,9 @@ use Symfony\Component\Routing\Router;
 class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, AuthenticationSuccessHandlerInterface {
 
     protected $container;
-    protected $secTokenStorage;
-    protected $secAuth;
+    //protected $secTokenStorage;
+    //protected $secAuth;
+    protected $security;
     protected $em;
     protected $router;
     protected $siteName;
@@ -56,12 +57,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
     protected $roleUnapproved;
     protected $firewallName;
 
-    public function __construct( ContainerInterface $container, EntityManagerInterface $em )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em, Security $security )
     {
         $this->container = $container;
         $this->router = $container->get('router');
-        $this->secAuth = $container->get('security.authorization_checker');
-        $this->secTokenStorage = $container->get('security.token_storage');
+        //$this->secAuth = $container->get('security.authorization_checker');
+        //$this->secTokenStorage = $container->get('security.token_storage');
+        $this->security = $security;
         $this->em = $em;
 
         $this->siteName = $container->getParameter('employees.sitename');
@@ -109,7 +111,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $session = $request->getSession();
 
-        //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->secAuth,$this->container);
+        //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
         $res = $secUtil->getMaxIdleTimeAndMaintenance();
 
         //check for maintenance
@@ -132,10 +134,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $session->set('sitename',$this->siteName);
         ///////////////// EOF set session variables /////////////////
 
-        if( $this->secAuth->isGranted($this->roleBanned) ) {
+        if( $this->security->isGranted($this->roleBanned) ) {
             $options['eventtype'] = 'Banned User Login Attempt';
             $options['event'] = 'Banned user login attempt to '.$this->siteNameStr.' site. Username='.$username;
-//            UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+//            UserUtil::setLoginAttempt($request,$this->security,$em,$options);
             $secUtil->setLoginAttempt($request,$options);
             //exit('banned user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
@@ -143,7 +145,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //detect if the user was first time logged in by ldap: assign role UNAPPROVED user
         //all users must have at least an OBSERVER role
-//        if( !$this->secAuth->isGranted($this->roleUser)  ) {
+//        if( !$this->security->isGranted($this->roleUser)  ) {
 //            //echo "assign role UNAPPROVED user <br>";
 //            //exit('UNAPPROVED user');
 //            $user->addRole($this->roleUnapproved);
@@ -151,10 +153,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $this->checkBasicRole($user,$lastRoute);
         //echo "lastRoute=".$lastRoute."<br>";exit();
 
-        if( $this->secAuth->isGranted($this->roleUnapproved) ) {
+        if( $this->security->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
             $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site. Username='.$username;
-            //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+            //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
             $secUtil->setLoginAttempt($request,$options);
             //exit('Unapproved user');
             return new RedirectResponse( $this->router->generate($this->siteName.'_access_request_new') );
@@ -164,7 +166,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options['eventtype'] = "Successful Login";
         $options['event'] = 'Successful login to '.$this->siteNameStr.' site. Username='.$username;
 
-        //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
 
         //Initial Configuration Completed
@@ -250,7 +252,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
     public function checkBasicRole($user,$targetUrl=null) : void
     {
-        if( !$this->secAuth->isGranted($this->roleUser)  ) {
+        if( !$this->security->isGranted($this->roleUser)  ) {
             //echo "assign role UNAPPROVED user <br>";
             //exit('UNAPPROVED user');
             $user->addRole($this->roleUnapproved);
@@ -276,7 +278,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $options['serverresponse'] = $exception->getMessage();
 
         //testing
-        //UserUtil::setLoginAttempt($request,$this->secTokenStorage,$em,$options);
+        //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);

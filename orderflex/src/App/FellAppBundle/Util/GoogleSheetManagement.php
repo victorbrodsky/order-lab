@@ -45,16 +45,18 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use App\FellAppBundle\Util\CustomDefaultServiceRequest;
+use Symfony\Component\Security\Core\Security;
 
 class GoogleSheetManagement {
 
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
-
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
     public function allowModifySOurceGoogleDrive() {
@@ -1232,7 +1234,7 @@ class GoogleSheetManagement {
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
     public function getConfigOnGoogleDrive() {
 
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
+        if( $this->security->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             return NULL;
         }

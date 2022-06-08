@@ -7,7 +7,7 @@
 function foscommentNewComment() {
 
     var comment = $('#foscomment_new_comment').val();
-    console.log('comment='+comment);
+    //console.log('comment='+comment);
 
     comment = comment.trim();
 
@@ -20,14 +20,15 @@ function foscommentNewComment() {
     submitLaddaBtn.start();
     submitBtn.disabled = true;
 
-    var url = Routing.generate('user_thread_new_comment_ajax');
-
     var threadId = $('#fos_comment_thread').data('thread');
-    console.log('threadId='+threadId);
+    //console.log('threadId='+threadId);
 
     var parentId = null; //$('#foscomment_thread_parent').val();
-    console.log('parentId='+parentId);
-    
+    //console.log('parentId='+parentId);
+
+    var url = Routing.generate('user_thread_new_comment_ajax');
+    //console.log('url='+url);
+
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,

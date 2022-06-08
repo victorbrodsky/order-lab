@@ -27,6 +27,7 @@ namespace App\UtilBundles\FOSCommentBundle\Util;
 use App\UtilBundles\FOSCommentBundle\Model\CommentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 //Derived from FosCommentListener
@@ -35,20 +36,16 @@ class FosCommentListenerUtil {
 
     private $container;
     private $em;
-    protected $secTokenStorage;
+    protected $security;
 
     protected $disable = false;
     //protected $disable = true; //disable comments when importing data
 
-    protected $secAuth;
-
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container )
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security )
     {
         $this->container = $container;
         $this->em = $em;
-
-        $this->secTokenStorage = $container->get('security.token_storage');  //$container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
+        $this->security = $security;
     }
 
     public function onCommentPrePersist(CommentInterface $comment)
@@ -58,7 +55,7 @@ class FosCommentListenerUtil {
         }
 
         $entity = $this->getEntityFromComment($comment);
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         if( $entity ) {
             //send comment entity properties
@@ -283,9 +280,11 @@ class FosCommentListenerUtil {
     public function getAuthorType( $entity ) {
 
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
 
-        if( !$this->secTokenStorage->getToken() ) {
+        //getUser() returns your User object, or null if the user is not authenticated
+        $user = $this->security->getUser();
+
+        if( !$user ) {
             //not authenticated
             return null;
         }
@@ -312,14 +311,14 @@ class FosCommentListenerUtil {
             }
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
             //$authorType = "Administrator";
             $authorTypeArr['type'] = "Administrator";
             $authorTypeArr['description'] = "Administrator";
             return $authorTypeArr;
         }
 
-        //if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+        //if( $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
         if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
             //$authorType = "Primary Reviewer";
             $authorTypeArr['type'] = "Administrator";

@@ -77,6 +77,12 @@ app_translationalresearch:
     prefix:   /translational-research
     schemes:  ['%connection_channel%']
 
+app_utilbundles_foscomment:
+    resource: "../src/App/UtilBundles/FOSCommentBundle/Controller/"
+    type:     annotation
+    prefix:   /utilbundles-foscomment
+    schemes:  ['%connection_channel%']
+
 app_userdirectory:
     resource: "../src/App/UserdirectoryBundle/Controller/"
     type:     annotation

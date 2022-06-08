@@ -39,21 +39,19 @@ use App\OrderformBundle\Entity\DataQualityMrnAcc;
 
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 class OrderUtil {
 
     private $em;
     private $container;
-    private $secTokenStorage;
-    private $secAuthChecker;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
-
         $this->container = $container;
-        $this->secAuthChecker = $container->get('security.authorization_checker');
-        $this->secTokenStorage = $container->get('security.token_storage');
+        $this->security = $security;
     }
 
     public function redirectOrderByStatus($order,$routeName) {
@@ -156,10 +154,10 @@ class OrderUtil {
 
             $fieldStatusStr = "deleted-by-canceled-order";
 
-            if( $entity->getProvider() == $user || $this->secAuthChecker->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
+            if( $entity->getProvider() == $user || $this->security->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
                 $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
-            if( $this->secAuthChecker->isGranted("ROLE_SCANORDER_ADMIN") || $this->secAuthChecker->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
+            if( $this->security->isGranted("ROLE_SCANORDER_ADMIN") || $this->security->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
                 $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Processor");
             } else {
                 $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
@@ -495,9 +493,19 @@ class OrderUtil {
     //$commentFlag = null-show only comments to the orders belonging to admin
     public function getCommentsCriteriaStr($flag = 'new_comments', $commentFlag = null) {
 
-        if( !$this->secTokenStorage->getToken() ) {
+        $user = $this->security->getUser();
+
+        if( !$user ) {
             return "";
         }
+
+        if( !is_object($user) ) {
+            return "";
+        }
+
+//        if( !$this->secTokenStorage->getToken() ) {
+//            return "";
+//        }
 
         $criteriastr = "eventtype.name='Comment Added' ";
 
@@ -505,12 +513,6 @@ class OrderUtil {
             $criteriastr = $criteriastr . "AND history.viewed is NULL ";
         } else {
             return $criteriastr;
-        }
-
-        $user = $this->secTokenStorage->getToken()->getUser();
-
-        if( !is_object($user) ) {
-            return "";
         }
 
         $role = "ROLE_SCANORDER_PROCESSOR";
@@ -710,7 +712,7 @@ class OrderUtil {
         $sysemail = $this->container->getParameter('default_system_email');
         $flashBag = $this->container->get('session')->getFlashBag();
 
-        if( $this->secAuthChecker->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->secAuthChecker->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->security->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
             $msg =  "Please add at least one institution to your user ".$webUserUrl." (in the form field titled 'Order data visible to members of (Institutional PHI Scope)') in order to be able to submit data.";
@@ -825,7 +827,7 @@ class OrderUtil {
 
             //chief scope
             $userSiteSettings = $secUtil->getUserPerSiteSettings($user);
-            if( $this->secAuthChecker->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+            if( $this->security->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $userSiteSettings->getChiefServices();
                 foreach( $chiefServices as $serv ) {
                     if( !$userServices->contains($serv) ) {
@@ -884,7 +886,7 @@ class OrderUtil {
     public function getPreviousMessage( $categoryStr=null ) {
         $previousOrder = null;
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
 //        $previousOrders = $this->em->getRepository('AppOrderformBundle:Message')->findBy(
 //            array('provider'=>$user),
