@@ -121,7 +121,6 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['transres_pdf_generator'] = '?'.PdfGenerator::class;
         $subscribedServices['transres_import'] = '?'.TransResImportData::class;
-        $subscribedServices['transres_dashboard'] = '?'.\App\TranslationalResearchBundle\Util\TransresDashboardUtil::class;
         $subscribedServices['transres_reminder_util'] = '?'.ReminderUtil::class;
 
         $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;

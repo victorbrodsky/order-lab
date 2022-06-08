@@ -58,26 +58,29 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Symfony\Component\Security\Core\Security;
 
 
 class ResAppUtil {
 
     protected $em;
     protected $container;
+    protected $security;
 
     protected $systemEmail;
 
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
 
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->container->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+        if( !$this->security->isGranted('ROLE_RESAPP_COORDINATOR') ) {
             //exit('not granted ROLE_RESAPP_COORDINATOR ???!!!'); //testing
             return null;
         } else {
@@ -758,7 +761,7 @@ class ResAppUtil {
         //echo "add EmptyResAppFields <br>";
         $em = $this->em;
         $user = $residencyApplication->getUser();
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         //Pathology Residency Applicant in EmploymentStatus
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
@@ -797,7 +800,7 @@ class ResAppUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$systemUser = $userSecUtil->findSystemUser();
         $user = $residencyApplication->getUser();
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         //Pathology Residency Applicant in EmploymentStatus
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
@@ -836,7 +839,7 @@ class ResAppUtil {
     //app_resappbundle_residencyapplication_references_0_name
     public function addEmptyReferences($residencyApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $references = $residencyApplication->getReferences();
         $count = count($references);
 
@@ -853,7 +856,7 @@ class ResAppUtil {
 
     public function addEmptyBoardCertifications($residencyApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $boardCertifications = $residencyApplication->getBoardCertifications();
         $count = count($boardCertifications);
 
@@ -871,7 +874,7 @@ class ResAppUtil {
     //app_resappbundle_residencyapplication[stateLicenses][0][licenseNumber]
     public function addEmptyStateLicenses($residencyApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $stateLicenses = $residencyApplication->getStateLicenses();
 
@@ -890,7 +893,7 @@ class ResAppUtil {
 
     public function addEmptyNationalBoards($residencyApplication) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $examinations = $residencyApplication->getExaminations();
 
@@ -904,7 +907,7 @@ class ResAppUtil {
     }
 
     public function addEmptyCitizenships($residencyApplication) {
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $citizenships = $residencyApplication->getCitizenships();
 
@@ -984,7 +987,7 @@ class ResAppUtil {
     }
     public function addSingleTraining($residencyApplication,$typeName,$orderinlist) {
         //echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
@@ -1007,7 +1010,7 @@ class ResAppUtil {
 
     public function createApplicantListExcel( $resappids ) {
         
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         
         $ea = new Spreadsheet(); // ea is short for Excel Application
@@ -1183,7 +1186,7 @@ class ResAppUtil {
     }
     public function createApplicantListExcelSpout( $resappids, $fileName ) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         //$writer = WriterFactory::create(Type::XLSX);
@@ -1474,7 +1477,7 @@ class ResAppUtil {
 
     public function createInterviewApplicantList( $resappids ) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $resapps = array();
 
@@ -1514,7 +1517,7 @@ class ResAppUtil {
     //Permissions: Create a New Residency Application, Modify a Residency Application, Submit an interview evaluation
     public function createOrEnableResAppRole( $subspecialtyType, $roleType, $institution, $testing=false ) {
         $em = $this->em;
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('resapp');
 
@@ -1803,11 +1806,9 @@ class ResAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
-        if( $user instanceof User) {
+        $user = $this->security->getUser();
+
+        if( $user && $user instanceof User) {
             //User OK - do nothing
         } else {
             $user = $userSecUtil->findSystemUser();
@@ -1885,11 +1886,9 @@ class ResAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
-        if( $user instanceof User) {
+        $user = $this->security->getUser();
+
+        if( $user && $user instanceof User) {
             //User OK - do nothing
         } else {
             $user = $userSecUtil->findSystemUser();
@@ -2218,8 +2217,8 @@ class ResAppUtil {
                 //check if account is not inactivated/banned (ROLE_RESAPP_BANNED, ROLE_RESAPP_UNAPPROVED, ROLE_USERDIRECTORY_BANNED, ROLE_USERDIRECTORY_UNAPPROVED)
                 if (
                     !$director->isEnabled() ||
-                    $this->container->get('security.authorization_checker')->isGranted('ROLE_RESAPP_BANNED') ||
-                    $this->container->get('security.authorization_checker')->isGranted('ROLE_RESAPP_UNAPPROVED')
+                    $this->security->isGranted('ROLE_RESAPP_BANNED') ||
+                    $this->security->isGranted('ROLE_RESAPP_UNAPPROVED')
                 ) {
                     //user is locked, banned or unapproved
                 } else {

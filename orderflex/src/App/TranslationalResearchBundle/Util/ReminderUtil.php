@@ -38,14 +38,10 @@ class ReminderUtil
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
 
@@ -389,7 +385,6 @@ class ReminderUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $logger = $this->container->get('logger');
-        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $systemuser = $userSecUtil->findSystemUser();
         $stateStr = $transresUtil->getStateLabelByName($state);
@@ -703,7 +698,6 @@ class ReminderUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $logger = $this->container->get('logger');
-        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $systemuser = $userSecUtil->findSystemUser();
         $stateStr = $transresRequestUtil->getProgressStateLabelByName($state);

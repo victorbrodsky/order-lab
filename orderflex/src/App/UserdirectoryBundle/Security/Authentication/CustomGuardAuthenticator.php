@@ -364,7 +364,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         return NULL;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) : Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
         return $authenticationSuccess->onAuthenticationSuccess($request,$token);

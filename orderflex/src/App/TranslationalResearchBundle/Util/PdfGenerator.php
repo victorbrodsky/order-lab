@@ -19,16 +19,12 @@ class PdfGenerator
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
 
     protected $uploadDir;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
 
         $this->uploadDir = 'Uploaded';
     }
@@ -126,7 +122,6 @@ class PdfGenerator
     protected function constructUniqueFileName($entity,$filenameStr,$subjectUser=null) {
 
         //$logger = $this->container->get('logger');
-        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $currentDate = new \DateTime();
 

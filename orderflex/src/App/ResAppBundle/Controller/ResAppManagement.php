@@ -60,7 +60,7 @@ class ResAppManagement extends OrderAbstractController {
      */
     public function restypeSettingsAction(Request $request) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -108,7 +108,7 @@ class ResAppManagement extends OrderAbstractController {
     {
         exit('Not supported');
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -266,7 +266,7 @@ class ResAppManagement extends OrderAbstractController {
 
         exit('Not supported');
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -325,7 +325,7 @@ class ResAppManagement extends OrderAbstractController {
      */
     public function showAction(Request $request, $id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -363,7 +363,7 @@ class ResAppManagement extends OrderAbstractController {
      */
     public function editAction(Request $request, $id) {
 
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_DIRECTOR') ){
+        if( false == $this->isGranted('ROLE_RESAPP_COORDINATOR') && false == $this->isGranted('ROLE_RESAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
@@ -531,7 +531,7 @@ class ResAppManagement extends OrderAbstractController {
 //
 //        exit("populateDefaultAction NOT USED");
 //
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_RESAPP_ADMIN') ){
+//        if( false == $this->isGranted('ROLE_RESAPP_ADMIN') ){
 //            return $this->redirect( $this->generateUrl('resapp-nopermission') );
 //        }
 //
@@ -749,7 +749,7 @@ class ResAppManagement extends OrderAbstractController {
 
         exit("Only one time run");
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN')) {
+        if (false == $this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
 

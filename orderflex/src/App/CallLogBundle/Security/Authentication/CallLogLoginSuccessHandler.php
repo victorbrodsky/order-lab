@@ -32,6 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,9 +45,9 @@ use Symfony\Component\Routing\Router;
 class CallLogLoginSuccessHandler extends LoginSuccessHandler {
 
 
-    public function __construct( ContainerInterface $container, EntityManagerInterface $em )
+    public function __construct( ContainerInterface $container, EntityManagerInterface $em, Security $security )
     {
-        parent::__construct($container,$em);
+        parent::__construct($container,$em,$security);
 
         $this->siteName = $container->getParameter('calllog.sitename');
         $this->siteNameStr = 'Call Log Book';
