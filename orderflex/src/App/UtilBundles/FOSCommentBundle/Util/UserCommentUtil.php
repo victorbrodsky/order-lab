@@ -39,16 +39,10 @@ class UserCommentUtil {
 
     protected $em;
     protected $container;
-    protected $secToken;
-    protected $secAuth;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container=null ) {
         $this->em = $em;
         $this->container = $container;
-        if( $container ) {
-            $this->secToken = $container->get('security.token_storage');
-            $this->secAuth = $container->get('security.authorization_checker');
-        }
     }
 
 

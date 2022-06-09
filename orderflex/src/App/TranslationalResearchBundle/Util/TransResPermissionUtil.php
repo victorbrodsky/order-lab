@@ -19,15 +19,16 @@ namespace App\TranslationalResearchBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use App\TranslationalResearchBundle\Entity\Invoice;
-use App\TranslationalResearchBundle\Entity\InvoiceItem;
-use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+//use Doctrine\Common\Collections\ArrayCollection;
+//use App\TranslationalResearchBundle\Entity\Invoice;
+//use App\TranslationalResearchBundle\Entity\InvoiceItem;
+//use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
+//use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 /**
- * Created by PhpStorm.
+ * Created by Oleg Ivanov.
  * Date: 8/13/2018
  * Time: 09:48 AM
  * container name: transres_permission_util
@@ -37,19 +38,17 @@ class TransResPermissionUtil
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        $this->security = $security;
     }
 
     /////////////// INVOICE ///////////////////////
     public function areInvoicesShowableToUser($project) {
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
@@ -64,11 +63,11 @@ class TransResPermissionUtil
 
         $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
 
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
             return true;
         }
 
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
             return true;
         }
 
@@ -85,7 +84,7 @@ class TransResPermissionUtil
     }
     //similar to isGranted("read",$entity)
     public function isUserHasInvoicePermission( $invoice, $action ) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -126,11 +125,11 @@ class TransResPermissionUtil
             $specialtyStr = "";
         }
 
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr) ) {
             return true;
         }
 
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyStr) ) {
             return true;
         }
 
@@ -145,7 +144,7 @@ class TransResPermissionUtil
 
 //        if( $action == "create" ) {
 //            $processed = true;
-//            if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+//            if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
 //                return true;
 //            }
 //        }
@@ -284,7 +283,7 @@ class TransResPermissionUtil
         $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
 
         //ROLE_TRANSRES_BILLING_ADMIN role
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
             return true;
         }
 
@@ -314,7 +313,7 @@ class TransResPermissionUtil
         $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
 
         //ROLE_TRANSRES_BILLING_ADMIN role
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
             return true;
         }
 
@@ -366,23 +365,23 @@ class TransResPermissionUtil
         }
 //        echo "specialtyStr=$specialtyStr; action=$action<br>";
 //
-//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+//        if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
 //            echo "[ROLE_TRANSRES_REQUESTER".$specialtyStr . "] role is OK <br>";
 //        }
-//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
+//        if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER_COVID19") ) {
 //            echo "2covid role is OK <br>";
 //        }
-//        if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
+//        if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER_APCP") ) {
 //            echo "2apcp role is OK <br>";
 //        }
 
         if( $action == "create" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
             ) {
                 return true;
             } else {
@@ -393,15 +392,15 @@ class TransResPermissionUtil
         if( $action == "update" || $action == "edit" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
-                //|| $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+                $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+                //|| $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
             ) {
                 return true;
             }
 
             //check if the user is a ROLE_TRANSRES_PRIMARY_REVIEWER of this project
             if( $project ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
+                $user = $this->security->getUser();
                 if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
                     return true;
                 }
@@ -430,28 +429,28 @@ class TransResPermissionUtil
             //all request's requesters associated with this project.
             //We can search all requests and then verify if this user is request's requester
             //but for perfomarnce, just show the project to requester roles
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
                 return true;
             }
 
             if(
-                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
-                //|| $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+                $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+                //|| $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
             ) {
                 return true;
             }
 
             //check if the user is a ROLE_TRANSRES_PRIMARY_REVIEWER of this project
             if( $project ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
+                $user = $this->security->getUser();
                 if( $transresUtil->isReviewsReviewer($user, $project->getFinalReviews()) ) {
                     return true;
                 }
             }
 
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
             ) {
                 return true;
             }
@@ -465,7 +464,7 @@ class TransResPermissionUtil
             }
 
             //all request's requesters associated with this project
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
                 return true;
             }
 
@@ -473,7 +472,7 @@ class TransResPermissionUtil
 
         if( $action == "cancel" ) {
             $done = true;
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
                 return true;
             }
 
@@ -484,21 +483,21 @@ class TransResPermissionUtil
 
         if( $action == "close" ) {
             $done = true;
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
                 return true;
             }
         }
 
         if( $action == "approve" ) {
             $done = true;
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
                 return true;
             }
         }
 
         if( $action == "delete" ) {
             $done = true;
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
                 return true;
             }
         }
@@ -506,8 +505,8 @@ class TransResPermissionUtil
         if( $action == "review" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
             ) {
                 return true;
             }
@@ -522,8 +521,8 @@ class TransResPermissionUtil
             if( $project ) {
                 if( $project->getFunded() ) {
                     if(
-                        $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                        $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+                        $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                        $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
                     ) {
                         return true;
                     }
@@ -534,10 +533,10 @@ class TransResPermissionUtil
         if( $action == "view-log" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
             ) {
                 return true;
             }
@@ -545,20 +544,20 @@ class TransResPermissionUtil
 
         if( $action == "list" ) {
             $done = true;
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_USER") ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_USER") ) {
                 return true;
             }
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
             ) {
                 return true;
             }
 
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
             ) {
                 return true;
             }
@@ -595,8 +594,8 @@ class TransResPermissionUtil
         if( $action == "create" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
             ) {
                 return true;
             }
@@ -608,7 +607,7 @@ class TransResPermissionUtil
                     }
                 }
             } else {
-                if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+                if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
                     return true;
                 }
             }
@@ -625,9 +624,9 @@ class TransResPermissionUtil
         if( $action == "update" || $action == "edit" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
             ) {
                 return true;
             }
@@ -647,10 +646,10 @@ class TransResPermissionUtil
             $done = true;
 
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
             ) {
                 return true;
             }
@@ -667,7 +666,7 @@ class TransResPermissionUtil
         if( $action == "delete" ) {
             $done = true;
 
-            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
                 return true;
             }
         }
@@ -675,8 +674,8 @@ class TransResPermissionUtil
         if( $action == "progress-review" ) {
             $done = true;
 //            if(
-//                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-//                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+//                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//                $this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
 //            ) {
 //                return true;
 //            }
@@ -706,9 +705,9 @@ class TransResPermissionUtil
         if( $action == "packing-slip" ) {
             $done = true;
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                //$this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                //$this->security->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
             ) {
                 return true;
             }
@@ -732,7 +731,7 @@ class TransResPermissionUtil
 
         if( $action == "update" || $action == "edit" ) {
 
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
 
             $project = NULL;
             $request = $product->getTransresRequest();
@@ -754,13 +753,13 @@ class TransResPermissionUtil
             $specialtyQueueRole = $user->hasPartialRole($specialtyStr."_QUEUE");
 
             //Always allow for Platform Admin
-            if( $this->secAuth->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+            if( $this->security->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
                 return true;
             }
 
 //            if(
-//                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-//                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+//                $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
 //            ) {
 //                //echo "allow <br>";
 //                return true;
@@ -775,8 +774,8 @@ class TransResPermissionUtil
 //
 //                //echo $category->getProductId().": Role2=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
 //                if (
-//                    $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
-//                    $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+//                    $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+//                    $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
 //                ) {
 //                    return true;
 //                }
@@ -806,8 +805,8 @@ class TransResPermissionUtil
                     //echo $category->getProductId().": Role1=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . $workQueueStr."]<br>";
                     //2) user has specialty+workqueue role
                     if (
-                        $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr . $workQueueStr) ||
-                        $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . $workQueueStr)
+                        $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr . $workQueueStr) ||
+                        $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . $workQueueStr)
                     ) {
                         return true;
                     }
@@ -816,8 +815,8 @@ class TransResPermissionUtil
                     //3) if user does not have '_QUEUE' role check if user has a generic technician role for this specialty
                     if( $specialtyQueueRole == false ) {
                         if(
-                            $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                            $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+                            $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                            $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
                         ) {
                             return true;
                         }
@@ -839,8 +838,8 @@ class TransResPermissionUtil
                     //echo $category->getProductId().": Role1=["."ROLE_TRANSRES_TECHNICIAN" . $specialtyStr . "]<br>";
                     //4) user has generic role
                     if (
-                        $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
-                        $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
+                        $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyStr) ||
+                        $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyStr)
                     ) {
                         return true;
                     }

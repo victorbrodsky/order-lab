@@ -37,7 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+//use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use App\UserdirectoryBundle\Entity\User;
@@ -47,32 +47,34 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserSecurityUtil {
 
     protected $em;
     protected $container;
-    protected $secToken;
-    protected $secAuth;
+    protected $security;
+    protected $tokenStorage;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container=null ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container=null, Security $security=null, TokenStorageInterface $tokenStorage=null ) {
         $this->em = $em;
-        //$this->secToken = $secToken;
-        //$this->secAuth = $secAuth;
         $this->container = $container;
-        if( $container ) {
-            $this->secToken = $container->get('security.token_storage');
-            $this->secAuth = $container->get('security.authorization_checker');
-        }
+        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        //if( $container ) {
+            //$this->secToken = $container->get('security.token_storage');
+            //$this->secAuth = $container->get('security.authorization_checker');
+        //}
     }
 
     public function isCurrentUser( $id ) {
 
-        if( !$this->secToken->getToken() ) {
+        if( !$this->security ) {
             return false;
         }
 
-        $user = $this->secToken->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $entity = $this->em->getRepository('AppUserdirectoryBundle:User')->find($id);
 
@@ -90,7 +92,7 @@ class UserSecurityUtil {
     public function isUserVisible( $subjectUser, $currentUser ) {
 
         //always visible to Platform Administrator and Deputy Platform Administrator
-        if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return true;
         }
 
@@ -163,7 +165,7 @@ class UserSecurityUtil {
             //check if current user has one of the role
             foreach( $showToRoles as $role ) {
                 //echo "role=".$role."<br>";
-                if( $this->secAuth->isGranted($role."") ) {
+                if( $this->security->isGranted($role."") ) {
                     $hideRole = false;
                     break;
                 }
@@ -221,23 +223,23 @@ class UserSecurityUtil {
     //check for the role in security context and in the user DB
     public function hasGlobalUserRole( $role, $user=null ) {
 
-        if( false === $this->secAuth->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->security->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return false;
         }
 
-        if( $this->secAuth->isGranted($role) ) {
+        if( $this->security->isGranted($role) ) {
             return true;
         }
 
         //get user from DB?
 
         if( $user == null ) {
-            if( $this->secToken->getToken() ) {
-                $user = $this->secToken->getToken()->getUser();
+            if( $this->security ) {
+                $user = $this->security->getUser();
             }
         }
 
-//        if( $this->secAuth->isGranted('PUBLIC_ACCESS') )
+//        if( $this->security->isGranted('PUBLIC_ACCESS') )
 //            return false;
 
         if( !is_object($user) ) {
@@ -263,7 +265,7 @@ class UserSecurityUtil {
     function idleLogout( $request, $sitename, $flag = null ) {
 
         //$userUtil = new UserUtil();
-        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->secAuth,$this->container);
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->security,$this->container);
 
         $res = $this->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime'];
@@ -291,9 +293,11 @@ class UserSecurityUtil {
             $msg
         );
 
-        $this->container->get('security.token_storage')->setToken(null);
+        //$this->container->get('security.token_storage')->setToken(null);
+        //$this->security->setToken(null); //testing
         //$this->get('request')->getSession()->invalidate();
-
+        $request->getSession()->invalidate();
+        $this->tokenStorage->setToken(null);
 
         //return $this->redirect($this->generateUrl('login'));
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
@@ -837,7 +841,7 @@ class UserSecurityUtil {
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
         $author = $userSecUtil->findSystemUser();
-        //$author = $this->secToken->getToken()->getUser();
+        //$author = $this->security->getUser();
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         $usernameClean = $userSecUtil->createCleanUsername($username);
@@ -1457,12 +1461,20 @@ class UserSecurityUtil {
 
         $logger = new Logger($site);
 
-        $token = $this->secToken->getToken();
+        //$token = $this->secToken->getToken();
 
-        if( $token ) {
+        if( $this->security ) {
 
-            $user = $this->secToken->getToken()->getUser();
-            $username = $token->getUsername();
+            //$user = $this->secToken->getToken()->getUser();
+            //$username = $token->getUsername();
+            $user = $this->security->getUser();
+            $username = $this->security->getToken()->getUsername();
+
+            //$this->security->setToken(null);
+            //$this->security->getToken()->getSession()->invalidate();
+            //$request->getSession()->invalidate();
+            //$this->tokenStorage->setToken(null);
+            //exit('$username='.$username);
 
             if( $user && is_object($user) ) {
                 $roles = $user->getRoles();
@@ -1606,7 +1618,7 @@ class UserSecurityUtil {
 
         //do not use maintenance for admin
         //if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-        if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $maintenance = false;
         }
 
@@ -2453,11 +2465,11 @@ class UserSecurityUtil {
         }
 
         //show login page, but not allowed when authenticated and visit the not accessible sites
-        if( $this->secToken->getToken() ) {
-            $user = $this->secToken->getToken()->getUser();
+        if( $this->security ) {
+            $user = $this->security->getUser();
             //exit("user=".$user);
             if ($user && $user instanceof User) {
-                if ($this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                if ($this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
                     //echo "admin <br>";
                     return true;
                 }
@@ -2663,7 +2675,7 @@ class UserSecurityUtil {
         }
         foreach( $actionStrArr as $action ) {
             //echo "check action=".$action."<br>";
-            if( false === $this->secAuth->isGranted($action, $entity) ) {
+            if( false === $this->security->isGranted($action, $entity) ) {
                 return false;
             }
         }
@@ -2728,9 +2740,9 @@ class UserSecurityUtil {
 
         //processor and division chief can perform any actions
         if(
-            $this->secAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_cSCANORDER_PROCESSOR') ||
-            $this->secAuth->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
+            $this->security->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+            $this->security->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
         ) {
             return true;
         }
@@ -3086,8 +3098,8 @@ class UserSecurityUtil {
         }
 
         $user = NULL;
-        if( $this->secToken->getToken() ) {
-            $user = $this->secToken->getToken()->getUser();
+        if( $this->security ) {
+            $user = $this->security->getUser();
         }
 
         $entity = new Roles();
@@ -3132,7 +3144,7 @@ class UserSecurityUtil {
     //Test hierarchy roles
     public function roleHierarchyTest() {
         //testing transres ROLE hierarchy
-        $user = $this->secToken->getToken()->getUser();
+        $user = $this->security->getUser();
         echo "$user: <br><br>";
 
         $roles = array(
@@ -3198,7 +3210,7 @@ class UserSecurityUtil {
             return NULL;
         }
         //testing transres ROLE hierarchy
-        if( !$this->secAuth->isGranted($role) ) {
+        if( !$this->security->isGranted($role) ) {
             echo "No $role <br>";
         } else {
             echo "Yes! $role <br>";

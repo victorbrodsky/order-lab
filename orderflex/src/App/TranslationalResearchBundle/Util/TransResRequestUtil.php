@@ -22,16 +22,16 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 use App\TranslationalResearchBundle\Entity\Product;
-use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+//use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+//use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
+//use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\InvoiceItem;
-use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
-use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
+//use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
+//use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //use Box\Spout\Common\Type;
@@ -46,6 +46,7 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Symfony\Component\Security\Core\Security;
 
 
 /**
@@ -59,14 +60,12 @@ class TransResRequestUtil
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        $this->security = $security;
     }
 
 
@@ -611,7 +610,7 @@ class TransResRequestUtil
             return true; //admin or primary reviewer or delegate
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
             return true;
         }
 
@@ -648,7 +647,7 @@ class TransResRequestUtil
             return true; //admin or primary reviewer or delegate
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyPostfix) ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyPostfix) ) {
             return true;
         }
 
@@ -669,7 +668,7 @@ class TransResRequestUtil
 
     //return true if request's submitter or principalInvestigators
     public function isRequestRequester( $transresRequest ) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         //submitter
         $submitter = $transresRequest->getSubmitter();
         if( $submitter ) {
@@ -724,7 +723,7 @@ class TransResRequestUtil
         //1) is_granted('ROLE_TRANSRES_REQUESTER')
         if(
             $transresUtil->isProjectRequester($project) === false &&
-            $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER'.$specialtyPostfix) === false &&
+            $this->security->isGranted('ROLE_TRANSRES_REQUESTER'.$specialtyPostfix) === false &&
             $transresUtil->isAdminOrPrimaryReviewer($project) === false
         ) {
             return -1;
@@ -770,7 +769,7 @@ class TransResRequestUtil
         //exit("get review links");
         $transresUtil = $this->container->get('transres_util');
         //$project = $transresRequest->getProject();
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->security->getUser();
 
         $project = $transresRequest->getProject();
         if( $project ) {
@@ -827,15 +826,15 @@ class TransResRequestUtil
                 //echo "from=".$from."<br>"; //irb_review
 
                 //exception: ok: if $to == "approvedInvoicing" and TRP Administrator
-                if( $to == "approvedInvoicing" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
+                if( $to == "approvedInvoicing" && !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
                     continue; //skip this $to state
                 }
 
                 //exception: Only admin can set status to "completedNotified"
                 if( $to == "completedNotified" &&
                     (
-                        !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) &&
-                        !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix)
+                        !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) &&
+                        !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix)
                     )
                 ) {
                     continue; //skip this $to state
@@ -843,7 +842,7 @@ class TransResRequestUtil
 
                 if( $to == "canceled" ) {
                     //do not show canceled for non-admin and non-technician
-                    if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
+                    if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                         continue; //skip this $to state
                     }
                 }
@@ -927,7 +926,7 @@ class TransResRequestUtil
         }
 
         //echo "transitionName=".$transitionName."<br>";
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         //$break = "\r\n";
@@ -972,7 +971,7 @@ class TransResRequestUtil
         //exception
         if( $to == "completedNotified" ) {
             //only Admin can change the status to completedNotified
-            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
+            if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
@@ -985,7 +984,7 @@ class TransResRequestUtil
         //exception
         if( $to == "canceled" ) {
             //only Admin can change the status to canceled
-            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
+            if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
@@ -1336,7 +1335,7 @@ class TransResRequestUtil
 
     //Used in create New Invoice
     public function createRequestItems($request) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $invoiceItemsArr = new ArrayCollection();
         $priceList = $request->getPriceList();
 
@@ -2171,7 +2170,7 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $newline = "\n";
 
@@ -2565,10 +2564,10 @@ class TransResRequestUtil
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
         ) {
             $elements = array(
                 "All my outstanding invoices",
@@ -2649,10 +2648,10 @@ class TransResRequestUtil
 //
 //        if(
 //            $transresUtil->isAdminOrPrimaryReviewer() ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-//            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
 //        ) {
 //            //Show all invoices filter
 //            $filterTypes = array(
@@ -2741,14 +2740,14 @@ class TransResRequestUtil
             //'Requests I Completed',
             //'[[hr]]'
         );
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
             $elements1[] = 'Requests I Completed';
         }
         $filterTypes['My work requests'] = $elements1;
 
 //        $filterTypes[] = '[[hr]]';
 
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;
         }
 
@@ -2836,13 +2835,13 @@ class TransResRequestUtil
             //'[[hr]]'
         );
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN') || $transresUtil->isAdminOrPrimaryReviewer() ) {
             $filterTypes[] = 'Requests I Completed';
         }
 
         $filterTypes[] = '[[hr]]';
 
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;
         }
 
@@ -2893,7 +2892,7 @@ class TransResRequestUtil
     //get allowed filter work queue types for logged in user
     public function getWorkQueuesFilterPresetType() {
         //$transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //"CTP Lab Work Queue" and "MISI Lab Work Queue"
         //$workQueues = $transresUtil->getWorkQueues();
@@ -2926,7 +2925,7 @@ class TransResRequestUtil
     }
     public function getWorkQueuesFilterPresetType_ORIG() {
         //$transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //"CTP Lab Work Queue" and "MISI Lab Work Queue"
 
@@ -3511,7 +3510,7 @@ class TransResRequestUtil
             return "Error: Packing Slip PDF ".$pdf->getUniquename()." has not been sent, because the email list (admins and primary reviewers, submitter, principalInvestigators, contact) is empty.";
         }
 
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->security->getUser();
         //$senderEmail = $user->getSingleEmail(false);
 
         $project = $transresRequest->getProject();
@@ -5383,7 +5382,7 @@ class TransResRequestUtil
             return NULL;
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         if( !$invoiceItem->getSubmitter() ) {
             $invoiceItem->setSubmitter($user);
@@ -5496,7 +5495,7 @@ class TransResRequestUtil
             );
 
         $userServiceUtil = $this->container->get('user_service_utility');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         //get column index
         $headerRowIndex = 7;
         $highestColumn = $sheet->getHighestColumn(); //AD
@@ -6278,7 +6277,7 @@ class TransResRequestUtil
     public function updateInvoiceByWorkRequest( $transresRequest, $updateInvoiceAnswer ) {
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $invoice = NULL;
         $msgInvoice = NULL;
@@ -6528,7 +6527,7 @@ class TransResRequestUtil
                 if( $count > 0 ) {
 
                     //EventLog
-                    $user = $this->secTokenStorage->getToken()->getUser();
+                    $user = $this->security->getUser();
                     $eventType = "Request Updated";
                     $transresUtil = $this->container->get('transres_util');
                     $currentStatusName = $this->getProgressStateLabelByName($currentStatus);
@@ -6552,7 +6551,7 @@ class TransResRequestUtil
 
         $workQueues = $transresUtil->getWorkQueues();
 
-        if( $this->secAuth->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+        if( $this->security->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
             return $workQueues;
         }
 
@@ -6571,8 +6570,8 @@ class TransResRequestUtil
         }
 
 //        if(
-//            $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-//            $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+//            $this->security->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//            $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
 //        ) {
 //            echo "granted roles<br>";exit('111');
 //            return $workQueues;
@@ -6599,7 +6598,7 @@ class TransResRequestUtil
         $testing = false;
 
         $transresUtil = $this->container->get('transres_util');
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         $newline =  "\n"; //"<br>\n";
@@ -6656,9 +6655,9 @@ class TransResRequestUtil
         $priceLists = NULL;
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE')
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->security->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE')
         ) {
             $columns = array(
                 'ID',

@@ -34,14 +34,10 @@ class TransResFormNodeUtil
 
     protected $container;
     protected $em;
-    protected $secTokenStorage;
-    protected $secAuth;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
 

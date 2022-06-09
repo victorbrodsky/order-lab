@@ -395,47 +395,47 @@ class TrpTest extends WebTestBase
         );
     }
 
-    //Translational Research Dashboard
-    public function testDashboardAction() {
-        $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Products/Services")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Filter")')->count()
-        );
+//    //Translational Research Dashboard
+//    public function testDashboardAction() {
+//        $this->logIn();
+//        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0');
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Products/Services")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Filter")')->count()
+//        );
+//
+//        //$content = $this->client->getResponse()->getContent();
+//        //exit("content=$content");
+//    }
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
-    }
-
-    //http://127.0.0.1/order/translational-research/dashboard/graphs/?filter%5BstartDate%5D=12/12/2018&filter%5BendDate%5D=12/12/2019&filter%5BprojectSpecialty%5D%5B%5D=0&filter%5BchartType%5D%5B0%5D=compare-projectspecialty-pis&filter%5BchartType%5D%5B1%5D=compare-projectspecialty-projects&filter%5BchartType%5D%5B2%5D=compare-projectspecialty-projects-stack&filter%5BchartType%5D%5B3%5D=compare-projectspecialty-requests&filter%5BchartType%5D%5B4%5D=compare-projectspecialty-invoices
-    public function testDashboardComparasionAction() {
-        $this->logIn();
-        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0&filter[chartType][0]=compare-projectspecialty-pis&filter[chartType][1]=compare-projectspecialty-projects&filter[chartType][2]=compare-projectspecialty-projects-stack&filter[chartType][3]=compare-projectspecialty-requests&filter[chartType][4]=compare-projectspecialty-invoices');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Total Number of")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Total Number of Projects per PI (Top) (linked)")')->count()
-        );
-
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
-    }
+//    //http://127.0.0.1/order/translational-research/dashboard/graphs/?filter%5BstartDate%5D=12/12/2018&filter%5BendDate%5D=12/12/2019&filter%5BprojectSpecialty%5D%5B%5D=0&filter%5BchartType%5D%5B0%5D=compare-projectspecialty-pis&filter%5BchartType%5D%5B1%5D=compare-projectspecialty-projects&filter%5BchartType%5D%5B2%5D=compare-projectspecialty-projects-stack&filter%5BchartType%5D%5B3%5D=compare-projectspecialty-requests&filter%5BchartType%5D%5B4%5D=compare-projectspecialty-invoices
+//    public function testDashboardComparasionAction() {
+//        $this->logIn();
+//        $crawler = $this->client->request('GET', '/translational-research/dashboard/graphs/?filter[startDate]=12/12/2018&filter[endDate]=12/12/2019&filter[projectSpecialty][]=0&filter[chartType][0]=compare-projectspecialty-pis&filter[chartType][1]=compare-projectspecialty-projects&filter[chartType][2]=compare-projectspecialty-projects-stack&filter[chartType][3]=compare-projectspecialty-requests&filter[chartType][4]=compare-projectspecialty-invoices');
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Translational Research Dashboard")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Total Number of")')->count()
+//        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Total Number of Projects per PI (Top) (linked)")')->count()
+//        );
+//
+//        //$content = $this->client->getResponse()->getContent();
+//        //exit("content=$content");
+//    }
 
     public function testUnpaidInvoiceReminderAction() {
         $this->logIn();

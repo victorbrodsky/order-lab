@@ -39,6 +39,7 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Created by PhpStorm.
@@ -51,16 +52,12 @@ class TransResUtil
 
     protected $container;
     protected $em;
-    //protected $secToken;
-    protected $secTokenStorage;
-    protected $secAuth;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->container = $container;
         $this->em = $em;
-        $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        //$this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
-        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
+        $this->security = $security;
     }
 
     //MAIN method to show allowed transition to state links
@@ -70,7 +67,7 @@ class TransResUtil
         $project = $review->getProject();
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $links = array();
 
@@ -128,7 +125,7 @@ class TransResUtil
                         //show link to committee_finalreview_approved
                     } else {
                         //echo "not primary or committee reviewer <br>";
-                        if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                        if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN') ) {
                             continue;
                         }
                     }
@@ -137,7 +134,7 @@ class TransResUtil
 //                        //show link to committee_finalreview_approved
 //                    } else {
 //                        //echo "not primary or committee reviewer <br>";
-//                        if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                        if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //                            continue;
 //                        }
 //                    }
@@ -409,7 +406,7 @@ class TransResUtil
 //            }
 //        }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
             return true;
@@ -456,7 +453,7 @@ class TransResUtil
         if( $strictReviewer ) {
             //$strictReviewer - check if user is an admin reviewer of this particular project
             if( $project ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
+                $user = $this->security->getUser();
                 if( $this->isReviewsReviewer($user, $project->getAdminReviews()) ) {
                     return true;
                 }
@@ -474,7 +471,7 @@ class TransResUtil
                 $specialtyStr = "_" . $specialtyStr;
             }
 
-            if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
+            if( $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
                 return true;
             }
         }
@@ -485,7 +482,7 @@ class TransResUtil
         if( $strictReviewer ) {
             //$strictReviewer - check if user is an admin reviewer of this particular project
             if( $project ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
+                $user = $this->security->getUser();
                 if( $this->isReviewsReviewer($user, $project->getFinalReviews()) ) {
                     return true;
                 }
@@ -503,7 +500,7 @@ class TransResUtil
                 $specialtyStr = "_" . $specialtyStr;
             }
 
-            if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+            if( $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
                 return true;
             }
         }
@@ -521,13 +518,13 @@ class TransResUtil
             $specialtyStr = "_" . $specialtyStr;
         }
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+        $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
         ) {
             return true;
         }
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+        $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
         ) {
             return true;
         }
@@ -541,7 +538,7 @@ class TransResUtil
 
         //check if user is a primary reviewer of this particular project
         if( $project ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             if( $this->isReviewsReviewer($user, $project->getFinalReviews()) ) {
                 return true;
             }
@@ -550,16 +547,16 @@ class TransResUtil
         return false;
     }
     public function hasReviewerRoles() {
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_IRB_REVIEWER') ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_IRB_REVIEWER') ) {
             return true;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return true;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
             return true;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
+        if( $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
             return true;
         }
         return false;
@@ -576,7 +573,7 @@ class TransResUtil
 //            }
 //        }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         if( $this->isReviewsReviewer($user,$project->getIrbReviews()) ) {
             return true;
         }
@@ -607,19 +604,19 @@ class TransResUtil
         }
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
         ) {
             return true;
         }
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
         ) {
             return true;
         }
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
         ) {
             return true;
         }
@@ -637,18 +634,18 @@ class TransResUtil
         //TODO: implement check only if user is admin, executive for the project specialty
         //TODO: or user is a primary (final) reviewer of this particular project
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
         ) {
             return true;
         }
@@ -685,7 +682,7 @@ class TransResUtil
         }
 
         //only for users listed as PIs or Billing contacts or
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         if( $project->getPrincipalInvestigators()->contains($user) ) {
             return true;
@@ -840,7 +837,7 @@ class TransResUtil
         $emailUtil = $this->container->get('user_mailer_utility');
         //$transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$user = $this->security->getUser();
 
         $newline = "\r\n";
 
@@ -1152,7 +1149,7 @@ class TransResUtil
         }
 
         //echo "transitionName=".$transitionName."<br>";
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
         //$break = "\r\n";
@@ -1891,7 +1888,7 @@ class TransResUtil
         //if( $transitionName != "committee_finalreview_approved" ) {
         //TODO: to diffirentiate, add if actual user can not use this $transitionName
         if( strpos((string)$transitionName, "finalreview_approved") === false ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             $showReviewer = false;
             if( $review ) {
                 $reviewer = $review->getReviewer();
@@ -1916,7 +1913,7 @@ class TransResUtil
     }
     public function getReviewerInfo($review) {
         $userInfo = "";
-        if( $review && $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( $review && $this->security->isGranted('ROLE_TRANSRES_ADMIN') ) {
             $reviewer = $review->getReviewer();
             if( $reviewer ) {
                 $userInfo = " (as " . $reviewer->getDisplayName() . ")";
@@ -2403,13 +2400,13 @@ class TransResUtil
     public function isUserAllowedFromThisStateByRole($from) {
 
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             return true;
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $sitename = $this->container->getParameter('translationalresearch.sitename');
 
         $role = null;
@@ -2466,7 +2463,7 @@ class TransResUtil
 //            return true;
 //        }
 //
-//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $user = $this->security->getUser();
 //
 //        //check if reviewer
 //        //$project, $user, $stateStr=null, $onlyReviewer=false
@@ -2491,7 +2488,7 @@ class TransResUtil
     //True should be returned for only actual reviewer or reviewer's delegate
     public function isUserAllowedFromThisStateByProjectAndReview($project, $review) {
         //echo "is UserAllowedFromThisStateByProjectAndReview: reviewer=".$review->getReviewer()." <br>";
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         if( !$project ) {
             $project = $review->getProject();
@@ -2693,14 +2690,14 @@ class TransResUtil
     public function isUserAllowedReview( $review ) {
         //echo "reviewId=".$review->getId()."<br>";
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+            $this->security->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             //echo "isUserAllowedReview: admin ok <br>";
             return true;
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         if( $this->isReviewer($user,$review) ) {
             return true;
         }
@@ -2743,7 +2740,7 @@ class TransResUtil
 //            //return null;
 //        }
 //
-//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $user = $this->security->getUser();
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $transresUtil = $this->container->get('transres_util');
 //        //$break = "\r\n";
@@ -2900,11 +2897,7 @@ class TransResUtil
 
     //Event Log
     public function setEventLog($project, $eventType, $event, $testing=false) {
-        if( $this->secTokenStorage->getToken() ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
-        } else {
-            $user = null;
-        }
+        $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         if( !$testing ) {
             $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $event, $user, $project, null, $eventType);
@@ -2959,7 +2952,7 @@ class TransResUtil
     public function sendTransitionEmail($project,$originalStateStr,$testing=false,$reason=NULL) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $subject = null;
         $body = null;
         $msg = null;
@@ -3484,11 +3477,7 @@ class TransResUtil
 
     public function getTransResProjectSpecialties( $userAllowed=true ) {
 
-        if( $this->secTokenStorage->getToken() ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
-        } else {
-            $user = null;
-        }
+        $user = $this->security->getUser();
 
         $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
             array(
@@ -3530,7 +3519,7 @@ class TransResUtil
             return "Anonymous" . $authorType . $comment->getPrefix();
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //TODO: get project from thread id:
         // Project: transres-Project-2252-admin_review
@@ -3641,7 +3630,7 @@ class TransResUtil
         //FosCommentListenerUtil
         //$commentThreadManager = $this->container->get('user_comment_listener_utility');
 
-        $author = $this->secTokenStorage->getToken()->getUser();
+        $author = $this->security->getUser();
 
         $threadId = $this->getProjectThreadIdByCurrentState($project);
 
@@ -3717,7 +3706,7 @@ class TransResUtil
     }
 //    public function getAuthorType( $entity ) {
 //
-//        if( !$this->secTokenStorage->getToken() ) {
+//        if( !$this->security ) {
 //            //not authenticated
 //            return null;
 //        }
@@ -3743,13 +3732,13 @@ class TransResUtil
 //            }
 //        }
 //
-//        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
+//        if( $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
 //            //$authorType = "Administrator";
 //            $authorTypeArr['type'] = "Administrator";
 //            $authorTypeArr['description'] = "Administrator";
 //            return $authorTypeArr;
 //        }
-//        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
+//        if( $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
 //            //$authorType = "Primary Reviewer";
 //            $authorTypeArr['type'] = "Administrator";
 //            $authorTypeArr['description'] = "Primary Reviewer";
@@ -3759,7 +3748,7 @@ class TransResUtil
 //        //if not found
 //        $transresUtil = $this->container->get('transres_util');
 //        $transresRequestUtil = $this->container->get('transres_request_util');
-//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $user = $this->security->getUser();
 //
 //        //1) check if the user is entity requester
 //        //$entity = $this->getEntityFromComment($comment);
@@ -3984,7 +3973,7 @@ class TransResUtil
             return true;
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         if( $this->isReviewer($user,$reviewObject) ) {
             return true;
         }
@@ -3999,7 +3988,7 @@ class TransResUtil
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
@@ -4053,7 +4042,7 @@ class TransResUtil
 
         //3) logged in user is requester (only if not admin)
         if( $requester ) {
-            if (!$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN")) {
+            if (!$this->security->isGranted("ROLE_TRANSRES_ADMIN")) {
                 $myRequestProjectsCriterion =
                     "principalInvestigators.id = :userId OR " .
                     "principalIrbInvestigator.id = :userId OR " .
@@ -4088,7 +4077,7 @@ class TransResUtil
         }
 
         //user specialty, if not admin
-        if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
+        if( !$this->security->isGranted("ROLE_TRANSRES_ADMIN") ) {
             $specialtyIds = array();
             $specialties = $this->getTransResProjectSpecialties();
             foreach( $specialties as $specialtyObject ) {
@@ -4137,7 +4126,7 @@ class TransResUtil
     }
     //logged in user requester or reviewer or submitter
     public function getAvailableRequesterOrReviewerProjects( $type=null, $limit=null, $search=null ) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
 
@@ -4191,11 +4180,11 @@ class TransResUtil
 
         //1) logged in user is requester (only if not admin)
         if(
-            //!$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") &&
-            //!$this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY")  &&
-            //!$this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+            //!$this->security->isGranted("ROLE_TRANSRES_ADMIN") &&
+            //!$this->security->isGranted("ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY")  &&
+            //!$this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
             !$this->isAdminOrPrimaryReviewerOrExecutive() &&
-            !$this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN")
+            !$this->security->isGranted("ROLE_TRANSRES_TECHNICIAN")
         ) {
             $myRequestProjectsCriterion =
                 "principalInvestigators.id = :userId OR " .
@@ -4375,7 +4364,7 @@ class TransResUtil
             if( strpos((string)$text, '[[PROJECT UPDATE DATE]]') !== false ) {
                 $projectUpdateDate = $project->getUpdateDate();
                 if( $projectUpdateDate ) {
-                    $user = $this->secTokenStorage->getToken()->getUser();
+                    $user = $this->security->getUser();
                     $userServiceUtil = $this->container->get('user_service_utility');
                     $projectUpdateDate = $userServiceUtil->convertFromUtcToUserTimezone($projectUpdateDate,$user);
                     $projectUpdateDateStr = $projectUpdateDate->format('m/d/Y \a\t H:i:s');
@@ -4629,7 +4618,7 @@ class TransResUtil
             if( strpos((string)$text, '[[PROJECT EXPIRATION DATE]]') !== false ) {
                 $expectedExpirationDate = $project->getExpectedExpirationDate();
                 if( $expectedExpirationDate ) {
-                    //$user = $this->secTokenStorage->getToken()->getUser();
+                    //$user = $this->security->getUser();
                     //$userServiceUtil = $this->container->get('user_service_utility');
                     //$expectedExpirationDate = $userServiceUtil->convertFromUtcToUserTimezone($expectedExpirationDate,$user);
                     $expectedExpirationDateStr = $expectedExpirationDate->format('m/d/Y');
@@ -5210,7 +5199,7 @@ class TransResUtil
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         //TODO:
@@ -5504,7 +5493,7 @@ class TransResUtil
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         //TODO:
@@ -5957,14 +5946,14 @@ class TransResUtil
         }
 
         if( !$user ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $partialRoleStr = "_".$specialtyObject->getUppercaseName();
 
         //if admin or deputy admin
         $adminRole = "ROLE_TRANSRES_ADMIN"."_".$partialRoleStr;
-        if( $this->secAuth->isGranted($adminRole) ) {
+        if( $this->security->isGranted($adminRole) ) {
             return true;
         }
         
@@ -5980,7 +5969,7 @@ class TransResUtil
 
 //        if( $role ) {
 //            //check security context
-//            if( $this->secAuth->isGranted($role) ) {
+//            if( $this->security->isGranted($role) ) {
 //                return true;
 //            }
 //
@@ -6142,7 +6131,7 @@ class TransResUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( !$user ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $flushUser = false;
@@ -6156,7 +6145,7 @@ class TransResUtil
             $role = 'ROLE_TRANSRES_REQUESTER'.$uppercaseName;
             //echo "check role=".$role."<br>";
             if(
-                false == $this->secAuth->isGranted($role) ||
+                false == $this->security->isGranted($role) ||
                 false == $user->hasRole($role)
             ) {
                 $user->addRole($role);
@@ -6167,7 +6156,7 @@ class TransResUtil
 
 //        if( $specialtyObject ) {
 //            $specialtyRole = $this->getSpecialtyRole($specialtyObject);
-//            if( false == $this->secAuth->isGranted($specialtyRole) ) {
+//            if( false == $this->security->isGranted($specialtyRole) ) {
 //                $user->addRole($specialtyRole);
 //                $flushUser = true;
 //                $roleAddedArr[] = $specialtyRole;
@@ -6180,7 +6169,7 @@ class TransResUtil
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
             if(
-                false == $this->secAuth->isGranted('ROLE_TESTER') ||
+                false == $this->security->isGranted('ROLE_TESTER') ||
                 false == $user->hasRole('ROLE_TESTER')
             ) {
                 $user->addRole('ROLE_TESTER');
@@ -6345,7 +6334,7 @@ class TransResUtil
         }
 
         if( !$msg ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
+            $user = $this->security->getUser();
             $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'";
             $msg = $msg . " by " . $user . ".";
         }
@@ -6653,7 +6642,7 @@ class TransResUtil
 
     //show current review's recommendations for committee review status for primary reviewer
     public function showProjectReviewInfo($project) {
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
         $res = null;
         //echo "threadId=$threadId<br>";
 
@@ -6811,17 +6800,10 @@ class TransResUtil
         //Create New
         $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
 
-//        if( !$specialty ) {
-//            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
-//        } else {
-            if( $this->secTokenStorage->getToken() ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
-            } else {
-                $user = null;
-            }
-            $entity = new TransResSiteParameters($user);
+        $user = $this->security->getUser();
+        $entity = new TransResSiteParameters($user);
 
-            $entity->setProjectSpecialty($specialty);
+        $entity->setProjectSpecialty($specialty);
 
 //            //remove null Logo document if exists
 //            $logoDocument = $entity->getTransresLogo();
@@ -6830,13 +6812,10 @@ class TransResUtil
 //                $em->remove($logoDocument);
 //            }
 
-            $em->persist($entity);
-            $em->flush($entity);
+        $em->persist($entity);
+        $em->flush($entity);
 
-            return $entity;
-        //}
-
-        return null;
+        return $entity;
     }
     public function getTransresSiteParameterFile( $fieldName, $project=null, $projectSpecialty=null) {
         $value = $this->getTransresSiteParameterFileSingle($fieldName, $project, $projectSpecialty);
@@ -7388,8 +7367,6 @@ class TransResUtil
 
         $userSecUtil = $this->container->get('user_security_utility');
         $transresUtil = $this->container->get('transres_util');
-
-        //$user = $this->secToken->getToken()->getUser();
 
         $rolename = $specialty->getRolename(); //MISI
         if( !$rolename ) {
@@ -7967,7 +7944,7 @@ class TransResUtil
         
         //get the project where this user is PI and priceList is not NULL
 
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
