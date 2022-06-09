@@ -64,6 +64,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         //get original target path
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $targetUrl = $request->getSession()->get($indexLastRoute);
+        //echo "targetUrl=".$targetUrl."<br>";
+        //exit('111');
 
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 

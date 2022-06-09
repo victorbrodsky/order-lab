@@ -1468,7 +1468,12 @@ class UserSecurityUtil {
             //$user = $this->secToken->getToken()->getUser();
             //$username = $token->getUsername();
             $user = $this->security->getUser();
-            $username = $this->security->getToken()->getUsername();
+
+            if( $this->security->getToken() ) {
+                $username = $this->security->getToken()->getUsername();
+            } else {
+                $username = $user."";
+            }
 
             //$this->security->setToken(null);
             //$this->security->getToken()->getSession()->invalidate();

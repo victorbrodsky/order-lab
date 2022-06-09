@@ -617,9 +617,10 @@ security:
 
 #       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
 #       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
-#       - { path: ^/translational-research/project/new, role: ROLE_TRANSRES_USER }
+#       - { path: ^/translational-research/project/new/*, role: ROLE_TRANSRES_USER }
        - { path: ^/translational-research/project/new, role: PUBLIC_ACCESS }
-#       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
+       - { path: ^/translational-research/project/new/*, role: ROLE_TRANSRES_USER }
+       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
 
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }

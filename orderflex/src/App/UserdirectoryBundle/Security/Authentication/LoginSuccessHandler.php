@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -84,11 +85,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $user = $token->getUser();
 
-        if( $user ) {
-            $username = $user->getUsername();
+        if( $user && $user instanceof UserInterface ) {
+            $username = $user->getUserIdentifier(); //getUsername();
         } else {
             $username = $user."";
         }
+        //$username = $user."";
+        //exit('$username='.$username);
 
         $options = array();
         //$em = $this->em;
