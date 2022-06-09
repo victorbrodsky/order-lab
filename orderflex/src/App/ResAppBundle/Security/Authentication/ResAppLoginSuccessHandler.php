@@ -57,7 +57,7 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
     {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
-        if( $this->secAuth->isGranted('ROLE_RESAPP_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_RESAPP_ADMIN') ) {
             return $redirectResponse;
         }
 

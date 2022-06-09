@@ -61,7 +61,7 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
 
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
-        if( $this->secAuth->isGranted("ROLE_VACREQ_ADMIN") ) {
+        if( $this->security->isGranted("ROLE_VACREQ_ADMIN") ) {
             return $redirectResponse;
         }
 

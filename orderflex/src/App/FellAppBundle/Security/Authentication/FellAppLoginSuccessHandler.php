@@ -57,7 +57,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
-        if( $this->secAuth->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( $this->security->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $redirectResponse;
         }
 
