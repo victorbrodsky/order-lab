@@ -17,7 +17,7 @@
 
 /**
  * Created by PhpStorm.
- * User: DevServer
+ * User: Oleg Ivanov
  * Date: 3/4/15
  * Time: 12:23 PM
  */
