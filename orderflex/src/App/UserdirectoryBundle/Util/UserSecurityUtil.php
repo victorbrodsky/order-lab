@@ -300,7 +300,7 @@ class UserSecurityUtil {
         $this->tokenStorage->setToken(null);
 
         //return $this->redirect($this->generateUrl('login'));
-        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
 
     function constructEventLog( $sitename, $user, $request ) {

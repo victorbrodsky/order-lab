@@ -11,6 +11,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 class TransResSignUpController extends SignUpController
@@ -50,9 +51,9 @@ class TransResSignUpController extends SignUpController
     /**
      * @Route("/activate-account/{registrationLinkID}", name="translationalresearch_activate_account", methods={"GET","POST"})
      */
-    public function activateAccountAction(Request $request, $registrationLinkID)
+    public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
-        return parent::activateAccountAction($request,$registrationLinkID);
+        return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
     }
 
     /**

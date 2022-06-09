@@ -4430,7 +4430,7 @@ class VacReqUtil
 //        $session = $this->container->get('session');
 //
 //        /////////////// check permission: if user is in approvers => ok ///////////////
-//        if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+//        if( false == $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
 //            $permitted = false;
 //            //echo "########## processChangeStatus_CarryOverRequest <br>";
 //            $approvers = $this->getRequestApprovers($entity);
@@ -4715,7 +4715,7 @@ class VacReqUtil
         $session = $this->container->get('session');
 
         /////////////// check permission: if user is in approvers => ok ///////////////
-        if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
             //echo "########## processChangeStatusCarryOverRequest <br>";
             $approvers = $this->getRequestApprovers($entity);
@@ -5025,7 +5025,7 @@ class VacReqUtil
 
     public function createtListExcel( $ids ) {
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
@@ -5080,7 +5080,7 @@ class VacReqUtil
             }
 
             //check if author can have access to view this request
-            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+            if( false == $this->security->isGranted("read", $vacreq) ) {
                 continue; //skip this applicant because the current user does not permission to view this applicant
             }
 
@@ -5216,7 +5216,7 @@ class VacReqUtil
 
         set_time_limit(600);
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         //$writer = WriterFactory::create(Type::XLSX);
@@ -5325,7 +5325,7 @@ class VacReqUtil
             }
 
             //check if author can have access to view this request
-            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+            if( false == $this->security->isGranted("read", $vacreq) ) {
                 continue; //skip this applicant because the current user does not permission to view this applicant
             }
 
@@ -5585,7 +5585,7 @@ class VacReqUtil
         //$testing = true;
         $testing = false;
 
-        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        $author = $this->security->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
         $newline =  "\n"; //"<br>\n";
@@ -5669,7 +5669,7 @@ class VacReqUtil
             }
 
 //            //check if author can have access to view this request
-//            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+//            if( false == $this->security->isGranted("read", $vacreq) ) {
 //                continue; //skip this applicant because the current user does not permission to view this applicant
 //            }
 

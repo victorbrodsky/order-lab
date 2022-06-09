@@ -42,6 +42,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
@@ -292,7 +293,7 @@ class PackingSlipController extends OrderAbstractController
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Request/packing-slip-pdf-show.html.twig")
      */
-    public function showPackingSlipAsPdfAction(Request $request, TransResRequest $transresRequest)
+    public function showPackingSlipAsPdfAction(Request $request, TokenStorageInterface $tokenStorage, TransResRequest $transresRequest)
     {
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
@@ -310,8 +311,9 @@ class PackingSlipController extends OrderAbstractController
             $systemUser = $userSecUtil->findSystemUser();
             if( $systemUser ) {
                 $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                $this->get('security.token_storage')->setToken($token);
                 //$this->get('security.token_storage')->setToken($token);
+                //$this->get('security.token_storage')->setToken($token);
+                $tokenStorage->setToken($token);
             }
             $logger->notice("Download view: Logged in as systemUser=".$systemUser);
         } else {

@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -680,7 +681,7 @@ class FellAppController extends OrderAbstractController {
      * @Route("/download/{id}", name="fellapp_download")
      * @Template("AppFellAppBundle/Form/new.html.twig")
      */
-    public function showAction(Request $request, $id) {
+    public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
@@ -737,7 +738,7 @@ class FellAppController extends OrderAbstractController {
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
                     $this->get('security.token_storage')->setToken($token);
-                    //$this->get('security.token_storage')->setToken($token);
+                    //$tokenStorage->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
             } else {

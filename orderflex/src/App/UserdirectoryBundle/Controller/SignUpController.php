@@ -32,6 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 
@@ -418,7 +419,7 @@ class SignUpController extends OrderAbstractController
     /**
      * @Route("/activate-account/{registrationLinkID}", name="employees_activate_account", methods={"GET", "POST"})
      */
-    public function activateAccountAction(Request $request, $registrationLinkID)
+    public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         //exit('1');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -593,7 +594,8 @@ class SignUpController extends OrderAbstractController
             ////////////////////// auth /////////////////////////
             // Authenticating user
             $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
+            //$this->get('security.token_storage')->setToken($token);
+            $tokenStorage->setToken($token);
             //For Symfony <= 2.3
             //$this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_secured_area', serialize($token));

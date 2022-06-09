@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use App\UserdirectoryBundle\Entity\User;
@@ -1309,7 +1310,7 @@ class InvoiceController extends OrderAbstractController
      * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Invoice/pdf-show.html.twig")
      */
-    public function downloadPdfAction(Request $request, Invoice $invoice)
+    public function downloadPdfAction(Request $request, TokenStorageInterface $tokenStorage, Invoice $invoice)
     {
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
@@ -1327,8 +1328,9 @@ class InvoiceController extends OrderAbstractController
             $systemUser = $userSecUtil->findSystemUser();
             if( $systemUser ) {
                 $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                $this->get('security.token_storage')->setToken($token);
                 //$this->get('security.token_storage')->setToken($token);
+                //$this->get('security.token_storage')->setToken($token);
+                $tokenStorage->setToken($token);
             }
             $logger->notice("Download view: Logged in as systemUser=".$systemUser);
         } else {

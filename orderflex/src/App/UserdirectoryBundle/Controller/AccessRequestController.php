@@ -661,7 +661,9 @@ class AccessRequestController extends OrderAbstractController
                 $text
             );
             //$this->get('security.context')->setToken(null);
-            $this->get('security.token_storage')->setToken(null);
+            //$this->get('security.token_storage')->setToken(null);
+            //$this->tokenStorage->setToken(null); //testing
+            //$request->getSession()->invalidate();
 
             //redirect to verify mobile phone number if isRequireVerifyMobilePhone
             if( $secUtil->isRequireVerifyMobilePhone($this->siteName) ) {
@@ -670,7 +672,7 @@ class AccessRequestController extends OrderAbstractController
                 ));
             }
 
-            return $this->redirect($this->generateUrl($sitename . '_login'));
+            return $this->redirect($this->generateUrl($sitename . '_logout'));
         } else {
 
             //TODO: show verify button on the request_confirmation.html.twig page

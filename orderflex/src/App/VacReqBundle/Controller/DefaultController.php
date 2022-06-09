@@ -108,6 +108,11 @@ class DefaultController extends OrderAbstractController
 //        $totalCount = count($vacationRequests) + count($businessRequests);
 //        exit($user.': totalCount='.$totalCount);
 
+        //use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+        //TokenStorageInterface $tokenStorage
+        //$tokenStorage->setToken(null); //testing
+        //$sitename = 'vacreq';
+        //return $this->redirect($this->generateUrl($sitename . '_logout'));
         
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }

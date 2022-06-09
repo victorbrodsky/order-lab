@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -741,7 +742,7 @@ class ResAppController extends OrderAbstractController {
      * @Route("/download/{id}", name="resapp_download")
      * @Template("AppResAppBundle/Form/new.html.twig")
      */
-    public function showAction(Request $request, $id) {
+    public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
@@ -783,8 +784,9 @@ class ResAppController extends OrderAbstractController {
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                    $this->get('security.token_storage')->setToken($token);
                     //$this->get('security.token_storage')->setToken($token);
+                    //$this->get('security.token_storage')->setToken($token);
+                    $tokenStorage->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
             } else {
