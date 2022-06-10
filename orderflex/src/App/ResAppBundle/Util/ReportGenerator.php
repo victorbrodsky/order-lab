@@ -1225,6 +1225,7 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+        //$userUtil = $this->container->get('user_utility');
 
         $filesStr = $this->convertFilesArrToString($filesArr);
 
@@ -1244,35 +1245,36 @@ class ReportGenerator {
             $logger->notice('pdftk Windows');
             //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
             //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
-            $userUtil = new UserUtil();
-            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
+            //$userUtil = new UserUtil();
+            //$userUtil = $this->container->get('user_utility');
+            $pdftkPathResApp = $userSecUtil->getSiteSettingParameter('pdftkPathFellApp');
             if (!$pdftkPathResApp) {
                 throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
             }
 
-            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellApp');
+            $pdftkFilenameResApp = $userSecUtil->getSiteSettingParameter('pdftkFilenameFellApp');
             if (!$pdftkFilenameResApp) {
                 throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
             }
 
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellApp');
+            $pdftkArgumentsResApp = $userSecUtil->getSiteSettingParameter('pdftkArgumentsFellApp');
             if (!$pdftkArgumentsResApp) {
                 throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
             //$logger->notice('pdftk not Windows');
-            $userUtil = new UserUtil();
-            $pdftkPathResApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
+            //$userUtil = new UserUtil();
+            $pdftkPathResApp = $userSecUtil->getSiteSettingParameter('pdftkPathFellAppLinux');
             if (!$pdftkPathResApp) {
                 throw new \InvalidArgumentException('pdftkPathFellAppLinux is not defined in Site Parameters.');
             }
 
-            $pdftkFilenameResApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellAppLinux');
+            $pdftkFilenameResApp = $userSecUtil->getSiteSettingParameter('pdftkFilenameFellAppLinux');
             if (!$pdftkFilenameResApp) {
                 throw new \InvalidArgumentException('pdftkFilenameFellAppLinux is not defined in Site Parameters.');
             }
 
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellAppLinux');
+            $pdftkArgumentsResApp = $userSecUtil->getSiteSettingParameter('pdftkArgumentsFellAppLinux');
             if (!$pdftkArgumentsResApp) {
                 throw new \InvalidArgumentException('pdftkArgumentsFellAppLinux is not defined in Site Parameters.');
             }
@@ -1382,7 +1384,7 @@ class ReportGenerator {
             //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
 
             //replace ###parameter### by appropriate variable
-            $pdftkArgumentsResApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
+            $pdftkArgumentsResApp = $userSecUtil->getSiteSettingParameter('pdftkArgumentsFellApp');
             if( !$pdftkArgumentsResApp ) {
                 throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
             }
@@ -1484,35 +1486,33 @@ class ReportGenerator {
         if( $userServiceUtil->isWinOs() ) {
             //$logger->notice('gs Windows');
             //$gsLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
-            $userUtil = new UserUtil();
-            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
+            $gsPathResApp = $userSecUtil->getSiteSettingParameter('gsPathFellApp');
             if (!$gsPathResApp) {
                 throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
             }
 
-            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellApp');
+            $gsFilenameResApp = $userSecUtil->getSiteSettingParameter('gsFilenameFellApp');
             if (!$gsFilenameResApp) {
                 throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
             }
 
-            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+            $gsArgumentsResAppOrig = $userSecUtil->getSiteSettingParameter('gsArgumentsFellApp');
             if( !$gsArgumentsResAppOrig ) {
                 throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
             //$logger->notice('gs not Windows');
-            $userUtil = new UserUtil();
-            $gsPathResApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
+            $gsPathResApp = $userSecUtil->getSiteSettingParameter('gsPathFellAppLinux');
             if (!$gsPathResApp) {
                 throw new \InvalidArgumentException('gsPathFellAppLinux is not defined in Site Parameters.');
             }
 
-            $gsFilenameResApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellAppLinux');
+            $gsFilenameResApp = $userSecUtil->getSiteSettingParameter('gsFilenameFellAppLinux');
             if (!$gsFilenameResApp) {
                 throw new \InvalidArgumentException('gsFilenameFellAppLinux is not defined in Site Parameters.');
             }
 
-            $gsArgumentsResAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellAppLinux');
+            $gsArgumentsResAppOrig = $userSecUtil->getSiteSettingParameter('gsArgumentsFellAppLinux');
             if( !$gsArgumentsResAppOrig ) {
                 throw new \InvalidArgumentException('gsArgumentsFellAppLinux is not defined in Site Parameters.');
             }

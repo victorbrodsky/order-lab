@@ -77,8 +77,9 @@ class VacReqImportData
         $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
 
         ////////////// add system user /////////////////
-        $userUtil = new UserUtil();
-        $systemuser = $userUtil->createSystemUser($this->em,$userkeytype,$default_time_zone);
+        //$userUtil = new UserUtil();
+        //$userUtil = $this->container->get('user_utility');
+        //$systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
         ////////////// end of add system user /////////////////
 
         //VacReqAvailabilityList

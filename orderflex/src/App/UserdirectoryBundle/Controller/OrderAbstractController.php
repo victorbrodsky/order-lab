@@ -40,6 +40,7 @@ use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
+use App\UserdirectoryBundle\Util\UserUtil;
 use App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil;
 use App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil;
 use App\VacReqBundle\Util\VacReqImportData;
@@ -86,7 +87,8 @@ class OrderAbstractController extends AbstractController {
         //$subscribedServices['security'] = '?'.Security::class;
         //$subscribedServices['security.authentication_utils'] = '?'.AuthenticationUtils::class;
         $subscribedServices['security.password_encoder'] = '?'.UserPasswordEncoderInterface::class;
-        
+
+        $subscribedServices['user_utility'] = '?'.UserUtil::class;
         $subscribedServices['user_security_utility'] = '?'.UserSecurityUtil::class;
         $subscribedServices['user_generator'] = '?'.UserGenerator::class;
         $subscribedServices['user_download_utility'] = '?'.UserDownloadUtil::class;

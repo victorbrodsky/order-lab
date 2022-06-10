@@ -91,14 +91,13 @@ class UserGenerator {
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $userUtil = new UserUtil();
-
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
 
 
         ////////////// add system user /////////////////
-        $systemuser = $userUtil->createSystemUser($this->em,$userkeytype,$default_time_zone);
+        $userUtil = $this->container->get('user_utility');
+        $systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
         ////////////// end of add system user /////////////////
 
         $sheet = $objPHPExcel->getSheet(0);
@@ -1196,14 +1195,14 @@ class UserGenerator {
 
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
-        $userUtil = new UserUtil();
-
         $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
 
 
         ////////////// add system user /////////////////
-        $systemuser = $userUtil->createSystemUser($this->em,$userkeytype,$default_time_zone);
+        //$userUtil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
+        $systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
         ////////////// end of add system user /////////////////
 
         $sheet = $objPHPExcel->getSheet(0);

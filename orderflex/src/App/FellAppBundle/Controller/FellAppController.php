@@ -737,8 +737,8 @@ class FellAppController extends OrderAbstractController {
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                    $this->get('security.token_storage')->setToken($token);
-                    //$tokenStorage->setToken($token);
+                    //$this->get('security.token_storage')->setToken($token);
+                    $tokenStorage->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
             } else {
@@ -1120,9 +1120,10 @@ class FellAppController extends OrderAbstractController {
 
             //set update author application
             $em = $this->getDoctrine()->getManager();
-            $userUtil = new UserUtil();
-            $secTokenStorage = $this->get('security.token_storage');
-            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+            $userUtil = $this->container->get('user_utility');
+            //$userUtil = new UserUtil();
+            //$secTokenStorage = $this->get('security.token_storage');
+            $userUtil->setUpdateInfo($entity);
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
@@ -1284,10 +1285,11 @@ class FellAppController extends OrderAbstractController {
             $entity->autoSetRecLetterReceived();
 
             //set update author application
-            $em = $this->getDoctrine()->getManager();
-            $userUtil = new UserUtil();
-            $secTokenStorage = $this->get('security.token_storage');
-            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+            //$em = $this->getDoctrine()->getManager();
+            //$userUtil = new UserUtil();
+            //$secTokenStorage = $this->get('security.token_storage');
+            $userUtil = $this->container->get('user_utility');
+            $userUtil->setUpdateInfo($entity);
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////

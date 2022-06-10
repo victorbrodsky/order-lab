@@ -74,7 +74,7 @@ class SecurityController extends OrderAbstractController
      */
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('user: loginAction');
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
@@ -310,7 +310,7 @@ class SecurityController extends OrderAbstractController
             $sitename = $this->getParameter('dashboard.sitename');
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
@@ -322,7 +322,7 @@ class SecurityController extends OrderAbstractController
         //echo "height=".$request->get('display_width').", width=".$request->get('display_height')." ";
         $options = array();
         $em = $this->getDoctrine()->getManager();
-        $userUtil = new UserUtil();
+        //$userUtil = new UserUtil();
 
         $routename = $request->get('_route');
         if( $routename == "employees_setloginvisit" ) {
@@ -380,7 +380,9 @@ class SecurityController extends OrderAbstractController
             $options['eventEntity'] = $siteObject;
         }
 
-        $userUtil->setLoginAttempt($request,$this->get('security.token_storage'),$em,$options);
+        //$userUtil->setLoginAttempt($request,$this->get('security.token_storage'),$em,$options);
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->setLoginAttempt($request,$options);
 
         $response = new Response();
         $response->setContent('OK');

@@ -1562,14 +1562,16 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        
         $entities = $em->getRepository('AppOrderformBundle:OrderDelivery')->findAll();
 
         if( $entities ) {
             return -1;
         }
 
-        $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($em,'siteEmail');
+        //$userutil = new UserUtil();
+        $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         $types = array(
             "I'll give slides to Melody - ST1015E (212) 746-2993",

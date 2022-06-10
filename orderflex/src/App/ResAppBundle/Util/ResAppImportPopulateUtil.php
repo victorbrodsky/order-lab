@@ -60,7 +60,7 @@ class ResAppImportPopulateUtil {
     protected $container;
 
     protected $uploadDir;
-    protected $systemEmail;
+    //protected $systemEmail;
 
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
@@ -70,8 +70,8 @@ class ResAppImportPopulateUtil {
 
         $this->uploadDir = 'Uploaded';
 
-        $userutil = new UserUtil();
-        $this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
+        //$userutil = new UserUtil();
+        //$this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
     }
 
 

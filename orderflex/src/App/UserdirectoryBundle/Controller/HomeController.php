@@ -159,21 +159,23 @@ class HomeController extends OrderAbstractController {
         //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
 
 
-        $userSecUtil = new UserSecurityUtil($em,null);
+        //$userSecUtil = new UserSecurityUtil($em,null);
+        $userSecUtil = $this->container->get('user_security_utility');
         $systemuser = $userSecUtil->findSystemUser();
 
         //$this->generateSitenameList($systemuser);
 
         if( !$systemuser ) {
 
-            $usetUtil = new UserUtil();
-            $usetUtil->generateUsernameTypes($em);
+            //$usetUtil = new UserUtil();
+            $userUtil = $this->container->get('user_utility');
+            $userUtil->generateUsernameTypes();
             //$userkeytype = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
             $userSecUtil = $this->container->get('user_security_utility');
             $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
-            $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
+            $systemuser = $userUtil->createSystemUser($userkeytype, $default_time_zone);
             $this->generateSitenameList($systemuser);
 
             //set unique username

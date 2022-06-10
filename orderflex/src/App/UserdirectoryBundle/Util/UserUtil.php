@@ -37,239 +37,237 @@ use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
+use Doctrine\ORM\EntityManagerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 
 //TODO: move methods to UserSecurityUtil or UserServiceUtil
 
 class UserUtil {
 
+    protected $em;
+    protected $container;
+    protected $security;
+    protected $tokenStorage;
 
-
-    public function setLoginAttempt( $request, $secTokenStorage, $em, $options ) {
-
-        //return;
-
-        $user = null;
-        $username = null;
-        $roles = null;
-
-        if( !array_key_exists('serverresponse', $options) ) {
-            //$options['serverresponse'] = null;
-            $options['serverresponse'] = http_response_code();
-        }
-
-        //find site object by sitename
-        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
-        if( !$site ) {
-            //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
-        }
-
-        $logger = new Logger($site);
-
-        $token = $secTokenStorage->getToken();
-
-        if( $token ) {
-
-            $user = $secTokenStorage->getToken()->getUser();
-            $username = $token->getUsername();
-
-            if( $user && is_object($user) ) {
-                $roles = $user->getRoles();
-            } else {
-                $user = null;
-            }
-
-            $logger->setUser($user);
-
-        } else {
-
-            $username = $request->get('_username');
-
-            $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
-            $user = $userDb;
-
-            $logger->setUser($userDb);
-
-        }
-
-        if( $options['eventtype'] == "Bad Credentials" ) {
-            $options['event'] = $options['event'] . ". Username=".$username;
-        }
-
-        $logger->setRoles($roles);
-        $logger->setUsername($username);
-        $logger->setIp($request->getClientIp());
-        $logger->setWidth($request->get('display_width'));
-        $logger->setHeight($request->get('display_height'));
-        $logger->setEvent($options['event']);
-        $logger->setServerresponse($options['serverresponse']);
-
-        ////////////// browser info //////////////
-        //$browser = BrowserInfo::Instance();
-        //$name = $browser->getBrowser();
-        //$version = $browser->getVersion();
-        //$platform = $browser->getPlatform();
-        $browser = new Browser();
-        $name = $browser->getName();
-        $version = $browser->getVersion();
-
-        $os = new Os();
-        $platform = $os->getName();
-
-        $browserInfo = $name . " " . $version . " on " . $platform;
-        //echo "Your browser: " . $browserInfo . "<br>";
-        ////////////// EOF browser info //////////////
-
-        $userAgent = $browserInfo . "; User Agent: " . $_SERVER['HTTP_USER_AGENT'];
-        $logger->setUseragent($userAgent);
-
-        //set Event Type
-        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
-        $logger->setEventType($eventtype);
-
-        //set eventEntity
-        $eventEntity = null;
-
-        if( array_key_exists('eventEntity', $options) && $options['eventEntity'] ) {
-
-            $eventEntity = $options['eventEntity'];
-
-        } elseif( $user && $user instanceof User && $user->getId() ) {
-
-            $eventEntity = $user;
-        }
-
-        if( $eventEntity ) {
-            //get classname, entity name and id of subject entity
-            $class = new \ReflectionClass($eventEntity);
-            $className = $class->getShortName();
-            $classNamespace = $class->getNamespaceName();
-
-            //set classname, entity name and id of subject entity
-            $logger->setEntityNamespace($classNamespace);
-            $logger->setEntityName($className);
-            $logger->setEntityId($eventEntity->getId());
-
-            //create EventObjectTypeList if not exists
-            $userSecUtil = new UserSecurityUtil($em,null);
-            $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
-            if( $eventObjectType ) {
-                $logger->setObjectType($eventObjectType);
-            }
-        }
-
-        $em->persist($logger);
-        $em->flush($logger);
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container=null,
+        Security $security=null,
+        TokenStorageInterface $tokenStorage=null
+    ) {
+        $this->em = $em;
+        $this->container = $container;
+        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
     }
 
-    public function getMaxIdleTime($em) {
 
-        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//    public function setLoginAttempt_TOREMOVE( $request, $secTokenStorage, $em, $options ) {
+//
+//        //return;
+//
+//        $user = null;
+//        $username = null;
+//        $roles = null;
+//
+//        if( !array_key_exists('serverresponse', $options) ) {
+//            //$options['serverresponse'] = null;
+//            $options['serverresponse'] = http_response_code();
+//        }
+//
+//        //find site object by sitename
+//        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+//        if( !$site ) {
+//            //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
+//        }
+//
+//        $logger = new Logger($site);
+//
+//        $token = $secTokenStorage->getToken();
+//
+//        if( $token ) {
+//
+//            $user = $secTokenStorage->getToken()->getUser();
+//            $username = $token->getUsername();
+//
+//            if( $user && is_object($user) ) {
+//                $roles = $user->getRoles();
+//            } else {
+//                $user = null;
+//            }
+//
+//            $logger->setUser($user);
+//
+//        } else {
+//
+//            $username = $request->get('_username');
+//
+//            $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+//            $user = $userDb;
+//
+//            $logger->setUser($userDb);
+//
+//        }
+//
+//        if( $options['eventtype'] == "Bad Credentials" ) {
+//            $options['event'] = $options['event'] . ". Username=".$username;
+//        }
+//
+//        $logger->setRoles($roles);
+//        $logger->setUsername($username);
+//        $logger->setIp($request->getClientIp());
+//        $logger->setWidth($request->get('display_width'));
+//        $logger->setHeight($request->get('display_height'));
+//        $logger->setEvent($options['event']);
+//        $logger->setServerresponse($options['serverresponse']);
+//
+//        ////////////// browser info //////////////
+//        //$browser = BrowserInfo::Instance();
+//        //$name = $browser->getBrowser();
+//        //$version = $browser->getVersion();
+//        //$platform = $browser->getPlatform();
+//        $browser = new Browser();
+//        $name = $browser->getName();
+//        $version = $browser->getVersion();
+//
+//        $os = new Os();
+//        $platform = $os->getName();
+//
+//        $browserInfo = $name . " " . $version . " on " . $platform;
+//        //echo "Your browser: " . $browserInfo . "<br>";
+//        ////////////// EOF browser info //////////////
+//
+//        $userAgent = $browserInfo . "; User Agent: " . $_SERVER['HTTP_USER_AGENT'];
+//        $logger->setUseragent($userAgent);
+//
+//        //set Event Type
+//        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
+//        $logger->setEventType($eventtype);
+//
+//        //set eventEntity
+//        $eventEntity = null;
+//
+//        if( array_key_exists('eventEntity', $options) && $options['eventEntity'] ) {
+//
+//            $eventEntity = $options['eventEntity'];
+//
+//        } elseif( $user && $user instanceof User && $user->getId() ) {
+//
+//            $eventEntity = $user;
+//        }
+//
+//        if( $eventEntity ) {
+//            //get classname, entity name and id of subject entity
+//            $class = new \ReflectionClass($eventEntity);
+//            $className = $class->getShortName();
+//            $classNamespace = $class->getNamespaceName();
+//
+//            //set classname, entity name and id of subject entity
+//            $logger->setEntityNamespace($classNamespace);
+//            $logger->setEntityName($className);
+//            $logger->setEntityId($eventEntity->getId());
+//
+//            //create EventObjectTypeList if not exists
+//            //$userSecUtil = new UserSecurityUtil($em,null);
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
+//            if( $eventObjectType ) {
+//                $logger->setObjectType($eventObjectType);
+//            }
+//        }
+//
+//        $em->persist($logger);
+//        $em->flush($logger);
+//    }
 
-        if( !$params ) {
-            //new DB does not have SiteParameters object
-            return 1800; //30 min
-            //throw new \Exception( 'Parameter object is not found' );
-        }
-
-        if( count($params) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
-        }
-
-        $param = $params[0];
-        $maxIdleTime = $param->getMaxIdleTime();
-
-        //return time in seconds
-        $maxIdleTime = $maxIdleTime * 60;
-
-        return $maxIdleTime;
-    }
-
-    public function getMaxIdleTimeAndMaintenance($em, $secAuth, $container) {
-
-        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-
-        if( !$params ) {
-            //new DB does not have SiteParameters object
-            $res = array(
-                'maxIdleTime' => 1800,
-                'maintenance' => false
-            );
-            return $res; //30 min
-            //throw new \Exception( 'Parameter object is not found' );
-        }
-
-        if( count($params) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
-        }
-
-        $param = $params[0];
-        $maxIdleTime = $param->getMaxIdleTime();
-        $maintenance = $param->getMaintenance();
-
-        //do not use maintenance for admin
-        if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            $maintenance = false;
-        }
-
-        $debug = in_array( $container->get('kernel')->getEnvironment(), array('test', 'dev') );
-        if( $debug ) {
-            $maintenance = false;
-        }
-
-        //return time in seconds
-        $maxIdleTime = $maxIdleTime * 60;
-
-        $res = array(
-            'maxIdleTime' => $maxIdleTime,
-            'maintenance' => $maintenance
-        );
-
-        return $res;
-    }
-
-    //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
-    public function getSiteSetting($em,$setting) {
-
-        $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-
+//    public function getMaxIdleTime_TODEL($em) {
+//
+//        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//
 //        if( !$params ) {
+//            //new DB does not have SiteParameters object
+//            return 1800; //30 min
 //            //throw new \Exception( 'Parameter object is not found' );
 //        }
+//
+//        if( count($params) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+//        }
+//
+//        $param = $params[0];
+//        $maxIdleTime = $param->getMaxIdleTime();
+//
+//        //return time in seconds
+//        $maxIdleTime = $maxIdleTime * 60;
+//
+//        return $maxIdleTime;
+//    }
 
-        //echo "params count=".count($params)."<br>";
+//    public function getMaxIdleTimeAndMaintenance_TODEL($em, $secAuth, $container) {
+//
+//        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//
+//        if( !$params ) {
+//            //new DB does not have SiteParameters object
+//            $res = array(
+//                'maxIdleTime' => 1800,
+//                'maintenance' => false
+//            );
+//            return $res; //30 min
+//            //throw new \Exception( 'Parameter object is not found' );
+//        }
+//
+//        if( count($params) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+//        }
+//
+//        $param = $params[0];
+//        $maxIdleTime = $param->getMaxIdleTime();
+//        $maintenance = $param->getMaintenance();
+//
+//        //do not use maintenance for admin
+//        if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            $maintenance = false;
+//        }
+//
+//        $debug = in_array( $container->get('kernel')->getEnvironment(), array('test', 'dev') );
+//        if( $debug ) {
+//            $maintenance = false;
+//        }
+//
+//        //return time in seconds
+//        $maxIdleTime = $maxIdleTime * 60;
+//
+//        $res = array(
+//            'maxIdleTime' => $maxIdleTime,
+//            'maintenance' => $maintenance
+//        );
+//
+//        return $res;
+//    }
 
-        if( count($params) == 0 ) {
-            return null;
-            //return -1;
-        }
+//    //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
+//    public function getSiteSetting($parameter) {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        return $userSecUtil->getSiteSettingParameter($parameter);
+//    }
 
-        if( count($params) > 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-        }
+    //done
+    public function generateUsernameTypes($user=null,$createSystemUser=true) {
 
-        $param = $params[0];
-
-        if( $setting == null ) {
-            return $param;
-        }
-
-        $getSettingMethod = "get".$setting;
-        $res = $param->$getSettingMethod();
-
-        return $res;
-    }
-
-    public function generateUsernameTypes($em,$user=null,$createSystemUser=true) {
+        $userSecUtil = $this->container->get('user_security_utility');
 
         if( $user == null && $createSystemUser ) {
-            $user = $this->createSystemUser($em,null,null);
+            $user = $this->createSystemUser(null,null);
         }
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
+        $entities = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
 
         if( $entities ) {
             return -1;
@@ -288,12 +286,12 @@ class UserUtil {
         foreach( $elements as $key=>$value ) {
 
             $entity = new UsernameType();
-            $this->setDefaultList($entity,$count,$user,null);
+            $userSecUtil->setDefaultList($entity,$count,$user,null);
             $entity->setName( trim((string)$value) );
             $entity->setAbbreviation( trim((string)$key) );
 
-            $em->persist($entity);
-            $em->flush();
+            $this->em->persist($entity);
+            $this->em->flush();
 
             $count = $count + 10;
 
@@ -301,20 +299,21 @@ class UserUtil {
 
         return round($count/10);
     }
-    public function setDefaultList( $entity, $count, $user, $name=null ) {
-        $entity->setOrderinlist( $count );
-        $entity->setCreator( $user );
-        $entity->setCreatedate( new \DateTime() );
-        $entity->setType('default');
-        if( $name ) {
-            $entity->setName( trim((string)$name) );
-        }
-        return $entity;
-    }
+//    public function setDefaultList( $entity, $count, $user, $name=null ) {
+//        $entity->setOrderinlist( $count );
+//        $entity->setCreator( $user );
+//        $entity->setCreatedate( new \DateTime() );
+//        $entity->setType('default');
+//        if( $name ) {
+//            $entity->setName( trim((string)$name) );
+//        }
+//        return $entity;
+//    }
 
-    public function createSystemUser( $em, $userkeytype, $default_time_zone ) {
+    //done
+    public function createSystemUser( $userkeytype, $default_time_zone ) {
 
-        $userSecUtil = new UserSecurityUtil($em,null);
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $found_user = $userSecUtil->findSystemUser();
 
@@ -323,7 +322,7 @@ class UserUtil {
             //echo "creating system user <br>";
             //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
-            $adminemail = $this->getSiteSetting($em,'siteEmail');
+            $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
             if( !$adminemail ) {
                 $adminemail = "email@example.com";
             }
@@ -342,8 +341,8 @@ class UserUtil {
             $systemuser->setEnabled(false);
             //$systemuser->setLocked(true); //system is locked, so no one can logged in with this account
             //$systemuser->setExpired(false);
-            $em->persist($systemuser);
-            $em->flush();
+            $this->em->persist($systemuser);
+            $this->em->flush();
 
         } else {
 
@@ -355,19 +354,19 @@ class UserUtil {
         return $systemuser;
     }
 
-    public function getDefaultUsernameType($em) {
-        $userkeytype = null;
-        $userkeytypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
-        //echo "userkeytypes=".$userkeytypes."<br>";
-        //print_r($userkeytypes);
-        if( $userkeytypes && count($userkeytypes) > 0 ) {
-            $userkeytype = $userkeytypes[0];
-        }
-        return $userkeytype;
-    }
+//    public function getDefaultUsernameType() {
+//        $userkeytype = null;
+//        $userkeytypes = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
+//        //echo "userkeytypes=".$userkeytypes."<br>";
+//        //print_r($userkeytypes);
+//        if( $userkeytypes && count($userkeytypes) > 0 ) {
+//            $userkeytype = $userkeytypes[0];
+//        }
+//        return $userkeytype;
+//    }
 
 
-
+    //done
     //academic titles, administrative titles, sevices, and divisions: if a object has a non-empty end date that is older than today's date, it is a "past" object.
     //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
     public function getCriteriaStrByTime( $dql, $time, $searchField, $inputCriteriastr) {
@@ -467,10 +466,10 @@ class UserUtil {
         return $inputCriteriastr;
     }
 
+    //done
+    public function indexLocation( $search, $request ) {
 
-    public function indexLocation( $search, $request, $container, $doctrine ) {
-
-        $repository = $doctrine->getRepository('AppUserdirectoryBundle:Location');
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
         $dql =  $repository->createQueryBuilder("location");
         $dql->addSelect('location');
         //$dql->addSelect('COUNT(administrativeTitles) as administrativeTitlesCount');
@@ -578,13 +577,13 @@ class UserUtil {
 
         //echo "Location dql=".$dql."<br>";
 
-        $em = $doctrine->getManager();
-        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+        //$em = $doctrine->getManager();
+        $query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         $limitFlag = true;
         if( $limitFlag ) {
             $limit = 10;
-            $paginator  = $container->get('knp_paginator');
+            $paginator  = $this->container->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->get('page', 1), /*page number*/
@@ -600,26 +599,28 @@ class UserUtil {
     }
 
 
-
-    public function processResidencySpecialtyTree( $treeholder, $em, $secTokenStorage ) {
+    //done
+    public function processResidencySpecialtyTree( $treeholder ) {
 
         $residencySpecialty = $treeholder->getResidencySpecialty();
         $fellowshipSubspecialty = $treeholder->getFellowshipSubspecialty();
         //echo "fellowshipSubspecialty: name=".$fellowshipSubspecialty->getName().", id=".$fellowshipSubspecialty->getId()."<br>";
         //exit();
 
-        $user = $secTokenStorage->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //use Institution tree set parent method for residency specialty-subspecialty because it's the same logic
-        $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
+        $fellowshipSubspecialty = $this->em->getRepository('AppUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
 
         //set author if not set
-        $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
+        $userUtil = $this->container->get('user_utility');
+        $this->setUpdateInfo($treeholder);
 
     }
 
+    //done
     //re-set node by id
-    public function processInstTree( $treeholder, $em, $secTokenStorage, $subjectUser=null ) {
+    public function processInstTree( $treeholder, $subjectUser=null ) {
 
         echo "///////////////title=".$treeholder.", id=".$treeholder->getId()."<br>";
 
@@ -628,7 +629,7 @@ class UserUtil {
 
         if( !$institution ) {
             //set author if not set
-            $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
+            $this->setUpdateInfo($treeholder);
             return;
         }
 
@@ -636,8 +637,8 @@ class UserUtil {
         if( $institution ) {
             echo "echo orig=".$institution."<br>";
             echo "echo orig parent=".$institution->getParent()."<br>";
-            //$institutionDb = $em->getReference('AppUserdirectoryBundle:Institution', $institution->getId());
-            $institutionDb = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institution->getId());
+            //$institutionDb = $this->em->getReference('AppUserdirectoryBundle:Institution', $institution->getId());
+            $institutionDb = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institution->getId());
             echo "echo id=".$institutionDb->getId()."<br>";
             echo "echo parent=".$institutionDb->getParent()."<br>";
 
@@ -652,7 +653,7 @@ class UserUtil {
 
         if( !$subjectUser ) {
             //set author if not set
-            $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
+            $this->setUpdateInfo($treeholder);
             return;
         }
 
@@ -689,7 +690,7 @@ class UserUtil {
 
         foreach( $instArr as $instId => $newPositions ) {
 
-            $nodeUserPositions = $em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
+            $nodeUserPositions = $this->em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
                 array(
                     'user' => $subjectUser->getId(),
                     'institution' => $instId
@@ -710,37 +711,38 @@ class UserUtil {
                 //echo 'create new UserPosition<br>';
                 $nodeUserPosition = new UserPosition();
                 $nodeUserPosition->setUser($subjectUser);
-                $instRef = $em->getReference('AppUserdirectoryBundle:Institution', $instId);
+                $instRef = $this->em->getReference('AppUserdirectoryBundle:Institution', $instId);
                 $nodeUserPosition->setInstitution($instRef);
             }
 
             $nodeUserPosition->clearPositionTypes();
 
             foreach( $newPositions as $positionId ) {
-                $positionRef = $em->getReference('AppUserdirectoryBundle:PositionTypeList', $positionId);
+                $positionRef = $this->em->getReference('AppUserdirectoryBundle:PositionTypeList', $positionId);
                 $nodeUserPosition->addPositionType($positionRef);
             }
 
-            $em->persist($nodeUserPosition);
+            $this->em->persist($nodeUserPosition);
         }
 
         //remove old userPosition from institution node
         $newIdBreadcrumbs = $institutionDb->getIdBreadcrumbs();
 
         $originalInstitutionId = $treeholder->getInstitution()->getId();
-        $originalInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($originalInstitutionId);
+        $originalInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($originalInstitutionId);
         $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
 
-        $this->removeUserPositionFromInstitution($subjectUser->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs,$em);
+        $this->removeUserPositionFromInstitution($subjectUser->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs);
 
         //echo "PRE_SUBMIT set newInst=".$institutionDb."<br>";
         $treeholder->setInstitution($institutionDb);
 
 
         //set author if not set
-        $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
+        $this->setUpdateInfo($treeholder);
     }
-    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs, $em ) {
+    //done
+    public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs ) {
 
 //        echo "originalIdBreadcrumbs:<br>";
 //        print_r($originalIdBreadcrumbs);
@@ -759,16 +761,17 @@ class UserUtil {
         foreach( $diffIds as $instId ) {
 
             if( !in_array($instId, $newIdBreadcrumbs) ) {
-                $this->removeUserPositionFromSingleInstitution($userid,$instId,$em);
+                $this->removeUserPositionFromSingleInstitution($userid,$instId);
             }
 
         }
     }
-    public function removeUserPositionFromSingleInstitution( $userid, $instid, $em ) {
+    //done
+    public function removeUserPositionFromSingleInstitution( $userid, $instid ) {
 
-        $originalInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        $originalInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
 
-        $originalUserPositions = $em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
+        $originalUserPositions = $this->em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
             array(
                 'user' => $userid,
                 'institution' => $instid
@@ -783,28 +786,24 @@ class UserUtil {
             //echo "!!!PRE_SUBMIT remove userPosition=".$originalUserPosition." from inst=".$originalInstitution."<br>";
             $originalInstitution->removeUserPosition($originalUserPosition);
 
-            $em->remove($originalUserPosition);
-            $em->flush($originalUserPosition);
+            $this->em->remove($originalUserPosition);
+            $this->em->flush($originalUserPosition);
 
-            $em->persist($originalInstitution);
+            $this->em->persist($originalInstitution);
         }
 
     }
 
-
-    public function setUpdateInfo( $entity, $em, $secTokenStorage ) {
+    //done
+    public function setUpdateInfo( $entity ) {
 
         if( !$entity ) {
             return;
         }
 
-        if( !$secTokenStorage->getToken() ) {
-            return;
-        }
+        $user = $this->security->getUser();
 
-        $user = $secTokenStorage->getToken()->getUser();
-
-        $author = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+        $author = $this->em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
 
         //set author and roles if not set
         if( !$entity->getAuthor() ) {
@@ -853,67 +852,57 @@ class UserUtil {
 //    }
 
 
-    public function replaceAdminTitleByObject($entity,$creator,$em,$container) {
-
-        if( $creator == null ) {
-            $userSecUtil = $container->get('user_security_utility');
-            $creator = $userSecUtil->findSystemUser();
-
-            if( !$creator ) {
-                $creator = $entity;
-            }
-        }
-
-        $adminTitle = $entity->getAdministrativeTitles()->first();
-        if( $adminTitle ) {
-            $adminTitleName = $adminTitle->getName();
-        } else {
-            $adminTitleName = null;
-        }
-
-        if( $adminTitleName == null ) {
-            return;
-        }
-
-//        $adminTitleNameObject = $em->getRepository('AppUserdirectoryBundle:AdminTitleList')->findOneByName($adminTitleName);
+//    public function replaceAdminTitleByObject($entity,$creator,$em,$container) {
 //
-//        if( !$adminTitleNameObject ) {
+//        if( $creator == null ) {
+//            //$userSecUtil = $container->get('user_security_utility');
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $creator = $userSecUtil->findSystemUser();
+//
+//            if( !$creator ) {
+//                $creator = $entity;
+//            }
+//        }
+//
+//        $adminTitle = $entity->getAdministrativeTitles()->first();
+//        if( $adminTitle ) {
+//            $adminTitleName = $adminTitle->getName();
+//        } else {
+//            $adminTitleName = null;
+//        }
+//
+//        if( $adminTitleName == null ) {
+//            return;
+//        }
+//
+//        $adminTitleNameObject = $this->getObjectByNameTransformer( $adminTitleName, $creator, "AdminTitleList", $em );
+//
+//        $adminTitle->setName($adminTitleNameObject);
+//    }
+
+//    //done
+//    //get string to object using transformer
+//    public function getObjectByNameTransformer( $name, $creator, $className ) {
+//
+//        if( $name == null || $name == "" ) {
+//            return null;
+//        }
+//
+//        $nameObject = $this->em->getRepository('AppUserdirectoryBundle:'.$className)->findOneByName($name);
+//
+//        if( !$nameObject ) {
 //
 //            //generate admin Title Name
-//            $treeTransf = new GenericTreeTransformer($em,$creator);
-//            $adminTitleNameObject = $treeTransf->createNewEntity($adminTitleName,"AdminTitleList",$creator);
+//            $treeTransf = new GenericTreeTransformer($this->em,$creator,$className);
+//            $nameObject = $treeTransf->createNewEntity($name,$className,$creator);
 //
-//            $em->persist($adminTitleNameObject);
+//            $this->em->persist($nameObject);
 //        }
+//
+//        return $nameObject;
+//    }
 
-        $adminTitleNameObject = $this->getObjectByNameTransformer( $adminTitleName, $creator, "AdminTitleList", $em );
-
-        $adminTitle->setName($adminTitleNameObject);
-
-    }
-
-    //get string to object using transformer
-    public function getObjectByNameTransformer( $name, $creator, $className, $em ) {
-
-        if( $name == null || $name == "" ) {
-            return null;
-        }
-
-        $nameObject = $em->getRepository('AppUserdirectoryBundle:'.$className)->findOneByName($name);
-
-        if( !$nameObject ) {
-
-            //generate admin Title Name
-            $treeTransf = new GenericTreeTransformer($em,$creator,$className);
-            $nameObject = $treeTransf->createNewEntity($name,$className,$creator);
-
-            $em->persist($nameObject);
-        }
-
-        return $nameObject;
-    }
-
-
+    //done
     //clone user according to issue #392
     public function makeUserClone( $suser, $duser ) {
 
@@ -968,9 +957,9 @@ class UserUtil {
         return $duser;
     }
 
-
+    //done
     //populate user according to issue https://bitbucket.org/weillcornellpathology/scanorder/issues/503/default-values-for-new-users
-    public function populateDefaultUserFields( $suser, $duser, $em ) {
+    public function populateDefaultUserFields( $suser, $duser ) {
 
         //check match for "Organizational Group for new user's default values in Employee Directory"
         //organizationalGroupDefault (PerSiteSettings) vs institution (OrganizationalGroupDefault)
@@ -986,7 +975,7 @@ class UserUtil {
             return $duser;
         }
 
-        $siteParameters = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $siteParameters = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($siteParameters) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($siteParameters).'object(s)' );

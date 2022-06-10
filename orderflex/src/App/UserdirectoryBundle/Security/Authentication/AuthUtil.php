@@ -327,8 +327,9 @@ class AuthUtil {
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
         if( !$userkeytype ) {
-            $userUtil = new UserUtil();
-            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            //$userUtil = new UserUtil();
+            //$userUtil = $this->get('user_utility');
+            //$count_usernameTypeList = $userUtil->generateUsernameTypes();
             $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
             //echo "userkeytype=".$userkeytype."<br>";
         }
@@ -507,8 +508,9 @@ class AuthUtil {
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
 
         if( !$userkeytype ) {
-            $userUtil = new UserUtil();
-            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            //$userUtil = new UserUtil();
+            //$userUtil = $this->get('user_utility');
+            //$count_usernameTypeList = $userUtil->generateUsernameTypes();
             $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
             //echo "userkeytype=".$userkeytype."<br>";
         }

@@ -60,7 +60,7 @@ class FellAppImportPopulateUtil {
     protected $container;
 
     protected $uploadDir;
-    protected $systemEmail;
+    //protected $systemEmail;
 
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
@@ -70,8 +70,10 @@ class FellAppImportPopulateUtil {
 
         $this->uploadDir = 'Uploaded';
 
-        $userutil = new UserUtil();
-        $this->systemEmail = $userutil->getSiteSetting($this->em,'siteEmail');
+        //$userutil = new UserUtil();
+        //$userUtil = $this->container->get('user_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$this->systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
     }
 
 

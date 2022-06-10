@@ -142,6 +142,10 @@ services:
         class: App\UserdirectoryBundle\Util\UserSecurityUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    user_utility:
+        class: App\UserdirectoryBundle\Util\UserUtil
+        #arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
     #user generator util
     user_generator:
         class: App\UserdirectoryBundle\Util\UserGenerator

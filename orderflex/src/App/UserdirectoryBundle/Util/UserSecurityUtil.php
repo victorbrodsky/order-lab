@@ -384,9 +384,19 @@ class UserSecurityUtil {
 //        }
 //        return $userkeytype;
 //    }
+//    public function getDefaultUsernameType() {
+//        $userUtil = new UserUtil();
+//        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+//        return $userkeytype;
+//    }
     public function getDefaultUsernameType() {
-        $userUtil = new UserUtil();
-        $userkeytype = $userUtil->getDefaultUsernameType($this->em);
+        $userkeytype = null;
+        $userkeytypes = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
+        //echo "userkeytypes=".$userkeytypes."<br>";
+        //print_r($userkeytypes);
+        if( $userkeytypes && count($userkeytypes) > 0 ) {
+            $userkeytype = $userkeytypes[0];
+        }
         return $userkeytype;
     }
 
@@ -856,8 +866,9 @@ class UserSecurityUtil {
 
         //first time login when DB is clean
         if( !$userkeytype ) {
-            $userUtil = new UserUtil();
-            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
+            //$userUtil = new UserUtil();
+            //$userUtil = $this->container->get('user_utility');
+            //$count_usernameTypeList = $userUtil->generateUsernameTypes();
             $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
         }
 
@@ -1381,7 +1392,10 @@ class UserSecurityUtil {
         return implode(",",$deletedDocumentIdsArr);
     }
 
-
+//    //mirror function
+//    public function getSiteSetting($parameter) {
+//        return $this->getSiteSettingParameter($parameter);
+//    }
     //return parameter specified by $parameter. If the first time login when site parameter does not exist yet, return -1.
     public function getSiteSettingParameter( $parameter, $sitename=null ) {
 

@@ -326,7 +326,7 @@ class ComplexListController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->get('security.token_storage');
 
         $cycle = 'new_post_standalone';
 
@@ -364,8 +364,9 @@ class ComplexListController extends OrderAbstractController
             //echo "pathname=".$mapper['pathname']."<br>";
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
-                $userUtil = new UserUtil();
-                $userUtil->processInstTree($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil = $this->container->get('user_utility');
+                $userUtil->processInstTree($entity);
 
                 //set Reviewed by Administration
                 $entity->setStatus($entity::STATUS_VERIFIED);
@@ -376,13 +377,15 @@ class ComplexListController extends OrderAbstractController
             }
 
             if( $mapper['pathname'] == 'buildings' ) {
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil = $this->container->get('user_utility');
+                $userUtil->setUpdateInfo($entity);
             }
 
             if( $mapper['pathname'] == 'researchlabs' ) {
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil = $this->container->get('user_utility');
+                $userUtil->setUpdateInfo($entity);
             }
 
             if( $mapper['pathname'] == 'grants' ) {
@@ -395,8 +398,9 @@ class ComplexListController extends OrderAbstractController
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
 
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil = $this->container->get('user_utility');
+                $userUtil->setUpdateInfo($entity);
             }
 
             $em->persist($entity);
@@ -445,7 +449,8 @@ class ComplexListController extends OrderAbstractController
 
         $cycle = 'edit_put_standalone';
 
-        $secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->get('security.token_storage');
+        $userUtil = $this->container->get('user_utility');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
@@ -470,18 +475,18 @@ class ComplexListController extends OrderAbstractController
 
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
-                $userUtil = new UserUtil();
-                $userUtil->processInstTree($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil->processInstTree($entity);
             }
 
             if( $mapper['pathname'] == 'buildings' ) {
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil->setUpdateInfo($entity);
             }
 
             if( $mapper['pathname'] == 'researchlabs' ) {
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil->setUpdateInfo($entity);
             }
 
             if( $mapper['pathname'] == 'grants' ) {
@@ -494,13 +499,13 @@ class ComplexListController extends OrderAbstractController
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
 
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil->setUpdateInfo($entity);
             }
 
             if( $mapper['pathname'] == 'labtests' ) {
-                $userUtil = new UserUtil();
-                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+                //$userUtil = new UserUtil();
+                $userUtil->setUpdateInfo($entity);
             }
 
             //increments the version (current +1)

@@ -199,7 +199,8 @@ class AdminController extends OrderAbstractController
         if (count($users) == 0) {
 
             //1) get systemuser
-            $userSecUtil = new UserSecurityUtil($em, null);
+            //$userSecUtil = new UserSecurityUtil($em, null);
+            $userSecUtil = $this->container->get('user_security_utility');
             $systemuser = $userSecUtil->findSystemUser();
 
             //$this->generateSitenameList($systemuser);
@@ -210,8 +211,9 @@ class AdminController extends OrderAbstractController
                 $default_time_zone = null;
                 $usernamePrefix = "local-user";
 
-                $usetUtil = new UserUtil();
-                $usetUtil->generateUsernameTypes($em, null, false);
+                //$userUtil = new UserUtil();
+                $userUtil = $this->container->get('user_utility');
+                $userUtil->generateUsernameTypes(null, false);
                 //$userkeytype = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
 
                 $this->generateSitenameList(null);
@@ -221,7 +223,7 @@ class AdminController extends OrderAbstractController
 
                 //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
-                $systemuser = $usetUtil->createSystemUser($em, $userkeytype, $default_time_zone);
+                $systemuser = $userUtil->createSystemUser($userkeytype,$default_time_zone);
 
                 //echo "0 systemuser=".$systemuser."; username=".$systemuser->getUsername()."; ID=".$systemuser->getId()."<br>";
 
@@ -809,7 +811,8 @@ class AdminController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $logger->notice("Start generateAll");
 
-        $userutil = new UserUtil();
+        //$userutil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
         $user = $this->getUser();
 
         //ini_set('memory_limit', '3072M');
@@ -880,7 +883,7 @@ class AdminController extends OrderAbstractController
 
         $count_terminationTypes = $this->generateTerminationTypes();
         $count_eventTypeList = $this->generateEventTypeList();
-        $count_usernameTypeList = $userutil->generateUsernameTypes($this->getDoctrine()->getManager(),$user);
+        $count_usernameTypeList = $userUtil->generateUsernameTypes($user);
         $count_identifierTypeList = $this->generateIdentifierTypeList();
         $count_fellowshipTypeList = $this->generateFellowshipTypeList();
         //$count_residencyTrackList = $this->generateResidencyTrackList();
@@ -5153,9 +5156,10 @@ class AdminController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userGenerator = $this->container->get('user_generator');
-        $userUtil = new UserUtil();
+        //$userUtil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
         $em = $this->getDoctrine()->getManager();
-        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->getUser();
+        $systemuser = $userUtil->createSystemUser(null,null);  //$this->getUser();
         $default_time_zone = $this->getParameter('default_time_zone');
         //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 

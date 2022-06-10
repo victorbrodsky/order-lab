@@ -1386,10 +1386,11 @@ class ResAppController extends OrderAbstractController {
             $entity->autoSetRecLetterReceived();
 
             //set update author application
-            $em = $this->getDoctrine()->getManager();
-            $userUtil = new UserUtil();
-            $secTokenStorage = $this->get('security.token_storage');
-            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+            //$em = $this->getDoctrine()->getManager();
+            //$userUtil = new UserUtil();
+            //$secTokenStorage = $this->get('security.token_storage');
+            $userUtil = $this->container->get('user_utility');
+            $userUtil->setUpdateInfo($entity);
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////

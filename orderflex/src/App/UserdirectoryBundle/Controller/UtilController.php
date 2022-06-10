@@ -1276,7 +1276,7 @@ class UtilController extends OrderAbstractController {
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $userutil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
 
         $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
@@ -1325,9 +1325,9 @@ class UtilController extends OrderAbstractController {
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         if( $type == "cwid" || $type == "single" ) {
@@ -1349,9 +1349,9 @@ class UtilController extends OrderAbstractController {
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            //$criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'appointmentInstitution', $criteriastr );
+            //$criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         //academic title
@@ -1365,9 +1365,9 @@ class UtilController extends OrderAbstractController {
             }
 
             //time
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
-            //$criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
+            //$criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+            //$criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
         //medical title
@@ -1381,7 +1381,7 @@ class UtilController extends OrderAbstractController {
             }
 
             //time
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
+            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'medicalInstitution', $criteriastr );
         }
 
 
@@ -1397,7 +1397,7 @@ class UtilController extends OrderAbstractController {
 //            }
 //
 //            //time
-//            $criteriastr = $userutil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
+//            $criteriastr = $userUtil->getCriteriaStrByTime( $dql, 'current_only', 'administrativeInstitution', $criteriastr );
 
             //echo "0 criteriastr=".$criteriastr."<br>";
 

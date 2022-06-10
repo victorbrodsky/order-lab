@@ -246,8 +246,8 @@ class UserController extends OrderAbstractController
         $filter = trim((string)$request->get('filter') );
 
         //location search
-        $userUtil = new UserUtil();
-        $locations = $userUtil->indexLocation($filter, $request, $this->container, $this->getDoctrine());
+        $userUtil = $this->container->get('user_utility');
+        $locations = $userUtil->indexLocation($filter, $request);
 
         return array(
             'locations' => $locations,
@@ -385,8 +385,9 @@ class UserController extends OrderAbstractController
         if( $search != "" || $userid != "" ) {
 
             //location search
-            $userUtil = new UserUtil();
-            $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
+            //$userUtil = new UserUtil();
+            $userUtil = $this->container->get('user_utility');
+            $locations = $userUtil->indexLocation($search, $request);
 
             //user search
             $params = array('time'=>'current_only','search'=>$search,'userid'=>$userid,'all'=>$all);
@@ -623,8 +624,8 @@ class UserController extends OrderAbstractController
             //echo "all=".$all."<br>";
             if( !$all ) {
                 //echo "all=".$all."<br>";
-                $userutil = new UserUtil();
-                $criteriastr = $userutil->getCriteriaStrByTime($dql, $time, null, $criteriastr);
+                $userUtil = $this->container->get('user_utility');
+                $criteriastr = $userUtil->getCriteriaStrByTime($dql, $time, null, $criteriastr);
                 //echo "criteriastr=" . $criteriastr . "<br>";
 
                 //filter out system user
@@ -1632,7 +1633,7 @@ class UserController extends OrderAbstractController
         $creator = $this->getUser();
         $user = $userGenerator->addDefaultLocations($user,$creator);
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getDefaultUsernameType();
         $user->setKeytype($userkeytype);
 
@@ -1664,13 +1665,15 @@ class UserController extends OrderAbstractController
         $subjectUser = null;
         if( $id && $id != "" ) {
             $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
-            $userUtil = new UserUtil();
+            //$userUtil = new UserUtil();
+            $userUtil = $this->container->get('user_utility');
             $user = $userUtil->makeUserClone($subjectUser,$user);
         } else {
             //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
             // then load the corresponding default values into the page on initial load
-            $userUtil = new UserUtil();
-            $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
+            //$userUtil = new UserUtil();
+            $userUtil = $this->container->get('user_utility');
+            $user = $userUtil->populateDefaultUserFields($creator,$user);
         }
 
         //add EIN identifier to credentials
@@ -1768,7 +1771,7 @@ class UserController extends OrderAbstractController
         $creator = $this->getUser();
         $user = $userGenerator->addDefaultLocations($user,$creator);
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userkeytype = $userSecUtil->getDefaultUsernameType();
         $user->setKeytype($userkeytype);
 
@@ -1800,8 +1803,9 @@ class UserController extends OrderAbstractController
         $subjectUser = null;
         //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
         // then load the corresponding default values into the page on initial load
-        $userUtil = new UserUtil();
-        $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
+        //$userUtil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
+        $user = $userUtil->populateDefaultUserFields($creator,$user);
 
         //Roles
         $rolesArr = $this->getUserRoles(); //new user form
@@ -3724,28 +3728,28 @@ class UserController extends OrderAbstractController
         //$user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $userUtil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
 
         //Administartive and Appointment Titles and Comments update info set when parent are processed
         //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab
         foreach( $subjectUser->getEmploymentStatus() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
+            $userUtil->setUpdateInfo($entity);
         }
 
         foreach( $subjectUser->getLocations() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
-            $userUtil->setUpdateInfo($entity->getBuilding(),$em,$this->get('security.token_storage'));
+            $userUtil->setUpdateInfo($entity);
+            $userUtil->setUpdateInfo($entity->getBuilding());
         }
 
         //credentials
-        $userUtil->setUpdateInfo($subjectUser->getCredentials(),$em,$this->get('security.token_storage'));
+        $userUtil->setUpdateInfo($subjectUser->getCredentials());
 
         foreach( $subjectUser->getResearchLabs() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
+            $userUtil->setUpdateInfo($entity);
         }
 
         foreach( $subjectUser->getGrants() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
+            $userUtil->setUpdateInfo($entity);
         }
 
     }
@@ -3781,13 +3785,14 @@ class UserController extends OrderAbstractController
     public function setParentsForResidencySpecialtyTree($entity) {
 
         $em = $this->getDoctrine()->getManager();
-        $secTokenStorage = $this->get('security.token_storage');
-        $userUtil = new UserUtil();
+        //$secTokenStorage = $this->get('security.token_storage');
+        //$userUtil = new UserUtil();
+        $userUtil = $this->container->get('user_utility');
 
         $educationalType = null;
 
         foreach( $entity->getTrainings() as $training) {
-            $userUtil->processResidencySpecialtyTree($training,$em,$secTokenStorage);
+            $userUtil->processResidencySpecialtyTree($training);
 
             //set Educational type for training Institution
             $institution = $training->getInstitution();
@@ -3832,6 +3837,7 @@ class UserController extends OrderAbstractController
     public function processCommentType($comment) {
 
         $em = $this->getDoctrine()->getManager();
+        $userUtil = $this->container->get('user_utility');
 
         // process documents
         $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $comment );
@@ -3841,8 +3847,7 @@ class UserController extends OrderAbstractController
         }
 
         //set author if not set
-        $userUtil = new UserUtil();
-        $userUtil->setUpdateInfo($comment,$em,$this->get('security.token_storage'));
+        $userUtil->setUpdateInfo($comment);
     }
 
 
