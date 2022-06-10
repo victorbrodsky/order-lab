@@ -1986,7 +1986,7 @@ class FormNodeUtil
     public function createV2FormNode( $params ) {
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+        $username = $this->security->getUser();
 
         $objectType = $params['objectType'];
         $name = $params['name'];
@@ -2693,7 +2693,7 @@ class FormNodeUtil
     public function generateFormNode() {
 
         $em = $this->em;
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+        $username = $this->security->getUser();
 
         //root
         $categories = array(
@@ -3474,7 +3474,7 @@ class FormNodeUtil
     }
 
     public function createandLinkOtherIssueSection( $parentNode ) {
-        //$username = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$username = $this->security->getUser();
         //$em = $this->em;
         $count = null;
 
@@ -3524,7 +3524,7 @@ class FormNodeUtil
 
     public function generateDermatopathologyFormNode() {
         $em = $this->em;
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+        $username = $this->security->getUser();
 
         //root
         $categories = array(
@@ -3737,7 +3737,7 @@ class FormNodeUtil
 //        return;
 //
 //        $em = $this->em;
-//        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->security->getUser();
 //
 //        //root
 //        $categories = array(
@@ -5377,7 +5377,7 @@ class FormNodeUtil
 //        exit("Depreciated. Not Used!!!");
 //        $em = $this->em;
 //        $userSecUtil = $this->container->get('user_security_utility');
-//        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+//        $username = $this->security->getUser();
 //
 //        $objectType = $params['objectType'];
 //        $showLabel = $params['showLabel'];

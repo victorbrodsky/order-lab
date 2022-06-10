@@ -28,15 +28,18 @@ namespace App\CrnBundle\Util;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class CrnUtilForm
 {
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
 
@@ -103,7 +106,7 @@ class CrnUtilForm
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
             $user_tz = $user->getPreferences()->getTimezone();
             if( !$user_tz ) {
                 $user_tz = "America/New_York";
@@ -371,7 +374,7 @@ class CrnUtilForm
 
     public function getCrnAuthorsHtml( $message, $sitename ) {
 
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $messageVersion = intval($message->getVersion());
 

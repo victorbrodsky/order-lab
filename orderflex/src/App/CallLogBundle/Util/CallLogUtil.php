@@ -53,6 +53,7 @@ use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Created by PhpStorm.
@@ -65,10 +66,12 @@ class CallLogUtil
 
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
 
@@ -914,7 +917,7 @@ class CallLogUtil
         if( strval($mrntypeId) != strval(intval($mrntypeId)) ) {
             //exit("not integer");
 
-            $mrntypeTransformer = new MrnTypeTransformer($this->em,$this->container->get('security.token_storage')->getToken()->getUser());
+            $mrntypeTransformer = new MrnTypeTransformer($this->em,$this->security->getUser());
             $mrntypeNew = $mrntypeTransformer->reverseTransform($mrntypeId,false);
 
             return $mrntypeNew;
@@ -965,7 +968,7 @@ class CallLogUtil
         if( !is_object($accessiontypeId) && strval($accessiontypeId) != strval(intval($accessiontypeId)) ) {
             //exit("not integer");
 
-            $accessiontypeTransformer = new AccessionTypeTransformer($this->em,$this->container->get('security.token_storage')->getToken()->getUser());
+            $accessiontypeTransformer = new AccessionTypeTransformer($this->em,$this->security->getUser());
             $accessiontypeNew = $accessiontypeTransformer->reverseTransform($accessiontypeId,false);
 
             return $accessiontypeNew;
@@ -1585,7 +1588,7 @@ class CallLogUtil
         $userServiceUtil = $this->container->get('user_service_utility');
 
         //only send the notification email if the box noAttendingEmail is not checked
-        $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->security->getUser();
         if( $currentUser && $currentUser->getPreferences() ) {
             $noAttendingEmail = $currentUser->getPreferences()->getNoAttendingEmail();
             if( $noAttendingEmail ) {
@@ -1647,7 +1650,7 @@ class CallLogUtil
 
         //testing
 //        $eventType = "New Call Log Book Entry Submitted";
-//        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->security->getUser();
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
     }
@@ -1720,7 +1723,7 @@ class CallLogUtil
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //add only if the patient does not exists in the list
         $similarPatients = $this->getSamePatientsInList($patientList,$patient);
@@ -2456,7 +2459,7 @@ class CallLogUtil
 
     public function getTotalTimeSpentMinutes( $user=null ) {
         if( !$user ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $msg = null;
@@ -2652,7 +2655,7 @@ class CallLogUtil
 
     public function getOrderSimpleDateStr( $message, $delimiter = " at " ) {
         $userServiceUtil = $this->container->get('user_service_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $dateStr = "Undefined Date";
 
@@ -2766,7 +2769,7 @@ class CallLogUtil
     //set all other messages status to deleted
     public function deleteAllOtherMessagesByOid( $message, $cycle, $testing=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $em = $this->em;
 
         //message muts have an ID
@@ -3430,7 +3433,7 @@ class CallLogUtil
     //Copy text to html text for "History/Findings" and "Impression/Outcome" fields
     public function updateLoopTextHtml_OLD()
     {
-//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+//        if (false === $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
 //            return $this->redirect($this->generateUrl('employees-nopermission'));
 //        }
 
@@ -3442,7 +3445,7 @@ class CallLogUtil
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        //$user = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->security->getUser();
 
         //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
@@ -3866,7 +3869,7 @@ class CallLogUtil
             //////////// get new encounter //////////////
             $securityUtil = $this->container->get('user_security_utility');
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
             $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
 
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -3972,7 +3975,7 @@ class CallLogUtil
 
     public function createCopyDocument($document,$holderEntity) {
         $logger = $this->container->get('logger');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $newDocument = new Document($user);
 
         $originalname = $document->getOriginalname();
@@ -4102,7 +4105,7 @@ class CallLogUtil
         }
 
         //set creator for remaining tasks
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         foreach( $calllogEntryMessage->getCalllogTasks() as $task ) {
 
             //remove empty tasks
@@ -4460,7 +4463,7 @@ class CallLogUtil
                 } else {
                     $patientEntities = $patients;
                 }
-                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                $user = $this->security->getUser();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
@@ -4916,7 +4919,7 @@ class CallLogUtil
                 } else {
                     $patientEntities = $patients;
                 }
-                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                $user = $this->security->getUser();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
@@ -5010,7 +5013,7 @@ class CallLogUtil
         $securityUtil = $this->container->get('user_security_utility');
 
         if( !$user ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $accessionType = $this->convertAutoGeneratedAccessiontype($accessionType,true);

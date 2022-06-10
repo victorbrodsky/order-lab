@@ -41,7 +41,7 @@ class MaintenanceListener {
 
     private $container;
     private $em;
-    protected $security;
+    private $security;
     private $logger;
 
     public function __construct(ContainerInterface $container, EntityManager $em, Security $security)

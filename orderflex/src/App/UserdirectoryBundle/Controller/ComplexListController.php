@@ -29,6 +29,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
@@ -312,7 +313,7 @@ class ComplexListController extends OrderAbstractController
      *
      * @Template("AppUserdirectoryBundle/ComplexList/new.html.twig")
      */
-    public function createListAction( Request $request )
+    public function createListAction( Request $request ) //TokenStorageInterface $secTokenStorage
     {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {

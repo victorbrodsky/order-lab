@@ -54,6 +54,7 @@ use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Created by PhpStorm.
@@ -66,10 +67,12 @@ class CrnUtil
 
     protected $em;
     protected $container;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
     }
 
 
@@ -915,7 +918,7 @@ class CrnUtil
         if( strval($mrntypeId) != strval(intval($mrntypeId)) ) {
             //exit("not integer");
 
-            $mrntypeTransformer = new MrnTypeTransformer($this->em,$this->container->get('security.token_storage')->getToken()->getUser());
+            $mrntypeTransformer = new MrnTypeTransformer($this->em,$this->security->getUser());
             $mrntypeNew = $mrntypeTransformer->reverseTransform($mrntypeId,false);
 
             return $mrntypeNew;
@@ -966,7 +969,7 @@ class CrnUtil
         if( !is_object($accessiontypeId) && strval($accessiontypeId) != strval(intval($accessiontypeId)) ) {
             //exit("not integer");
 
-            $accessiontypeTransformer = new AccessionTypeTransformer($this->em,$this->container->get('security.token_storage')->getToken()->getUser());
+            $accessiontypeTransformer = new AccessionTypeTransformer($this->em,$this->security->getUser());
             $accessiontypeNew = $accessiontypeTransformer->reverseTransform($accessiontypeId,false);
 
             return $accessiontypeNew;
@@ -1568,7 +1571,7 @@ class CrnUtil
         $userServiceUtil = $this->container->get('user_service_utility');
 
         //only send the notification email if the box noAttendingEmail is not checked
-        $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+        $currentUser = $this->security->getUser();
         if( $currentUser && $currentUser->getPreferences() ) {
             $noAttendingEmail = $currentUser->getPreferences()->getNoAttendingEmail();
             if( $noAttendingEmail ) {
@@ -1630,7 +1633,7 @@ class CrnUtil
 
         //testing
 //        $eventType = "New Critical Result Notification Entry Submitted";
-//        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+//        $user = $this->security->getUser();
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $userSecUtil->createUserEditEvent($this->container->getParameter('crn.sitename'), $body, $user, $message, null, $eventType);
     }
@@ -1703,7 +1706,7 @@ class CrnUtil
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //add only if the patient does not exists in the list
         $similarPatients = $this->getSamePatientsInList($patientList,$patient);
@@ -2427,7 +2430,7 @@ class CrnUtil
 
     public function getTotalTimeSpentMinutes( $user=null ) {
         if( !$user ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $msg = null;
@@ -2645,7 +2648,7 @@ class CrnUtil
 
     public function getOrderSimpleDateStr( $message, $delimiter = " at " ) {
         $userServiceUtil = $this->container->get('user_service_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         $dateStr = "Undefined Date";
 
@@ -2752,7 +2755,7 @@ class CrnUtil
     //set all other messages status to deleted
     public function deleteAllOtherMessagesByOid( $message, $cycle, $testing=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $em = $this->em;
 
         //message muts have an ID
@@ -3412,7 +3415,7 @@ class CrnUtil
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        //$user = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->security->getUser();
 
         //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
@@ -3836,7 +3839,7 @@ class CrnUtil
             //////////// get new encounter //////////////
             $securityUtil = $this->container->get('user_security_utility');
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
             $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('crn.sitename'));
 
             $institution = $userSecUtil->getCurrentUserInstitution($user);
@@ -3942,7 +3945,7 @@ class CrnUtil
 
     public function createCopyDocument($document,$holderEntity) {
         $logger = $this->container->get('logger');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         $newDocument = new Document($user);
 
         $originalname = $document->getOriginalname();
@@ -4072,7 +4075,7 @@ class CrnUtil
         }
 
         //set creator for remaining tasks
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
         foreach( $crnEntryMessage->getCrnTasks() as $task ) {
 
             //remove empty tasks
@@ -4430,7 +4433,7 @@ class CrnUtil
                 } else {
                     $patientEntities = $patients;
                 }
-                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                $user = $this->security->getUser();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
@@ -4880,7 +4883,7 @@ class CrnUtil
                 } else {
                     $patientEntities = $patients;
                 }
-                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                $user = $this->security->getUser();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
@@ -4974,7 +4977,7 @@ class CrnUtil
         $securityUtil = $this->container->get('user_security_utility');
 
         if( !$user ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $user = $this->security->getUser();
         }
 
         $accessionType = $this->convertAutoGeneratedAccessiontype($accessionType,true);
