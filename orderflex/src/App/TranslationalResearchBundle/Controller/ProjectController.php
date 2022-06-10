@@ -1270,8 +1270,12 @@ class ProjectController extends OrderAbstractController
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      */
-    public function newProjectAction(Request $request, $specialtyStr)
+    public function newProjectAction(Request $request, $specialtyStr=null)
     {
+        if( !$specialtyStr ) {
+            return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
+        }
+
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
