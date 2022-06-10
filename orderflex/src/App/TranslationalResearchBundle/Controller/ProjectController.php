@@ -1234,7 +1234,7 @@ class ProjectController extends OrderAbstractController
     /**
      * Select new project specialty
      *
-     * @Route("/project/new", name="translationalresearch_project_new_selector", methods={"GET","POST"})
+     * @Route("/project/selector", name="translationalresearch_project_new_selector", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new-project-selector.html.twig")
      */
     public function newProjectSelectorAction(Request $request)

@@ -90,7 +90,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         } else {
             $username = $user."";
         }
-        //$username = $user."";
+        $username = $user."";
         //exit('$username='.$username);
 
         $options = array();

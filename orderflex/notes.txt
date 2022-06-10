@@ -1166,4 +1166,4 @@ sudo systemctl restart postgresql-14
 Configure /var/lib/pgsql/14/data/pg_hba.conf for pgAdmin: host all all all md5
 
 http://127.0.0.1/order/index_dev.php/translational-research/project/new
-
+http://127.0.0.1/order/index_dev.php/translational-research/project/selector
