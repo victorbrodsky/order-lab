@@ -153,7 +153,8 @@ class ArrayFieldType extends AbstractType
                     if ($otherObject) {
                         //echo "form provider=(" . $otherObject['provider'] . ")!!!!!!!!!<br>";
                         if( !$otherObject['id'] && !$otherObject['provider'] && $this->params['container'] ) {
-                            $user = $this->params['container']->get('security.token_storage')->getToken()->getUser();
+                            //$user = $this->params['container']->get('security.token_storage')->getToken()->getUser();
+                            $user = $this->params['container']->get('user_utility')->getLoggedinUser();
                             //echo $otherObject['id'] . ": set provider=" . $user . " !!!!!!!!!<br>";
                             $otherObject['provider'] = $user->getId();
                         }
@@ -195,7 +196,8 @@ class ArrayFieldType extends AbstractType
                         $provider = null;
                         if ($this->params['container'] && !$thisProvider) {
                             //echo "FormEvent provider=".$thisProvider."<br>";
-                            $provider = $this->params['container']->get('security.token_storage')->getToken()->getUser();
+                            //$provider = $this->params['container']->get('security.token_storage')->getToken()->getUser();
+                            $provider = $this->params['container']->get('user_utility')->getLoggedinUser();
                             $formProviderModifier($event->getForm()->getParent(), $provider);
                         }
 

@@ -25,26 +25,29 @@
 namespace App\UserdirectoryBundle\Services;
 
 
-use Doctrine\ORM\EntityManager;
+//use Doctrine\ORM\EntityManager;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\Event\PreUploadEvent;
 
 use App\UserdirectoryBundle\Entity\Document;
-
+use Symfony\Component\Security\Core\Security;
 
 
 class UploadListener {
 
     private $container;
     private $em;
+    protected $security;
 
-    public function __construct(ContainerInterface $container, EntityManager $em)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
+        $this->security = $security;
     }
 
     public function onUpload(PostPersistEvent $event)
@@ -80,11 +83,7 @@ class UploadListener {
             $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
         } else {
             //for new object (i.e. application) userid might not be set. Therefore, use the logged in user.
-            if( $this->container->get('security.token_storage') ) {
-                if( $this->container->get('security.token_storage')->getToken() ) {
-                    $user = $this->container->get('security.token_storage')->getToken()->getUser();
-                }
-            }
+            $user = $this->security->getUser();
         }
 
         $authUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($authUserId);

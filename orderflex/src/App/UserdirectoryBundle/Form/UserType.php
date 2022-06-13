@@ -43,8 +43,8 @@ class UserType extends AbstractType
     protected $cloneUser;
     protected $roles;
     protected $container;
-    protected $secTokenStorage;
-    protected $secAuthChecker;
+    //protected $secTokenStorage;
+    //protected $secAuthChecker;
     protected $em;
     protected $hasRoleSimpleView;
 
@@ -61,8 +61,8 @@ class UserType extends AbstractType
 
         //$this->sc = $params['sc'];
         $this->container = $params['container'];
-        $this->secAuthChecker = $this->container->get('security.authorization_checker');
-        $this->secTokenStorage = $this->container->get('security.token_storage');
+        //$this->secAuthChecker = $this->container->get('security.authorization_checker');
+        //$this->secTokenStorage = $this->container->get('security.token_storage');
 
         if( !array_key_exists('showfellapp', $params) ) {
             $this->params['showfellapp'] = null;
@@ -75,7 +75,10 @@ class UserType extends AbstractType
         }
 
         //echo "cycle=".$this->cycle."<br>";
-        if( $this->secAuthChecker->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if(
+            $this->container->get('user_utility')->isLoggedinUserGranted('ROLE_USERDIRECTORY_EDITOR') ||
+            $this->container->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
+        ) {
             //echo "role ADMIN<br>";
             $this->roleAdmin = true;
         } else {
@@ -93,14 +96,14 @@ class UserType extends AbstractType
         }
 
         $this->currentUser = false;
-        $user = $this->secTokenStorage->getToken()->getUser();
+        $user = $this->container->get('user_utility')->getLoggedinUser();
         if( $user->getId() === $this->subjectUser->getId() ) {
             $this->currentUser = true;
         }
 
         $this->hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+            $this->hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
     }
 

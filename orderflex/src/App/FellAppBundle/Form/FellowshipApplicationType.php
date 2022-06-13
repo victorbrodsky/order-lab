@@ -83,7 +83,7 @@ class FellowshipApplicationType extends AbstractType
         if( 0 && $this->params['cycle'] == "edit" ) {
             //$this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') ||
             //if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 $builder->add('googleFormId', null, array(
                     'required' => false,
                     'label' => "Google Form Id (Do not modify this value! New application will be generated if googleFormId will be different from the one in the spreadsheet.):",

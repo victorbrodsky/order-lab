@@ -36,7 +36,7 @@ use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use App\UserdirectoryBundle\Util\UserSecurityUtil;
+//use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
@@ -53,18 +53,18 @@ class UserUtil {
     protected $em;
     protected $container;
     protected $security;
-    protected $tokenStorage;
+    //protected $tokenStorage;
 
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container=null,
-        Security $security=null,
-        TokenStorageInterface $tokenStorage=null
+        Security $security=null
+        //TokenStorageInterface $tokenStorage=null
     ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
-        $this->tokenStorage = $tokenStorage;
+        //$this->tokenStorage = $tokenStorage;
     }
 
 
@@ -257,6 +257,23 @@ class UserUtil {
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        return $userSecUtil->getSiteSettingParameter($parameter);
 //    }
+
+    public function isLoggedinUserHasRole( $roleStr ) {
+        if( !$roleStr ) {
+            return false;
+        }
+        $user = $this->security->getUser();
+        return $user->hasRole($roleStr);
+    }
+    public function getLoggedinUser() {
+        return $this->security->getUser();
+    }
+    public function isLoggedinUserGranted( $roleStr ) {
+        return $this->isGranted($roleStr);
+    }
+    public function isGranted( $roleStr ) {
+        return $this->security->isGranted($roleStr);
+    }
 
     //done
     public function generateUsernameTypes($user=null,$createSystemUser=true) {

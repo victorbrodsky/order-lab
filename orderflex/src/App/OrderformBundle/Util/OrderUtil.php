@@ -1497,7 +1497,7 @@ class OrderUtil {
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->security->getUser();
 
         //add only if the accession does not exists in the list
         $similarAccessions = $this->getSameAccessionsInList($accessionList,$accession);

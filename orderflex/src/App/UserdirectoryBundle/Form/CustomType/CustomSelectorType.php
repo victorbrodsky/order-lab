@@ -54,7 +54,7 @@ class CustomSelectorType extends AbstractType {
      * @var ObjectManager
      */
     private $om;
-    private $secTokenStorage;
+    //private $secTokenStorage;
     private $serviceContainer;
 
      /**
@@ -65,13 +65,13 @@ class CustomSelectorType extends AbstractType {
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;
-        $this->secTokenStorage = $serviceContainer->get('security.token_storage');
+        //$this->secTokenStorage = $serviceContainer->get('security.token_storage');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $username = $this->secTokenStorage->getToken()->getUser();
+        $username = $this->serviceContainer->get('user_utility')->getLoggedinUser();
         
         $classtype = $options['classtype'];
 

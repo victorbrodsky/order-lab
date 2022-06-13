@@ -13,16 +13,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Security;
 
 class RecLetterUtil {
 
     protected $em;
     protected $container;
+    protected $security;
     protected $uploadDir;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
+        $this->security = $security;
         $this->uploadDir = 'Uploaded';
     }
 
@@ -1434,16 +1437,8 @@ class RecLetterUtil {
 
     public function sendLetterEventLog($msg,$eventType,$fellapp) {
         $userSecUtil = $this->container->get('user_security_utility');
-
-        $user = NULL;
-        if( $this->container->get('security.token_storage')->getToken() ) {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        }
-        if( $user instanceof User) {
-            //User OK - do nothing
-        } else {
-            $user = $userSecUtil->findSystemUser();
-        }
+        
+        $user = $this->security->getUser();
         if( !$user ) {
             $user = $userSecUtil->findSystemUser();
         }

@@ -26,6 +26,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Security;
 
 //service: transres_formnode_util
 
@@ -34,10 +35,12 @@ class TransResFormNodeUtil
 
     protected $container;
     protected $em;
+    protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->container = $container;
         $this->em = $em;
+        $this->security = $security;
     }
 
 
@@ -47,7 +50,7 @@ class TransResFormNodeUtil
 
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+        $username = $this->security->getUser();
 
         //root
         $categories = array(
@@ -226,7 +229,7 @@ class TransResFormNodeUtil
 
         $em = $this->em;
         $formNodeUtil = $this->container->get('user_formnode_utility');
-        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+        $username = $this->security->getUser();
 
         //root
         $categories = array(

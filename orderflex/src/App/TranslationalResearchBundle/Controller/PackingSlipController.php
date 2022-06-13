@@ -317,7 +317,7 @@ class PackingSlipController extends OrderAbstractController
             }
             $logger->notice("Download view: Logged in as systemUser=".$systemUser);
         } else {
-            $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
+            $logger->notice("Download view: Token user is valid security user=".$user);
         }
 
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {

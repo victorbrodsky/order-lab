@@ -32,24 +32,25 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 //use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 
 class UserDownloadUtil {
 
     protected $em;
-    protected $secTokenStorage;
     protected $container;
+    protected $security;
 
     private $cellSize = 10;
     private $cellFont = "Calibri";
     private $headerSize = 11;
     private $headerFont = "Calibri";
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
-        $this->secTokenStorage = $container->get('security.token_storage');
         $this->container = $container;
+        $this->security = $security;
     }
 
 
@@ -191,10 +192,7 @@ class UserDownloadUtil {
             $this->headerSize = $sheetSize;
         }
 
-        $author = NULL;
-        if( $this->secTokenStorage->getToken() ) {
-            $author = $this->secTokenStorage->getToken()->getUser();
-        }
+        $author = $this->security->getUser();
 
         $row = 1;
         //$withheader = false;

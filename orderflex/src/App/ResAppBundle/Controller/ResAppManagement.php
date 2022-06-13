@@ -49,7 +49,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
+use Symfony\Component\Security\Core\Security;
 
 
 class ResAppManagement extends OrderAbstractController {
@@ -65,7 +65,6 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $resappUtil = $this->container->get('resapp_util');
 
         //get all residency types using institution: ResidencyTrack objects that have $coordinators, $directors, $interviewers
@@ -104,7 +103,7 @@ class ResAppManagement extends OrderAbstractController {
      * @Route("/add-residency-application-type", name="resapp_residency_application_type_add", methods={"GET","POST"})
      * @Template("AppResAppBundle/Management/new-residency-application-type.html.twig")
      */
-    public function addResidencyApplicationTypeAction(Request $request )
+    public function addResidencyApplicationTypeAction(Request $request, Security $security )
     {
         exit('Not supported');
 
@@ -117,7 +116,7 @@ class ResAppManagement extends OrderAbstractController {
 
         $resappUtil = $this->container->get('resapp_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $security->getUser();
 
 //        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
 //
@@ -261,7 +260,7 @@ class ResAppManagement extends OrderAbstractController {
      *
      * @Route("/residency-application-type-remove/{resaptypeid}", name="resapp_residency_application_type_remove", methods={"GET","POST"})
      */
-    public function removeResidencyApplicationTypeAction(Request $request, $resaptypeid )
+    public function removeResidencyApplicationTypeAction(Request $request, Security $security, $resaptypeid )
     {
 
         exit('Not supported');
@@ -274,7 +273,7 @@ class ResAppManagement extends OrderAbstractController {
         //exit('removeResidencyTypeAction id='.$resaptypeid);
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $security->getUser();
 
         //$subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resaptypeid);
         $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackListType')->find($resaptypeid);
@@ -744,7 +743,7 @@ class ResAppManagement extends OrderAbstractController {
     /**
      * @Route("/update-inst-user-role", name="resapp_update_inst_user_role", methods={"GET"})
      */
-    public function updateUserInstRoleAction(Request $request)
+    public function updateUserInstRoleAction(Request $request, Security $security)
     {
 
         exit("Only one time run");
@@ -754,7 +753,7 @@ class ResAppManagement extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $security->getUser();
         $resappUtil = $this->container->get('resapp_util');
 
 

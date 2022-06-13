@@ -32,7 +32,10 @@ class FellAppUserType extends UserType
 
         parent::formConstructor($params);
 
-        if( $this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if(
+            $this->params['container']->get('user_utility')->isGranted('ROLE_FELLAPP_ADMIN') ||
+            $this->params['container']->get('user_utility')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
+        ) {
             $this->roleAdmin = true;
         } else {
             $this->roleAdmin = false;

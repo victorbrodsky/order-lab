@@ -51,7 +51,7 @@ class BaseTitleType extends AbstractType
 
         $hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
-            $hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+            $hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
         $builder->add('id',HiddenType::class,array('label'=>false));

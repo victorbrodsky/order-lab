@@ -62,7 +62,7 @@ class LocationType extends AbstractType
 
         $this->hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+            $this->hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
     }

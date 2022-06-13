@@ -125,7 +125,7 @@ class ResidencyApplicationType extends AbstractType
         if( 0 && $this->params['cycle'] == "edit" ) {
             //$this->secAuthChecker->isGranted('ROLE_RESAPP_ADMIN') ||
             //if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( $this->params['container']->get('user_utility')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 $builder->add('googleFormId', null, array(
                     'required' => false,
                     'label' => "Google Form Id (Do not modify this value! New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
@@ -508,7 +508,7 @@ class ResidencyApplicationType extends AbstractType
         //Black or African American, Hispanic or Latino, American Indian or Alaska Native, Native Hawaiian and other Pacific Islander, Unknown
         //Visible only to Admin and Coordinator
         if( $this->params['cycle'] != 'download' ) {
-            if ( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+            if ( $this->params['container']->get('user_utility')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
                 $builder->add('ethnicity', ChoiceType::class, array(
                     'label' => 'Is the applicant a member of any of the following groups?:',
                     'required' => false,
@@ -624,7 +624,7 @@ class ResidencyApplicationType extends AbstractType
     public function userLocations($builder) {
 
 
-        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
+        if( $this->params['container']->get('user_utility')->isGranted('ROLE_RESAPP_COORDINATOR') ) {
             $roleAdmin = true;
             $readonly = true;
         } else {
@@ -635,7 +635,7 @@ class ResidencyApplicationType extends AbstractType
         $readonly = false;
 
         $currentUser = false;
-        $user = $this->params['container']->get('security.token_storage')->getToken()->getUser();
+        $user = $this->params['container']->get('user_utility')->getLoggedinUser();
         if( $user->getId() === $this->params['user']->getId() ) {
             $currentUser = true;
         }
