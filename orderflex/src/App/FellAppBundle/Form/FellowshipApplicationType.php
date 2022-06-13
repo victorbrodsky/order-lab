@@ -59,31 +59,6 @@ class FellowshipApplicationType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-//        $builder->add('fellowshipSubspecialty',null, array(
-//            'label' => '* Fellowship Type:',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-//        ));
-//        $builder->add('fellowshipSubspecialty', 'entity', array(
-//            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
-//            'label'=> "* Fellowship Application Type:",
-//            'required'=> false,
-//            //'multiple' => true,
-//            'attr' => array('class'=>'combobox combobox-width fellapp-fellowshipSubspecialty'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.institution","institution")
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
-//                    ->andWhere("institution.id IS NOT NULL")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
-//        ));
-
-
         //get subfellowship types as for ROLE_FELLAPP_ADMIN
         //$fellappUtil = $this->params['container']->get('fellapp_util');
         //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
@@ -500,8 +475,11 @@ class FellowshipApplicationType extends AbstractType
 
     public function userLocations($builder) {
 
-
-        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+        if(
+            //$this->params['container']->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR')
+            array_key_exists('security', $this->params) &&
+            $this->params['security']->isGranted('ROLE_FELLAPP_COORDINATOR')
+        ) {
             $roleAdmin = true;
             $readonly = true;
         } else {
@@ -512,14 +490,26 @@ class FellowshipApplicationType extends AbstractType
         $readonly = false;
 
         $currentUser = false;
-        $user = $this->params['container']->get('security.token_storage')->getToken()->getUser();
-        if( $user->getId() === $this->params['user']->getId() ) {
-            $currentUser = true;
+        if( array_key_exists('security', $this->params) ) {
+            $user = $this->params['security']->getUser();
+            if( $user ) {
+                if( $user->getId() === $this->params['user']->getId() ) {
+                    $currentUser = true;
+                }
+            }
         }
         //echo "currentUser=".$currentUser."<br>";
 
 
-        $params = array('disabled'=>$readonly,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->params['cycle'],'em'=>$this->params['em'],'subjectUser'=>$this->params['user']);
+        $params = array(
+            'disabled'=>$readonly,
+            'admin'=>$roleAdmin,
+            'currentUser'=>$currentUser,
+            'cycle'=>$this->params['cycle'],
+            'em'=>$this->params['em'],
+            'subjectUser'=>$this->params['user'],
+            'security'=>$this->params['security'],
+        );
 
         $builder->add('locations', CollectionType::class, array(
             'entry_type' => FellAppLocationType::class,
