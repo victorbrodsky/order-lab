@@ -258,21 +258,18 @@ class UserUtil {
 //        return $userSecUtil->getSiteSettingParameter($parameter);
 //    }
 
-    public function isLoggedinUserHasRole( $roleStr ) {
-        if( !$roleStr ) {
-            return false;
-        }
-        $user = $this->security->getUser();
-        return $user->hasRole($roleStr);
+    public function getUser() {
+        return $this->security->getUser();
     }
     public function getLoggedinUser() {
-        return $this->security->getUser();
+        return $this->getUser();
+    }
+
+    public function isGranted( $roleStr ) {
+        return $this->security->isGranted($roleStr);
     }
     public function isLoggedinUserGranted( $roleStr ) {
         return $this->isGranted($roleStr);
-    }
-    public function isGranted( $roleStr ) {
-        return $this->security->isGranted($roleStr);
     }
 
     //done

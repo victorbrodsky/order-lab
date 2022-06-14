@@ -26,14 +26,14 @@ services:
     crn_role_voter:
         class: App\CrnBundle\Security\Voter\CrnRoleVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     crn_permission_voter:
         class: App\CrnBundle\Security\Voter\CrnPermissionVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 

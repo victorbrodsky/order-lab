@@ -26,14 +26,14 @@ services:
     translationalresearch_role_voter:
         class: App\TranslationalResearchBundle\Security\Voter\TranslationalResearchRoleVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     translationalresearch_permission_voter:
         class: App\TranslationalResearchBundle\Security\Voter\TranslationalResearchPermissionVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 

@@ -952,7 +952,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'fellappVisas' => $fellappVisas,
-            'security' => $security
+            //'security' => $security
         );
 
 //        $form = $this->createForm(
@@ -1414,7 +1414,7 @@ class FellAppController extends OrderAbstractController {
             'cycle_type' => "update",
             'fellappTypes' => $fellTypes,
             'fellappVisas' => $fellappVisas,
-            'security' => $security
+            //'security' => $security
         );
         //Edit Form
         $form = $this->createForm( FellowshipApplicationType::class, $entity, array(
@@ -1618,7 +1618,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'fellappVisas' => $fellappVisas,
-            'security' => $security
+            //'security' => $security
         );
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
         $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //new

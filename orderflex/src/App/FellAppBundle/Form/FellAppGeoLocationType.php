@@ -47,10 +47,11 @@ class FellAppGeoLocationType extends AbstractType
 
         $hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
-            if( array_key_exists('security', $this->params) ) {
+            //if( array_key_exists('security', $this->params) ) {
                 //$hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
-                $hasRoleSimpleView = $this->params['security']->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
-            }
+                //$hasRoleSimpleView = $this->params['security']->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+                $hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+            //}
         }
 
         $builder->add('street1',null,array(

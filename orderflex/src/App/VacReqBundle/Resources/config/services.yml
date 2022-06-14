@@ -26,14 +26,14 @@ services:
     vacreq_role_voter:
         class: App\VacReqBundle\Security\Voter\VacReqRoleVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     vacreq_permission_voter:
         class: App\VacReqBundle\Security\Voter\VacReqPermissionVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 

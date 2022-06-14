@@ -23,13 +23,13 @@ services:
     deidentifier_role_voter:
         class: App\DeidentifierBundle\Security\Voter\DeidentifierRoleVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     deidentifier_permission_voter:
         class: App\DeidentifierBundle\Security\Voter\DeidentifierPermissionVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }

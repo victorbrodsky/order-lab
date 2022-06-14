@@ -52,14 +52,14 @@ services:
     fellapp_role_voter:
         class: App\FellAppBundle\Security\Voter\FellAppRoleVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     fellapp_permission_voter:
         class: App\FellAppBundle\Security\Voter\FellAppPermissionVoter
         public: false
-        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 

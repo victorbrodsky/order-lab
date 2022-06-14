@@ -477,8 +477,8 @@ class FellowshipApplicationType extends AbstractType
 
         if(
             //$this->params['container']->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR')
-            array_key_exists('security', $this->params) &&
-            $this->params['security']->isGranted('ROLE_FELLAPP_COORDINATOR')
+            array_key_exists('container', $this->params) &&
+            $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_FELLAPP_COORDINATOR')
         ) {
             $roleAdmin = true;
             $readonly = true;
@@ -490,8 +490,8 @@ class FellowshipApplicationType extends AbstractType
         $readonly = false;
 
         $currentUser = false;
-        if( array_key_exists('security', $this->params) ) {
-            $user = $this->params['security']->getUser();
+        if( array_key_exists('container', $this->params) ) {
+            $user = $this->params['container']->get('user_utility')->getLoggedinUser();
             if( $user ) {
                 if( $user->getId() === $this->params['user']->getId() ) {
                     $currentUser = true;
@@ -508,7 +508,7 @@ class FellowshipApplicationType extends AbstractType
             'cycle'=>$this->params['cycle'],
             'em'=>$this->params['em'],
             'subjectUser'=>$this->params['user'],
-            'security'=>$this->params['security'],
+            //'security'=>$this->params['security'],
         );
 
         $builder->add('locations', CollectionType::class, array(
