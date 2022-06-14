@@ -1167,3 +1167,11 @@ Configure /var/lib/pgsql/14/data/pg_hba.conf for pgAdmin: host all all all md5
 
 http://127.0.0.1/order/index_dev.php/translational-research/project/new
 http://127.0.0.1/order/index_dev.php/translational-research/project/select-new-project-type
+
+"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe" --lowquality --cookie "PHPSESSID" --javascript-delay 9000 --load-error-handling "ignore" --load-media-error-handling "ignore" "http://localhost/fellowship-applications/download/1582" "application_ID1582.pdf"
+
+wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --lowquality --cookie \"PHPSESSID\" \"\"
+--javascript-delay \"9000\" --load-error-handling \"ignore\" --load-media-error-handling \"ignore\"
+\"http://localhost/fellowship-applications/download/1583\"
+\"C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\order-lab\\orderflex\\public\\Uploaded\\fellapp/Reports/temp_1583/application_ID1583.pdf\"
+
