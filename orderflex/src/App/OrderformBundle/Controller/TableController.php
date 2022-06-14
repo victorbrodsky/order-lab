@@ -136,16 +136,16 @@ class TableController extends OrderAbstractController {
         $user = $this->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -166,13 +166,13 @@ class TableController extends OrderAbstractController {
             $actions = array('edit');
         }
 
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( $message && !$secUtil->isUserAllowOrderActions($message, $user, $actions) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
         //redirect by status
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $redirect = $orderUtil->redirectOrderByStatus($message,$routeName);
         if( $redirect ) {
             return $redirect;
@@ -495,11 +495,11 @@ class TableController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $orderUtil = $this->get('scanorder_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -747,7 +747,7 @@ class TableController extends OrderAbstractController {
 
         //add dataqualities to entity
         $dataqualities = $form->get('conflicts')->getData();
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
         $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
@@ -774,7 +774,7 @@ class TableController extends OrderAbstractController {
 
         //email
         //$scanEmailUtil = new ScanEmailUtil($em,$this->container);
-        //$scanEmailUtil = $this->get('scanorder_email_utility');
+        //$scanEmailUtil = $this->container->get('scanorder_email_utility');
         $scanEmailUtil->sendScanEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
         if( isset($_POST['btnSaveOnIdleTimeout']) ) {
@@ -812,7 +812,7 @@ class TableController extends OrderAbstractController {
         $force = true; //true - create fields even if the value is empty
         $status = "valid";
         $provider = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $system = $securityUtil->getDefaultSourceSystem();    //'scanorder';
         $em = $this->getDoctrine()->getManager();
 

@@ -109,7 +109,7 @@ class CallLogLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
         if( !$eventType ) {

@@ -113,15 +113,15 @@ class CrnEntryController extends OrderAbstractController
         }
 
         //testing
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$results = $userServiceUtil->getFuzzyTest();
         //exit("<br>exit");
 
-        //$crnUtil = $this->get('user_service_utility');
+        //$crnUtil = $this->container->get('user_service_utility');
         //echo $crnUtil->getInstalledSoftware()."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $route = $request->get('_route');
         $title = "Critical Result Notification Case List";
@@ -228,10 +228,10 @@ class CrnEntryController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
-        $userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('crn.sitename');
 
         //$route = $request->get('_route');
@@ -1235,11 +1235,11 @@ class CrnEntryController extends OrderAbstractController
         //1) search box: MRN,Name...
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $crnUtil = $this->get('crn_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
         $sitename = $this->getParameter('crn.sitename');
 
@@ -1408,7 +1408,7 @@ class CrnEntryController extends OrderAbstractController
             //echo "next key=".$crnUtil->getNextEncounterGeneratedId()."<br>";
             //$crnUtil->checkNextEncounterGeneratedId();
             //testing
-            //$userFormNodeUtil = $this->get('user_formnode_utility');
+            //$userFormNodeUtil = $this->container->get('user_formnode_utility');
             //$formNodeTest = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
             //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
             //print_r($values);
@@ -1526,10 +1526,10 @@ class CrnEntryController extends OrderAbstractController
         //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
-        $crnUtil = $this->get('crn_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $em = $this->getDoctrine()->getManager();
 
@@ -2018,7 +2018,7 @@ class CrnEntryController extends OrderAbstractController
                 //$em->flush($message);
 
                 //process form nodes: process each form field and record it to DB
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
@@ -2098,7 +2098,7 @@ class CrnEntryController extends OrderAbstractController
     public function createCrnEntryForm($message, $mrntype=null, $mrn=null, $cycle='show', $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('crn.sitename');
@@ -2207,8 +2207,8 @@ class CrnEntryController extends OrderAbstractController
 
     public function createCrnEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
-        $orderUtil = $this->get('scanorder_utility');
-        $crnUtil = $this->get('crn_util');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
 
         $message = new Message();
@@ -2316,7 +2316,7 @@ class CrnEntryController extends OrderAbstractController
 
         if( $searchtype != "" && $search != "" ) {
 
-//            $searchUtil = $this->get('search_utility');
+//            $searchUtil = $this->container->get('search_utility');
 //            $object = 'patient';
 //            $params = array('request'=>$request,'object'=>$object,'searchtype'=>$searchtype,'search'=>$search,'exactmatch'=>false);
 //            $res = $searchUtil->searchAction($params);
@@ -2345,7 +2345,7 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $searchedArr = array();
 
@@ -2510,8 +2510,8 @@ class CrnEntryController extends OrderAbstractController
     }
 
     public function searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false ) {
-        //$userServiceUtil = $this->get('user_service_utility');
-        $crnUtil = $this->get('crn_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $crnUtil = $this->container->get('crn_util');
 
 //        if( $params ) {
 //            //echo "params true<br>";
@@ -2585,8 +2585,8 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $withEncounter = false;
         $res = array();
         $output = 'OK';
@@ -2610,7 +2610,7 @@ class CrnEntryController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
 
         $mrn = trim((string)$request->get('mrn'));
@@ -3056,7 +3056,7 @@ class CrnEntryController extends OrderAbstractController
 //    public function getCurrentUserInstitution($user)
 //    {
 //        $em = $this->getDoctrine()->getManager();
-//        $securityUtil = $this->get('user_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 //        $institution = $userSiteSettings->getDefaultInstitution();
@@ -3134,9 +3134,9 @@ class CrnEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        //$userSecUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
-        $crnUtil = $this->get('crn_util');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $route = $request->get('_route');
 
@@ -3347,7 +3347,7 @@ class CrnEntryController extends OrderAbstractController
         //previous entries similar to crn-list-previous-entries: get it in the view by ajax
 
         //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         $eventType = "Critical Result Notification Entry Viewed";
         $eventStr = "Critical Result Notification Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
@@ -3476,7 +3476,7 @@ class CrnEntryController extends OrderAbstractController
         set_time_limit(600); //600 seconds => 10 mins
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         //$logger = $this->container->get('logger');
 
         //$all = $request->get('all');
@@ -3597,7 +3597,7 @@ class CrnEntryController extends OrderAbstractController
     //Not used. Use Spout instead.
     public function createCrnListExcel($entries,$author) {
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
 
@@ -3843,7 +3843,7 @@ class CrnEntryController extends OrderAbstractController
 
         set_time_limit(600); //6 min
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
         $useCache = TRUE; //default. Always use cache for export

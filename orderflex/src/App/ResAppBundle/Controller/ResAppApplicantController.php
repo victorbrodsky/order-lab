@@ -325,7 +325,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $emailResArr = array();
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         //$em = $this->getDoctrine()->getManager();
         $resapp = $interview->getResapp();
         $applicant = $resapp->getUser();
@@ -447,7 +447,7 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . "<br>" . $emailStr;
@@ -542,7 +542,7 @@ class ResAppApplicantController extends OrderAbstractController {
         }
 
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         $emails = array();
         $emailErrorArr = array();

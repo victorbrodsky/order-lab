@@ -106,14 +106,14 @@ class FellAppController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //echo "fellapp user ok <br>";
 
         //$user = $this->getUser();
         $user = $this->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
         //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
@@ -667,7 +667,7 @@ class FellAppController extends OrderAbstractController {
 //        if( !$this->isGranted('ROLE_FELLAPP_ADMIN') ) {
 //            return null;
 //        }
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('fellapp.sitename'),AccessRequest::STATUS_ACTIVE);
 //        return $accessreqs;
 //    }
@@ -1010,7 +1010,7 @@ class FellAppController extends OrderAbstractController {
 //
 //        //ini_set('memory_limit', '3072M'); //3072M
 //
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        //$user = $this->getUser();
 //        $user = $this->getUser();
 //
@@ -1143,7 +1143,7 @@ class FellAppController extends OrderAbstractController {
 //                $event = $event . "<br>" . implode("<br>", $removedCollections);
 //                $event = $event . $reportsDiffInfoStr;
 //                //echo "Diff event=".$event."<br>";
-//                //$userSecUtil = $this->get('user_security_utility');
+//                //$userSecUtil = $this->container->get('user_security_utility');
 //                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
 //            }
 //
@@ -2483,7 +2483,7 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $fellappRecLetterUtil = $this->get('fellapp_rec_letter_util');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
         $result = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
 

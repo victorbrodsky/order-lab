@@ -707,7 +707,7 @@ class ListController extends OrderAbstractController
 
         $entityClass = $mapper['fullClassName'];
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         
         $fileName = "list_ID_$linkToListId".".xlsx";
 
@@ -2252,7 +2252,7 @@ class ListController extends OrderAbstractController
 
         //exit("Update list");
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
@@ -2343,7 +2343,7 @@ class ListController extends OrderAbstractController
                     $event = "Permission of the Role ".$entity->getId()." has been changed by ".$user.":"."<br>";
                     $event = $event . implode("<br>", $changedInfoArr);
                     $event = $event . "<br>" . implode("<br>", $removedCollections);
-                    //$userSecUtil = $this->get('user_security_utility');
+                    //$userSecUtil = $this->container->get('user_security_utility');
                     //echo "event=".$event."<br>";
                     //print_r($removedCollections);
                     //exit();
@@ -2391,7 +2391,7 @@ class ListController extends OrderAbstractController
                         $event = "Visual Infos of the Antibody " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
                         $event = $event . implode("<br>", $changedInfoArr);
                         $event = $event . "<br>" . implode("<br>", $removedVisualInfoCollections);
-                        //$userSecUtil = $this->get('user_security_utility');
+                        //$userSecUtil = $this->container->get('user_security_utility');
                         //echo "event=".$event."<br>";
                         //print_r($removedCollections);
                         //exit();
@@ -2426,7 +2426,7 @@ class ListController extends OrderAbstractController
                         $event = "Price the RequestCategoryTypeList " . $entity->getId() . " has been changed by " . $user . ":" . "<br>";
                         $event = $event . implode("<br>", $changedInfoArr);
                         $event = $event . "<br>" . implode("<br>", $removedPriceCollections);
-                        //$userSecUtil = $this->get('user_security_utility');
+                        //$userSecUtil = $this->container->get('user_security_utility');
                         //echo "event=".$event."<br>";
                         //print_r($removedCollections);
                         //exit();
@@ -4178,7 +4178,7 @@ class ListController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         //echo "data: $pathbase, $entityId, $type <br>";
@@ -4200,7 +4200,7 @@ class ListController extends OrderAbstractController
                 $event
             );
 
-            //$userSecUtil = $this->get('user_security_utility');
+            //$userSecUtil = $this->container->get('user_security_utility');
             //echo "event=".$event."<br>";
             //print_r($removedCollections);
             //exit();

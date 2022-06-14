@@ -57,7 +57,7 @@ class CarryOverController extends OrderAbstractController
 //        }
 //
 //        $em = $this->getDoctrine()->getManager();
-//        //$vacreqUtil = $this->get('vacreq_util');
+//        //$vacreqUtil = $this->container->get('vacreq_util');
 //        exit('not implemented');
 //
 //        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
@@ -120,7 +120,7 @@ class CarryOverController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
 
         $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
 
@@ -174,7 +174,7 @@ class CarryOverController extends OrderAbstractController
     public function createCarryOversForm( $entity, $cycle, $request=null ) {
 
         $em = $this->getDoctrine()->getManager();
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         //$user = $this->getUser();
 
         $params = array(
@@ -222,7 +222,7 @@ class CarryOverController extends OrderAbstractController
     }
     public function addCarryOverByAcademicYear( $userCarryOver, $yearIndex ) {
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         //TODO: fixed using getCurrentAcademicYearStartEndDates
         //get current academical start year:
@@ -265,7 +265,7 @@ class CarryOverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         //$emailUtil = $this->container->get('user_mailer_utility');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$break = "\r\n";

@@ -84,8 +84,8 @@ class SignUpController extends OrderAbstractController
     public function newSignUpAction(Request $request)
     {
 
-        $userSecUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $em = $this->getDoctrine()->getManager();
         $signUp = new Signup();
@@ -330,7 +330,7 @@ class SignUpController extends OrderAbstractController
     public function sendEmailWithActivationLink($signUp,$request) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $newline = "<br>";
@@ -423,8 +423,8 @@ class SignUpController extends OrderAbstractController
     {
         //exit('1');
         $emailUtil = $this->container->get('user_mailer_utility');
-        //$userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
@@ -648,7 +648,7 @@ class SignUpController extends OrderAbstractController
             //$author = $this->getUser();
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Account Activation:<br>".$signUp;
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Account Activation');
 
             $this->get('session')->getFlashBag()->add(
@@ -958,8 +958,8 @@ class SignUpController extends OrderAbstractController
     public function forgotPasswordAction(Request $request)
     {
         //exit('Not Implemented Yet');
-        $userSecUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $em = $this->getDoctrine()->getManager();
 
@@ -1112,7 +1112,7 @@ class SignUpController extends OrderAbstractController
     public function sendEmailWithResetLink($resetPassword,$request) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
@@ -1185,8 +1185,8 @@ class SignUpController extends OrderAbstractController
         //exit("reset password by resetPasswordLinkID=".$resetPasswordLinkID);
 
         //$emailUtil = $this->container->get('user_mailer_utility');
-        //$userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $resetPassword = $em->getRepository('AppUserdirectoryBundle:ResetPassword')->findOneByRegistrationLinkID($resetPasswordLinkID);
@@ -1354,7 +1354,7 @@ class SignUpController extends OrderAbstractController
             //$author = $this->getUser();
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Password Reset:<br>".$resetPassword;
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Password Reset');
 
             $this->get('session')->getFlashBag()->add(

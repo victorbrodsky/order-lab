@@ -551,7 +551,7 @@ class TreeController extends OrderAbstractController {
 
                 $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
                 $node = new $fullClassName();
-                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->setDefaultList($node,$orderinlist,$username,$nodetext);
 
                 if( $organizationalGroupType ) {
@@ -619,7 +619,7 @@ class TreeController extends OrderAbstractController {
 
         $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
         $root = new $fullClassName();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->setDefaultList($root,1,$user,$rootNodeName);
 
 

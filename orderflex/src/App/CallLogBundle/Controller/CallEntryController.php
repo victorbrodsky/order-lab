@@ -116,15 +116,15 @@ class CallEntryController extends OrderAbstractController
         }
 
         //testing
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$results = $userServiceUtil->getFuzzyTest();
         //exit("<br>exit");
 
-        //$calllogUtil = $this->get('user_service_utility');
+        //$calllogUtil = $this->container->get('user_service_utility');
         //echo $calllogUtil->getInstalledSoftware()."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
         $title = "Call Case List";
@@ -232,10 +232,10 @@ class CallEntryController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
-        $userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('calllog.sitename');
 
         $route = $request->get('_route');
@@ -1300,11 +1300,11 @@ class CallEntryController extends OrderAbstractController
         //1) search box: MRN,Name...
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
         $sitename = $this->getParameter('calllog.sitename');
 
@@ -1473,7 +1473,7 @@ class CallEntryController extends OrderAbstractController
             //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
             //$calllogUtil->checkNextEncounterGeneratedId();
             //testing
-            //$userFormNodeUtil = $this->get('user_formnode_utility');
+            //$userFormNodeUtil = $this->container->get('user_formnode_utility');
             //$formNodeTest = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
             //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
             //print_r($values);
@@ -1594,10 +1594,10 @@ class CallEntryController extends OrderAbstractController
         //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $em = $this->getDoctrine()->getManager();
 
@@ -2093,7 +2093,7 @@ class CallEntryController extends OrderAbstractController
                 //$em->flush($message);
 
                 //process form nodes: process each form field and record it to DB
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
@@ -2173,7 +2173,7 @@ class CallEntryController extends OrderAbstractController
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle='show', $readonlyEncounter=false, $showPreviousEncounters=false) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('calllog.sitename');
@@ -2282,8 +2282,8 @@ class CallEntryController extends OrderAbstractController
 
     public function createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
-        $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
 
         $message = new Message();
@@ -2387,7 +2387,7 @@ class CallEntryController extends OrderAbstractController
 
         if( $searchtype != "" && $search != "" ) {
 
-//            $searchUtil = $this->get('search_utility');
+//            $searchUtil = $this->container->get('search_utility');
 //            $object = 'patient';
 //            $params = array('request'=>$request,'object'=>$object,'searchtype'=>$searchtype,'search'=>$search,'exactmatch'=>false);
 //            $res = $searchUtil->searchAction($params);
@@ -2416,7 +2416,7 @@ class CallEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $searchedArr = array();
 
@@ -2581,8 +2581,8 @@ class CallEntryController extends OrderAbstractController
     }
 
     public function searchPatient( $request, $evenlog=false, $params=null, $turnOffMetaphone=false ) {
-        //$userServiceUtil = $this->get('user_service_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $calllogUtil = $this->container->get('calllog_util');
 
 //        if( $params ) {
 //            //echo "params true<br>";
@@ -2656,8 +2656,8 @@ class CallEntryController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $withEncounter = false;
         $res = array();
         $output = 'OK';
@@ -2681,7 +2681,7 @@ class CallEntryController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
 
         $mrn = trim((string)$request->get('mrn'));
@@ -3127,7 +3127,7 @@ class CallEntryController extends OrderAbstractController
 //    public function getCurrentUserInstitution($user)
 //    {
 //        $em = $this->getDoctrine()->getManager();
-//        $securityUtil = $this->get('user_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 //        $institution = $userSiteSettings->getDefaultInstitution();
@@ -3205,9 +3205,9 @@ class CallEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        //$userSecUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
-        $calllogUtil = $this->get('calllog_util');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
         $route = $request->get('_route');
 
@@ -3434,7 +3434,7 @@ class CallEntryController extends OrderAbstractController
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
         //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         $eventType = "Call Log Book Entry Viewed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed by ".$user;
@@ -3566,7 +3566,7 @@ class CallEntryController extends OrderAbstractController
         set_time_limit(600); //600 seconds => 10 mins
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         //$logger = $this->container->get('logger');
 
         //$all = $request->get('all');
@@ -3687,7 +3687,7 @@ class CallEntryController extends OrderAbstractController
     //Not used. Use Spout instead.
     public function createCalllogListExcel($entries,$author) {
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
 
         $ea = new Spreadsheet(); // ea is short for Excel Application
 
@@ -3933,7 +3933,7 @@ class CallEntryController extends OrderAbstractController
 
         set_time_limit(600); //6 min
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
         $useCache = TRUE; //default. Always use cache for export

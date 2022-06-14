@@ -36,7 +36,8 @@ class HomeController extends OrderAbstractController {
 
     public function mainCommonHomeAction() {
 
-        $userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $width = "300";
         $height = "80";
@@ -211,7 +212,7 @@ class HomeController extends OrderAbstractController {
     public function generateSitenameList($systemuser) {
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $elements = array(
             'directory' => 'employees',

@@ -59,9 +59,9 @@ class RequestFormNodeController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $cycle = "new";
@@ -139,7 +139,7 @@ class RequestFormNodeController extends OrderAbstractController
             }
 
             //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil = $this->container->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$transresRequest->getMessageCategory(),$transresRequest,$testing);
 
             $msg = "New Request has been successfully submitted for the project ID ".$project->getOid();
@@ -188,7 +188,7 @@ class RequestFormNodeController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
@@ -272,7 +272,7 @@ class RequestFormNodeController extends OrderAbstractController
 //            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
 
             //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil = $this->container->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$transresRequest->getMessageCategory(),$transresRequest,$testing); //testing
 
             $msg = "Request ID ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
@@ -757,7 +757,7 @@ class RequestFormNodeController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $count = $transResFormNodeUtil->generateTransResFormNodeRequest();
 
         exit("Form Node Tree generated: ".$count);
@@ -853,7 +853,7 @@ class RequestFormNodeController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $res = "NotOK";
 

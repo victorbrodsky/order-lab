@@ -163,7 +163,7 @@ class CheckController extends OrderAbstractController {
         //$security_content = $this->get('security.context');
         //$user = $this->getUser();
         //$userUtil = new UserUtil();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             //echo "no permission ";
             $entity = null;
@@ -320,7 +320,7 @@ class CheckController extends OrderAbstractController {
 
         $element = array();
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
         }
@@ -567,7 +567,7 @@ class CheckController extends OrderAbstractController {
         }
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
         }
@@ -701,7 +701,7 @@ class CheckController extends OrderAbstractController {
             }
 
             $user = $this->getUser();
-            $securityUtil = $this->get('user_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
                 $entity = null;
             }

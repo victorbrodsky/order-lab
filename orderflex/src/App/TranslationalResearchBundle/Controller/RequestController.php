@@ -64,9 +64,9 @@ class RequestController extends OrderAbstractController
     {
         //exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
         $transresPermissionUtil = $this->container->get('transres_permission_util');
-        //$transResFormNodeUtil = $this->get('transres_formnode_util');
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -284,7 +284,7 @@ class RequestController extends OrderAbstractController
 
             //process form nodes
             if( $formnode ) {
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
             }
 
@@ -365,7 +365,7 @@ class RequestController extends OrderAbstractController
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
         //exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
-        //$transResFormNodeUtil = $this->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
@@ -576,7 +576,7 @@ class RequestController extends OrderAbstractController
             
             //process form nodes
             if( $formnode ) {
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
             }
 
@@ -2494,7 +2494,7 @@ class RequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
@@ -2523,7 +2523,7 @@ class RequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
@@ -2582,8 +2582,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
-        //$transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $routeName = $request->get('_route');
 
         $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
@@ -2749,7 +2749,7 @@ class RequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $count = $transResFormNodeUtil->generateTransResFormNodeRequest();
 
         exit("Form Node Tree generated: ".$count);
@@ -2871,7 +2871,7 @@ class RequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        //$transresRequestUtil = $this->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
 
@@ -3366,7 +3366,7 @@ class RequestController extends OrderAbstractController
      */
     public function getUserDataSearchAction(Request $request) {
 
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 
         $type = trim((string)$request->get('type') );
         $search = trim((string)$request->get('search') );
@@ -3398,7 +3398,7 @@ class RequestController extends OrderAbstractController
 
         //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->get('session')->getFlashBag()->add(

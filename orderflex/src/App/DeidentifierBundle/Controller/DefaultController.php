@@ -100,7 +100,7 @@ class DefaultController extends OrderAbstractController
         }
 
 //        //email testing
-//        $emailUtil = $this->get('user_mailer_utility');
+//        $emailUtil = $this->container->get('user_mailer_utility');
 //        $emailUtil->sendEmail( 'oli2002@med.cornell.edu', "Test email !!!", "Test email body !!!", "oli2002@med.cornell.edu,cinava@yahoo.com" );
 
         //check for active access requests
@@ -124,7 +124,7 @@ class DefaultController extends OrderAbstractController
     }
 
     public function createGenerateForm() {
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         //permittedInstitutions for generation
@@ -132,7 +132,7 @@ class DefaultController extends OrderAbstractController
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( $userSiteSettings ) {
             $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions, null);
 
             //set default "WCM-NYP Collaboration" as institution
@@ -215,10 +215,10 @@ class DefaultController extends OrderAbstractController
         $pagination = null;
 
         //Search across all institutions that are listed in PHI Scope of the user by default
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,null);
         $institutionIds = array();
         foreach( $permittedInstitutions as $permittedInstitution ) {
@@ -471,7 +471,7 @@ class DefaultController extends OrderAbstractController
         }
 
         //set source
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $source = $securityUtil->getDefaultSourceSystem($this->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
@@ -689,7 +689,7 @@ class DefaultController extends OrderAbstractController
         $user = $this->getUser();
 
         $status = 'deidentified-valid';
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $source = $securityUtil->getDefaultSourceSystem($this->getParameter('deidentifier.sitename'));
         if( !$source ) {
             throw $this->createNotFoundException('Unable to find Deidentifier in SourceSystemList by name='."ORDER Deidentifier");
@@ -725,7 +725,7 @@ class DefaultController extends OrderAbstractController
         if( !$this->isGranted('ROLE_DEIDENTIFICATOR_ADMIN') ) {
             return null;
         }
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('deidentifier.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }

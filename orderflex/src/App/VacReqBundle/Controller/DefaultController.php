@@ -71,7 +71,7 @@ class DefaultController extends OrderAbstractController
 //
 //            $floatingDayDate = \DateTime::createfromformat('m/d/Y',$floatingDay);
 //
-//            $vacreqUtil = $this->get('vacreq_util');
+//            $vacreqUtil = $this->container->get('vacreq_util');
 //            $yearRangeStr = $vacreqUtil->getAcademicYearBySingleDate($floatingDayDate);
 //            echo "yearRangeStr: $floatingDay => $yearRangeStr == $expectedRes ";
 //            if( $yearRangeStr == $expectedRes ) {
@@ -82,7 +82,7 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
-//        $vacreqUtil = $this->get('vacreq_util');
+//        $vacreqUtil = $this->container->get('vacreq_util');
 //        $em = $this->getDoctrine()->getManager();
 //        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(375);
 //        $groups = "";
@@ -317,7 +317,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
 
         $ids = $request->request->get('ids');
@@ -358,7 +358,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $userIdsStr = $request->request->get('ids');
         //echo "ids=".$userIdsStr."<br>";
@@ -512,7 +512,7 @@ class DefaultController extends OrderAbstractController
 
         exit('Not allowed.');
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $status = 'approved';

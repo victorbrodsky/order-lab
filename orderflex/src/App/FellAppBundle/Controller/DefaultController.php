@@ -310,7 +310,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year

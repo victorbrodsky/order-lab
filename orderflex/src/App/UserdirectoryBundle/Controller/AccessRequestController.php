@@ -81,8 +81,8 @@ class AccessRequestController extends OrderAbstractController
 
         //exit('access Request Create Plain');
 
-        $userSecUtil = $this->get('user_security_utility');
-        //$userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -227,7 +227,7 @@ class AccessRequestController extends OrderAbstractController
 
         $user = $this->getUser();
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
             //exit('no role roleUnapproved'); //testing
             return $this->redirect($this->generateUrl($sitename.'_login'));
@@ -260,7 +260,7 @@ class AccessRequestController extends OrderAbstractController
             //throw $this->createNotFoundException('Unable to find User.');
         }
 
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
         $sitenameFull = $this->siteNameStr;
@@ -290,7 +290,7 @@ class AccessRequestController extends OrderAbstractController
         }
 
         // Case 3: user has role banned
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         if( $userSecUtil->hasGlobalUserRole($roles['banned'],$user) ) {
 
             $request->getSession()->getFlashBag()->add(
@@ -373,7 +373,7 @@ class AccessRequestController extends OrderAbstractController
     public function getParams() {
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
 
         $params = array();
 
@@ -405,7 +405,7 @@ class AccessRequestController extends OrderAbstractController
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
         //make mobile phone number required field
-        $requireVerifyMobilePhone = $securityUtil->isRequireVerifyMobilePhone($this->siteName);
+        $requireVerifyMobilePhone = $userSecUtil->isRequireVerifyMobilePhone($this->siteName);
         $params['requireVerifyMobilePhone'] = $requireVerifyMobilePhone;
 
         return $params;
@@ -488,7 +488,7 @@ class AccessRequestController extends OrderAbstractController
         //$user->setAppliedforaccess('active');
         //$user->setAppliedforaccessdate( new \DateTime() );
 
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);
 
         $sitenameFull = $this->siteNameStr;
@@ -579,7 +579,7 @@ class AccessRequestController extends OrderAbstractController
             $emailStr = "<br>Confirmation email was sent to ".$email;
         }
 
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         $siteurl = $this->generateUrl( $sitename.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
 
@@ -629,7 +629,7 @@ class AccessRequestController extends OrderAbstractController
         $msg .= "<br>"."Reference E-Mail: ".$accReq->getReferenceemail();
         $msg .= "<br>"."Reference Phone Number: ".$accReq->getReferencephone();
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
         $headers = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
 
@@ -831,7 +831,7 @@ class AccessRequestController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
         if( !$accReq ) {
@@ -882,7 +882,7 @@ class AccessRequestController extends OrderAbstractController
             //$entity->addRole($this->roleBanned);
 
             //2 way) New: If "Yes" is pressed, all roles belonging to this user and attached to this site should be removed.
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $roles = $userSecUtil->getUserRolesBySite( $entity, $this->siteName );
             foreach( $roles as $role ) {
                 //echo "role=".$role->getName()."<br>";
@@ -974,7 +974,7 @@ class AccessRequestController extends OrderAbstractController
 
         if( $status == "updated" || $status == "update" ) {
 
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $roles = $userSecUtil->getUserRolesBySite( $subjectUser, $sitename );
 
             $subject = "Your access for ".$sitenameFull." has been updated";
@@ -988,7 +988,7 @@ class AccessRequestController extends OrderAbstractController
 
         if( $msg != "" ) {
             $email = $subjectUser->getEmail();
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
             $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
         }
@@ -1016,7 +1016,7 @@ class AccessRequestController extends OrderAbstractController
             throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
         }
 
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //$accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
         $entity = $accReq->getUser();
@@ -1027,7 +1027,7 @@ class AccessRequestController extends OrderAbstractController
         ////////////////// lowest roles /////////////////////
 //        //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
 //        //user's roles associated with this site
-//        $securityUtil = $this->get('user_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //        $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 //        if( count($siteRoles) == 0 ) {
 //            //pre-populate the Role with a role that has the lowest permissions on this site
@@ -1040,7 +1040,7 @@ class AccessRequestController extends OrderAbstractController
         ////////////////// EOF lowest roles /////////////////////
 
         //Roles
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
         $params = array(
@@ -1091,7 +1091,7 @@ class AccessRequestController extends OrderAbstractController
         }
 
         //Original Roles not associated with this site
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1229,7 +1229,7 @@ class AccessRequestController extends OrderAbstractController
 //                $subjectuser->removeRole($role);
 //            }
 //        }
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $accReq = $userSecUtil->getUserAccessRequest($userId,$this->siteName);
 //        $accReq->setStatus(AccessRequest::STATUS_DECLINED);
 //        $em->persist($subjectuser);
@@ -1237,7 +1237,7 @@ class AccessRequestController extends OrderAbstractController
 //        $em->flush();
 
         //Previously Remove access authorization was working by adding Banned role
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accReq = $userSecUtil->getUserAccessRequest($userId,$this->siteName);
         $this->changeStatus( $accReq, "decline", $subjectuser, $request );
 
@@ -1269,7 +1269,7 @@ class AccessRequestController extends OrderAbstractController
 
         $this->addLowestRolesToUser( $entity, $this->siteName );
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         //Roles
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1286,7 +1286,7 @@ class AccessRequestController extends OrderAbstractController
         $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
 
         //TODO: check if this user is already authorized to access this site
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accReq = $userSecUtil->getUserAccessRequest($id,$this->siteName);
 
         $userViewArr = array(
@@ -1324,7 +1324,7 @@ class AccessRequestController extends OrderAbstractController
         }
 
         //user's original not associated with this site
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $originalOtherRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName, false );
 
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
@@ -1391,7 +1391,7 @@ class AccessRequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         //echo "sitename=".$this->siteName."<br>";
 
@@ -1573,7 +1573,7 @@ class AccessRequestController extends OrderAbstractController
             $user = $this->getUser();
             $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
             $event = $event . "<br>" . implode("<br>", $removedCollections);
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User record updated');
         }
     }
@@ -1604,7 +1604,7 @@ class AccessRequestController extends OrderAbstractController
     public function addLowestRolesToUser( $user, $sitename ) {
         //if a user does not have any siteroles => pre-populate the Role with a role that has the lowest permissions on this site
         //user's roles associated with this site
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $siteRoles = $securityUtil->getUserRolesBySite( $user, $sitename );
         if( count($siteRoles) == 0 ) {
             //pre-populate the Role with a role that has the lowest permissions on this site
@@ -1715,7 +1715,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";
 
@@ -1806,7 +1806,7 @@ class AccessRequestController extends OrderAbstractController
             $emailNotification = $form['emailNotification']->getData();
             if( $emailNotification ) {
 
-                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil = $this->container->get('user_security_utility');
 
                 if( $currentUser->getEmail() ) {
                     $adminEmail = $currentUser->getEmail();
@@ -1830,7 +1830,7 @@ class AccessRequestController extends OrderAbstractController
                     $currentUser->getUsernameOptimal().$adminEmailStr;
 
                 $email = $user->getEmail();
-                $emailUtil = $this->get('user_mailer_utility');
+                $emailUtil = $this->container->get('user_mailer_utility');
                 //                    $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
             }
@@ -1846,7 +1846,7 @@ class AccessRequestController extends OrderAbstractController
             //Event Log
             $event = "Manually created account ".$user." for ".$sitenameFull." has been changed by ".$currentUser."; Status: $lockedStr"."<br>";
             //$event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 
             return $this->redirectToRoute($this->siteName.'_generated_users');
@@ -1873,7 +1873,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$newline = "\r\n";
         $newline = "<br>";
 
@@ -1895,7 +1895,7 @@ class AccessRequestController extends OrderAbstractController
         $emailNotification = true;
         if( $emailNotification ) {
 
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
 
             if( $currentUser->getEmail() ) {
                 $adminEmail = $currentUser->getEmail();
@@ -1919,7 +1919,7 @@ class AccessRequestController extends OrderAbstractController
                 $currentUser->getUsernameOptimal().$adminEmailStr;
 
             $email = $user->getEmail();
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             //                    $email, $subject, $message, $em, $ccs=null, $adminemail=null
             $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
         }
@@ -1935,7 +1935,7 @@ class AccessRequestController extends OrderAbstractController
         //Event Log
         $event = "Manually created account ".$user." for ".$sitenameFull." has been approved by ".$currentUser."; Status: $lockedStr"."<br>";
         //$event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 
         return $this->redirectToRoute($this->siteName.'_generated_users');

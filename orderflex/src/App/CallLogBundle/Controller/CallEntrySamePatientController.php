@@ -73,10 +73,10 @@ class CallEntrySamePatientController extends CallEntryController
         //1) search box: MRN,Name...
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $calllogUtil = $this->get('calllog_util');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
+        $securityUtil = $this->container->get('user_security_utility');
+        $calllogUtil = $this->container->get('calllog_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrn = trim((string)$request->get('mrn'));
@@ -88,7 +88,7 @@ class CallEntrySamePatientController extends CallEntryController
         //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution
-        //$securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -217,7 +217,7 @@ class CallEntrySamePatientController extends CallEntryController
             //echo "next key=".$calllogUtil->getNextEncounterGeneratedId()."<br>";
             //$calllogUtil->checkNextEncounterGeneratedId();
             //testing
-            //$userFormNodeUtil = $this->get('user_formnode_utility');
+            //$userFormNodeUtil = $this->container->get('user_formnode_utility');
             //$formNodeTest = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("Blood Product Transfused");
             //$values = $userFormNodeUtil->getDropdownValue($formNodeTest);
             //print_r($values);
@@ -312,10 +312,10 @@ class CallEntrySamePatientController extends CallEntryController
         //case 2: patient does not exists: create a new encounter to DB
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         //$readonlyPatient = trim((string)$request->get('readonlyPatient'));
@@ -595,7 +595,7 @@ class CallEntrySamePatientController extends CallEntryController
                 //////////////////// EOF Processing ////////////////////////
 
                 //process form nodes
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 

@@ -260,7 +260,7 @@ class AdminController extends OrderAbstractController
                 //set channel in SiteParameters to https
                 $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
                 if (count($entities) != 1) {
-                    $userServiceUtil = $this->get('user_service_utility');
+                    $userServiceUtil = $this->container->get('user_service_utility');
                     $userServiceUtil->generateSiteParameters();
                     $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
                 }
@@ -298,7 +298,7 @@ class AdminController extends OrderAbstractController
 //        //make sure sitesettings is initialized
 //        $siteParams = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 //        if( count($siteParams) != 1 ) {
-//            $userServiceUtil = $this->get('user_service_utility');
+//            $userServiceUtil = $this->container->get('user_service_utility');
 //            $userServiceUtil->generateSiteParameters();
 //        }
         
@@ -821,7 +821,7 @@ class AdminController extends OrderAbstractController
 
 
         //testing
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->createCronsLinux();
         //exit('eof createCronsLinux');
         //$count_generateChartsList = $this->generateChartsList();
@@ -1187,10 +1187,10 @@ class AdminController extends OrderAbstractController
 //            //$emailUtil->createEmailCronJob();
 //            //$logger->notice("Created email cron job");
 //        } else {
-//            $userServiceUtil = $this->get('user_service_utility');
+//            $userServiceUtil = $this->container->get('user_service_utility');
 //            $userServiceUtil->createCronsLinux();
 //        }
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->createCrons();
 
         return $msg;
@@ -1260,7 +1260,7 @@ class AdminController extends OrderAbstractController
         //$userutil = new UserUtil();
         //return $userutil->setDefaultList( $entity, $count, $user, $name );
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $entity = $userSecUtil->setDefaultList( $entity, $count, $user, $name );
         $entity->setType('default');
         return $entity;
@@ -2652,12 +2652,12 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateSiteParameters() {
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         return $userServiceUtil->generateSiteParameters();
     }
 
     public function generateDefaultOrgGroupSiteParameters() {
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -4660,7 +4660,7 @@ class AdminController extends OrderAbstractController
     public function generateResLabs() {
 
         $username = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4913,7 +4913,7 @@ class AdminController extends OrderAbstractController
 
     public function generateLocations() {
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -7404,7 +7404,7 @@ class AdminController extends OrderAbstractController
     }
     public function populateClassUrl() {
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
         $query = $repository->createQueryBuilder('logger')
@@ -8819,7 +8819,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $count = $formNodeUtil->generateFormNode();
 
         $this->get('session')->getFlashBag()->add(
@@ -8840,7 +8840,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $count = $formNodeUtil->generateDermatopathologyFormNode();
 
         $this->get('session')->getFlashBag()->add(
@@ -8861,7 +8861,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $formNodeUtil->createTestFormNodes();
 
         exit("Test Form Node Tree generated");
@@ -8876,7 +8876,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $userServiceUtil->createCrons();
 
         $this->get('session')->getFlashBag()->add(
@@ -8897,7 +8897,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $res = $userServiceUtil->createStatusCronLinux();
 
@@ -8922,7 +8922,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         //add test job
         $res = $userServiceUtil->createTestStatusCronLinux();
@@ -8945,7 +8945,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         if( $userServiceUtil->isWindows() ){
             $this->get('session')->getFlashBag()->add(
@@ -9807,8 +9807,7 @@ class AdminController extends OrderAbstractController
     //Run after generateRoles
     public function generateTransResProjectSpecialty() {
 
-        //$userSecUtil = $this->get('user_security_utility');
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -9893,8 +9892,7 @@ class AdminController extends OrderAbstractController
     }
 
     public function generateWorkQueueList() {
-        //$userSecUtil = $this->get('user_security_utility');
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -10954,7 +10952,7 @@ class AdminController extends OrderAbstractController
     //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
     public function generateTransResRequestCategoryType() {
 
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -11261,7 +11259,7 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('AppOrderformBundle:Patient');
@@ -11508,16 +11506,6 @@ class AdminController extends OrderAbstractController
 
         exit($msg);
     }
-
-
-//    public function createAdminAntibodyList($filename) {
-//        $importUtil = $this->get('transres_import');
-//        $res = $importUtil->createAntibodyList($filename);
-//        //exit("generateAntibodyListAction: Finished with res=".$res);
-//        return $res;
-//    }
-
-
 
 
 //    /**

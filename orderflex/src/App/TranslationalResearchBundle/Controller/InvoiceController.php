@@ -52,8 +52,8 @@ class InvoiceController extends OrderAbstractController
         $user = $this->getUser();
         //exit('user='.$user);
 
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
         $advancedFilter = 0;
         $title = "List of Invoices";
@@ -815,8 +815,8 @@ class InvoiceController extends OrderAbstractController
         //}
 
         //$em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $user = $this->getUser();
         //$user = null; //testing
         $cycle = "new";
@@ -912,7 +912,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
         //1) try to find by oid
@@ -983,8 +983,8 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
@@ -1209,7 +1209,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 
         $form = $this->createDeleteForm($invoice);
         $form->handleRequest($request);
@@ -1242,10 +1242,10 @@ class InvoiceController extends OrderAbstractController
     public function generateInvoicePdfAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
-        $transresPdfUtil = $this->get('transres_pdf_generator');
-        $transresRequestUtil = $this->get('transres_request_util');
-        //$transresPermissionUtil = $this->get('transres_permission_util');
-        $transresUtil = $this->get('transres_util');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresPermissionUtil = $this->container->get('transres_permission_util');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
 
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1318,7 +1318,7 @@ class InvoiceController extends OrderAbstractController
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         //download: user or localhost
         //$user = $this->getUser();
@@ -1400,8 +1400,8 @@ class InvoiceController extends OrderAbstractController
         //$logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         //$userSecUtil = $this->container->get('user_security_utility');
-        $transresRequestUtil = $this->get('transres_request_util');
-        //$transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresUtil = $this->container->get('transres_util');
 
         //$em = $this->getDoctrine()->getManager();
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1483,7 +1483,7 @@ class InvoiceController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if( !$transresRequest ) {
             $transresRequest = $invoice->getTransresRequest();
@@ -1552,7 +1552,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $userDownloadUtil = $this->get('user_download_utility');
+        $userDownloadUtil = $this->container->get('user_download_utility');
         $em = $this->getDoctrine()->getManager();
         $newline = "\n";
         $res = "NotOK";
@@ -1573,8 +1573,8 @@ class InvoiceController extends OrderAbstractController
      */
     public function sendByEmailAction( Request $request, $oid ) {
         //$user = $this->getUser();
-        $transresRequestUtil = $this->get('transres_request_util');
-        //$transresPermissionUtil = $this->get('transres_permission_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresPermissionUtil = $this->container->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
 
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1616,9 +1616,9 @@ class InvoiceController extends OrderAbstractController
 
     public function processInvoiceAfterSave( $invoice, $form, $user ) {
 
-        $transresPdfUtil = $this->get('transres_pdf_generator');
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
 
         $newline = "<br>"; //"\n";
         $msg = "";
@@ -1696,8 +1696,8 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         $user = $this->getUser();
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
         $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1774,9 +1774,9 @@ class InvoiceController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
-        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
 
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -1921,7 +1921,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
@@ -1949,7 +1949,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
@@ -1980,7 +1980,7 @@ class InvoiceController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 //
-//        $transresRequestUtil = $this->get('transres_request_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
 //
 //        $routeName = $request->get('_route');
 //        $showSummary = false;

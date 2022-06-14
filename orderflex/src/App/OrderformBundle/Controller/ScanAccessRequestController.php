@@ -51,7 +51,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestCreatePlainAction(Request $request)
     {
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
 
@@ -99,7 +99,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $user = $this->getUser();
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED',$user) ) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
         }

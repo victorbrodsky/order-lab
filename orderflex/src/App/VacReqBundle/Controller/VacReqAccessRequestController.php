@@ -176,13 +176,13 @@ class VacReqAccessRequestController extends AccessRequestController
 //    }
 
     public function getOrganizationalGroup() {
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $organizationalGroups = $vacreqUtil->getAllGroups();
         return $organizationalGroups;
     }
 
     public function getGroupNote() {
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $note = "<b>"."Please choose an appropriate 'Organizational Group' below. Your vacation/business requests will be reviewed by this group's approvers."."</b>";
 
         $organizationalGroupArr = array();

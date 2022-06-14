@@ -730,7 +730,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         //$user = $this->getUser();
         $cycle = "new";
 

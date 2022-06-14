@@ -781,7 +781,7 @@ class ScanUtilController extends UtilController {
         }
 
         //get default returnLocation option
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $returnLocations = $orderUtil->getOrderReturnLocations(null,$providerid,$proxyid);
         $preferredLocations = $returnLocations['preferred_choices'];
 
@@ -868,7 +868,7 @@ class ScanUtilController extends UtilController {
 //
 //        $em = $this->getDoctrine()->getManager();
 //        $loggedUser = $this->getUser();
-//        $securityUtil = $this->get('user_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //        $cycle = $request->query->get('cycle');
 //
 //        $output = array();
@@ -1123,7 +1123,7 @@ class ScanUtilController extends UtilController {
                 $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
             } else {
                 //$user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
-                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil = $this->container->get('user_security_utility');
                 $user = $userSecUtil->getUserByUserstr($providerId);
             }
 

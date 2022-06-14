@@ -727,7 +727,7 @@ class ScanAdminController extends AdminController
         }
 
         //1) remove messages with patients: danger !!!
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $removedMessagesCount = $orderUtil->removeAllOrdersPatients();
 
         $this->get('session')->getFlashBag()->add(

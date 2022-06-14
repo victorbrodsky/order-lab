@@ -70,7 +70,7 @@ class DefaultController extends OrderAbstractController
 
         //testing
         //metaphone (if enabled)
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->metaphoneTest();
 
 //        $msg = "Notify Test!!!";
@@ -274,8 +274,8 @@ class DefaultController extends OrderAbstractController
 
         //exit("This is a one time run method");
 
-        $formNodeUtil = $this->get('user_formnode_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -346,7 +346,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -404,13 +404,13 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $res = $crnUtil->updateTextHtml();
 
         exit("EOF updateTextHtmlAction. Res=".$res);
 
 //        //$em = $this->getDoctrine()->getManager();
-//        //$userSecUtil = $this->get('user_security_utility');
+//        //$userSecUtil = $this->container->get('user_security_utility');
 //        //$user = $this->getUser();
 //
 //        //$objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
@@ -666,7 +666,7 @@ class DefaultController extends OrderAbstractController
 //    //$name - "History/Findings", "Impression/Outcome"
 //    public function getSourceFormNodeByName($name) {
 //        $em = $this->getDoctrine()->getManager();
-//        $formNodeUtil = $this->get('user_formnode_utility');
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
 //
 //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
 //
@@ -691,7 +691,7 @@ class DefaultController extends OrderAbstractController
 //    //$name - "History/Findings HTML", "Impression/Outcome HTML"
 //    public function getDestinationFormNodeByName($name) {
 //        $em = $this->getDoctrine()->getManager();
-//        $formNodeUtil = $this->get('user_formnode_utility');
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
 //
 //        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 //

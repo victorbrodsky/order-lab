@@ -66,7 +66,7 @@ class ApproverController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $vacreqUtil = $this->vacreqUtil;
         $user = $this->getUser();
         //$em = $this->getDoctrine()->getManager();
@@ -156,7 +156,7 @@ class ApproverController extends OrderAbstractController
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
         //vacreq_util
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $vacreqUtil = $this->vacreqUtil;
         //$vacreqUtil = $this->container->get('vacreq_util');
         $settings = $vacreqUtil->getSettingsByInstitution($groupId);
@@ -217,7 +217,7 @@ class ApproverController extends OrderAbstractController
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         //vacreq_util
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $vacreqUtil = $this->vacreqUtil;
         $settings = $vacreqUtil->getSettingsByInstitution($institutionId);
 
@@ -267,7 +267,7 @@ class ApproverController extends OrderAbstractController
         }
         //echo "approvers=".count($approvers)."<br>";
 
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
         if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $institutionId) == false ) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
@@ -331,7 +331,7 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //check if logged in user has approver role for $instid
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
         if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
@@ -350,11 +350,11 @@ class ApproverController extends OrderAbstractController
         }
 
         //Original Roles not associated with this site
-        //$securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$originalOtherRoles = $securityUtil->getUserRolesBySite( $subjectUser, 'vacreq', false );
 
         //Roles
-        //$securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
 
         $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findById($roleId);
@@ -410,7 +410,7 @@ class ApproverController extends OrderAbstractController
         $user = $this->getUser();
 
         //check if logged in user has approver role for $instid
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
         if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
@@ -434,7 +434,7 @@ class ApproverController extends OrderAbstractController
             $roleArr = array();
         }
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $res = $securityUtil->addOnlySiteRoles($subjectUser,$roleArr,'vacreq');
 
         if( $res ) {
@@ -490,7 +490,7 @@ class ApproverController extends OrderAbstractController
         $user = $this->getUser();
 
         //check if logged in user has approver role for $instid
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
         if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
@@ -563,7 +563,7 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //check if logged in user has approver role for $instid
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
         if( $this->vacreqUtil->hasRoleNameAndGroup($partialRoleNames, $instid) == false ) {
             exit('no permission');
@@ -947,7 +947,7 @@ class ApproverController extends OrderAbstractController
         //$user = $this->getUser();
 
         //vacreq_util
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
@@ -1013,7 +1013,7 @@ class ApproverController extends OrderAbstractController
         }
 
         //vacreq_util
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
         if( !$entity ) {
@@ -1082,7 +1082,7 @@ class ApproverController extends OrderAbstractController
         $user = $this->getUser();
 
         //vacreq_util
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
 
         $userids = null;
 
@@ -1171,7 +1171,7 @@ class ApproverController extends OrderAbstractController
 
         //echo "groupId=".$groupId."<br>";
         $em = $this->getDoctrine()->getManager();
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
 
         //find role submitters by institution
         //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);

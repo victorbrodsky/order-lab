@@ -55,8 +55,8 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
-        //$securityUtil = $this->get('user_security_utility');
+        $crnUtil = $this->container->get('crn_util');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
 
         //$listname
@@ -157,7 +157,7 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
 
         //listing Accessions whose notes have been updated in the last 96 hours
@@ -229,7 +229,7 @@ class CrnAccessionController extends OrderAbstractController {
     public function createAccessionForm() {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$crnUtil = $this->get('crn_util');
+        //$crnUtil = $this->container->get('crn_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('crn.sitename');
 
@@ -269,7 +269,7 @@ class CrnAccessionController extends OrderAbstractController {
         $accessionNumber = trim((string)$request->get('accessionnumber'));
         $accessionType = trim((string)$request->get('accessiontype'));
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);
 
         $patientInfo = null;
@@ -362,7 +362,7 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);

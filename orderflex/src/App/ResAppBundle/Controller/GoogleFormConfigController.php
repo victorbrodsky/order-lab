@@ -105,7 +105,7 @@ class GoogleFormConfigController extends OrderAbstractController
             //$action = $this->generateUrl('resapp_update', array('id' => $entity->getId()));
         }
 
-        $resappUtil = $this->get('resapp_util');
+        $resappUtil = $this->container->get('resapp_util');
         $resTypes = $resappUtil->getResidencyTypesByInstitution(true);
         $resVisaStatus = $resappUtil->getResidencyVisaStatuses(true);
 

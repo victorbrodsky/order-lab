@@ -54,8 +54,8 @@ class TransResSiteParametersController extends OrderAbstractController
 //        }
 //
 //        //$em = $this->getDoctrine()->getManager();
-//        //$transresUtil = $this->get('transres_util');
-//        $transresRequestUtil = $this->get('transres_request_util');
+//        //$transresUtil = $this->container->get('transres_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
 //        $user = $this->getUser();
 //        //$user = null; //testing
 //        $cycle = "new";
@@ -106,7 +106,7 @@ class TransResSiteParametersController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $cycle = "show";
 
         $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
@@ -138,7 +138,7 @@ class TransResSiteParametersController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $cycle = "show";
 
         $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
@@ -172,8 +172,8 @@ class TransResSiteParametersController extends OrderAbstractController
 
         $cycle = "edit";
         $user = $this->getUser();
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
         $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
@@ -235,7 +235,7 @@ class TransResSiteParametersController extends OrderAbstractController
     public function createSiteParameterForm( $siteParameter, $cycle ) {
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
         
         $params = array(

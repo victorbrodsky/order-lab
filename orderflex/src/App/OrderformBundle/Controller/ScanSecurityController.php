@@ -55,7 +55,7 @@ class ScanSecurityController extends SecurityController
     {
         return parent::idlelogoutAction($request,$flag);
 
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $sitename = $this->getParameter('scan.sitename');
 //        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }

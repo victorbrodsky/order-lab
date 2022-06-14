@@ -78,7 +78,7 @@ class FellAppSecurityController extends SecurityController
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $sitename = $this->getParameter('fellapp.sitename');
 //        return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }

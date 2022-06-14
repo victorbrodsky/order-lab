@@ -170,7 +170,7 @@ class LoggerController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get site name from abbreviation $sitename
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $sitenameObject = $userSecUtil->getSiteBySitename($sitename);
         if( $sitenameObject ) {
             $sitenameFull = $sitenameObject->getName();
@@ -723,7 +723,7 @@ class LoggerController extends OrderAbstractController
     }
 
     protected function createLogger(Request $request, $sitename) {
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $site = $userSecUtil->getSiteBySitename($sitename);
         $entity = new Logger($site);
         $form = $this->createCreateForm($entity, $sitename);
@@ -777,7 +777,7 @@ class LoggerController extends OrderAbstractController
      */
     public function newAction()
     {
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $site = $userSecUtil->getSiteBySitename($this->getParameter('employees.sitename'));
 
         $entity = new Logger($site);

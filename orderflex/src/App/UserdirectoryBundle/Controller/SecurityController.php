@@ -117,7 +117,7 @@ class SecurityController extends OrderAbstractController
         /////////////// set browser info ///////////////
         //$request = $this->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $browserInfo = $userServiceUtil->browserCheck();
         $session->set('browserWarningInfo', $browserInfo);
         /////////////// EOF set browser info ///////////////
@@ -613,7 +613,7 @@ class SecurityController extends OrderAbstractController
         $token = new UsernamePasswordToken($username, $password, $providerKey);
 
         //$authUtil = new AuthUtil($this->container,$em);
-        $authUtil = $this->get('authenticator_utility');
+        $authUtil = $this->container->get('authenticator_utility');
 
         $authUSer = $authUtil->authenticateUserToken($user,$token);
 

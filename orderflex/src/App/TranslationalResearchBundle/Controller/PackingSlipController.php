@@ -62,7 +62,7 @@ class PackingSlipController extends OrderAbstractController
     public function generatePackingSlipAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
-        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -301,7 +301,7 @@ class PackingSlipController extends OrderAbstractController
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         //download: user or localhost
         //$user = $this->getUser();

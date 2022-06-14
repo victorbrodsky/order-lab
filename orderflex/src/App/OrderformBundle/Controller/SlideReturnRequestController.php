@@ -55,10 +55,10 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $user = $this->getUser();
 
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -313,7 +313,7 @@ class SlideReturnRequestController extends OrderAbstractController
                 throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
             }
 
-            $securityUtil = $this->get('user_security_utility');
+            $securityUtil = $this->container->get('user_security_utility');
             if( $message && !$securityUtil->isUserAllowOrderActions($message, $user, array('show')) ) {
                 return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
@@ -338,15 +338,15 @@ class SlideReturnRequestController extends OrderAbstractController
         $slideReturnRequest->setMessage($message);
 
         $slideReturnRequest->getMessage()->setProvider($user);
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $orderUtil->setLastOrderWithProxyuser($user,$slideReturnRequest->getMessage());
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $permittedInst = $securityUtil->getUserPermittedInstitutions($user);
 
         $permittedInst = $orderUtil->getAllScopeInstitutions($permittedInst,$message);
 
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
 
         $params['em'] = $this->getDoctrine()->getManager();
         $params['user'] = $user;
@@ -599,7 +599,7 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $user = $this->getUser();
         $message = $entity->getMessage();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( $message && !$securityUtil->hasUserPermission($message,$user,array("Union"),array("changestatus")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }

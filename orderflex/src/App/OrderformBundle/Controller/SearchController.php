@@ -78,7 +78,7 @@ class SearchController extends OrderAbstractController {
 
         if( $searchtype != "" && $search != "" ) {
 
-            $searchUtil = $this->get('search_utility');
+            $searchUtil = $this->container->get('search_utility');
 
             $object = 'patient';
             $params = array('request'=>$request,'object'=>$object,'searchtype'=>$searchtype,'search'=>$search,'exactmatch'=>false);

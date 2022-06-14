@@ -103,7 +103,7 @@ class CrnPatientController extends PatientController {
         //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrntype = trim((string)$request->get('mrntype'));
@@ -220,7 +220,7 @@ class CrnPatientController extends PatientController {
         //ini_set('memory_limit', '-1');
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrntype = trim((string)$request->get('mrntype'));
@@ -362,7 +362,7 @@ class CrnPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
         $cycle = "edit";
@@ -551,7 +551,7 @@ class CrnPatientController extends PatientController {
             $em->flush();
 
             //////////////// TODO: update all associated messages patient info for CSV export ////////////////
-            //$formNodeUtil = $this->get('user_formnode_utility');
+            //$formNodeUtil = $this->container->get('user_formnode_utility');
             $em = $this->getDoctrine()->getManager();
 
             $repository = $em->getRepository('AppOrderformBundle:Message');
@@ -635,7 +635,7 @@ class CrnPatientController extends PatientController {
     public function createPatientSingleForm($patient,$singlePatient,$cycle) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$crnUtil = $this->get('crn_util');
+        //$crnUtil = $this->container->get('crn_util');
 
         //echo "Patient=".$patient->getId()."<br>";
 
@@ -790,7 +790,7 @@ class CrnPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         //$listname
@@ -888,7 +888,7 @@ class CrnPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         //listing patients whose notes have been updated in the last 96 hours
@@ -1034,7 +1034,7 @@ class CrnPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
@@ -1092,7 +1092,7 @@ class CrnPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Previous Entries";
@@ -1385,7 +1385,7 @@ class CrnPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Outstanding/Pending To Do Tasks";
@@ -1579,7 +1579,7 @@ class CrnPatientController extends PatientController {
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('crn.sitename');
 
@@ -1627,7 +1627,7 @@ class CrnPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
 
         $patientId = trim((string)$request->get('patientId'));
         //echo "patientId=$patientId<br>";
@@ -1666,7 +1666,7 @@ class CrnPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$crnUtil = $this->get('crn_util');
+        //$crnUtil = $this->container->get('crn_util');
 
         $encounterId = trim((string)$request->get('encounterId'));
         //echo "encounterId=$encounterId<br>";

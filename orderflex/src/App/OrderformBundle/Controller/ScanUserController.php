@@ -71,7 +71,7 @@ class ScanUserController extends UserController
      */
     public function showUserAction(Request $request, $id)
     {
-        //$secUtil = $this->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
         if( false === $this->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -104,7 +104,7 @@ class ScanUserController extends UserController
      */
     public function editUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -137,7 +137,7 @@ class ScanUserController extends UserController
      */
     public function updateUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -147,7 +147,7 @@ class ScanUserController extends UserController
 
 
         ///////////////////////// moved to general user controller /////////////////////////
-        $scanSecUtil = $this->get('user_security_utility');
+        $scanSecUtil = $this->container->get('user_security_utility');
         $scanSiteSettings = $scanSecUtil->getUserPerSiteSettings($id);
 
         //get originals collections
@@ -310,7 +310,7 @@ class ScanUserController extends UserController
      */
     public function showScanSettingsAction($id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -346,7 +346,7 @@ class ScanUserController extends UserController
         );
     }
     public function getScanSettingsForm($id,$cycle) {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
 
         $disabled = true;
 
@@ -412,7 +412,7 @@ class ScanUserController extends UserController
 
         $user = $this->getUser();
 
-        $secUtil = $secUtil = $this->get('user_security_utility');
+        $secUtil = $secUtil = $this->container->get('user_security_utility');
 
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );

@@ -296,7 +296,7 @@ class UtilController extends OrderAbstractController {
      * @Route("/common/calllogpatientlists", name="employees_get_calllogpatientlists", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getCalllogPatientListsAction(Request $request) {
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $patientLists = $calllogUtil->getDefaultPatientLists();
 
         $output = array();
@@ -316,7 +316,7 @@ class UtilController extends OrderAbstractController {
      * @Route("/common/crnpatientlists", name="employees_get_crnpatientlists", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getCrnPatientListsAction(Request $request) {
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         $patientLists = $crnUtil->getDefaultPatientLists();
 
         $output = array();
@@ -337,7 +337,7 @@ class UtilController extends OrderAbstractController {
      * @Route("/common/accessionlists", name="employees_get_accessionlists", methods={"GET","POST"}, options={"expose"=true})
      */
     public function getAccessionListsAction(Request $request) {
-        $scanorderUtil = $this->get('scanorder_utility');
+        $scanorderUtil = $this->container->get('scanorder_utility');
         //Accession list currently is level=1
         $level = 1;
         $accessionLists = $scanorderUtil->getDefaultAccessionLists($level);
@@ -1240,7 +1240,7 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //$authUtil = new AuthUtil($this->container,$em);
-        $authUtil = $this->get('authenticator_utility');
+        $authUtil = $this->container->get('authenticator_utility');
         
         //search this user if exists in ldap directory
         //$searchRes might be -1 => can not bind to LDAP server, meaning running on testing localhost outside cornell.edu network => user is ok
@@ -1525,7 +1525,7 @@ class UtilController extends OrderAbstractController {
 
         //$encoderService = $this->get('security.encoder_factory');
         //$encoder = $encoderService->getEncoder($user);
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$encoder = $userServiceUtil->getUserEncoder($user);
         $encoder = $this->get('security.password_encoder');
 
@@ -1560,7 +1560,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $loggedUser = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $cycle = $request->query->get('cycle');
 
         $output = array();

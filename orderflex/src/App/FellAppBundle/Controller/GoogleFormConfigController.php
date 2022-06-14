@@ -105,7 +105,7 @@ class GoogleFormConfigController extends OrderAbstractController
             //$action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
-        $fellappUtil = $this->get('fellapp_util');
+        $fellappUtil = $this->container->get('fellapp_util');
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         $fellVisaStatus = $fellappUtil->getFellowshipVisaStatuses(true);
 

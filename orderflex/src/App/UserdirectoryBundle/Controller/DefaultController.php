@@ -149,7 +149,7 @@ class DefaultController extends OrderAbstractController
 //        if( !$this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
 //            return null;
 //        }
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('employees.sitename'),AccessRequest::STATUS_ACTIVE);
 //        return $accessreqs;
 //    }

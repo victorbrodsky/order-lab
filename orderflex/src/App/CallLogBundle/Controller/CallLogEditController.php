@@ -47,12 +47,12 @@ class CallLogEditController extends CallEntryController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$user = $this->getUser();
-        //$securityUtil = $this->get('user_security_utility');
-        //$userSecUtil = $this->get('user_security_utility');
-        //$orderUtil = $this->get('scanorder_utility');
-        //$calllogUtil = $this->get('calllog_util');
+        //$securityUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$orderUtil = $this->container->get('scanorder_utility');
+        //$calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
@@ -81,10 +81,10 @@ class CallLogEditController extends CallEntryController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
@@ -131,8 +131,8 @@ class CallLogEditController extends CallEntryController
 
     public function deleteMessage( $message, $actionStr, $request, $testing=false ) {
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         if( $message->getMessageStatus()->getName()."" != "Deleted" ) {
@@ -187,10 +187,10 @@ class CallLogEditController extends CallEntryController
         //ini_set('memory_limit', '5120M');
         //ini_set('memory_limit', '-1');
 
-        $userSecUtil = $this->get('user_security_utility');
-        $calllogUtil = $this->get('calllog_util');
-        $securityUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $calllogUtil = $this->container->get('calllog_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -420,7 +420,7 @@ class CallLogEditController extends CallEntryController
         $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
 
         //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
         $eventType = "Call Log Book Entry Edit Accessed";
         $eventStr = "Call Log Book Entry ID#".$message->getMessageOidVersion()." has been viewed on the edit page by ".$user;
@@ -470,10 +470,10 @@ class CallLogEditController extends CallEntryController
         //exit('update entry');
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
@@ -826,7 +826,7 @@ class CallLogEditController extends CallEntryController
                 //$em->flush($message);
 
                 //process form nodes
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
@@ -945,7 +945,7 @@ class CallLogEditController extends CallEntryController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
 
         $messageId = trim((string)$request->get('messageId'));
         $latestNextMessageVersion = trim((string)$request->get('latestNextMessageVersion')); //next message version, that message will have after submit

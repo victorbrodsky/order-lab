@@ -100,8 +100,8 @@ class TransResListController extends ListController
         
         //exit('transres post ProcessList');
 
-        //$userSecUtil = $this->get('user_security_utility');
-        $transresUtil = $this->get('transres_util');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
 
         if( $entity instanceof SpecialtyList ) {
             //Use this only for SpecialtyList
@@ -213,7 +213,7 @@ class TransResListController extends ListController
         //echo "ids=".$ids."<br>";
         //exit('111');
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $search = $request->get('search');
         $linkToListId = $request->get('linkToListId');
@@ -231,7 +231,7 @@ class TransResListController extends ListController
 
         $entityClass = $mapper['fullClassName'];
 
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 
         $fileName = "fee_schedule_list".".xlsx";
 

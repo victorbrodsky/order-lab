@@ -36,7 +36,7 @@ class TestController extends TestBaseController
 
         $msg = "Container Test";
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->container->get('calllog_util');
         $user = $this->getUser();
 
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());

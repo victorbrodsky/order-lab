@@ -90,7 +90,7 @@ class TelephonyController extends OrderAbstractController {
     public function verifyMobileCodeAction(Request $request, $verificationCode=null) {
 
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         //$user = $this->getUser(); //user here is undefined
 
         //testing
@@ -278,7 +278,7 @@ class TelephonyController extends OrderAbstractController {
 
         try {
             $em = $this->getDoctrine()->getManager();
-            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil = $this->container->get('user_service_utility');
 
             // Get data from session
             //$data = $this->get('session')->get('user');
@@ -405,7 +405,7 @@ class TelephonyController extends OrderAbstractController {
     public function verifyMobileAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->getUser();
 
         //Testing
@@ -503,7 +503,7 @@ class TelephonyController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         // Get data
         //$verificationCode = $request->query->get('verificationCode');
@@ -632,7 +632,7 @@ class TelephonyController extends OrderAbstractController {
     public function verifyAccountRequestMobileAjaxAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         //$user = $this->getUser();
 
         $userRequest = NULL;
@@ -700,7 +700,7 @@ class TelephonyController extends OrderAbstractController {
      */
     public function verifyAccountRequestCodeAjaxAction(Request $request)
     {
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         $userRequest = NULL;

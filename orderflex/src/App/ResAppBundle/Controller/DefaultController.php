@@ -75,7 +75,7 @@ class DefaultController extends OrderAbstractController
 //        }
 
 //        //testing extract pdf as array of keys
-        //$resappPdfUtil = $this->get('resapp_pdfutil');
+        //$resappPdfUtil = $this->container->get('resapp_pdfutil');
         //$keyFieldArr = $resappPdfUtil->getKeyFieldArr();
         //dump($keyFieldArr);
 //        $path = "C:\\Users\\ch3\\Documents\\MyDocs\\WCMC\\ORDER\\ResidencyImport\\Test1\\StevenAdams_Original_MY_ERAS_APPLICATION_2020-10-23-124716_4470ce61-5d2c-4b8d-b163-547adc95123d.pdf";
@@ -124,7 +124,7 @@ class DefaultController extends OrderAbstractController
 //        echo "seasonStartDate=$seasonStartDate, seasonEndDate=$seasonEndDate <br>";
 //        echo "residencyStartDate=$residencyStartDate, residencyEndDate=$residencyEndDate <br>";
 //
-//        $resappPdfUtil = $this->get('resapp_pdfutil');
+//        $resappPdfUtil = $this->container->get('resapp_pdfutil');
 //        $resapps = $resappPdfUtil->getEnabledResapps();
 //        echo "count=".count($resapps)."<br>";
 //        foreach($resapps as $resapp) {
@@ -162,7 +162,7 @@ class DefaultController extends OrderAbstractController
      */
     public function testGoogleFileAction( Request $request ) {
 
-        //$resappRecLetterUtil = $this->get('resapp_rec_letter_util');
+        //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         //$result2 = $resappRecLetterUtil->processResRecLetterFromGoogleDrive();
         //echo $result2."<br>";
 
@@ -278,7 +278,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('resapp.sitename').'-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year

@@ -107,7 +107,7 @@ class RequestIndexController extends OrderAbstractController
 //                }
 //            }
 //        }
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $redirectArr = $vacreqUtil->redirectIndex($request);
         if( $redirectArr ) {
             return $this->redirect(
@@ -116,7 +116,7 @@ class RequestIndexController extends OrderAbstractController
         }
         ///////// EOF redirect to floating list /////////
 
-        //$vacreqUtil = $this->get('vacreq_util');
+        //$vacreqUtil = $this->container->get('vacreq_util');
 
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
@@ -213,7 +213,7 @@ class RequestIndexController extends OrderAbstractController
 //                }
 //            }
 //        }
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $redirectArr = $vacreqUtil->redirectIndex($request);
         if( $redirectArr ) {
             return $this->redirect(
@@ -238,7 +238,7 @@ class RequestIndexController extends OrderAbstractController
 
     public function listRequests( $params, $request ) {
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
@@ -545,7 +545,7 @@ class RequestIndexController extends OrderAbstractController
     public function processFilter( $dql, $request, $params ) {
 
         $currentUser = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $dqlParameters = array();
         $filterRes = array();
@@ -678,7 +678,7 @@ class RequestIndexController extends OrderAbstractController
             );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
 
         //tentative institutions

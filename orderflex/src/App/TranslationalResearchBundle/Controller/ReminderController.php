@@ -32,7 +32,7 @@ class ReminderController extends OrderAbstractController
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $transresReminderUtil = $this->get('transres_reminder_util');
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
         $showSummary = false;
@@ -112,7 +112,7 @@ class ReminderController extends OrderAbstractController
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $transresReminderUtil = $this->get('transres_reminder_util');
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
         $showSummary = false;
@@ -232,7 +232,7 @@ class ReminderController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
-        $transresReminderUtil = $this->get('transres_reminder_util');
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
 
         $routeName = $request->get('_route');
         $showSummary = true;

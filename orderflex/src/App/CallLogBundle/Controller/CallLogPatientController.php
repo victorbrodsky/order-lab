@@ -109,7 +109,7 @@ class CallLogPatientController extends PatientController {
         //ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrntype = trim((string)$request->get('mrntype'));
@@ -227,7 +227,7 @@ class CallLogPatientController extends PatientController {
         //ini_set('memory_limit', '-1');
 
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $mrntype = trim((string)$request->get('mrntype'));
@@ -369,7 +369,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
         $cycle = "edit";
@@ -558,7 +558,7 @@ class CallLogPatientController extends PatientController {
             $em->flush();
 
             //////////////// TODO: update all associated messages patient info for CSV export ////////////////
-            //$formNodeUtil = $this->get('user_formnode_utility');
+            //$formNodeUtil = $this->container->get('user_formnode_utility');
             $em = $this->getDoctrine()->getManager();
 
             $repository = $em->getRepository('AppOrderformBundle:Message');
@@ -642,7 +642,7 @@ class CallLogPatientController extends PatientController {
     public function createPatientSingleForm($patient,$singlePatient,$cycle) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->container->get('calllog_util');
 
         //echo "Patient=".$patient->getId()."<br>";
 
@@ -797,7 +797,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         //$listname
@@ -895,7 +895,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         //listing patients whose notes have been updated in the last 96 hours
@@ -1040,7 +1040,7 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
@@ -1098,7 +1098,7 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Previous Entries";
@@ -1396,7 +1396,7 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Outstanding/Pending To Do Tasks";
@@ -1591,7 +1591,7 @@ class CallLogPatientController extends PatientController {
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('calllog.sitename');
 
@@ -1639,7 +1639,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
 
         $patientId = trim((string)$request->get('patientId'));
         //echo "patientId=$patientId<br>";
@@ -1678,7 +1678,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->container->get('calllog_util');
 
         $encounterId = trim((string)$request->get('encounterId'));
         //echo "encounterId=$encounterId<br>";
@@ -1760,7 +1760,7 @@ class CallLogPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         //$logger = $this->container->get('logger');
 
         //$all = $request->get('all');

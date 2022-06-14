@@ -120,7 +120,7 @@ class ScanOrderController extends OrderAbstractController {
         if( $routeName == "incoming-scan-orders" ) {
             $services = $this->getServiceFilter();
         } else {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $services = $orderUtil->generateUserFilterOptions($user);
         }
 
@@ -337,7 +337,7 @@ class ScanOrderController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
 
         //make uppercase: cancel, sumbit, un-cancel (Un-Cancel)
         //$status = str_replace("-"," ",$status);
@@ -504,7 +504,7 @@ class ScanOrderController extends OrderAbstractController {
         }
 
         //check if user has Per Site Settings
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             return $criteriastr;
@@ -580,7 +580,7 @@ class ScanOrderController extends OrderAbstractController {
 //        }
 //
 //        //check if user has Per Site Settings
-//        $securityUtil = $this->get('user_security_utility');
+//        $securityUtil = $this->container->get('user_security_utility');
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
 //        if( !$userSiteSettings ) {
 //            return $criteriastr;
@@ -654,7 +654,7 @@ class ScanOrderController extends OrderAbstractController {
 
         /////////// institution ///////////
         $user = $this->getUser();
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
 //        foreach( $user->getInstitutions() as $inst ) {
@@ -703,7 +703,7 @@ class ScanOrderController extends OrderAbstractController {
 
         /////////// institution ///////////
         $user = $this->getUser();
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
 //        foreach( $user->getInstitutions() as $inst ) {
@@ -758,7 +758,7 @@ class ScanOrderController extends OrderAbstractController {
         if( !$this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return null;
         }
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('scan.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
@@ -841,7 +841,7 @@ class ScanOrderController extends OrderAbstractController {
                 $count = $count . "+";
             }
 
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $site = $userSecUtil->getSiteBySitename($this->getParameter('scan.sitename'));
             $logger = new Logger($site);
             $logger->setUser($user);
@@ -894,7 +894,7 @@ class ScanOrderController extends OrderAbstractController {
                 $count = $count . "+";
             }
 
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $site = $userSecUtil->getSiteBySitename($this->getParameter('scan.sitename'));
 
             $logger = new Logger($site);
@@ -921,7 +921,7 @@ class ScanOrderController extends OrderAbstractController {
 
     public function getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 
@@ -1223,7 +1223,7 @@ class ScanOrderController extends OrderAbstractController {
 
     public function getDQL( $repository, $service, $filter, $search, $routeName, $withSearch = false ) {
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 
@@ -1313,12 +1313,12 @@ class ScanOrderController extends OrderAbstractController {
             switch( $filter ) {
 
                 case "With New Comments":
-                    $orderUtil = $this->get('scanorder_utility');
+                    $orderUtil = $this->container->get('scanorder_utility');
                     $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr('new_comments',$commentFlag) . " ) ";
                     $filterStr = $newCommentsCriteriaStr;
                     break;
                 case "With Comments":
-                    $orderUtil = $this->get('scanorder_utility');
+                    $orderUtil = $this->container->get('scanorder_utility');
                     $newCommentsCriteriaStr = "( " . $orderUtil->getCommentsCriteriaStr('all_comments',$commentFlag) . " ) ";
                     $filterStr = $newCommentsCriteriaStr;
                     break;
@@ -1685,7 +1685,7 @@ class ScanOrderController extends OrderAbstractController {
 
         /////////// institution ///////////
         if( $institution === false ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             //$dql->leftJoin("message.institution", "institution");
             $criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr);
         }

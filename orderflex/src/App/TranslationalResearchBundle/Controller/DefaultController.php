@@ -25,8 +25,8 @@ class DefaultController extends OrderAbstractController
     public function aboutAction( Request $request ) {
 
         $em = $this->getDoctrine()->getManager();
-        $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
 
         //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->browserCheck();
@@ -36,7 +36,7 @@ class DefaultController extends OrderAbstractController
         //$test = new DummyClass();
 
         //Work Request ID APCP756-REQ17009(FROM Original State 'completedNotified'): 'progress' (TO) transition not found by name pendingHistology_completedNotified with code0
-//        $transresRequestUtil = $this->get('transres_request_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
 //        $transitionName = "pendingHistology_completedNotified";
 //        $statMachineType = "progress";
 //        $em = $this->getDoctrine()->getManager();
@@ -52,7 +52,7 @@ class DefaultController extends OrderAbstractController
 //        //testing isInvoiceAlreadySent($invoice)
 //        $em = $this->getDoctrine()->getManager();
 //        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid('APCP3353-REQ20459-V28');
-//        $transresRequestUtil = $this->get('transres_request_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
 //        if( $transresRequestUtil->isInvoiceAlreadySent($invoice) ) {
 //            echo "invoice already sent<br>";
 //        } else {
@@ -71,17 +71,17 @@ class DefaultController extends OrderAbstractController
 //        $invoice->setDue($total);
 //        echo "total=$total<br>";
 //
-//        $transresRequestUtil = $this->get('transres_request_util');
+//        $transresRequestUtil = $this->container->get('transres_request_util');
 //        $subsidy = $transresRequestUtil->updateInvoiceSubsidy($invoice);
 //        echo "subsidy=$subsidy<br>";
 
         //testing transres ROLE hierarchy
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //$userSecUtil->roleHierarchyTest();
         //exit("EOF role testing");
 
 //        //testing review
-//        $transresUtil = $this->get('transres_util');
+//        $transresUtil = $this->container->get('transres_util');
 //        $em = $this->getDoctrine()->getManager();
 //        $user = $this->getUser();
 //        echo "$user<br>";
@@ -292,7 +292,7 @@ class DefaultController extends OrderAbstractController
             $em = $this->getDoctrine()->getManager();
             $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
 
-            $transresUtil = $this->get('transres_util');
+            $transresUtil = $this->container->get('transres_util');
             $transresIntakeForm = $transresUtil->getTransresSiteParameterFile("transresIntakeForms",NULL,$projectSpecialtyObject);
             if( $transresIntakeForm ) {
                 //$abspath = $transresIntakeForm->getAbsoluteUploadFullPath();
@@ -392,7 +392,7 @@ class DefaultController extends OrderAbstractController
             $projectSpecialty = $transresRequest->getProjectSpecialty();
         }
 
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $categories = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty);
 
         foreach ($categories as $category) {
@@ -575,8 +575,8 @@ class DefaultController extends OrderAbstractController
      */
     public function getTransResRecalculateProjectRemainingBudgetAjaxAction(Request $request) {
 
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
         //$projectId = $request->query->get('projectId');
@@ -800,7 +800,7 @@ class DefaultController extends OrderAbstractController
 
         $resArr = array();
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
 
         //Step 1: import projects and admin Comments from TRF_PROJECT_INFO
         if(0) {
@@ -939,7 +939,7 @@ class DefaultController extends OrderAbstractController
         set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '7168M');
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
         //use only 500 per time
         //$startRow = 2;
         if( $increment ) {
@@ -983,7 +983,7 @@ class DefaultController extends OrderAbstractController
 
         //exit("generateAntibodyList: ".$filename);
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
         $res = $importUtil->createAntibodyList($filename);
         //exit("generateAntibodyListAction: Finished with res=".$res);
 
@@ -1015,7 +1015,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
         $res = $importUtil->setAntibodyListProperties();
 
         //Flash
@@ -1048,7 +1048,7 @@ class DefaultController extends OrderAbstractController
 
         //exit("generateAntibodyList: ".$filename);
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
 
         $filename = "IHC_antibody-11_16Nov2018.csv";
         $res = $importUtil->updateInsertAntibodyList($filename);
@@ -1075,7 +1075,7 @@ class DefaultController extends OrderAbstractController
 
         exit("syncIdAntibodyListAction");
 
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
         $res = $importUtil->syncIdAntibodyList();
 
         //Flash
@@ -1293,7 +1293,7 @@ class DefaultController extends OrderAbstractController
 
         //$em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
 
         $form = $this->createFormBuilder()
             ->add('file', FileType::class)
@@ -1389,7 +1389,7 @@ class DefaultController extends OrderAbstractController
 
         //$em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
 
         $form = $this->createFormBuilder()
             ->add('file', FileType::class)
@@ -1730,7 +1730,7 @@ class DefaultController extends OrderAbstractController
 
         //$em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
 
         $form = $this->createFormBuilder()
             ->add('file', FileType::class)
@@ -1768,8 +1768,8 @@ class DefaultController extends OrderAbstractController
         //exit("emailNotationTestAction: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $notations = "
         <h4>Project Request:</h4>
@@ -1883,8 +1883,8 @@ class DefaultController extends OrderAbstractController
      */
     public function getTransResTestEmailNotationAjaxAction(Request $request) {
 
-        //$transresUtil = $this->get('transres_util');
-        //$transresRequestUtil = $this->get('transres_request_util');
+        //$transresUtil = $this->container->get('transres_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
         //$newline = "\n";
@@ -1987,7 +1987,7 @@ class DefaultController extends OrderAbstractController
     }
     public function getEmailNotation( $field, $project, $transresRequest, $invoice, $specialtyId) {
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 
         //$newline = "\n";
         //$newline = "<br>";
@@ -2049,8 +2049,8 @@ class DefaultController extends OrderAbstractController
         //exit("emailNotationTestAction: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
-        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName("AP/CP");
 

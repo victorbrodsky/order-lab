@@ -175,7 +175,7 @@ class TestController extends OrderAbstractController
      */
     public function googleFileAction( Request $request ) {
 
-        //$fellappRecLetterUtil = $this->get('fellapp_rec_letter_util');
+        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$result2 = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
         //echo $result2."<br>";
 

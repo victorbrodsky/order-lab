@@ -90,16 +90,16 @@ class MultiScanOrderController extends OrderAbstractController {
         $user = $this->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -124,7 +124,7 @@ class MultiScanOrderController extends OrderAbstractController {
 
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $permittedInstitutions = $orderUtil->getAllScopeInstitutions($permittedInstitutions,$entity);
 
         $params = array(
@@ -251,7 +251,7 @@ class MultiScanOrderController extends OrderAbstractController {
 
             //Add dataqualities to entity
             $dataqualities = $form->get('conflicts')->getData();
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
 
@@ -348,11 +348,11 @@ class MultiScanOrderController extends OrderAbstractController {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $orderUtil = $this->get('scanorder_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);
@@ -545,16 +545,16 @@ class MultiScanOrderController extends OrderAbstractController {
         $user = $this->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -627,7 +627,7 @@ class MultiScanOrderController extends OrderAbstractController {
         }
 
         //redirect by status
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $redirect = $orderUtil->redirectOrderByStatus($entity,$routeName);
         if( $redirect != null ) {
             return $redirect;

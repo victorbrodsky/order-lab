@@ -175,7 +175,7 @@ class ProjectFormNodeController extends ProjectController
             }
 
             //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil = $this->container->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
 //            //update project's irbExpirationDate
@@ -295,7 +295,7 @@ class ProjectFormNodeController extends ProjectController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -430,7 +430,7 @@ class ProjectFormNodeController extends ProjectController
 
             //process form nodes
             //TODO: 1) check and fix formnode update. 2) adding the same dropdown item on update
-            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil = $this->container->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
             //update project's irbExpirationDate and fundedAccountNumber
@@ -534,7 +534,7 @@ class ProjectFormNodeController extends ProjectController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $count = $transResFormNodeUtil->generateTransResFormNode();
 
         exit("Form Node Tree generated: ".$count);

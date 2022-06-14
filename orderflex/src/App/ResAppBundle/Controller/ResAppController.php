@@ -121,13 +121,13 @@ class ResAppController extends OrderAbstractController {
         }
 
         //$em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         //echo "resapp user ok <br>";
 
         //$user = $this->getUser();
         $resappUtil = $this->container->get('resapp_util');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $enableGoolge = false;
         $searchFlag = false;
@@ -727,7 +727,7 @@ class ResAppController extends OrderAbstractController {
 //        if( !$this->isGranted('ROLE_RESAPP_ADMIN') ) {
 //            return null;
 //        }
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('resapp.sitename'),AccessRequest::STATUS_ACTIVE);
 //        return $accessreqs;
 //    }
@@ -1099,7 +1099,7 @@ class ResAppController extends OrderAbstractController {
 //
 //        //ini_set('memory_limit', '3072M'); //3072M
 //
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $user = $this->getUser();
 //
 //        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
@@ -1228,7 +1228,7 @@ class ResAppController extends OrderAbstractController {
 //                $event = $event . "<br>" . implode("<br>", $removedCollections);
 //                $event = $event . $reportsDiffInfoStr;
 //                //echo "Diff event=".$event."<br>";
-//                //$userSecUtil = $this->get('user_security_utility');
+//                //$userSecUtil = $this->container->get('user_security_utility');
 //                $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,'Residency Application Updated');
 //            }
 //
@@ -2689,7 +2689,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        $resappRecLetterUtil = $this->get('resapp_rec_letter_util');
+        $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
 
         $result = $resappRecLetterUtil->processResRecLetterFromGoogleDrive();
 

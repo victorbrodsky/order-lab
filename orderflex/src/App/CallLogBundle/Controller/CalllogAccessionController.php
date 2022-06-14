@@ -56,8 +56,8 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
-        //$securityUtil = $this->get('user_security_utility');
+        $calllogUtil = $this->container->get('calllog_util');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
 
         //$listname
@@ -158,7 +158,7 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$securityUtil = $this->get('user_security_utility');
+        //$securityUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
 
         //listing Accessions whose notes have been updated in the last 96 hours
@@ -230,7 +230,7 @@ class CalllogAccessionController extends OrderAbstractController {
     public function createAccessionForm() {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->container->get('calllog_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('calllog.sitename');
 
@@ -270,7 +270,7 @@ class CalllogAccessionController extends OrderAbstractController {
         $accessionNumber = trim((string)$request->get('accessionnumber'));
         $accessionType = trim((string)$request->get('accessiontype'));
 
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $accession = $calllogUtil->findExistingAccession($accessionNumber,$accessionType);
 
         $patientInfo = null;
@@ -363,7 +363,7 @@ class CalllogAccessionController extends OrderAbstractController {
         }
 
         $scanorderUtil = $this->container->get('scanorder_utility');
-        $calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);

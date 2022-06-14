@@ -54,7 +54,7 @@ class FellAppUtilController extends OrderAbstractController
         }
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $warning = $fellappUtil->getRejectionAcceptanceEmailWarning($fellapp);
 

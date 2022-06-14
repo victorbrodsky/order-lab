@@ -47,12 +47,12 @@ class CrnEditController extends CrnEntryController
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$user = $this->getUser();
-        //$securityUtil = $this->get('user_security_utility');
-        //$userSecUtil = $this->get('user_security_utility');
-        //$orderUtil = $this->get('scanorder_utility');
-        //$crnUtil = $this->get('crn_util');
+        //$securityUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$orderUtil = $this->container->get('scanorder_utility');
+        //$crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
@@ -81,10 +81,10 @@ class CrnEditController extends CrnEntryController
             return $this->redirect( $this->generateUrl('crn-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
@@ -131,8 +131,8 @@ class CrnEditController extends CrnEntryController
 
     public function deleteMessage( $message, $actionStr, $request, $testing=false ) {
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
-        $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
 
         if( $message->getMessageStatus()->getName()."" != "Deleted" ) {
@@ -187,10 +187,10 @@ class CrnEditController extends CrnEntryController
         //ini_set('memory_limit', '5120M');
         //ini_set('memory_limit', '-1');
 
-        $userSecUtil = $this->get('user_security_utility');
-        $crnUtil = $this->get('crn_util');
-        $securityUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $crnUtil = $this->container->get('crn_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -411,7 +411,7 @@ class CrnEditController extends CrnEntryController
         $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
 
         //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
         $eventType = "Critical Result Notification Entry Edit Accessed";
         $eventStr = "Critical Result Notification Entry ID#".$message->getMessageOidVersion()." has been viewed on the edit page by ".$user;
@@ -461,10 +461,10 @@ class CrnEditController extends CrnEntryController
         //exit('update entry');
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
-        $userSecUtil = $this->get('user_security_utility');
-        $orderUtil = $this->get('scanorder_utility');
-        $crnUtil = $this->get('crn_util');
+        $securityUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
+        $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $testing = false;
@@ -817,7 +817,7 @@ class CrnEditController extends CrnEntryController
                 //$em->flush($message);
 
                 //process form nodes
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
@@ -936,7 +936,7 @@ class CrnEditController extends CrnEntryController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
 
         $messageId = trim((string)$request->get('messageId'));
         $latestNextMessageVersion = trim((string)$request->get('latestNextMessageVersion')); //next message version, that message will have after submit

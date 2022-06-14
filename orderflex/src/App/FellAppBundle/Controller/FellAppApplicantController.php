@@ -292,7 +292,7 @@ class FellAppApplicantController extends OrderAbstractController {
     public function sendInvitationEmail( $interview ) {
 
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         //$em = $this->getDoctrine()->getManager();
         $fellapp = $interview->getFellapp();
         $applicant = $fellapp->getUser();
@@ -400,7 +400,7 @@ class FellAppApplicantController extends OrderAbstractController {
         }
 
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . "<br>" . $emailStr;
@@ -495,7 +495,7 @@ class FellAppApplicantController extends OrderAbstractController {
         }
 
         $logger = $this->container->get('logger');
-        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         $emails = array();
 

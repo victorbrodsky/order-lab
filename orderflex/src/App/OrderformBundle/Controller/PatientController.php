@@ -92,7 +92,7 @@ class PatientController extends OrderAbstractController
      */
     public function indexAction(Request $request)
     {
-        $searchUtil = $this->get('search_utility');
+        $searchUtil = $this->container->get('search_utility');
         $object = 'patient';
         $params = array('request'=>$request,'object'=>$object);
         $res = $searchUtil->searchAction($params);
@@ -115,16 +115,16 @@ class PatientController extends OrderAbstractController
         $user = $this->getUser();
 
         //check if user has at least one institution
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -258,7 +258,7 @@ class PatientController extends OrderAbstractController
         //echo "fullname=".$entity->getFullPatientName(false)."<br>";
         //exit('1');
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             //exit("showPatient: no permission to show patient");
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -390,7 +390,7 @@ class PatientController extends OrderAbstractController
         }
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union"),array("edit")) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -527,7 +527,7 @@ class PatientController extends OrderAbstractController
         }
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         if ($entity && !$securityUtil->hasUserPermission($entity, $user, array("Union"), array("edit"))) {
             return $this->redirect($this->generateUrl('scan-nopermission'));
         }
@@ -743,7 +743,7 @@ class PatientController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $status = 'valid';
         $system = $securityUtil->getDefaultSourceSystem();
         $em = $this->getDoctrine()->getManager();
@@ -752,13 +752,13 @@ class PatientController extends OrderAbstractController
         //check if user has at least one institution
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
         $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
         if( count($permittedInstitutions) == 0 ) {
-            $orderUtil = $this->get('scanorder_utility');
+            $orderUtil = $this->container->get('scanorder_utility');
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -1061,7 +1061,7 @@ class PatientController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         $system = $securityUtil->getDefaultSourceSystem();
         $status = 'valid';
@@ -1596,7 +1596,7 @@ class PatientController extends OrderAbstractController
     public function createSpecificMessage( $messageCategoryStr ) {
 
         $em = $this->getDoctrine()->getManager();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         $userSecurity = $this->getUser();
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
@@ -1640,7 +1640,7 @@ class PatientController extends OrderAbstractController
         $message->setMessageCategory($category);
 
         //set the default institution; check if user has at least one institution
-        $orderUtil = $this->get('scanorder_utility');
+        $orderUtil = $this->container->get('scanorder_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);

@@ -55,7 +55,7 @@ class ResAppUtilController extends OrderAbstractController
         }
 
         $resappUtil = $this->container->get('resapp_util');
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $warning = $resappUtil->getRejectionAcceptanceEmailWarning($resapp);
 

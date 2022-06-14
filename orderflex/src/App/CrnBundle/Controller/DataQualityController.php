@@ -51,7 +51,7 @@ class DataQualityController extends CrnEntryController
 //    protected $crnUtil;
 //    public function __construct( CrnUtil $crnUtil ) {
 //        $this->crnUtil = $crnUtil;
-//        //$this->userServiceUtil = $this->get('user_service_utility');//user_service_utility;
+//        //$this->userServiceUtil = $this->container->get('user_service_utility');//user_service_utility;
 //    }
 
     /**
@@ -62,7 +62,7 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $title = "Merge Patient Records";
@@ -114,8 +114,8 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        //$securityUtil = $this->get('user_security_utility');
-        $crnUtil = $this->get('crn_util');
+        //$securityUtil = $this->container->get('user_security_utility');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $em = $this->getDoctrine()->getManager();
 
@@ -349,7 +349,7 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $system = $securityUtil->getDefaultSourceSystem($this->getParameter('crn.sitename'));
@@ -409,8 +409,8 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        //$securityUtil = $this->get('user_security_utility');
-        //$crnUtil = $this->get('crn_util');
+        //$securityUtil = $this->container->get('user_security_utility');
+        //$crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $em = $this->getDoctrine()->getManager();
 
@@ -453,8 +453,8 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        //$securityUtil = $this->get('user_security_utility');
-        //$crnUtil = $this->get('crn_util');
+        //$securityUtil = $this->container->get('user_security_utility');
+        //$crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $em = $this->getDoctrine()->getManager();
 
@@ -550,7 +550,7 @@ class DataQualityController extends CrnEntryController
     public function findAndEditPatientAction(Request $request) {
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         //$em = $this->getDoctrine()->getManager();
 
         $system = $securityUtil->getDefaultSourceSystem($this->getParameter('crn.sitename'));
@@ -639,7 +639,7 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         $title = "Merge Patient Records";
@@ -688,7 +688,7 @@ class DataQualityController extends CrnEntryController
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $crnUtil = $this->get('crn_util');
+        $crnUtil = $this->container->get('crn_util');
         //$crnUtil = $this->crnUtil;
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('crn.sitename');
@@ -750,7 +750,7 @@ class DataQualityController extends CrnEntryController
     {
 
         $user = $this->getUser();
-        //$crnUtil = $this->get('crn_util');
+        //$crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
         $error = false;

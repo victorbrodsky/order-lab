@@ -43,7 +43,7 @@ class DeidentifierUserController extends UserController
      */
     public function editUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }
@@ -63,7 +63,7 @@ class DeidentifierUserController extends UserController
      */
     public function updateUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         }

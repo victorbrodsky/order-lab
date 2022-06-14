@@ -1409,7 +1409,7 @@ class ProjectController extends OrderAbstractController
 
             //process form nodes
             if( $formnode ) {
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
                 $transresUtil->copyFormNodeFieldsToProject($project);
             }
@@ -1516,7 +1516,7 @@ class ProjectController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
 
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -1673,7 +1673,7 @@ class ProjectController extends OrderAbstractController
             //if specialty is changed
             if( $originalProjectSpecialty->getId() != $project->getProjectSpecialty()->getId() ) {
 
-                $transresPdfUtil = $this->get('transres_pdf_generator');
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
 
                 //eventlog
 //                $eventType = "Project Updated";
@@ -1715,7 +1715,7 @@ class ProjectController extends OrderAbstractController
 
             //process form nodes
             if( $formnode ) {
-                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
                 //update project's irbExpirationDate and fundedAccountNumber
                 $transresUtil->copyFormNodeFieldsToProject($project);

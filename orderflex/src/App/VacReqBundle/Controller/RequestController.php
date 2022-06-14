@@ -61,7 +61,7 @@ class RequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
@@ -232,7 +232,7 @@ class RequestController extends OrderAbstractController
             }
 
             $requestName = $entity->getRequestName();
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             //$break = "\r\n";
             $break = "<br>";
 
@@ -427,7 +427,7 @@ class RequestController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
@@ -837,7 +837,7 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
@@ -1216,7 +1216,7 @@ class RequestController extends OrderAbstractController
         $message .= "(the days in this request will still count towards ".$userNameOptimal."'s vacation / business travel):".$break;
         $message .= $rejectLink;
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
 
         $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
@@ -1308,7 +1308,7 @@ class RequestController extends OrderAbstractController
         $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         //set confirmation email to submitter and email users
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         //$break = "\r\n";
         $break = "<br>";
         $message = $eventSubject . $break . $break . $entity->printRequest($this->container);
@@ -1355,7 +1355,7 @@ class RequestController extends OrderAbstractController
         }
 
         //set confirmation email to approver and email users
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
 
         $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
@@ -1375,8 +1375,8 @@ class RequestController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
-        $vacreqUtil = $this->get('vacreq_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $routeName = $request->get('_route');
 
         $user = $this->getUser();
@@ -1640,7 +1640,7 @@ class RequestController extends OrderAbstractController
         if( !$this->isGranted('ROLE_VACREQ_ADMIN') ) {
             return null;
         }
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('vacreq.sitename'),AccessRequest::STATUS_ACTIVE);
         return $accessreqs;
     }
@@ -1862,7 +1862,7 @@ class RequestController extends OrderAbstractController
         return $requests;
     }
     public function analyzeRequests($userId,$count=1) {
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
@@ -1890,7 +1890,7 @@ class RequestController extends OrderAbstractController
         }
 
         $logger = $this->container->get('logger');
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         //find pending carryover request

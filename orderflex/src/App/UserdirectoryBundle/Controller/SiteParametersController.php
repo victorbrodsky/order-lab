@@ -104,7 +104,7 @@ class SiteParametersController extends OrderAbstractController
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
-            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
             $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         }
@@ -325,7 +325,7 @@ class SiteParametersController extends OrderAbstractController
             }
 
             if( $param == 'mailerSpool' || $param == 'mailerFlushQueueFrequency' ) {
-                $emailUtil = $this->get('user_mailer_utility');
+                $emailUtil = $this->container->get('user_mailer_utility');
                 $emailUtil->createEmailCronJob();
             }
 
@@ -352,7 +352,7 @@ class SiteParametersController extends OrderAbstractController
 
             //add a new eventlog record for an updated parameter
             $user = $this->getUser();
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $eventType = "Site Settings Parameter Updated";
             $eventStr = "Site Settings parameter [$param] has been updated by ".$user;
             $eventStr = $eventStr . "<br>original value:<br>".$originalParam;
@@ -601,7 +601,7 @@ class SiteParametersController extends OrderAbstractController
         $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
-            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
             $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
         }
@@ -659,7 +659,7 @@ class SiteParametersController extends OrderAbstractController
             $em->persist($entity);
             $em->flush($entity);
 
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->createEmailCronJob();
 
             //exit("form is valid");

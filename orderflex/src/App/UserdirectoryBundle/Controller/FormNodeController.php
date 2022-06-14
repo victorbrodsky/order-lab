@@ -52,7 +52,7 @@ class FormNodeController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
         $cycle = $request->query->get('cycle');
@@ -372,7 +372,7 @@ class FormNodeController extends OrderAbstractController {
             return $resArr;
         }
 
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
 
         //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
         $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
@@ -403,7 +403,7 @@ class FormNodeController extends OrderAbstractController {
             }
 
             //$arraySectionCount = null;
-            //$formNodeUtil = $this->get('user_formnode_utility');
+            //$formNodeUtil = $this->container->get('user_formnode_utility');
             //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
 
 //            if( $arraySectionCount ) {
@@ -490,7 +490,7 @@ class FormNodeController extends OrderAbstractController {
     //only "Form Section" and "Form Section Array" are visible by convention.
     //check all parents if they have a similar Form Section (the same name) and return the one on the top
     public function getParentFormNodeSection( $formNodeHolderEntity, $formNode ) {
-        $formNodeUtil = $this->get('user_formnode_utility');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         return $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity,$formNode);
 
 //        $parentFormNode = $formNode->getParent();

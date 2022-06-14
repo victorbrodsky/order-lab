@@ -54,8 +54,8 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
-        $vacreqUtil = $this->get('vacreq_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 

@@ -94,7 +94,7 @@ class UserController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$ver = $userServiceUtil->getGitVersionDate();
         //echo "ver=".$ver."<br>";
         //print_r($ver);
@@ -103,7 +103,7 @@ class UserController extends OrderAbstractController
         //testing error
 
         //testing
-//        $authUtil = $this->get('authenticator_utility');
+//        $authUtil = $this->container->get('authenticator_utility');
 //        $username = 'oli2002';
 //        $searchRes = $authUtil->searchLdap($username,$ldapType=1);
 //        echo "searchRes=<br><pre>";
@@ -112,7 +112,7 @@ class UserController extends OrderAbstractController
 //        exit('1');
 
         //testing id of the created entity
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $site = $userSecUtil->getSiteBySitename("employees");
 //        $testEntity = new Logger($site);
 //        echo "testEntity ID=[".$testEntity->getId()."]<br>";
@@ -124,11 +124,11 @@ class UserController extends OrderAbstractController
 //        exit('eof id test');
 
         //testing public dir
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->getPublicFolderName();
 
         //testing cron
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->createCrons();
         //$res = $userServiceUtil->getCronJobFullNameLinux("cron:swift");
         //echo "getCronJobFullNameLinux=$res<br>";
@@ -137,18 +137,18 @@ class UserController extends OrderAbstractController
         //echo $session->get('_security_scan_auth');
 
         //$encoder = $this->get('security.password_encoder');
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         //$encoder = $userServiceUtil->getEncoder();
         //$plainPassword = "123";
         //$user = $this->getUser();
         //$encoded = $encoder->encodePassword($user, $plainPassword);
         //exit("encoded=[$encoded]");
 
-//        $authUtil = $this->get('authenticator_utility');
+//        $authUtil = $this->container->get('authenticator_utility');
 //        $userTest = $authUtil->findUserByUsername('user1_@_local-user');
 //        echo "testUser=".$userTest."<br>";
 
-        //$userServiceUtil = $this->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 //        $apiInfo = $userServiceUtil->getFrameworkInfo();
 //        echo "apiInfo=$apiInfo <br>";
         //$res = $userServiceUtil->browserCheck();
@@ -433,7 +433,7 @@ class UserController extends OrderAbstractController
         if( !$this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             return null;
         }
-        //$userSecUtil = $this->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         //$sitename = $this->container->getParameter('employees.sitename');
         //$sitename = $this->container->get('parameter_bag')->get('employees.sitename');
@@ -1874,7 +1874,7 @@ class UserController extends OrderAbstractController
         }
 
         //$em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $resArr = null;
 
@@ -1907,7 +1907,7 @@ class UserController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $authUtil = $this->get('authenticator_utility');
+        $authUtil = $this->container->get('authenticator_utility');
         
         $resArr = null;
         $primaryPublicUserId = null;
@@ -2047,8 +2047,8 @@ class UserController extends OrderAbstractController
 
         $creator = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $username = null;
         $user = null;
         $firstEmailPart = null;
@@ -2207,7 +2207,7 @@ class UserController extends OrderAbstractController
             $searchRes = array('dummy'); //testing
         } else {
             //$authUtil = new AuthUtil($this->container,$em);
-            $authUtil = $this->get('authenticator_utility');
+            $authUtil = $this->container->get('authenticator_utility');
             $searchRes = $authUtil->searchLdap($publicUserId);
         }
 
@@ -2372,7 +2372,7 @@ class UserController extends OrderAbstractController
             $event = $event . "<br><br>" . "To review the details for this user account, please visit the link below:";
             $event = $event . "<br>" . $userUrl;
 
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent(
                 $sitename,
                 $event,
@@ -2384,7 +2384,7 @@ class UserController extends OrderAbstractController
 
             //Email to Admin
             //$event = str_replace("<br>","\r\n",$event);
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
             $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
             $adminEmails = array_merge($adminEmails,$ccEmails);
@@ -2444,7 +2444,7 @@ class UserController extends OrderAbstractController
 
         //$user = new User();
         //$userManager = $this->container->get('fos_user.user_manager');
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userManager = $this->container->get('user_manager');
         $user = $userManager->createUser();
 
@@ -2564,7 +2564,7 @@ class UserController extends OrderAbstractController
             //record create user to Event Log
             $userAdmin = $this->getUser();
             $event = "User account for ".$user." has been created by ".$userAdmin."<br>";
-            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
 
             //check fellapp roles to sync with FellowshipSubspecialty
@@ -2629,7 +2629,7 @@ class UserController extends OrderAbstractController
 //
 //        //check if this subject user is visible according to the subject user's preferences
 //        $user = $this->getUser();
-//        $secUtil = $this->get('user_security_utility');
+//        $secUtil = $this->container->get('user_security_utility');
 //        if( !$secUtil->isUserVisible($entity,$user) ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
@@ -2672,7 +2672,7 @@ class UserController extends OrderAbstractController
 
         //check if this subject user is visible according to the subject user's preferences
         $user = $this->getUser();
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
             //exit('1 show User Optimized no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2704,7 +2704,7 @@ class UserController extends OrderAbstractController
      */
     public function showUserOptimizedCustomhAction(Request $request, $id)
     {
-        //$secUtil = $this->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
         if( false === $this->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -2788,7 +2788,7 @@ class UserController extends OrderAbstractController
      */
     public function showOnlyUserAction(Request $request, $id)
     {
-        //$secUtil = $this->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
         if( false === $this->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -2836,7 +2836,7 @@ class UserController extends OrderAbstractController
      */
     public function showUserAction(Request $request, $id)
     {
-        //$secUtil = $this->get('user_security_utility');
+        //$secUtil = $this->container->get('user_security_utility');
         if( false === $this->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -2866,7 +2866,7 @@ class UserController extends OrderAbstractController
 
             //check if this subject user is visible according to the subject user's preferences
             $user = $this->getUser();
-            $secUtil = $this->get('user_security_utility');
+            $secUtil = $this->container->get('user_security_utility');
             if( !$secUtil->isUserVisible($entity,$user) ) {
                 return false;
             }
@@ -2936,7 +2936,7 @@ class UserController extends OrderAbstractController
      */
     public function editUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -2965,7 +2965,7 @@ class UserController extends OrderAbstractController
 
         //check if this subject user is visible according to the subject user's preferences
         $user = $this->getUser();
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
             return false;
         }
@@ -3167,7 +3167,7 @@ class UserController extends OrderAbstractController
      */
     public function updateUserAction(Request $request, $id)
     {
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -3677,7 +3677,7 @@ class UserController extends OrderAbstractController
                 $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
-                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($sitename,$event,$user,$entity,$request,'User record updated');
             }
 
@@ -3756,7 +3756,7 @@ class UserController extends OrderAbstractController
 
 
 //    public function createUserEditEvent($sitename,$event,$user,$subjectEntity,$request,$action='User record updated') {
-//        $userSecUtil = $this->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
 //        $eventLog = $userSecUtil->constructEventLog($sitename,$user,$request);
 //        $eventLog->setEvent($event);
 //
@@ -3878,7 +3878,7 @@ class UserController extends OrderAbstractController
 
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $credentials = $subjectUser->getCredentials();
         if( !$credentials ) {
@@ -4313,7 +4313,7 @@ class UserController extends OrderAbstractController
         $userAdmin = $this->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent($sitename,$event,$userAdmin,$user,$request,'User record updated');
 
         $em->persist($user);
@@ -4653,7 +4653,7 @@ class UserController extends OrderAbstractController
         //echo "file=".$file." <br>";
         //echo "userid1=".$userid." <br>";
 
-        $secUtil = $this->get('user_security_utility');
+        $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isCurrentUser($userid) && false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             echo "employees-nopermission<br>";
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -4745,7 +4745,7 @@ class UserController extends OrderAbstractController
 
         //EventLog
         $event = $userAdmin." impersonated ".$user;
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
             $this->getParameter('employees.sitename'),
             $event,
@@ -4843,7 +4843,7 @@ class UserController extends OrderAbstractController
         // populate the user performing the change and the Object Type/ID of the user receiving the change.
         $event = $subjectUser->getUsernameOptimal()." marked as no longer employed by ".$institutionStr." as of ".$yestardayDateStr;
         $event .= " by ".$userAdmin->getUsernameOptimal()." and account locked";
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
             $this->getParameter('employees.sitename'),
             $event,
@@ -5186,7 +5186,7 @@ class UserController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         $inst1 = null;

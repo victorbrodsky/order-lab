@@ -129,7 +129,7 @@ class UserRequestController extends OrderAbstractController
     public function createAction(Request $request)
     {
         //exit("createAction");
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
 
         $entity  = new UserRequest();
         $entity->setSiteName($this->siteName);
@@ -436,7 +436,7 @@ class UserRequestController extends OrderAbstractController
 
     public function getParams( $sitename ) {
 
-        $securityUtil = $this->get('user_security_utility');
+        $securityUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->get('security.context')->getToken()->getUser();
         

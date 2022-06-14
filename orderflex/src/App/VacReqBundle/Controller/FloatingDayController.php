@@ -64,7 +64,7 @@ class FloatingDayController extends OrderAbstractController
 //                    )
 //                ));
 //        }
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $redirectArr = $vacreqUtil->redirectIndex($request);
         if( $redirectArr ) {
             return $this->redirect(
@@ -99,7 +99,7 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $redirectArr = $vacreqUtil->redirectIndex($request);
         if( $redirectArr ) {
             return $this->redirect(
@@ -129,7 +129,7 @@ class FloatingDayController extends OrderAbstractController
 
         //exit('incomingFloatingRequestsAction');
         $em = $this->getDoctrine()->getManager();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
         $routeName = $request->get('_route');
         $sitename = $this->getParameter('vacreq.sitename');
@@ -257,7 +257,7 @@ class FloatingDayController extends OrderAbstractController
     public function processFilter( $dql, $request, $params ) {
 
         $currentUser = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $dqlParameters = array();
         $filterRes = array();
@@ -366,7 +366,7 @@ class FloatingDayController extends OrderAbstractController
             );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
 
 //        //tentative institutions
@@ -734,8 +734,8 @@ class FloatingDayController extends OrderAbstractController
         $testing = false;
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->get('user_service_utility');
-        $vacreqUtil = $this->get('vacreq_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -771,7 +771,7 @@ class FloatingDayController extends OrderAbstractController
 
 
             $requestName = $entity->getRequestName(); //"Floating Day Request";
-            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
             //$break = "\r\n";
             $break = "<br>";
 
@@ -900,7 +900,7 @@ class FloatingDayController extends OrderAbstractController
     public function editAction(Request $request, $id) {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
@@ -1109,7 +1109,7 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
 
@@ -1290,7 +1290,7 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$routeName = $request->get('_route');
         $user = $this->getUser();
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         //////////////// change status ////////////////////////
         $requestName = $entity->getRequestName();
@@ -1612,7 +1612,7 @@ class FloatingDayController extends OrderAbstractController
         $message .= $break.$break."To reject cancellation of this floating request, please follow this link ".$break;
         $message .= $rejectLink;
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $approversNameStr = $vacreqUtil->sendGeneralEmailToApproversAndEmailUsers($entity,$eventSubject,$message);
 
         $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
@@ -1701,7 +1701,7 @@ class FloatingDayController extends OrderAbstractController
         $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $eventSubject, $user, $entity, $request, $eventType);
 
         //set confirmation email to submitter and email users
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         //$break = "\r\n";
         $break = "<br>";
         $message = $eventSubject . $break . $break . $entity->printRequest($this->container);
@@ -1748,7 +1748,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //set confirmation email to approver and email users
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $approversNameStr = $this->sendConfirmationEmailToFloatingApprovers( $entity );
 
         $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
@@ -1779,7 +1779,7 @@ class FloatingDayController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $floatingTypeId = $request->get('floatingTypeId');
         $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
@@ -1851,8 +1851,8 @@ class FloatingDayController extends OrderAbstractController
     public function createRequestForm( $entity, $cycle, $request ) {
 
         $em = $this->getDoctrine()->getManager();
-        $userServiceUtil = $this->get('user_service_utility');
-        $vacreqUtil = $this->get('vacreq_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $routeName = $request->get('_route');
 
         $user = $this->getUser();
@@ -2051,7 +2051,7 @@ class FloatingDayController extends OrderAbstractController
     }
 
     public function sendConfirmationEmailToFloatingApprovers( $entity, $sendCopy=true ) {
-        $vacreqUtil = $this->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $subject = $entity->getEmailSubject();
         //echo "subject=$subject <br>";
         $message = $this->createFloatingEmailBody($entity);
