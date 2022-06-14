@@ -58,6 +58,6 @@ Allow from 127.0.0.1
 Allow from 127.0.0.1 ::1
 Allow from 157.139.226.86
 Allow from 157.139.226.124
-Satisfy Any
+#Satisfy Any
 
 
