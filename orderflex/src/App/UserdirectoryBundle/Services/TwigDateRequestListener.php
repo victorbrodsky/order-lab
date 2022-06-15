@@ -36,13 +36,11 @@ use Twig\Environment;
 class TwigDateRequestListener {
 
     protected $twig;
-    //protected $secTokenStorage;
     protected $defaultTimeZone;
     protected $security;
 
-    function __construct(Environment $twig, $defaultTimeZone = null, Security $security) {
+    function __construct(Environment $twig, $defaultTimeZone, Security $security) {
         $this->twig = $twig;
-        //$this->secTokenStorage = $secTokenStorage;
         $this->defaultTimeZone = $defaultTimeZone;
         $this->security = $security;
     }
@@ -52,6 +50,7 @@ class TwigDateRequestListener {
 
         $user = null;
         $timezone = $this->defaultTimeZone;
+        //echo "default timezone=$timezone <br>";
 
         $user = $this->security->getUser();
 
@@ -73,6 +72,8 @@ class TwigDateRequestListener {
         //$this->twig->getExtension('Core')->setTimezone($timezone);
         //$this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
         //$this->twig->getExtension('CoreExtension')->setTimezone($timezone);
+
+        //echo "user timezone=$timezone <br>";
 
         //https://twig.symfony.com/doc/1.x/filters/date.html
         $this->twig->getExtension('\Twig\Extension\CoreExtension')->setTimezone($timezone); //new twig

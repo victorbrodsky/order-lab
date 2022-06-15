@@ -65,7 +65,9 @@ class MaintenanceListener {
 //        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
 //            return;
 //        }
-        if( !$event->isMasterRequest() ) {
+
+        //Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.
+        if( !$event->isMainRequest() ) {
             //exit('1');
             return;
         }
