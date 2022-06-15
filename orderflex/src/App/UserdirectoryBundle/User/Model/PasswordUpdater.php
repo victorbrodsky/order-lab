@@ -13,8 +13,10 @@ namespace App\UserdirectoryBundle\User\Model;
 
 //use FOS\UserBundle\Model\UserInterface;
 //use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
+use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+//use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+//use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 /**
  * Class updating the hashed password in the user when there is a new password.
@@ -25,7 +27,11 @@ class PasswordUpdater implements PasswordUpdaterInterface
 {
     private $encoderFactory;
 
-    public function __construct(EncoderFactoryInterface $encoderFactory)
+//    public function __construct(EncoderFactoryInterface $encoderFactory)
+//    {
+//        $this->encoderFactory = $encoderFactory;
+//    }
+    public function __construct(PasswordHasherFactoryInterface $encoderFactory)
     {
         $this->encoderFactory = $encoderFactory;
     }
@@ -40,7 +46,7 @@ class PasswordUpdater implements PasswordUpdaterInterface
 
         $encoder = $this->encoderFactory->getEncoder($user);
 
-        if ($encoder instanceof NativePasswordEncoder) { //BCryptPasswordEncoder
+        if ($encoder instanceof NativePasswordHasher) { //NativePasswordEncoder, BCryptPasswordEncoder
             $user->setSalt(null);
         } else {
             $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');

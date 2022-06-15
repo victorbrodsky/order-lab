@@ -36,7 +36,7 @@ use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
 use Doctrine\ORM\EntityManagerInterface;
-//use Psr\Container\ContainerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
@@ -68,14 +68,21 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 class UserServiceUtil {
 
     protected $em;
+    protected $doctrine;
     protected $security;
     protected $container;
     protected $m3;
 
-    public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
+    public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container, ManagerRegistry $doctrine ) {
         $this->em = $em;
+        $this->doctrine = $doctrine;
         $this->security = $security;
         $this->container = $container;
+    }
+
+    public function getDoctrine() : ManagerRegistry
+    {
+        return $this->doctrine;
     }
 
     public function convertFromUserTimezonetoUTC($datetime,$user) {

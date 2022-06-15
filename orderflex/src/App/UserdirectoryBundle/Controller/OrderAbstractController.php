@@ -34,8 +34,6 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\User\Model\UserManager;
 use App\UserdirectoryBundle\Util\EmailUtil;
 use App\UserdirectoryBundle\Util\FormNodeUtil;
-//use App\UserdirectoryBundle\Util\FosCommentListenerUtil;
-//use App\UserdirectoryBundle\Util\UserCommentUtil;
 use App\UserdirectoryBundle\Util\UserDownloadUtil;
 use App\UserdirectoryBundle\Util\UserGenerator;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
@@ -45,36 +43,22 @@ use App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil;
 use App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
-
-//use FOS\CommentBundle\Model\CommentInterface;
-//use FOS\CommentBundle\Model\CommentManagerInterface;
-//use FOS\CommentBundle\Model\ThreadManagerInterface;
-//use App\UserdirectoryBundle\Comment\Model\CommentManagerInterface;
-//use App\UserdirectoryBundle\Comment\Model\ThreadManagerInterface;
-//use App\UserdirectoryBundle\Comment\Model\CommentManager;
-//use App\UserdirectoryBundle\Comment\Model\ThreadManager;
-
+use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Routing\Annotation\Route;
-
-//use Symfony\Component\Routing\Annotation\Route;
-//use Symfony\Component\Routing\Annotation\Template;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class OrderAbstractController extends AbstractController {
 
-//    protected $calllogUtil;
-//    public function __construct( CallLogUtil $calllogUtil ) {
-//        $this->calllogUtil = $calllogUtil;
-//    }
+    //AbstractController::getDoctrine()  is now deprecated.
+    //New alternative for getDoctrine() in Symfony 5.4 and up
+    public function getDoctrine() : ManagerRegistry
+    {
+        return $this->container->get('user_service_utility')->getDoctrine();
+    }
 
     //Check for auto-injection deprecation notice
     //1) Create OrderAbstarctController extends OrderAbstractController
@@ -86,7 +70,8 @@ class OrderAbstractController extends AbstractController {
 
         //$subscribedServices['security'] = '?'.Security::class;
         //$subscribedServices['security.authentication_utils'] = '?'.AuthenticationUtils::class;
-        $subscribedServices['security.password_encoder'] = '?'.UserPasswordEncoderInterface::class;
+        //$subscribedServices['security.password_encoder'] = '?'.UserPasswordEncoderInterface::class;
+        $subscribedServices['security.password_encoder'] = '?'.UserPasswordHasherInterface::class;
 
         $subscribedServices['user_utility'] = '?'.UserUtil::class;
         $subscribedServices['user_security_utility'] = '?'.UserSecurityUtil::class;
@@ -152,7 +137,6 @@ class OrderAbstractController extends AbstractController {
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 //        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
-
 
         return $subscribedServices;
     }
