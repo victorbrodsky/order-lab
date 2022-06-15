@@ -64,8 +64,6 @@ class AccessRequestController extends OrderAbstractController
         $this->roleUser = 'ROLE_USERDIRECTORY_OBSERVER';
         $this->roleUnapproved = 'ROLE_USERDIRECTORY_UNAPPROVED';
         $this->roleEditor = 'ROLE_USERDIRECTORY_EDITOR';
-        
-        parent::__construct($doctrine);
     }
 
     /**
