@@ -88,7 +88,7 @@ class ProjectChangeStatusConfirmationType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'project-change-state-confirmation';
     }

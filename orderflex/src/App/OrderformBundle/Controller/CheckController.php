@@ -160,7 +160,7 @@ class CheckController extends OrderAbstractController {
 
         $element = array();
         
-        //$security_content = $this->get('security.context');
+        //$security_content = $this->container->get('security.context');
         //$user = $this->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->container->get('user_security_utility');

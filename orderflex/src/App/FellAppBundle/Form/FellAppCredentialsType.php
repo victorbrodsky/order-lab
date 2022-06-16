@@ -67,7 +67,7 @@ class FellAppCredentialsType extends AbstractType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_userdirectorybundle_credentials';
     }

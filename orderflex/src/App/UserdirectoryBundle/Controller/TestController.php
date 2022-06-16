@@ -48,11 +48,11 @@ class TestController extends TestBaseController
         //$this->container ContainerInterface $container
         //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
         //$calllogUtilDirect = $this->container->get('calllog_util');
-        $calllogUtilDirect = $this->get('calllog_util');
+        $calllogUtilDirect = $this->container->get('calllog_util');
         $id = $calllogUtilDirect->getNextEncounterGeneratedId();
         $msg = $msg . "; id=$id";
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

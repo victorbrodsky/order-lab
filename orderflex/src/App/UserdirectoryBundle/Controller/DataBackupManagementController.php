@@ -61,7 +61,7 @@ class DataBackupManagementController extends OrderAbstractController
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
@@ -100,7 +100,7 @@ class DataBackupManagementController extends OrderAbstractController
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
@@ -119,7 +119,7 @@ class DataBackupManagementController extends OrderAbstractController
             $res = $this->creatingBackupSQLFull($networkDrivePath);
             //exit($res);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res
             );
@@ -128,7 +128,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify-error',
             "Error backup"
         );
@@ -165,7 +165,7 @@ class DataBackupManagementController extends OrderAbstractController
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'error',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
@@ -185,12 +185,12 @@ class DataBackupManagementController extends OrderAbstractController
             $res = $this->restoringBackupSQLFull($networkDrivePath);
             //exit($res);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res
             );
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 //"DB has been restored by backup ".$backupFilePath
                 $res

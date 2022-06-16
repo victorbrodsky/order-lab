@@ -1523,11 +1523,11 @@ class UtilController extends OrderAbstractController {
         //$encoded = $encoder->encodePassword($subjectUser, $userpassword);
         //$encodeRes = StringUtils::equals($subjectUser->getPassword(), $encoded);
 
-        //$encoderService = $this->get('security.encoder_factory');
+        //$encoderService = $this->container->get('security.encoder_factory');
         //$encoder = $encoderService->getEncoder($user);
         //$userServiceUtil = $this->container->get('user_service_utility');
         //$encoder = $userServiceUtil->getUserEncoder($user);
-        $encoder = $this->get('security.password_encoder');
+        $encoder = $this->container->get('security.password_encoder');
 
         //$encodeRes = $encoder->isPasswordValid($subjectUser->getPassword(), $userpassword, $user->getSalt());
         $encodeRes = $encoder->isPasswordValid($user,$userpassword);

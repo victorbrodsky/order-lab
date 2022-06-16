@@ -39,7 +39,7 @@ class AdminCommentType extends BaseCommentsType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_userdirectorybundle_admincomments';
     }

@@ -64,7 +64,7 @@ class VacReqCarryOverType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_vacreqbundle_carryover';
     }

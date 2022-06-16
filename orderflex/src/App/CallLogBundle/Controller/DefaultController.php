@@ -85,11 +85,11 @@ class DefaultController extends OrderAbstractController
         //$userServiceUtil->metaphoneTest();
 
 //        $msg = "Notify Test!!!";
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'pnotify',
 //                $msg
 //            );
@@ -339,7 +339,7 @@ class DefaultController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('calllog.sitename'), $msgLog, $user, null, $request, $eventType);
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -383,7 +383,7 @@ class DefaultController extends OrderAbstractController
 
             $msg = "Call Log cache has been manually updated for " . $message->getOid();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 $msg
             );
@@ -834,7 +834,7 @@ class DefaultController extends OrderAbstractController
         //$inputFileName = __DIR__ . '/../Util/Cities.xlsx';
         //$inputFileName = "C:\Users\ch3\Documents\MyDocs\WCMC\CallLog";
 
-        $projectRoot = $this->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         //echo "projectRoot=$projectRoot<br>";
         //exit($projectRoot);
         $parentRoot = str_replace('order-lab','',$projectRoot);

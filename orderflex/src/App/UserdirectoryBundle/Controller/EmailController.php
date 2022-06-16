@@ -57,7 +57,7 @@ class EmailController extends OrderAbstractController
         }
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -106,7 +106,7 @@ class EmailController extends OrderAbstractController
             //exit("email res=".$emailRes);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Test email sent to: '.$emails.' and ccs to:'.$ccs. "<br> Status: ".$emailRes
             );

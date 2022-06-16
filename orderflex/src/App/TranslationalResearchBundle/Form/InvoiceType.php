@@ -397,7 +397,7 @@ class InvoiceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_translationalresearchbundle_invoice';
     }

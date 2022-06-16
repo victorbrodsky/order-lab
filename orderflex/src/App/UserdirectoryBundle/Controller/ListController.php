@@ -547,7 +547,7 @@ class ListController extends OrderAbstractController
             $walker = array();
         }
 
-        $paginator = $this->get('knp_paginator');
+        $paginator = $this->container->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -644,7 +644,7 @@ class ListController extends OrderAbstractController
 //            $query->setParameters( $dqlParameters );
 //        }
 
-        $paginator = $this->get('knp_paginator');
+        $paginator = $this->container->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -1047,7 +1047,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
-        //$options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
+        //$options['SecurityAuthChecker'] = $this->container->get('security.authorization_checker');
 
         //exit("this->postPath=".$this->postPath);
         //$path = $pathbase.'_create'.$this->postPath;
@@ -1980,7 +1980,7 @@ class ListController extends OrderAbstractController
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
-        //$options['SecurityAuthChecker'] = $this->get('security.authorization_checker');
+        //$options['SecurityAuthChecker'] = $this->container->get('security.authorization_checker');
 
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())),
@@ -4195,7 +4195,7 @@ class ListController extends OrderAbstractController
 
             $event = "The type of the list entry '" . $entity . "' has been changed to '" . $type . "'";
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );

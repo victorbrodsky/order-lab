@@ -495,7 +495,7 @@ class SiteParametersController extends OrderAbstractController
             //$em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Defaults for an Organizational Group have been updated."
             );
@@ -671,7 +671,7 @@ class SiteParametersController extends OrderAbstractController
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Thank You for completing the initial configuration!<br>".
                 'Please update <a href="' . $urlUpdateCacheAssets . '">System\'s Cache and Assets</a> to update the footer.<br>'.

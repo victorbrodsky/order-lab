@@ -211,7 +211,7 @@ class CalllogPatientType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_calllogbundle_patienttype';
     }

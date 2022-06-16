@@ -457,7 +457,7 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$organizationalGroupInstitution,$request,$eventType);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -535,7 +535,7 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$subjectUser,$request,$eventType);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -674,7 +674,7 @@ class ApproverController extends OrderAbstractController
         //exit();
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             implode(" ",$globalEventArr)
         );
@@ -798,7 +798,7 @@ class ApproverController extends OrderAbstractController
                 $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $event
                 );
@@ -854,7 +854,7 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -1044,7 +1044,7 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -1252,7 +1252,7 @@ class ApproverController extends OrderAbstractController
         $groupParams['statusArr'] = array('default','user-added');
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
         if( count($organizationalInstitutions) > 0 ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "Business/Vacation group is not empty."
             );
@@ -1281,7 +1281,7 @@ class ApproverController extends OrderAbstractController
         if( !$institution ) {
             $msg = "Default group '$defaultInstName' not found";
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $msg
             );
@@ -1360,7 +1360,7 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );

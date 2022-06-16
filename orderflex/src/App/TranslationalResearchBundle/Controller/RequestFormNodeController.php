@@ -148,7 +148,7 @@ class RequestFormNodeController extends OrderAbstractController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -281,7 +281,7 @@ class RequestFormNodeController extends OrderAbstractController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -479,7 +479,7 @@ class RequestFormNodeController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $transresRequests = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -624,7 +624,7 @@ class RequestFormNodeController extends OrderAbstractController
             'defaultSortDirection' => 'DESC'
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $transresRequests = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -688,7 +688,7 @@ class RequestFormNodeController extends OrderAbstractController
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdmin' => $trpAdmin,
             'transresRequest' => $transresRequest,
             'routeName' => $routeName,

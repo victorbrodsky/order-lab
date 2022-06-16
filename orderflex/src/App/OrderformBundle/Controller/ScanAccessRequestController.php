@@ -72,7 +72,7 @@ class ScanAccessRequestController extends AccessRequestController
 
             //exit('nopermission create scan access request for non ldap user');
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have permission to visit this page on Scan Order site."."<br>".
                 "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->getParameter('scan.sitename').'_logout',true).">Re-Login</a>"

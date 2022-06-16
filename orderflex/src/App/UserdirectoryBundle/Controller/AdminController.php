@@ -290,7 +290,7 @@ class AdminController extends OrderAbstractController
         }
 
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $adminRes
         );
@@ -308,7 +308,7 @@ class AdminController extends OrderAbstractController
     /**
      * @Route("/update-system-source-code/", name="user_update_system_source_code")
      */
-    public function updateSourceCodeAction() {
+    public function updateSourceCodeAction(Request $request) {
         if(
             false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
         ) {
@@ -322,7 +322,7 @@ class AdminController extends OrderAbstractController
 
         $updateres = "Source code and composer has been successfully updated";
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $updateres
         );
@@ -333,7 +333,7 @@ class AdminController extends OrderAbstractController
     /**
      * @Route("/update-system-source-composer/", name="user_update_system_source_composer")
      */
-    public function updateComposerAction() {
+    public function updateComposerAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -344,7 +344,7 @@ class AdminController extends OrderAbstractController
 
         $updateres = "Source code and composer has been successfully updated";
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $updateres
         );
@@ -355,18 +355,18 @@ class AdminController extends OrderAbstractController
     /**
      * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
      */
-    public function updateSystemAction() {
+    public function updateSystemAction(Request $request) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $updateres = $this->updateApplication();
 
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $updateres
 //        );
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $updateres
         );
@@ -629,7 +629,7 @@ class AdminController extends OrderAbstractController
 //    //Testing method
 //    public function cccAction()
 //    {
-//        $kernel = $this->get('kernel');
+//        $kernel = $this->container->get('kernel');
 //        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
 //        $application->setAutoExit(false);
 //        $options = array('command' => 'cache:clear',"--env" => 'prod', '--no-warmup' => true);
@@ -724,7 +724,7 @@ class AdminController extends OrderAbstractController
      * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
-    public function generateAllSiteAction()
+    public function generateAllSiteAction(Request $request)
     {
         $logger = $this->container->get('logger');
         $logger->notice("generateAllSiteAction");
@@ -739,10 +739,10 @@ class AdminController extends OrderAbstractController
         $em->clear();
 
         //2)
-        $msg2 = $this->generateAll();
+        $msg2 = $this->generateAll($request);
         $em->clear();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg1 . "<br><br><br>" .
             $msg2
@@ -762,7 +762,7 @@ class AdminController extends OrderAbstractController
      * @Route("/populate-all-lists-with-default-values", name="user_generate_all", methods={"GET"})
      * @Template("AppUserdirectoryBundle/Admin/index.html.twig")
      */
-    public function generateAllAction()
+    public function generateAllAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -791,10 +791,10 @@ class AdminController extends OrderAbstractController
             exit("Intl test");
         }
 
-        $msg = $this->generateAll();
+        $msg = $this->generateAll($request);
         $em->clear();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -806,7 +806,7 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
-    public function generateAll() {
+    public function generateAll($request) {
 
         $logger = $this->container->get('logger');
         $logger->notice("Start generateAll");
@@ -863,7 +863,7 @@ class AdminController extends OrderAbstractController
         $count_residencyTrackList = $this->generateResidencyTrackList(); //must be run before generateRoles
         $logger->notice("Finished generateResidencyTrackList");
 
-        $count_roles = $this->generateRoles();
+        $count_roles = $this->generateRoles($request);
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
         $logger->notice("Finished generateStates");
@@ -1201,13 +1201,13 @@ class AdminController extends OrderAbstractController
      * @Route("/populate-residency-specialties-with-default-values", name="generate_residencyspecialties", methods={"GET"})
      * @Template()
      */
-    public function generateResidencySpecialtiesAction()
+    public function generateResidencySpecialtiesAction(Request $request)
     {
 
         $count = $this->generateResidencySpecialties();
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Created '.$count. ' Residency Specialties'
             );
@@ -1216,7 +1216,7 @@ class AdminController extends OrderAbstractController
 
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -1231,7 +1231,7 @@ class AdminController extends OrderAbstractController
      * @Route("/populate-country-city-list-with-default-values", name="generate_country_city", methods={"GET"})
      * @Template()
      */
-    public function generateProcedureAction()
+    public function generateProcedureAction(Request $request)
     {
 
         $max_exec_time = ini_get('max_execution_time');
@@ -1242,7 +1242,7 @@ class AdminController extends OrderAbstractController
         $countryCount = $count['country'];
         $cityCount = $count['city'];
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Added '.$countryCount.' countries and '.$cityCount.' cities'
         );
@@ -1268,7 +1268,7 @@ class AdminController extends OrderAbstractController
 
    
     //Generate or Update roles
-    public function generateRoles() {
+    public function generateRoles(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2250,7 +2250,7 @@ class AdminController extends OrderAbstractController
                 $resResidencyTrack = $this->resetResidencyTrack($entity,$role);
                 if( $resResidencyTrack ) {
                     $em->flush();
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         "Set residency track for $role"
                     );
@@ -2260,7 +2260,7 @@ class AdminController extends OrderAbstractController
 //                if( isset($aliasDescription[3]) && $aliasDescription[3] == 'dashboard' ) {
 //                    $this->addSites($entity,'_DASHBOARD_','dashboards');
 //                    $em->flush();
-//                    $this->get('session')->getFlashBag()->add(
+//                    $this->addFlash(
 //                        'notice',
 //                        "Set dashboards site for $role"
 //                    );
@@ -7913,7 +7913,7 @@ class AdminController extends OrderAbstractController
 
         $res = 'Inserted PlatformListManagerRootList objects count='.round($count/10);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $res
         );
@@ -8080,7 +8080,7 @@ class AdminController extends OrderAbstractController
     /**
      * @Route("/convert-logger-site/", name="user_convert-logger-site", methods={"GET"})
      */
-    public function convertLoggerSitenameToSiteObectAction() {
+    public function convertLoggerSitenameToSiteObectAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -8122,7 +8122,7 @@ class AdminController extends OrderAbstractController
 
         exit('Inserted site objects to loggers count='.$count);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Inserted site objects to loggers count='.$count
         );
@@ -8158,8 +8158,8 @@ class AdminController extends OrderAbstractController
             $count = $count + $thisCount;
         }
 
-        
-        $this->get('session')->getFlashBag()->add(
+
+        $this->addFlash(
             'notice',
             'Vacreq roles sync count='.$count
         );
@@ -8180,20 +8180,20 @@ class AdminController extends OrderAbstractController
         }
 
         $count = $this->syncEventTypeListDb();
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'syncEventTypeListDb count='.$count
         );
 
         $count = $this->syncRolesDb();
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'sync RolesDb count='.$count
         );
 
         //List of Research Labs clean
         $count = $this->syncResearchLabsDb();
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Research Labs clean count='.$count
         );
@@ -8822,7 +8822,7 @@ class AdminController extends OrderAbstractController
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $count = $formNodeUtil->generateFormNode();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'CallLog Form Node Fields generated='.$count
         );
@@ -8843,7 +8843,7 @@ class AdminController extends OrderAbstractController
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $count = $formNodeUtil->generateDermatopathologyFormNode();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Dermatopathology Form Node Fields generated='.$count
         );
@@ -8879,7 +8879,7 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $userServiceUtil->createCrons();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'All cron Jobs are generated (Email, Fellowship Import, Unpaid Invoices).'
         );
@@ -8904,7 +8904,7 @@ class AdminController extends OrderAbstractController
         //add test job
         //$userServiceUtil->createTestStatusCronLinux();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Status cron job to check the Maintenance state: '.$res
         );
@@ -8927,7 +8927,7 @@ class AdminController extends OrderAbstractController
         //add test job
         $res = $userServiceUtil->createTestStatusCronLinux();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $res
         );
@@ -8948,7 +8948,7 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
 
         if( $userServiceUtil->isWindows() ){
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "Windows is not supported"
             );
@@ -8960,7 +8960,7 @@ class AdminController extends OrderAbstractController
         //remove test job
         $userServiceUtil->removeCronJobLinuxByCommandName($commandName);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Cron job '.$cronJobName.' has been removed.'
         );
@@ -8978,14 +8978,14 @@ class AdminController extends OrderAbstractController
         }
 
         //run after populating chart and topic
-        $dashboardInit = $this->get('dashboard_init');
+        $dashboardInit = $this->container->get('dashboard_init');
 
         //$testing = true;
         $testing = false;
 
         $chartInitCount = $dashboardInit->initCharts($testing);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Initialized '.$chartInitCount.' charts'
         );
@@ -10211,7 +10211,7 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $dashboardInit = $this->get('dashboard_init');
+        $dashboardInit = $this->container->get('dashboard_init');
         $types = $dashboardInit->getDashboardRolesArr();
 
         $count = 10;
@@ -10852,7 +10852,7 @@ class AdminController extends OrderAbstractController
         }
 
         //run after populating chart and topic
-        //$dashboardInit = $this->get('dashboard_init');
+        //$dashboardInit = $this->container->get('dashboard_init');
         //$chartInitCount = $dashboardInit->initCharts();
         //$count = $count + $chartInitCount;
 
@@ -11088,7 +11088,7 @@ class AdminController extends OrderAbstractController
         $testing = false;
         $syncRes = $transresUtil->syncFeeAndWorkQueue($testing); //$testing=true
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $syncRes
         );

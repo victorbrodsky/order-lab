@@ -750,7 +750,7 @@ class TableController extends OrderAbstractController {
         $orderUtil = $this->container->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
+        $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');

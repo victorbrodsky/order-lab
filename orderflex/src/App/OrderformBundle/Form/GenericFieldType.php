@@ -94,7 +94,7 @@ class GenericFieldType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_orderformbundle_genfieldtype'; //generic field type
     }

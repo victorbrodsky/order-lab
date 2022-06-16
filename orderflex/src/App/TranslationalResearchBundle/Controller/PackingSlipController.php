@@ -78,7 +78,7 @@ class PackingSlipController extends OrderAbstractController
 
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -122,7 +122,7 @@ class PackingSlipController extends OrderAbstractController
 
         //exit("<br><br>".$msg);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -163,7 +163,7 @@ class PackingSlipController extends OrderAbstractController
 
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -201,7 +201,7 @@ class PackingSlipController extends OrderAbstractController
 
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $res
         );
@@ -234,7 +234,7 @@ class PackingSlipController extends OrderAbstractController
 
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -276,7 +276,7 @@ class PackingSlipController extends OrderAbstractController
 
         $res = $res . "<br>" . $changeStatusStr;
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $res
         );
@@ -311,8 +311,8 @@ class PackingSlipController extends OrderAbstractController
             $systemUser = $userSecUtil->findSystemUser();
             if( $systemUser ) {
                 $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                //$this->get('security.token_storage')->setToken($token);
-                //$this->get('security.token_storage')->setToken($token);
+                //$this->container->get('security.token_storage')->setToken($token);
+                //$this->container->get('security.token_storage')->setToken($token);
                 $tokenStorage->setToken($token);
             }
             $logger->notice("Download view: Logged in as systemUser=".$systemUser);

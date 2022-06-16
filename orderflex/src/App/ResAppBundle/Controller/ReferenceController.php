@@ -64,12 +64,12 @@ class ReferenceController extends OrderAbstractController
 //                //send invitation email
 //                $res = $resappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$resapp);
 //                if( $res['res'] == true ) {
-//                    $this->get('session')->getFlashBag()->add(
+//                    $this->addFlash(
 //                        'notice',
 //                        $res['msg']
 //                    );
 //                } else {
-//                    $this->get('session')->getFlashBag()->add(
+//                    $this->addFlash(
 //                        'warning',
 //                        $res['msg']
 //                    );
@@ -80,12 +80,12 @@ class ReferenceController extends OrderAbstractController
         $resArr = $resappRecLetterUtil->sendInvitationEmailsToReferences($resapp,true);
         foreach($resArr as $res) {
             if( $res['res'] == true ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $res['msg']
                 );
             } else {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $res['msg']
                 );
@@ -98,7 +98,7 @@ class ReferenceController extends OrderAbstractController
 //            $msg = "No invitations have been sent.";
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
@@ -133,12 +133,12 @@ class ReferenceController extends OrderAbstractController
         $res = $resappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$resapp);
 
         if( $res['res'] == true ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res['msg']
             );
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $res['msg']
             );
@@ -180,7 +180,7 @@ class ReferenceController extends OrderAbstractController
         $user = $this->getUser();
         $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$msg,$user,$reference,$request,$eventType);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

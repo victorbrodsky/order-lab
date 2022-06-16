@@ -1056,7 +1056,7 @@ if( 1 ) {
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_orderformbundle_messageobjecttype';
     }

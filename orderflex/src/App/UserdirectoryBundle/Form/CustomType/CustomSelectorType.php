@@ -275,7 +275,7 @@ class CustomSelectorType extends AbstractType {
         //return 'text';
     }
 
-    public function getBlockPrefix() : string
+    public function getBlockPrefix(): string
     {
         return 'employees_custom_selector';
     }

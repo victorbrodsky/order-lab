@@ -76,7 +76,7 @@ class ScanSecurityController extends SecurityController
 //        $options['eventtype'] = "Login Page Visit";
 //        $options['event'] = "Scan Order login page visit";
 //        $options['serverresponse'] = "";
-//        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+//        $userUtil->setLoginAttempt($request,$this->container->get('security.context'),$em,$options);
 //
 //        $response = new Response();
 //        $response->setContent('OK');
@@ -118,8 +118,8 @@ class ScanSecurityController extends SecurityController
 //        //echo "logout Action! <br>";
 //        //exit();
 //
-//        $this->get('security.context')->setToken(null);
-//        $this->get('request')->getSession()->invalidate();
+//        $this->container->get('security.context')->setToken(null);
+//        $this->container->get('request')->getSession()->invalidate();
 //        return $this->redirect($this->generateUrl('login'));
 //    }
 
@@ -133,7 +133,7 @@ class ScanSecurityController extends SecurityController
     {
 
         if( false === $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You do not have permission to visit this page'
             );

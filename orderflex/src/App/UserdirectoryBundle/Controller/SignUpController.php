@@ -430,7 +430,7 @@ class SignUpController extends OrderAbstractController
         $signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
         if( !$signUp ) {
             $confirmation = "This activation link is invalid. Please make sure you have copied it from your email message correctly.";
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                $confirmation
 //            );
@@ -579,10 +579,10 @@ class SignUpController extends OrderAbstractController
 //            ////////////////////// auth /////////////////////////
 //            // Authenticating user
 //            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
-//            $this->get('security.token_storage')->setToken($token);
+//            $this->container->get('security.token_storage')->setToken($token);
 //            //For Symfony <= 2.3
-//            //$this->get('security.context')->setToken($token);
-//            $this->get('session')->set('_security_secured_area', serialize($token));
+//            //$this->container->get('security.context')->setToken($token);
+//            $this->container->get('session')->set('_security_secured_area', serialize($token));
 //            ////////////////////// EOF auth /////////////////////////
         }//if user is not created yet
 
@@ -594,11 +594,12 @@ class SignUpController extends OrderAbstractController
             ////////////////////// auth /////////////////////////
             // Authenticating user
             $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
-            //$this->get('security.token_storage')->setToken($token);
+            //$this->container->get('security.token_storage')->setToken($token);
             $tokenStorage->setToken($token);
             //For Symfony <= 2.3
-            //$this->get('security.context')->setToken($token);
-            $this->get('session')->set('_security_secured_area', serialize($token));
+            //$this->container->get('security.context')->setToken($token);
+            //$this->container->get('session')->set('_security_secured_area', serialize($token));
+            $request->getSession()->set('_security_secured_area', serialize($token));
             ////////////////////// EOF auth /////////////////////////
         }
 
@@ -651,7 +652,7 @@ class SignUpController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Account Activation');
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Your account has been successfully activated."
             );
@@ -678,7 +679,7 @@ class SignUpController extends OrderAbstractController
             ;
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail($emails, $subject, $body); //testing
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                "subject=".$subject . "; body=" . $body
 //            );
@@ -1283,8 +1284,8 @@ class SignUpController extends OrderAbstractController
 //            //exit('before auth');
 //            ////////////////////// auth /////////////////////////
 //            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
-//            $this->get('security.token_storage')->setToken($token);
-//            $this->get('session')->set('_security_secured_area', serialize($token));
+//            $this->container->get('security.token_storage')->setToken($token);
+//            $this->container->get('session')->set('_security_secured_area', serialize($token));
 //            ////////////////////// EOF auth /////////////////////////
 //        }
 
@@ -1357,7 +1358,7 @@ class SignUpController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Password Reset');
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Your password has been successfully reset."
             );

@@ -671,7 +671,7 @@ class CommentThreadController extends OrderAbstractController
 //            $thread->setPermalink($permalink);
 //
 ////            // Validate the entity
-////            $errors = $this->get('validator')->validate($thread, null, ['NewThread']);
+////            $errors = $this->container->get('validator')->validate($thread, null, ['NewThread']);
 ////            if (count($errors) > 0) {
 ////                $view = View::create()
 ////                    ->setStatusCode(Response::HTTP_BAD_REQUEST)
@@ -750,7 +750,7 @@ class CommentThreadController extends OrderAbstractController
 //                return new Response($handler->renderTemplate($view, 'rss'), Response::HTTP_OK, $view->getHeaders());
 //            };
 //
-//            $this->get('fos_rest.view_handler')->registerHandler('rss', $templatingHandler);
+//            $this->container->get('fos_rest.view_handler')->registerHandler('rss', $templatingHandler);
 //        }
 //
 //        //dump($comments);

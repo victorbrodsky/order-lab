@@ -177,7 +177,7 @@ class CrnSinglePatientType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_single_patient';
     }

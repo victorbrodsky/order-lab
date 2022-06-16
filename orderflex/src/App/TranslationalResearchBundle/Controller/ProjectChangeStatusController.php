@@ -243,7 +243,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $eventType = "Project Closed";
         $transresUtil->setEventLog($project,$eventType,$resultMsg,$testing);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $sessionNotice
         //$transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project)
@@ -407,7 +407,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         //Session notice
         $sessionNotice = "Your request to change the status has been sent to the designated reviewer for approval and the status will be changed once approved";
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $sessionNotice
         );
@@ -513,7 +513,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $noticeMsg = $transresUtil->getNotificationMsgByStates($originalStateStr,$to,$project);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $noticeMsg
         );
@@ -548,7 +548,7 @@ class ProjectChangeStatusController extends OrderAbstractController
             //TODO: This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
             $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
             $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $errorMsg
             );
@@ -584,7 +584,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $piStr = $project->getPiStr();
         $msg = "The status for project request ".$projectOid." '".$project->getTitle()."' ($piStr) will remain 'Closed'";
         $noticeMsg = "Thank you! $msg. If you would like to change the status, please select it below and press 'Update Status'";
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $noticeMsg
         );
@@ -648,7 +648,7 @@ class ProjectChangeStatusController extends OrderAbstractController
             //This project request [ProjectID] is already active and has a status of ‘[current status]’, updated by [FirstName LastName] on MM/DD/YYYY at HH:MM.
             $statusStr = $transresUtil->getStateSimpleLabelByName($project->getState());
             $errorMsg = "This project request ".$project->getOid()." is already active and has a status of '".$statusStr."'";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $errorMsg
             );
@@ -679,7 +679,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $piStr = $project->getPiStr();
         $msg = "The status for project request ".$projectOid." '".$project->getTitle()."' ($piStr) has been updated to '$statusStr'";
         $noticeMsg = "Thank you! $msg. If you would like to change the status, please select it below and press 'Update Status'";
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $noticeMsg
         );
@@ -764,7 +764,7 @@ class ProjectChangeStatusController extends OrderAbstractController
             $eventType = "Project Status Updated";
             $transresUtil->setEventLog($project,$eventType,$msg);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -938,7 +938,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );

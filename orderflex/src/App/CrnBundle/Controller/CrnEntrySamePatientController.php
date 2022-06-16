@@ -156,7 +156,7 @@ class CrnEntrySamePatientController extends CrnEntryController
                 }
 
                 $encounterMsg = "Encounter $encounterNumber of type ".$encounter2->obtainEncounterNumber()." is not with patient whose MRN of type $mrntypeStr is $mrn";
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $encounterMsg
                 );
@@ -638,7 +638,7 @@ class CrnEntrySamePatientController extends CrnEntryController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );

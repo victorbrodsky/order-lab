@@ -66,7 +66,7 @@ class CalllogTrackerType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_userdirectorybundle_trackertypetype';
     }

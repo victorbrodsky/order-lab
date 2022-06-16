@@ -66,7 +66,7 @@ class VacReqUserType extends UserType
     /**
      * @return string
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_vacreqbundle_user';
     }

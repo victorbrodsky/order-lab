@@ -100,7 +100,7 @@ class FellAppSecurityController extends SecurityController
 //        $options['eventtype'] = "Login Page Visit";
 //        $options['event'] = "Scan Order login page visit";
 //        $options['serverresponse'] = "";
-//        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+//        $userUtil->setLoginAttempt($request,$this->container->get('security.context'),$em,$options);
 //
 //        $response = new Response();
 //        $response->setContent('OK');

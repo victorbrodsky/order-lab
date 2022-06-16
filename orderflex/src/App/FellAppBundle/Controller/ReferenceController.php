@@ -62,12 +62,12 @@ class ReferenceController extends OrderAbstractController
 //                //send invitation email
 //                $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
 //                if( $res['res'] == true ) {
-//                    $this->get('session')->getFlashBag()->add(
+//                    $this->addFlash(
 //                        'notice',
 //                        $res['msg']
 //                    );
 //                } else {
-//                    $this->get('session')->getFlashBag()->add(
+//                    $this->addFlash(
 //                        'warning',
 //                        $res['msg']
 //                    );
@@ -79,19 +79,19 @@ class ReferenceController extends OrderAbstractController
         if( $resArr && is_array($resArr) ) {
             foreach ($resArr as $res) {
                 if ($res['res'] == true) {
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         $res['msg']
                     );
                 } else {
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         $res['msg']
                     );
                 }
             }
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "Logical error: invitation emails have not been sent."
             );
@@ -103,7 +103,7 @@ class ReferenceController extends OrderAbstractController
 //            $msg = "No invitations have been sent.";
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
@@ -138,12 +138,12 @@ class ReferenceController extends OrderAbstractController
         $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
 
         if( $res['res'] == true ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res['msg']
             );
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $res['msg']
             );
@@ -185,7 +185,7 @@ class ReferenceController extends OrderAbstractController
         $user = $this->getUser();
         $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$msg,$user,$reference,$request,$eventType);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

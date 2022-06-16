@@ -693,7 +693,7 @@ class PatientController extends OrderAbstractController
         }
         //exit("Form is not valid");
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'warning',
             'Form is invalid.'
         );
@@ -882,12 +882,12 @@ class PatientController extends OrderAbstractController
         //echo "multi-scan message count=".count($messageMultiSlideScanOrder)."<br>";
 
         //create scan order first; patient hierarchy will be created as well.
-        $MultiSlideScanOrder = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->get('router'), $this->container );
+        $MultiSlideScanOrder = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->container->get('router'), $this->container );
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Failed to create a test patient'
             );

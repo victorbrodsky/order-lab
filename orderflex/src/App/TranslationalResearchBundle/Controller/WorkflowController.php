@@ -107,7 +107,7 @@ class WorkflowController extends OrderAbstractController
 
         //exit("EXIT: type=".$type."; filename=".$filename);
 
-//        $webpath = $this->get('kernel')->getRootDir();
+//        $webpath = $this->container->get('kernel')->getRootDir();
         //echo "webPath=$webpath<br>";
         //exit();
 //        $file = $webpath."/../src/App/TranslationalResearchBundle/Resources/public/images/".$filename;
@@ -145,7 +145,7 @@ class WorkflowController extends OrderAbstractController
 
         echo "cmd=".$cmd."<br>";
 
-        //$dir = $this->get('kernel')->getRootDir();
+        //$dir = $this->container->get('kernel')->getRootDir();
         //echo "dir=".$dir."<br>";
 
         $oExec = null;

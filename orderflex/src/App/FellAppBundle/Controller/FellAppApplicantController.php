@@ -279,7 +279,7 @@ class FellAppApplicantController extends OrderAbstractController {
 //        return $response;
 
         if( $email ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "A personal invitation email has been sent to " . $interview->getInterviewer() . " " . $email
             );
@@ -306,7 +306,7 @@ class FellAppApplicantController extends OrderAbstractController {
         if( !$fellapp->getRecentItinerary() ) {
             $appLink = $this->generateUrl( 'fellapp_show', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
             $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (fellowship application ID# '.$fellapp->getId().')'.'</a>';
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
@@ -416,7 +416,7 @@ class FellAppApplicantController extends OrderAbstractController {
         //return $this->redirect( $this->generateUrl('fellapp_home') );
 
         //if( $emails && count($emails) > 0 ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -609,7 +609,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $fileName = str_replace(",", "-", $fileName);
 
         //take care of authentication
-        $session = $this->get('session');
+        $session = $request->getSession(); //$this->container->get('session');
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();
@@ -643,7 +643,7 @@ class FellAppApplicantController extends OrderAbstractController {
 //                    '</div>';
 //        }
 //
-//        $output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+//        $output = $this->container->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
 //            'cookie' => array(
 //                'PHPSESSID' => $PHPSESSID
 //            )));
@@ -709,7 +709,7 @@ class FellAppApplicantController extends OrderAbstractController {
 //                'sitename' => $this->getParameter('fellapp.sitename')
 //            )
 //        );
-        $interviewsDocHtml = $this->get('twig')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
+        $interviewsDocHtml = $this->container->get('twig')->render('AppFellAppBundle/Interview/applicants-interview-info-doc.html.twig',
             array(
                 'entities' => $entities,
                 'pathbase' => 'fellapp',

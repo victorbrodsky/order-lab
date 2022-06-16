@@ -147,7 +147,7 @@ class DashboardController extends OrderAbstractController
 
         $maxDisplayCharts = 20;
         if( $chartTypesCount > $maxDisplayCharts ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 "Please click 'Display' button to generate multiple charts"
             );
@@ -266,7 +266,7 @@ class DashboardController extends OrderAbstractController
 
         $maxDisplayCharts = 20;
         if( $chartTypesCount > $maxDisplayCharts ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 "Please click 'Display' button to generate multiple charts"
             );
@@ -423,7 +423,7 @@ class DashboardController extends OrderAbstractController
 
         if( !$id ) {
             $error = "Topic id is not provided";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -435,7 +435,7 @@ class DashboardController extends OrderAbstractController
             $error = "Topic is not found by ID '".$id."'";
             //throw new \Exception($error);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -502,7 +502,7 @@ class DashboardController extends OrderAbstractController
 
         if( !$id ) {
             $error = "Service id is not provided";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -512,7 +512,7 @@ class DashboardController extends OrderAbstractController
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($id);
         if( !$institution ) {
             $error = "Institution is not found by ID '".$id."'";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -576,7 +576,7 @@ class DashboardController extends OrderAbstractController
 
         if( !$id ) {
             $error = "Chart type  id is not provided";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -586,7 +586,7 @@ class DashboardController extends OrderAbstractController
         $chartType = $em->getRepository('AppDashboardBundle:ChartTypeList')->find($id);
         if( !$chartType ) {
             $error = "Chart type is not found by ID '".$id."'";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -650,7 +650,7 @@ class DashboardController extends OrderAbstractController
 
         if( !$id ) {
             $error = "Chart id is not provided";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $error
             );
@@ -713,7 +713,7 @@ class DashboardController extends OrderAbstractController
             $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
             if( !$chart ) {
                 $error = "Chart is not found by ID '".$id."'";
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $error
                 );
@@ -757,7 +757,7 @@ class DashboardController extends OrderAbstractController
         $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         $error = "You do not have access to this chart '".$chart->getName()."'. Please request access by contacting your site administrator $adminemail.";
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'warning',
             $error
         );

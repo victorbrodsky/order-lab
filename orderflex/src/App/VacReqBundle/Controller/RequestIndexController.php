@@ -348,7 +348,7 @@ class RequestIndexController extends OrderAbstractController
         //}
 
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -672,7 +672,7 @@ class RequestIndexController extends OrderAbstractController
                     " Once they are set up, this page will show cumulative summary data.";
             }
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $warningMsg
             );

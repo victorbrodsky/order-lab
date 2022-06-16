@@ -231,7 +231,7 @@ class FloatingDayController extends OrderAbstractController
             'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -360,7 +360,7 @@ class FloatingDayController extends OrderAbstractController
                 " Once they are set up, this page will show cumulative summary data.";
             }
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $warningMsg
             );
@@ -788,7 +788,7 @@ class FloatingDayController extends OrderAbstractController
             if( !$personAwayEmail ) {
                 //throw $this->createNotFoundException("Person email is null: personAway=".$personAway);
                 $personAwayEmail = $css;
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "Away person's email is not set. Sent confirmation email to $personAwayEmail instead."
                 );
@@ -823,7 +823,7 @@ class FloatingDayController extends OrderAbstractController
             //exit('exit event='.$event);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -915,7 +915,7 @@ class FloatingDayController extends OrderAbstractController
             if ($routName == 'vacreq_floating_review') {
                 if (false == $this->isGranted("changestatus", $entity)) {
                     //exit("vacreq_floating_review: no permission to changestatus");
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         "no permission to review/change the status of this floating day request."
                     );
@@ -924,7 +924,7 @@ class FloatingDayController extends OrderAbstractController
             } else {
                 if (false == $this->isGranted("update", $entity)) {
                     //exit('vacreq_edit: no permission to update');
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         "no permission to update this floating day request."
                     );
@@ -1046,7 +1046,7 @@ class FloatingDayController extends OrderAbstractController
                 $event .= $break . $break;
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $event
                 );
@@ -1130,7 +1130,7 @@ class FloatingDayController extends OrderAbstractController
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You can not change status of this ".$entity->getRequestName().
                     " with ID #".$entity->getId()." to ".$status.
@@ -1141,7 +1141,7 @@ class FloatingDayController extends OrderAbstractController
             }
         } else {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You can not change status of this ".$entity->getRequestName().
                 " with ID #".$entity->getId()." to ".$status
@@ -1160,7 +1160,7 @@ class FloatingDayController extends OrderAbstractController
                 $modificationDate = " on ".$updateDate->format('m/d/Y H:i:s');
             }
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 //"This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
                 "This ".$entity->getRequestName()." ID #" . $entity->getId()." is not pending anymore and has been modified by ".$entity->getUpdateUser().$modificationDate
@@ -1174,7 +1174,7 @@ class FloatingDayController extends OrderAbstractController
             //exit("count=".count($overlappedRequests));
             if (count($overlappedRequests) > 0) {
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $errorMsg
                 );
@@ -1189,7 +1189,7 @@ class FloatingDayController extends OrderAbstractController
         //duplicate check for overlapped requests
         if( isset($resArr['error']) && $resArr['error'] === true ) {
             if (isset($resArr['errorType']) && $resArr['errorType'] === 'overlapped') {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $resArr['message']
                 );
@@ -1369,7 +1369,7 @@ class FloatingDayController extends OrderAbstractController
                 $event .= " Confirmation email(s) have been sent to ".$approversNameStr.".";
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -1429,7 +1429,7 @@ class FloatingDayController extends OrderAbstractController
 
         if( !$entity->isOverallStatus('approved') ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You can not submit a Cancellation Requested for not approved floating request.'
             );
@@ -1443,7 +1443,7 @@ class FloatingDayController extends OrderAbstractController
 
         //Flash
         if( $eventSubject ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $eventSubject
             );
@@ -1528,7 +1528,7 @@ class FloatingDayController extends OrderAbstractController
 
         if( !$entity->isOverallStatus('approved') ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You can not submit a Cancellation Requested for not approved floating request.'
             );
@@ -1660,7 +1660,7 @@ class FloatingDayController extends OrderAbstractController
         //if not Cancellation Requested and vacreq_status_cancellation-request_email_change => redirect to incoming request page
         if( $entity->getExtraStatus() != "Cancellation Requested" && $routeName == 'vacreq_floating_status_cancellation_request_email_change' ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "This cancellation request for ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
             );
@@ -1689,7 +1689,7 @@ class FloatingDayController extends OrderAbstractController
         $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " (" . $userNameOptimal . ") by " . $user;
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSubject
         );
@@ -1754,7 +1754,7 @@ class FloatingDayController extends OrderAbstractController
         $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSubject
         );
@@ -1925,7 +1925,7 @@ class FloatingDayController extends OrderAbstractController
                     " Please contact the site administrator to create a group and/or get a Submitter role for your account.".$emailStr;
             }
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $warningMsg
             );

@@ -118,7 +118,7 @@ class FellappSiteParameterType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_fellappbundle_fellappsiteparameter';
     }

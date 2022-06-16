@@ -172,7 +172,7 @@ class CallEntryController extends OrderAbstractController
 //        );
         $paginationParams = array('wrap-queries'=>true);
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $messages = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -1161,10 +1161,10 @@ class CallEntryController extends OrderAbstractController
 
         return $res;
 
-//        $paginator  = $this->get('knp_paginator');
+//        $paginator  = $this->container->get('knp_paginator');
 //        $messages = $paginator->paginate(
 //            $query,
-//            $this->get('request')->query->get('page', 1), /*page number*/
+//            $this->container->get('request')->query->get('page', 1), /*page number*/
 //            //$request->query->getInt('page', 1),
 //            $limit      /*limit per page*/
 //        );
@@ -1326,7 +1326,8 @@ class CallEntryController extends OrderAbstractController
 //            $orderUtil->setWarningMessageNoInstitution($user);
 //            return $this->redirect( $this->generateUrl('calllog_home') );
 //        }
-        $permittedInstitutions = $orderUtil->getAndAddAtleastOneInstitutionPHI($user,$this->get('session'));
+        //$permittedInstitutions = $orderUtil->getAndAddAtleastOneInstitutionPHI($user,$this->container->get('session'));
+        $permittedInstitutions = $orderUtil->getAndAddAtleastOneInstitutionPHI($user,$request->getSession());
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('calllog_home') );
@@ -1392,7 +1393,7 @@ class CallEntryController extends OrderAbstractController
 //                }
 //
 //                $encounterMsg = "Encounter $encounterNumber of type ".$encounter2->obtainEncounterNumber()." is not with patient whose MRN of type $mrntypeStr is $mrn";
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'warning',
 //                    $encounterMsg
 //                );
@@ -1549,7 +1550,7 @@ class CallEntryController extends OrderAbstractController
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
             );
@@ -2140,7 +2141,7 @@ class CallEntryController extends OrderAbstractController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -2263,7 +2264,7 @@ class CallEntryController extends OrderAbstractController
             'defaultAccessionType' => $defaultAccessionType,
             'showAccession' => $showAccession,
             'defaultTagType' => $defaultTagTypeId
-            //'user_security_utility' => $this->get('user_security_utility')
+            //'user_security_utility' => $this->container->get('user_security_utility')
             //'accessiontypes' => $accessiontypes
         );
 
@@ -3267,7 +3268,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         //testing
-        //$this->get('user_formnode_utility')->updateFieldsCache($message);
+        //$this->container->get('user_formnode_utility')->updateFieldsCache($message);
         //exit('pre-update entry');
 
         //testing dob: dob before 1901 causes php error
@@ -3285,7 +3286,7 @@ class CallEntryController extends OrderAbstractController
 //            }
 //        }
         //testing
-        //$mesInfo = $this->get('user_formnode_utility')->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
+        //$mesInfo = $this->container->get('user_formnode_utility')->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),1,"");
         //echo "mesInfo=".$mesInfo."<br>";
         //$tz = $message->getOrderdate()->getTimezone();
         //echo "tz=".$tz->getName()."<br>";
@@ -3536,7 +3537,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         //testing
-        //$this->get('user_formnode_utility')->updateFieldsCache($message);
+        //$this->container->get('user_formnode_utility')->updateFieldsCache($message);
 
         $fileName = "Call-Log-Entry-ID" . $message->getOid();
 
@@ -3616,7 +3617,7 @@ class CallEntryController extends OrderAbstractController
         //return array('filename'=>'111','title'=>'222');
 
         if( count($entries) == 0 ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "No entries found for exporting."
             );

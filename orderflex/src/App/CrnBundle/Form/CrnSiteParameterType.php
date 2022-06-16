@@ -442,7 +442,7 @@ class CrnSiteParameterType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_CrnBundle_crnsiteparameter';
     }

@@ -134,7 +134,7 @@ class CrnPatientController extends PatientController {
             if( !$patient ) {
                 $patient = $patients[0];
             }
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 'Multiple patients found with mrn ' . $mrn . ". Displayed is the first patient with a valid mrn. Found " . count($patients) . " patients: <hr>" . implode("<hr>",$patientArr)
             );
@@ -145,7 +145,7 @@ class CrnPatientController extends PatientController {
         }
 
         if( !$patient || !$patient->getId() ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 'No patient found with mrn ' . $mrn
             );
@@ -257,7 +257,7 @@ class CrnPatientController extends PatientController {
             if( !$patient ) {
                 $patient = $patients[0];
             }
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 'Multiple patients found with mrn ' . $mrn . ". Displayed is the first patient with a valid mrn. Found " . count($patients) . " patients: <hr>" . implode("<hr>",$patientArr)
             );
@@ -268,14 +268,14 @@ class CrnPatientController extends PatientController {
         }
 
         if( !$patient || !$patient->getId() ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify-error',
                 'No patient found with mrn ' . $mrn
             );
             return $this->redirect($this->generateUrl('crn_home'));
         }
 
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'pnotify',
 //            'Ok!'
 //        );
@@ -834,7 +834,7 @@ class CrnPatientController extends PatientController {
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $patients = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -934,7 +934,7 @@ class CrnPatientController extends PatientController {
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $patients = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -1009,7 +1009,7 @@ class CrnPatientController extends PatientController {
             $msg = "Removed patient:<br>" . $msg;
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -1060,7 +1060,7 @@ class CrnPatientController extends PatientController {
             $pnotify = 'pnotify-error';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $pnotify,
             $msg
         );
@@ -1249,10 +1249,10 @@ class CrnPatientController extends PatientController {
 
         //echo "query=".$query->getSql()."<br>";
 
-//        $paginator  = $this->get('knp_paginator');
+//        $paginator  = $this->container->get('knp_paginator');
 //        $messages = $paginator->paginate(
 //            $query,
-//            $this->get('request')->query->get('page', 1), /*page number*/
+//            $this->container->get('request')->query->get('page', 1), /*page number*/
 //            //$request->query->getInt('page', 1),
 //            $limit      /*limit per page*/
 //        );

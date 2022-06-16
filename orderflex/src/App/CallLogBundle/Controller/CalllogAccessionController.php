@@ -106,7 +106,7 @@ class CalllogAccessionController extends OrderAbstractController {
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $accessions = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -202,7 +202,7 @@ class CalllogAccessionController extends OrderAbstractController {
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $accessions = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -337,7 +337,7 @@ class CalllogAccessionController extends OrderAbstractController {
             $msg = "Removed accession:<br>" . $msg;
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -390,7 +390,7 @@ class CalllogAccessionController extends OrderAbstractController {
             $pnotify = 'pnotify-error';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $pnotify,
             $msg
         );

@@ -202,9 +202,9 @@ class DefaultController extends OrderAbstractController
 //            exit($res);
 //        }
 
-        //$secTokenStorage = $this->get('security.token_storage');
         //$secTokenStorage = $this->container->get('security.token_storage');
-        //$secTokenStorage = $this->get('security.context')->getToken();
+        //$secTokenStorage = $this->container->get('security.token_storage');
+        //$secTokenStorage = $this->container->get('security.context')->getToken();
         //$user = $secTokenStorage->getToken()->getUser();
         //exit('$user='.$user);
 
@@ -244,7 +244,7 @@ class DefaultController extends OrderAbstractController
 //     */
 //    public function indexAction( Request $request ) {
 //
-//        if( false == $this->get('security.context')->isGranted('ROLE_TRANSRES_USER') ){
+//        if( false == $this->container->get('security.context')->isGranted('ROLE_TRANSRES_USER') ){
 //            //exit('deidentifier: no permission');
 //            return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
 //        }
@@ -927,7 +927,7 @@ class DefaultController extends OrderAbstractController
         exit('Imported result: '.$res);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Imported result: '.$res
         );
@@ -988,7 +988,7 @@ class DefaultController extends OrderAbstractController
         //exit("generateAntibodyListAction: Finished with res=".$res);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "Antibody list imported result ($filename): <br>".$res
         );
@@ -997,7 +997,7 @@ class DefaultController extends OrderAbstractController
 //        $filename = "IHC_antibody-11_16Nov2018.csv";
 //        $res = $importUtil->updateInsertAntibodyList($filename);
 //        //Flash
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            "Antibody list imported result ($filename): <br>".$res
 //        );
@@ -1019,7 +1019,7 @@ class DefaultController extends OrderAbstractController
         $res = $importUtil->setAntibodyListProperties();
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Antibody set properties result: '.$res
         );
@@ -1027,7 +1027,7 @@ class DefaultController extends OrderAbstractController
 //        $filename = "IHC_antibody-11_16Nov2018.csv";
 //        $res = $importUtil->updateInsertAntibodyList($filename);
 //        //Flash
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            "Antibody list imported result ($filename): <br>".$res
 //        );
@@ -1055,7 +1055,7 @@ class DefaultController extends OrderAbstractController
         //exit("generateAntibodyListAction: Finished with res=".$res);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "Antibody list imported result ($filename): <br>".$res
         );
@@ -1079,7 +1079,7 @@ class DefaultController extends OrderAbstractController
         $res = $importUtil->syncIdAntibodyList();
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "Antibody sync id result: <br>".$res
         );
@@ -1708,7 +1708,7 @@ class DefaultController extends OrderAbstractController
 //
 //        //$transresUtil->setEventLog(NULL,$eventType,$resultMsg);
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $resultMsg
 //        );

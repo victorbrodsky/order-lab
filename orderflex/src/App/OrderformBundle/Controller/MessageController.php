@@ -150,7 +150,7 @@ class MessageController extends OrderAbstractController {
             $em->persist($entity);                               
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You successfully submit a scan request! Confirmation email sent!'
             );

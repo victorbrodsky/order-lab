@@ -234,7 +234,7 @@ class DefaultController extends OrderAbstractController
         if( $query ) {
 
             $limit = 20;
-            $paginator  = $this->get('knp_paginator');
+            $paginator  = $this->container->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->get('page', 1),   /*page number*/
@@ -317,7 +317,7 @@ class DefaultController extends OrderAbstractController
         $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
 
         if( !$accessionNumber ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Accession Number is not provided.'
             );
@@ -336,7 +336,7 @@ class DefaultController extends OrderAbstractController
             if (!$accessMaskValid) {
                 //exit('mask invalid');
                 $msg = "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956).";
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     'Accession Number is not valid. ' . $msg
                 );
@@ -348,7 +348,7 @@ class DefaultController extends OrderAbstractController
         $accessionNumberClean = preg_replace('/\s+/', '', $accessionNumber);
         $accessionNumberClean = preg_replace('/-/', '', $accessionNumberClean);
         if( !$accessionNumberClean ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Accession Number is empty.'
             );
@@ -356,7 +356,7 @@ class DefaultController extends OrderAbstractController
         }
 
         if( !$accessionTypeId ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Accession Type is not provided.'
             );
@@ -364,7 +364,7 @@ class DefaultController extends OrderAbstractController
         }
 
         if( !$institution ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Institution is not provided.'
             );
@@ -394,7 +394,7 @@ class DefaultController extends OrderAbstractController
 
         $msg = '<strong>' . $deidentifier . '</strong>' . ' generated for ' . $accession->obtainFullValidKeyName() . '<br>' . $msg;
 
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );

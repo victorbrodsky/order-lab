@@ -296,7 +296,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 //            'statuses' => $transresRequestUtil->getInvoiceStatuses(),
 //            'principalInvestigators' => $principalInvestigators,
 //            //'piEm' => $piEm,
-//            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+//            'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
 //        );
 //
 //        if( $cycle == "new" ) {

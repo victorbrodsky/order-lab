@@ -154,7 +154,7 @@ class EducationalResearchController extends OrderAbstractController {
                 $reviewLink = '<br> <a href="'.$url.'">Back to Data Review</a>';
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'status-changed',
                 $msg
             );

@@ -89,7 +89,7 @@ class CarryOverController extends OrderAbstractController
 ////            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 //
 //            //Flash
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                $event
 //            );
@@ -156,7 +156,7 @@ class CarryOverController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$userCarryOver,$request,$eventType);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -303,7 +303,7 @@ class CarryOverController extends OrderAbstractController
             }
             if ($permitted == false) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "You can not review this request. This request can be approved or rejected by " . implode("; ", $approversName)
                 );
@@ -319,7 +319,7 @@ class CarryOverController extends OrderAbstractController
             //OK
         } else {
             //exit('changestatus: no permission to approve/reject'); //testing
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "no permission to approve/reject this carry over request"
             );
@@ -340,7 +340,7 @@ class CarryOverController extends OrderAbstractController
             $event = "This request ID #".$entity->getId()." has been already ".$entity->getStatus()." by ".$entity->getApprover().
             " on ".$entity->getApprovedRejectDate()->format('F jS, Y');
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );

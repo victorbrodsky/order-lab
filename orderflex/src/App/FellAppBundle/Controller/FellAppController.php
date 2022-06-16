@@ -160,7 +160,7 @@ class FellAppController extends OrderAbstractController {
             $warningMsg = "No fellowship types (subspecialties) are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 //'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
                 // Please assign the WCMC department to the appropriate Fellowship Subspecialties'
@@ -492,7 +492,7 @@ class FellAppController extends OrderAbstractController {
         $query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $fellApps = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -701,7 +701,7 @@ class FellAppController extends OrderAbstractController {
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        //$user = $this->get('security')->getUser();
+        //$user = $this->container->get('security')->getUser();
         $user = $this->getUser();
         //dump($user);
         //if( $user ) {
@@ -709,13 +709,13 @@ class FellAppController extends OrderAbstractController {
         //} else {
         //    exit('no user');
         //}
-//        if( $this->get('security.token_storage')->getToken() ) {
+//        if( $this->container->get('security.token_storage')->getToken() ) {
 //            exit('token ok');
 //        } else {
 //            exit('no token');
 //        }
 //        $user = NULL;
-//        //if( $this->get('security.token_storage')->getToken() ) {
+//        //if( $this->container->get('security.token_storage')->getToken() ) {
 //            $user = $this->getUser();
 //        //}
 
@@ -738,7 +738,7 @@ class FellAppController extends OrderAbstractController {
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                    //$this->get('security.token_storage')->setToken($token);
+                    //$this->container->get('security.token_storage')->setToken($token);
                     $tokenStorage->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
@@ -842,7 +842,7 @@ class FellAppController extends OrderAbstractController {
             $warningMsg = "No fellowship types (subspecialties) are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $warningMsg
             );
@@ -930,7 +930,7 @@ class FellAppController extends OrderAbstractController {
             $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
             $fellappUtil->addDefaultInterviewers($entity);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
             );
@@ -1123,7 +1123,7 @@ class FellAppController extends OrderAbstractController {
 //            $em = $this->getDoctrine()->getManager();
 //            $userUtil = $this->container->get('user_utility');
 //            //$userUtil = new UserUtil();
-//            //$secTokenStorage = $this->get('security.token_storage');
+//            //$secTokenStorage = $this->container->get('security.token_storage');
 //            $userUtil->setUpdateInfo($entity);
 //
 //
@@ -1158,7 +1158,7 @@ class FellAppController extends OrderAbstractController {
 //            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
 //                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
 //                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    'A new Complete Fellowship Application PDF will be generated.'
 //                );
@@ -1288,7 +1288,7 @@ class FellAppController extends OrderAbstractController {
             //set update author application
             //$em = $this->getDoctrine()->getManager();
             //$userUtil = new UserUtil();
-            //$secTokenStorage = $this->get('security.token_storage');
+            //$secTokenStorage = $this->container->get('security.token_storage');
             $userUtil = $this->container->get('user_utility');
             $userUtil->setUpdateInfo($entity);
 
@@ -1333,7 +1333,7 @@ class FellAppController extends OrderAbstractController {
             if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
                 $fellappRepGen->addFellAppReportToQueue( $entity->getId(), 'overwrite' );
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     'A new Complete Fellowship Application PDF will be generated.'
                 );
@@ -1352,7 +1352,7 @@ class FellAppController extends OrderAbstractController {
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
 
             //redirect to a simple confirmation page
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Fellowship Application with ID '.$id.' has been updated.'
             );
@@ -1367,7 +1367,7 @@ class FellAppController extends OrderAbstractController {
 //            }
 
             if( $routeName == "fellapp_edit_default_interviewers" ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'pnotify',
                     "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
                 );
@@ -1691,7 +1691,7 @@ class FellAppController extends OrderAbstractController {
             //set update author application
 //            $em = $this->getDoctrine()->getManager();
 //            $userUtil = new UserUtil();
-//            $sc = $this->get('security.context');
+//            $sc = $this->container->get('security.context');
 //            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
 
             //exit('eof new applicant');
@@ -1705,7 +1705,7 @@ class FellAppController extends OrderAbstractController {
             //if( count($entity->getReports()) == 0 ) {
             $fellappRepGen = $this->container->get('fellapp_reportgenerator');
             $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId(), 'overwrite' );
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'A new Complete Fellowship Application PDF will be generated.'
             );
@@ -1850,7 +1850,7 @@ class FellAppController extends OrderAbstractController {
 
         $event = $this->changeFellAppStatus($entity, $status, $request);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $event
         );
@@ -2007,7 +2007,7 @@ class FellAppController extends OrderAbstractController {
 
         $event = $entity->getApplicantFullName()."’s application for ".$entity->getFellowshipSubspecialty()." has been moved from ".$startDate->format('Y')." to ".$startDatePlusOne->format('Y');
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $event
         );
@@ -2326,7 +2326,7 @@ class FellAppController extends OrderAbstractController {
             
             //return $this->redirect( $this->generateUrl('fellapp_home'));
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -2371,7 +2371,7 @@ class FellAppController extends OrderAbstractController {
 //
 //        $params = array(
 //            'cycle' => $cycle,
-//            'sc' => $this->get('security.context'),
+//            'sc' => $this->container->get('security.context'),
 //            'em' => $this->getDoctrine()->getManager(),
 //        );
 //        $form = $this->createForm( new InterviewType($params), $interview );
@@ -2425,7 +2425,7 @@ class FellAppController extends OrderAbstractController {
 
         $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $result
         );
@@ -2444,7 +2444,7 @@ class FellAppController extends OrderAbstractController {
 //            $error = true;
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            $flashType,
 //            $event
 //        );
@@ -2464,7 +2464,7 @@ class FellAppController extends OrderAbstractController {
 //            $flashType = 'warning';
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            $flashType,
 //            $event
 //        );
@@ -2487,7 +2487,7 @@ class FellAppController extends OrderAbstractController {
 
         $result = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $result
         );
@@ -2517,7 +2517,7 @@ class FellAppController extends OrderAbstractController {
             $flashType = 'warning';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $flashType,
             $event
         );
@@ -2548,7 +2548,7 @@ class FellAppController extends OrderAbstractController {
             $flashType = 'warning';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $flashType,
             $event
         );
@@ -2713,7 +2713,7 @@ class FellAppController extends OrderAbstractController {
 
             //exit('fellapp_download_pdf exit');
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Complete Application PDF is not ready yet. Please try again later.'
             );
@@ -2772,7 +2772,7 @@ class FellAppController extends OrderAbstractController {
         $fellapps = $fellappRepGen->getFellApplicationsByYear($year);
         
         $estimatedTime = count($fellapps)*5; //5 min for each report
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'All Application Reports will be regenerated. Estimated processing time for ' . count($fellapps) . ' reports is ' . $estimatedTime . ' minutes. Number of deleted processes in queue ' . $numDeleted
         );
@@ -2822,7 +2822,7 @@ class FellAppController extends OrderAbstractController {
             $processInfoStr = " (ID=".implode(", ",$processInfoArr).")";
         }
         $estimatedTime = count($processes)*5; //5 min for each report
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Queue with ' . count($processes) . $processInfoStr .
             ' will be re-run. Estimated processing time is ' .
@@ -2938,12 +2938,12 @@ class FellAppController extends OrderAbstractController {
                 $status = "rejectedandnotified";
                 $event = $this->changeFellAppStatus($fellapp, $status, $request);
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $event
                 );
 
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    'Rejection notification email has been sent to '.$id
 //                );

@@ -297,7 +297,7 @@ class DefaultController extends OrderAbstractController
 
         $id = 'transres-Project-3358-admin_review';
         //$thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
-        $thread = $this->get('user_comment_utility')->findThreadById($id);
+        $thread = $this->container->get('user_comment_utility')->findThreadById($id);
 
         $commentAtStr = "";
         if($thread->getLastCommentAt()) {

@@ -206,7 +206,7 @@ class AccessRequestController extends OrderAbstractController
         $lastPath = substr((string)$referer, strpos((string)$referer, $request->getBaseUrl()));
         $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
 
-        $matcher = $this->get('router')->getMatcher();
+        $matcher = $this->container->get('router')->getMatcher();
         $parameters = $matcher->match($lastPath);
         $route = $parameters['_route'];
 
@@ -273,8 +273,8 @@ class AccessRequestController extends OrderAbstractController
 
             $text = "You have requested access to ".$sitenameFull." on " . $dateStr . ". Your request has not been approved yet. Please contact the system administrator by emailing ".$this->getParameter('default_system_email')." if you have any questions.";
 
-            //$this->get('security.context')->setToken(null);
-            //$this->get('request')->getSession()->invalidate();
+            //$this->container->get('security.context')->setToken(null);
+            //$this->container->get('request')->getSession()->invalidate();
 
             return $this->render('AppUserdirectoryBundle/AccessRequest/request_confirmation.html.twig',array('text'=>$text,'sitename'=>$sitename,'pendinguser'=>true));
         }
@@ -526,7 +526,7 @@ class AccessRequestController extends OrderAbstractController
         $params = $this->getParams();
         $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
-        //$request = $this->get('request');
+        //$request = $this->container->get('request');
         $form->handleRequest($request);
 
         $requireVerifyMobilePhone = $secUtil->isRequireVerifyMobilePhone($this->siteName);
@@ -653,15 +653,15 @@ class AccessRequestController extends OrderAbstractController
         //Differentiate between the two situations:
         //A- User just logged in and requested access
         //B- User logged in to use another site, then clicked on a site they have no access to and "requested access"...
-        //$request = $this->get('request');
+        //$request = $this->container->get('request');
         $session = $request->getSession();
         if( $session->get('sitename') == $sitename ) {
             $session->getFlashBag()->add(
                 'notice',
                 $text
             );
-            //$this->get('security.context')->setToken(null);
-            //$this->get('security.token_storage')->setToken(null);
+            //$this->container->get('security.context')->setToken(null);
+            //$this->container->get('security.token_storage')->setToken(null);
             //$this->tokenStorage->setToken(null); //testing
             //$request->getSession()->invalidate();
 
@@ -714,7 +714,7 @@ class AccessRequestController extends OrderAbstractController
 
 //    public function reLoginUser($sitename) {
 //        echo "relogin sitename=".$sitename."<br>";
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'warning',
 //            "You must re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
 //        );
@@ -773,7 +773,7 @@ class AccessRequestController extends OrderAbstractController
         $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
         
-		//$request = $this->get('request');
+		//$request = $this->container->get('request');
 		$postData = $request->query->all();
 		
 		if( !isset($postData['sort']) ) { 
@@ -787,7 +787,7 @@ class AccessRequestController extends OrderAbstractController
 
         $limit = 30;
         $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -1432,7 +1432,7 @@ class AccessRequestController extends OrderAbstractController
             'readonly' => false,
             'keytypeChoices' => $keytypeChoices,
             'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdTypeId
-            //'sc' => $this->get('security.context')
+            //'sc' => $this->container->get('security.context')
         );
 
         $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
@@ -1470,7 +1470,7 @@ class AccessRequestController extends OrderAbstractController
         //exit('1');
 
         $limit = 20;
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $users = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -1664,7 +1664,7 @@ class AccessRequestController extends OrderAbstractController
         $dql->leftJoin('user.keytype','keytype');
         $dql->where("user.createdby = '" . $createdby . "'" );
 
-        //$request = $this->get('request');
+        //$request = $this->container->get('request');
 //        $postData = $request->query->all();
 //        if( !isset($postData['sort']) ) {
 //            $dql->orderBy("user.createDate","DESC");
@@ -1677,7 +1677,7 @@ class AccessRequestController extends OrderAbstractController
 
         $limit = 30;
         $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $users = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/

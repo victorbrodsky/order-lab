@@ -1188,3 +1188,9 @@ Working:
 "doctrine/doctrine-bundle": "2.5.*",
 "doctrine/orm": "2.9.6",
 
+Method "Symfony\Component\Config\Definition\ConfigurationInterface::getConfigTreeBuilder()" might add "TreeBuilder"
+as a native return type declaration in the future. Do the same in implementation
+"Oneup\UploaderBundle\DependencyInjection\Configuration" now to avoid errors or add an
+explicit @return annotation to suppress this message.
+Solution: add return type: TreeBuilder in Oneup\UploaderBundle\DependencyInjection\Configuration::getConfigTreeBuilder()
+

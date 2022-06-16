@@ -115,7 +115,7 @@ class SecurityController extends OrderAbstractController
         //exit('sitename='.$sitename);
 
         /////////////// set browser info ///////////////
-        //$request = $this->get('request_stack')->getCurrentRequest();
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
         $session = $request->getSession();
         $userServiceUtil = $this->container->get('user_service_utility');
         $browserInfo = $userServiceUtil->browserCheck();
@@ -200,11 +200,11 @@ class SecurityController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        //$helper = $this->get('security.authentication_utils');
-        //$authenticationUtils = $this->get('security.authentication_utils');
+        //$helper = $this->container->get('security.authentication_utils');
+        //$authenticationUtils = $this->container->get('security.authentication_utils');
 
         //Symfony < 2.6 deprecated methods
-        //$request = $this->get('request_stack')->getCurrentRequest();
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
         //$session = $request->getSession();
 
         // get the login error if there is one
@@ -380,7 +380,7 @@ class SecurityController extends OrderAbstractController
             $options['eventEntity'] = $siteObject;
         }
 
-        //$userUtil->setLoginAttempt($request,$this->get('security.token_storage'),$em,$options);
+        //$userUtil->setLoginAttempt($request,$this->container->get('security.token_storage'),$em,$options);
         $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->setLoginAttempt($request,$options);
 
@@ -409,7 +409,7 @@ class SecurityController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         //$userUtil = new UserUtil();
-        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->container->get('security.authorization_checker'),$this->container);
         $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime']+5; //in seconds; add some seconds as a safety delay.
         $maintenance = $res['maintenance'];
@@ -499,7 +499,7 @@ class SecurityController extends OrderAbstractController
         //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
 
         //$userUtil = new UserUtil();
-        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->container->get('security.authorization_checker'),$this->container);
         $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
         $maxIdleTime = $res['maxIdleTime']; //in seconds
         $maintenance = $res['maintenance'];
@@ -546,8 +546,8 @@ class SecurityController extends OrderAbstractController
 //        echo "logout Action! <br>";
 //        //exit();
 //
-//        $this->get('security.token_storage')->setToken(null);
-//        //$this->get('request')->getSession()->invalidate();
+//        $this->container->get('security.token_storage')->setToken(null);
+//        //$this->container->get('request')->getSession()->invalidate();
 //
 //
 //        $routename = $request->get('_route');
@@ -567,14 +567,14 @@ class SecurityController extends OrderAbstractController
 //        //exit();
 //
 //
-//        $this->get('security.token_storage')->setToken(null);
-//        //$this->get('request')->getSession()->invalidate();
+//        $this->container->get('security.token_storage')->setToken(null);
+//        //$this->container->get('request')->getSession()->invalidate();
 //
 //        return $this->accreqLogout($request,$this->getParameter('employees.sitename'));
 //    }
 //
 //    public function accreqLogout($request,$sitename) {
-//        $this->get('security.token_storage')->setToken(null);
+//        $this->container->get('security.token_storage')->setToken(null);
 //        return $this->redirect($this->generateUrl($sitename.'_login'));
 //    }
 

@@ -44,7 +44,7 @@ class ProviderType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_orderformbundle_providertype';
     }

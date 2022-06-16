@@ -93,7 +93,7 @@ class ProjectFormNodeController extends ProjectController
         $cycle = "new";
 
         if( $transresUtil->isUserAllowedSpecialtyObject($specialty) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the $specialty project specialty"
             );
@@ -224,7 +224,7 @@ class ProjectFormNodeController extends ProjectController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -288,7 +288,7 @@ class ProjectFormNodeController extends ProjectController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -447,7 +447,7 @@ class ProjectFormNodeController extends ProjectController
                 exit('Form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );

@@ -68,7 +68,7 @@ class VisualInfoType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_translationalresearchbundle_visualinfo';
     }

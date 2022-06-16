@@ -244,7 +244,7 @@ class ProjectController extends OrderAbstractController
         }
         
         $params = array(
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdminOrTech' => $trpAdminOrTech,
             'transresUsers' => $transresUsers,
             'stateChoiceArr' => $stateChoiceArr,
@@ -658,7 +658,7 @@ class ProjectController extends OrderAbstractController
             }
 
             if( $expectedExpirationDateProcessed == false ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "Expiration filter '$expectedExpirationDateChoices' not found"
                 );
@@ -1142,7 +1142,7 @@ class ProjectController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $projects = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -1319,7 +1319,7 @@ class ProjectController extends OrderAbstractController
         $cycle = "new";
 
         if( $transresUtil->isUserAllowedSpecialtyObject($specialty) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the $specialty project specialty"
             );
@@ -1457,7 +1457,7 @@ class ProjectController extends OrderAbstractController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -1780,7 +1780,7 @@ class ProjectController extends OrderAbstractController
             }
             //exit("exit111");
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -1868,7 +1868,7 @@ class ProjectController extends OrderAbstractController
 //        //$user = $this->getUser();
 //
 //        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -2035,7 +2035,7 @@ class ProjectController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -2273,7 +2273,7 @@ class ProjectController extends OrderAbstractController
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdmin' => $trpAdmin,
             'trpTech' => $trpTech,
             'trpCommitteeReviewer' => $trpCommitteeReviewer,
@@ -2436,7 +2436,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );

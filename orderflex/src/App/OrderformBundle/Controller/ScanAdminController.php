@@ -148,7 +148,7 @@ class ScanAdminController extends AdminController
      * @Route("/populate-all-lists-with-default-values", name="generate_all", methods={"GET"})
      * @Template()
      */
-    public function generateAllAction()
+    public function generateAllAction(Request $request)
     {
 
         if( false === $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
@@ -162,7 +162,7 @@ class ScanAdminController extends AdminController
 
         $msg = $this->generateScanorderAll();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -305,7 +305,7 @@ class ScanAdminController extends AdminController
         $count = $this->generateStains();
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Generated '.$count. ' stain records.'
             );
@@ -314,7 +314,7 @@ class ScanAdminController extends AdminController
 
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -338,7 +338,7 @@ class ScanAdminController extends AdminController
 
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Created '.$count. ' organ records'
             );
@@ -347,7 +347,7 @@ class ScanAdminController extends AdminController
 
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -365,7 +365,7 @@ class ScanAdminController extends AdminController
      * @Route("/populate-procedure-types-list-with-default-values", name="generate_procedure", methods={"GET"})
      * @Template()
      */
-    public function generateProcedureAction()
+    public function generateProcedureAction(Request $request)
     {
 
 //        $em = $this->getDoctrine()->getManager();
@@ -375,7 +375,7 @@ class ScanAdminController extends AdminController
 
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Created '.$count. ' procedure records'
             );
@@ -383,7 +383,7 @@ class ScanAdminController extends AdminController
             return $this->redirect($this->generateUrl('procedurelist'));
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -406,7 +406,7 @@ class ScanAdminController extends AdminController
 //        $count = $this->generatePathServices();
 //        if( $count >= 0 ) {
 //
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                'Created '.$count. ' stain records'
 //            );
@@ -415,7 +415,7 @@ class ScanAdminController extends AdminController
 //
 //        } else {
 //
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                'This table is already exists!'
 //            );
@@ -437,7 +437,7 @@ class ScanAdminController extends AdminController
         $count = $this->generateSlideType();
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Created '.$count. ' slide types records'
             );
@@ -446,7 +446,7 @@ class ScanAdminController extends AdminController
 
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -468,7 +468,7 @@ class ScanAdminController extends AdminController
         $count = $this->generateMrnType();
         if( $count >= 0 ) {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Created '.$count. ' mrn type records'
             );
@@ -478,7 +478,7 @@ class ScanAdminController extends AdminController
 
         } else {
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'This table is already exists!'
             );
@@ -706,7 +706,7 @@ class ScanAdminController extends AdminController
 //            }
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            'Removed disabled '.$count. ' stains.'
 //        );
@@ -730,7 +730,7 @@ class ScanAdminController extends AdminController
         $orderUtil = $this->container->get('scanorder_utility');
         $removedMessagesCount = $orderUtil->removeAllOrdersPatients();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Removed '.$removedMessagesCount. ' messages.'
         );
@@ -741,7 +741,7 @@ class ScanAdminController extends AdminController
             //2) remove stains
             $count = $orderUtil->removeAllStains();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Removed '.$count. ' stains.'
             );

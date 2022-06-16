@@ -50,7 +50,7 @@ class TestBaseController extends OrderAbstractController
         $id = $calllogUtilDirect->getNextEncounterGeneratedId();
         $msg = $msg . "; id=$id";
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

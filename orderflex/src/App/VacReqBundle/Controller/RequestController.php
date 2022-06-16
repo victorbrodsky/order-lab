@@ -73,7 +73,7 @@ class RequestController extends OrderAbstractController
             //approvers - redirect to incoming requests page
             if( $this->isGranted('ROLE_VACREQ_APPROVER') ) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "You don't have a submitter role in order to submit a request. You have been redirected to the 'Incoming Requests' page."
                 );
@@ -249,7 +249,7 @@ class RequestController extends OrderAbstractController
             if( !$personAwayEmail ) {
                 //throw $this->createNotFoundException("Person email is null: personAway=".$personAway);
                 $personAwayEmail = $css;
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "Away person's email is not set. Sent confirmation email to $personAwayEmail instead."
                 );
@@ -286,7 +286,7 @@ class RequestController extends OrderAbstractController
             //exit('exit event='.$event);
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -447,7 +447,7 @@ class RequestController extends OrderAbstractController
         //can't edit or review if request is not pending
 //        if( $entity->getStatus() != "pending" && $entity->getOverallStatus() != "pending" ) {
 //            //Flash
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                'This request can not be modified because it is not pending anymore.'
 //            );
@@ -461,7 +461,7 @@ class RequestController extends OrderAbstractController
             if ($routName == 'vacreq_review') {
                 if (false == $this->isGranted("changestatus", $entity)) {
                     //exit("vacreq_review: no permission to changestatus");
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         "no permission to review/change the status of this carry over request."
                     );
@@ -470,7 +470,7 @@ class RequestController extends OrderAbstractController
             } else {
                 if (false == $this->isGranted("update", $entity)) {
                     //exit('vacreq_edit: no permission to update');
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         "no permission to update this request."
                     );
@@ -761,7 +761,7 @@ class RequestController extends OrderAbstractController
             $userSecUtil = $this->container->get('user_security_utility');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -870,7 +870,7 @@ class RequestController extends OrderAbstractController
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
                 );
@@ -891,7 +891,7 @@ class RequestController extends OrderAbstractController
                 $modificationDate = " on ".$updateDate->format('m/d/Y H:i:s');
             }
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 //"This ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
                 "This ".$entity->getRequestName()." ID #" . $entity->getId()." is not pending anymore and has been modified by ".$entity->getUpdateUser().$modificationDate
@@ -916,13 +916,13 @@ class RequestController extends OrderAbstractController
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, null, true ); //change status: approved, rejected, pending, canceled
                     $errorMsg .= "<br>This request has been canceled as a duplicate.<br>";
 
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         $errorMsg
                     );
                 } else {
                     $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests );  //change status: approved, rejected, pending, canceled
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         $errorMsg
                     );
@@ -1092,7 +1092,7 @@ class RequestController extends OrderAbstractController
 
                 $event .= $removeCarryoverStr;
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $event
                 );
@@ -1153,7 +1153,7 @@ class RequestController extends OrderAbstractController
 
         if( !$entity->isOverallStatus('approved') ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You can not submit a Cancellation Requested for not approved request.'
             );
@@ -1222,7 +1222,7 @@ class RequestController extends OrderAbstractController
         $eventSubject = $eventSubject.". Email(s) have been sent to ".$approversNameStr;
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSubject
         );
@@ -1266,7 +1266,7 @@ class RequestController extends OrderAbstractController
         //if not Cancellation Requested and vacreq_status_cancellation-request_email_change => redirect to incoming request page
         if( $entity->getExtraStatus() != "Cancellation Requested" && $routeName == 'vacreq_status_cancellation-request_email_change' ) {
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "This cancellation request for ".$entity->getRequestName()." ID #" . $entity->getId()." has already been completed by ".$entity->getApprover()
             );
@@ -1296,7 +1296,7 @@ class RequestController extends OrderAbstractController
         $eventSubject = $entity->getExtraStatus()." of a ".ucwords($requestName)." ID #" . $entity->getId() . " (" . $userNameOptimal . ") by " . $user;
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSubject
         );
@@ -1361,7 +1361,7 @@ class RequestController extends OrderAbstractController
         $eventSubject = 'Reminder email(s) has been sent to '.$approversNameStr;
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSubject
         );
@@ -1498,7 +1498,7 @@ class RequestController extends OrderAbstractController
                     ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $warningMsg
                 );
@@ -1521,7 +1521,7 @@ class RequestController extends OrderAbstractController
                     " Please contact the site administrator to create a group and/or get a Submitter role for your account." . $emailStr;
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $warningMsg
                 );
@@ -1659,13 +1659,13 @@ class RequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $vacReqImportData = $this->get('vacreq_import_data');
+        $vacReqImportData = $this->container->get('vacreq_import_data');
         $res = $vacReqImportData->importOldData();
 
         //exit('Imported result: '.$res);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Imported result: '.$res
         );
@@ -1726,7 +1726,7 @@ class RequestController extends OrderAbstractController
         //exit('Remove result: '.$count);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Removed requests: '.count($requests)
         );
@@ -1794,7 +1794,7 @@ class RequestController extends OrderAbstractController
         //exit('Updated result: '.$count);
 
         //Flash
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Updated dates requests: '.count($requests)
         );
@@ -1982,7 +1982,7 @@ class RequestController extends OrderAbstractController
                 $logger->notice("Sent confirmation email to ".$approversNameStr);
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $msg. " Sent emails=".$approversNameStr
                 );

@@ -242,7 +242,7 @@ class ReviewBaseController extends OrderAbstractController
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'review' => $review,
             'routeName' => $routeName,
             'stateStr' => $stateStr,

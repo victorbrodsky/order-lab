@@ -90,7 +90,7 @@ class ReminderController extends OrderAbstractController
             );
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "Sending reminder emails for unpaid invoices: ".$results
         );
@@ -201,7 +201,7 @@ class ReminderController extends OrderAbstractController
 
         foreach($finalResults as $state=>$results) {
             //$stateStr = $transresUtil->getStateLabelByName($state);
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Sending reminder emails for delayed project requests ($state): " . $results
             );
@@ -404,7 +404,7 @@ class ReminderController extends OrderAbstractController
         }
 
         foreach($finalResults as $state=>$results) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Sending reminder emails for ($state): " . $results
             );

@@ -169,7 +169,7 @@ class ComplexListController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -326,7 +326,7 @@ class ComplexListController extends OrderAbstractController
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->container->get('security.token_storage');
 
         $cycle = 'new_post_standalone';
 
@@ -449,7 +449,7 @@ class ComplexListController extends OrderAbstractController
 
         $cycle = 'edit_put_standalone';
 
-        //$secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->container->get('security.token_storage');
         $userUtil = $this->container->get('user_utility');
         $em = $this->getDoctrine()->getManager();
 

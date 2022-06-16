@@ -129,7 +129,7 @@ class ScanOrderController extends OrderAbstractController {
         //exit();
         //throw new \Exception( 'Test' );
         //http://knpbundles.com/craue/CraueConfigBundle
-        //$this->get('craue_config')->set('ldap_driver_host', 'a.wcmc-ad.net');
+        //$this->container->get('craue_config')->set('ldap_driver_host', 'a.wcmc-ad.net');
 
         //create filters
         $params = array();
@@ -171,8 +171,8 @@ class ScanOrderController extends OrderAbstractController {
             $dql->where($criteriastr);
         }
 
-        $params = $this->get('request_stack')->getCurrentRequest()->query->all();
-        $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
+        $params = $this->container->get('request_stack')->getCurrentRequest()->query->all();
+        $sort = $this->container->get('request_stack')->getCurrentRequest()->query->get('sort');
 
         //echo "sort=".$sort.", page=".$page."<br>";
 
@@ -211,7 +211,7 @@ class ScanOrderController extends OrderAbstractController {
         $limit = $this->limit;
 
         $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
 
         $pagination = $paginator->paginate(
             $query,
@@ -246,15 +246,15 @@ class ScanOrderController extends OrderAbstractController {
         }
 
         ////////////////// Testing pagination //////////////////
-//        $em    = $this->get('doctrine.orm.entity_manager');
+//        $em    = $this->container->get('doctrine.orm.entity_manager');
 //        $postData = $request->query->all();
 //        $dql1   = "SELECT message, COUNT(slides.id) AS slidecount FROM AppOrderformBundle:Message message INNER JOIN message.slide slides GROUP BY message ORDER BY $postData[sort] $postData[direction]";
 //        $query1 = $em->createQuery($dql1);
 //        echo "dql=".$dql1."<br>";
-//        $paginator  = $this->get('knp_paginator');
+//        $paginator  = $this->container->get('knp_paginator');
 //        $pagination1 = $paginator->paginate(
 //            $query1,
-//            $this->get('request')->query->get('page', 1)/*page number*/,
+//            $this->container->get('request')->query->get('page', 1)/*page number*/,
 //            10  /*limit per page*/
 //        );
 //        foreach( $pagination1 as $page ) {
@@ -354,7 +354,7 @@ class ScanOrderController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $this->get('session')->getFlashBag()->add('status-changed',$res['message']);
+        $this->addFlash('status-changed',$res['message']);
 
         $referer_url = $request->headers->get('referer');
 
@@ -1127,8 +1127,8 @@ class ScanOrderController extends OrderAbstractController {
         //$dql->where($criteriastrOrig);
         //$dql->where("1=1");
 
-        $params = $this->get('request_stack')->getCurrentRequest()->query->all();
-        $sort = $this->get('request_stack')->getCurrentRequest()->query->get('sort');
+        $params = $this->container->get('request_stack')->getCurrentRequest()->query->all();
+        $sort = $this->container->get('request_stack')->getCurrentRequest()->query->get('sort');
 
         if( $routeName == "my-scan-orders" ) {
             if( $params == null || count($params) == 0 ) {
@@ -1162,7 +1162,7 @@ class ScanOrderController extends OrderAbstractController {
 
         $query = $em->createQuery($dql);
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
 
         $pagination = $paginator->paginate(
             $query,

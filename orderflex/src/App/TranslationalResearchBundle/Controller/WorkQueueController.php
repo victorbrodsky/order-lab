@@ -156,7 +156,7 @@ class WorkQueueController extends OrderAbstractController
         }
         
         $params = array(
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdminOrTech' => $trpAdminOrTech,
             'progressStateArr' => $progressStateArr,
             'billingStateArr' => $billingStateArr,
@@ -674,7 +674,7 @@ class WorkQueueController extends OrderAbstractController
         //TESTING
         //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $products = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -802,7 +802,7 @@ class WorkQueueController extends OrderAbstractController
             $msg = "Error: Orderable status for product '".$product."' has not been updated to $orderableStatusName";
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

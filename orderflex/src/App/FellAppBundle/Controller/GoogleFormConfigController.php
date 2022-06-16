@@ -295,7 +295,7 @@ class GoogleFormConfigController extends OrderAbstractController
                 $eventMsg = "Fellowship Form Configuration file has been updated on the Google Drive by " . $user;
                 $eventType = 'Fellowship Application Config Updated On Google Drive';
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $eventMsg
                 );
@@ -304,7 +304,7 @@ class GoogleFormConfigController extends OrderAbstractController
                 $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
                 //throw new \Exception( $msg );
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $eventMsg
                 );
@@ -313,7 +313,7 @@ class GoogleFormConfigController extends OrderAbstractController
             $eventMsg = "Fellowship Form Configuration file has not been updated because the environment is not 'live' (environment='$environment') on the Google Drive by " . $user;
             $eventType = 'Fellowship Application Config Updated On Google Drive Failed';
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $eventMsg
             );

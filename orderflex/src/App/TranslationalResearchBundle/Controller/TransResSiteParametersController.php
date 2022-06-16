@@ -77,7 +77,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //
 //            //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 //
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'notice',
 //                $msg
 //            );
@@ -202,7 +202,7 @@ class TransResSiteParametersController extends OrderAbstractController
 
             $msg = $siteParameter." have been updated.";
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );

@@ -82,7 +82,7 @@ class FilterSlideReturnRequestType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'filter_search_box';
     }

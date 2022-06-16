@@ -460,7 +460,7 @@ class UploadController extends OrderAbstractController {
     {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You do not have permission to import users.'
             );
@@ -492,7 +492,7 @@ class UploadController extends OrderAbstractController {
             //list v2 provided by Jessica
             $res = $userGenerator->generateUsersExcelV2($inputFileName);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res
             );
@@ -516,7 +516,7 @@ class UploadController extends OrderAbstractController {
      */
     public function importExcelUsersTemplateFileAction() {
 
-        $rootDir = $this->get('kernel')->getRootDir();
+        $rootDir = $this->container->get('kernel')->getRootDir();
         //echo "rootDir=".$rootDir."<br>";
 
         //C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx

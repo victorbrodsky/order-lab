@@ -54,7 +54,7 @@ class ScanListController extends ListController
         //$listExcelHtml = $this->container->get('templating')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
         //    $listArr
         //);
-        $listExcelHtml = $this->get('twig')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
+        $listExcelHtml = $this->container->get('twig')->render('AppOrderformBundle/ListForm/list-excel.html.twig',
             $listArr
         );
 
@@ -119,7 +119,7 @@ class ScanListController extends ListController
         //$em->flush(); // Persist objects that did not make up an entire batch
         $em->clear();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "Stain's Full Title updated: " . $count
         );

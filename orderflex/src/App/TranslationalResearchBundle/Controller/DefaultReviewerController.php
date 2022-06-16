@@ -104,7 +104,7 @@ class DefaultReviewerController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $defaultReviewers = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/

@@ -40,7 +40,7 @@ class AdministrativeTitleType extends BaseTitleType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_userdirectorybundle_administrativetitletype';
     }

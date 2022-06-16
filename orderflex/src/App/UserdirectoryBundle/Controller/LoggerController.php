@@ -298,7 +298,7 @@ class LoggerController extends OrderAbstractController
 
         if( $postData == null ) {
 //            if( $request == null ) {
-//                $request = $this->get('request');
+//                $request = $this->container->get('request');
 //            }
 		    $postData = $request->query->all();
         }
@@ -339,7 +339,7 @@ class LoggerController extends OrderAbstractController
         //echo "logs=".count($logs)."<br>";
         //exit('111');
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -737,7 +737,7 @@ class LoggerController extends OrderAbstractController
             return $this->redirect($this->generateUrl('logger_show', array('id' => $entity->getId())));
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Failed to create log'
         );

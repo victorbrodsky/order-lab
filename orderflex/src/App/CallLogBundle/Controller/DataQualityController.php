@@ -814,7 +814,7 @@ class DataQualityController extends CallEntryController
             $msg .= "Task has not been updated: task id or status are not provided.";
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );

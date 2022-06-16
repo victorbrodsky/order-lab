@@ -178,7 +178,7 @@ class ScanCustomSelectorType extends AbstractType {
         //return 'text';
     }
 
-    public function getBlockPrefix() : string
+    public function getBlockPrefix(): string
     {
         return 'scan_custom_selector';
     }

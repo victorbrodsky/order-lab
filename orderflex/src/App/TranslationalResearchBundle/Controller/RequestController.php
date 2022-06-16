@@ -96,7 +96,7 @@ class RequestController extends OrderAbstractController
 
         if( $project ) {
             if( $transresRequestUtil->isRequestCanBeCreated($project) !== 1 ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You can not submit a new work request for an expired project"
                 );
@@ -128,7 +128,7 @@ class RequestController extends OrderAbstractController
             //exit('111');
 
             if( $transresRequestUtil->isRequestCanBeCreated($project) !== 1 ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You can not submit a new work request for an expired project"
                 );
@@ -140,7 +140,7 @@ class RequestController extends OrderAbstractController
 
             //if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             if( false === $transresPermissionUtil->hasRequestPermission('create',$transresRequest) ) {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'warning',
 //                    "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //                );
@@ -300,17 +300,17 @@ class RequestController extends OrderAbstractController
             }
 
 //            if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    $msg . $break . $break . $overBudgetEmail
 //                );
 //            } else {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    $msg
 //                );
 //            }
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -388,7 +388,7 @@ class RequestController extends OrderAbstractController
         if( false === $transresPermissionUtil->hasRequestPermission('update',$transresRequest) ) {
             if( $transresUtil->isProjectRequester($project) && $transresRequest->getProgressState() != 'draft' ) {
                 $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
                 );
@@ -613,12 +613,12 @@ class RequestController extends OrderAbstractController
             }
 
 //            if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    $msg . $break.$break . $overBudgetEmail . $break.$break . $newInvoiceMsg
 //                );
 //            } else {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    $msg . $break.$break . $newInvoiceMsg
 //                );
@@ -626,7 +626,7 @@ class RequestController extends OrderAbstractController
             if( $newInvoiceMsg ) {
                 $newInvoiceMsg = $break.$break . $newInvoiceMsg;
             }
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg . $newInvoiceMsg
             );
@@ -1002,7 +1002,7 @@ class RequestController extends OrderAbstractController
 //
 //
 //        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -1078,7 +1078,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -1252,7 +1252,7 @@ class RequestController extends OrderAbstractController
         }
 
         $params = array(
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdminOrTech' => $trpAdminOrTech,
             'transresUsers' => $transresUsers,
             'progressStateArr' => $progressStateArr,
@@ -1401,7 +1401,7 @@ class RequestController extends OrderAbstractController
             //if specialty contains $projectSpecialtyDeniedArr => exit
             foreach ($projectSpecialties as $thisProjectSpecialty) {
                 if ($projectSpecialtyDeniedArr->contains($thisProjectSpecialty)) {
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'warning',
                         "You project specialty $thisProjectSpecialty conflicting with your allowed specialty"
                     );
@@ -1959,14 +1959,14 @@ class RequestController extends OrderAbstractController
 
             //not pre-set filter
 //            if( $filterType != "All Requests" ) {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    "Filter pre-set type '$filterType' is not defined"
 //                );
 //            }
 
             if (!$filterTypeDone) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "Filter pre-set type '$filterType' is not defined"
                 );
@@ -2331,7 +2331,7 @@ class RequestController extends OrderAbstractController
         //TESTING
         //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $transresRequests = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
@@ -2460,7 +2460,7 @@ class RequestController extends OrderAbstractController
 //            'defaultSortDirection' => 'DESC',
 //            'wrap-queries' => true
 //        );
-//        $paginator  = $this->get('knp_paginator');
+//        $paginator  = $this->container->get('knp_paginator');
 //        $transresRequests = $paginator->paginate(
 //            $query,
 //            $request->query->get('page', 1),   /*page number*/
@@ -2639,7 +2639,7 @@ class RequestController extends OrderAbstractController
             'em' => $em,
             'user' => $user,
             'transresUtil' => $transresUtil,
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'trpAdmin' => $trpAdmin,
             'transresRequest' => $transresRequest,
             'routeName' => $routeName,
@@ -2888,7 +2888,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -2941,7 +2941,7 @@ class RequestController extends OrderAbstractController
                 $originalIrbExpDateStr." to ".$value;
             $transresUtil->setEventLog($project,$eventType,$res);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $res
             );
@@ -2972,7 +2972,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -3028,7 +3028,7 @@ class RequestController extends OrderAbstractController
                             $originalPriceList . " to " . $priceList;
                         $transresUtil->setEventLog($project,$eventType,$res);
 
-                        $this->get('session')->getFlashBag()->add(
+                        $this->addFlash(
                             'notice',
                             $res
                         );
@@ -3069,7 +3069,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -3102,7 +3102,7 @@ class RequestController extends OrderAbstractController
                     $originalApprovedProjectBudget . " to " . $project->getApprovedProjectBudget();
                 $transresUtil->setEventLog($project,$eventType,$res);
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $res
                 );
@@ -3138,7 +3138,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
 //            );
@@ -3186,7 +3186,7 @@ class RequestController extends OrderAbstractController
                     $originalNoBudgetLimitStr . " to " . $noBudgetLimitStr;
                 $transresUtil->setEventLog($project,$eventType,$res);
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $res
                 );
@@ -3267,7 +3267,7 @@ class RequestController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $fees = $paginator->paginate(
             $query,
             $request->query->get('page', 1),    /*page number*/
@@ -3401,7 +3401,7 @@ class RequestController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );

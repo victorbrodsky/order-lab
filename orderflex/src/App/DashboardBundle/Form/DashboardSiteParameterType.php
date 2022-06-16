@@ -103,7 +103,7 @@ class DashboardSiteParameterType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_dashboardbundle_dashboardsiteparameter';
     }

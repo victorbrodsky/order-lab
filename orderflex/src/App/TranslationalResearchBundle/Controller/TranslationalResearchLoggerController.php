@@ -136,7 +136,7 @@ class TranslationalResearchLoggerController extends LoggerController
         if( count($objectTypes) > 0 ) {
             $objectType = $objectTypes[0];
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "Object Type is not defined."
             );
@@ -164,7 +164,7 @@ class TranslationalResearchLoggerController extends LoggerController
 
         $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
         if( !$subjectEntity ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "Object not found by ID ".$objectId
             );
@@ -176,7 +176,7 @@ class TranslationalResearchLoggerController extends LoggerController
 
         if( method_exists($subjectEntity, "getProjectSpecialty") ) {
             if( $transresUtil->isUserAllowedSpecialtyObject($subjectEntity->getProjectSpecialty()) === false ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     "You don't have a permission to access the ".$subjectEntity->getProjectSpecialty()." project specialty"
                 );

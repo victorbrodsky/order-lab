@@ -183,7 +183,7 @@ class ResAppController extends OrderAbstractController {
             $warningMsg = "No residency tracks are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application track.</a>';
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 //'No Residency Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
                 // Please assign the WCMC department to the appropriate Residency Subspecialties'
@@ -546,7 +546,7 @@ class ResAppController extends OrderAbstractController {
         $limit = 200;
         //$limit = 10; //testing
         $query = $em->createQuery($dql);
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $resApps = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -784,8 +784,8 @@ class ResAppController extends OrderAbstractController {
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                    //$this->get('security.token_storage')->setToken($token);
-                    //$this->get('security.token_storage')->setToken($token);
+                    //$this->container->get('security.token_storage')->setToken($token);
+                    //$this->container->get('security.token_storage')->setToken($token);
                     $tokenStorage->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
@@ -911,7 +911,7 @@ class ResAppController extends OrderAbstractController {
             $warningMsg = "No residency tracks are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new residency application track.</a>';
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 $warningMsg
             );
@@ -1009,7 +1009,7 @@ class ResAppController extends OrderAbstractController {
             $action = $this->generateUrl('resapp_update', array('id' => $entity->getId()));
             $resappUtil->addDefaultInterviewers($entity);
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
             );
@@ -1208,7 +1208,7 @@ class ResAppController extends OrderAbstractController {
 //            //set update author application
 //            $em = $this->getDoctrine()->getManager();
 //            $userUtil = new UserUtil();
-//            $secTokenStorage = $this->get('security.token_storage');
+//            $secTokenStorage = $this->container->get('security.token_storage');
 //            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
 //
 //
@@ -1243,7 +1243,7 @@ class ResAppController extends OrderAbstractController {
 //            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
 //                $resappRepGen = $this->container->get('resapp_reportgenerator');
 //                $resappRepGen->addResAppReportToQueue( $id, 'overwrite' );
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    'A new Complete Residency Application PDF will be generated.'
 //                );
@@ -1388,7 +1388,7 @@ class ResAppController extends OrderAbstractController {
             //set update author application
             //$em = $this->getDoctrine()->getManager();
             //$userUtil = new UserUtil();
-            //$secTokenStorage = $this->get('security.token_storage');
+            //$secTokenStorage = $this->container->get('security.token_storage');
             $userUtil = $this->container->get('user_utility');
             $userUtil->setUpdateInfo($entity);
 
@@ -1429,7 +1429,7 @@ class ResAppController extends OrderAbstractController {
 
                 $resappRepGen = $this->container->get('resapp_reportgenerator');
                 $resappRepGen->addResAppReportToQueue( $entity->getId(), 'overwrite' );
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     'A new Complete Residency Application PDF will be generated.'
                 );
@@ -1448,7 +1448,7 @@ class ResAppController extends OrderAbstractController {
             //return $this->redirect($this->generateUrl('resapp_show',array('id' => $entity->getId())));
 
             //redirect to a simple confirmation page
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Residency Application with ID '.$id.' has been updated.'
             );
@@ -1463,7 +1463,7 @@ class ResAppController extends OrderAbstractController {
 //            }
 
             if( $routeName == "resapp_edit_default_interviewers" ) {
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'pnotify',
                     "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
                 );
@@ -1831,7 +1831,7 @@ class ResAppController extends OrderAbstractController {
             //set update author application
 //            $em = $this->getDoctrine()->getManager();
 //            $userUtil = new UserUtil();
-//            $sc = $this->get('security.context');
+//            $sc = $this->container->get('security.context');
 //            $userUtil->setUpdateInfo($residencyApplication,$em,$sc);
 
             //exit('eof new applicant');
@@ -1845,7 +1845,7 @@ class ResAppController extends OrderAbstractController {
             //if( count($entity->getReports()) == 0 ) {
             $resappRepGen = $this->container->get('resapp_reportgenerator');
             $resappRepGen->addResAppReportToQueue( $residencyApplication->getId(), 'overwrite' );
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'A new Complete Residency Application PDF will be generated.'
             );
@@ -2013,7 +2013,7 @@ class ResAppController extends OrderAbstractController {
 
         $event = $this->changeResAppStatus($entity, $status, $request);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $event
         );
@@ -2216,7 +2216,7 @@ class ResAppController extends OrderAbstractController {
 
         $event = $entity->getApplicantFullName()."’s application for ".$entity->getResidencyTrack()." has been moved from ".$startDate->format('Y')." to ".$startDatePlusOne->format('Y');
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $event
         );
@@ -2532,7 +2532,7 @@ class ResAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$resapp,$request,$eventType);
             ////// EOF Event Log //////
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -2577,7 +2577,7 @@ class ResAppController extends OrderAbstractController {
 //
 //        $params = array(
 //            'cycle' => $cycle,
-//            'sc' => $this->get('security.context'),
+//            'sc' => $this->container->get('security.context'),
 //            'em' => $this->getDoctrine()->getManager(),
 //        );
 //        $form = $this->createForm( new InterviewType($params), $interview );
@@ -2631,7 +2631,7 @@ class ResAppController extends OrderAbstractController {
 
         $result = $resappImportPopulateUtil->processResAppFromGoogleDrive();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $result
         );
@@ -2650,7 +2650,7 @@ class ResAppController extends OrderAbstractController {
 //            $error = true;
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            $flashType,
 //            $event
 //        );
@@ -2670,7 +2670,7 @@ class ResAppController extends OrderAbstractController {
 //            $flashType = 'warning';
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            $flashType,
 //            $event
 //        );
@@ -2693,7 +2693,7 @@ class ResAppController extends OrderAbstractController {
 
         $result = $resappRecLetterUtil->processResRecLetterFromGoogleDrive();
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $result
         );
@@ -2723,7 +2723,7 @@ class ResAppController extends OrderAbstractController {
             $flashType = 'warning';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $flashType,
             $event
         );
@@ -2754,7 +2754,7 @@ class ResAppController extends OrderAbstractController {
             $flashType = 'warning';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             $flashType,
             $event
         );
@@ -2919,7 +2919,7 @@ class ResAppController extends OrderAbstractController {
 
             //exit('resapp_download_pdf exit');
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Complete Application PDF is not ready yet. Please try again later.'
             );
@@ -2994,7 +2994,7 @@ class ResAppController extends OrderAbstractController {
 
         exit($msg);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -3072,7 +3072,7 @@ class ResAppController extends OrderAbstractController {
             $processInfoStr = " (ID=".implode(", ",$processInfoArr).")";
         }
         $estimatedTime = count($processes)*5; //5 min for each report
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             'Queue with ' . count($processes) . $processInfoStr . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processes in queue ' . $numUpdated
         );
@@ -3185,12 +3185,12 @@ class ResAppController extends OrderAbstractController {
                 $status = "rejectedandnotified";
                 $event = $this->changeResAppStatus($resapp, $status, $request);
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     $event
                 );
 
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    'Rejection notification email has been sent to '.$id
 //                );

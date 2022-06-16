@@ -51,7 +51,7 @@ class VacReqRequestVacationType extends VacReqRequestBaseType {
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_vacreqbundle_request_vacation';
     }

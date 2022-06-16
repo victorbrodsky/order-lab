@@ -74,11 +74,11 @@ class DefaultController extends OrderAbstractController
         //$userServiceUtil->metaphoneTest();
 
 //        $msg = "Notify Test!!!";
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'pnotify',
 //                $msg
 //            );
@@ -326,7 +326,7 @@ class DefaultController extends OrderAbstractController
             $userSecUtil->createUserEditEvent($this->getParameter('crn.sitename'), $msgLog, $user, null, $request, $eventType);
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -370,7 +370,7 @@ class DefaultController extends OrderAbstractController
 
             $msg = "Critical Result Notification cache has been manually updated for " . $message->getOid();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'pnotify',
                 $msg
             );

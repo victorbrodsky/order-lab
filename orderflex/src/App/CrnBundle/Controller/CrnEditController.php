@@ -62,7 +62,7 @@ class CrnEditController extends CrnEntryController
 
         $msg = $this->deleteMessage( $message, "delete link", $request );
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -94,7 +94,7 @@ class CrnEditController extends CrnEntryController
         $messageStatusPrior = $message->getMessageStatusPrior();
 
         if( !$messageStatusPrior ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Prior entry status is undefined, therefore, no modification has been performed.'
             );
@@ -114,11 +114,11 @@ class CrnEditController extends CrnEntryController
         }
         $msg = "Message Entry ID#".$message->getMessageOidVersion()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message).
             " successfully un-deleted and status set to ".$messageStatusPrior;
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -896,7 +896,7 @@ class CrnEditController extends CrnEntryController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );

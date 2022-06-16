@@ -48,7 +48,7 @@ class InvoiceController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        //replace $this->get('security.token_storage')
+        //replace $this->container->get('security.token_storage')
         $user = $this->getUser();
         //exit('user='.$user);
 
@@ -126,7 +126,7 @@ class InvoiceController extends OrderAbstractController
             'versions' => $versions,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'humanAnimalName' => $transresUtil->getHumanAnimalName("brackets"),
-            //'SecurityAuthChecker' => $this->container, //$this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container, //$this->container->get('security.authorization_checker'),
             'trpAdminOrTech' => $trpAdminOrTech,
             'transresPricesList' => $transresPricesList
         );
@@ -723,7 +723,7 @@ class InvoiceController extends OrderAbstractController
             'wrap-queries' => true
         );
 
-        $paginator = $this->get('knp_paginator');
+        $paginator = $this->container->get('knp_paginator');
         $invoices = $paginator->paginate(
             $query,
             $request->query->get('page', 1),    /*page number*/
@@ -824,7 +824,7 @@ class InvoiceController extends OrderAbstractController
         $project = $transresRequest->getProject();
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
             );
@@ -834,7 +834,7 @@ class InvoiceController extends OrderAbstractController
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"create") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to create this invoice."
             );
@@ -874,7 +874,7 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $msg . $msg2;
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -928,7 +928,7 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
@@ -936,7 +936,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to view this invoice"
             );
@@ -992,7 +992,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         if( $invoice->getLatestVersion() !== true ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "The old version of the invoice can not be edited."
             );
@@ -1002,7 +1002,7 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
@@ -1010,7 +1010,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"update") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to edit this invoice"
             );
@@ -1157,7 +1157,7 @@ class InvoiceController extends OrderAbstractController
 
             $msg = $msg . $msg2;
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -1222,7 +1222,7 @@ class InvoiceController extends OrderAbstractController
             $em->remove($invoice);
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );
@@ -1260,7 +1260,7 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
@@ -1268,7 +1268,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"generate-invoice-pdf") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to generate PDF for this invoice"
             );
@@ -1294,7 +1294,7 @@ class InvoiceController extends OrderAbstractController
 
         //exit("<br><br>".$msg);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -1328,8 +1328,8 @@ class InvoiceController extends OrderAbstractController
             $systemUser = $userSecUtil->findSystemUser();
             if( $systemUser ) {
                 $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                //$this->get('security.token_storage')->setToken($token);
-                //$this->get('security.token_storage')->setToken($token);
+                //$this->container->get('security.token_storage')->setToken($token);
+                //$this->container->get('security.token_storage')->setToken($token);
                 $tokenStorage->setToken($token);
             }
             $logger->notice("Download view: Logged in as systemUser=".$systemUser);
@@ -1338,7 +1338,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to view this invoice"
             );
@@ -1423,7 +1423,7 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
@@ -1431,7 +1431,7 @@ class InvoiceController extends OrderAbstractController
 //        }
 
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to view this invoice"
             );
@@ -1453,7 +1453,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('translationalresearch_file_view',array('id' => $invoicePDF->getId())) );
 
         } else {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Invoice PDF does not exists.'
             );
@@ -1512,7 +1512,7 @@ class InvoiceController extends OrderAbstractController
             'invoice' => $invoice,
             'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'principalInvestigators' => $principalInvestigators,
-            //'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            //'SecurityAuthChecker' => $this->container->get('security.authorization_checker'),
             'transres_request_util' => $transresRequestUtil
         );
 
@@ -1588,14 +1588,14 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"send-invoice-pdf-email") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to send the invoice pdf by email"
             );
@@ -1605,7 +1605,7 @@ class InvoiceController extends OrderAbstractController
         //Send the most recent Invoice PDF by Email
         $msg = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -1711,14 +1711,14 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"change-status") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to change the invoice status"
             );
@@ -1757,7 +1757,7 @@ class InvoiceController extends OrderAbstractController
             $transresUtil->setEventLog($invoice,$eventType,$msg);
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -1803,14 +1803,14 @@ class InvoiceController extends OrderAbstractController
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                "You don't have a permission to access this specialty"
 //            );
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
         if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"update") === false ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 "You don't have a permission to update this invoice"
             );
@@ -2007,7 +2007,7 @@ class InvoiceController extends OrderAbstractController
 //            );
 //        }
 //
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            "Sending reminder emails for unpaid invoices: ".$results
 //        );

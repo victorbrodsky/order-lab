@@ -109,7 +109,7 @@ class PriceType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_translationalresearchbundle_prices';
     }

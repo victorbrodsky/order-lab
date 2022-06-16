@@ -92,7 +92,7 @@ class UserRequestController extends OrderAbstractController
         //echo "siteName=".$this->siteName."<br>";
         //echo "query=".$query->getSql()."<br>";
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -183,7 +183,7 @@ class UserRequestController extends OrderAbstractController
             $em->persist($entity);
             $em->flush(); //comment out for testing
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
@@ -348,7 +348,7 @@ class UserRequestController extends OrderAbstractController
                 $em->persist($entityDb);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "User with username " . $entityDb->getUsername() . " has been successfully approved. ".
                     "You must manually create this user in the system. ".
@@ -371,7 +371,7 @@ class UserRequestController extends OrderAbstractController
                     $failedArr[] = "organizational group is empty";
                 }
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
                 );
@@ -405,7 +405,7 @@ class UserRequestController extends OrderAbstractController
                 $em->persist($entityDb);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "User with username " . $entityDb->getUsername() . " has been successfully approved. ".
                     "You must manually create this user in the system. ".
@@ -423,7 +423,7 @@ class UserRequestController extends OrderAbstractController
                     $failedArr[] = "organizational group is empty";
                 }
 
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     "Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
                 );
@@ -438,7 +438,7 @@ class UserRequestController extends OrderAbstractController
 
         $securityUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->container->get('security.context')->getToken()->getUser();
         
         $params = array();
 

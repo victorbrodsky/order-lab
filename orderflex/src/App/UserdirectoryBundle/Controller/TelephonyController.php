@@ -117,7 +117,7 @@ class TelephonyController extends OrderAbstractController {
                     $user->addRole("ROLE_CRN_RECIPIENT");
                 }
                 $em->flush();
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'notice',
                     'Your mobile phone number has been successfully verified.'
                 );
@@ -128,7 +128,7 @@ class TelephonyController extends OrderAbstractController {
                 
                 return $this->redirect($this->generateUrl('main_common_home'));
             } else {
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'warning',
 //                    'Invalid verification code.'
 //                );
@@ -137,7 +137,7 @@ class TelephonyController extends OrderAbstractController {
                 } else {
                     $resFailed = "Verification failed";
                 }
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     $resFailed
                 );
@@ -155,20 +155,20 @@ class TelephonyController extends OrderAbstractController {
 //
 //                $em->flush();
 //
-//                $this->get('session')->getFlashBag()->add(
+//                $this->addFlash(
 //                    'notice',
 //                    'Your mobile phone number has been successfully verified.'
 //                );
 //
 //                return $this->redirect($this->generateUrl('main_common_home'));
 //            } else {
-////                $this->get('session')->getFlashBag()->add(
+////                $this->addFlash(
 ////                    'warning',
 ////                    'Invalid verification code.'
 ////                );
 //            }
         } else {
-//            $this->get('session')->getFlashBag()->add(
+//            $this->addFlash(
 //                'warning',
 //                'Invalid verification code.'
 //            );
@@ -281,7 +281,7 @@ class TelephonyController extends OrderAbstractController {
             $userServiceUtil = $this->container->get('user_service_utility');
 
             // Get data from session
-            //$data = $this->get('session')->get('user');
+            //$data = $this->container->get('session')->get('user');
             $verificationCode = $request->query->get('verify_code');
             $verificationCode = trim((string)$verificationCode);
 
@@ -321,7 +321,7 @@ class TelephonyController extends OrderAbstractController {
                             $user->addRole("ROLE_CRN_RECIPIENT");
                         }
                         $em->flush();
-                        $this->get('session')->getFlashBag()->add(
+                        $this->addFlash(
                             'notice',
                             'Mobile phone number is verified!'
                         );
@@ -348,7 +348,7 @@ class TelephonyController extends OrderAbstractController {
                             $resFailed = "Verification failed";
                         }
                         //$logger->error("verifyCodeAction: ".$resFailed);
-                        $this->get('session')->getFlashBag()->add(
+                        $this->addFlash(
                             'warning',
                             $resFailed
                         );
@@ -360,7 +360,7 @@ class TelephonyController extends OrderAbstractController {
             } else {
                 //$logger->error("verifyCodeAction: Logical error: invalid input parameters. phoneNumber=".$phoneNumber);
                 //exit("Invalid input parameters: verificationCode=[$verificationCode], phoneNumber=[$phoneNumber]");
-                $this->get('session')->getFlashBag()->add(
+                $this->addFlash(
                     'warning',
                     'Logical error: invalid input parameters.'
                 );
@@ -369,7 +369,7 @@ class TelephonyController extends OrderAbstractController {
             //exit('Mobile phone number not verified.');
 
             //$logger->error("verifyCodeAction: Logical error: Unknown error. phoneNumber=".$phoneNumber);
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Mobile phone number is not verified.'
             );

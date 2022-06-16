@@ -216,7 +216,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         if( !$inputFileName ) {
                             $inputFileName = $file->getFullServerPath();
                         } else {
-                            $this->get('session')->getFlashBag()->add(
+                            $this->addFlash(
                                 'warning',
                                 "Multiple CSV files are not supported. CSV file ".$file->getOriginalName()." is ignored."
                             );
@@ -256,7 +256,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                     $errorMsg = $handsomtableJsonData;
 
-                        $this->get('session')->getFlashBag()->add(
+                        $this->addFlash(
                         'warning',
                         $handsomtableJsonData
                     );
@@ -313,7 +313,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $updatedStr = "<b>".$updatedStr . $key . "</b>". ":<br>" . implode("; ",$valueArr) . "<br><br>";
                     }
                    //$updatedStr = implode("<br>",$updatedStrArr);
-                    $this->get('session')->getFlashBag()->add(
+                    $this->addFlash(
                         'notice',
                         $updatedStr
                     );

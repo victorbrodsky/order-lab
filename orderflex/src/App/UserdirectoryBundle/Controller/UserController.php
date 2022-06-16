@@ -136,7 +136,7 @@ class UserController extends OrderAbstractController
         //$session = $request->getSession();
         //echo $session->get('_security_scan_auth');
 
-        //$encoder = $this->get('security.password_encoder');
+        //$encoder = $this->container->get('security.password_encoder');
         //$userServiceUtil = $this->container->get('user_service_utility');
         //$encoder = $userServiceUtil->getEncoder();
         //$plainPassword = "123";
@@ -154,7 +154,29 @@ class UserController extends OrderAbstractController
         //$res = $userServiceUtil->browserCheck();
         //exit('res='.$res);
 
-
+//        $paginator  = $this->container->get('knp_paginator');
+//
+//        $request->getSession()->getFlashBag()->add(
+//                'notice',
+//                "test"
+//            );
+//        $this->addFlash('notice',"test2");
+//
+//        //$this->container->get(' => $this->container->get('
+//        $listExcelHtml = $this->container->get('twig');
+//        $params = $this->container->get('request_stack');
+//
+//        $router = $this->container->get('router');
+//        $thisUrl = $router->generate(
+//            'employees_showuser',
+//            array(
+//                'id'=>1
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        echo "thisUrl=$thisUrl <br>";
+//
+//        $encoder = $this->container->get('security.password_encoder');
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
@@ -523,7 +545,7 @@ class UserController extends OrderAbstractController
         //echo "search=".$search."<br>";
         //echo "all=".$all."<br>";
 
-        //$request = $this->get('request');
+        //$request = $this->container->get('request');
         $postData = $request->query->all();
 
         $sort = null;
@@ -685,7 +707,7 @@ class UserController extends OrderAbstractController
                 $limit = count($paginationOnePage);
             }
 
-            $paginator  = $this->get('knp_paginator');
+            $paginator  = $this->container->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->get('page', 1), /*page number*/
@@ -1160,7 +1182,7 @@ class UserController extends OrderAbstractController
 
         if( $filter && $filter != "" && $criteriastr == "" ) {
             $criteriastr = "1 = 0";
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "Filter not found: ".$filter
             );
@@ -2277,7 +2299,7 @@ class UserController extends OrderAbstractController
         //$emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
         //echo "ldapMapperPrimaryPublicUserIdType1=$ldapMapperPrimaryPublicUserIdType1; ldapMapperPrimaryPublicUserIdType2=$ldapMapperPrimaryPublicUserIdType2 <br>";
         //exit("keytype=$keytype; keytypeEntity=$keytypeEntity; emailMapperPostfix1=$emailMapperPostfix1; emailMapperPostfix2=$emailMapperPostfix2");
-        //$logger = $this->get('logger');
+        //$logger = $this->container->get('logger');
         //$logger->notice("new user with username=$username");
         //exit("new user with username=$username");
 
@@ -3785,7 +3807,7 @@ class UserController extends OrderAbstractController
     public function setParentsForResidencySpecialtyTree($entity) {
 
         $em = $this->getDoctrine()->getManager();
-        //$secTokenStorage = $this->get('security.token_storage');
+        //$secTokenStorage = $this->container->get('security.token_storage');
         //$userUtil = new UserUtil();
         $userUtil = $this->container->get('user_utility');
 
@@ -3864,8 +3886,8 @@ class UserController extends OrderAbstractController
 
                 if( $documentContainer ) {
                     //$userUtil = new UserUtil();
-                    //$sc = $this->get('security.context');
-                    //$userUtil->setUpdateInfo($documentContainer,$em,$this->get('security.token_storage'));
+                    //$sc = $this->container->get('security.context');
+                    //$userUtil->setUpdateInfo($documentContainer,$em,$this->container->get('security.token_storage'));
                 }
 
             }
@@ -4044,7 +4066,7 @@ class UserController extends OrderAbstractController
         if( !$equals && $user->getPassword() != "" ) {
             // 3) Encode the password (you could also do this via Doctrine listener)
             //echo "new password<br>";
-            //$password = $this->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
+            //$password = $this->container->get('security.password_encoder')->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($encoded);
         } else {
             //echo "old password<br>";
@@ -4226,7 +4248,7 @@ class UserController extends OrderAbstractController
     {
 
         if( false === $this->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'You do not have permission to visit this page'
             );
@@ -4249,7 +4271,7 @@ class UserController extends OrderAbstractController
             $msg = 'Imported new users from spreadsheet failed.';
         }
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $msg
         );
@@ -4593,11 +4615,11 @@ class UserController extends OrderAbstractController
     }
 
     public function setSessionForbiddenNote($msg) {
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             "You do not have permission to perform this operation: ".$msg
         );
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'pnotify-error',
 //            "You do not have permission to perform this operation: ".$msg
 //        );
@@ -4856,7 +4878,7 @@ class UserController extends OrderAbstractController
         //D- Once successful, display a blue well at the top of the user's profile page saying
         // "Successfully marked user as no longer working at the [Institution] as of yesterday, MM/DD/YYYY."
         $eventSession = "Successfully marked ".$subjectUser->getUsernameOptimal()." as no longer working at the ".$institutionStr." as of yesterday, ".$yestardayDateStr.".";
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'notice',
             $eventSession
         );

@@ -444,7 +444,7 @@ class BaseTitleType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_userdirectorybundle_'.$this->params['formname'];
     }

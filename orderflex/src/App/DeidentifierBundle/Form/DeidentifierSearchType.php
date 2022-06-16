@@ -123,7 +123,7 @@ class DeidentifierSearchType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
         //return 'deidentifier_search_box';

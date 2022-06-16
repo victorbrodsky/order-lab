@@ -441,7 +441,7 @@ class SlideReturnRequestController extends OrderAbstractController
             $query->setParameter('status',$filter);
         }				
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $sliderequests = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -555,7 +555,7 @@ class SlideReturnRequestController extends OrderAbstractController
             $query->setParameter('status',$filter);
         }				
 
-        $paginator  = $this->get('knp_paginator');
+        $paginator  = $this->container->get('knp_paginator');
         $sliderequests = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/

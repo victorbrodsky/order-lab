@@ -62,7 +62,7 @@ class CallLogEditController extends CallEntryController
 
         $msg = $this->deleteMessage( $message, "delete link", $request );
 
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -94,7 +94,7 @@ class CallLogEditController extends CallEntryController
         $messageStatusPrior = $message->getMessageStatusPrior();
 
         if( !$messageStatusPrior ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 'Prior entry status is undefined, therefore, no modification has been performed.'
             );
@@ -114,11 +114,11 @@ class CallLogEditController extends CallEntryController
         }
         $msg = "Message Entry ID#".$message->getMessageOidVersion()." $patientInfoStr submitted on ".$userServiceUtil->getSubmitterInfo($message).
             " successfully un-deleted and status set to ".$messageStatusPrior;
-//        $this->get('session')->getFlashBag()->add(
+//        $this->addFlash(
 //            'notice',
 //            $msg
 //        );
-        $this->get('session')->getFlashBag()->add(
+        $this->addFlash(
             'pnotify',
             $msg
         );
@@ -905,7 +905,7 @@ class CallLogEditController extends CallEntryController
                 exit('form is submitted and finished, msg='.$msg);
             }
 
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $msg
             );

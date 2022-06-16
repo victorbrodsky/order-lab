@@ -189,7 +189,7 @@ class MultiScanOrderController extends OrderAbstractController {
 //        $id = $form["id"]->getData();
 //        $provider = $form["provider"]->getData();
 //        echo "form field id=".$id.", provider=".$provider."<br>";
-//        //$request  = $this->get('request_stack')->getCurrentRequest();
+//        //$request  = $this->container->get('request_stack')->getCurrentRequest();
 //        $idrequest = $request->query->get('id');
 //        echo "idreq=".$idrequest."<br>";
 //        exit();
@@ -256,7 +256,7 @@ class MultiScanOrderController extends OrderAbstractController {
 
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->get('router'), $this->container );
+            $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 

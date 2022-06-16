@@ -211,7 +211,7 @@ class CrnPatientType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'oleg_CrnBundle_patienttype';
     }

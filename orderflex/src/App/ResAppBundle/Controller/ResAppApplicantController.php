@@ -311,7 +311,7 @@ class ResAppApplicantController extends OrderAbstractController {
 //        return $response;
 
         if( $email ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 "A personal invitation email has been sent to " . $interview->getInterviewer() . " " . $email
             );
@@ -342,7 +342,7 @@ class ResAppApplicantController extends OrderAbstractController {
         if( !$resapp->getRecentItinerary() ) {
             $appLink = $this->generateUrl( 'resapp_show', array("id"=>$resapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
             $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (residency application ID# '.$resapp->getId().')'.'</a>';
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'warning',
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
@@ -463,7 +463,7 @@ class ResAppApplicantController extends OrderAbstractController {
         //return $this->redirect( $this->generateUrl('resapp_home') );
 
         //if( $emails && count($emails) > 0 ) {
-            $this->get('session')->getFlashBag()->add(
+            $this->addFlash(
                 'notice',
                 $event
             );
@@ -664,7 +664,7 @@ class ResAppApplicantController extends OrderAbstractController {
         $fileName = str_replace(",", "-", $fileName);
 
         //take care of authentication
-        $session = $this->get('session');
+        $session = $request->getSession(); //$this->container->get('session');
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();
@@ -673,7 +673,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $pageUrl = $this->generateUrl('resapp_interview_applicants_list', array('resappIds'=>$resappIds), UrlGeneratorInterface::ABSOLUTE_URL); // use absolute path!
 
-        //$output = $this->get('knp_snappy.pdf')->getOutput(
+        //$output = $this->container->get('knp_snappy.pdf')->getOutput(
         $output = $resappRepGen->getSnappyPdf()->getOutput(
             $pageUrl, 
             array(
@@ -703,7 +703,7 @@ class ResAppApplicantController extends OrderAbstractController {
 //                    '</div>';
 //        }
 //
-//        $output = $this->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
+//        $output = $this->container->get('knp_snappy.pdf')->getOutputFromHtml($html, array(
 //            'cookie' => array(
 //                'PHPSESSID' => $PHPSESSID
 //            )));
@@ -769,7 +769,7 @@ class ResAppApplicantController extends OrderAbstractController {
 //                'sitename' => $this->getParameter('resapp.sitename')
 //            )
 //        );
-        $interviewsDocHtml = $this->get('twig')->render('AppResAppBundle/Interview/applicants-interview-info-doc.html.twig',
+        $interviewsDocHtml = $this->container->get('twig')->render('AppResAppBundle/Interview/applicants-interview-info-doc.html.twig',
             array(
                 'entities' => $entities,
                 'pathbase' => 'resapp',
