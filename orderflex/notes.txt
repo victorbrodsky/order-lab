@@ -1177,3 +1177,14 @@ wkhtmltopdf\\bin\\wkhtmltopdf.exe\" --lowquality --cookie \"PHPSESSID\" \"\"
 
 Util = $this->get('
 Util = $this->container->get('
+
+Symfony 6:
+"doctrine/doctrine-bundle": "2.3.2",
+"doctrine/doctrine-migrations-bundle": "^3.2",
+"doctrine/orm": "2.9.6",
+"stof/doctrine-extensions-bundle": "^1.7",
+
+Working:
+"doctrine/doctrine-bundle": "2.5.*",
+"doctrine/orm": "2.9.6",
+
