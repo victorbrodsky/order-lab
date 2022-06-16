@@ -61,7 +61,7 @@ class GenericSelectTransformer implements DataTransformerInterface
     /**
      * Transforms an object or name string to id.
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
         if( null === $entity || $entity == "" ) {
             return "";
@@ -95,7 +95,7 @@ class GenericSelectTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
         //echo "data reverseTransform text=".$text."<br>";
         //exit();

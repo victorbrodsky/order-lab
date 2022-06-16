@@ -346,9 +346,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
         $providerKey = 'ldap_employees_firewall';
+        //public function __construct(UserInterface $user, string $firewallName, array $roles = [])
         $unauthenticatedToken = new UsernamePasswordToken(
             $username,
-            $password,
+            //$password,
             $providerKey
         );
 
@@ -484,7 +485,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //exit('getUsernamePasswordToken '.$user);
         return new UsernamePasswordToken(
             $user,
-            NULL,   //$user->getPassword(),
+            //NULL,   //$user->getPassword(),
             $providerKey,
             $user->getRoles()
         );

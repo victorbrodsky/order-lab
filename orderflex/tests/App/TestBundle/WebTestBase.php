@@ -135,8 +135,8 @@ class WebTestBase extends WebTestCase
 
         $systemUser = $this->getUser();
         //$systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername('administrator');
-
-        $token = new UsernamePasswordToken($systemUser, null, $firewallName, $systemUser->getRoles());
+        
+        $token = new UsernamePasswordToken($systemUser, $firewallName, $systemUser->getRoles());
         $this->testContainer->get('security.token_storage')->setToken($token);
 
         $session->set('_security_'.$firewallContext, serialize($token));

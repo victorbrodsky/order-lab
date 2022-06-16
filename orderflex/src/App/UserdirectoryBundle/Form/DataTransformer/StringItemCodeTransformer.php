@@ -63,7 +63,7 @@ class StringItemCodeTransformer implements DataTransformerInterface
      * New/Show/Edit
      * Transforms an object or name string to id.
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
         //$entity = "delivery fee";
         //echo "data transformer entity=".$entity."<br>";
@@ -108,7 +108,7 @@ class StringItemCodeTransformer implements DataTransformerInterface
      * Submit New/Edit
      * Transforms a string (number) to an object.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
         //echo "data reverseTransform text=".$text."<br>";
         //exit();

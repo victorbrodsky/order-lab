@@ -50,11 +50,8 @@ class StainTransformer implements DataTransformerInterface
 
     /**
      * Transforms an object (issue) to a string (number).
-     *
-     * @param  Issue|null $issue
-     * @return string
      */
-    public function transform($stain)
+    public function transform($stain): mixed
     {
 
         if (null === $stain) {
@@ -80,13 +77,9 @@ class StainTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (i.e. stain).
      *
-     * @param  string $number
-     *
-     * @return Stain|null
-     *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
 
         //echo "data transformer text=".$text."<br>";

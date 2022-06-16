@@ -34,19 +34,15 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 class DayMonthDateTransformer implements DataTransformerInterface {
 
     //https://stackoverflow.com/questions/40463364/disable-days-and-month-from-symfony-datetypeclass
-    /**
-     * {@inheritdoc}
-     */
-    public function transform($value)
+    public function transform($value): mixed
     {
         return $value;
     }
 
     /**
      * Transforms a string (number) to an object.
-     * {@inheritdoc}
      */
-    public function reverseTransform($value)
+    public function reverseTransform($value): mixed
     {
         if (!is_array($value)) {
             return $value;

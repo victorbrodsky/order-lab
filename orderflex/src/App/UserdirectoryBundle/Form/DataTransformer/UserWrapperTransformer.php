@@ -81,11 +81,8 @@ class UserWrapperTransformer implements DataTransformerInterface
      * Use for 'Show'
      *
      * Transforms an UserWrapper object to a string.
-     *
-     * @param  Issue|null $issue
-     * @return string
      */
-    public function transform( $entities )
+    public function transform( $entities ): mixed
     {
         //echo "first entity=".$entities->first()."<br>";
         //echo "transform: entities=".$entities."<br>";
@@ -137,13 +134,9 @@ class UserWrapperTransformer implements DataTransformerInterface
      *
      * Transform a user (user id) or userstr (user string) to an UserWrapper object (i.e. user).
      *
-     * @param  string $number
-     *
-     * @return $this->className|null
-     *
      * @throws TransformationFailedException if object ($this->className) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
 
         //var_dump($text);

@@ -83,10 +83,10 @@ class GenericTreeTransformer implements DataTransformerInterface
     /**
      * Transforms an object or name string to id.
      *
-     * @param  Issue|null $issue
-     * @return string
+     * @param  mixed $entity
+     * @return mixed
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
 
         //echo "transform: entity=".$entity."<br>";
@@ -122,13 +122,13 @@ class GenericTreeTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object.
      *
-     * @param  string $number
+     * @param  mixed $text
      *
-     * @return Stain|null
+     * @return mixed
      *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform( $text )
+    public function reverseTransform( $text ): mixed
     {
 
         //echo "data reverse transformer text=".$text."<br>";

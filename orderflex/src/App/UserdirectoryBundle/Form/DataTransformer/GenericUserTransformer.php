@@ -64,7 +64,7 @@ class GenericUserTransformer implements DataTransformerInterface
     /**
      * Transforms an array of objects or name strings to ids.
      */
-    public function transform( $entities )
+    public function transform( $entities ): mixed
     {
         //echo $entities->first()->getBlockPrefix()."<br>";
         //echo "!!!!!!!!!!!transform: entities=".$entities."<br>";
@@ -111,14 +111,9 @@ class GenericUserTransformer implements DataTransformerInterface
 
     /**
      * Transforms a string (number) to an object.
-     *
-     * @param  string $number
-     *
-     * @return Stain|null
-     *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
 
         //echo "!!!!!!!!!!!data reverse transformer text=".$text."<br>";

@@ -44,7 +44,7 @@ class StringToBooleanTransformer implements DataTransformerInterface
     /**
      * Transforms a string to boolean.
      */
-    public function transform($string)
+    public function transform($string): mixed
     {
         if( strpos((string)$string,'Yes') !== false || strpos((string)$string,'yes') !== false ) {
             return true;
@@ -56,7 +56,7 @@ class StringToBooleanTransformer implements DataTransformerInterface
     /**
      * Transforms boolean to a string.
      */
-    public function reverseTransform($boolean)
+    public function reverseTransform($boolean): mixed
     {
         if( $boolean == true ) {
             return 'Yes';

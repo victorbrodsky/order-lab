@@ -1327,7 +1327,7 @@ class InvoiceController extends OrderAbstractController
             $firewall = 'ldap_translationalresearch_firewall';
             $systemUser = $userSecUtil->findSystemUser();
             if( $systemUser ) {
-                $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+                $token = new UsernamePasswordToken($systemUser, $firewall, $systemUser->getRoles());
                 //$this->container->get('security.token_storage')->setToken($token);
                 //$this->container->get('security.token_storage')->setToken($token);
                 $tokenStorage->setToken($token);

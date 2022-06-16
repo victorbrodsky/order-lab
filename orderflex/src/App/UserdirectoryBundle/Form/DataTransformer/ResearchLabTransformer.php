@@ -51,7 +51,7 @@ class ResearchLabTransformer implements DataTransformerInterface
     /**
      * Transforms id or name to an object
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
         if( null === $entity || $entity == "" ) {
             return "";
@@ -84,7 +84,7 @@ class ResearchLabTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (i.e. stain).
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
         //echo "data reverseTransform text=".$text."<br>";
         //exit();

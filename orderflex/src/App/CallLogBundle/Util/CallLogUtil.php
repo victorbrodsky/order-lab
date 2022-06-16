@@ -16,6 +16,7 @@
  */
 
 namespace App\CallLogBundle\Util;
+
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -52,6 +53,7 @@ use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Entity\Spot;
 use App\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -67,11 +69,13 @@ class CallLogUtil
     protected $em;
     protected $container;
     protected $security;
+    protected $formFactory;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security, FormFactoryInterface $formFactory ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
+        $this->formFactory = $formFactory;
     }
 
 
@@ -1561,7 +1565,9 @@ class CallLogUtil
     }
     public function createForm($type, $data = null, array $options = array())
     {
-        return $this->container->get('form.factory')->create($type, $data, $options);
+        //return $this->container->get('form.factory')->create($type, $data, $options);
+        //return $this->container->get('user_utility')->createForm($type, $data, $options);
+        return $this->formFactory->create($type, $data, $options);
     }
 
     /**

@@ -49,11 +49,8 @@ class StringTransformer implements DataTransformerInterface
 
     /**
      * Transforms an object to a string.
-     *
-     * @param  Issue|null $issue
-     * @return string
      */
-    public function transform($entity)
+    public function transform($entity): mixed
     {
         //echo "string data transformer: ".$entity."<br>";
         if (null === $entity) {
@@ -67,13 +64,9 @@ class StringTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (i.e. stain).
      *
-     * @param  string $number
-     *
-     * @return Stain|null
-     *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
         //echo "data reverseTransform text=".$text."<br>";
         //exit();

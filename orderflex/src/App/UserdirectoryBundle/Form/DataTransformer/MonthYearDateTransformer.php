@@ -51,7 +51,7 @@ class MonthYearDateTransformer implements DataTransformerInterface
     /**
      * Transforms an object to a string.
      */
-    public function transform($date)
+    public function transform($date): mixed
     {
         //echo "string data transformer: ".$date."<br>";
         if (null === $date) {
@@ -69,7 +69,7 @@ class MonthYearDateTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
         //echo "data reverseTransform text=".$text."<br>";
         //exit();

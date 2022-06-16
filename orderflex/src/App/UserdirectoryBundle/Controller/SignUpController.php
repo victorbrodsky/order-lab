@@ -593,7 +593,7 @@ class SignUpController extends OrderAbstractController
         } else {
             ////////////////////// auth /////////////////////////
             // Authenticating user
-            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
+            $token = new UsernamePasswordToken($user, 'ldap_employees_firewall', $user->getRoles());
             //$this->container->get('security.token_storage')->setToken($token);
             $tokenStorage->setToken($token);
             //For Symfony <= 2.3

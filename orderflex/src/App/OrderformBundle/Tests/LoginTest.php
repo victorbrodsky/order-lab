@@ -189,7 +189,7 @@ class LoginTest extends WebTestCase {
         $session = $client->getContainer()->get('session');
 
         $firewall = 'external_ldap_firewall';
-        $token = new UsernamePasswordToken('testprocessor', null, $firewall, array('ROLE_PLATFORM_DEPUTY_ADMIN'));
+        $token = new UsernamePasswordToken('testprocessor', $firewall, array('ROLE_PLATFORM_DEPUTY_ADMIN'));
         $session->set('_security_'.$firewall, serialize($token));
         $session->save();
 

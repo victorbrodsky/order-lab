@@ -41,11 +41,8 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
      * Use for 'Show'
      *
      * Transforms an UserWrapper object to a string.
-     *
-     * @param  Issue|null $issue
-     * @return string
      */
-    public function transform( $entity )
+    public function transform( $entity ): mixed
     {
         //echo "transform: entity=".$entity."<br>";
         //if( $entity ) {
@@ -75,13 +72,9 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
      *
      * Transform a user (user id) or userstr (user string) to an UserWrapper object (i.e. user).
      *
-     * @param  string $number
-     *
-     * @return $this->className|null
-     *
      * @throws TransformationFailedException if object ($this->className) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text): mixed
     {
 
         //var_dump($text);
