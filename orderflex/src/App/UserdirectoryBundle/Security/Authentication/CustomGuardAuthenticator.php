@@ -349,11 +349,11 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //public function __construct(UserInterface $user, string $firewallName, array $roles = [])
         $unauthenticatedToken = new UsernamePasswordToken(
             $username,
-            //$password,
+            $password,
             $providerKey
         );
 
-        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$password,$providerKey);
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
@@ -378,7 +378,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     }
 
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
-    public function authenticateToken($token, $providerKey)
+    public function authenticateToken($token, $password, $providerKey)
     {
         //echo "CustomGuardAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();

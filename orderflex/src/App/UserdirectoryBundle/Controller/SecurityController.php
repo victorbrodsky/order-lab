@@ -610,7 +610,7 @@ class SecurityController extends OrderAbstractController
         $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
         $username = $user->getUsername();
 
-        $token = new UsernamePasswordToken($username, $providerKey);
+        $token = new UsernamePasswordToken($username, $password, $providerKey);
 
         //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->container->get('authenticator_utility');
