@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Security\Authentication\CustomUsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Security;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -610,7 +611,8 @@ class SecurityController extends OrderAbstractController
         $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
         $username = $user->getUsername();
 
-        $token = new UsernamePasswordToken($username, $password, $providerKey);
+        //$token = new UsernamePasswordToken($username, $password, $providerKey);
+        $token = new CustomUsernamePasswordToken($username, $password, $providerKey);
 
         //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->container->get('authenticator_utility');

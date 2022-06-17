@@ -211,101 +211,6 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     }
 
 
-//    protected function getLoginUrl(Request $request) : string
-//    {
-//        $url = $this->container->get('router')->generate('directory_login'); //employees_login
-//        return $url;
-//    }
-//    /**
-//     * Called when authentication is needed, but it's not sent
-//     */
-//    public function start(Request $request, AuthenticationException $authException = null) : RedirectResponse
-//    {
-//        $route = $request->attributes->get('_route');
-//        //echo '1 route='.$route."; Method=".$request->getMethod()."<br>";
-//        //echo 'sitename='.$this->sitename."<br>";
-//        //exit('111');
-//
-//        $url = NULL;
-//
-//        if(
-//            $route == 'setserveractive' ||
-//            $route == 'keepalive' ||
-//            $route == 'getmaxidletime'
-//        ) {
-//            $url = $this->container->get('router')->generate($route);
-//        }
-//
-//        if( !$url && $route == 'main_maintenance' ) {
-//            $url = $this->container->get('router')->generate('main_maintenance');
-//        }
-//
-//        if( !$url ) {
-//            $sitename = $this->getSiteNameByRoute($route);
-//            $url = $this->container->get('router')->generate($sitename . '_login');
-//        }
-//
-//        return new RedirectResponse($url);
-//    }
-//
-//    public function getSiteNameByRoute($route) : string
-//    {
-//        //sitename is the first string before '_';
-//        //$sitenameArr = explode('_',$route);
-//        //return $sitenameArr[0];
-//
-//        //echo "route=$route <br>";
-//        //exit('111');
-//
-//        if( strpos((string)$route,'translationalresearch') !== false ) {
-//            return "translationalresearch";
-//        }
-//        if( strpos((string)$route,'vacreq') !== false ) {
-//            return "vacreq";
-//        }
-//        if( strpos((string)$route,'calllog') !== false ) {
-//            return "calllog";
-//        }
-//        if( strpos((string)$route,'crn') !== false ) {
-//            return "crn";
-//        }
-//
-//        if( strpos((string)$route,'fellapp') !== false ) {
-//            return "fellapp";
-//        }
-//        if( strpos((string)$route,'resapp') !== false ) {
-//            return "resapp";
-//        }
-//
-//        if( strpos((string)$route,'employees') !== false ) {
-//            return "employees";
-//        }
-//
-//        if( strpos((string)$route,'user') !== false ) {
-//            return "employees";
-//        }
-//
-//        if( strpos((string)$route,'deidentifier') !== false ) {
-//            return "deidentifier";
-//        }
-//        if( strpos((string)$route,'scan') !== false ) {
-//            return "scan";
-//        }
-//        if( strpos((string)$route,'dashboard') !== false ) {
-//            return "dashboard";
-//        }
-//
-//        //get first element before '_'
-//        if( strpos((string)$route,'_') !== false ) {
-//            $routeArr = explode('_',$route);
-//            if( count($routeArr) > 0 ) {
-//                return $routeArr[0];
-//            }
-//        }
-//
-//        return "employees";
-//    }
-
     /**
      * Called on every request. Return whatever credentials you want to
      * be passed to getUser() as $credentials.
@@ -347,13 +252,19 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
         $providerKey = 'ldap_employees_firewall';
         //public function __construct(UserInterface $user, string $firewallName, array $roles = [])
-        $unauthenticatedToken = new UsernamePasswordToken(
+//        $unauthenticatedToken = new UsernamePasswordToken(
+//            $username,
+//            $password,
+//            $providerKey
+//        );
+
+        $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,
             $password,
             $providerKey
         );
 
-        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$password,$providerKey);
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
@@ -378,7 +289,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     }
 
     //public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
-    public function authenticateToken($token, $password, $providerKey)
+    public function authenticateToken($token, $providerKey)
     {
         //echo "CustomGuardAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();

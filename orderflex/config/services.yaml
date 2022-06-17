@@ -101,7 +101,7 @@ services:
 
     App\UserdirectoryBundle\Security\Authentication\:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
-        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php}'
+        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
