@@ -1194,3 +1194,4 @@ as a native return type declaration in the future. Do the same in implementation
 explicit @return annotation to suppress this message.
 Solution: add return type: TreeBuilder in Oneup\UploaderBundle\DependencyInjection\Configuration::getConfigTreeBuilder()
 
+User Deprecated: Since symfony/framework-bundle 5.3: Accessing the "state_machine.transres_project" service directly from the container is deprecated, use dependency injection instead.

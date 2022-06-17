@@ -2633,6 +2633,9 @@ class TransResUtil
         //double check this state by state machine
         $workflow = $this->container->get('state_machine.transres_project');
 
+        //$userUtil = $this->container->get('user_utility');
+        //$workflow = $userUtil->getWorkflowByString('state_machine.transres_project');
+
         $transitions = $workflow->getEnabledTransitions($project);
 
         foreach( $transitions as $transition ) {

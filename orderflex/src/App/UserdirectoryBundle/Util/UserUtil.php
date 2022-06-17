@@ -271,6 +271,11 @@ class UserUtil {
         return $this->isGranted($roleStr);
     }
 
+//    public function getWorkflowByString($workflowStr)
+//    {
+//        return $this->container->get($workflowStr);
+//    }
+
     //done
     public function generateUsernameTypes($user=null,$createSystemUser=true) {
 
