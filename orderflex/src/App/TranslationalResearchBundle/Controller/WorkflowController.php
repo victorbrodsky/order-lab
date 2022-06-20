@@ -176,7 +176,8 @@ class WorkflowController extends OrderAbstractController
     public function toIrbReviewAction( Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $transresUtil->getWorkflowByName('state_machine.transres_project');
 
         $workflow->can($project, 'to_irb_review'); // True
         $workflow->can($project, 'to_admin_review'); // False
@@ -234,7 +235,9 @@ class WorkflowController extends OrderAbstractController
     public function transitionStateAction( $transitionName, $to, Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
-        $workflow = $this->container->get('state_machine.transres_project');
+
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $transresUtil->getWorkflowByName('state_machine.transres_project');
 
         //$workflow->can($project, 'to_irb_review'); // True
         //$workflow->can($project, 'to_admin_review'); // False

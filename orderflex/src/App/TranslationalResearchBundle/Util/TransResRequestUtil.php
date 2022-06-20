@@ -47,6 +47,7 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 
 /**
@@ -62,10 +63,24 @@ class TransResRequestUtil
     protected $em;
     protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
+    // Symfony will inject the 'blog_publishing' workflow configured before => WorkflowInterface $blogPublishingWorkflow
+    //transres_request_progress => WorkflowInterface $transresRequestProgressStateMachine
+    //transres_request_billing => WorkflowInterface $transresRequestBillingStateMachine
+    protected $transresRequestProgressStateMachine;
+    protected $transresRequestBillingStateMachine;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        Security $security,
+        WorkflowInterface $transresRequestProgressStateMachine,
+        WorkflowInterface $transresRequestBillingStateMachine
+    ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
+        $this->transresRequestProgressStateMachine = $transresRequestProgressStateMachine;
+        $this->transresRequestBillingStateMachine = $transresRequestBillingStateMachine;
     }
 
 
@@ -792,7 +807,7 @@ class TransResRequestUtil
                 //exit("return: progress not allowed");
                 return $links;
             }
-            $workflow = $this->container->get('state_machine.transres_request_progress');
+            $workflow = $this->transresRequestProgressStateMachine;
             $transitions = $workflow->getEnabledTransitions($transresRequest);
             $verified = true;
         }
@@ -801,7 +816,7 @@ class TransResRequestUtil
                 //exit("return: billing not allowed");
                 return $links;
             }
-            $workflow = $this->container->get('state_machine.transres_request_billing');
+            $workflow = $this->transresRequestBillingStateMachine;
             $transitions = $workflow->getEnabledTransitions($transresRequest);
             $verified = true;
         }
@@ -934,12 +949,12 @@ class TransResRequestUtil
         $addMsg = "";
 
         if( $statMachineType == 'progress' ) {
-            $workflow = $this->container->get('state_machine.transres_request_progress');
+            $workflow = $this->transresRequestProgressStateMachine;
             $originalStateStr = $transresRequest->getProgressState();
             $setState = "setProgressState";
         }
         if( $statMachineType == 'billing' ) {
-            $workflow = $this->container->get('state_machine.transres_request_billing');
+            $workflow = $this->transresRequestBillingStateMachine;
             $originalStateStr = $transresRequest->getBillingState();
             $setState = "setBillingState";
         }
@@ -1134,10 +1149,10 @@ class TransResRequestUtil
 
     public function getWorkflowByStateMachineType($statMachineType) {
         if( $statMachineType == 'progress' ) {
-            return $this->container->get('state_machine.transres_request_progress');
+            return $this->transresRequestProgressStateMachine;
         }
         if( $statMachineType == 'billing' ) {
-            return $this->container->get('state_machine.transres_request_billing');
+            return $this->transresRequestBillingStateMachine;
         }
         return null;
     }
@@ -6479,7 +6494,7 @@ class TransResRequestUtil
         return NULL;
     }
     public function getProgressCompletedTransitionName($transresRequest) {
-        $workflow = $this->container->get('state_machine.transres_request_progress');
+        $workflow = $this->transresRequestProgressStateMachine;
         $transitions = $workflow->getEnabledTransitions($transresRequest);
         foreach( $transitions as $transition ) {
             //echo "compare [".$transition->getName()."] ?= [".$transitionName."<br>";

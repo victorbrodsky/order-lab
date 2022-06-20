@@ -29,8 +29,8 @@ use App\TranslationalResearchBundle\Entity\IrbReview;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Symfony\Component\Cache\Simple\ApcuCache;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+//use Symfony\Component\Cache\Simple\ApcuCache;
+//use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 //use Zend\Cache\StorageFactory;
 
@@ -40,6 +40,8 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Symfony\Component\Security\Core\Security;
+
+use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * Created by PhpStorm.
@@ -54,18 +56,37 @@ class TransResUtil
     protected $em;
     protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
+
+    // Symfony will inject the 'blog_publishing' workflow configured before => WorkflowInterface $blogPublishingWorkflow
+    //transres_project => WorkflowInterface $transresProjectStateMachine
+    protected $transresProjectStateMachine;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        Security $security,
+        WorkflowInterface $transresProjectStateMachine
+    ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
+        $this->transresProjectStateMachine = $transresProjectStateMachine;
     }
 
+    public function getWorkflowByName($workflowName) {
+        if( $workflowName === 'state_machine.transres_project' ) {
+            return $this->transresProjectStateMachine;
+        }
+        return NULL;
+    }
+    
     //MAIN method to show allowed transition to state links
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
     public function getReviewEnabledLinkActions( $review ) {
         //exit("get review links");
         $project = $review->getProject();
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transitions = $workflow->getEnabledTransitions($project);
         $user = $this->security->getUser();
 
@@ -212,7 +233,8 @@ class TransResUtil
     public function getResubmitButtons($review) {
         //exit("getResubmitButtons <br>");
         $project = $review->getProject();
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transitions = $workflow->getEnabledTransitions($project);
 
         $links = array();
@@ -1125,7 +1147,8 @@ class TransResUtil
     }
 
     public function getTransitionByName( $project, $transitionName ) {
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transitions = $workflow->getEnabledTransitions($project);
         //echo $transitionName.": count=".count($transitions)."<br>";
         foreach( $transitions as $transition ) {
@@ -1151,7 +1174,8 @@ class TransResUtil
         //echo "transitionName=".$transitionName."<br>";
         $user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         //$break = "\r\n";
         $break = "<br>";
 
@@ -2260,7 +2284,8 @@ class TransResUtil
     }
 
     public function getSingleTransitionNameByProject($project) {
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transitions = $workflow->getEnabledTransitions($project);
         //take the first $transition
         if( count($transitions) == 1 ) {
@@ -2273,7 +2298,8 @@ class TransResUtil
     //Testing (Not Used): Trying to overwrite the workflow for COVID19: committee_review => irb_review => admin_review => final_review
     //Second approach: create a separate transitions workflow for covid19
     public function getProjectEnabledTransitions($project) {
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transresUtil = $this->container->get('transres_util');
         if( $project->getProjectSpecialty()->getAbbreviation() == "covid19" ) {
             $transitions = $workflow->getEnabledTransitions($project);
@@ -2631,7 +2657,8 @@ class TransResUtil
         $stateStr = $project->getState();
 
         //double check this state by state machine
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
 
         //$userUtil = $this->container->get('user_utility');
         //$workflow = $userUtil->getWorkflowByString('state_machine.transres_project');
@@ -2801,7 +2828,8 @@ class TransResUtil
             }
         }
 
-        $workflow = $this->container->get('state_machine.transres_project');
+        //$workflow = $this->container->get('state_machine.transres_project');
+        $workflow = $this->transresProjectStateMachine;
         $transitions = $workflow->getEnabledTransitions($project);
 
         //echo "<pre>";
