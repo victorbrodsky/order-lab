@@ -78,7 +78,7 @@ class SimpleWebTest extends WebTestBase
 //        return $systemUser;
 //    }
 
-    public function t_estLoginPageAction() {
+    public function testLoginPageAction() {
 
         $phpVersion = phpversion();
         echo "[User,PHP=".$phpVersion."]";
@@ -100,21 +100,21 @@ class SimpleWebTest extends WebTestBase
         );
     }
 
-    public function t_estHomeAction() {
-
-        $this->logIn();
-        //return;
-
-        $crawler = $this->client->request('GET', '/directory/');
-
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
-
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Welcome to the Employee Directory!")')->count()
-        );
-    }
+//    public function testHomeAction() {
+//
+//        $this->logIn();
+//        //return;
+//
+//        $crawler = $this->client->request('GET', '/directory/');
+//
+//        //$content = $this->client->getResponse()->getContent();
+//        //exit("content=$content");
+//
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Welcome to the Employee Directory!")')->count()
+//        );
+//    }
 
 //    public function testLogin2PageAction() {
 //        $client = static::createClient();
