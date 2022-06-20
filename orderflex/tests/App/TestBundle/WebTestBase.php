@@ -14,8 +14,17 @@ namespace Tests\App\TestBundle;
 //use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
+//use Doctrine\ORM\EntityManagerInterface;
+//use Symfony\Component\DependencyInjection\ContainerInterface;
+//use Symfony\Component\Security\Core\Security;
+//use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+//use Symfony\Component\HttpFoundation\RequestStack;
 
 //1) Make sure to include in composer.json "Tests\\": "tests/" under autoload:
 //"autoload": {
@@ -54,23 +63,6 @@ class WebTestBase extends WebTestCase
     protected $user = null;
     protected $environment = null;
 
-
-//    public function getInit() : void
-//    {
-//        $this->getTestClient();
-//
-//        $this->testContainer = self::$container;
-//        //$this->container = $this->client->getContainer();
-//
-//        $this->em = self::$container->get('doctrine.orm.entity_manager');
-//        //$this->em = $this->getService('doctrine.orm.entity_manager');
-//        //$this->em = $this->getService('user_security_utility');
-//
-//        $this->user = $this->getUser();
-//
-//        $this->getParam();
-//    }
-
     public function getParam() {
 //        global $argv, $argc;
 //        $this->assertGreaterThan(2, $argc, 'No environment name passed');
@@ -87,14 +79,18 @@ class WebTestBase extends WebTestCase
 
     protected function setUp(): void {
 
+        //$kernel = self::bootKernel();
+
         $this->getTestClient();
 
-        $this->testContainer = self::$container;
-        //$this->container = $this->client->getContainer();
+        //$this->testContainer = self::$container;
+        $this->testContainer = $this->client->getContainer();
+        //$this->testContainer = $kernel->getContainer();
 
-        $this->em = self::$container->get('doctrine.orm.entity_manager');
+        //$this->em = self::$container->get('doctrine.orm.entity_manager');
         //$this->em = $this->getService('doctrine.orm.entity_manager');
         //$this->em = $this->getService('user_security_utility');
+        $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
 
         $this->user = $this->getUser();
 
@@ -123,55 +119,51 @@ class WebTestBase extends WebTestCase
         $this->user = null;
     }
 
+//    public function logIn_OLD() {
+//
+//        $session = $this->client->getContainer()->get('session');
+//        //$session = $this->requestStack->getSession();
+//        //$session = $this->client->getContainer()->get('request_stack')->getSession();
+//        //$session = $this->client->getContainer()->get(RequestStack::class)->getSession();
+//        //$session = new Session(new MockFileSessionStorage());
+//        //$session = new Session(new MockFileSessionStorage());
+//        //$session = new Session();
+//        //$session->start();
+//
+//        $session = $this->client->getContainer()->get('session.factory')->createSession();
+//
+//        //$firewallName = 'external_ldap_firewall';
+//        // if you don't define multiple connected firewalls, the context defaults to the firewall name
+//        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
+//        $firewallContext = 'scan_auth';
+//        $firewallName = 'ldap_fellapp_firewall';
+//
+//        $systemUser = $this->getUser();
+//        //$systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername('administrator');
+//
+//        $token = new UsernamePasswordToken($systemUser, $firewallName, $systemUser->getRoles());
+//
+//        //$this->testContainer->get('security.token_storage')->setToken($token);
+//        $this->client->getContainer()->get('security.token_storage')->setToken($token);
+//        //$this->tokenStorage->setToken($token);
+//
+//        $session->set('_security_'.$firewallContext, serialize($token));
+//        $session->save();
+//
+//        $cookie = new Cookie($session->getName(), $session->getId());
+//        $this->client->getCookieJar()->set($cookie);
+//    }
+
     public function logIn() {
-
-        $session = $this->client->getContainer()->get('session');
-
-        //$firewallName = 'external_ldap_firewall';
-        // if you don't define multiple connected firewalls, the context defaults to the firewall name
-        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
-        $firewallContext = 'scan_auth';
-        $firewallName = 'ldap_fellapp_firewall';
-
         $systemUser = $this->getUser();
-        //$systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername('administrator');
-        
-        $token = new UsernamePasswordToken($systemUser, $firewallName, $systemUser->getRoles());
-        $this->testContainer->get('security.token_storage')->setToken($token);
 
-        $session->set('_security_'.$firewallContext, serialize($token));
-        $session->save();
+        $firewallContext = 'scan_auth';
 
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
+        // simulate $testUser being logged in
+        $this->client->loginUser($systemUser,$firewallContext);
     }
 
     public function getTestClient(array $options = array(), array $server = array()) {
-
-        //$client = static::createClient();
-        //$this->client = $client;
-        //return $client;
-
-        //Set HTTPS if required
-//        $client = static::createClient([], [
-//            'HTTP_HOST'       => '127.0.0.1',
-//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
-//        ]);
-
-        //$kernel = static::bootKernel($options);
-        //$client = $kernel->getContainer()->get('test.client');
-
-        //$userSecUtil = $this->testContainer->get('user_security_utility');
-        //$userSecUtil = $this->getService('user_security_utility');
-
-//        $connectionChannel = NULL;
-//        //$connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
-        //$httpsChannel = false;
-        //$httpsChannel = true;
-//        if( $connectionChannel == 'https' ) {
-//            $httpsChannel = true;
-//        }
-
         //To specify http channel run it as: HTTP=1 ./bin/phpunit
         //To specify https channel (default) run it as: ./bin/phpunit
         $channel = getenv('HTTP');
@@ -195,25 +187,6 @@ class WebTestBase extends WebTestCase
         //Alternative of setting HTTPS: When running on https this will follow redirect from http://127.0.0.1 to https://127.0.0.1
         //$this->client->followRedirects();
     }
-
-//    public function logIn_old()
-//    {
-//        $session = $this->client->getContainer()->get('session');
-//
-//        $firewallName = 'ldap_fellapp_firewall';
-//        // if you don't define multiple connected firewalls, the context defaults to the firewall name
-//        // See https://symfony.com/doc/current/reference/configuration/security.html#firewall-context
-//        $firewallContext = 'scan_auth';
-//
-//        // you may need to use a different token class depending on your application.
-//        // for example, when using Guard authentication you must instantiate PostAuthenticationGuardToken
-//        $token = new UsernamePasswordToken('administrator', null, $firewallName, ['ROLE_PLATFORM_ADMIN']);
-//        $session->set('_security_'.$firewallContext, serialize($token));
-//        $session->save();
-//
-//        $cookie = new Cookie($session->getName(), $session->getId());
-//        $this->client->getCookieJar()->set($cookie);
-//    }
 
     public function getUser()
     {

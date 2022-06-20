@@ -42,6 +42,7 @@ use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Security;
@@ -53,17 +54,20 @@ class UserUtil {
     protected $container;
     protected $security;
     //protected $tokenStorage;
+    protected $requestStack;
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container=null,
-        Security $security=null
+        ContainerInterface $container,
+        Security $security,
+        RequestStack $requestStack
         //TokenStorageInterface $tokenStorage=null
     ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
         //$this->tokenStorage = $tokenStorage;
+        $this->requestStack = $requestStack;
     }
 
 
@@ -269,6 +273,10 @@ class UserUtil {
     }
     public function isLoggedinUserGranted( $roleStr ) {
         return $this->isGranted($roleStr);
+    }
+
+    public function getSession() {
+        return $this->requestStack->getSession();
     }
 
 //    public function getWorkflowByString($workflowStr)

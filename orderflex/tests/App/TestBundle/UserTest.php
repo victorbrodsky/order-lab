@@ -77,9 +77,6 @@ class UserTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Symfony")')->count()
         );
-        //$linkName = '/translational-research/about';
-        //$this->testGetLink($linkName,"Current Version");
-        //$this->testGetLink($linkName);
     }
 
     public function testListCurrentAction() {

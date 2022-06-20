@@ -9,20 +9,87 @@
 namespace Tests\App\TestBundle;
 
 
+use App\UserdirectoryBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 //class SimpleWebTest extends WebTestCase
 class SimpleWebTest extends WebTestBase
 {
 
-    public function testLoginPageAction() {
-        //$this->getInit();
-        //$this->client = static::createClient();
+//    public function testVisitingWhileLoggedIn()
+//    {
+//
+//        $client = static::createClient([], [
+//            'HTTP_HOST' => '127.0.0.1',
+//            'HTTP_USER_AGENT' => 'MySuperBrowser/1.0',
+//            //'HTTPS' => false
+//        ]);
+//
+//        // retrieve the test user
+//        $systemUser = $this->getUser();
+//        //exit('$systemUser='.$systemUser);
+//
+//        // simulate $testUser being logged in
+//        $client->loginUser($systemUser,$firewallContext = 'scan_auth');
+//
+//        $client->followRedirects();
+//
+//        // test e.g. the profile page
+//        //$client->request('GET', '/directory/about');
+//
+//        //$content = $client->getResponse()->getContent();
+//        //exit("content=$content");
+//
+//        //$this->assertResponseIsSuccessful();
+//        //$this->assertSelectorTextContains('p', 'Current Version for branch master');
+//
+//
+//        $crawler = $client->request('GET', '/directory/about');
+//
+//        //$content = $client->getResponse()->getContent();
+//        //exit("content=$content");
+//
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Current Version for branch master")')->count()
+//        );
+//
+////        $this->assertGreaterThan(
+////            0,
+////            $crawler->filter('html:contains("O R D E R")')->count()
+////        );
+//    }
+//
+//    public function getUser()
+//    {
+//        $em = static::getContainer()->get('doctrine.orm.entity_manager');
+//
+//        $userSecUtil = static::getContainer()->get('user_security_utility');
+//        $systemUser = $userSecUtil->findSystemUser();
+//
+//        if( !$systemUser ) {
+//            $systemUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('Administrator');
+//        }
+//
+//        if( !$systemUser ) {
+//            $systemUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('administrator');
+//        }
+//
+//        return $systemUser;
+//    }
 
-        //dump($this->client);
-        //exit();
+    public function t_estLoginPageAction() {
+
+        $phpVersion = phpversion();
+        echo "[User,PHP=".$phpVersion."]";
+
+        $userServiceUtil = $this->testContainer->get('user_service_utility');
+        echo "[DB=".$userServiceUtil->getDbVersion()."]";
 
         $crawler = $this->client->request('GET', '/directory/login');
+
+        //$client = static::createClient();
+        //$crawler = $client->request('GET', '/directory/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -30,6 +97,22 @@ class SimpleWebTest extends WebTestBase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Employee Directory")')->count()
+        );
+    }
+
+    public function t_estHomeAction() {
+
+        $this->logIn();
+        //return;
+
+        $crawler = $this->client->request('GET', '/directory/');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Welcome to the Employee Directory!")')->count()
         );
     }
 
