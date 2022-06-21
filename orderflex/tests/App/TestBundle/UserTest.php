@@ -185,4 +185,31 @@ class UserTest extends WebTestBase
         );
     }
 
+
+    public function testFellappNewListManagerAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/directory/admin/list/fellowship-subspecialties/new');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Fellowship Subspecialties")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add New")')->count()
+        );
+    }
+
+    public function testRoleNewListManagerAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/directory/admin/list/roles/new');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Roles")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add New")')->count()
+        );
+    }
+
 }
