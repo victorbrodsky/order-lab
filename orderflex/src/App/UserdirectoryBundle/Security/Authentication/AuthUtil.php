@@ -30,10 +30,12 @@ use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+//use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+//use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
+
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 //use Symfony\Component\Security\Core\Util\StringUtils;
 
@@ -42,17 +44,24 @@ class AuthUtil {
     private $container;        //container
     private $em;        //entity manager
     private $logger;
-    protected $requestStack;
+    private $requestStack;
+    private $passwordHasher;
 
     //private $supportedUsertypesExternal = array('external');
     //private $supportedUsertypesLdap = null; //array('ldap-user');
     //private $supportedUsertypesLocal = array('local-user');
 
-    public function __construct( ContainerInterface $container, EntityManagerInterface $em, RequestStack $requestStack=null )
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $em,
+        RequestStack $requestStack,
+        UserPasswordHasherInterface $passwordHasher
+    )
     {
         $this->container = $container;
         $this->em = $em;
         $this->requestStack = $requestStack;
+        $this->passwordHasher = $passwordHasher;
         $this->logger = $container->get('logger');
 
         //set $supportedUsertypesLdap from defaultPrimaryPublicUserIdType
@@ -97,63 +106,16 @@ class AuthUtil {
             }
 
             //check password
-//            $encoder = $this->container->get('security.password_encoder');
-//            $encoded = $encoder->encodePassword($user, $token->getCredentials());
-//            if( hash_equals($user->getPassword(), $encoded) ) {
-//                //exit('equal');
-//                return $user;
-//            } else {
-//                //exit('not equal');
-//                return NULL;
-//            }
+            $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
 
-            if(0) {
-//                $encoderService = $this->container->get('security.encoder_factory');
-//                $encoder = $encoderService->getEncoder($user);
-//
-//                if ($encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt())) {
-//                    //exit('password invalid ['.$token->getCredentials().']');
-//                    return $user;
-//                } else {
-//                    $this->validateFailedAttempts($user);
-//                    $this->logger->notice("Local Authentication: password is invalid");
-//                    return NULL;
-//                }
+            if( $encodeRes ) {
+                //exit('password invalid ['.$token->getCredentials().']');
+                return $user;
             } else {
-//                $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
-//                $encoders = [
-//                    User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
-//                ];
-//
-//                $encoderFactory = new EncoderFactory($encoders);
-//                $encoder = $encoderFactory->getEncoder($user);
-                //$userServiceUtil = $this->container->get('user_service_utility');
-                //$encoder = $userServiceUtil->getUserEncoder($user);
-                //$encodeRes = $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt());
-                $encoder = $this->container->get('security.password_encoder');
-
-                $encodeRes = $encoder->isPasswordValid($user,$token->getCredentials()); //does not work
-
-//                $encoded = $encoder->encodePassword($user, $token->getCredentials());
-//                echo "compare: [". $encoded . "]==[" . $user->getPassword() ."]<br>";
-//                if( hash_equals($encoded, $user->getPassword()) ) {
-//                    $encodeRes = true;
-//                } else {
-//                    $encodeRes = false;
-//                }
-//                exit("encodeRes=$encodeRes");
-
-                if( $encodeRes ) {
-                    //exit('password invalid ['.$token->getCredentials().']');
-                    return $user;
-                } else {
-                    $this->validateFailedAttempts($user);
-                    $this->logger->notice("Local Authentication: password is invalid");
-                    return NULL;
-                }
+                $this->validateFailedAttempts($user);
+                $this->logger->notice("Local Authentication: password is invalid");
+                return NULL;
             }
-
-
 
         }
 
@@ -1724,6 +1686,23 @@ class AuthUtil {
         while ($entry = ldap_next_entry($conn, $entry));
         //we're done
         return ($srchRslt);
+    }
+
+    public function getPasswordHasher() {
+        return $this->passwordHasher;
+    }
+    public function getEncodedPassword($user,$plaintextPassword) {
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plaintextPassword
+        );
+        return $hashedPassword;
+    }
+    public function isPasswordValid($user,$plaintextPassword) {
+        if( $this->passwordHasher->isPasswordValid($user, $plaintextPassword) ) {
+            return true;
+        }
+        return false;
     }
 
 } 

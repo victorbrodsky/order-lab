@@ -586,7 +586,7 @@ class SiteParametersController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $encoder = $this->container->get('security.password_encoder');
+        //$encoder = $this->container->get('security.password_encoder');
         //$userSecUtil = $this->container->get('user_security_utility');
         //$routeName = $request->get('_route');
 
@@ -634,7 +634,9 @@ class SiteParametersController extends OrderAbstractController
             $password = $form['password']->getData();
             //echo "password=".$password."<br>";
             if( $password ) {
-                $encoded = $encoder->encodePassword($administratorUser, $password);
+                //$encoded = $encoder->encodePassword($administratorUser, $password);
+                $authUtil = $this->container->get('authenticator_utility');
+                $encoded = $authUtil->getEncodedPassword($administratorUser, $password);
                 //echo "encoded=" . $encoded . "<br>";
                 $administratorUser->setPassword($encoded);
                 $modifiedAdminUser = true;

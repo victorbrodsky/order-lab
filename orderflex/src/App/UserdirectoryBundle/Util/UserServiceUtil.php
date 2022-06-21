@@ -2369,18 +2369,18 @@ Pathology and Laboratory Medicine",
         exit("projectDir=$projectDir");
     }
 
-    public function getUserEncoder($user=null) {
-//        $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
-//        $encoders = [
-//            User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
-//        ];
+//    public function getUserEncoder($user=null) {
+////        $defaultEncoder = new MessageDigestPasswordEncoder('sha512', true, 5000);
+////        $encoders = [
+////            User::class => $defaultEncoder, // Your user class. This line specify you ant sha512 encoder for this user class
+////        ];
+////
+////        $encoderFactory = new EncoderFactory($encoders);
+////        $encoder = $encoderFactory->getEncoder($user);
 //
-//        $encoderFactory = new EncoderFactory($encoders);
-//        $encoder = $encoderFactory->getEncoder($user);
-
-        $encoder = $this->container->get('security.password_encoder');
-        return $encoder;
-    }
+//        $encoder = $this->container->get('security.password_encoder');
+//        return $encoder;
+//    }
 
     //check system status. Used by StatusCronCommand (php bin/console cron:status --env=prod)
     public function checkStatus() {

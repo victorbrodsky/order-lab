@@ -48,7 +48,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+//use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class OrderAbstractController extends AbstractController {
@@ -71,7 +71,7 @@ class OrderAbstractController extends AbstractController {
         //$subscribedServices['security'] = '?'.Security::class;
         //$subscribedServices['security.authentication_utils'] = '?'.AuthenticationUtils::class;
         //$subscribedServices['security.password_encoder'] = '?'.UserPasswordEncoderInterface::class;
-        $subscribedServices['security.password_encoder'] = '?'.UserPasswordHasherInterface::class;
+        //$subscribedServices['security.password_encoder'] = '?'.UserPasswordHasherInterface::class;
 
         $subscribedServices['user_utility'] = '?'.UserUtil::class;
         $subscribedServices['user_security_utility'] = '?'.UserSecurityUtil::class;

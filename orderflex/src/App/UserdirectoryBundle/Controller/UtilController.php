@@ -1520,17 +1520,9 @@ class UtilController extends OrderAbstractController {
         $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
 
         //$encoder = $this->container->get('security.password_encoder');
-        //$encoded = $encoder->encodePassword($subjectUser, $userpassword);
-        //$encodeRes = StringUtils::equals($subjectUser->getPassword(), $encoded);
-
-        //$encoderService = $this->container->get('security.encoder_factory');
-        //$encoder = $encoderService->getEncoder($user);
-        //$userServiceUtil = $this->container->get('user_service_utility');
-        //$encoder = $userServiceUtil->getUserEncoder($user);
-        $encoder = $this->container->get('security.password_encoder');
-
-        //$encodeRes = $encoder->isPasswordValid($subjectUser->getPassword(), $userpassword, $user->getSalt());
-        $encodeRes = $encoder->isPasswordValid($user,$userpassword);
+        //$encodeRes = $encoder->isPasswordValid($user,$userpassword);
+        $authUtil = $this->container->get('authenticator_utility');
+        $encodeRes = $authUtil->isPasswordValid($user,$userpassword);
 
         if( $encodeRes ) {
             $output = 'ok';

@@ -255,11 +255,10 @@ class SignUpController extends OrderAbstractController
             $dummyUser = new User();
             $dummyUser->setSalt($salt);
 
-            $encoder = $this->container->get('security.password_encoder');
-            //$encoderService = $this->container->get('security.encoder_factory');
-            //$encoder = $encoderService->getEncoder($dummyUser);
-
-            $encoded = $encoder->encodePassword($dummyUser,$password);
+            //$encoder = $this->container->get('security.password_encoder');
+            //$encoded = $encoder->encodePassword($dummyUser,$password);
+            $authUtil = $this->container->get('authenticator_utility');
+            $encoded = $authUtil->getEncodedPassword($dummyUser,$password);
             //echo "encoded=$encoded<br>";
             $signUp->setSalt($salt);
             $signUp->setHashPassword($encoded);
@@ -1339,8 +1338,10 @@ class SignUpController extends OrderAbstractController
             $resetPassword->setRegistrationStatus("Reset");
 
             //get password hash
-            $encoder = $this->container->get('security.password_encoder');
-            $encodedPassword = $encoder->encodePassword($user,$password);
+            //$encoder = $this->container->get('security.password_encoder');
+            //$encodedPassword = $encoder->encodePassword($user,$password);
+            $authUtil = $this->container->get('authenticator_utility');
+            $encodedPassword = $authUtil->getEncodedPassword($user,$password);
             //echo "encodedPassword=".$encodedPassword."<br>";
             $user->setPassword($encodedPassword);
 

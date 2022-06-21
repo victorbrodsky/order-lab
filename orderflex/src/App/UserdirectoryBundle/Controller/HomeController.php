@@ -187,8 +187,10 @@ class HomeController extends OrderAbstractController {
             //$systemuser->setUsername("system_@_local-user");
             //$systemuser->setUsernameCanonical("system_@_local-user");
 
-            $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+            //$encoder = $this->container->get('security.password_encoder');
+            //$encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+            $authUtil = $this->container->get('authenticator_utility');
+            $encoded = $authUtil->getEncodedPassword($systemuser, "systemuserpass");
 
             $systemuser->setPassword($encoded);
             $systemuser->setLocked(false);
@@ -200,8 +202,10 @@ class HomeController extends OrderAbstractController {
         }
 
         if( !$systemuser->getPassword() ) {
-            $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+            //$encoder = $this->container->get('security.password_encoder');
+            //$encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+            $authUtil = $this->container->get('authenticator_utility');
+            $encoded = $authUtil->getEncodedPassword($systemuser, "systemuserpass");
             $systemuser->setPassword($encoded);
             $em->persist($systemuser);
             $em->flush();

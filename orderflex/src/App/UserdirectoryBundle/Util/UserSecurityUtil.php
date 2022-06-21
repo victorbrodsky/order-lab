@@ -49,6 +49,7 @@ use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class UserSecurityUtil {
 
@@ -56,17 +57,20 @@ class UserSecurityUtil {
     protected $container;
     protected $security;
     protected $tokenStorage;
+    protected $requestStack;
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container=null,
-        Security $security=null,
-        TokenStorageInterface $tokenStorage=null
+        ContainerInterface $container,
+        Security $security,
+        TokenStorageInterface $tokenStorage,
+        RequestStack $requestStack
     ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
         $this->tokenStorage = $tokenStorage;
+        $this->requestStack = $requestStack;
         //if( $container ) {
             //$this->secToken = $container->get('security.token_storage');
             //$this->secAuth = $container->get('security.authorization_checker');
@@ -293,7 +297,11 @@ class UserSecurityUtil {
 
         }
 
-        $this->container->get('session')->getFlashBag()->add(
+//        $this->container->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
+        $request->getSession()->getFlashBag()->add(
             'notice',
             $msg
         );
@@ -1488,11 +1496,12 @@ class UserSecurityUtil {
             //$username = $token->getUsername();
             $user = $this->security->getUser();
 
-            if( $this->security->getToken() ) {
-                $username = $this->security->getToken()->getUsername();
-            } else {
-                $username = $user."";
-            }
+//            if( $this->security->getToken() ) {
+//                $username = $this->security->getToken()->getUsername();
+//            } else {
+//                $username = $user."";
+//            }
+            $username = $user."";
 
             //$this->security->setToken(null);
             //$this->security->getToken()->getSession()->invalidate();

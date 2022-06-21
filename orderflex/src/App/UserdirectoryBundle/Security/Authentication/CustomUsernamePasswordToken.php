@@ -9,21 +9,33 @@
 namespace App\UserdirectoryBundle\Security\Authentication;
 
 
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-//use Symfony\Component\Security\Core\User\UserInterface;
+//use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
-
-class CustomUsernamePasswordToken extends UsernamePasswordToken
+class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
 {
 
+    private $firewallName;
+    private $username;
     private $credentials;
 
 
-    public function __construct($user, $credentials, string $firewallName, array $roles = [])
+    //UserInterface $user,
+    public function __construct(string $username, $credentials, string $firewallName, array $roles = [])
     {
         $this->credentials = $credentials ?? null;
+        $this->username = $username ?? null;
 
-        parent::__construct($user,$firewallName,$roles);
+        //parent::__construct($user,$firewallName,$roles);
+        parent::__construct($roles);
+
+        if ('' === $firewallName) {
+            throw new \InvalidArgumentException('$firewallName must not be empty.');
+        }
+
+        //$this->setUser($user);
+        $this->firewallName = $firewallName;
     }
 
 
@@ -40,6 +52,16 @@ class CustomUsernamePasswordToken extends UsernamePasswordToken
         parent::eraseCredentials();
 
         $this->credentials = null;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function setUsername( $username )
+    {
+        return $this->username = $username;
     }
 
 }

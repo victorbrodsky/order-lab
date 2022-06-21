@@ -259,7 +259,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //        );
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
-            $username,
+            $username,      //username
             $password,
             $providerKey
         );

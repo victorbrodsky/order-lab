@@ -4046,8 +4046,10 @@ class UserController extends OrderAbstractController
 //            $user->setSalt($salt);
 //        }
 
-        $encoder = $this->container->get('security.password_encoder');
-        $encoded = $encoder->encodePassword($user, $user->getPassword());
+        //$encoder = $this->container->get('security.password_encoder');
+        //$encoded = $encoder->encodePassword($user, $user->getPassword());
+        $authUtil = $this->container->get('authenticator_utility');
+        $encoded = $authUtil->getEncodedPassword($user, $user->getPassword());
 
         //password is the same as original one
         if( !$newUser && $user->getPassword() && hash_equals($originalPassword, $user->getPassword()) ) {

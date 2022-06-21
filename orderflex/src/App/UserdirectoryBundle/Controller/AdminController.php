@@ -237,8 +237,10 @@ class AdminController extends OrderAbstractController
                 //$systemuser->setUsername("system_@_local-user");
                 //$systemuser->setUsernameCanonical("system_@_local-user");
 
-                $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+                //$encoder = $this->container->get('security.password_encoder');
+                //$encoded = $encoder->encodePassword($systemuser, "systemuserpass");
+                $authUtil = $this->container->get('authenticator_utility');
+                $encoded = $authUtil->getEncodedPassword($systemuser,"systemuserpass");
 
                 $systemuser->setPassword($encoded);
                 $systemuser->setLocked(false);
@@ -8693,7 +8695,7 @@ class AdminController extends OrderAbstractController
             $administrator = NULL;
         }
 
-        $encoder = $this->container->get('security.password_encoder');
+        //$encoder = $this->container->get('security.password_encoder');
         //echo 'testing2 <br>';
 
         //$administrator = NULL; //testing
@@ -8708,7 +8710,9 @@ class AdminController extends OrderAbstractController
 
             ////////////// Update password ///////////////////
             if(0) {
-                $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+                //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+                $authUtil = $this->container->get('authenticator_utility');
+                $encodedPassword = $authUtil->getEncodedPassword($administrator, "1234567890");
                 //echo 'testing4 $encodedPassword=['.$encodedPassword.']<br>';
                 //$encodedPassword = strval($encodedPassword);
                 $encodedPassword = (string)$encodedPassword;
@@ -8784,7 +8788,9 @@ class AdminController extends OrderAbstractController
             //$administrator->setLocked(true);
             //$administrator->setExpired(false);
 
-            $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+            //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
+            $authUtil = $this->container->get('authenticator_utility');
+            $encodedPassword = $authUtil->getEncodedPassword($administrator, "1234567890");
             //$encodedPassword = $argon2id$v=19$m=65536,t=4,p=1$qQUcnDgdNns+KHgHyFrTXQ$XDuWLo1F2TyPhxzEOp8fZ0zXX94EYSACt+f/vjOZYX4
             //exit("encodedPassword=$encodedPassword"); //testing
             $administrator->setPassword($encodedPassword);
