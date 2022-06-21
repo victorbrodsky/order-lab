@@ -142,7 +142,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * @return string
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return (string) $this->getUsername();
     }
@@ -150,7 +150,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function addRole($role) : self
+    public function addRole($role): self
     {
         $role = strtoupper($role);
         if ($role === static::ROLE_DEFAULT) {
@@ -185,13 +185,13 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
      *
      * @final
      */
-    public function serialize() : array
+    public function serialize(): array
     {
         return serialize($this->__serialize());
     }
     //implements the Serializable interface, which is deprecated. Implement __serialize() and __unserialize()
     //public function __serialize(): array {}
-    public function __serialize() : array
+    public function __serialize(): array
     {
         return array(
             $this->password,
@@ -240,12 +240,12 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
      *
      * @final
      */
-    public function unserialize($serialized) : void
+    public function unserialize($serialized): void
     {
         $this->__unserialize(unserialize($serialized));
     }
     //public function __unserialize(array $data): void {}
-    public function __unserialize($data) : void
+    public function __unserialize($data): void
     {
         //$this->unserialize($data);
         //$data = unserialize($serialized);
@@ -275,7 +275,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function eraseCredentials() : void
+    public function eraseCredentials(): void
     {
         $this->plainPassword = null;
     }
@@ -283,7 +283,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getId() : ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -291,7 +291,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getUsername() : ?string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -299,7 +299,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getUsernameCanonical() : ?string
+    public function getUsernameCanonical(): ?string
     {
         return $this->usernameCanonical;
     }
@@ -307,7 +307,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getSalt() : ?string
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
@@ -315,7 +315,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getEmail() : ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -323,7 +323,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getEmailCanonical() : ?string
+    public function getEmailCanonical(): ?string
     {
         return $this->emailCanonical;
     }
@@ -331,7 +331,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getPassword() : ?string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -339,7 +339,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getPlainPassword() : ?string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -365,7 +365,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getRoles() : array
+    public function getRoles(): array
     {
         $roles = $this->roles;
 
@@ -382,7 +382,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function hasRole($role) : bool
+    public function hasRole($role): bool
     {
         return in_array(strtoupper($role), $this->getRoles(), true);
     }
@@ -390,7 +390,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonExpired() : bool
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
@@ -398,7 +398,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function isAccountNonLocked() : bool
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
@@ -406,12 +406,12 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function isCredentialsNonExpired() : bool
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
 
-    public function isEnabled() : bool
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -419,7 +419,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function isSuperAdmin() : bool
+    public function isSuperAdmin(): bool
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
@@ -427,7 +427,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function removeRole($role) : self
+    public function removeRole($role): self
     {
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
@@ -440,7 +440,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setUsername($username) : ?self
+    public function setUsername($username): ?self
     {
         $this->username = $username;
 
@@ -450,7 +450,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setUsernameCanonical($usernameCanonical) : ?self
+    public function setUsernameCanonical($usernameCanonical): ?self
     {
         $this->usernameCanonical = $usernameCanonical;
 
@@ -460,7 +460,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setSalt($salt) : self
+    public function setSalt($salt): self
     {
         $this->salt = $salt;
 
@@ -470,7 +470,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setEmail($email) : ?self
+    public function setEmail($email): ?self
     {
         $this->email = $email;
 
@@ -480,7 +480,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setEmailCanonical($emailCanonical) : self
+    public function setEmailCanonical($emailCanonical): self
     {
         $this->emailCanonical = $emailCanonical;
 
@@ -490,7 +490,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setEnabled($boolean) : self
+    public function setEnabled($boolean): self
     {
         $this->enabled = (bool) $boolean;
 
@@ -500,7 +500,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setPassword($password) : self
+    public function setPassword($password): self
     {
         $this->password = $password;
 
@@ -510,7 +510,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setSuperAdmin($boolean) : self
+    public function setSuperAdmin($boolean): self
     {
         if (true === $boolean) {
             $this->addRole(static::ROLE_SUPER_ADMIN);
@@ -524,7 +524,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setPlainPassword($password) : self
+    public function setPlainPassword($password): self
     {
         $this->plainPassword = $password;
 
@@ -534,7 +534,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setLastLogin(\DateTime $time = null) : self
+    public function setLastLogin(\DateTime $time = null): self
     {
         $this->lastLogin = $time;
 
@@ -544,7 +544,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setConfirmationToken($confirmationToken) : self
+    public function setConfirmationToken($confirmationToken): self
     {
         $this->confirmationToken = $confirmationToken;
 
@@ -554,7 +554,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setPasswordRequestedAt(\DateTime $date = null) : self
+    public function setPasswordRequestedAt(\DateTime $date = null): self
     {
         $this->passwordRequestedAt = $date;
 
@@ -574,7 +574,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function isPasswordRequestNonExpired($ttl) : bool
+    public function isPasswordRequestNonExpired($ttl): bool
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
                $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
@@ -583,7 +583,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setRoles(array $roles) : self
+    public function setRoles(array $roles): self
     {
         $this->roles = array();
 
@@ -597,7 +597,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function canonicalize($string) : ?string
+    public function canonicalize($string): ?string
     {
         if (null === $string) {
             return null;
