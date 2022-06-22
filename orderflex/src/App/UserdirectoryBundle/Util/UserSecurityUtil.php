@@ -51,6 +51,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+
+//Note: This class might be called from repository and transformer with only the first argument in constractor $em
+//Methods used when this class is created by "new UserSecurityUtil": getDefaultSourceSystem findSystemUser addDefaultType
+
 class UserSecurityUtil {
 
     protected $em;
@@ -61,10 +65,10 @@ class UserSecurityUtil {
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container,
-        Security $security,
-        TokenStorageInterface $tokenStorage,
-        RequestStack $requestStack
+        ContainerInterface $container=null,
+        Security $security=null,
+        TokenStorageInterface $tokenStorage=null,
+        RequestStack $requestStack=null
     ) {
         $this->em = $em;
         $this->container = $container;

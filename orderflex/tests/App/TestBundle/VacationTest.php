@@ -47,7 +47,8 @@ class VacationTest extends WebTestBase
         // Create a stub for the SomeClass class.
         //$stub = $this->createStub(SomeClass::class);
 
-        $vacreqUtil = self::$container->get('vacreq_util');
+        //$vacreqUtil = self::$container->get('vacreq_util');
+        $vacreqUtil = $this->testContainer->get('vacreq_util');
 
         $floatingDays = array(
             array("06/29/2019", "2018-2019"),

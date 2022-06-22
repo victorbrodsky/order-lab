@@ -23,6 +23,9 @@ use Symfony\Component\HttpFoundation\Response;
 class DashboardController extends OrderAbstractController
 {
 
+    //filter[projectSpecialty][] - not working, filter[projectSpecialty] - working
+    //private $emptyProjectSpecialtyFilter = null; //"All" => 0 "AP/CP" => 2
+
     /**
      * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
      *
@@ -83,7 +86,8 @@ class DashboardController extends OrderAbstractController
                 $redirectParams = array(
                     'filter[startDate]' => $startDateStr,
                     'filter[endDate]' => $endDateStr,
-                    'filter[projectSpecialty][]' => 0,
+                    //'filter[projectSpecialty][]' => 0,
+                    //'filter[projectSpecialty][0]' => '0', //$this->emptyProjectSpecialtyFilter, //filter[projectSpecialty][] => 0
                     'title' => "Default Charts"
                 );
                 $count = 0;
@@ -459,7 +463,7 @@ class DashboardController extends OrderAbstractController
         $redirectParams = array(
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
-            'filter[projectSpecialty][]' => 0,
+            //'filter[projectSpecialty][]' => $this->emptyProjectSpecialtyFilter,
             'title' => "Topic '".$topic->getName()."'",
             'auto' => true
         );
@@ -534,7 +538,7 @@ class DashboardController extends OrderAbstractController
         $redirectParams = array(
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
-            'filter[projectSpecialty][]' => 0,
+            //'filter[projectSpecialty][]' => $this->emptyProjectSpecialtyFilter,
             'title' => "Service '".$institution->getName()."'",
             'auto' => true
         );
@@ -608,7 +612,7 @@ class DashboardController extends OrderAbstractController
         $redirectParams = array(
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
-            'filter[projectSpecialty][]' => 0,
+            //'filter[projectSpecialty][]' => $this->emptyProjectSpecialtyFilter,
             'title' => "Chart type '".$chartType->getName()."'"
         );
         $count = 0;
@@ -664,7 +668,7 @@ class DashboardController extends OrderAbstractController
         $redirectParams = array(
             'filter[startDate]' => $startDateStr,
             'filter[endDate]' => $endDateStr,
-            'filter[projectSpecialty][]' => 0,
+            //'filter[projectSpecialty][]' => $this->emptyProjectSpecialtyFilter,
             //'title' => $title
         );
 

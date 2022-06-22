@@ -116,7 +116,7 @@ class AccountTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $userSecUtil = new UserSecurityUtil($this->em,null);
+                $userSecUtil = new UserSecurityUtil($this->em);
                 $this->user = $userSecUtil->findSystemUser();
             }
 

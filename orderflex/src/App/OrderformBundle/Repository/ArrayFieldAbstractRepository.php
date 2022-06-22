@@ -41,7 +41,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     {
         parent::__construct($em, $class);
 
-        $securityUtil = new UserSecurityUtil($this->_em,null);
+        $securityUtil = new UserSecurityUtil($this->_em);
         $this->source = $securityUtil->getDefaultSourceSystem();
     }
     //https://stackoverflow.com/questions/48024235/cannot-autowire-service-argument-references-class-but-no-such-service-exists
@@ -566,7 +566,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //default source
-        $securityUtil = new UserSecurityUtil($this->_em,null);
+        $securityUtil = new UserSecurityUtil($this->_em);
         $source = $securityUtil->getDefaultSourceSystem();
 
         $class = new \ReflectionClass($entity);

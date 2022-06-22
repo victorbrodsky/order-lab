@@ -112,7 +112,7 @@ class DashboardTest extends WebTestBase
     public function testHomePageAction() {
         $this->logIn();
         //$crawler = $this->client->request('GET', '/dashboards/');
-        $crawler = $this->client->request('GET', '/dashboards/?filter[startDate]=03/15/2021&filter[endDate]=03/15/2022&filter[projectSpecialty][]=0&title=Favorite charts');
+        $crawler = $this->client->request('GET', '/dashboards/?filter[startDate]=03/15/2021&filter[endDate]=03/15/2022&title=Favorite charts');
 //        $this->assertGreaterThan(
 //            0,
 //            $crawler->filter('html:contains("Favorites")')->count()

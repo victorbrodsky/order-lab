@@ -249,7 +249,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $acctype = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
 
-        $securityUtil = new UserSecurityUtil($this->_em,null);
+        $securityUtil = new UserSecurityUtil($this->_em);
         $source = $securityUtil->getDefaultSourceSystem();
 
         //we should have only one key field !!!

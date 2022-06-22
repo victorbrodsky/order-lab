@@ -1196,3 +1196,14 @@ Solution: add return type: TreeBuilder in Oneup\UploaderBundle\DependencyInjecti
 
 User Deprecated: Since symfony/framework-bundle 5.3: Accessing the "state_machine.transres_project"
 service directly from the container is deprecated, use dependency injection instead.
+
+https://symfony.com/doc/current/setup/upgrade_major.html
+https://github.com/symfony/symfony/blob/6.2/UPGRADE-6.0.md
+
+Symfony\Bridge\Twig\Extension\twig_is_selected_choice(): Argument #2 ($selectedValue)
+must be of type array|string, null given, called in
+C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\var\cache\dev\twig\89\89648522daac99c3a0c6e7ef41c80227.php
+on line 532
+Solution: 'filter[projectSpecialty][]' => 0 is not correct
+
+TODO: remove? Doctrine\Common\Lexer\AbstractLexer

@@ -46,7 +46,18 @@ class FilterDashboardType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        if( $this->params["projectSpecialty"] ) {
+        //dump($this->params['projectSpecialties']);
+        //exit('111');
+        //$this->params['projectSpecialties'] = array(1,2,3);
+//        if( !is_array($this->params["projectSpecialties"]) ) {
+//            dump($this->params['projectSpecialties']);
+//            exit('not array');
+//        }
+
+        //Symfony\Bridge\Twig\Extension\twig_is_selected_choice(): Argument #2 ($selectedValue) must be of type array|string, null given
+        if( $this->params["projectSpecialty"] && is_array($this->params["projectSpecialties"] ) ) {
+            //dump($this->params['projectSpecialties']);
+            //exit('111');
             $builder->add('projectSpecialty', ChoiceType::class, array(
                 'label' => false,
                 'choices' => $this->params['projectSpecialties'],
