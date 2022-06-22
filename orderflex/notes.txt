@@ -1209,3 +1209,11 @@ on line 532
 Solution: 'filter[projectSpecialty][]' => 0 is not correct
 
 TODO: remove? Doctrine\Common\Lexer\AbstractLexer
+
+https://stackoverflow.com/questions/25671785/git-fatal-unable-to-auto-detect-email-address
+composer recipes:update symfony/framework-bundle
+fatal: unable to auto-detect email address  (got 'ch3@Admin.(none)')
+git config --global user.email "oli2002@med.cornell.edu"
+git config --global user.name "Oleg Ivanov"
+git config --local user.email "oli2002@med.cornell.edu"
+git config --local user.name "Oleg Ivanov"
