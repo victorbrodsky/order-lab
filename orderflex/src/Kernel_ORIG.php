@@ -2,30 +2,19 @@
 
 namespace App;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace App;
-
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+//use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+//use Symfony\Component\Routing\RouteCollectionBuilder;
 
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-
-private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
     public function registerBundles(): iterable
     {
@@ -55,4 +44,14 @@ private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
         $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
+
+
+//    protected function configureRoutes(RouteCollectionBuilder $routes): void
+//    {
+//        $confDir = $this->getProjectDir().'/config';
+//
+//        $routes->import($confDir.'/{routes}/'.$this->environment.'/*'.self::CONFIG_EXTS, '/', 'glob');
+//        $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
+//        $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
+//    }
 }
