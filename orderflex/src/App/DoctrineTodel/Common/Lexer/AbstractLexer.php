@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Doctrine\Common\Lexer;
+namespace DoctrineTodel\Common\Lexer;
 #namespace App\Doctrine\Common\Lexer;
 
 use ReflectionClass;

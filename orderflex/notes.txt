@@ -150,7 +150,8 @@ doctrine/lexer (^1.2)
 "google/apiclient": "^2.4",s - new
 
 
-[2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError: "Type error: preg_split() expects parameter 2 to be string, object given" at
+[2019-12-22 18:20:30] request.CRITICAL: Uncaught PHP Exception Symfony\Component\Debug\Exception\FatalThrowableError:
+"Type error: preg_split() expects parameter 2 to be string, object given" at
 C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\Scanorders2\vendor\doctrine\lexer\lib\Doctrine\Common\Lexer\AbstractLexer.php line 255
 {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalThrowableError(code: 0): Type error: preg_split() expects parameter 2 to be string, object given
 php.CRITICAL: preg_split() expects parameter 2 to be string, float given doctrine/lexer#31
@@ -161,8 +162,9 @@ $input = $input."";
 $matches = preg_split($this->regex, $input, -1, $flags);
 ######### Solution: ##############
 1) Copy AbstractLexer to src/App/Doctrine\Common\Lexer\AbstractLexer
-2) make sure namespace is the original: "namespace Doctrine\Common\Lexer;"
-3) Modify composer (we have only one file in Doctrine\\Common\\Lexer\\):
+2) replace $matches = preg_split($this->regex, $input, -1, $flags); to $matches = preg_split($this->regex, (string)$input, -1, $flags);
+3) make sure namespace is the original: "namespace Doctrine\Common\Lexer;"
+4) Modify composer (we have only one file in Doctrine\\Common\\Lexer\\):
 "autoload": {
         "psr-4": {
             "App\\": "src/App/",
@@ -173,7 +175,7 @@ $matches = preg_split($this->regex, $input, -1, $flags);
             "src/Kernel.php"
         ]
     },
-4) composer.phar dump-autoload
+5) composer.phar dump-autoload
 ###################################
 
 composer update --ignore-platform-reqs
