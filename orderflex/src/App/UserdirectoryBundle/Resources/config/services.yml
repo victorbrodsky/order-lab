@@ -94,7 +94,7 @@ services:
     #Redirect admin to index
     employees_authentication_handler:
         class: App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+        #arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #twig listener
     twigdate.listener.request:
@@ -107,7 +107,7 @@ services:
     #user security util (removed "@security.token_storage" and "@security.authorization_checker")
     user_security_utility:
         class: App\UserdirectoryBundle\Util\UserSecurityUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        #arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     user_utility:
         class: App\UserdirectoryBundle\Util\UserUtil
@@ -116,17 +116,17 @@ services:
     #user generator util
     user_generator:
         class: App\UserdirectoryBundle\Util\UserGenerator
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        #arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #user download util
     user_download_utility:
         class: App\UserdirectoryBundle\Util\UserDownloadUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        #arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #OneupUploaderBundle upload listener
     oleg.upload_listener:
         class: App\UserdirectoryBundle\Services\UploadListener
-        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
+        #arguments: ["@service_container", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
 #            - { name: kernel.event_listener, event: oneup_uploader.pre_upload, method: preUpload }
@@ -134,7 +134,7 @@ services:
     #Doctrine listener for postPersist
     doctrine.listener:
         class: App\UserdirectoryBundle\Services\DoctrineListener
-        arguments: ["@service_container"]
+        #arguments: ["@service_container"]
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: preUpdate, connection: default }
@@ -149,7 +149,7 @@ services:
     #user mailer util
     user_mailer_utility:
         class: App\UserdirectoryBundle\Util\EmailUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+        #arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     user_role_voter:
         class: App\UserdirectoryBundle\Security\Voter\UserRoleVoter

@@ -5,8 +5,8 @@ framework:
     #translator:
       #enabled: false
 
-    secret: '%secret%'
-#    secret: '%env(APP_SECRET)%'
+#    secret: '%secret%'
+    secret: '%env(APP_SECRET)%'
 #    secret: '123'
 
 #    router:

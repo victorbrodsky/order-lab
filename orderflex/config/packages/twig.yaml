@@ -61,3 +61,7 @@ twig:
         transres_permission_util: "@transres_permission_util"
         transres_formnode_util: "@transres_formnode_util"
         user_mailer_utility: "@user_mailer_utility"
+
+when@test:
+    twig:
+        strict_variables: true
