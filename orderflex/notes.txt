@@ -1219,6 +1219,10 @@ git config --local user.email "oli2002@med.cornell.edu"
 git config --local user.name "Oleg Ivanov"
 
 TODO:
+https://symfonycasts.com/screencast/symfony5-upgrade/console-recipe
+composer recipes:install symfony/console --force -v
+composer recipes:install phpunit/phpunit --force -v
+
 1) run in dev
 2) use secret: '%env(APP_SECRET)%'
 3) use symfony 6 Kernel, bundles.php
