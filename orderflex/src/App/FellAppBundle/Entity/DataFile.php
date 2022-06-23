@@ -17,6 +17,7 @@
 
 namespace App\FellAppBundle\Entity;
 
+use App\UserdirectoryBundle\Entity\Document;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -68,7 +69,7 @@ class DataFile {
     private $fellapp;
 
     
-    public function __construct($document) {
+    public function __construct(Document $document) {
         $this->setCreationdate(new \DateTime());
         $this->setStatus("active");
         $this->setDocument($document);

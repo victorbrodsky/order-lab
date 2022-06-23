@@ -1219,6 +1219,22 @@ git config --local user.email "oli2002@med.cornell.edu"
 git config --local user.name "Oleg Ivanov"
 
 TODO:
+Optional recommendations to improve your setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * a PHP accelerator should be installed
+   > Install and/or enable a PHP accelerator (highly recommended).
+
+ * realpath_cache_size should be at least 5M in php.ini
+   > Setting "realpath_cache_size" to e.g. "5242880" or "5M" in
+   > php.ini* may improve performance on Windows significantly in some
+   > cases.
+
+ * "post_max_size" should be greater than "upload_max_filesize".
+   > Set "post_max_size" to be greater than "upload_max_filesize".
+
+
+TODO:
 https://symfonycasts.com/screencast/symfony5-upgrade/console-recipe
 composer.phar recipes:install symfony/framework-bundle --force -v
 composer.phar recipes:install symfony/console --force -v

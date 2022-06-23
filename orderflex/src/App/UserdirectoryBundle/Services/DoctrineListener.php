@@ -33,13 +33,14 @@ use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\PatientLastName;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DoctrineListener {
 
 
     private $container;
 
-    public function __construct($container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
