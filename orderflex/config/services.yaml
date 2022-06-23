@@ -40,7 +40,9 @@ imports:
 #    - { resource: "@AppCallLogBundle/Resources/config/services.yml" }
 #    - { resource: "@AppTranslationalResearchBundle/Resources/config/services.yml" }
 #    - { resource: "@AppUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
+
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
+#    - { resource: "@AppUserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/ResAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/OrderformBundle/Resources/config/services.yml" }
@@ -59,6 +61,7 @@ imports:
 #    - { resource: "@FOSCommentBundle/Resources/config/services.yaml" }
 
 services:
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -66,23 +69,30 @@ services:
         public: true       # Allows optimizing the container by removing unused services; this also means
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
-#        bind:
-#             $projectDir: '%kernel.project_dir%'
-#        bind:
-#            $variableName: 'someValue'
-##            App\VacReqBundle\Util\VacReqUtil $vacreqUtil: '@vacreq_util'
-#            App\VacReqBundle\Util\VacReqUtil: '@vacreq_util'
-#            App\VacReqBundle\Util\VacReqImportData $vacReqImportData: '@vacreq_import_data'
-#            App\CallLogBundle\Util\CallLogUtil $calllogUtil: '@calllog_util'
-
-    #Doctrine\Common\Lexer\AbstractLexer: ~
-    #Doctrine\Common\Lexer\AbstractLexer:
-    #    class: App\Doctrine\Common\Lexer\AbstractLexer
-
-        #App\UserdirectoryBundle\Services\AbstractLexer:
-            #decorates: Doctrine\Common\Lexer\AbstractLexer
 
     Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+#    Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface: ~
+#    Symfony\Component\Security\Core\Security: ~
+#    Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface: ~
+#    Psr\Container\ContainerInterface:
+
+#    authenticator_utility:
+#        class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
+#
+#    oleg.listener.maintenance:
+#            class: App\UserdirectoryBundle\Services\MaintenanceListener
+#            tags:
+#                - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#
+#    oleg.listener.exception:
+#            class: App\UserdirectoryBundle\Services\ExceptionListener
+#            arguments: ["@service_container","@doctrine.orm.entity_manager"]
+#            tags:
+#                - { name: kernel.event_listener, event: kernel.exception }
+#
+#    employees_authentication_handler:
+#            class: App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
+#            arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -101,7 +111,11 @@ services:
 
     App\UserdirectoryBundle\Security\Authentication\:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
-        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
+        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{AuthUtil.php,CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
+
+#    App\UserdirectoryBundle\Services\:
+#        resource: '../src/App/UserdirectoryBundle/Services'
+#        exclude: '../src/App/UserdirectoryBundle/Services/{MaintenanceListener.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -145,35 +159,6 @@ services:
     App\UtilBundles\FOSCommentBundle\Controller\:
         resource: '../src/App/UtilBundles/FOSCommentBundle/Controller/'
 
-    #FOS\CommentBundle\Controller
-#    App\Controller\:
-#        resource: '@FOSCommentBundle/Controller/'
-
-#    App\UserdirectoryBundle\Controller\UserController: ~
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
-    #Remove autowire for Classes using extends vendor Classes
-#    App\UserdirectoryBundle\Query\CastFunction:
-#        autowire: false
-#    App\UserdirectoryBundle\Query\GroupConcat:
-#        autowire: false
-
-#    App\Log\CustomLogger:
-#        arguments: ['@logger']
-#        tags:
-#            - { name: monolog.logger, channel: app }
-
-    #App\CallLogBundle\Controller\DataQualityController:
-    #    arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
-    #App\CallLogBundle\Controller\CallEntryController: ~
-    #    arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
-
-#    App\VacReqBundle\Controller\ApproverController:
-#        arguments: ["@vacreq_util"]
-#        bind:
-#            $vacreqUtil: '@vacreq_util'
 
 
     ################## Commands ##################
@@ -292,12 +277,5 @@ oneup_uploader:
             storage:
                 directory: 'Uploaded/%dashboard.uploadpath%'
 
-#sensio_framework_extra:
-#    router:      { annotations: true } # Deprecated; use routing annotations of Symfony core instead
-#    request:     { converters: true, auto_convert: true }
-#    view:        { annotations: true }
-#    cache:       { annotations: true }
-#    security:    { annotations: true }
-#    psr_message: { enabled: false } # Defaults to true if the PSR-7 bridge is installed
 
 

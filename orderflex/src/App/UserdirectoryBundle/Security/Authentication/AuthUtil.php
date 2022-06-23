@@ -30,8 +30,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-//use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-//use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+//use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -46,6 +45,7 @@ class AuthUtil {
     private $logger;
     private $requestStack;
     private $passwordHasher;
+    //private $hasherFactory;
 
     //private $supportedUsertypesExternal = array('external');
     //private $supportedUsertypesLdap = null; //array('ldap-user');
@@ -56,13 +56,16 @@ class AuthUtil {
         EntityManagerInterface $em,
         RequestStack $requestStack,
         UserPasswordHasherInterface $passwordHasher
+        //PasswordHasherFactory $hasherFactory
     )
     {
         $this->container = $container;
         $this->em = $em;
         $this->requestStack = $requestStack;
-        $this->passwordHasher = $passwordHasher;
         $this->logger = $container->get('logger');
+
+        $this->passwordHasher = $passwordHasher;
+        //$this->hasherFactory = $hasherFactory;
 
         //set $supportedUsertypesLdap from defaultPrimaryPublicUserIdType
 //        $userSecUtil = $this->container->get('user_security_utility');

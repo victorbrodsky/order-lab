@@ -32,42 +32,13 @@ parameters:
   sitesettings_title:
   contentabout_page:
 
-  #swiftmailer default [] - use originals emails in live
-#  swift_delivery_addresses: []
-
-
-#  maintenance:
-#  maintenanceenddate:
-#  maintenanceloginmsg:
-#  maintenancelogoutmsg:
-
-#framework:
-#    session:
-#        cookie_lifetime: 20
-#        gc_maxlifetime: 10
-
-
-#fos user bundle
-#fos_user:
-#    db_driver: orm
-#    firewall_name: main
-#    user_class: App\UserdirectoryBundle\Entity\User
-#    from_email:
-#        address: oli2002@med.cornell.edu
-#        sender_name: Oleg Ivanov
-
-#fos_comment:
-#    db_driver: orm
-#    class:
-#        model:
-#            comment: App\UserdirectoryBundle\Entity\FosComment
-#            thread: App\UserdirectoryBundle\Entity\FosThread
 
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        public: true       # Allows optimizing the container by removing unused services; this also means
+        public: true
+#        public: false        # Allows optimizing the container by removing unused services; this also means
                                 # fetching services directly from the container via $container->get() won't work.
                                 # The best practice is to be explicit about your dependencies anyway.
 #        bind:
@@ -85,20 +56,20 @@ services:
 #        class:     App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
 #        arguments: ["@security.password_encoder","@service_container","@doctrine.orm.entity_manager"]
 
+#    App\UserdirectoryBundle\Services\:
+#            resource: '../../Services'
+#            exclude: '../../Services/{MaintenanceListener.php,DoctrineListener.php,ExceptionListener.php,FosCommentListener.php,SessionIdleHandler.php,TwigDateRequestListener.php,UploadListener.php}'
+
     custom_guard_authenticator:
         class:     App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
-        arguments: ["@service_container","@doctrine.orm.entity_manager"]
 
     authenticator_utility:
         class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
-        arguments: ["@service_container","@doctrine.orm.entity_manager"]
 
     oleg.listener.maintenance:
         class: App\UserdirectoryBundle\Services\MaintenanceListener
-        arguments: ["@service_container","@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-#            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
     oleg.listener.exception:
         class: App\UserdirectoryBundle\Services\ExceptionListener
@@ -119,11 +90,6 @@ services:
         arguments: ["@service_container", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-    #Override Ldap Manager
-#    oleg.security.ldap_manager:
-#        class: App\UserdirectoryBundle\Security\Authentication\LdapManager
-#        arguments: [@fr3d_ldap.ldap_driver, @fr3d_ldap.user_manager, %fr3d_ldap.ldap_manager.parameters%, @service_container, @doctrine.orm.entity_manager ]
 
     #Redirect admin to index
     employees_authentication_handler:

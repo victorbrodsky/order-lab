@@ -26,7 +26,8 @@ namespace App\UserdirectoryBundle\Services;
 
 
 //use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Doctrine\ORM\EntityManager;
+//use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,7 +45,7 @@ class MaintenanceListener {
     private $security;
     private $logger;
 
-    public function __construct(ContainerInterface $container, EntityManager $em, Security $security)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;

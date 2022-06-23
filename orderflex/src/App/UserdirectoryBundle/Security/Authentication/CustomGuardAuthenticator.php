@@ -28,7 +28,7 @@ namespace App\UserdirectoryBundle\Security\Authentication;
 //use Symfony\Component\HttpFoundation\Request;
 //use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+//use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 //use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -77,7 +77,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     private $passwordToken;
     //private $credentials;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security=null, CsrfTokenManagerInterface $csrfTokenManager=null)
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $em,
+        Security $security=null,
+        CsrfTokenManagerInterface $csrfTokenManager=null
+    )
     {
         //$this->encoder = $encoder;
         $this->container = $container;                //Service Container

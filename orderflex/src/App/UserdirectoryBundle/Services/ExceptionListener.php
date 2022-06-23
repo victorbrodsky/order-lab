@@ -25,7 +25,8 @@
 namespace App\UserdirectoryBundle\Services;
 
 
-use Doctrine\ORM\EntityManager;
+//use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -39,7 +40,7 @@ class ExceptionListener {
     protected $security;
     private $logger;
 
-    public function __construct(ContainerInterface $container, EntityManager $em, Security $security)
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, Security $security)
     {
         $this->container = $container;
         $this->em = $em;
