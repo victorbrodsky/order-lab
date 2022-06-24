@@ -31,17 +31,17 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_reportgenerator:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\ResAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_googlesheetmanagement:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\ResAppBundle\Util\GoogleSheetManagement
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
@@ -54,9 +54,9 @@ services:
           arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_pdfutil:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\ResAppBundle\Util\PdfUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 

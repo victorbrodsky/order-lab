@@ -2,7 +2,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 imports:
-    - { resource: parameters.yml }
+    - { resource: "parameters.yml" }
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/ResAppBundle/Resources/config/services.yml" }
@@ -31,7 +31,7 @@ services:
 #    Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface: ~
 #    Symfony\Component\Security\Core\Security: ~
 #    Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface: ~
-#    Psr\Container\ContainerInterface:
+#    Psr\Container\ContainerInterface: ~
 
 #    authenticator_utility:
 #        class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
@@ -51,18 +51,28 @@ services:
 #            class: App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
 #            arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
+
+#https://symfony.com/doc/6.0/service_container/import.html
+#When loading a configuration file, Symfony loads first the imported files and then it processes the parameters and services defined in the file. If you use the default services.yaml configuration as in the above example, the App\ definition creates services for classes found in ../src/*. If your imported file defines services for those classes too, they will be overridden.
+
+#A possible solution for this is to add the classes and/or directories of the imported files in the exclude option of the App\ definition. Another solution is to not use imports and add the service definitions in the same file, but after the App\ definition to override it.
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     #Remove autowire for Classes using extends vendor Classes: can be done here, for example adding folder 'Query' (App\UserdirectoryBundle\Query) to exclude
     App\:
 #        resource: '../src/App/*/*'
 #        resource: '../src/App/*'
-        resource: '../src/App/*/Util'
+#        resource: '../src/App/*/Util'
         #resource: '../src/App/*/*/Util/'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
+        resource: '../src/App/*/Util/'
         exclude:
-            - '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
+            - '../src/App/Migrations'
+            - '../src/App/*/{Entity,Cert,Tests,Query,Repository}'
+            - '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
+            - '../src/App/*/{Security,Services}'
             - '../src/Kernel.php'
 
     App\UserdirectoryBundle\User\Model\:
@@ -72,17 +82,37 @@ services:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
         exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{AuthUtil.php,CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
 
-#    App\UserdirectoryBundle\Services\:
-#        resource: '../src/App/UserdirectoryBundle/Services'
-#        exclude: '../src/App/UserdirectoryBundle/Services/{MaintenanceListener.php}'
+#    authenticator_utility:
+#            class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
+#
+#    oleg.listener.maintenance:
+#        class: App\UserdirectoryBundle\Services\MaintenanceListener
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#
+#    oleg.listener.exception:
+#        class: App\UserdirectoryBundle\Services\ExceptionListener
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.exception }
+#
+#    twigdate.listener.request:
+#        class: App\UserdirectoryBundle\Services\TwigDateRequestListener
+#        arguments: ["@twig", '%default_time_zone%']
+#        #arguments: ["@twig", "@security.token_storage", '%default_time_zone%']
+#        tags:
+#              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+#
+#    oleg.upload_listener:
+#        class: App\UserdirectoryBundle\Services\UploadListener
+#        tags:
+#            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+#
+#    user_formnode_utility:
+#        class: App\UserdirectoryBundle\Util\FormNodeUtil
+#
+#    user_service_utility:
+#        class: App\UserdirectoryBundle\Util\UserServiceUtil
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-#    App\Controller\:
-##        namespace: App\
-#        resource: '../src/App/*/*/Controller/'
-#        #resource: '../src/App/*/Controller/'
-#        tags: ['controller.service_arguments']
 
 #If controllers are defined here as services, then util services are not available
 #in the controllers via $this->get('service_name) (i.e. $calllogUtil = $this->get('calllog_util');)

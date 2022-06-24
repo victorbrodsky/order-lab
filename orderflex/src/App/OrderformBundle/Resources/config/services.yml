@@ -20,9 +20,9 @@ services:
 
     #Custom selector fields
     order_form.type.scan_custom_selector:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\OrderformBundle\Form\CustomType\ScanCustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@service_container"]
         tags:

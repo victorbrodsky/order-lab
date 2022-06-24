@@ -30,17 +30,17 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\FellAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_googlesheetmanagement:
-        autowire: true
-        autoconfigure: true
-        public: true
+#        autowire: true
+#        autoconfigure: true
+#        public: true
         class: App\FellAppBundle\Util\GoogleSheetManagement
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 

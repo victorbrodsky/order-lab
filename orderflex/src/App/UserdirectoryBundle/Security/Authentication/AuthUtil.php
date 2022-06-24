@@ -1691,9 +1691,9 @@ class AuthUtil {
         return ($srchRslt);
     }
 
-    public function getPasswordHasher() {
-        return $this->passwordHasher;
-    }
+//    public function getPasswordHasher() {
+//        return $this->passwordHasher;
+//    }
     public function getEncodedPassword($user,$plaintextPassword) {
         $hashedPassword = $this->passwordHasher->hashPassword(
             $user,
