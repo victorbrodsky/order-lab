@@ -54,4 +54,21 @@ class Kernel extends BaseKernel
 //        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
 //        //$loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
 //    }
+
+    ////////////// Working /////////////////
+    private const CONFIG_EXTS = '.{xml,yaml,yml}'; //'.{php,xml,yaml,yml}';
+    public function getProjectDir(): string
+    {
+        return \dirname(__DIR__);
+    }
+
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        $confDir = $this->getProjectDir().'/config';
+
+        $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+    }
 }
