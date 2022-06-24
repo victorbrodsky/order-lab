@@ -1274,5 +1274,7 @@ Untracked files:
         config/routes/web_profiler.yaml
 
 
+1) Why env is shown as 'prod'? on about page? => environment is not loaded from .env?
+2) Why Debug is false on about page?
 
 
