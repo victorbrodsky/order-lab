@@ -1276,5 +1276,10 @@ Untracked files:
 
 1) Why env is shown as 'prod'? on about page? => environment is not loaded from .env?
 2) Why Debug is false on about page?
+3) When default empty Kernel.php:
+Cannot autowire service "authenticator_utility": argument "$passwordHasher" of method
+"App\UserdirectoryBundle\Security\Authentication\AuthUtil::__construct()"
+references interface "Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface"
+but no such service exists. Did you create a class that implements this interface?
 
 
