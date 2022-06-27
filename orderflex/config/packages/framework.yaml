@@ -34,7 +34,8 @@ framework:
     fragments: {path: /_fragment}
     http_method_override: true
     profiler:
-        collect: false
+        collect: true #show profiler toolbar
+        #collect: false
 
     #Testing http cache: With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass your application entirely on subsequent requests
     #http_cache: true

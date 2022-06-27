@@ -1282,4 +1282,8 @@ Cannot autowire service "authenticator_utility": argument "$passwordHasher" of m
 references interface "Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface"
 but no such service exists. Did you create a class that implements this interface?
 
+Default Kernel.php is not loading framework.yaml
+https://github.com/symfony/symfony/issues/45100
+Fixed in 6.1.2?
+
 
