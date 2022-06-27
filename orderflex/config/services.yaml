@@ -3,6 +3,7 @@
 
 imports:
     - { resource: "parameters.yml" }
+#    - { resource: "../config/packages/*.yaml" }
     - { resource: "../src/App/UserdirectoryBundle/Resources/config/services.yml" }
     - { resource: "../src/App/FellAppBundle/Resources/config/services.yml" }
     - { resource: "../src/App/ResAppBundle/Resources/config/services.yml" }
@@ -14,6 +15,7 @@ imports:
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/UtilBundles/FOSCommentBundle/Resources/config/services.yml" }
+#    - { resource: "/packages/*.yaml" }
     - { resource: "setparameters.php" } #must run after importing services
 #    - { resource: "setparameters-test.php" } #must run after importing services
 
@@ -82,7 +84,9 @@ services:
     App\UserdirectoryBundle\Security\Authentication\:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
         exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{AuthUtil.php,CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
+        #exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
 
+#
 #    authenticator_utility:
 #            class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
 #

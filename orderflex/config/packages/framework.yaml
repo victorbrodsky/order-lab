@@ -7,7 +7,7 @@ framework:
 
     secret: '%secret%'
 #    secret: '%env(APP_SECRET)%'
-#    secret: '123'
+    #secret: '123'
 
 #    router:
 #        resource: "%kernel.project_dir%/config/routes.yml"
@@ -18,7 +18,7 @@ framework:
     #templating:
         #engines: ['twig']
 #        assets_version: SomeVersionScheme
-    default_locale:  "%locale%"
+    default_locale: "%locale%"
 #    trusted_proxies: ~
 #    session:         ~
 #        save_path: ~

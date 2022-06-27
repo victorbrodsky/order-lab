@@ -64,11 +64,19 @@ class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
+
+        //$container->setParameter('secret','123');
         $confDir = $this->getProjectDir().'/config';
 
+        echo "1=".$confDir.'/{packages}/*'.self::CONFIG_EXTS."<br>";
+        echo "2=".$confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS."<br>";
+        echo "3=".$confDir.'/{services}'.self::CONFIG_EXTS."<br>";
+        echo "4=".$confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS."<br>";
+        //exit('111');
+
         $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
+        //$loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
         $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+        //$loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 }
