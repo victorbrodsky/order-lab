@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TestCommand extends Command
 {
-    protected static $defaultName = 'app:simple-tests';
+    //protected static $defaultName = 'app:simple-tests';
     private $container;
     private $em;
 

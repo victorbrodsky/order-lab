@@ -28,7 +28,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ExpirationCronCommand extends Command {
 
-    protected static $defaultName = 'cron:expiration-reminder-emails';
+    //protected static $defaultName = 'cron:expiration-reminder-emails';
     private $container;
     private $em;
 

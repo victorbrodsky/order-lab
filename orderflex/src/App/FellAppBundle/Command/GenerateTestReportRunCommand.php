@@ -38,7 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class GenerateTestReportRunCommand extends Command {
 
-    protected static $defaultName = 'fellapp:generate-test-reportrun';
+    //protected static $defaultName = 'fellapp:generate-test-reportrun';
     private $container;
     private $em;
 

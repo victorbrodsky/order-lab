@@ -29,7 +29,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CronCommand extends Command {
 
-    protected static $defaultName = 'cron:invoice-reminder-emails';
+    //protected static $defaultName = 'cron:invoice-reminder-emails';
     private $container;
     private $em;
 

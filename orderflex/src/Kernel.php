@@ -46,6 +46,10 @@ class Kernel extends BaseKernel
     {
 
         //(new Dotenv(false))->loadEnv(dirname(__DIR__).'/.env');
+        //use Symfony\Component\Dotenv\Dotenv;
+        //exit(__DIR__.'/../.env');
+        //$dotenv = new Dotenv();
+        //$dotenv->load(__DIR__.'/../.env');
 
         //$container->addResource(new FileResource($this->getProjectDir().'/config/bundles.php'));
         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);

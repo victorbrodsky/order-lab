@@ -37,7 +37,7 @@ use Doctrine\ORM\EntityManagerInterface;
 //Execute some temporary, utility commands such as populate large data
 class UtilCommand extends Command {
 
-    protected static $defaultName = 'cron:util-command';
+    //protected static $defaultName = 'cron:util-command';
     private $container;
     private $em;
 

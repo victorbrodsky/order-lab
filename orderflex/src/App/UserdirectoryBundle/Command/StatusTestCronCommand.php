@@ -34,9 +34,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
+//#[AsCommand(name: 'cron:statustest')]
+
 class StatusTestCronCommand extends Command {
 
-    protected static $defaultName = 'cron:statustest';
+    //protected static $defaultName = 'cron:statustest';
     private $container;
     private $em;
 

@@ -38,7 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class GenerateReportCommand extends Command {
 
-    protected static $defaultName = 'fellapp:generatereport';
+    //protected static $defaultName = 'fellapp:generatereport';
     private $container;
     private $em;
 

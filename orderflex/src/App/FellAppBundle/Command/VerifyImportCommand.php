@@ -38,7 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class VerifyImportCommand extends Command {
 
-    protected static $defaultName = 'cron:verifyimport';
+    //protected static $defaultName = 'cron:verifyimport';
     private $container;
     private $em;
 

@@ -36,7 +36,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class StatusCronCommand extends Command {
 
-    protected static $defaultName = 'cron:status';
+    //protected static $defaultName = 'cron:status';
     private $container;
     private $em;
 

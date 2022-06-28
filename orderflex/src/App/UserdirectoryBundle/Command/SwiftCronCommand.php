@@ -36,7 +36,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SwiftCronCommand extends Command {
 
-    protected static $defaultName = 'cron:swift';
+    //protected static $defaultName = 'cron:swift';
     private $container;
     private $em;
 

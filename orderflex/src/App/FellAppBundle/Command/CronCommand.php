@@ -37,7 +37,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CronCommand extends Command {
 
-    protected static $defaultName = 'cron:importfellapp';
+    //protected static $defaultName = 'cron:importfellapp';
     private $container;
     private $em;
 

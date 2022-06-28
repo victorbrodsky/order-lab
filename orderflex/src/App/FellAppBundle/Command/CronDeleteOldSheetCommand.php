@@ -37,7 +37,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CronDeleteOldSheetCommand extends Command {
 
-    protected static $defaultName = 'cron:deleteoldsheetfellapp';
+    //protected static $defaultName = 'cron:deleteoldsheetfellapp';
     private $container;
     private $em;
 

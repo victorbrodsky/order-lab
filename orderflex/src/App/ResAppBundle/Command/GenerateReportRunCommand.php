@@ -38,7 +38,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class GenerateReportRunCommand extends Command {
 
-    protected static $defaultName = 'resapp:generatereportrun';
+    //protected static $defaultName = 'resapp:generatereportrun';
     private $container;
     private $em;
 

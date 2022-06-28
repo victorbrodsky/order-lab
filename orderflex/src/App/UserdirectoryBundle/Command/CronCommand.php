@@ -37,7 +37,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CronCommand extends Command {
 
-    protected static $defaultName = 'cron:delete-orphan';
+    //protected static $defaultName = 'cron:delete-orphan';
     private $container;
     private $em;
 
