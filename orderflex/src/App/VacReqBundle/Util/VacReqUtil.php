@@ -4805,10 +4805,11 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $session->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
+                //TODO: fix it!
+//                $session->getFlashBag()->add(
+//                    'notice',
+//                    $event
+//                );
             }
 
             //send email to submitter
@@ -4842,10 +4843,11 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $session->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
+                //TODO: fix it!
+//                $session->getFlashBag()->add(
+//                    'notice',
+//                    $event
+//                );
             }
 
 
@@ -4926,10 +4928,11 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $session->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
+                //TODO: fix it!
+//                $session->getFlashBag()->add(
+//                    'notice',
+//                    $event
+//                );
             }//approved
 
 
@@ -4958,10 +4961,11 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                $session->getFlashBag()->add(
-                    'notice',
-                    $event
-                );
+                //TODO: fix it!
+//                $session->getFlashBag()->add(
+//                    'notice',
+//                    $event
+//                );
             }//rejected
         }
         /////////////////// EOF TWO CASES: pre-approval and final approval ///////////////////
