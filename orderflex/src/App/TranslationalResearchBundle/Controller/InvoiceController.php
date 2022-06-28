@@ -863,7 +863,7 @@ class InvoiceController extends OrderAbstractController
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
             //generate new PDF
-            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user); //new
+            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user,$request); //new
 
             $invoiceStatus = $invoice->getStatus();
             if( $invoiceStatus != $originalInvoiceStatus ) {
@@ -1151,7 +1151,7 @@ class InvoiceController extends OrderAbstractController
             }
 
             //generate new PDF
-            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user); //edit
+            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user,$request); //edit
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
 
@@ -1614,7 +1614,7 @@ class InvoiceController extends OrderAbstractController
         return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
     }
 
-    public function processInvoiceAfterSave( $invoice, $form, $user ) {
+    public function processInvoiceAfterSave( $invoice, $form, $user, $request ) {
 
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -1630,7 +1630,7 @@ class InvoiceController extends OrderAbstractController
             //save and generate Invoice PDF
             //1) supposed that invoice has been already saved
             //2) generate Invoice PDF
-            $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+            $res = $transresPdfUtil->generateInvoicePdf($invoice,$user,$request);
 
             //$filename = $res['filename'];
             //$pdf = $res['pdf'];

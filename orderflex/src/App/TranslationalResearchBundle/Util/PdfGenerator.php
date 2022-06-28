@@ -81,7 +81,7 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdf($invoice,$applicationFilePath); //this does not work with https
+        $this->generatePdf($invoice,$applicationFilePath,$request); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //$pdfPath = "translationalresearch_invoice_download";
@@ -178,7 +178,7 @@ class PdfGenerator
     //TODO: test it for https
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
-    public function generatePdf($invoice,$applicationOutputFilePath) {
+    public function generatePdf($invoice,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
@@ -246,7 +246,8 @@ class PdfGenerator
         //$session->getName() => $session->getId()
 
         //take care of authentication
-        $session = $this->container->get('session');
+        //$session = $this->container->get('session');
+        $session = $request->getSession();
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();
@@ -398,7 +399,7 @@ class PdfGenerator
         //$useKnpSnappy = true;
         $useKnpSnappy = false;
         if( $useKnpSnappy ) {
-            $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+            $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath,$request);
             //$this->generatePdfPhantomjsPackingSlip($transresRequest,$applicationFilePath,$request);
         } else {
             //packing slip url
@@ -453,7 +454,7 @@ class PdfGenerator
     //NOT USED (js generated barcodes are not shown)
     //Do not use KnpSnappyBundle to convert html to pdf for packing slip
     //http://wkhtmltopdf.org must be installed on server
-    public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
+    public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
@@ -504,7 +505,8 @@ class PdfGenerator
         //exit();
 
         //take care of authentication
-        $session = $this->container->get('session');
+        //$session = $this->container->get('session');
+        $session = $request->getSession();
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();
