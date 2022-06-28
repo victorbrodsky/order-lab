@@ -418,21 +418,21 @@ class DefaultReviewerController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $projectsMsg = $this->getFilteredProjects($form);
-            $this->container->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $projectsMsg
             );
 
             $requestsMsg = $this->getFilteredRequests($form);
             //exit("Update Request Exit: $requestsMsg");
-            $this->container->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $requestsMsg
             );
 
             $invoicesMsg = $this->getFilteredInvoices($form);
             //exit("Update Invoice Exit: $invoicesMsg");
-            $this->container->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $invoicesMsg
             );

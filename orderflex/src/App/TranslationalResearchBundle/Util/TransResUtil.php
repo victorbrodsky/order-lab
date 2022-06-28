@@ -31,6 +31,7 @@ use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 //use Symfony\Component\Cache\Simple\ApcuCache;
 //use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 //use Zend\Cache\StorageFactory;
 
@@ -55,7 +56,7 @@ class TransResUtil
     protected $container;
     protected $em;
     protected $security;
-
+    protected $session;
 
     // Symfony will inject the 'blog_publishing' workflow configured before => WorkflowInterface $blogPublishingWorkflow
     //transres_project => WorkflowInterface $transresProjectStateMachine
@@ -65,11 +66,13 @@ class TransResUtil
         EntityManagerInterface $em,
         ContainerInterface $container,
         Security $security,
+        //Session $session,
         WorkflowInterface $transresProjectStateMachine
     ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
+        //$this->session = $session;
         $this->transresProjectStateMachine = $transresProjectStateMachine;
     }
 
@@ -1268,10 +1271,11 @@ class TransResUtil
                         $eventType = "Review Submitted";
                         $this->setEventLog($project,$eventType,$emailBody,$testing);
 
-                        $this->container->get('session')->getFlashBag()->add(
-                            'notice',
-                            $subject
-                        );
+                        //TODO: fix it!
+//                        $this->session->getFlashBag()->add(
+//                            'notice',
+//                            $subject
+//                        );
 
                         return true;
                     }
@@ -1304,10 +1308,11 @@ class TransResUtil
                 $eventType = "Review Submitted";
                 $this->setEventLog($project,$eventType,$resultMsg,$testing);
 
-                $this->container->get('session')->getFlashBag()->add(
-                    'notice',
-                    $this->getNotificationMsgByStates($originalStateStr,$to,$project)    //"Successful action: ".$label
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'notice',
+//                    $this->getNotificationMsgByStates($originalStateStr,$to,$project)    //"Successful action: ".$label
+//                );
                 return true;
             } catch (\LogicException $e) {
                 //event log
@@ -1315,10 +1320,11 @@ class TransResUtil
                 $logger = $this->container->get('logger');
                 $logger->error("Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName).", Error:".$e);
 
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'warning',
+//                    "Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
+//                );
                 return false;
             }//try
         }
@@ -2911,10 +2917,11 @@ class TransResUtil
                     $this->em->flush($project);
                 }
 
-                $this->container->get('session')->getFlashBag()->add(
-                    'notice',
-                    "Successful transition: ".$transitionNameFinal."; Project request is in ".$this->getStateLabelByProject($project)." stage."
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'notice',
+//                    "Successful transition: ".$transitionNameFinal."; Project request is in ".$this->getStateLabelByProject($project)." stage."
+//                );
 
             } catch (LogicException $e) {
                 throw new \Exception("Can not change project's state: transitionNameFinal=" . $transitionNameFinal);
@@ -6213,7 +6220,7 @@ class TransResUtil
             //exit('flush user');
             $this->em->flush($user);
 
-//            $this->container->get('session')->getFlashBag()->add(
+//            $this->session->getFlashBag()->add(
 //                'warning',
 //                "Permission to create a new $specialtyStr project has been automatically granted by the system. Your activities will be recorded."
 //            );
@@ -7532,11 +7539,12 @@ class TransResUtil
 
                 $msg = "Added role=[$role]: alias=[$alias], description=[$description] <br>";
 
+                //TODO: fix it!
                 //Flash
-                $this->container->get('session')->getFlashBag()->add(
-                    'notice',
-                    $msg
-                );
+//                $this->session->getFlashBag()->add(
+//                    'notice',
+//                    $msg
+//                );
 
                 //eventlog
                 $eventType = "New Role Created";
@@ -7641,10 +7649,11 @@ class TransResUtil
                     $msg = "Added role=[$workQueueRoleName]: alias=[$alias], description=[$description] <br>";
 
                     //Flash
-                    $this->container->get('session')->getFlashBag()->add(
-                        'notice',
-                        $msg
-                    );
+                    //TODO: fix it!
+//                    $this->session->getFlashBag()->add(
+//                        'notice',
+//                        $msg
+//                    );
 
                     //eventlog
                     $eventType = "New Role Created";

@@ -31,6 +31,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 //use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -45,6 +46,7 @@ class AuthUtil {
     private $logger;
     private $requestStack;
     private $passwordHasher;
+    //protected $session;
     //private $hasherFactory;
 
     //private $supportedUsertypesExternal = array('external');
@@ -54,6 +56,7 @@ class AuthUtil {
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $em,
+        //Session $session,
         RequestStack $requestStack,
         UserPasswordHasherInterface $passwordHasher
         //PasswordHasherFactory $hasherFactory
@@ -62,6 +65,7 @@ class AuthUtil {
         $this->container = $container;
         $this->em = $em;
         $this->requestStack = $requestStack;
+        //$this->session = $session;
         $this->logger = $container->get('logger');
 
         $this->passwordHasher = $passwordHasher;
@@ -1344,7 +1348,7 @@ class AuthUtil {
             $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
             $msg = " This account has been locked to prevent unauthorized access.<br>".
                 " Please contact the ".$systemEmail." to request account re-activation.";
-            $this->container->get('session')->getFlashBag()->add(
+            $this->requestStack->getCurrentRequest()->getSession()->getFlashBag()->add(
                 'warning',
                 $msg
             );
@@ -1397,7 +1401,7 @@ class AuthUtil {
                 $msg = $permittedFailedLoginAttempt." attempts have been made to log into this account with incorrect credentials.<br>".
                     " This account has been locked to prevent unauthorized access.<br>".
                     " Please contact the ".$systemEmail." to request account re-activation.";
-                $this->container->get('session')->getFlashBag()->add(
+                $this->requestStack->getCurrentRequest()->getSession()->getFlashBag()->add(
                     'warning',
                     $msg
                 );

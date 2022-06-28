@@ -32,6 +32,7 @@ use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\InvoiceItem;
 //use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 //use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //use Box\Spout\Common\Type;
@@ -62,6 +63,7 @@ class TransResRequestUtil
     protected $container;
     protected $em;
     protected $security;
+    protected $session;
 
     // Symfony will inject the 'blog_publishing' workflow configured before => WorkflowInterface $blogPublishingWorkflow
     //transres_request_progress => WorkflowInterface $transresRequestProgressStateMachine
@@ -73,12 +75,14 @@ class TransResRequestUtil
         EntityManagerInterface $em,
         ContainerInterface $container,
         Security $security,
+        //Session $session,
         WorkflowInterface $transresRequestProgressStateMachine,
         WorkflowInterface $transresRequestBillingStateMachine
     ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
+        //$this->session = $session;
         $this->transresRequestProgressStateMachine = $transresRequestProgressStateMachine;
         $this->transresRequestBillingStateMachine = $transresRequestBillingStateMachine;
     }
@@ -966,11 +970,12 @@ class TransResRequestUtil
                 //throw new \Exception("Work Request ID ".$transresRequest->getOid()."(FROM Original State '".$originalStateStr."'): '".$statMachineType."' (TO) transition not found by name ".$transitionName);
                 //second click on the "old" transition
                 $stateLabel = $this->getRequestLabelByStateMachineType($transresRequest,$statMachineType);
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "It is not possible anymore to change the $statMachineType status for this work request " .
-                    $transresRequest->getOid(). " with the current status '" . $stateLabel . "'"
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'warning',
+//                    "It is not possible anymore to change the $statMachineType status for this work request " .
+//                    $transresRequest->getOid(). " with the current status '" . $stateLabel . "'"
+//                );
                 return false;
             }
             $tos = $transition->getTos();
@@ -988,10 +993,11 @@ class TransResRequestUtil
             //only Admin can change the status to completedNotified
             if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "Only Admins and Technicians can change the status of the Request to " . $toLabel
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'warning',
+//                    "Only Admins and Technicians can change the status of the Request to " . $toLabel
+//                );
                 return false;
             }
         }
@@ -1001,10 +1007,11 @@ class TransResRequestUtil
             //only Admin can change the status to canceled
             if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "Only Admin and Technician can change the status of the Request to " . $toLabel
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'warning',
+//                    "Only Admin and Technician can change the status of the Request to " . $toLabel
+//                );
                 return false;
             }
         }
@@ -1117,19 +1124,20 @@ class TransResRequestUtil
                 $eventType = "Request State Changed";
                 $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo,$testing);
 
-                $this->container->get('session')->getFlashBag()->add(
-                    'notice',
-                    "Successful action: ".$label . $addMsg
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'notice',
+//                    "Successful action: ".$label . $addMsg
+//                );
                 return true;
             } catch (\LogicException $e) {
 
                 //event log
-
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    "Action failed (setRequestTransition): ".$e
-                );
+                //TODO: fix it!
+//                $this->session->getFlashBag()->add(
+//                    'warning',
+//                    "Action failed (setRequestTransition): ".$e
+//                );
                 return false;
             }//try
         }
