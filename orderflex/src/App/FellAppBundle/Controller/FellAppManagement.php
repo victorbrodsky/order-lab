@@ -136,7 +136,7 @@ class FellAppManagement extends OrderAbstractController {
             $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
             if( !$subspecialtyType ) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'warning',
                     "Please select Fellowship Subspecialty"
                 );
@@ -169,7 +169,7 @@ class FellAppManagement extends OrderAbstractController {
                         ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
 
                     //Flash
-                    $this->get('session')->getFlashBag()->add(
+                    $request->getSession()->getFlashBag()->add(
                         'warning',
                         $msg
                     );
@@ -228,7 +228,7 @@ class FellAppManagement extends OrderAbstractController {
                 $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Created');
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'notice',
                     $event
                 );
@@ -294,7 +294,7 @@ class FellAppManagement extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $event
             );
@@ -822,7 +822,7 @@ class FellAppManagement extends OrderAbstractController {
 
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(false);
         if( count($fellowshipTypes) > 0 ) {
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 "Fellowship Type is already existed."
             );
@@ -855,7 +855,7 @@ class FellAppManagement extends OrderAbstractController {
         $fellowshipSubspecialtyName = "Clinical Informatics";
         $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialtyName);
         if( !$subspecialtyType ) {
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'warning',
                 "Fellowship Subspecialty '$fellowshipSubspecialtyName' does not exist."
             );
@@ -886,7 +886,7 @@ class FellAppManagement extends OrderAbstractController {
                     ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'warning',
                     $msg
                 );
@@ -958,11 +958,33 @@ class FellAppManagement extends OrderAbstractController {
         //$em->persist($subspecialtyType);
         //->flush();
 
-        $this->get('session')->getFlashBag()->add(
+        $request->getSession()->getFlashBag()->add(
             'notice',
             $msg
         );
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
+
+    /**
+     * @Route("/fellowship-test-session", name="fellapp_test-session", methods={"GET"})
+     * @Template("AppFellAppBundle/Management/management.html.twig")
+     */
+    public function testSession(Request $request) {
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            "test session 1"
+        );
+
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+        if( $session ) {
+            $session->getFlashBag()->add(
+                'notice',
+                "test session 2"
+            );
+        }
+        return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+    }
 }

@@ -227,6 +227,8 @@ class DefaultController extends OrderAbstractController
 //        echo "fellapps=".count($fellapps)."; interviews=".$totalInterviews."; totalFeedbacks=".$totalFeedbacks."<br>";
 //        exit('111');
 
+        $fellappUtil = $this->container->get('fellapp_util');
+        testSession();
         /////////// EOF testing ///////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));

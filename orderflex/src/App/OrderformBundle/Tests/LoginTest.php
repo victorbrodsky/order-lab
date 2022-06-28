@@ -165,36 +165,36 @@ class LoginTest extends WebTestCase {
 
 
     
-    public function dddtestSecuredMyOrders()
-    {
-        $client = static::createClient();
-        $client->followRedirects();
+//    public function dddtestSecuredMyOrders()
+//    {
+//        $client = static::createClient();
+//        $client->followRedirects();
+//
+//        $this->logIn($client);
+//
+//        echo "client response:<br>";
+//        var_dump($client->getResponse());
+//        //exit();
+//
+//        $crawler = $client->request('GET', '/scan/my-scan-orders');
+//
+//        $this->assertTrue($client->getResponse()->isSuccessful());
+//
+//        $this->assertGreaterThan(0, $crawler->filter('html:contains("Welcome to the Scan Order System")')->count());
+//    }
 
-        $this->logIn($client);
 
-        echo "client response:<br>";
-        var_dump($client->getResponse());
-        //exit();
-
-        $crawler = $client->request('GET', '/scan/my-scan-orders');
-
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("Welcome to the Scan Order System")')->count());
-    }
-
-
-    private function logIn($client)
-    {
-        $session = $client->getContainer()->get('session');
-
-        $firewall = 'external_ldap_firewall';
-        $token = new UsernamePasswordToken('testprocessor', $firewall, array('ROLE_PLATFORM_DEPUTY_ADMIN'));
-        $session->set('_security_'.$firewall, serialize($token));
-        $session->save();
-
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $client->getCookieJar()->set($cookie);
-    }
+//    private function logIn($client)
+//    {
+//        $session = $client->getContainer()->get('session');
+//
+//        $firewall = 'external_ldap_firewall';
+//        $token = new UsernamePasswordToken('testprocessor', $firewall, array('ROLE_PLATFORM_DEPUTY_ADMIN'));
+//        $session->set('_security_'.$firewall, serialize($token));
+//        $session->save();
+//
+//        $cookie = new Cookie($session->getName(), $session->getId());
+//        $client->getCookieJar()->set($cookie);
+//    }
 
 } 

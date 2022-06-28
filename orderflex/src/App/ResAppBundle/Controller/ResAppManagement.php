@@ -144,7 +144,7 @@ class ResAppManagement extends OrderAbstractController {
             $subspecialtyType = $form["residencytracklisttype"]->getData();
             if( !$subspecialtyType ) {
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'warning',
                     "Please select Residency Track"
                 );
@@ -178,7 +178,7 @@ class ResAppManagement extends OrderAbstractController {
                             ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
 
                         //Flash
-                        $this->get('session')->getFlashBag()->add(
+                        $request->getSession()->getFlashBag()->add(
                             'warning',
                             $msg
                         );
@@ -238,7 +238,7 @@ class ResAppManagement extends OrderAbstractController {
                 $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Track Created');
 
                 //Flash
-                $this->get('session')->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'notice',
                     $event
                 );
@@ -308,7 +308,7 @@ class ResAppManagement extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'), $event, $user, $subspecialtyType, $request, 'Residency Track Removed');
 
             //Flash
-            $this->get('session')->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'notice',
                 $event
             );
