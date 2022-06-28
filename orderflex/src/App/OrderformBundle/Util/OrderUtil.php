@@ -710,7 +710,8 @@ class OrderUtil {
         $userUrl = $router->generate('scan_showuser', array('id' => $user->getId()),UrlGeneratorInterface::ABSOLUTE_URL);
         $homeUrl = $router->generate('main_common_home',array(),UrlGeneratorInterface::ABSOLUTE_URL);
         $sysemail = $this->container->getParameter('default_system_email');
-        $flashBag = $this->container->get('session')->getFlashBag();
+
+        $flashBag = $this->container->get('user_utility')->getSession()->getFlashBag();
 
         if( $this->security->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->security->isGranted('ROLE_SCANORDER_ADMIN') ) {
 

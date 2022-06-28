@@ -21,7 +21,7 @@ services:
 
     translationalresearch_authentication_handler:
         class: App\TranslationalResearchBundle\Security\Authentication\TranslationalResearchLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     translationalresearch_role_voter:
         class: App\TranslationalResearchBundle\Security\Voter\TranslationalResearchRoleVoter
@@ -39,31 +39,31 @@ services:
 
     transres_util:
         class: App\TranslationalResearchBundle\Util\TransResUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_request_util:
         class: App\TranslationalResearchBundle\Util\TransResRequestUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_permission_util:
             class: App\TranslationalResearchBundle\Util\TransResPermissionUtil
-            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_formnode_util:
         class: App\TranslationalResearchBundle\Util\TransResFormNodeUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_pdf_generator:
         class: App\TranslationalResearchBundle\Util\PdfGenerator
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_import:
         class: App\TranslationalResearchBundle\Util\TransResImportData
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     transres_reminder_util:
         class: App\TranslationalResearchBundle\Util\ReminderUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
 framework:

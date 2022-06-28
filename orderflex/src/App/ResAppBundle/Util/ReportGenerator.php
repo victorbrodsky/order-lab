@@ -889,7 +889,8 @@ class ReportGenerator {
             }
         } else {
             //take care of authentication
-            $session = $this->container->get('session');
+            $userUtil = $this->container->get('user_utility');
+            $session = $userUtil->getSession(); //$this->container->get('session');
             if( $session && $session->getId() ) {
                 //$logger->notice("2before session save: ".dump($session));
                 $session->save();

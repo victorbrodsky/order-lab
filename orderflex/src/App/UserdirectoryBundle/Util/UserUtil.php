@@ -276,7 +276,13 @@ class UserUtil {
     }
 
     public function getSession() {
-        return $this->requestStack->getSession();
+        if( $this->requestStack ) {
+            $session = $this->requestStack->getSession();
+            if( $session ) {
+                return $session;
+            }
+        }
+        return NULL;
     }
 
 //    public function getWorkflowByString($workflowStr)

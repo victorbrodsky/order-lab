@@ -18,7 +18,7 @@ services:
 
     deidentifier_authentication_handler:
         class: App\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
-        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
 
     deidentifier_role_voter:
         class: App\DeidentifierBundle\Security\Voter\DeidentifierRoleVoter

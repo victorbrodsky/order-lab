@@ -21,7 +21,7 @@ services:
 
     crn_authentication_handler:
         class: App\CrnBundle\Security\Authentication\CrnLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     crn_role_voter:
         class: App\CrnBundle\Security\Voter\CrnRoleVoter
@@ -39,12 +39,12 @@ services:
 
     crn_util:
         class: App\CrnBundle\Util\CrnUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     crn_util_form:
         public: true
         class: App\CrnBundle\Util\CrnUtilForm
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
 #    App\CrnBundle\Controller\CrnEntryController: ~

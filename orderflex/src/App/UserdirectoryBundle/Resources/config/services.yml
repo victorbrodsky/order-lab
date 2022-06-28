@@ -60,14 +60,14 @@ services:
     #Custom selector fields
     oleg.type.employees_custom_selector:
         class: App\UserdirectoryBundle\Form\CustomType\CustomSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager","@service_container"]
         tags:
             - { name: form.type, alias: employees_custom_selector }
 
     #idle time out handler (can pass %session_max_idle_time%. Now use DB)
     oleg.handler.session_idle:
         class: App\UserdirectoryBundle\Services\SessionIdleHandler
-        arguments: ["@service_container", "@router", "@doctrine.orm.entity_manager"]
+#        arguments: ["@service_container", "@router", "@doctrine.orm.entity_manager"]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

@@ -75,14 +75,14 @@ class TransResRequestUtil
         EntityManagerInterface $em,
         ContainerInterface $container,
         Security $security,
-        //Session $session,
+        Session $session,
         WorkflowInterface $transresRequestProgressStateMachine,
         WorkflowInterface $transresRequestBillingStateMachine
     ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
-        //$this->session = $session;
+        $this->session = $session;
         $this->transresRequestProgressStateMachine = $transresRequestProgressStateMachine;
         $this->transresRequestBillingStateMachine = $transresRequestBillingStateMachine;
     }
@@ -971,11 +971,13 @@ class TransResRequestUtil
                 //second click on the "old" transition
                 $stateLabel = $this->getRequestLabelByStateMachineType($transresRequest,$statMachineType);
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'warning',
-//                    "It is not possible anymore to change the $statMachineType status for this work request " .
-//                    $transresRequest->getOid(). " with the current status '" . $stateLabel . "'"
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'warning',
+                        "It is not possible anymore to change the $statMachineType status for this work request " .
+                        $transresRequest->getOid() . " with the current status '" . $stateLabel . "'"
+                    );
+                }
                 return false;
             }
             $tos = $transition->getTos();
@@ -994,10 +996,12 @@ class TransResRequestUtil
             if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'warning',
-//                    "Only Admins and Technicians can change the status of the Request to " . $toLabel
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'warning',
+                        "Only Admins and Technicians can change the status of the Request to " . $toLabel
+                    );
+                }
                 return false;
             }
         }
@@ -1008,10 +1012,12 @@ class TransResRequestUtil
             if( !$this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->security->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'warning',
-//                    "Only Admin and Technician can change the status of the Request to " . $toLabel
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'warning',
+                        "Only Admin and Technician can change the status of the Request to " . $toLabel
+                    );
+                }
                 return false;
             }
         }
@@ -1125,19 +1131,23 @@ class TransResRequestUtil
                 $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo,$testing);
 
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'notice',
-//                    "Successful action: ".$label . $addMsg
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'notice',
+                        "Successful action: " . $label . $addMsg
+                    );
+                }
                 return true;
             } catch (\LogicException $e) {
 
                 //event log
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'warning',
-//                    "Action failed (setRequestTransition): ".$e
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'warning',
+                        "Action failed (setRequestTransition): " . $e
+                    );
+                }
                 return false;
             }//try
         }

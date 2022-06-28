@@ -1424,10 +1424,14 @@ class ResAppImportPopulateUtil {
                 $logger->error($event);
 
                 //flash
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    $event
-                );
+                $userUtil = $this->container->get('user_utility');
+                $session = $userUtil->getSession();
+                if( $session ) {
+                    $session->getFlashBag()->add(
+                        'warning',
+                        $event
+                    );
+                }
             } //try/catch
 
 

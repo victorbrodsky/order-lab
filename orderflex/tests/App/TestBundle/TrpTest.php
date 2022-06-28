@@ -159,6 +159,46 @@ class TrpTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Save Changes")')->count()
         );
+
+        //Review project
+        $projectId = NULL;
+        if( count($projects) > 0 ) {
+            foreach($projects as $project) {
+                $projectStatus = $project->getState();
+                if( str_contains($projectStatus, 'review') ) {
+                    $projectId = $project->getId();
+                }
+            }
+        } else {
+            echo "Skip testShowProjectApplication; There are no available projects found";
+            return null;
+        }
+
+        if( !$projectId ) {
+            echo "Skip project review; There are no available projects found";
+            return null;
+        }
+
+        //Test Review
+        $crawler = $this->client->request('GET', '/translational-research/project/review/'.$projectId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Review Project request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Please review this request, enter a comment")')->count()
+        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Add Comment Without Changing Status")')->count()
+//        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Project Status")')->count()
+        );
+
     }
 
     public function testShowRequestApplication() {
@@ -222,6 +262,50 @@ class TrpTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Associated Project Info")')->count()
         );
+
+        //Review Work Request
+        $requestId = NULL;
+        if( count($requests) > 0 ) {
+            foreach($requests as $transRequest) {
+                $transRequestProgressStatus = $transRequest->getProgressState();
+                if( $transRequestProgressStatus != 'canceled' && $transRequestProgressStatus != 'draft' ) {
+                    $requestId = $transRequest->getId();
+                }
+            }
+        } else {
+            echo "Skip testShowRequestApplication; There are no available requests found";
+            return null;
+        }
+
+        if( !$requestId ) {
+            echo "Skip request review; There are no available requests found";
+            return null;
+        }
+
+        //Test Review
+        $crawler = $this->client->request('GET', '/translational-research/work-request/progress/review/'.$requestId);
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Status Update for Work Request")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Add New Comment")')->count()
+        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Add Comment Without Changing Status")')->count()
+//        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Work Request Info")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Request Details")')->count()
+        );
+
     }
 
     public function testShowInvoiceApplication() {

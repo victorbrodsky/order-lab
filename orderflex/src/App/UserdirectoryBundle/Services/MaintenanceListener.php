@@ -98,7 +98,7 @@ class MaintenanceListener {
                 if( $siteObject ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
-                    $session = $this->container->get('session');
+                    $session = $request->getSession(); //$this->container->get('session');
                     $session->getFlashBag()->add(
                         'warning',
                         $siteObject->getSiteName() . " site is not currently accessible. If you have any questions, please contact $systemEmail."

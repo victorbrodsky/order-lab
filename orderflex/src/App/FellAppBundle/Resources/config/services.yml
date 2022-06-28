@@ -19,15 +19,15 @@ services:
 
     fellapp_authentication_handler:
         class: App\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #fellowship application utilities
     fellapp_util:
             class: App\FellAppBundle\Util\FellAppUtil
-            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
     fellapp_importpopulate_util:
         class: App\FellAppBundle\Util\FellAppImportPopulateUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
 #        autowire: true
@@ -35,18 +35,18 @@ services:
 #        public: true
         class: App\FellAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_googlesheetmanagement:
 #        autowire: true
 #        autoconfigure: true
 #        public: true
         class: App\FellAppBundle\Util\GoogleSheetManagement
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_rec_letter_util:
         class: App\FellAppBundle\Util\RecLetterUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     fellapp_role_voter:

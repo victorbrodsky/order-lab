@@ -413,8 +413,11 @@ class DashboardPermissionVoter extends BasePermissionVoter
     public function setPermissionErrorSession($chart,$error) : void
     {
         //Use session to store error attribute
-        $session = $this->container->get('session');
-        $session->set('permission-error-'.$chart->getId(), $error);
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession(); //$this->container->get('session');
+        if( $session ) {
+            $session->set('permission-error-' . $chart->getId(), $error);
+        }
     }
 
 

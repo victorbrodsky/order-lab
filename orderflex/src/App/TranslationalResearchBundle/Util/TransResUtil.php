@@ -66,13 +66,13 @@ class TransResUtil
         EntityManagerInterface $em,
         ContainerInterface $container,
         Security $security,
-        //Session $session,
+        Session $session,
         WorkflowInterface $transresProjectStateMachine
     ) {
         $this->container = $container;
         $this->em = $em;
         $this->security = $security;
-        //$this->session = $session;
+        $this->session = $session;
         $this->transresProjectStateMachine = $transresProjectStateMachine;
     }
 
@@ -1272,10 +1272,12 @@ class TransResUtil
                         $this->setEventLog($project,$eventType,$emailBody,$testing);
 
                         //TODO: fix it!
-//                        $this->session->getFlashBag()->add(
-//                            'notice',
-//                            $subject
-//                        );
+                        if( $this->session ) {
+                            $this->session->getFlashBag()->add(
+                                'notice',
+                                $subject
+                            );
+                        }
 
                         return true;
                     }
@@ -1309,10 +1311,12 @@ class TransResUtil
                 $this->setEventLog($project,$eventType,$resultMsg,$testing);
 
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'notice',
-//                    $this->getNotificationMsgByStates($originalStateStr,$to,$project)    //"Successful action: ".$label
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'notice',
+                        $this->getNotificationMsgByStates($originalStateStr, $to, $project)    //"Successful action: ".$label
+                    );
+                }
                 return true;
             } catch (\LogicException $e) {
                 //event log
@@ -1321,10 +1325,12 @@ class TransResUtil
                 $logger->error("Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName).", Error:".$e);
 
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'warning',
-//                    "Action failed (setTransition): ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'warning',
+                        "Action failed (setTransition): " . $this->getTransitionLabelByName($transitionName) . "<br> Error:" . $e
+                    );
+                }
                 return false;
             }//try
         }
@@ -2918,10 +2924,12 @@ class TransResUtil
                 }
 
                 //TODO: fix it!
-//                $this->session->getFlashBag()->add(
-//                    'notice',
-//                    "Successful transition: ".$transitionNameFinal."; Project request is in ".$this->getStateLabelByProject($project)." stage."
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'notice',
+                        "Successful transition: " . $transitionNameFinal . "; Project request is in " . $this->getStateLabelByProject($project) . " stage."
+                    );
+                }
 
             } catch (LogicException $e) {
                 throw new \Exception("Can not change project's state: transitionNameFinal=" . $transitionNameFinal);
@@ -7541,10 +7549,12 @@ class TransResUtil
 
                 //TODO: fix it!
                 //Flash
-//                $this->session->getFlashBag()->add(
-//                    'notice',
-//                    $msg
-//                );
+                if( $this->session ) {
+                    $this->session->getFlashBag()->add(
+                        'notice',
+                        $msg
+                    );
+                }
 
                 //eventlog
                 $eventType = "New Role Created";
@@ -7650,10 +7660,12 @@ class TransResUtil
 
                     //Flash
                     //TODO: fix it!
-//                    $this->session->getFlashBag()->add(
-//                        'notice',
-//                        $msg
-//                    );
+                    if( $this->session ) {
+                        $this->session->getFlashBag()->add(
+                            'notice',
+                            $msg
+                        );
+                    }
 
                     //eventlog
                     $eventType = "New Role Created";

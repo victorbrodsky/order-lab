@@ -4712,7 +4712,10 @@ class VacReqUtil
         //echo "Tentative inst=".$entity->getTentativeInstitution()."<br>";
 
         $logger = $this->container->get('logger');
-        $session = $this->container->get('session');
+
+        //$session = $this->container->get('session');
+        //$userUtil = $this->container->get('user_utility');
+        $session = $request->getSession(); //$userUtil->getSession();
 
         /////////////// check permission: if user is in approvers => ok ///////////////
         if( false == $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -4806,10 +4809,12 @@ class VacReqUtil
 
                 //Flash
                 //TODO: fix it!
-//                $session->getFlashBag()->add(
-//                    'notice',
-//                    $event
-//                );
+                if( $session ) {
+                    $session->getFlashBag()->add(
+                        'notice',
+                        $event
+                    );
+                }
             }
 
             //send email to submitter
@@ -4844,10 +4849,12 @@ class VacReqUtil
 
                 //Flash
                 //TODO: fix it!
-//                $session->getFlashBag()->add(
-//                    'notice',
-//                    $event
-//                );
+                if( $session ) {
+                    $session->getFlashBag()->add(
+                        'notice',
+                        $event
+                    );
+                }
             }
 
 
@@ -4929,10 +4936,12 @@ class VacReqUtil
 
                 //Flash
                 //TODO: fix it!
-//                $session->getFlashBag()->add(
-//                    'notice',
-//                    $event
-//                );
+                if( $session ) {
+                    $session->getFlashBag()->add(
+                        'notice',
+                        $event
+                    );
+                }
             }//approved
 
 
@@ -4962,10 +4971,12 @@ class VacReqUtil
 
                 //Flash
                 //TODO: fix it!
-//                $session->getFlashBag()->add(
-//                    'notice',
-//                    $event
-//                );
+                if( $session ) {
+                    $session->getFlashBag()->add(
+                        'notice',
+                        $event
+                    );
+                }
             }//rejected
         }
         /////////////////// EOF TWO CASES: pre-approval and final approval ///////////////////

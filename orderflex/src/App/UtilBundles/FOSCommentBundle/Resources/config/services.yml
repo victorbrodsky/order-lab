@@ -14,10 +14,10 @@ services:
 
     user_comment_utility:
         class: App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     user_comment_listener_utility:
         class: App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 

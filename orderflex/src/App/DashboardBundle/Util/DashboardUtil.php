@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -26,6 +27,7 @@ class DashboardUtil
     //protected $secTokenStorage;
     //protected $secAuth;
     protected $security;
+    protected $session;
 
     private $width = 1200;
     private $height = 600;
@@ -35,7 +37,12 @@ class DashboardUtil
 
     //private $lightFilter = true;
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container, Security $security)
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        Security $security,
+        Session $session
+    )
     {
         $this->container = $container;
         $this->em = $em;
@@ -43,6 +50,7 @@ class DashboardUtil
         //$this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
         //$this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
         $this->security = $security;
+        $this->session = $session;
     }
 
     public function getChartViewCount($startDate,$endDate,$chart) {
@@ -2479,16 +2487,16 @@ class DashboardUtil
     }
 
     public function getSessionFlashBag( $asString=true, $clear=true ) {
-        //dump($this->container->get('session')->getFlashBag());
+        //dump($this->session->getFlashBag());
         //exit('111');
 
-        $notices = $this->container->get('session')->getFlashBag()->get('notice', []);
-        $warnings = $this->container->get('session')->getFlashBag()->get('warning', []);
-        $errors = $this->container->get('session')->getFlashBag()->get('error', []);
-        $permissionWarning = $this->container->get('session')->getFlashBag()->get('permissionwarning', []);
+        $notices = $this->session->getFlashBag()->get('notice', []);
+        $warnings = $this->session->getFlashBag()->get('warning', []);
+        $errors = $this->session->getFlashBag()->get('error', []);
+        $permissionWarning = $this->session->getFlashBag()->get('permissionwarning', []);
 
         if( $clear ) {
-            $errors = $this->container->get('session')->getFlashBag()->clear();
+            $errors = $this->session->getFlashBag()->clear();
         }
 
         if( $asString ) {
@@ -2538,7 +2546,7 @@ class DashboardUtil
         //Use session to get error attribute
         $sessionAttribute = NULL;
 
-        $session = $this->container->get('session');
+        $session = $this->session;
         //dump($session);
 
         if( $session ) {
@@ -2553,7 +2561,7 @@ class DashboardUtil
             //$error = $sessionAttribute;
         }
 
-        //$session = $this->container->get('session');
+        //$session = $this->session;
         //dump($session);
 
         return $sessionAttribute;

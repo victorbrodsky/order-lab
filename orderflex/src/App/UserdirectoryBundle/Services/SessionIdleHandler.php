@@ -25,6 +25,8 @@
 
 namespace App\UserdirectoryBundle\Services;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
@@ -40,7 +42,7 @@ class SessionIdleHandler
     protected $maxIdleTime;
     protected $em;
 
-    public function __construct($container, RouterInterface $router, $em )
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, RouterInterface $router )
     {
         $this->container = $container;
         $this->router = $router;

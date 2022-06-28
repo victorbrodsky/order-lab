@@ -19,15 +19,15 @@ services:
 
     dashboard_authentication_handler:
         class: App\DashboardBundle\Security\Authentication\DashboardLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     dashboard_util:
         class: App\DashboardBundle\Util\DashboardUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     dashboard_init:
         class: App\DashboardBundle\Util\DashboardInit
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     dashboard_role_voter:
           class: App\DashboardBundle\Security\Voter\DashboardRoleVoter

@@ -1745,7 +1745,7 @@ class DefaultController extends OrderAbstractController
             echo "inputFileName=" . $inputFileName . "<br>";
             //exit('111');
 
-            $count = $importUtil->closeProjectsFromSpreadsheet($inputFileName);
+            $count = $importUtil->closeProjectsFromSpreadsheet($inputFileName,$request);
 
             exit("End closeProjectsAction: count=".$count);
         }

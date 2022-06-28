@@ -21,7 +21,7 @@ services:
 
     calllog_authentication_handler:
         class: App\CallLogBundle\Security\Authentication\CallLogLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     calllog_role_voter:
         class: App\CallLogBundle\Security\Voter\CallLogRoleVoter
@@ -39,12 +39,12 @@ services:
 
     calllog_util:
         class: App\CallLogBundle\Util\CallLogUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     calllog_util_form:
         public: true
         class: App\CallLogBundle\Util\CallLogUtilForm
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
 #    App\CallLogBundle\Controller\CallEntryController: ~

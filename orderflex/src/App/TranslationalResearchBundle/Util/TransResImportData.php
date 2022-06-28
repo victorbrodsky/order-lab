@@ -3446,7 +3446,9 @@ class TransResImportData
     }
 
     //http://127.0.0.1/order/translational-research/batch-close-projects
-    public function closeProjectsFromSpreadsheet($inputFileName) {
+    public function closeProjectsFromSpreadsheet($inputFileName,$request) {
+
+        exit("Not permitted");
 
         //$logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -3532,7 +3534,8 @@ class TransResImportData
 
         $eventType = "Project Updated";
         $transresUtil->setEventLog(NULL,$eventType,$resultMsg);
-        $this->container->get('session')->getFlashBag()->add(
+        //$this->container->get('session')
+        $request->getSession()->getFlashBag()->add(
             'notice',
             $resultMsg
         );

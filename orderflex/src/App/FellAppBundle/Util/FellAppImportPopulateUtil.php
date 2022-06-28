@@ -888,6 +888,7 @@ class FellAppImportPopulateUtil {
         //echo "inputFileName=".$inputFileName."<br>";
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userUtil = $this->container->get('user_utility');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
@@ -1924,10 +1925,13 @@ class FellAppImportPopulateUtil {
                 $logger->error($event);
 
                 //flash
-                $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    $event
-                );
+                //TODO: fix it!
+                if( $userUtil->getSession() ) {
+                    $userUtil->getSession()->getFlashBag()->add(
+                        'warning',
+                        $event
+                    );
+                }
             } //try/catch
 
 

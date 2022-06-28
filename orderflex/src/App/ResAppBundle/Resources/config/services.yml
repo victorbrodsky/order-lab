@@ -20,15 +20,15 @@ services:
 
     resapp_authentication_handler:
         class: App\ResAppBundle\Security\Authentication\ResAppLoginSuccessHandler
-        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #residency application utilities
     resapp_util:
             class: App\ResAppBundle\Util\ResAppUtil
-            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
     resapp_importpopulate_util:
         class: App\ResAppBundle\Util\ResAppImportPopulateUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_reportgenerator:
 #        autowire: true
@@ -36,29 +36,29 @@ services:
 #        public: true
         class: App\ResAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_googlesheetmanagement:
 #        autowire: true
 #        autoconfigure: true
 #        public: true
         class: App\ResAppBundle\Util\GoogleSheetManagement
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_rec_letter_util:
         class: App\ResAppBundle\Util\RecLetterUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_import_from_old_system_util:
           class: App\ResAppBundle\Util\ImportFromOldSystem
-          arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#          arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     resapp_pdfutil:
 #        autowire: true
 #        autoconfigure: true
 #        public: true
         class: App\ResAppBundle\Util\PdfUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     resapp_role_voter:

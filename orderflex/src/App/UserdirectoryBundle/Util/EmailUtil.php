@@ -636,7 +636,8 @@ class EmailUtil {
             //echo "remove crontab commandJobName=".$commandJobName."<br>";
             $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandJobName);
             if( $res ) {
-                $session = $this->container->get('session');
+                $userUtil = $this->container->get('user_utility');
+                $session = $userUtil->getSession(); //$this->container->get('session');
                 $session->getFlashBag()->add(
                     'notice',
                     "Removed Cron Job:" . $commandJobName

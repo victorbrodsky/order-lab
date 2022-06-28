@@ -28,6 +28,8 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
 
     Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+    Symfony\Component\HttpFoundation\Session\Session: ~
+
 #    Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface: ~
 #    Symfony\Component\Security\Core\Security: ~
 #    Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface: ~
@@ -70,11 +72,11 @@ services:
 #        resource: '../src/App/*/Util'
         exclude: '../src/App/*/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Query,Repository,Security,Services}'
 #        exclude:
-#            - '../src/App/Migrations'
-#            - '../src/App/*/{Entity,Cert,Tests,Query,Repository}'
-#            - '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
-#            - '../src/App/*/{Security,Services}'
-#            - '../src/Kernel.php'
+            #- '../src/App/Migrations'
+            #- '../src/App/*/{Entity,Cert,Tests,Query,Repository}'
+            #- '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
+            #- '../src/App/*/{Security,Services}'
+            #- '../src/Kernel.php'
 
     App\UserdirectoryBundle\User\Model\:
         resource: '../src/App/UserdirectoryBundle/User/Model'
