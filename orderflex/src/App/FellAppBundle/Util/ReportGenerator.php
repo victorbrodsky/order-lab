@@ -894,10 +894,12 @@ class ReportGenerator {
 
         //take care of authentication
         $PHPSESSID = NULL;
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-        if( $request && $request->hasSession() ) {
-            $logger->notice("has session");
-            $session = $request->getSession();
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession();
+        if( $session ) {
+            $logger->notice("generateApplicationPdf: has session");
+            //$session = $request->getSession();
             if( $session && $session->getId() ) {
                 //$logger->notice("1before session save: ".dump($session));
                 $session->save();
@@ -907,10 +909,10 @@ class ReportGenerator {
                 $PHPSESSID = $session->getId();
             }
         } else {
-            $logger->notice("no session");
+            $logger->notice("generateApplicationPdf: no session");
             //take care of authentication
-            $userUtil = $this->container->get('user_utility');
-            $session = $userUtil->getSession(); //$this->container->get('session');
+            //$userUtil = $this->container->get('user_utility');
+            //$session = $userUtil->getSession(); //$this->container->get('session');
             if( $session && $session->getId() ) {
                 //$logger->notice("2before session save: ".dump($session));
                 $session->save();
