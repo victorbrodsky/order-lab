@@ -760,13 +760,16 @@ class RecLetterUtil {
         $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //i.e. 55555
         $logger->notice("compare: $identificationUploadLetterFellApp ?= $instituteIdentification");
         if( $instituteIdentification && $identificationUploadLetterFellApp ) {
-            if ($identificationUploadLetterFellApp != $instituteIdentification) {
-                //send email
-                $msg = "Fellowship identification string in the letter file name ($instituteIdentification) does not match with the site settings ($identificationUploadLetterFellApp)";
-                $userSecUtil->sendEmailToSystemEmail($msg, $msg);
-                //eventlog
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $msg, $systemUser, null, null, "No Recommendation Letters");
-                return NULL;
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( $environment == "live" ) { //send email (on live server only)
+                if ($identificationUploadLetterFellApp != $instituteIdentification) {
+                    //send email
+                    $msg = "Fellowship identification string in the letter file name ($instituteIdentification) does not match with the site settings ($identificationUploadLetterFellApp)";
+                    $userSecUtil->sendEmailToSystemEmail($msg, $msg);
+                    //eventlog
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $msg, $systemUser, null, null, "No Recommendation Letters");
+                    return NULL;
+                }
             }
         }
 
