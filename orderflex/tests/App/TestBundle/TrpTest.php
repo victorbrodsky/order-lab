@@ -17,8 +17,8 @@ class TrpTest extends WebTestBase
 
         $phpVersion = phpversion();
         echo "[Trp,PHP=".$phpVersion."]";
+        $phpVersion->getId();
 
-        //$this->getTestClient();
         $crawler = $this->client->request('GET', '/translational-research/login');
         $this->assertGreaterThan(
             0,

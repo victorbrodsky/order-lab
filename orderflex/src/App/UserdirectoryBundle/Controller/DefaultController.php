@@ -95,7 +95,7 @@ class DefaultController extends OrderAbstractController
         echo '<code>';
         echo '<pre>';
 
-        //echo $a; 
+        //echo $a;
         echo file_get_contents( $systemLogFile );
 
         echo '</pre>';
@@ -123,6 +123,8 @@ class DefaultController extends OrderAbstractController
 
         //$orig = file_get_contents($systemLogFile);
         //$a = htmlentities($orig);
+
+        echo $systemLogFile;
 
         echo '<code>';
         echo '<pre>';

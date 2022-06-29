@@ -42,6 +42,10 @@ when@test:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
+            nested_error:
+                type: stream
+                path: '%kernel.logs_dir%/%kernel.environment%_ERROR.log'
+                level: error
 
 when@prod:
     monolog:
