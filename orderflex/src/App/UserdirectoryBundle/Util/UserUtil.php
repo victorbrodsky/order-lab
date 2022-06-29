@@ -71,196 +71,6 @@ class UserUtil {
     }
 
 
-//    public function setLoginAttempt_TOREMOVE( $request, $secTokenStorage, $em, $options ) {
-//
-//        //return;
-//
-//        $user = null;
-//        $username = null;
-//        $roles = null;
-//
-//        if( !array_key_exists('serverresponse', $options) ) {
-//            //$options['serverresponse'] = null;
-//            $options['serverresponse'] = http_response_code();
-//        }
-//
-//        //find site object by sitename
-//        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
-//        if( !$site ) {
-//            //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
-//        }
-//
-//        $logger = new Logger($site);
-//
-//        $token = $secTokenStorage->getToken();
-//
-//        if( $token ) {
-//
-//            $user = $secTokenStorage->getToken()->getUser();
-//            $username = $token->getUsername();
-//
-//            if( $user && is_object($user) ) {
-//                $roles = $user->getRoles();
-//            } else {
-//                $user = null;
-//            }
-//
-//            $logger->setUser($user);
-//
-//        } else {
-//
-//            $username = $request->get('_username');
-//
-//            $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
-//            $user = $userDb;
-//
-//            $logger->setUser($userDb);
-//
-//        }
-//
-//        if( $options['eventtype'] == "Bad Credentials" ) {
-//            $options['event'] = $options['event'] . ". Username=".$username;
-//        }
-//
-//        $logger->setRoles($roles);
-//        $logger->setUsername($username);
-//        $logger->setIp($request->getClientIp());
-//        $logger->setWidth($request->get('display_width'));
-//        $logger->setHeight($request->get('display_height'));
-//        $logger->setEvent($options['event']);
-//        $logger->setServerresponse($options['serverresponse']);
-//
-//        ////////////// browser info //////////////
-//        //$browser = BrowserInfo::Instance();
-//        //$name = $browser->getBrowser();
-//        //$version = $browser->getVersion();
-//        //$platform = $browser->getPlatform();
-//        $browser = new Browser();
-//        $name = $browser->getName();
-//        $version = $browser->getVersion();
-//
-//        $os = new Os();
-//        $platform = $os->getName();
-//
-//        $browserInfo = $name . " " . $version . " on " . $platform;
-//        //echo "Your browser: " . $browserInfo . "<br>";
-//        ////////////// EOF browser info //////////////
-//
-//        $userAgent = $browserInfo . "; User Agent: " . $_SERVER['HTTP_USER_AGENT'];
-//        $logger->setUseragent($userAgent);
-//
-//        //set Event Type
-//        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
-//        $logger->setEventType($eventtype);
-//
-//        //set eventEntity
-//        $eventEntity = null;
-//
-//        if( array_key_exists('eventEntity', $options) && $options['eventEntity'] ) {
-//
-//            $eventEntity = $options['eventEntity'];
-//
-//        } elseif( $user && $user instanceof User && $user->getId() ) {
-//
-//            $eventEntity = $user;
-//        }
-//
-//        if( $eventEntity ) {
-//            //get classname, entity name and id of subject entity
-//            $class = new \ReflectionClass($eventEntity);
-//            $className = $class->getShortName();
-//            $classNamespace = $class->getNamespaceName();
-//
-//            //set classname, entity name and id of subject entity
-//            $logger->setEntityNamespace($classNamespace);
-//            $logger->setEntityName($className);
-//            $logger->setEntityId($eventEntity->getId());
-//
-//            //create EventObjectTypeList if not exists
-//            //$userSecUtil = new UserSecurityUtil($em,null);
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
-//            if( $eventObjectType ) {
-//                $logger->setObjectType($eventObjectType);
-//            }
-//        }
-//
-//        $em->persist($logger);
-//        $em->flush($logger);
-//    }
-
-//    public function getMaxIdleTime_TODEL($em) {
-//
-//        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-//
-//        if( !$params ) {
-//            //new DB does not have SiteParameters object
-//            return 1800; //30 min
-//            //throw new \Exception( 'Parameter object is not found' );
-//        }
-//
-//        if( count($params) != 1 ) {
-//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
-//        }
-//
-//        $param = $params[0];
-//        $maxIdleTime = $param->getMaxIdleTime();
-//
-//        //return time in seconds
-//        $maxIdleTime = $maxIdleTime * 60;
-//
-//        return $maxIdleTime;
-//    }
-
-//    public function getMaxIdleTimeAndMaintenance_TODEL($em, $secAuth, $container) {
-//
-//        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
-//
-//        if( !$params ) {
-//            //new DB does not have SiteParameters object
-//            $res = array(
-//                'maxIdleTime' => 1800,
-//                'maintenance' => false
-//            );
-//            return $res; //30 min
-//            //throw new \Exception( 'Parameter object is not found' );
-//        }
-//
-//        if( count($params) != 1 ) {
-//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
-//        }
-//
-//        $param = $params[0];
-//        $maxIdleTime = $param->getMaxIdleTime();
-//        $maintenance = $param->getMaintenance();
-//
-//        //do not use maintenance for admin
-//        if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            $maintenance = false;
-//        }
-//
-//        $debug = in_array( $container->get('kernel')->getEnvironment(), array('test', 'dev') );
-//        if( $debug ) {
-//            $maintenance = false;
-//        }
-//
-//        //return time in seconds
-//        $maxIdleTime = $maxIdleTime * 60;
-//
-//        $res = array(
-//            'maxIdleTime' => $maxIdleTime,
-//            'maintenance' => $maintenance
-//        );
-//
-//        return $res;
-//    }
-
-//    //return parameter specified by $setting. If the first time login when site parameter does not exist yet, return -1.
-//    public function getSiteSetting($parameter) {
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        return $userSecUtil->getSiteSettingParameter($parameter);
-//    }
-
     public function getUser() {
         return $this->security->getUser();
     }
@@ -276,12 +86,18 @@ class UserUtil {
     }
 
     public function getSession() {
+        $logger = $this->container->get('logger');
+        $logger->notice("before getSession");
         if( $this->requestStack ) {
+            $logger->notice("before requestStack->getSession");
             $session = $this->requestStack->getSession();
+            $logger->notice("after requestStack->getSession");
             if( $session ) {
+                $logger->notice("getSession yes!");
                 return $session;
             }
         }
+        $logger->notice("getSession exit");
         return NULL;
     }
 
