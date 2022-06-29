@@ -73,13 +73,13 @@ class DefaultController extends OrderAbstractController
         //dump($files);
         //echo "files=".count($files)."<br>";
         if( count($files) > 0 ) {
-            //$newestLogFile = $files[0];
-            foreach($files as $file) {
-                if( str_contains($file, 'prod-') ) {
-                    $systemLogFile = $file;
-                    break;
-                }
-            }
+            $systemLogFile = $files[0];
+//            foreach($files as $file) {
+//                if( str_contains($file, 'prod-') ) {
+//                    $systemLogFile = $file;
+//                    break;
+//                }
+//            }
         }
         //echo "newestLogFile=$newestLogFile <br>";
         //exit('111');
