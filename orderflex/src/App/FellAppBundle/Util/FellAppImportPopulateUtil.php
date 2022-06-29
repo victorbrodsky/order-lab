@@ -892,6 +892,8 @@ class FellAppImportPopulateUtil {
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+
         ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
         //ini_set('memory_limit', '512M');
 
@@ -1234,53 +1236,58 @@ class FellAppImportPopulateUtil {
                 $errorMsgArr[] = "End Date is null";
             }
 
-            //getFellowshipSubspecialty
-            //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
-            if( $errorMsgArr && count($errorMsgArr) > 0 ) {
 
-                //delete erroneous spreadsheet from filesystem and $document from DB
-                if( file_exists($inputFileName) ) {
-                    //$logger->error("Source sheet does not exists with filename=".$inputFileName);
-                    //remove from DB
-                    $em->remove($document);
-                    if( $datafile ) {
-                        $em->remove($datafile);
+            if( $environment == "live" ) {
+                //getFellowshipSubspecialty
+                //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                if( $errorMsgArr && count($errorMsgArr) > 0 ) {
+
+                    //delete erroneous spreadsheet from filesystem and $document from DB
+                    if( file_exists($inputFileName) ) {
+                        //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                        //remove from DB
+                        $em->remove($document);
+                        if( $datafile ) {
+                            $em->remove($datafile);
+                        }
+
+                        if( $testing == false ) {
+                            $em->flush();
+                        }
+                        //delete file
+                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                        $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
                     }
+
+                    $event = "First spreadsheet validation error:".
+                        " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                        ": " . implode("; ",$errorMsgArr);
 
                     if( $testing == false ) {
-                        $em->flush();
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
                     }
-                    //delete file
-                    unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
-                    $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
-                }
 
-                $event = "First spreadsheet validation error:".
-                    " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
-                    ": " . implode("; ",$errorMsgArr);
+                    $logger->error($event);
 
-                if( $testing == false ) {
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
-                }
-
-                $logger->error($event);
-
-                //send email
-                $sendErrorEmail = true;
-                //$sendErrorEmail = false;
-                if( $sendErrorEmail ) {
-                    $userSecUtil = $this->container->get('user_security_utility');
-                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-                    if (!$emails) {
-                        $emails = $ccs;
-                        $ccs = null;
+                    //send email
+                    $sendErrorEmail = true;
+                    //$sendErrorEmail = false;
+                    if( $sendErrorEmail ) {
+                        $userSecUtil = $this->container->get('user_security_utility');
+                        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                        if (!$emails) {
+                            $emails = $ccs;
+                            $ccs = null;
+                        }
+                        $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
+                        $this->sendEmailToSystemEmail($subjectError, $event);
                     }
-                    $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
-                    $this->sendEmailToSystemEmail($subjectError, $event);
-                }
 
-                continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                    continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                }
+            } else {
+                $logger->error("Not live server: No deleted erroneous spreadsheet from filesystem and $document from DB");
             }
             ////////////////// EOF validate spreadsheet ////////////////////////
 
@@ -1733,55 +1740,59 @@ class FellAppImportPopulateUtil {
                     $errorMsgArr[] = "End Date is null";
                 }
 
-                //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
-                //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
-                if( $errorMsgArr && count($errorMsgArr) > 0 ) {
+                if( $environment == "live" ) {
+                    //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
+                    //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                    if ($errorMsgArr && count($errorMsgArr) > 0) {
 
-                    //delete erroneous spreadsheet from filesystem and $document from DB
-                    if( file_exists($inputFileName) ) {
-                        //$logger->error("Source sheet does not exists with filename=".$inputFileName);
-                        //remove from DB
-                        $em->remove($document);
-                        if( $datafile ) {
-                            $em->remove($datafile);
+                        //delete erroneous spreadsheet from filesystem and $document from DB
+                        if (file_exists($inputFileName)) {
+                            //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                            //remove from DB
+                            $em->remove($document);
+                            if ($datafile) {
+                                $em->remove($datafile);
+                            }
+                            //$em->flush($document);
+
+                            if ($testing == false) {
+                                $em->flush();
+                            }
+                            //delete file
+                            unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                            $logger->error("Erroneous spreadsheet deleted from server: inputFileName=" . $inputFileName);
                         }
-                        //$em->flush($document);
 
-                        if( $testing == false ) {
-                            $em->flush();
+                        $event = "Second spreadsheet validation error:" .
+                            " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
+                            " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                            ": " . implode("; ", $errorMsgArr);
+
+                        if ($testing == false) {
+                            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
                         }
-                        //delete file
-                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
-                        $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=".$inputFileName);
-                    }
 
-                    $event = "Second spreadsheet validation error:".
-                        " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
-                        " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
-                        ": " . implode("; ",$errorMsgArr);
+                        $logger->error($event);
 
-                    if( $testing == false ) {
-                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
-                    }
-
-                    $logger->error($event);
-
-                    //send email
-                    //$sendErrorEmail = true;
-                    $sendErrorEmail = false;
-                    if( $sendErrorEmail ) {
-                        $userSecUtil = $this->container->get('user_security_utility');
-                        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-                        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-                        if (!$emails) {
-                            $emails = $ccs;
-                            $ccs = null;
+                        //send email
+                        //$sendErrorEmail = true;
+                        $sendErrorEmail = false;
+                        if ($sendErrorEmail) {
+                            $userSecUtil = $this->container->get('user_security_utility');
+                            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                            if (!$emails) {
+                                $emails = $ccs;
+                                $ccs = null;
+                            }
+                            $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
+                            $this->sendEmailToSystemEmail($subjectError, $event);
                         }
-                        $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
-                        $this->sendEmailToSystemEmail($subjectError, $event);
-                    }
 
-                    continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                        continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                    }
+                } else {
+                    $logger->error("Not live server:"."No Erroneous spreadsheet deleted from server: inputFileName=" . $inputFileName);
                 }
                 //////////////////// EOF second validate the application //////////////////////
 
