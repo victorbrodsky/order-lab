@@ -62,15 +62,21 @@ class DefaultController extends OrderAbstractController
 
         $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "log";
 
-        $newestLogFile = NULL;
-        $files = scandir($logDir, SCANDIR_SORT_DESCENDING);
+        $systemLogFile = NULL;
+        //$files = scandir($logDir, SCANDIR_SORT_DESCENDING);
+
+        $files = glob($logDir.'/*.log');
+        usort($files, function($a, $b) {
+            return filemtime($b) - filemtime($a);
+        });
+
         //dump($files);
         //echo "files=".count($files)."<br>";
         if( count($files) > 0 ) {
             //$newestLogFile = $files[0];
             foreach($files as $file) {
                 if( str_contains($file, 'prod-') ) {
-                    $newestLogFile = $file;
+                    $systemLogFile = $file;
                     break;
                 }
             }
@@ -78,12 +84,12 @@ class DefaultController extends OrderAbstractController
         //echo "newestLogFile=$newestLogFile <br>";
         //exit('111');
 
-        if( !$newestLogFile ) {
+        if( !$systemLogFile ) {
             exit();
             return array();
         }
 
-        $systemLogFile = $logDir . DIRECTORY_SEPARATOR . $newestLogFile; //"prod.log";
+        //$systemLogFile = $logDir . DIRECTORY_SEPARATOR . $newestLogFile; //"prod.log";
 
         //echo file_get_contents( $systemLogFile );
 
