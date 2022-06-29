@@ -1,0 +1,60 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    Testing
+{% endblock %}
+
+{% block content %}
+
+    <input type="hidden1" id="testFile" value="{{ testFile }}" />
+
+    <div id="message">Please Wait ...</div>
+    <div id="result"></div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+            var testFile = $('#testFile').val();
+
+            runTestingProcess(testFile);
+
+        });
+
+        function runTestingProcess(testFile) {
+            var url = Routing.generate('employees_run_test_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: true,
+                data: {testFile: testFile},
+            }).done(function(data) {
+                $('#message').hide();
+                $('#result').append(data);
+            });
+        }
+    </script>
+
+{% endblock %}

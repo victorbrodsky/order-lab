@@ -31,6 +31,7 @@ use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -145,6 +146,158 @@ class DefaultController extends OrderAbstractController
         return array();
     }
 
+    /**
+     * @Route("/run-all-test", name="employees_run_test_all", methods={"GET"})
+     * @Template("AppUserdirectoryBundle/Default/show-run-test.html.twig")
+     */
+    public function runAllTestAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $logDir = $this->container->get('kernel')->getProjectDir();
+        echo "logDir=$logDir <br>";
+
+        //$testFolderCwd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin";
+        $testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
+
+        //$logDir = $logDir.DIRECTORY_SEPARATOR;
+
+        //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
+        //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
+        $testCmd = "./vendor/bin/phpunit.bat";
+        echo "testCmd=$testCmd <br>";
+
+        //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
+        //$commandArr = array($testCmd);
+        $commandArr = array($testCmd,'-d', 'memory_limit=-1');
+
+        $execTime = 6000;
+        ini_set('max_execution_time', $execTime);
+
+        $envArr = array('HTTP' => 1);
+
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+//            if (Process::ERR === $type) {
+//                echo 'ERR > '.$buffer;
+//            } else {
+//                echo 'OUT > '.$buffer;
+//            }
+        });
+
+        //return array('testCmd' => $testCmd);
+        exit();
+    }
+    /**
+     * @Route("/run-test", name="employees_run_test", methods={"GET"})
+     * @Template("AppUserdirectoryBundle/Default/show-run-test.html.twig")
+     */
+    public function runTestAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //$logDir = $this->container->get('kernel')->getProjectDir() ;
+        //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
+        //$tests = $tests . DIRECTORY_SEPARATOR . 'UserTest.php';
+        $tests = 'UserTest.php';
+
+        return array('testFile'=>$tests);
+
+        $logDir = $this->container->get('kernel')->getProjectDir();
+        echo "logDir=$logDir <br>";
+
+        //$testFolderCwd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin";
+        $testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
+
+        //$logDir = $logDir.DIRECTORY_SEPARATOR;
+
+        $testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
+        $testCmd = "vendor/bin/phpunit -d memory_limit=-1";
+        $testCmd = "./vendor/bin/phpunit.bat";
+        echo "testCmd=$testCmd <br>";
+
+        //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
+        $commandArr = array($testCmd);
+        $commandArr = array($testCmd,'-d', 'memory_limit=-1');
+
+        $execTime = 6000;
+        ini_set('max_execution_time', $execTime);
+
+        $envArr = array('HTTP' => 1);
+
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
+        $process->run(function ($type, $buffer) {
+            echo $buffer;
+//            if (Process::ERR === $type) {
+//                echo 'ERR > '.$buffer;
+//            } else {
+//                echo 'OUT > '.$buffer;
+//            }
+        });
+
+        //return array('testCmd' => $testCmd);
+        exit();
+    }
+    /**
+     * @Route("/run-test-ajax", name="employees_run_test_ajax", methods={"GET"}, options={"expose"=true})
+     */
+    public function runTestAjaxAction(Request $request) {
+
+        $result = "no testing";
+
+        $logDir = $this->container->get('kernel')->getProjectDir();
+        //echo "logDir=$logDir <br>";
+
+        $testFile = trim((string)$request->get('testFile'));
+
+        $logDir = $this->container->get('kernel')->getProjectDir() ;
+
+        $tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
+
+        $testFilePath = $tests . DIRECTORY_SEPARATOR . $testFile;
+
+        //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
+        //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
+        $testCmd = "./vendor/bin/phpunit.bat";
+        //echo "testCmd=$testCmd <br>";
+
+        //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
+        $commandArr = array($testCmd,'-d', 'memory_limit=-1',$testFilePath);
+
+        $execTime = 6000;
+        ini_set('max_execution_time', $execTime);
+
+        $envArr = array('HTTP' => 1);
+
+        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+
+        $process->run(function ($type, $buffer) {
+            //echo $buffer;
+//            if (Process::ERR === $type) {
+//                echo 'ERR > '.$buffer;
+//            } else {
+//                echo 'OUT > '.$buffer;
+//            }
+
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+
+        });
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($result));
+        return $response;
+    }
 
 //    /**
 //     * @Route("/", name="employees_home")
