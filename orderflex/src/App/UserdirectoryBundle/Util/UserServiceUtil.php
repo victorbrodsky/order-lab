@@ -1997,7 +1997,8 @@ Pathology and Laboratory Medicine",
         $phpPath = $this->getPhpPath();
         $fellappCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
 
-        $fellappCronJob = "00 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
+        $fellappCronJob = "*/2 * * * *" . " " . $fellappCronJobCommand; //at every 2nd minutes
+        //$fellappCronJob = "00 * * * *" . " " . $fellappCronJobCommand; //0 minutes - every hour
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
 
