@@ -29,7 +29,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 //NOT USED
-class ReportGeneratorManager {
+class ReportGeneratorManagerTODEL {
 
     /**
      * @var Singleton The reference to *Singleton* instance of this class

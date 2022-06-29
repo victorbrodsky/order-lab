@@ -137,15 +137,15 @@ class ReportGenerator {
 
     public function resetQueueRun() {
 
-        $logger = $this->container->get('logger');
-        $logger->notice("Start resetQueueRun");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("Start resetQueueRun");
 
         $queue = $this->getQueue();
 
         //reset queue
-        $logger->notice("resetQueueRun: before resetQueue");
+        //$logger->notice("resetQueueRun: before resetQueue");
         $numUpdated = $this->resetQueue($queue);
-        $logger->notice("resetQueueRun: after resetQueue");
+        //$logger->notice("resetQueueRun: after resetQueue");
 
         //reset processes
 //        $repository = $this->em->getRepository('AppFellAppBundle:Process');

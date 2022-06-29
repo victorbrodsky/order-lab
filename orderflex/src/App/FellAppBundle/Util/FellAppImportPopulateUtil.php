@@ -769,7 +769,7 @@ class FellAppImportPopulateUtil {
     //return newly created DataFile object
     public function addFileToDataFileDB( $document ) {
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         $dataFile = $this->em->getRepository('AppFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
