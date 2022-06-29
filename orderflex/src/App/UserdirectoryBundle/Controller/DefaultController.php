@@ -65,7 +65,7 @@ class DefaultController extends OrderAbstractController
         $systemLogFile = NULL;
         //$files = scandir($logDir, SCANDIR_SORT_DESCENDING);
 
-        $files = glob($logDir.'/*.log');
+        $files = glob($logDir.'/prod-*.log');
         usort($files, function($a, $b) {
             return filemtime($b) - filemtime($a);
         });
