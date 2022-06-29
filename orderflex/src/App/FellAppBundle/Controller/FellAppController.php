@@ -2788,6 +2788,9 @@ class FellAppController extends OrderAbstractController {
      */
     public function resetQueueRunAction(Request $request) {
 
+        $logger = $this->container->get('logger');
+        $logger->notice("resetQueueRunAction !!!");
+
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

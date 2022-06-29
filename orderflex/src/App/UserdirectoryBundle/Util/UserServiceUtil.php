@@ -1821,6 +1821,7 @@ Pathology and Laboratory Medicine",
         return $res;
     }
     public function makeThumb($src, $dest, $desired_width) {
+        //$logger = $this->container->get('logger');
 
         if (file_exists($dest)) {
             //echo "The file $dest exists <br>";
@@ -1830,6 +1831,15 @@ Pathology and Laboratory Medicine",
         }
         else {
             //echo "The file $dest does not exists <br>";
+        }
+
+        if (file_exists($src)) {
+            //echo "The file $src exists <br>";
+            //$logger->notice("src file does not exists src=$src");
+            return null;
+        }
+        else {
+            //$logger->notice("src file exists src=$src");
         }
 
         if( strpos((string)$src, '.jpg') !== false || strpos((string)$src, '.jpeg') !== false ) {

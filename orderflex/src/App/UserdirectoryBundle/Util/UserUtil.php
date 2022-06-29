@@ -36,13 +36,13 @@ use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\Logger;
 use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-//use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Doctrine\ORM\EntityManagerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Security;
@@ -53,21 +53,21 @@ class UserUtil {
     protected $em;
     protected $container;
     protected $security;
-    //protected $tokenStorage;
     protected $requestStack;
+    protected $session;
 
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container,
         Security $security,
-        RequestStack $requestStack
-        //TokenStorageInterface $tokenStorage=null
+        RequestStack $requestStack,
+        Session $session
     ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
-        //$this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack;
+        $this->session = $session;
     }
 
 
@@ -88,17 +88,26 @@ class UserUtil {
     public function getSession() {
         $logger = $this->container->get('logger');
         $logger->notice("before getSession");
-        if( $this->requestStack ) {
-            $logger->notice("before requestStack->getSession");
-            $session = $this->requestStack->getSession();
-            $logger->notice("after requestStack->getSession");
-            if( $session ) {
-                $logger->notice("getSession yes!");
-                return $session;
-            }
+
+        $session = $this->session;
+        if( $session ) {
+            $logger->notice("UserUtil: session ok");
+            return $session;
         }
-        $logger->notice("getSession exit");
+        $logger->notice("UserUtil: session NULL");
         return NULL;
+
+//        if( $this->requestStack ) {
+//            $logger->notice("before requestStack->getCurrentRequest()->getSession()");
+//            $session = $this->requestStack->getCurrentRequest()->getSession();
+//            $logger->notice("after requestStack->getCurrentRequest()->getSession()");
+//            if( $session ) {
+//                $logger->notice("getSession yes!");
+//                return $session;
+//            }
+//        }
+//        $logger->notice("getSession exit");
+//        return NULL;
     }
 
 //    public function getWorkflowByString($workflowStr)
