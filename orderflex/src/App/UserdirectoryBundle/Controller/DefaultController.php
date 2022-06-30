@@ -161,7 +161,7 @@ class DefaultController extends OrderAbstractController
         echo "logDir=$logDir <br>";
 
         //$testFolderCwd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin";
-        $testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
+        //$testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
 
         //$logDir = $logDir.DIRECTORY_SEPARATOR;
 
@@ -174,10 +174,12 @@ class DefaultController extends OrderAbstractController
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
             $envArr = array('HTTP' => 1);
+            $commandArr = array($testCmd,'-d', 'memory_limit=-1');
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
             $envArr = array();
+            $commandArr = array($testCmd);
         }
 
         echo "testCmd=$testCmd <br>";
@@ -310,20 +312,21 @@ class DefaultController extends OrderAbstractController
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
             $envArr = array('HTTP' => 1);
+            $commandArr = array($testCmd,'-d', 'memory_limit=-1',$testFilePath);
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
             $envArr = array();
+            $commandArr = array($testCmd,$testFilePath);
         }
 
         //echo "testCmd=$testCmd <br>";
 
         //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
-        $commandArr = array($testCmd,'-d', 'memory_limit=-1',$testFilePath);
 
         $execTime = 6000;
         ini_set('max_execution_time', $execTime);
-        
+
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
 //        $process->run(function ($type, $buffer) {
