@@ -26,11 +26,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Ldap\Adapter\ExtLdap\ConnectionOptions;
-use Symfony\Component\Ldap\Ldap;
+//use Symfony\Component\Ldap\Adapter\ExtLdap\ConnectionOptions;
+//use Symfony\Component\Ldap\Ldap;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -181,7 +182,16 @@ class DefaultController extends OrderAbstractController
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
         $process->run(function ($type, $buffer) {
+
+            echo '<code>';
+            echo '<pre>';
+
             echo $buffer;
+
+            echo '</pre>';
+            echo '</code>';
+
+
 //            if (Process::ERR === $type) {
 //                echo 'ERR > '.$buffer;
 //            } else {
@@ -246,6 +256,8 @@ class DefaultController extends OrderAbstractController
         exit();
     }
     /**
+     * http://127.0.0.1/order/directory/run-test-ajax?testFile=UserTest.php
+     *
      * @Route("/run-test-ajax", name="employees_run_test_ajax", methods={"GET"}, options={"expose"=true})
      */
     public function runTestAjaxAction(Request $request) {
@@ -261,7 +273,10 @@ class DefaultController extends OrderAbstractController
 
         $tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
 
-        $testFilePath = $tests . DIRECTORY_SEPARATOR . $testFile;
+        //$testFilePath = $tests . DIRECTORY_SEPARATOR . $testFile;
+        $testFilePath = 'tests\App\TestBundle\UserTest.php';
+        echo "testFilePath=$testFilePath <br>";
+        //testFilePath=C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\UserTest.php
 
         //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
@@ -278,20 +293,29 @@ class DefaultController extends OrderAbstractController
 
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
-        $process->run(function ($type, $buffer) {
-            //echo $buffer;
-//            if (Process::ERR === $type) {
-//                echo 'ERR > '.$buffer;
-//            } else {
-//                echo 'OUT > '.$buffer;
-//            }
+//        $process->run(function ($type, $buffer) {
+//            $response = new Response();
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent(json_encode($buffer));
+//            return $response;
+//
+//        });
 
+        try {
+            $process->mustRun();
+            $buffer = $process->getOutput();
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode($buffer));
             return $response;
 
-        });
+        } catch (ProcessFailedException $exception) {
+            $buffer = $exception->getMessage();
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($buffer));
+            return $response;
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -579,41 +603,41 @@ class DefaultController extends OrderAbstractController
 
     }
 
-    //It might work
-    //remove: fabiang/sasl symfony/ldap
-    public function loginLaminasTest( $thisUser, $password ) {
-
-        echo "username=[$thisUser], password=[$password] <br>";
-
-        $host = 'a.wcmc-ad.net';
-
-        $options = [
-            'host'              => $host,
-            //'username'          => 'xxx',
-            //'password'          => 'xxx',
-            //'bindRequiresDn'    => false,
-            'accountDomainName' => $host,
-            'baseDn'            => 'dc=a,dc=wcmc-ad,dc=net',
-            //'useSsl'            => true,
-            //'useStartTls'      => true
-        ];
-
-        $ldap = new \Laminas\Ldap\Ldap($options);
-        $ldap->bind($thisUser, $password);
-
-        dump($ldap);
-        //exit('EOF');
-
-        //$acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
-
-        $acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
-        echo "acctname=[$acctname] <br>";
-
-        //dump($acctname);
-
-        echo "EOF loginLaminasTest <br>";
-        exit('EOF');
-    }
+//    //It might work
+//    //remove: fabiang/sasl symfony/ldap
+//    public function loginLaminasTest( $thisUser, $password ) {
+//
+//        echo "username=[$thisUser], password=[$password] <br>";
+//
+//        $host = 'a.wcmc-ad.net';
+//
+//        $options = [
+//            'host'              => $host,
+//            //'username'          => 'xxx',
+//            //'password'          => 'xxx',
+//            //'bindRequiresDn'    => false,
+//            'accountDomainName' => $host,
+//            'baseDn'            => 'dc=a,dc=wcmc-ad,dc=net',
+//            //'useSsl'            => true,
+//            //'useStartTls'      => true
+//        ];
+//
+//        $ldap = new \Laminas\Ldap\Ldap($options);
+//        $ldap->bind($thisUser, $password);
+//
+//        dump($ldap);
+//        //exit('EOF');
+//
+//        //$acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+//
+//        $acctname = $ldap->getCanonicalAccountName($thisUser, \Laminas\Ldap\Ldap::ACCTNAME_FORM_DN);
+//        echo "acctname=[$acctname] <br>";
+//
+//        //dump($acctname);
+//
+//        echo "EOF loginLaminasTest <br>";
+//        exit('EOF');
+//    }
 
     public function loginFabiangTest( $thisUser, $password ) {
 
@@ -638,58 +662,58 @@ class DefaultController extends OrderAbstractController
         exit('EOF');
     }
 
-    public function loginSymfonyTest( $thisUser, $password ) {
-        $host = 'a.wcmc-ad.net';
-
-        //$options = 'X_SASL_MECH'; //array(X_SASL_MECH);
-
-        $encryption = 'none';
-        //$encryption = 'ssl';
-        //$encryption = 'tls';
-
-        $ldap = Ldap::create('ext_ldap', [
-            'host' => $host,
-            'port' => 389,
-            'version' => 3,
-            //'encryption' => $encryption,
-            //'options' => $options
-            //'options' => array(x_sasl_mech)
-            //'x_sasl_mech'
-        ]);
-
-        //$ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldaps://$host:636']);
-
-        //$dn = "OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
-        $dn = "cn=Users,DC=a,DC=wcmc-ad,DC=net";
-        //$dn = "DC=a,DC=wcmc-ad,DC=net";
-
-        $dn = "cn=".$thisUser.",".$dn;
-
-        //$dn = $thisUser;
-        echo "dn: [$dn]<br>";
-        echo "password=[$password]<br>";
-
-        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
-        //$dn = "CN=xxx";
-        //$dn = "CN=xxx,DC=a,DC=wcmc-ad,DC=net";
-        //$password = "xxx";
-
-        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
-        //$password = "xxx";
-
-        $r = $ldap->bind($dn, $password);
-
-        dump($r);
-
-//        if( $r ) {
-//            exit('OK');
-//        } else {
-//            exit('NOT OK');
-//        }
-
-        echo "EOF loginSymfonyTest <br>";
-        //exit('EOF loginSymfonyTest');
-    }
+//    public function loginSymfonyTest( $thisUser, $password ) {
+//        $host = 'a.wcmc-ad.net';
+//
+//        //$options = 'X_SASL_MECH'; //array(X_SASL_MECH);
+//
+//        $encryption = 'none';
+//        //$encryption = 'ssl';
+//        //$encryption = 'tls';
+//
+//        $ldap = Ldap::create('ext_ldap', [
+//            'host' => $host,
+//            'port' => 389,
+//            'version' => 3,
+//            //'encryption' => $encryption,
+//            //'options' => $options
+//            //'options' => array(x_sasl_mech)
+//            //'x_sasl_mech'
+//        ]);
+//
+//        //$ldap = Ldap::create('ext_ldap', ['connection_string' => 'ldaps://$host:636']);
+//
+//        //$dn = "OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+//        $dn = "cn=Users,DC=a,DC=wcmc-ad,DC=net";
+//        //$dn = "DC=a,DC=wcmc-ad,DC=net";
+//
+//        $dn = "cn=".$thisUser.",".$dn;
+//
+//        //$dn = $thisUser;
+//        echo "dn: [$dn]<br>";
+//        echo "password=[$password]<br>";
+//
+//        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+//        //$dn = "CN=xxx";
+//        //$dn = "CN=xxx,DC=a,DC=wcmc-ad,DC=net";
+//        //$password = "xxx";
+//
+//        //$dn = "CN=xxx,OU=NYP Users,OU=External,DC=a,DC=wcmc-ad,DC=net";
+//        //$password = "xxx";
+//
+//        $r = $ldap->bind($dn, $password);
+//
+//        dump($r);
+//
+////        if( $r ) {
+////            exit('OK');
+////        } else {
+////            exit('NOT OK');
+////        }
+//
+//        echo "EOF loginSymfonyTest <br>";
+//        //exit('EOF loginSymfonyTest');
+//    }
 
 
     public function loginTest_php( $thisUser, $password ) {

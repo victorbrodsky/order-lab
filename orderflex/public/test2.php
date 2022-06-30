@@ -14,10 +14,13 @@ disable_ob();
 
 $command = 'ping 127.0.0.1';
 $command = 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\vendor\bin\phpunit';
-
 echo "command=$command <br>";
 
-system($command);
+$tests = 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle';
+$tests = $tests . '\UserTest.php';
+echo "tests=$tests <br>";
+
+system($command . " " . $tests);
 
 function disable_ob() {
     // Turn off output buffering
