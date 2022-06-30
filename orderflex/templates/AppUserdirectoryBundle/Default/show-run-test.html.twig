@@ -23,8 +23,8 @@
 
 {% block content %}
 
-    <input type="hidden1" id="testFiles" value="{{ testFiles }}" />
-
+    {{ testFiles }}<br>
+    <input type="hidden" id="testFiles" value="{{ testFiles }}" />
 
     {#<code><pre>#}
     <div id="result"></div>
@@ -57,7 +57,7 @@
         });
 
         function runTestingProcess(testFile,counter,totalCount) {
-            $('#message').text("Running "+counter+" of "+totalCount+" tests. Please Wait ...");
+            //$('#message').text("Running "+counter+" of "+totalCount+" tests. Please Wait ...");
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
