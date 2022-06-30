@@ -78,7 +78,7 @@
                     $('#message').text("All "+totalCount+" tests are completed");
                 }
             }).fail(function() {
-                $('#message').text("Error: test suite failed to start");
+                $('#message').text("Error: test suite failed to start for "+testFile);
                 //$('#result').append("Error: test suite failed to start");
             })
             .always(function() {
