@@ -241,9 +241,9 @@ class DefaultController extends OrderAbstractController
             //echo "file=".basename($file)."<br>";
             $testFiles[] = basename($file);
             $count++;
-            if( $count > 2 ) {
-                break;
-            }
+//            if( $count > 2 ) {
+//                break;
+//            }
         }
 
         $testFilesStr = "";

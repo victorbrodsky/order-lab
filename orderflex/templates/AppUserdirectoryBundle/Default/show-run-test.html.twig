@@ -25,11 +25,12 @@
 
     <input type="hidden1" id="testFiles" value="{{ testFiles }}" />
 
-    <div id="message">Please Wait ...</div>
 
     {#<code><pre>#}
     <div id="result"></div>
     {#</pre></code>#}
+
+    <div id="message">Please Wait ...</div>
 
 {% endblock %}
 
@@ -42,16 +43,17 @@
             var testFiles = $('#testFiles').val();
             var filesArray = testFiles.split(",");
 
+            $('#message').text("Running "+filesArray.length+" tests. Please Wait ...");
+
             for(let i = 0; i < filesArray.length; i++) {
                 //text += filesArray[i] + "<br>";
-                runTestingProcess(filesArray[i]);
+                runTestingProcess(filesArray[i],i,filesArray.length);
             }
-
-            //runTestingProcess(testFile);
 
         });
 
-        function runTestingProcess(testFile) {
+        function runTestingProcess(testFile,count,totalCount) {
+            $('#message').text("Running "+count+" of "+totalCount.length+" tests. Please Wait ...");
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
@@ -60,13 +62,17 @@
                 async: true,
                 data: {testFile: testFile},
             }).done(function(data) {
-                $('#message').hide();
                 $('#result').append(data);
+                console.log("count="+count+", totalCount="+totalCount);
+                if( count == totalCount ) {
+                    $('#message').text("All "+totalCount+" tests are completed");
+                }
             }).fail(function() {
                 $('#message').text("Error: test suite failed to start");
+                //$('#result').append("Error: test suite failed to start");
             })
             .always(function() {
-                $('#message').hide();
+                //$('#message').hide();
             });
         }
     </script>
