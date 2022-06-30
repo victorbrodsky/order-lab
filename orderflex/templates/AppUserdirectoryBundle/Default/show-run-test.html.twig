@@ -68,7 +68,7 @@
             }).done(function(data) {
                 //TODO: check for 'FAILURES!' and change color
                 $('#result').append(data);
-                console.log("count="+count+", totalCount="+totalCount);
+                console.log("counter="+counter+", totalCount="+totalCount);
                 if( counter == totalCount ) {
                     $('#message').text("All "+totalCount+" tests are completed");
                 }
