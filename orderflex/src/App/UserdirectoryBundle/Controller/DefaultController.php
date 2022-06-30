@@ -264,9 +264,6 @@ class DefaultController extends OrderAbstractController
 
         $result = "no testing";
 
-        $logDir = $this->container->get('kernel')->getProjectDir();
-        //echo "logDir=$logDir <br>";
-
         $testFile = trim((string)$request->get('testFile'));
 
         $logDir = $this->container->get('kernel')->getProjectDir() ;
@@ -274,8 +271,8 @@ class DefaultController extends OrderAbstractController
         $tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
 
         //$testFilePath = $tests . DIRECTORY_SEPARATOR . $testFile;
-        $testFilePath = 'tests\App\TestBundle\UserTest.php';
-        echo "testFilePath=$testFilePath <br>";
+        $testFilePath = 'tests'.DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'TestBundle'.DIRECTORY_SEPARATOR.$testFile;
+        //echo "testFilePath=$testFilePath <br>";
         //testFilePath=C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\UserTest.php
 
         //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
