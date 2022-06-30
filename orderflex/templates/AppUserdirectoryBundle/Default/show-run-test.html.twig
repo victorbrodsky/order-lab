@@ -43,17 +43,20 @@
             var testFiles = $('#testFiles').val();
             var filesArray = testFiles.split(",");
 
-            $('#message').text("Running "+filesArray.length+" tests. Please Wait ...");
+            var totalCount = filesArray.length;
 
-            for(let i = 0; i < filesArray.length; i++) {
+            $('#message').text("Running "+totalCount+" tests. Please Wait ...");
+            var i = 0;
+
+            for(i = 0; i < totalCount; i++) {
                 //text += filesArray[i] + "<br>";
-                runTestingProcess(filesArray[i],i,filesArray.length);
+                runTestingProcess(filesArray[i],i,totalCount);
             }
 
         });
 
         function runTestingProcess(testFile,count,totalCount) {
-            $('#message').text("Running "+count+" of "+totalCount.length+" tests. Please Wait ...");
+            $('#message').text("Running "+count+" of "+totalCount+" tests. Please Wait ...");
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
