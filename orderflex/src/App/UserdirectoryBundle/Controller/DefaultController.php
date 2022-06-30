@@ -231,7 +231,7 @@ class DefaultController extends OrderAbstractController
         //$tests = $tests . DIRECTORY_SEPARATOR . 'UserTest.php';
 
         $testsDir = $projectDir.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'TestBundle';
-        echo "testsDir=$testsDir <br>";
+        //echo "testsDir=$testsDir <br>";
 
         $files = glob($testsDir.'/*Test.php',GLOB_BRACE);
 
