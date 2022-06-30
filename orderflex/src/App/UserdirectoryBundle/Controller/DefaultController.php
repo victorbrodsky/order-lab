@@ -175,7 +175,7 @@ class DefaultController extends OrderAbstractController
             $testCmd = "./vendor/bin/phpunit.bat";
         } else {
             //Linux
-            $testCmd = "vendor/bin/phpunit.bat";
+            $testCmd = "vendor/bin/phpunit";
         }
 
         echo "testCmd=$testCmd <br>";
@@ -311,7 +311,7 @@ class DefaultController extends OrderAbstractController
             $testCmd = "./vendor/bin/phpunit.bat";
         } else {
             //Linux
-            $testCmd = "vendor/bin/phpunit.bat";
+            $testCmd = "vendor/bin/phpunit";
         }
 
         //echo "testCmd=$testCmd <br>";
