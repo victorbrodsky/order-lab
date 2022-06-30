@@ -23,13 +23,13 @@
 
 {% block content %}
 
-    <input type="hidden1" id="testFile" value="{{ testFile }}" />
+    <input type="hidden1" id="testFiles" value="{{ testFiles }}" />
 
     <div id="message">Please Wait ...</div>
 
-    <code><pre>
+    {#<code><pre>#}
     <div id="result"></div>
-    </pre></code>
+    {#</pre></code>#}
 
 {% endblock %}
 
@@ -39,9 +39,15 @@
     <script>
         $(document).ready(function () {
 
-            var testFile = $('#testFile').val();
+            var testFiles = $('#testFiles').val();
+            var filesArray = testFiles.split(",");
 
-            runTestingProcess(testFile);
+            for(let i = 0; i < filesArray.length; i++) {
+                //text += filesArray[i] + "<br>";
+                runTestingProcess(filesArray[i]);
+            }
+
+            //runTestingProcess(testFile);
 
         });
 
@@ -56,6 +62,11 @@
             }).done(function(data) {
                 $('#message').hide();
                 $('#result').append(data);
+            }).fail(function() {
+                $('#message').text("Error: test suite failed to start");
+            })
+            .always(function() {
+                $('#message').hide();
             });
         }
     </script>

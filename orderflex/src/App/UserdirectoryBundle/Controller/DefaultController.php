@@ -226,12 +226,34 @@ class DefaultController extends OrderAbstractController
 
         //$userServiceUtil = $this->container->get('user_service_utility');
 
-        //$logDir = $this->container->get('kernel')->getProjectDir() ;
+        $projectDir = $this->container->get('kernel')->getProjectDir() ;
         //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
         //$tests = $tests . DIRECTORY_SEPARATOR . 'UserTest.php';
-        $tests = 'UserTest.php';
 
-        return array('testFile'=>$tests);
+        $testsDir = $projectDir.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'TestBundle';
+        echo "testsDir=$testsDir <br>";
+
+        $files = glob($testsDir.'/*Test.php',GLOB_BRACE);
+
+        $count = 0;
+        $testFiles = array();
+        foreach($files as $file) {
+            //echo "file=".basename($file)."<br>";
+            $testFiles[] = basename($file);
+            $count++;
+            if( $count > 2 ) {
+                break;
+            }
+        }
+
+        $testFilesStr = "";
+        if( count($testFiles) > 0 ) {
+            $testFilesStr = implode(",",$testFiles);
+        }
+
+        //exit('111');
+
+        return array('testFiles'=>$testFilesStr);
 
 //        $logDir = $this->container->get('kernel')->getProjectDir();
 //        echo "logDir=$logDir <br>";
@@ -288,7 +310,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 
         $result = "no testing";
 
@@ -296,7 +318,7 @@ class DefaultController extends OrderAbstractController
 
         $logDir = $this->container->get('kernel')->getProjectDir() ;
 
-        $tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
+        //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
 
         //$testFilePath = $tests . DIRECTORY_SEPARATOR . $testFile;
         $testFilePath = 'tests'.DIRECTORY_SEPARATOR.'App'.DIRECTORY_SEPARATOR.'TestBundle'.DIRECTORY_SEPARATOR.$testFile;
@@ -340,13 +362,14 @@ class DefaultController extends OrderAbstractController
         try {
             $process->mustRun();
             $buffer = $process->getOutput();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode($buffer));
             return $response;
-
         } catch (ProcessFailedException $exception) {
             $buffer = $exception->getMessage();
+            $buffer = '<code><pre>'.$buffer.'</pre></code>';
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
             $response->setContent(json_encode($buffer));
