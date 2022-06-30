@@ -167,7 +167,17 @@ class DefaultController extends OrderAbstractController
 
         //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
-        $testCmd = "./vendor/bin/phpunit.bat";
+        //$testCmd = "./vendor/bin/phpunit.bat";
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        if( $userServiceUtil->isWindows() ){
+            //Windows
+            $testCmd = "./vendor/bin/phpunit.bat";
+        } else {
+            //Linux
+            $testCmd = "vendor/bin/phpunit.bat";
+        }
+
         echo "testCmd=$testCmd <br>";
 
         //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
@@ -212,6 +222,8 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        //$userServiceUtil = $this->container->get('user_service_utility');
+
         //$logDir = $this->container->get('kernel')->getProjectDir() ;
         //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
         //$tests = $tests . DIRECTORY_SEPARATOR . 'UserTest.php';
@@ -219,41 +231,49 @@ class DefaultController extends OrderAbstractController
 
         return array('testFile'=>$tests);
 
-        $logDir = $this->container->get('kernel')->getProjectDir();
-        echo "logDir=$logDir <br>";
-
-        //$testFolderCwd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin";
-        $testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
-
-        //$logDir = $logDir.DIRECTORY_SEPARATOR;
-
-        $testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
-        $testCmd = "vendor/bin/phpunit -d memory_limit=-1";
-        $testCmd = "./vendor/bin/phpunit.bat";
-        echo "testCmd=$testCmd <br>";
-
-        //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
-        $commandArr = array($testCmd);
-        $commandArr = array($testCmd,'-d', 'memory_limit=-1');
-
-        $execTime = 6000;
-        ini_set('max_execution_time', $execTime);
-
-        $envArr = array('HTTP' => 1);
-
-        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
-
-        $process->run(function ($type, $buffer) {
-            echo $buffer;
-//            if (Process::ERR === $type) {
-//                echo 'ERR > '.$buffer;
-//            } else {
-//                echo 'OUT > '.$buffer;
-//            }
-        });
-
-        //return array('testCmd' => $testCmd);
-        exit();
+//        $logDir = $this->container->get('kernel')->getProjectDir();
+//        echo "logDir=$logDir <br>";
+//
+//        //$testFolderCwd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin";
+//        $testCmd = $logDir . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phpunit";
+//
+//        //$logDir = $logDir.DIRECTORY_SEPARATOR;
+//
+//        $testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
+//        $testCmd = "vendor/bin/phpunit -d memory_limit=-1";
+//
+//        if( $userServiceUtil->isWindows() ){
+//            //Windows
+//            $testCmd = "./vendor/bin/phpunit.bat";
+//        } else {
+//            //Linux
+//            $testCmd = "vendor/bin/phpunit.bat";
+//        }
+//
+//        echo "testCmd=$testCmd <br>";
+//
+//        //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
+//        $commandArr = array($testCmd);
+//        $commandArr = array($testCmd,'-d', 'memory_limit=-1');
+//
+//        $execTime = 6000;
+//        ini_set('max_execution_time', $execTime);
+//
+//        $envArr = array('HTTP' => 1);
+//
+//        $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
+//
+//        $process->run(function ($type, $buffer) {
+//            echo $buffer;
+////            if (Process::ERR === $type) {
+////                echo 'ERR > '.$buffer;
+////            } else {
+////                echo 'OUT > '.$buffer;
+////            }
+//        });
+//
+//        //return array('testCmd' => $testCmd);
+//        exit();
     }
     /**
      * http://127.0.0.1/order/directory/run-test-ajax?testFile=UserTest.php
@@ -261,6 +281,12 @@ class DefaultController extends OrderAbstractController
      * @Route("/run-test-ajax", name="employees_run_test_ajax", methods={"GET"}, options={"expose"=true})
      */
     public function runTestAjaxAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $result = "no testing";
 
@@ -277,7 +303,17 @@ class DefaultController extends OrderAbstractController
 
         //$testCmd = "HTTP=1  ./vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
-        $testCmd = "./vendor/bin/phpunit.bat";
+        //$testCmd = "./vendor/bin/phpunit.bat";
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        if( $userServiceUtil->isWindows() ){
+            //Windows
+            $testCmd = "./vendor/bin/phpunit.bat";
+        } else {
+            //Linux
+            $testCmd = "vendor/bin/phpunit.bat";
+        }
+
         //echo "testCmd=$testCmd <br>";
 
         //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
