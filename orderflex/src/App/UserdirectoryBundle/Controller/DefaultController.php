@@ -346,7 +346,7 @@ class DefaultController extends OrderAbstractController
 
         //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
 
-        $execTime = 6000;
+        $execTime = 600; //10 min
         ini_set('max_execution_time', $execTime);
 
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);

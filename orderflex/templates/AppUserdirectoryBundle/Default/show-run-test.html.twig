@@ -67,6 +67,11 @@
                 data: {testFile: testFile},
             }).done(function(data) {
                 //TODO: check for 'FAILURES!' and change color
+                if( data.indexOf("FAILURES!") >= 0 ) {
+                    data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
+                } else {
+                    data = '<div class="alert alert-success" role="alert">'+data+'</div>';
+                }
                 $('#result').append(data);
                 console.log("counter="+counter+", totalCount="+totalCount);
                 if( counter == totalCount ) {
