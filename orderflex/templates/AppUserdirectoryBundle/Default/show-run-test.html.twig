@@ -46,17 +46,18 @@
             var totalCount = filesArray.length;
 
             $('#message').text("Running "+totalCount+" tests. Please Wait ...");
-            var i = 0;
+            var counter = 1;
 
-            for(i = 0; i < totalCount; i++) {
+            for(let i = 0; i < totalCount; i++) {
                 //text += filesArray[i] + "<br>";
-                runTestingProcess(filesArray[i],i,totalCount);
+                runTestingProcess(filesArray[i],counter,totalCount);
+                counter++;
             }
 
         });
 
-        function runTestingProcess(testFile,count,totalCount) {
-            $('#message').text("Running "+count+" of "+totalCount+" tests. Please Wait ...");
+        function runTestingProcess(testFile,counter,totalCount) {
+            $('#message').text("Running "+counter+" of "+totalCount+" tests. Please Wait ...");
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
@@ -65,9 +66,10 @@
                 async: true,
                 data: {testFile: testFile},
             }).done(function(data) {
+                //TODO: check for 'FAILURES!' and change color
                 $('#result').append(data);
                 console.log("count="+count+", totalCount="+totalCount);
-                if( count == totalCount ) {
+                if( counter == totalCount ) {
                     $('#message').text("All "+totalCount+" tests are completed");
                 }
             }).fail(function() {
