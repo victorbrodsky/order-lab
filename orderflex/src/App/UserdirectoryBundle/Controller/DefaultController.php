@@ -173,9 +173,11 @@ class DefaultController extends OrderAbstractController
         if( $userServiceUtil->isWindows() ){
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
+            $envArr = array('HTTP' => 1);
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
+            $envArr = array();
         }
 
         echo "testCmd=$testCmd <br>";
@@ -186,8 +188,6 @@ class DefaultController extends OrderAbstractController
 
         $execTime = 6000;
         ini_set('max_execution_time', $execTime);
-
-        $envArr = array('HTTP' => 1);
 
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
@@ -309,9 +309,11 @@ class DefaultController extends OrderAbstractController
         if( $userServiceUtil->isWindows() ){
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
+            $envArr = array('HTTP' => 1);
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
+            $envArr = array();
         }
 
         //echo "testCmd=$testCmd <br>";
@@ -321,9 +323,7 @@ class DefaultController extends OrderAbstractController
 
         $execTime = 6000;
         ini_set('max_execution_time', $execTime);
-
-        $envArr = array('HTTP' => 1);
-
+        
         $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
 //        $process->run(function ($type, $buffer) {
