@@ -90,7 +90,7 @@
                 _testCompleted = _testCompleted + 1;
                 $('.completedCounter').text(_testCompleted);
                 //TODO: check for 'FAILURES!' and change color
-                if( data.indexOf("FAILURES!") >= 0 ) {
+                if( data.indexOf("FAILURES!") >= 0 || data.indexOf("ERRORS!") >= 0 ) {
                     data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
                     _testFailed = _testFailed + 1;
                     $('.failedTests').text(_testFailed);
