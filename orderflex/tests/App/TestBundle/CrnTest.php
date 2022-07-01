@@ -22,8 +22,8 @@ class CrnTest extends WebTestBase
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/critical-result-notifications/login');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
