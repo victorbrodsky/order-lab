@@ -23,7 +23,10 @@
 
 {% block content %}
 
-    {{ testFiles }}<br>
+    <div class="well">
+        Test Files: {{ testFiles }}
+    </div>
+    <br>
     <input type="hidden" id="testFiles" value="{{ testFiles }}" />
 
     {#<p><div class="totalTests">Total Tests</div></p>#}
@@ -65,7 +68,6 @@
             var counter = 1;
 
             for(let i = 0; i < totalCount; i++) {
-                //text += filesArray[i] + "<br>";
                 runTestingProcess(filesArray[i],counter,totalCount);
                 counter++;
             }
