@@ -164,6 +164,8 @@ class WebTestBase extends WebTestCase
     }
 
     public function getTestClient(array $options = array(), array $server = array()) {
+        //TODO: detect if HTTP or HTTPS used by url
+
         //To specify http channel run it as: HTTP=1 ./bin/phpunit
         //To specify https channel (default) run it as: ./bin/phpunit
         $channel = getenv('HTTP');
