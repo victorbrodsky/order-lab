@@ -182,7 +182,7 @@ class WebTestBase extends WebTestCase
         $scheme = $userUtil->getScheme();
         //exit("scheme=$scheme");
         if( $scheme ) {
-            if( $scheme = 'http' ) {
+            if( strtolower($scheme) == 'http' ) {
                 //echo "HTTP";
                 $httpsChannel = false;
             } else {
