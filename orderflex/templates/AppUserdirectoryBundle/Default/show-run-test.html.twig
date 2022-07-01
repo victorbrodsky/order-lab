@@ -38,6 +38,9 @@
 {% block additionaljs %}
 
     <script>
+
+        var _testCompleted = 0;
+
         $(document).ready(function () {
 
             var testFiles = $('#testFiles').val();
@@ -56,8 +59,9 @@
 
         });
 
-        function runTestingProcess(testFile,counter,totalCount) {
-            //$('#message').text("Running "+counter+" of "+totalCount+" tests. Please Wait ...");
+        function runTestingProcess(testFile,counter,totalCount)
+            var leftTest = totalCount - _testCompleted;
+            $('#message').text("Running "+leftTest+" of "+totalCount+" tests. Please Wait ...");
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
@@ -66,6 +70,7 @@
                 async: true,
                 data: {testFile: testFile},
             }).done(function(data) {
+                _testCompleted++;
                 //TODO: check for 'FAILURES!' and change color
                 if( data.indexOf("FAILURES!") >= 0 ) {
                     data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
