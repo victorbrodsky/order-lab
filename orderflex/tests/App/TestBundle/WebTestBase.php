@@ -80,7 +80,7 @@ class WebTestBase extends WebTestCase
     protected function setUp(): void {
 
         //$kernel = self::bootKernel();
-        
+
         //$this->testContainer = self::$container;
         $this->testContainer = $this->client->getContainer();
         //$this->testContainer = $kernel->getContainer();
@@ -178,7 +178,8 @@ class WebTestBase extends WebTestCase
             $httpsChannel = true;
         }
 
-        $userUtil = $this->testContainer->get('user_utility');
+        $client = static::createClient();
+        $userUtil = $this->client->getContainer()->get('user_utility');
         $scheme = $userUtil->getScheme();
         //exit("scheme=$scheme");
         if( $scheme ) {
