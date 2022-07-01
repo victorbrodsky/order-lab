@@ -178,19 +178,19 @@ class WebTestBase extends WebTestCase
             $httpsChannel = true;
         }
 
-        $client = static::createClient();
-        $userUtil = $client->getContainer()->get('user_utility');
-        $scheme = $userUtil->getScheme();
-        //exit("scheme=$scheme");
-        if( $scheme ) {
-            if( strtolower($scheme) == 'http' ) {
-                //echo "HTTP";
-                $httpsChannel = false;
-            } else {
-                //echo "HTTPS";
-                $httpsChannel = true;
-            }
-        }
+//        $client = static::createClient();
+//        $userUtil = $client->getContainer()->get('user_utility');
+//        $scheme = $userUtil->getScheme();
+//        //exit("scheme=$scheme");
+//        if( $scheme ) {
+//            if( strtolower($scheme) == 'http' ) {
+//                //echo "HTTP";
+//                $httpsChannel = false;
+//            } else {
+//                //echo "HTTPS";
+//                $httpsChannel = true;
+//            }
+//        }
 
         $client = static::createClient([], [
             'HTTP_HOST' => '127.0.0.1',
