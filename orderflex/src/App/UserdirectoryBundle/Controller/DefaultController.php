@@ -251,7 +251,7 @@ class DefaultController extends OrderAbstractController
             $testFilesStr = implode(",",$testFiles);
         }
 
-        $testFilesStr = "TrpTest.php";
+        //$testFilesStr = "TrpTest.php";
 
         //exit('111');
 
