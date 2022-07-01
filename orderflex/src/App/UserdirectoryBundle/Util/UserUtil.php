@@ -70,6 +70,9 @@ class UserUtil {
         $this->session = $session;
     }
 
+    public function getScheme() {
+        return $this->requestStack->getCurrentRequest()->getScheme();
+    }
 
     public function getUser() {
         return $this->security->getUser();
