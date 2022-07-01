@@ -26,11 +26,20 @@
     {{ testFiles }}<br>
     <input type="hidden" id="testFiles" value="{{ testFiles }}" />
 
+    {#<p><div class="totalTests">Total Tests</div></p>#}
+    {#<p>Completed tests <div class="completedCounter"></div></p>#}
+    <br>
+    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span></p>
+
     {#<code><pre>#}
     <div id="result"></div>
     {#</pre></code>#}
 
     <div id="message">Please Wait ...</div>
+
+    <br>
+    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span></p>
+    {#<p>Completed tests <span class="completedCounter">0</span></p>#}
 
 {% endblock %}
 
@@ -48,7 +57,10 @@
 
             var totalCount = filesArray.length;
 
-            $('#message').text("Running "+totalCount+" tests. Please Wait ...");
+            //$('#message').text("Running "+totalCount+" tests. Please Wait ...");
+            $('.totalTests').text(totalCount);
+            $('.completedCounter').text(_testCompleted);
+
             var counter = 1;
 
             for(let i = 0; i < totalCount; i++) {
@@ -59,9 +71,11 @@
 
         });
 
-        function runTestingProcess(testFile,counter,totalCount)
-            var leftTest = totalCount - _testCompleted;
-            $('#message').text("Running "+leftTest+" of "+totalCount+" tests. Please Wait ...");
+        function runTestingProcess(testFile,counter,totalCount) {
+            //var leftTest = totalCount - _testCompleted;
+            //$('#message').text("Running "+leftTest+" of "+totalCount+" tests. Please Wait ...");
+            //$('#message').text("Running "+totalCount+" tests (completed "+_testCompleted+" tests). Please Wait ...");
+
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
@@ -70,7 +84,6 @@
                 async: true,
                 data: {testFile: testFile},
             }).done(function(data) {
-                _testCompleted++;
                 //TODO: check for 'FAILURES!' and change color
                 if( data.indexOf("FAILURES!") >= 0 ) {
                     data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
@@ -78,15 +91,16 @@
                     data = '<div class="alert alert-success" role="alert">'+data+'</div>';
                 }
                 $('#result').append(data);
-                console.log("counter="+counter+", totalCount="+totalCount);
+                console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
                 if( counter == totalCount ) {
                     $('#message').text("All "+totalCount+" tests are completed");
                 }
             }).fail(function() {
                 $('#message').text("Error: test suite failed to start for "+testFile);
                 //$('#result').append("Error: test suite failed to start");
-            })
-            .always(function() {
+            }).always(function() {
+                _testCompleted = _testCompleted + 1;
+                $('.completedCounter').text(_testCompleted);
                 //$('#message').hide();
             });
         }
