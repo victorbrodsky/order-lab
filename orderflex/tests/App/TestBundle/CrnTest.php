@@ -16,7 +16,9 @@ class CrnTest extends WebTestBase
 
         $phpVersion = phpversion();
         echo "[Crn,PHP=".$phpVersion."]";
-        
+
+        $this->client->followRedirects();
+
         //$this->getTestClient();
         $crawler = $this->client->request('GET', '/critical-result-notifications/login');
 
