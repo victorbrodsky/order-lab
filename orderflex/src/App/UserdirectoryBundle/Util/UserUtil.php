@@ -71,7 +71,10 @@ class UserUtil {
     }
 
     public function getScheme() {
-        return $this->requestStack->getCurrentRequest()->getScheme();
+        if( $this->requestStack && $this->requestStack->getCurrentRequest() && $this->requestStack->getCurrentRequest()->getScheme() ) {
+            return $this->requestStack->getCurrentRequest()->getScheme();
+        }
+        return NULL;
     }
 
     public function getUser() {

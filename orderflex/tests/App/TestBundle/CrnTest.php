@@ -14,6 +14,10 @@ class CrnTest extends WebTestBase
 
     public function testLoginPageAction() {
 
+        //$userUtil = $this->testContainer->get('user_utility');
+        //$scheme = $userUtil->getScheme();
+        //exit("scheme=$scheme");
+
         $phpVersion = phpversion();
         echo "[Crn,PHP=".$phpVersion."]";
 
