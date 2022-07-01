@@ -80,12 +80,12 @@ class WebTestBase extends WebTestCase
     protected function setUp(): void {
 
         //$kernel = self::bootKernel();
-
-        $this->getTestClient();
-
+        
         //$this->testContainer = self::$container;
         $this->testContainer = $this->client->getContainer();
         //$this->testContainer = $kernel->getContainer();
+
+        $this->getTestClient();
 
         //$this->em = self::$container->get('doctrine.orm.entity_manager');
         //$this->em = $this->getService('doctrine.orm.entity_manager');
