@@ -231,9 +231,14 @@ class DefaultController extends OrderAbstractController
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $res = $emailUtil->sendInvoiceTestEmail();
-        echo $res;
-        return $res;
+        //echo $res;
 
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        $response->setContent($res);
+        return $response;
+
+        //return $res;
         //return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
