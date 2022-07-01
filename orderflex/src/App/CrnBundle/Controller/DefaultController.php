@@ -39,6 +39,11 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction(Request $request)
     {
+
+        //$userUtil = $this->container->get('user_utility');
+        //$scheme = $userUtil->getScheme();
+        //exit("scheme=$scheme");
+
         return array('sitename' => $this->getParameter('crn.sitename'));
     }
 

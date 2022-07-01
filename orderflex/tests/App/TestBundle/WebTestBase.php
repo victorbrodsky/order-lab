@@ -166,7 +166,7 @@ class WebTestBase extends WebTestCase
     public function getTestClient(array $options = array(), array $server = array()) {
         //TODO: detect if HTTP or HTTPS used by url
 
-        $userUtil = $this->testContainer->get('user_utility');
+        $userUtil = $this->container->get('user_utility');
         $scheme = $userUtil->getScheme();
         exit("scheme=$scheme");
 
