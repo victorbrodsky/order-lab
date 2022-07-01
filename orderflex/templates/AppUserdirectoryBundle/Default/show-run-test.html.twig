@@ -29,7 +29,7 @@
     {#<p><div class="totalTests">Total Tests</div></p>#}
     {#<p>Completed tests <div class="completedCounter"></div></p>#}
     <br>
-    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span></p>
+    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span></p>
 
     {#<code><pre>#}
     <div id="result"></div>
@@ -38,7 +38,7 @@
     <div id="message">Please Wait ...</div>
 
     <br>
-    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span></p>
+    <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span></p>
     {#<p>Completed tests <span class="completedCounter">0</span></p>#}
 
 {% endblock %}
@@ -49,6 +49,7 @@
     <script>
 
         var _testCompleted = 0;
+        var _testFailed = 0;
 
         $(document).ready(function () {
 
@@ -89,6 +90,8 @@
                 //TODO: check for 'FAILURES!' and change color
                 if( data.indexOf("FAILURES!") >= 0 ) {
                     data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
+                    _testFailed = _testFailed + 1;
+                    $('.failedTests').text(_testFailed);
                 } else {
                     data = '<div class="alert alert-success" role="alert">'+data+'</div>';
                 }
