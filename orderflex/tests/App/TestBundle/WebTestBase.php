@@ -179,7 +179,7 @@ class WebTestBase extends WebTestCase
         }
 
         $client = static::createClient();
-        $userUtil = $this->client->getContainer()->get('user_utility');
+        $userUtil = $client->getContainer()->get('user_utility');
         $scheme = $userUtil->getScheme();
         //exit("scheme=$scheme");
         if( $scheme ) {
