@@ -677,12 +677,13 @@ class TrpTest extends WebTestBase
 
     public function testNewRequestAction() {
 
-        if( $this->emptyDb ) {
+        $this->logIn();
+
+        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        if( count($projects) == 0 ) {
             echo "No projects found";
             return null;
         }
-
-        $this->logIn();
 
         $crawler = $this->client->request('GET', '/translational-research/work-request/new/');
         //$content = $this->client->getResponse()->getContent();
