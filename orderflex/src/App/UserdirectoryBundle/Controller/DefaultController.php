@@ -173,12 +173,12 @@ class DefaultController extends OrderAbstractController
         if( $userServiceUtil->isWindows() ){
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
-            $envArr = array('HTTP' => 1);
+            //$envArr = array('HTTP' => 1);
             $commandArr = array($testCmd,'-d', 'memory_limit=-1');
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
-            $envArr = array();
+            //$envArr = array();
             $commandArr = array($testCmd);
         }
 
@@ -264,7 +264,8 @@ class DefaultController extends OrderAbstractController
             $testFilesStr = implode(",",$testFiles);
         }
 
-        //$testFilesStr = "TrpTest.php";
+        //testing
+        $testFilesStr = "CalllogShortTest.php,UserTest.php"; //"TrpTest.php";
 
         //exit('111');
 
@@ -303,17 +304,32 @@ class DefaultController extends OrderAbstractController
         //$testCmd = "vendor/bin/phpunit -d memory_limit=-1";
         //$testCmd = "./vendor/bin/phpunit.bat";
 
+        $envArr = array();
+
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
             //Windows
             $testCmd = "./vendor/bin/phpunit.bat";
-            $envArr = array('HTTP' => 1);
+            //$envArr = array('HTTP' => 1);
             $commandArr = array($testCmd,'-d', 'memory_limit=-1',$testFilePath);
         } else {
             //Linux
             $testCmd = "vendor/bin/phpunit";
-            $envArr = array();
+            //$envArr = array();
             $commandArr = array($testCmd,$testFilePath);
+        }
+
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getScheme();
+        //exit("scheme=$scheme");
+        if( $scheme ) {
+            if( strtolower($scheme) == 'http' ) {
+                //echo "HTTP";
+                $envArr = array('HTTP' => 1);
+            } else {
+                //echo "HTTPS";
+                //$httpsChannel = true;
+            }
         }
 
         //echo "testCmd=$testCmd <br>";
