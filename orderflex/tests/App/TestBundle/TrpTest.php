@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TrpTest extends WebTestBase
 {
-    private $emptyDb = false;
 
     public function testHomeAction() {
 
@@ -114,7 +113,6 @@ class TrpTest extends WebTestBase
             $project = end($projects);
             $projectId = $project->getId();
         } else {
-            $this->emptyDb = true;
             echo "Skip testShowProjectApplication; There are no available projects found";
             return null;
         }

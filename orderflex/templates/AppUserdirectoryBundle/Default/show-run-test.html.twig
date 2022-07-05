@@ -38,7 +38,7 @@
     <div id="result"></div>
     {#</pre></code>#}
 
-    <div id="message">Please Wait ...</div>
+    <div id="message" class="alert alert-primary" role="alert">Please Wait ...</div>
 
     <br>
     <p>Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span></p>
@@ -101,9 +101,11 @@
                 console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
                 if( counter == totalCount ) {
                     $('#message').text("All "+totalCount+" tests are completed");
+                    $('#message').removeClass('alert-primary').addClass('alert-success');
                 }
             }).fail(function() {
                 $('#message').text("Error: test suite failed to start for "+testFile);
+                $('#message').removeClass('alert-primary').addClass('alert-danger');
                 //$('#result').append("Error: test suite failed to start");
             }).always(function() {
 //                $('.completedCounter').text(_testCompleted);
