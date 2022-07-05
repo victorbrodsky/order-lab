@@ -343,6 +343,26 @@ class DefaultController extends OrderAbstractController
         return $response;
     }
 
+    /**
+     * @Route("/dev-mode", name="employees_dev_mode", methods={"GET"})
+     */
+    public function runDevModeAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $baseUrl = $request->getBaseURL();
+        echo "baseUrl=$baseUrl <br>";
+        if( !str_contains($baseUrl, 'index_dev.php') ) {
+            $baseUrl = $baseUrl . '/index_dev.php';
+            return $this->redirect($baseUrl);
+        }
+        //exit();
+
+        return $this->redirect($baseUrl);
+    }
+
 //    /**
 //     * @Route("/", name="employees_home")
 //     * @Template("AppUserdirectoryBundle/Default/home.html.twig")

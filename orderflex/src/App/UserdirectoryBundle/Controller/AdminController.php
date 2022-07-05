@@ -312,7 +312,7 @@ class AdminController extends OrderAbstractController
      */
     public function updateSourceCodeAction(Request $request) {
         if(
-            false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')
+            false === $this->isGranted('ROLE_PLATFORM_ADMIN')
         ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -336,7 +336,7 @@ class AdminController extends OrderAbstractController
      * @Route("/update-system-source-composer/", name="user_update_system_source_composer")
      */
     public function updateComposerAction(Request $request) {
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -392,6 +392,16 @@ class AdminController extends OrderAbstractController
         return $updateres;
     }
     public function runDeployScript($update, $composer, $cache) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        if( $update || $composer ) {
+            if (false === $this->isGranted('ROLE_PLATFORM_ADMIN')) {
+                return $this->redirect($this->generateUrl('employees-nopermission'));
+            }
+        }
+
         $dirSep = DIRECTORY_SEPARATOR;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
