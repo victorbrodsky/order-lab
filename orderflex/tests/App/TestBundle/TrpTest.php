@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TrpTest extends WebTestBase
 {
+    private $emptyDb = false;
 
     public function testHomeAction() {
 
@@ -68,6 +69,7 @@ class TrpTest extends WebTestBase
 
         //link Review Project if exists
         if( $crawler->filter('html:contains("Review Project")')->count() > 0 ) {
+
             $link = $crawler->selectLink('Review Project')->link();
             $crawler = $this->client->click($link);
 
@@ -112,6 +114,7 @@ class TrpTest extends WebTestBase
             $project = end($projects);
             $projectId = $project->getId();
         } else {
+            $this->emptyDb = true;
             echo "Skip testShowProjectApplication; There are no available projects found";
             return null;
         }
@@ -673,7 +676,14 @@ class TrpTest extends WebTestBase
     }
 
     public function testNewRequestAction() {
+
+        if( $this->emptyDb ) {
+            echo "No projects found";
+            return null;
+        }
+
         $this->logIn();
+
         $crawler = $this->client->request('GET', '/translational-research/work-request/new/');
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
