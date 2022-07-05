@@ -487,35 +487,45 @@ class CalllogTest extends WebTestBase
         );
     }
 
-//    public function testNewEntryAction() {
-//        $this->logIn();
-//        //$this->client->followRedirects();
-//        $crawler = $this->client->request('GET', '/call-log-book/entry/new');
-//
-//        $content = $this->client->getResponse()->getContent();
-//        exit("content=$content");
-//
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("MRN Type:")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("DOB:")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Patient Info")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("No single patient is referenced by this entry or ")')->count()
-//        );
-//        $this->assertGreaterThan(
-//            0,
-//            $crawler->filter('html:contains("Find Patient")')->count()
-//        );
-//    }
+    public function testNewEntryAction() {
+        $this->logIn();
+
+        //check if there are any entries
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/call-log-book/');
+        $records = $crawler->filter('.calllog-patient-name');
+        if( count($records) == 0 ) {
+            echo "List is empty, records=".count($records);
+            return;
+        }
+
+        //$this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/call-log-book/entry/new');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("MRN Type:")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("DOB:")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Patient Info")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("No single patient is referenced by this entry or ")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Find Patient")')->count()
+        );
+    }
 
     public function testSiteSettingsAction() {
         $this->logIn();
