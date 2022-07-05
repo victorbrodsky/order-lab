@@ -20,6 +20,8 @@ class CreateUserCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         $application = new Application($kernel);
 
+        $this->logIn();
+
         $command = $application->find('cron:statustest');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
