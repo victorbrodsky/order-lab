@@ -112,7 +112,7 @@
                 }
                 $('#result').append(data);
                 console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
-                if( counter == totalCount ) {
+                if( _testCompleted == totalCount ) {
                     $('#message').text("All "+totalCount+" tests are completed");
                     $('#message').removeClass('alert-primary').addClass('alert-success');
                     $('.infomessage').removeClass('alert-primary').addClass('alert-success');
