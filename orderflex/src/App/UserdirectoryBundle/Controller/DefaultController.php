@@ -265,7 +265,7 @@ class DefaultController extends OrderAbstractController
         }
 
         //testing
-        $testFilesStr = "CalllogShortTest.php,UserTest.php"; //"TrpTest.php";
+        //$testFilesStr = "CalllogShortTest.php,UserTest.php"; //"TrpTest.php";
 
         //exit('111');
 
