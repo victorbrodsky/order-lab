@@ -497,7 +497,11 @@ class CalllogTest extends WebTestBase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("New Entry")')->count()
+            $crawler->filter('html:contains("MRN Type:")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("DOB:")')->count()
         );
         $this->assertGreaterThan(
             0,
