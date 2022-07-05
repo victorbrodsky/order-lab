@@ -351,6 +351,10 @@ class EmailUtil {
         $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
+        $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        echo '$fromEmail='.$fromEmail."<br>";
+        echo '$username='.$username.'; $password='.$password.'; $port='.$port.'; $host='.$host."<br>";
+
         //MAILER_DSN=smtp://****:****@smtp.office365.com:587?timeout=60
         $timeoutStr = "";
         $timeoutStr = "?timeout=60"; //timeout in seconds
