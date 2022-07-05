@@ -490,10 +490,10 @@ class CalllogTest extends WebTestBase
     public function testNewEntryAction() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/call-log-book/entry/new');
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("New Entry")')->count()
-        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("New Entry")')->count()
+//        );
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Patient Info")')->count()
