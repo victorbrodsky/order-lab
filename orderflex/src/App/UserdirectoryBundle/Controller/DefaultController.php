@@ -182,6 +182,19 @@ class DefaultController extends OrderAbstractController
             $commandArr = array($testCmd);
         }
 
+        $userUtil = $this->container->get('user_utility');
+        $scheme = $userUtil->getScheme();
+        //exit("scheme=$scheme");
+        if( $scheme ) {
+            if( strtolower($scheme) == 'http' ) {
+                //echo "HTTP";
+                $envArr = array('HTTP' => 1);
+            } else {
+                //echo "HTTPS";
+                //$httpsChannel = true;
+            }
+        }
+
         echo "testCmd=$testCmd <br>";
 
         //array $command, string $cwd = null, array $env = null, mixed $input = null, ?float $timeout = 60
@@ -353,12 +366,17 @@ class DefaultController extends OrderAbstractController
         }
 
         $baseUrl = $request->getBaseURL();
-        echo "baseUrl=$baseUrl <br>";
+        //echo "baseUrl=$baseUrl <br>";
         if( !str_contains($baseUrl, 'index_dev.php') ) {
             $baseUrl = $baseUrl . '/index_dev.php';
             return $this->redirect($baseUrl);
         }
         //exit();
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            "You are already in the development mode"
+        );
 
         return $this->redirect($baseUrl);
     }
