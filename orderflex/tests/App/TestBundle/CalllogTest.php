@@ -489,11 +489,11 @@ class CalllogTest extends WebTestBase
 
     public function testNewEntryAction() {
         $this->logIn();
-        $this->client->followRedirects();
+        //$this->client->followRedirects();
         $crawler = $this->client->request('GET', '/call-log-book/entry/new');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
