@@ -72,6 +72,15 @@ class CrnTest extends WebTestBase
 
         $this->logIn();
 
+        //check if there are any entries
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/critical-result-notifications/');
+        $records = $crawler->filter('.crn-patient-name');
+        if( count($records) == 0 ) {
+            echo "List is empty, records=".count($records);
+            return;
+        }
+
         $mapper = array(
             'entityName' => 'Message',
             'entityNamespace' => 'App\OrderformBundle\Entity',
@@ -526,6 +535,16 @@ class CrnTest extends WebTestBase
 
     public function testNewEntryAction() {
         $this->logIn();
+
+        //check if there are any entries
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/critical-result-notifications/');
+        $records = $crawler->filter('.crn-patient-name');
+        if( count($records) == 0 ) {
+            echo "List is empty, records=".count($records);
+            return;
+        }
+
         $crawler = $this->client->request('GET', '/critical-result-notifications/entry/new');
         $this->assertGreaterThan(
             0,
