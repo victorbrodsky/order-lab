@@ -492,8 +492,8 @@ class CalllogTest extends WebTestBase
         //$this->client->followRedirects();
         $crawler = $this->client->request('GET', '/call-log-book/entry/new');
 
-        //$content = $this->client->getResponse()->getContent();
-        //exit("content=$content");
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
 
         $this->assertGreaterThan(
             0,
