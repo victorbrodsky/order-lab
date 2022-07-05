@@ -167,6 +167,11 @@ class CalllogTest extends WebTestBase
         }
 
         //Test view data
+        $records = $crawler->filter('.calllog-patient-name');
+        if( count($records) == 0 ) {
+            echo "list is empty, records=".count($records);
+            return;
+        }
 
         $links = $crawler->filter('.calllog_entry_view_link');
         $this->assertGreaterThan(
@@ -215,7 +220,7 @@ class CalllogTest extends WebTestBase
 //        }
 //        exit('exit333');
 
-        $records = $crawler->filter('.calllog-patient-name');
+        //$records = $crawler->filter('.calllog-patient-name');
         //echo "records count=".count($records)."<br>";
         foreach( $records as $record ) {
             //var_dump($record);
