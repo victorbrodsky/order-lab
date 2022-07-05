@@ -66,6 +66,15 @@ class CalllogTest extends WebTestBase
 
         $this->logIn();
 
+        //check if there are any entries
+        $this->client->followRedirects();
+        $crawler = $this->client->request('GET', '/call-log-book/');
+        $records = $crawler->filter('.calllog-patient-name');
+        if( count($records) == 0 ) {
+            echo "list is empty, records=".count($records);
+            return;
+        }
+
         $mapper = array(
             'entityName' => 'Message',
             'entityNamespace' => 'App\OrderformBundle\Entity',
