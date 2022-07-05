@@ -33,22 +33,28 @@
     {#<p>Completed tests <div class="completedCounter"></div></p>#}
     <br>
     <div class="infomessage alert alert-primary" role="alert">
-        {#<p>#}
+        <p id="pleasewait">
+            Please wait ...
+        </p>
+        <p>
             Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>
-        {#</p>#}
+        </p>
     </div>
 
     {#<code><pre>#}
     <div id="result"></div>
     {#</pre></code>#}
 
-    <div id="message" class="alert alert-primary" role="alert">Please Wait ...</div>
+    {#<div id="message" class="alert alert-primary" role="alert">Please Wait ...</div>#}
 
     <br>
     <div class="infomessage alert alert-primary" role="alert">
-        {#<p>#}
+        <p id="pleasewait">
+            Please wait ...
+        </p>
+        <p>
             Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>
-        {#</p>#}
+        </p>
     </div>
 
 {% endblock %}
@@ -110,6 +116,7 @@
                     $('#message').text("All "+totalCount+" tests are completed");
                     $('#message').removeClass('alert-primary').addClass('alert-success');
                     $('.infomessage').removeClass('alert-primary').addClass('alert-success');
+                    $('#pleasewait').remove();
                 }
             }).fail(function() {
                 $('#message').text("Error: test suite failed to start for "+testFile);
