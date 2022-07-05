@@ -19,9 +19,17 @@ class CreateUserCommandTest extends KernelTestCase
     public function testExecute()
     {
         $kernel = self::bootKernel();
-        $application = new Application($kernel);
+        $container = static::getContainer();
 
         //check if mailer is set
+        $userSecUtil = $container->get('user_security_utility');
+        $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        if( !$fromEmail ) {
+            echo "Email is not set";
+            return;
+        }
+
+        $application = new Application($kernel);
 
 
         $command = $application->find('cron:statustest');

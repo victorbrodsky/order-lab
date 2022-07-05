@@ -791,7 +791,7 @@ class UserServiceUtil {
 
             "maxIdleTime" => "30",
             "environment" => "dev",
-            "siteEmail" => "email@email.com",
+            "siteEmail" => "", //"email@email.com",
             "loginInstruction" => 'Please use your <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a> to log in.',
             "remoteAccessUrl" => "https://its.weill.cornell.edu/services/wifi-networks/remote-access",
             
