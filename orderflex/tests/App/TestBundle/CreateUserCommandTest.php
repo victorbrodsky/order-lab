@@ -23,10 +23,16 @@ class CreateUserCommandTest extends KernelTestCase
 
         //check if mailer is set
         $userSecUtil = $container->get('user_security_utility');
-        $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        if( !$fromEmail ) {
-            echo "Email is not set";
-            return;
+        $mailerAuthMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
+        if( $mailerAuthMode ) {
+            if( !$userSecUtil->getSiteSettingParameter('mailerUser') ) {
+                echo "Email user is not set";
+                return;
+            }
+            if( !$userSecUtil->getSiteSettingParameter('mailerPassword') ) {
+                echo "Email password is not set";
+                return;
+            }
         }
 
         $application = new Application($kernel);
