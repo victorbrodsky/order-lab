@@ -71,7 +71,7 @@ class CalllogTest extends WebTestBase
         $crawler = $this->client->request('GET', '/call-log-book/');
         $records = $crawler->filter('.calllog-patient-name');
         if( count($records) == 0 ) {
-            echo "list is empty, records=".count($records);
+            echo "List is empty, records=".count($records);
             return;
         }
 
@@ -178,7 +178,7 @@ class CalllogTest extends WebTestBase
         //Test view data
         $records = $crawler->filter('.calllog-patient-name');
         if( count($records) == 0 ) {
-            echo "list is empty, records=".count($records);
+            echo "List is empty, records=".count($records);
             return;
         }
 
