@@ -283,7 +283,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $execTime = 6000;
+        $execTime = 6000; //sec 10 min
         ini_set('max_execution_time', $execTime);
 
         //$userServiceUtil = $this->container->get('user_service_utility');
