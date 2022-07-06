@@ -115,8 +115,14 @@
                 if( _testCompleted == totalCount ) {
 //                    $('#message').text("All "+totalCount+" tests are completed");
 //                    $('#message').removeClass('alert-primary').addClass('alert-success');
-                    $('.infomessage').removeClass('alert-primary').addClass('alert-success');
-                    $('#pleasewait').text('All tests has been successfully completed');
+                    if( _testFailed == 0 ) {
+                        $('.infomessage').removeClass('alert-primary').addClass('alert-success');
+                        $('#pleasewait').text('All tests has been successfully completed');
+                    } else {
+                        $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
+                        $('#pleasewait').text("All tests has been completed with "+_testFailed + ' test(s) failed');
+                    }
+
                 }
             }).fail(function() {
 //                $('#message').text("Error: test suite failed to start for "+testFile);
