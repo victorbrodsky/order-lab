@@ -95,7 +95,7 @@
             var url = Routing.generate('employees_run_test_ajax');
             $.ajax({
                 url: url,
-                timeout: 6000,
+                timeout: 600000, //in milliseconds. sets timeout to 10 minutes
                 dataType: 'json',
                 async: true,
                 data: {testFile: testFile},
