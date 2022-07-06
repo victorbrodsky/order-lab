@@ -2595,12 +2595,35 @@ class TransResRequestUtil
 
         $filterTypes = array();
 
+        //modify to be auto specialty
+        // $this->security->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
+        $adminOrReviewerAllow = false;
+        $executiveAllow = false;
+        $billingadminAllow = false;
+        $userSpecialties = $transresUtil->getTransResProjectSpecialties();
+        foreach($userSpecialties as $userSpecialty) {
+            //echo "userSpecialty=$userSpecialty <br>";
+            $specialtyStr = $userSpecialty->getUppercaseName();
+            //echo "specialtyStr=$specialtyStr <br>";
+            if( $transresUtil->isAdminOrPrimaryReviewer(null,$userSpecialty) ) {
+                $adminOrReviewerAllow = true;
+            }
+            if( $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_'.$specialtyStr) ) {
+                $executiveAllow = true;
+            }
+            if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+                $billingadminAllow = true;
+            }
+        }
+
+
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+            //$transresUtil->isAdminOrPrimaryReviewer() ||
+            $adminOrReviewerAllow || $executiveAllow || $billingadminAllow
+            //$this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            //$this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+            //$this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+            //$this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
         ) {
             $elements = array(
                 "All my outstanding invoices",

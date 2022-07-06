@@ -84,6 +84,7 @@ class InvoiceController extends OrderAbstractController
         $dql->leftJoin('invoice.transresRequest', 'transresRequest');
         $dql->leftJoin('invoice.principalInvestigator', 'principalInvestigator');
         $dql->leftJoin('invoice.billingContact', 'billingContact');
+        $dql->leftJoin('transresRequest.project', 'project');
 
         $dqlParameters = array();
 
@@ -480,6 +481,9 @@ class InvoiceController extends OrderAbstractController
         }
         ////// EOF create filter //////////
 
+        //get logged in user specialties
+        $userSpecialties = $transresUtil->getTransResProjectSpecialties();
+
         //echo "filterTitle=$filterTitle, invoicetype=$invoicetype <br>";
         $onlyForAdmin = false;
         if ($invoicetype && strpos(strtolower($invoicetype), 'all') !== false) {
@@ -492,13 +496,32 @@ class InvoiceController extends OrderAbstractController
             }
         }
         if ($onlyForAdmin) {
+
+            //modify to be auto specialty
+            $adminOrReviewerAllow = false;
+            $executiveAllow = false;
+            $billingadminAllow = false;
+            foreach($userSpecialties as $userSpecialty) {
+                $specialtyStr = $userSpecialty->getUppercaseName();
+                if( $transresUtil->isAdminOrPrimaryReviewer(null,$userSpecialty) ) {
+                    $adminOrReviewerAllow = true;
+                }
+                if( $this->isGranted('ROLE_TRANSRES_EXECUTIVE_'.$specialtyStr) ) {
+                    $executiveAllow = true;
+                }
+                if( $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+                    $billingadminAllow = true;
+                }
+            }
+
             if (
-                $transresUtil->isAdminOrPrimaryReviewer() ||
-                $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
-                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-                $this->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+                $adminOrReviewerAllow || $executiveAllow || $billingadminAllow
+                //$transresUtil->isAdminOrPrimaryReviewer() ||
+                //$this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+                //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+                //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+                //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+                //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
             ) {
                 //show
             } else {
@@ -687,7 +710,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         if ($irbNumber) {
-            $dql->leftJoin('transresRequest.project', 'project');
+            //$dql->leftJoin('transresRequest.project', 'project');
             $dql->andWhere("project.irbNumber LIKE :irbNumber OR project.iacucNumber LIKE :irbNumber");
             $dqlParameters["irbNumber"] = "%" . $irbNumber . "%";
             $advancedFilter++;
@@ -695,7 +718,7 @@ class InvoiceController extends OrderAbstractController
 
         if ($priceList) {
             if ($priceList != 'all') {
-                $dql->leftJoin('transresRequest.project', 'project');
+                //$dql->leftJoin('transresRequest.project', 'project');
                 $dql->leftJoin('project.priceList', 'priceList');
                 if( $priceList == 'external' ) {
                 //if ($priceList == 'default') {
@@ -705,6 +728,28 @@ class InvoiceController extends OrderAbstractController
                     $dqlParameters["priceListId"] = $priceList;
                 }
                 $advancedFilter++;
+            }
+        }
+
+        //if not ROLE_PLATFORM_ADMIN and ROLE_PLATFORM_DEPUTY_ADMIN => filter by specialty
+        if( !$this->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+            if(
+                $this->isGranted('ROLE_TRANSRES_ADMIN') ||
+                $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+                $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ||
+                $this->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
+                $this->isGranted('ROLE_TRANSRES_EXECUTIVE')
+            ) {
+                $projectSpecialtyIds = array();
+                foreach ($userSpecialties as $userSpecialty) {
+                    $projectSpecialtyIds[] = $userSpecialty->getId();
+                }
+                if (count($projectSpecialtyIds) > 0) {
+                    //$dql->leftJoin('project.projectSpecialty', 'projectSpecialty');
+                    //$dql->leftJoin('transresRequest.project', 'project');
+                    $dql->andWhere("project.projectSpecialty IN (:projectSpecialties)");
+                    $dqlParameters["projectSpecialties"] = $projectSpecialtyIds;
+                }
             }
         }
 

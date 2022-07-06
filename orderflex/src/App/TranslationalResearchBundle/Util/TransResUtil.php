@@ -532,8 +532,8 @@ class TransResUtil
 
         return false;
     }
-    public function isAdminOrPrimaryReviewer( $project=null ) { //$projectSpecialty=null
-        $projectSpecialty = null;
+    public function isAdminOrPrimaryReviewer( $project=null, $projectSpecialty=null ) { //$projectSpecialty=null
+        //$projectSpecialty = null;
         $specialtyStr = null;
         if( $project ) {
             $projectSpecialty = $project->getProjectSpecialty();
@@ -655,27 +655,27 @@ class TransResUtil
 
         return false;
     }
-    public function isAdminOrPrimaryReviewerOrExecutive_ORIG( $project=null ) {
-        //TODO: implement check only if user is admin, executive for the project specialty
-        //TODO: or user is a primary (final) reviewer of this particular project
-        if(
-            $this->security->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
-            $this->security->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
-            $this->security->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
-            $this->security->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
-            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
-            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
-            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
-            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
-            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
-        ) {
-            return true;
-        }
-        return false;
-    }
+//    public function isAdminOrPrimaryReviewerOrExecutive_ORIG( $project=null ) {
+//        //TODO: implement check only if user is admin, executive for the project specialty
+//        //TODO: or user is a primary (final) reviewer of this particular project
+//        if(
+//            $this->security->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
+//            $this->security->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+//            $this->security->isGranted('ROLE_TRANSRES_ADMIN_COVID19') ||
+//            $this->security->isGranted('ROLE_TRANSRES_ADMIN_MISI') ||
+//            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
+//            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
+//            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_COVID19') ||
+//            $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_MISI') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
+//            $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
+//        ) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     //check if user:
     //listed as PIs or Billing contacts or
