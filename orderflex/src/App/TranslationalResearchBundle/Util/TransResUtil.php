@@ -3210,9 +3210,9 @@ class TransResUtil
 
             //testing
             $logger = $this->container->get('logger');
-            $logger->notice('emailRecipients:'.implode(", ",$emailRecipients));
-            $logger->notice('adminsCcs:'.implode(", ",$adminsCcs));
-            $logger->notice('senderEmail:'.$senderEmail);
+            $logger->notice('emailRecipients:['.implode("|",$emailRecipients).']');
+            $logger->notice('adminsCcs:['.implode("|",$adminsCcs).']');
+            $logger->notice('senderEmail:['.$senderEmail.']');
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
