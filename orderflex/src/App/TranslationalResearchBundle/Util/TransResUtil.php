@@ -3208,6 +3208,12 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            //testing
+            $logger = $this->container->get('logger');
+            $logger->note('emailRecipients:'.implode(", ",$emailRecipients));
+            $logger->note('adminsCcs:'.implode(", ",$adminsCcs));
+            $logger->note('senderEmail:'.$senderEmail);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
