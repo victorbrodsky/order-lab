@@ -164,6 +164,7 @@ function fieldInputMask( holder ) {
         "mask": "[n]", "repeat": 50, "greedy": false
     });
 
+    //console.log("masking.js: email-mask");
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
     $('.digit-mask-seven').inputmask("mask", {

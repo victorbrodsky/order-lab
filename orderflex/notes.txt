@@ -1290,3 +1290,4 @@ Error:
 https://view.med.cornell.edu/translational-research/approve-project/3705
 TransResUtil.php(3212) -> EmailUtil.php(277) ->
 Expected response code "250/251/252" but got code "501", with message "501 5.1.3 Invalid address"
+email contained ','

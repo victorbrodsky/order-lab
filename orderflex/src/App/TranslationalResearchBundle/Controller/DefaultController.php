@@ -208,6 +208,13 @@ class DefaultController extends OrderAbstractController
         //$user = $secTokenStorage->getToken()->getUser();
         //exit('$user='.$user);
 
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        $subject = $body = 'Test email';
+//        $emailRecipients = array('cinava@yahoo.com,',' cinava@yahoo.com ','oli2002@med.cornell.edu, ','oli2002@med.cornell.edu,');
+//        $adminsCcs = 'oli2002@med.cornell.edu,cinava@yahoo.com, ,,';
+//        $senderEmail = 'oli2002@med.cornell.edu';
+//        $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+        
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 

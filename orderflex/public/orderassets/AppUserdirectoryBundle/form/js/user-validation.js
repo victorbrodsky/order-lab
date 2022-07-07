@@ -30,7 +30,7 @@ function validateUser(btnEl,origuserid) {
     if( typeof origuserid != "undefined" && origuserid != "" ) {
         var actionFlag = 'update';
     }
-    //console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
+    console.log("actionFlag="+actionFlag+", origuserid="+origuserid);
 
     removeAllErrorAlerts();
 
@@ -48,6 +48,16 @@ function validateUser(btnEl,origuserid) {
     
     var preferredEmail = $('.user-email').val(); 
     preferredEmail = trimWithCheck(preferredEmail);
+
+    if( userdirectoryValidateEmail(preferredEmail) == false ) {
+        $('#userinfo').collapse('show');
+        addErrorAlert("Preferred Email is not valid");
+        $('.user-keytype-field').parent().addClass("has-error");
+        lbtn.stop();
+        //console.log('Validation error preferredEmail='+preferredEmail);
+        return false;
+    }
+    //console.log('Validation ok preferredEmail='+preferredEmail);
 
     if( userType == "" ) {
         $('#userinfo').collapse('show');
@@ -193,6 +203,20 @@ function validateUser(btnEl,origuserid) {
     //return false; //testing
     $("#user-profile-form").submit();
 }
+
+function userdirectoryValidateEmail(inputText)
+{
+    //console.log('Validation inputText='+inputText);
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(inputText.match(mailformat))
+    {
+        //alert("Valid email address!");
+        //document.form1.text1.focus();
+        return true;
+    }
+    return false;
+}
+
 
 function getUserUrl(userid,username) {
     var dataholder = document.querySelector('#form-prototype-data');

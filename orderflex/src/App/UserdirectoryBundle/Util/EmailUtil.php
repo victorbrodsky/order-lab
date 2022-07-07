@@ -483,22 +483,16 @@ class EmailUtil {
         return $cleanEmailsArr;
     }
 
-    public function cleanEmail($emails) {
-        if( $emails ) {
-            $emails = trim((string)$emails);
-            $emails = str_replace(" ", "", $emails);
-            $emails = str_replace(",,,", ",", $emails);
-            $emails = str_replace(",,", ",", $emails);
+    public function cleanEmail($email) {
+        if( $email ) {
+            $email = trim((string)$email);
+            $email = str_replace(" ", "", $email);
+            $email = str_replace(",,,", ",", $email);
+            $email = str_replace(",,", ",", $email);
+            $email = str_replace(",", "", $email);
         }
 
-//        //remove duplicates
-//        if( $emails && str_contains($emails, ',') ) {
-//            $emailsArr = explode(',', $emails);
-//            $emailsArr = array_unique($emailsArr);
-//            $emails = implode(',',$emailsArr);
-//        }
-
-        return $emails;
+        return $email;
     }
 
     //$inputEmails:     array(e1,e5)
