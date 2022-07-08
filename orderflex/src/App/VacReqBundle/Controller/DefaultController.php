@@ -663,7 +663,7 @@ class DefaultController extends OrderAbstractController
             }
 
             if( $bStatusChanged || $vStatusChanged ) {
-                //$em->flush();
+                $em->flush();
                 $event = "Changed old pending status request ID#".$vacreqRequest->getId()."; Submitted=".
                     $vacreqRequest->getCreateDate()->format('m-d-Y').
                     "; ".
@@ -673,7 +673,7 @@ class DefaultController extends OrderAbstractController
                 echo $event."<br>";
 
                 $eventType = "Business/Vacation Request Updated";
-                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$vacreqRequest,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$vacreqRequest,$request,$eventType);
             }
 
             echo "<br>";
