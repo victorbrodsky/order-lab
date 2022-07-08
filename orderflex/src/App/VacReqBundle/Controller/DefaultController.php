@@ -590,10 +590,13 @@ class DefaultController extends OrderAbstractController
 
         //exit('Not allowed.');
 
-        $vacreqUtil = $this->container->get('vacreq_util');
+        $user = $this->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $params = array();
+        $changeStatusTo = 'rejected';
 
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
@@ -620,22 +623,60 @@ class DefaultController extends OrderAbstractController
         $requests = $query->getResult();
         echo "requests=".count($requests)."<br>";
 
-        foreach($requests as $request) {
+        foreach($requests as $vacreqRequest) {
 
-            $bStatus = "N/A";
-            $vStatus = "N/A";
+            $bStatusChanged = false;
+            $vStatusChanged = false;
 
-            if( $request->hasBusinessRequest() ) {
-                $subRequest = $request->getRequestBusiness();
-                $bStatus = $subRequest->getStatus();
+            $bRequest = NULL;
+            $vRequest = NULL;
+
+            $bOriginalStatus = "N/A";
+            $vOriginalStatus = "N/A";
+
+            $bNewStatus = "N/A";
+            $vNewStatus = "N/A";
+
+            if( $vacreqRequest->hasBusinessRequest() ) {
+                $bRequest = $vacreqRequest->getRequestBusiness();
+                $bOriginalStatus = $bRequest->getStatus();
             }
 
-            if( $request->hasVacationRequest() ) {
-                $subRequest = $request->getRequestVacation();
-                $vStatus = $subRequest->getStatus();
+            if( $vacreqRequest->hasVacationRequest() ) {
+                $vRequest = $vacreqRequest->getRequestVacation();
+                $vOriginalStatus = $vRequest->getStatus();
             }
 
-            echo $request->getId()."; Submitted=".$request->getCreateDate()->format('m-d-Y')."; bStatus=".$bStatus." vStatus=".$vStatus."<br>";
+            echo $vacreqRequest->getId()."; Submitted=".
+                $vacreqRequest->getCreateDate()->format('m-d-Y').
+                "; bStatus=".$bOriginalStatus." vStatus=".$vOriginalStatus."<br>";
+
+            if( $bOriginalStatus == 'pending' ) {
+                $bRequest->setStatus($changeStatusTo);
+                $bNewStatus = $bRequest->getStatus();
+                $bStatusChanged = true;
+            }
+            if( $vOriginalStatus == 'pending' ) {
+                $vRequest->setStatus($changeStatusTo);
+                $vNewStatus = $vRequest->getStatus();
+                $vStatusChanged = true;
+            }
+
+            if( $bStatusChanged || $vStatusChanged ) {
+                //$em->flush();
+                $event = "Changed old pending status request ID#".$vacreqRequest->getId()."; Submitted=".
+                    $vacreqRequest->getCreateDate()->format('m-d-Y').
+                    "; ".
+                    "bStatus: ".$bOriginalStatus." to ".$bNewStatus.
+                    "; ".
+                    "vStatus:".$vOriginalStatus." to ".$vNewStatus;
+                echo $event."<br>";
+
+                $eventType = "Business/Vacation Request Updated";
+                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$vacreqRequest,$request,$eventType);
+            }
+
+            echo "<br>";
         }
 
         exit('EOF cancelOldPendingRequestsAction');
