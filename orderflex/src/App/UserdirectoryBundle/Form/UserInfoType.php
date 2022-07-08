@@ -61,7 +61,7 @@ class UserInfoType extends AbstractType
         $builder->add('email', EmailType::class, array(
             'label' => 'Preferred Email:',
             'required' => true,
-            'attr' => array('class'=>'form-control user-email')
+            'attr' => array('class'=>'form-control user-email') //email-mask
         ));
         $builder->add('displayName', null, array(
             'label' => 'Preferred Full Name for Display:',
@@ -69,7 +69,7 @@ class UserInfoType extends AbstractType
         ));
         $builder->add('preferredPhone', null, array(
             'label' => 'Preferred Phone Number:',
-            'attr' => array('class'=>'form-control phone-mask email-mask')
+            'attr' => array('class'=>'form-control phone-mask')
         ));
         $builder->add('preferredMobilePhone', null, array(
             'label' => 'Preferred Mobile Phone Number (E. 164 format: +11234567890):',

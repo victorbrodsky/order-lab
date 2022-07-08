@@ -576,4 +576,68 @@ class DefaultController extends OrderAbstractController
         exit('EOF diffCarryOverDaysAction');
     }
 
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-requests
+     *
+     * @Route("/cancel-old-pending-requests", name="vacreq_cancel-old-pending-requests")
+     */
+    public function cancelOldPendingRequestsAction( Request $request )
+    {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //exit('Not allowed.');
+
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array();
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->select('request');
+        
+        $dql->leftJoin("request.requestBusiness", "requestBusiness");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+
+        $dql->where("(requestBusiness IS NOT NULL OR requestVacation IS NOT NULL)");
+
+        $dql->andWhere("(requestBusiness.status = :status OR requestVacation.status = :status)");
+        $params['status'] = 'pending';
+
+        $dql->andWhere("request.createDate < :maxCreateDate");
+        $params['maxCreateDate'] = '2019-01-01';
+
+        $query = $em->createQuery($dql);
+
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
+
+        $requests = $query->getResult();
+        echo "requests=".count($requests)."<br>";
+
+        foreach($requests as $request) {
+
+            $bStatus = "N/A";
+            $vStatus = "N/A";
+
+            if( $request->hasBusinessRequest() ) {
+                $subRequest = $request->getRequestBusiness();
+                $bStatus = $subRequest->getStatus();
+            }
+
+            if( $request->hasVacationRequest() ) {
+                $subRequest = $request->getRequestVacation();
+                $vStatus = $subRequest->getStatus();
+            }
+
+            echo $request->getId()."; Submitted=".$request->getCreateDate()->format('m-d-Y')."; bStatus=".$bStatus." vStatus=".$vStatus."<br>";
+        }
+
+        exit('EOF cancelOldPendingRequestsAction');
+    }
 }
