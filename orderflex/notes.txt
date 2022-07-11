@@ -1291,3 +1291,10 @@ https://view.med.cornell.edu/translational-research/approve-project/3705
 TransResUtil.php(3212) -> EmailUtil.php(277) ->
 Expected response code "250/251/252" but got code "501", with message "501 5.1.3 Invalid address"
 email contained ','
+
+call-log-book/event-log/event-log-per-user-per-event-type/?
+filter[eventType][0]=82&filter[objectType][0]=10&filter[user][0]=8863
+=> $filter = $request->query->get('filter'); replaced by just $filter = $request->get('filter');
+https://symfony.com/doc/current/components/http_foundation.html
+TODO: replace all $request->query->get() by $request->get() or by $filter = $request->query->all('filter');?
+

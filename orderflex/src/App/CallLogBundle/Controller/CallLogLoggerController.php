@@ -133,7 +133,17 @@ class CallLogLoggerController extends LoggerController
         $eventTypes = array();
         $users = array();
 
-        $filter = $request->query->get('filter');
+        //dump($request->query);
+        //dump($request->get('filter'));
+        //exit('111');
+
+//        $filter = array();
+//        if( $request->query->has('filter') ) {
+//            $filter = $request->query->get('filter');
+//        }
+        //$filter = $request->query->get('filter');
+        //$filter = $request->get('filter');
+        $filter = $request->query->all('filter');
 
         if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];
