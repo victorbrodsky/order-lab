@@ -864,10 +864,10 @@ class FellAppImportPopulateUtil {
 
     //create a temporary copy of spreadsheet file if filename has '.'
     //Spreadsheets\1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18
-    function createTempSpreadsheetCopy($inputFileName) {
+    function createTempSpreadsheetCopy($inputFileName, $forceCreateCopy=false) {
         $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
         //echo "extension=".$extension."<br>";
-        if( $extension || strlen($extension) > 7 ) {
+        if( $forceCreateCopy || $extension || strlen($extension) > 7 ) {
             //copy('foo/test.php', 'bar/test.php');
 
             $inputFileNameNew = str_replace('.','_',$inputFileName);
@@ -944,7 +944,9 @@ class FellAppImportPopulateUtil {
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
             //echo "extension=".$extension."<br>";
-            if( true || $extension || strlen($extension) > 9 ) {
+            $forceCreateCopy = true;
+            //$forceCreateCopy = false;
+            if( $forceCreateCopy || $extension || strlen($extension) > 9 ) {
                 //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -958,7 +960,7 @@ class FellAppImportPopulateUtil {
 
                 //$inputFileNameOrig = $inputFileName;
 
-                $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName);
+                $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName,$forceCreateCopy);
                 if( !$inputFileNameNew ) {
                     $errorSubject = "Can not create temp file for the source spreadsheet";
                     $errorEvent = $errorSubject . ". Filename=" .
