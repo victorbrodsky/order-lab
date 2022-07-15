@@ -984,9 +984,10 @@ class FellAppImportPopulateUtil {
                 //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
                 ////$inputFileType = 'Csv';
                 //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-                //$objPHPExcel = $objReader->load($inputFileName);
 
-                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+                $objPHPExcel = $objReader->load($inputFileName);
+
             }
 
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
