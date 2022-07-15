@@ -979,7 +979,10 @@ class FellAppImportPopulateUtil {
 
             } else {
                 $logger->warning("Before identify input file type: inputFileName=[".$inputFileName."]");
-                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                //IOFactory::identify filename='1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q':
+                //Error: Unable to identify a reader for this file with code0
+                //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                $inputFileType = 'Csv';
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
                 $objPHPExcel = $objReader->load($inputFileName);
             }
