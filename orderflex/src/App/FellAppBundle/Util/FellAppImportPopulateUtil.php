@@ -964,7 +964,7 @@ class FellAppImportPopulateUtil {
                     $errorEvent = $errorSubject . ". Filename=" .
                         $inputFileName . ", extension=" . $extension .
                         ", documentId=" . $document->getId();
-                    $logger->error($event);
+                    $logger->error($errorEvent);
                     $this->sendEmailToSystemEmail($errorSubject, $errorEvent);
                     return false;
                     //exit('$inputFileNameNew is NULL');
@@ -978,6 +978,7 @@ class FellAppImportPopulateUtil {
                 unlink($inputFileNameNew);
 
             } else {
+                $logger->warning("Before identify input file type: inputFileName=[".$inputFileName."]");
                 $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
                 $objPHPExcel = $objReader->load($inputFileName);
