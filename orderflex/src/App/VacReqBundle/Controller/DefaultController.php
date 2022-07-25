@@ -738,7 +738,7 @@ class DefaultController extends OrderAbstractController
             $newStatus = $carryoverRequest->getStatus();
 
             if( 1 ) {
-                //$em->flush();
+                $em->flush();
                 $event = "Changed old pending status for carry over request ID#".$carryoverRequest->getId()."; Submitted=".
                     $carryoverRequest->getCreateDate()->format('m-d-Y').
                     "; ".
@@ -746,7 +746,7 @@ class DefaultController extends OrderAbstractController
                 echo $event."<br>";
 
                 $eventType = "Carry Over Request Updated";
-                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$carryoverRequest,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$carryoverRequest,$request,$eventType);
             }
 
             echo "<br>";
