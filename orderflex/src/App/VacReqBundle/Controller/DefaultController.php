@@ -693,7 +693,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //exit('Not allowed.');
+        exit('cancelOldPendingCarryoverRequestsAction Not allowed.');
 
         $user = $this->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
