@@ -718,7 +718,7 @@ class DefaultController extends OrderAbstractController
         $params['status'] = 'pending';
 
         $dql->andWhere("request.createDate < :maxCreateDate");
-        $params['maxCreateDate'] = '2019-01-01';
+        $params['maxCreateDate'] = '2020-01-01';
 
         $query = $em->createQuery($dql);
 
@@ -738,7 +738,7 @@ class DefaultController extends OrderAbstractController
             $newStatus = $carryoverRequest->getStatus();
 
             if( 1 ) {
-                //$em->flush();
+                $em->flush();
                 $event = "Changed old pending status for carry over request ID#".$carryoverRequest->getId()."; Submitted=".
                     $carryoverRequest->getCreateDate()->format('m-d-Y').
                     "; ".
@@ -746,7 +746,7 @@ class DefaultController extends OrderAbstractController
                 echo $event."<br>";
 
                 $eventType = "Carry Over Request Updated";
-                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$vacreqRequest,$request,$eventType);
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$carryoverRequest,$request,$eventType);
             }
 
             echo "<br>";
