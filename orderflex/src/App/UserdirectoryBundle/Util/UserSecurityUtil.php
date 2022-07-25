@@ -1494,11 +1494,12 @@ class UserSecurityUtil {
 
         //$token = $this->secToken->getToken();
 
-        if( $this->security ) {
+        if( $this->security && $this->security->getUser() ) {
 
             //$user = $this->secToken->getToken()->getUser();
             //$username = $token->getUsername();
             $user = $this->security->getUser();
+            //$user = $this->tokenStorage->getToken()->getUser();
 
 //            if( $this->security->getToken() ) {
 //                $username = $this->security->getToken()->getUsername();

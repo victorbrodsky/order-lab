@@ -480,8 +480,11 @@ class SecurityController extends OrderAbstractController
         $session = $request->getSession();            
         $session->set('lastRequest',time());
 
-        //$logger = $this->container->get('logger');
-        //$logger->notice("setServerActiveAction: reset lastRequest");
+        //dump($session);
+        //exit('111');
+
+        $logger = $this->container->get('logger');
+        $logger->notice("setServerActiveAction: session id=".$session->getId());
     
         $response->setContent('OK');
         return $response;

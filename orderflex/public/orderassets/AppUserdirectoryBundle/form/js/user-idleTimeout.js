@@ -99,6 +99,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
             //console.debug("idletime="+data.maxIdleTime);
             //console.debug("maint="+data.maintenance);
             _idleAfter = data.maxIdleTime;
+            //console.log("_idleAfter="+_idleAfter);
             //idleTimeoutClass.prototype.testfunc();
         },
         //success: this.maxIdleTimeMethod,
@@ -113,7 +114,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 };
 
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
-    //console.log( "############# checkIdleTimeout, testvar="+this.testvar );
+    console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
     // start the idle timer plugin; all times are in seconds
     var idleTimeout =
     $.idleTimeout('#idle-timeout', '#idle-timeout-keepworking', {
@@ -220,7 +221,7 @@ idleTimeoutClass.prototype.setActive = function () {
     //console.log("setActive");
     //return;
 
-    var timerIdleTime = 60 * 1000; //1 min = 60000 milliseconds
+    var timerIdleTime = 60 * 1000; //1 min = 60s * 1000 milliseconds
     //console.log("event active idleTimer timerIdleTime="+timerIdleTime);
     
     _lastActiveTime = Date.now();
