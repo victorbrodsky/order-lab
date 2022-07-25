@@ -1298,3 +1298,4 @@ filter[eventType][0]=82&filter[objectType][0]=10&filter[user][0]=8863
 https://symfony.com/doc/current/components/http_foundation.html
 TODO: replace all $request->query->get() by $request->get() or by $filter = $request->query->all('filter');?
 
+TODO: if fellapp generation failed (cannot read by PhpSpreadsheet) => in FellAppImportPopulateUtil:populateSpreadsheet:$forceCreateCopy = true

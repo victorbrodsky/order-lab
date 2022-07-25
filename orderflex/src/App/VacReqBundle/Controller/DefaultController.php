@@ -578,11 +578,11 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-requests
+     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-vacation-requests
      *
-     * @Route("/cancel-old-pending-requests", name="vacreq_cancel-old-pending-requests")
+     * @Route("/cancel-old-pending-vacation-requests", name="vacreq_cancel-old-pending-vacation-requests")
      */
-    public function cancelOldPendingRequestsAction( Request $request )
+    public function cancelOldPendingVacationRequestsAction( Request $request )
     {
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -680,5 +680,78 @@ class DefaultController extends OrderAbstractController
         }
 
         exit('EOF cancelOldPendingRequestsAction');
+    }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-carryover-requests
+     *
+     * @Route("/cancel-old-pending-carryover-requests", name="vacreq_cancel-old-pending-carryover-requests")
+     */
+    public function cancelOldPendingCarryoverRequestsAction( Request $request )
+    {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        //exit('Not allowed.');
+
+        $user = $this->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$vacreqUtil = $this->container->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array();
+        $changeStatusTo = 'rejected';
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        $dql =  $repository->createQueryBuilder("request");
+
+        $dql->select('request');
+
+        $dql->leftJoin("request.requestType", "requestType");
+
+        $dql->where("(requestType.abbreviation = :requestTypeName AND request.carryOverDays IS NOT NULL)");
+        //$dql->where("requestType.abbreviation = :requestTypeName");
+        $params['requestTypeName'] = 'carryover';
+
+        $dql->andWhere("request.status = :status");
+        $params['status'] = 'pending';
+
+        $dql->andWhere("request.createDate < :maxCreateDate");
+        $params['maxCreateDate'] = '2019-01-01';
+
+        $query = $em->createQuery($dql);
+
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
+
+        $requests = $query->getResult();
+        echo "carryover requests=".count($requests)."<br>";
+
+        foreach($requests as $carryoverRequest) {
+
+            $originalStatus = $carryoverRequest->getStatus();
+
+            $carryoverRequest->setStatus($changeStatusTo);
+
+            $newStatus = $carryoverRequest->getStatus();
+
+            if( 1 ) {
+                //$em->flush();
+                $event = "Changed old pending status for carry over request ID#".$carryoverRequest->getId()."; Submitted=".
+                    $carryoverRequest->getCreateDate()->format('m-d-Y').
+                    "; ".
+                    "Change status: ".$originalStatus." to ".$newStatus;
+                echo $event."<br>";
+
+                $eventType = "Carry Over Request Updated";
+                //$userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$event,$user,$vacreqRequest,$request,$eventType);
+            }
+
+            echo "<br>";
+        }
+
+        exit('EOF cancelOldPendingCarryoverRequestsAction');
     }
 }

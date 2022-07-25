@@ -944,8 +944,9 @@ class FellAppImportPopulateUtil {
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
             //echo "extension=".$extension."<br>";
+            //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q' cannot read by PhpSpreadsheet?
             $forceCreateCopy = true;
-            //$forceCreateCopy = false;
+            $forceCreateCopy = false;
             if( $forceCreateCopy || $extension || strlen($extension) > 9 ) {
                 //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
