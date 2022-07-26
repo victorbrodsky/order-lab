@@ -22,6 +22,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
+//consider https://github.com/JillElaine/jquery-idleTimeout
+//https://openbase.com/js/jquery-idleTimeout-plus
+
 var _idleAfter = 0; //in seconds
 var _ajaxTimeout = 300000;  //15000 => 15 sec, 180000 => 180 sec
 var _maxIdleTime = $("#maxIdleTime").val(); //in seconds
@@ -114,27 +117,31 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 };
 
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
-    console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
+    //console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
+    console.log( "############# checkIdleTimeout" + ", _idleAfter="+_idleAfter);
     // start the idle timer plugin; all times are in seconds
+    var pollingIntervalShift = 50;
+    //var pollingIntervalShift = 10;
     var idleTimeout =
     $.idleTimeout('#idle-timeout', '#idle-timeout-keepworking', {
         AJAXTimeout: null,
         failedRequests: 1,
         idleAfter: _idleAfter,
         warningLength: 30,
-        pollingInterval: _idleAfter-50,
+        pollingInterval: (_idleAfter-pollingIntervalShift),
         keepAliveURL: this.urlCommonIdleTimeout,
         serverResponseEquals: 'OK',
         onTimeout: function(){
             //fired on idle timeout from server: server response is not equal to the expected
             console.log("onTimeout: logout");
+            //alert("onTimeout: logout");
             idleTimeoutClass.prototype.onTimeout();
         },
         onIdle: function(){
             //fired on no activity on the page
             console.log("on idle");
-            $('#idle-timeout').modal('show');
-            
+            //alert("on idle");
+            //$('#idle-timeout').modal('show');
             idleTimeoutClass.prototype.isServerActive();
         },
         onCountdown: function(counter){
@@ -143,6 +150,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         },
         onAbort: function(){
             console.log("onAbort: logout");
+            //alert("onAbort: logout");
             idleTimeoutClass.prototype.onAbort();
         }
     });
@@ -152,9 +160,6 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
 
 idleTimeoutClass.prototype.isServerActive = function () {
     //check if the other page is active
-    //_serverActive = false;
-    //var url = getCommonBaseUrl("common/isserveractive","employees");
-    //var url = getCommonBaseUrl("common/keepalive","employees");
     var url = Routing.generate('keepalive');
     //console.log("isServerActive url="+url);
     $.ajax({
@@ -164,34 +169,20 @@ idleTimeoutClass.prototype.isServerActive = function () {
         async: true,
         timeout: _ajaxTimeout,
         success: function (data) {
-            //console.debug("isServerActive data="+data);
-            // if( data == "OK" ) {
-            //     //console.debug("OK data="+data);
-            //     console.debug("OK data="+data+" => force to close timeout dialog modal");
-            //     $("#idle-timeout-keepworking").trigger('click');
-            //     //keepWorking();
-            //     //active = true;
-            //     //_serverActive = true;
-            // } else {
-            //     console.debug("show timeout dialog modal");
-            //     //$('#idle-timeout').modal('show');
-            // }
             if( data.indexOf("show_idletimeout_modal") !== -1 ) {
                 console.log("show timeout dialog modal: data="+data);
+                $('#idle-timeout').modal('show');
             } else {
                 console.log("OK data="+data+" => force to close timeout dialog modal");
-                $("#idle-timeout-keepworking").trigger('click');
+                //$("#idle-timeout-keepworking").trigger('click');
             }
         },
-        //success: this.maxIdleTimeMethod,
         error: function ( x, t, m ) {
             //console.debug("isserveractive error???");
             if( t === "timeout" ) {
                 //console.debug("isserveractive timeout???");
                 getAjaxTimeoutMsg();
             }
-            //console.debug("get max idletime: error data="+data);
-            //_idleAfter = 0;
         }
     });
     
@@ -237,6 +228,7 @@ idleTimeoutClass.prototype.setActive = function () {
         if( getLastActiveTimeDiff < timerIdleTime ) {
             //console.log("event setserveractive:  getLastActiveTimeDiff="+getLastActiveTimeDiff/1000+" sec");
             //var url = getCommonBaseUrl("common/setserveractive","employees");
+            //var currentUrl = window.location.href;
             var url = Routing.generate('setserveractive');
             //console.log("url="+url);
             $.ajax({
@@ -244,6 +236,7 @@ idleTimeoutClass.prototype.setActive = function () {
                 //type: 'GET',
                 //contentType: 'application/json',
                 //dataType: 'json',
+                //data: {url: currentUrl},
                 async: true,
                 timeout: _ajaxTimeout,
                 success: function (data) {

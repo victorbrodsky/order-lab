@@ -184,6 +184,11 @@ class SecurityController extends OrderAbstractController
             $formArr['inputStyle'] = "background-color:#FF5050;";
         }
 
+//        $request->getSession()->getFlashBag()->add(
+//            'notice',
+//            "Test message"
+//        );
+
         return $this->render(
             'AppUserdirectoryBundle/Security/login.html.twig',
             $formArr
@@ -310,6 +315,11 @@ class SecurityController extends OrderAbstractController
         if( $routename == "dashboard_idlelogout" ) {
             $sitename = $this->getParameter('dashboard.sitename');
         }
+
+//        $request->getSession()->getFlashBag()->add(
+//            'notice',
+//            "Test message"
+//        );
 
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -480,11 +490,13 @@ class SecurityController extends OrderAbstractController
         $session = $request->getSession();            
         $session->set('lastRequest',time());
 
+        //$url = $request->query->get('url');
+
         //dump($session);
         //exit('111');
 
-        $logger = $this->container->get('logger');
-        $logger->notice("setServerActiveAction: session id=".$session->getId());
+        //$logger = $this->container->get('logger');
+        //$logger->notice("setServerActiveAction: session id=".$session->getId()."; url=".$url);
     
         $response->setContent('OK');
         return $response;
