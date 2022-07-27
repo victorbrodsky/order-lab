@@ -301,7 +301,8 @@ function logoff() {
 
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
-    //return; //testing
+    console.log('idlelogout')
+    return; //testing
     window.onbeforeunload = null;
     var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
     window.location = urlIdleTimeoutLogout;
