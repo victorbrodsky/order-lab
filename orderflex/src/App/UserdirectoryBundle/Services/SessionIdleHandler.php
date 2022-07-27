@@ -62,6 +62,35 @@ class SessionIdleHandler
             return;
         }
 
+        //$this->maxIdleTime = 3;//sec testing
+
+        if( $this->maxIdleTime > 0 ) {
+
+            $session->start();
+
+            $lapse = time() - $session->getMetadataBag()->getLastUsed();
+
+            if ($lapse > $this->maxIdleTime) {
+                //exit("$lapse > ".$this->maxIdleTime);
+
+                $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout')));
+                //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
+                //$event->setResponse(new RedirectResponse($this->router->generate('employees_login')));
+            }
+        }
+    }
+
+    //NOT USED
+    public function onKernelRequest_ORIG(RequestEvent $event)
+    {
+        //echo "maxIdleTime=".$this->maxIdleTime."<br>";exit('111');
+        $request = $event->getRequest();
+        $session = $request->getSession();
+
+        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
+            return;
+        }
+
         //*************** set url for redirection ***************//
         $dontSetRedirect = $this->setSessionLastRoute( $event );
         if( $dontSetRedirect > 0 ) {
@@ -106,6 +135,7 @@ class SessionIdleHandler
             }
         }
     }
+    //NOT USED
     //http://www.fractalizer.ru/frpost_658/symfony2-how-redirect-user-to-a-previous-page-correctly/
     public function setSessionLastRoute( $event ) {
 
@@ -189,159 +219,6 @@ class SessionIdleHandler
 
         return $dontSetRedirect;
     }
-
-    //Similar to: https://github.com/LionwareSolutions/symfony-session-timeout/blob/master/src/Lionware/SymfonySessionTimeoutBundle/EventListener/SessionListener.php
-    public function onKernelRequest_NEW(RequestEvent $event)
-    {
-        if( !$event->isMainRequest() ) {
-            return;
-        }
-
-        //echo "maxIdleTime=".$this->maxIdleTime."<br>";exit('111');
-        $request = $event->getRequest();
-        $session = $request->getSession();
-
-        //*************** set url for redirection ***************//
-        $ignoreKernelRequest = $this->isKernelRequestIgnored($event);
-        if( $ignoreKernelRequest ) {
-            //exit('$ignoreKernelRequest is true');
-            return;
-        }
-        //*************** end of set url for redirection ***************//
-
-        if( $this->maxIdleTime > 0 ) {
-
-            $session->start();
-
-            if (1) {
-                echo "lastused=" . $session->getMetadataBag()->getLastUsed() . "<br>";
-                exit('111');
-                //Don't use getLastUsed(). But it is the same until page is closed.
-                $lapse = time() - $session->getMetadataBag()->getLastUsed();
-
-                //$msg = "'lapse=".$lapse.", max idle time=".$this->maxIdleTime."'";
-                //echo $msg;
-                //exit();
-
-            } else {
-                //set lastRequest timestamp $this->getUser()->getAttribute('lastRequest');
-                $lastRequest = $session->get('lastRequest');
-                //echo "Handler: lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
-                //echo "Handler: pingCheck=".$session->get('pingCheck')."<br>";
-                //exit('111');
-                if (!$lastRequest) {
-                    $logger = $this->container->get('logger');
-                    $logger->notice("onKernelRequest: set lastRequest to " . time());
-                    $session->set('lastRequest', time());
-                    //$session->set('pingCheck','Yes!');
-                }
-
-                $lapse = time() - $session->get('lastRequest');
-                $session->set('lastRequest', time());
-            }
-
-            if ($lapse > $this->maxIdleTime) {
-
-                $event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
-
-            }
-        }
-    }
-
-    //http://www.fractalizer.ru/frpost_658/symfony2-how-redirect-user-to-a-previous-page-correctly/
-    public function isKernelRequestIgnored( $event ) {
-
-        $ignoreKernelRequest = false;
-
-        /** @var \Symfony\Component\HttpFoundation\Request $request  */
-        $request = $event->getRequest();
-        /** @var \Symfony\Component\HttpFoundation\Session $session  */
-        $session = $request->getSession();
-
-        $routeParams = $this->router->match($request->getPathInfo());
-        //print_r($routeParams);
-
-        $fullUrl = $_SERVER['REQUEST_URI'];
-
-        $routeName = $routeParams['_route'];
-        //echo "<br> kernel routeName=".$routeName."<br>";
-        //exit();
-
-//        if( $routeName[0] == '_' ) {
-//            echo "dontSetRedirect: routeName _<br>";
-//            $dontSetRedirect++;
-//        }
-        //unset($routeParams['_route']);
-
-        $routeData = array('name' => $routeName, 'params' => $routeParams);
-
-        //Skipping duplicates, logins and logout
-        //$thisRoute = $session->get('this_route', array());
-
-//        $pos = strpos((string)$routeName, "scan-order" );
-//        if( $pos === false ) {
-//            //$dontSetRedirect++;
-//        }
-
-        if(
-            str_contains((string)$routeName, "_setloginvisit" ) ||
-            $routeName == 'getmaxidletime' ||
-            $routeName == 'isserveractive' ||
-            $routeName == 'setserveractive' ||
-            $routeName == '_wdt' ||
-            $routeName == 'keepalive' ||
-            $routeName == 'idlelogout'
-        ) {
-            $ignoreKernelRequest = true;
-            //echo "ignoreKernelRequest: 1<br>";
-        }
-
-//        if(
-//            str_contains((string)$routeName, "login" ) === false || //string not found
-//            str_contains((string)$routeName, "logout" ) === false || //string not found
-//        ) {
-//            $ignoreKernelRequest = true;
-//            echo "ignoreKernelRequest: 2<br>";
-//        }
-
-        $idlelogout = strpos((string)$routeName, 'idlelogout');
-        if( $idlelogout ) {
-            $ignoreKernelRequest = true;
-            //echo "ignoreKernelRequest: 3<br>";
-        }
-
-        if( $ignoreKernelRequest == false ) {
-            if( $session->get('last_route_arr') && count($session->get('last_route_arr')) > 0 ) {
-                $routeNameArr = $session->get('last_route_arr');
-                //dump($routeNameArr);
-                //echo "routeNameArr exists<br>";
-            } else {
-                $routeNameArr = array();
-                //echo "routeNameArr new <br>";
-                $session->set('last_route_arr',$routeNameArr);
-            }
-            $target_path = $session->get('_security.external_ldap_firewall.target_path');
-            //echo "target_path rout=".$target_path."<br>";
-            $routeNameArr[] =  $routeName;
-            $session->set('last_route', $routeName);
-            $session->set('this_route', $routeData);
-            $session->set('full_url', $fullUrl);
-            $session->set('last_route_arr', $routeNameArr);
-            $session->set('target_path', $target_path);
-            //echo "set session rout=".$routeName."<br>";
-        } else {
-            //$session->set('target_path', null);
-        }
-//        echo "<br> kernel routeName=".$routeName."<br>";
-//        $referer = $request->headers->get('referer');
-//        echo "referer=".$referer."<br>";
-//        print_r($session);
-//        exit();
-
-        return $ignoreKernelRequest;
-    }
-
-
 
 
 }

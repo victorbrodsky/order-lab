@@ -273,6 +273,8 @@ class SecurityController extends OrderAbstractController
 
 
     /**
+     * 127.0.0.1/order/index_dev.php/directory/idle-log-out
+     * 
      * @Route("/idle-log-out", name="employees_idlelogout")
      * @Route("/idle-log-out/{flag}", name="employees_idlelogout-saveorder")
      *
@@ -280,6 +282,7 @@ class SecurityController extends OrderAbstractController
      */
     public function idlelogoutAction( Request $request, $flag = null )
     {
+        //exit('idlelogoutAction');
         $routename = $request->get('_route');
 
         //default
@@ -320,12 +323,66 @@ class SecurityController extends OrderAbstractController
 //            'notice',
 //            "Test message"
 //        );
+        //exit('111');
 
         $userSecUtil = $this->container->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
     }
 
     /**
+     * sessionKeepAliveUrl for user-idleTimeouts.js
+     *
+     * @Route("/common/setserveractive", name="setserveractive", methods={"GET"}, options={"expose"=true})
+     */
+    public function setServerActiveAction( Request $request )
+    {
+        //echo "keep Alive Action! <br>";
+        $response = new Response();
+        $response->setContent('OK');
+        return $response;
+    }
+
+    /**
+     * @Route("/common/getmaxidletime", name="getmaxidletime", methods={"GET"})
+     */
+    public function getmaxidletimeAction( Request $request )
+    {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$userUtil = new UserUtil();
+        //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
+
+        //$userUtil = new UserUtil();
+        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->container->get('security.authorization_checker'),$this->container);
+        $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
+        $maxIdleTime = $res['maxIdleTime']; //in seconds
+        $maintenance = $res['maintenance'];
+
+        if( $maintenance ) {
+            $maxIdleTime = 0; //2min
+        }
+
+        $output = array(
+            'maxIdleTime' => $maxIdleTime,
+            'maintenance' => $maintenance
+        );
+
+        $response = new Response();
+        //$response->setContent($res);
+        $response->setContent(json_encode($output));
+
+        return $response;
+    }
+
+
+
+
+
+
+    //////////////// Idle Time Out - Common Functions (NOT USED ANYMORE) ////////////////////
+    /**
+     * //NOT USED
+     *
      * @Route("/setloginvisit/", name="employees_setloginvisit", methods={"GET"})
      */
     public function setAjaxLoginVisit( Request $request )
@@ -400,11 +457,9 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
-
-
-    //////////////// Idle Time Out - Common Functions ////////////////////
-
     /**
+     * //NOT USED
+     *
      * Check the server every 30 min (maxIdleTime) if the server timeout is ok ($lapse > $maxIdleTime).
      * If not, the server returns NOTOK flag and js open a dialog modal to continue.
      *
@@ -480,9 +535,11 @@ class SecurityController extends OrderAbstractController
     }
     
     /**
-     * @Route("/common/setserveractive", name="setserveractive", methods={"GET"}, options={"expose"=true})
+     * //NOT USED
+     *
+     * @Route("/common/setserveractive_ORIG", name="setserveractive_ORIG", methods={"GET"}, options={"expose"=true})
      */
-    public function setServerActiveAction( Request $request )
+    public function setServerActiveAction_ORIG( Request $request )
     {
         //echo "keep Alive Action! <br>";
         $response = new Response();
@@ -501,41 +558,7 @@ class SecurityController extends OrderAbstractController
         $response->setContent('OK');
         return $response;
     }
-
-
-
-    /**
-     * @Route("/common/getmaxidletime", name="getmaxidletime", methods={"GET"})
-     */
-    public function getmaxidletimeAction( Request $request )
-    {
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        //$userUtil = new UserUtil();
-        //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
-
-        //$userUtil = new UserUtil();
-        //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->container->get('security.authorization_checker'),$this->container);
-        $res = $userSecUtil->getMaxIdleTimeAndMaintenance();
-        $maxIdleTime = $res['maxIdleTime']; //in seconds
-        $maintenance = $res['maintenance'];
-
-        if( $maintenance ) {
-            $maxIdleTime = 0; //2min
-        }
-
-        $output = array(
-            'maxIdleTime' => $maxIdleTime,
-            'maintenance' => $maintenance
-        );
-
-        $response = new Response();
-        //$response->setContent($res);
-        $response->setContent(json_encode($output));
-
-        return $response;
-    }
-    //////////////// EOF Idle Time Out ////////////////////
+    //////////////// EOF Idle Time Out (NOT USED ANYMORE) ////////////////////
 
 
     /**

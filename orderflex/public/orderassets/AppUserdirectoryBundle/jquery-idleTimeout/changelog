@@ -1,0 +1,59 @@
+Changelog - JillElaine/jquery-idleTimeout.js
+--------------------------------------------
+v.1.0.10
++ Fix 'Time Remaining' dialog timeout bug. Closes issue #17
+
+v.1.0.9
++ Update README for NPM markdown
+
+v.1.0.8
++ Add public functions: logout & iframeRecheck
++ Modify console logs, code and variable names to make plugin more understandable
++ Make idleCheckHeartbeat a public configuration variable
++ Created workaround for bug in public function call: iframeRecheck (used defaultConfig instead of userRuntimeConfig)
++ Changed more complex polling functions to use setTimeout instead of setInterval
++ Add ability to disable warning dialog. Closes issue #8.
++ Change configurable timers' units from milliseconds to seconds
++ Merge pull request #9 from svenbit: destroy dialog function set to idleTimeout dialog ID instead of jQuery dialog class selector
++ Merge pull request #10 from svenbit: fix hide dialog "x" close button to select only jquery-idleTimeout dialog
++ Add ability to translate all display text to desired language. Thanks to Criptos. Closes Pull Request #12.
++ Add information to README about possible Chrome 'mousemove' bug (on Windows?). Thanks to g4g4r1n. Closes Issue #13.
++ Make sessionKeepAliveUrl a public variable. Closes issue #15.
++ Stop session keep-alive pings when warning dialog appears; restart keep-alive if warning dialog is dismissed. Closes issue #16.
++ Add ability to detect iframes that are dynamically added to the document, including iframes in dialogs. Closes issue #14.
++ Add ability to detect and include nested iframes, whether dynamic or static.
+
+v1.0.6
++ Modify sessionKeepAliveTimer default to 10 minutes. Set user's current URL as URL to ping. Closes issue #7.
++ Add ability to detect activity within iframes within the same domain. Closes issue #5.
++ Upgrade all code to JSLint compliant
+
+v1.0.5
++ Add 'Time remaining' countdown to warning dialog. Closes issue #6.
++ Change to MIT License
++ Fix bug in 'isDialogOpen' test
+
+v1.0.4
++ Add modification of browser title(s) and tab(s) when warning dialog appears. Original browser title restored if warning dialog dismissed.
++ Remove trailing comma in 'defaults' array
+
+v1.0.3
++ Clean up of code format to standards http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml
+
+v1.0.2
++ Complete rewrite of script to support Internet Explorer
+
+v1.0.1
++ Add clearTimeout(idleTimer) to storage_event_reactor
++ Reversed order of dialog buttons. 'Stay logged in' has focus.
++ Move private dialog variable to dialog function
++ Update index.html example page to reference Google hosted JQuery scripts and CSS
+
+v1.0
++ First versioned version
++ Add support for disable of server pings. Closes issue #1.
++ Move 'event listener' to all windows & tabs, not just 'inactive' ones. Closes issue #3.
++ Modify custom callback support - does not override redirect url
++ Add support to disable redirect url
++ Create 'destroy & remove warning dialog' as separate function
++ Add testing version - jquery-idleTimeout-for-testing.js

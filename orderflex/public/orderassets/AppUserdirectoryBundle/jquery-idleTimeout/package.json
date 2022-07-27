@@ -1,0 +1,35 @@
+{
+  "name": "jquery-idletimeout",
+  "version": "1.0.10",
+  "description": "JQuery IdleTimeout Plugin for multiple windows, tabs and, optionally, iframes",
+  "main": "jquery-idleTimeout",
+  "homepage": "https://github.com/JillElaine/jquery-idleTimeout",
+  "author": "Jill Elaine <jillelaine01@gmail.com>",
+  "contributors": [
+    "Phil Palmieri (http://philpalmieri.com)",
+    "Jose Garcia (http://josebalius.com)",
+    "tomyvi",
+    "Sebastian Hadinata (http://www.svenbit.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/JillElaine/jquery-idleTimeout.git"
+  },
+  "keywords": [
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "idle",
+    "multiple windows",
+    "timer",
+    "logout redirect"
+  ],
+  "dependencies": {
+    "JQuery": ">1.7",
+    "JQuery UI": ">1.9",
+    "store.js": "git://github.com/marcuswestin/store.js.git"
+  },
+  "license": "CC-BY-SA-3.0",
+  "bugs": {
+    "url": "https://github.com/JillElaine/jquery-idleTimeout/issues"
+  }
+}

@@ -309,16 +309,19 @@ class UserSecurityUtil {
             'notice',
             $msg
         );
+        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_home') );//testing
+        //exit($msg);
 
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->security->setToken(null); //testing
         //$this->get('request')->getSession()->invalidate();
         //$request->getSession()->invalidate();
 
-        //$this->tokenStorage->setToken(null);
+        $this->tokenStorage->setToken(null);
 
-        //return $this->redirect($this->generateUrl('login'));
-        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+        //return $this->redirect($this->generateUrl($sitename.'_login'));
+        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
 
     function constructEventLog( $sitename, $user, $request ) {

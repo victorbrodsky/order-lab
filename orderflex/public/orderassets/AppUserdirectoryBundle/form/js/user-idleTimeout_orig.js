@@ -22,17 +22,16 @@
  * To change this template use File | Settings | File Templates.
  */
 
-//based on https://github.com/JillElaine/jquery-idleTimeout
-//alternative: https://openbase.com/js/jquery-idleTimeout-plus
-//https://github.com/marcuswestin/store.js
+//consider https://github.com/JillElaine/jquery-idleTimeout
+//https://openbase.com/js/jquery-idleTimeout-plus
 
 var _idleAfter = 0; //in seconds
 var _ajaxTimeout = 300000;  //15000 => 15 sec, 180000 => 180 sec
 var _maxIdleTime = $("#maxIdleTime").val(); //in seconds
 var _siteEmail = $("#siteEmail").val();
 //var _serverActive = false;
-//_countdownDialog = $("#dialog-countdown");
-//var _lastActiveTime = Date.now();
+_countdownDialog = $("#dialog-countdown");
+var _lastActiveTime = Date.now();
 
 
 $(document).ready(function() {
@@ -55,8 +54,11 @@ $(document).ready(function() {
 
     //console.log('idleTimeout cycle=('+cycle+')');
     if( cycle !== 'download' ) {
+        //console.log('init idleTimeout');
         var idleTimeout = new idleTimeoutClass();
+
         idleTimeout.init();
+        //idleTimeout.setMaxIdletime();
         idleTimeout.checkIdleTimeout();
     }
 
@@ -75,7 +77,7 @@ idleTimeoutClass.prototype.init = function () {
 
     this.setMaxIdletime();
     
-    //this.setActive();
+    this.setActive();
 
 };
 
@@ -100,7 +102,10 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
             //console.debug("idletime="+data.maxIdleTime);
             //console.debug("maint="+data.maintenance);
             _idleAfter = data.maxIdleTime;
+            //console.log("_idleAfter="+_idleAfter);
+            //idleTimeoutClass.prototype.testfunc();
         },
+        //success: this.maxIdleTimeMethod,
         error: function ( x, t, m ) {
             if( t === "timeout" ) {
                 getAjaxTimeoutMsg();
@@ -112,77 +117,6 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 };
 
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
-    //console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
-    console.log( "############# checkIdleTimeout" + ", _idleAfter="+_idleAfter);
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
-    //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
-    //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
-    console.log("urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
-
-    //_idleAfter = 10; //sec testing
-    var sessionKeepAliveTimer = _idleAfter - 180; //call server before idle timer expired
-    if( sessionKeepAliveTimer < 0 ) {
-        sessionKeepAliveTimer = 120;
-    }
-
-    var sessionKeepAliveUrl = Routing.generate('setserveractive'); //window.location.href
-
-    //https://github.com/JillElaine/jquery-idleTimeout/blob/master/example.html
-    $(document).idleTimeout({
-        redirectUrl: urlIdleTimeoutLogout, // redirect to this url on logout. Set to "redirectUrl: false" to disable redirect
-
-        // idle settings
-        idleTimeLimit: _idleAfter,   // 'No activity' time limit in seconds. 1200 = 20 Minutes
-        idleCheckHeartbeat: 5,       // Frequency to check for idle timeouts in seconds
-
-        // optional custom callback to perform before logout
-        customCallback: false,       // set to false for no customCallback
-        // customCallback:    function () {    // define optional custom js function
-        // perform custom action before logout
-        // },
-
-        // configure which activity events to detect
-        // http://www.quirksmode.org/dom/events/
-        // https://developer.mozilla.org/en-US/docs/Web/Reference/Events
-        activityEvents: 'click keypress scroll wheel mousewheel mousemove', // separate each event with a space
-
-        // warning dialog box configuration
-        enableDialog: true,           // set to false for logout without warning dialog
-        dialogDisplayLimit: 30,       // 20 seconds for testing. Time to display the warning dialog before logout (and optional callback) in seconds. 180 = 3 Minutes
-        dialogTitle: 'Your session is about to expire!', // also displays on browser title bar
-        dialogText: 'Because you have been inactive, your session is about to expire.',
-        dialogTimeRemaining: 'Time remaining',
-        dialogStayLoggedInButton: 'Stay Logged In',
-        dialogLogOutNowButton: 'Log Out Now',
-
-        // error message if https://github.com/marcuswestin/store.js not enabled
-        errorAlertMessage: 'Please disable "Private Mode", or upgrade to a modern browser.', //Or perhaps a dependent file missing. Please see: https://github.com/marcuswestin/store.js',
-
-        // server-side session keep-alive timer
-        sessionKeepAliveTimer: sessionKeepAliveTimer,   // ping the server at this interval in seconds. 600 = 10 Minutes. Set to false to disable pings
-        sessionKeepAliveUrl: sessionKeepAliveUrl // set URL to ping - does not apply if sessionKeepAliveTimer: false
-    });
-};
-
-function getAjaxTimeoutMsg() {
-    //alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");
-    var msg = "Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds. " +
-        "The server appears unreachable. Please check your Internet connection, VPN connection (if applicable), "+
-        "or contact the system administrator "+_siteEmail+". "+
-        "You may be logged out in "+_maxIdleTime+" minutes and entered data may be lost if the connection is not restored.";
-
-    alert(msg);
-
-    return false;
-}
-
-
-
-
-
-
-//NOT USED
-idleTimeoutClass.prototype.checkIdleTimeout1_Orig = function () {
     //console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
     console.log( "############# checkIdleTimeout" + ", _idleAfter="+_idleAfter);
     // start the idle timer plugin; all times are in seconds
@@ -224,7 +158,6 @@ idleTimeoutClass.prototype.checkIdleTimeout1_Orig = function () {
       
 };
 
-//NOT USED
 idleTimeoutClass.prototype.isServerActive = function () {
     //check if the other page is active
     var url = Routing.generate('keepalive');
@@ -257,12 +190,12 @@ idleTimeoutClass.prototype.isServerActive = function () {
     //return active;
 };
 
-//NOT USED
+
 idleTimeoutClass.prototype.onTimeout = function () {
     //console.log("onTimeout: user");
     idlelogout();
 };
-//NOT USED
+
 idleTimeoutClass.prototype.onAbort = function () {
     //console.log("onAbort: user");
     //getAjaxTimeoutMsg();
@@ -274,7 +207,7 @@ idleTimeoutClass.prototype.onAbort = function () {
 //    //alert("testfunc: user test!");
 //}
 
-//NOT USED
+
 idleTimeoutClass.prototype.setActive = function () {
     //console.log("setActive");
     //return;
@@ -341,15 +274,23 @@ idleTimeoutClass.prototype.setActive = function () {
 
 //////////////////// Common Timeout Function //////////////////////////
 
+function getAjaxTimeoutMsg() {
+    //alert("Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds.");   
+    var msg = "Could not communicate with server: no answer after " + _ajaxTimeout/1000 + " seconds. " +
+            "The server appears unreachable. Please check your Internet connection, VPN connection (if applicable), "+
+            "or contact the system administrator "+_siteEmail+". "+
+            "You may be logged out in "+_maxIdleTime+" minutes and entered data may be lost if the connection is not restored.";
+    
+    alert(msg);
+    
+    return false;
+}
 
-
-//NOT USED
 function keepWorking() {
     //console.log("keep working: hide modal");
     $('#idle-timeout').modal('hide');
 }
 
-//NOT USED
 function logoff() {
     //return; //testing
     //console.log("logoff");
@@ -358,7 +299,6 @@ function logoff() {
     window.location = urlRegularLogout;
 }
 
-//NOT USED
 //redirect to /idlelogout controller => logout with message of inactivity
 function idlelogout() {
     console.log('idlelogout')
