@@ -331,6 +331,13 @@ Symfony 3.4 with PHP 5.6:
 3) cd order-lab/packer
 4) bash deploy-order-digital-ocean.sh --token yourapitoken --os centos
 
+//how to: https://www.digitalocean.com/community/tutorials/how-to-push-an-existing-project-to-github
+remove version tracking: rm -rf .git
+show: git remote -v
+remove remote url: git remote rm originme
+add new remote: git remote add origin git@github.com:sammy/my-new-project.git
+git push originme
+or: git push -u -f originme main
 
 Redirect:
 #.htaccess: Redirect only http://collage.med.cornell.edu/order/* to http://157.139.226.86/order/* keeping all url parameters
