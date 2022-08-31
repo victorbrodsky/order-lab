@@ -1209,6 +1209,13 @@ class SiteParametersType extends AbstractType
 
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'sendEmailUserAdded' ) {
+            $builder->add('sendEmailUserAdded', null, array(
+                'label' => 'Send email notifications to platform administrators when new user records are created: [Yes/No]:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
     }
     
     /**

@@ -2404,15 +2404,20 @@ class UserController extends OrderAbstractController
                 'New user record added'
             );
 
-            //Email to Admin
-            //$event = str_replace("<br>","\r\n",$event);
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
-            $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
-            $adminEmails = array_merge($adminEmails,$ccEmails);
-            $adminEmails = array_unique($adminEmails);
-            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail($adminEmails, 'New user record added', $event);
+            //Send email notifications to platform administrators when new user records are created: [Yes/No]
+            $sendEmailUserAdded = $userSecUtil->getSiteSettingParameter('sendEmailUserAdded');
+            if( $sendEmailUserAdded ) {
+                //Email to Admin
+                //$event = str_replace("<br>","\r\n",$event);
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
+                $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
+                $adminEmails = array_merge($adminEmails,$ccEmails);
+                $adminEmails = array_unique($adminEmails);
+                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                $emailUtil->sendEmail($adminEmails, 'New user record added', $event);
+            }
+
         } else {
             //$resArr["flag"] = "NOTOK";
             //$resArr["error"] = "Testing Mode!";

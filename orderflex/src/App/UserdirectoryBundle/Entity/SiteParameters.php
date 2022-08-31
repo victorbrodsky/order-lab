@@ -1284,6 +1284,13 @@ class SiteParameters {
      */
     private $monitorCheckInterval;
 
+    /**
+     * Send email notifications to platform administrators when new user records are created: [Yes/No]
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendEmailUserAdded;
+
 //    /**
 //     * independent monitor script arguments (i.e. url, smtpServerAddress, mailerPort, mailerUser, mailerPassword, admin emails )
 //     *
@@ -4447,6 +4454,22 @@ class SiteParameters {
     public function setMonitorCheckInterval($monitorCheckInterval)
     {
         $this->monitorCheckInterval = $monitorCheckInterval;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSendEmailUserAdded()
+    {
+        return $this->sendEmailUserAdded;
+    }
+
+    /**
+     * @param mixed $sendEmailUserAdded
+     */
+    public function setSendEmailUserAdded($sendEmailUserAdded)
+    {
+        $this->sendEmailUserAdded = $sendEmailUserAdded;
     }
 
     
