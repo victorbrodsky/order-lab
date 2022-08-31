@@ -1,0 +1,71 @@
+List all migrations: https://wiki.postgresql.org/wiki/Converting_from_other_Databases_to_PostgreSQL
+
+1) Using MSSQL Management Studio:
+https://stackoverflow.com/questions/1370326/migrate-data-from-ms-sql-to-postgresql/50919468#50919468
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver=PostgreSQL Unicode;Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W32
+Error: server export wizard error IM002 ODBC Driver Manager data source name not found and no default driver specified
+
+2) Using csv.
+Problem: only one table at a time, must fix lots of incompatibility issues (https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know)
+
+3) pgloader (https://github.com/dimitri/pgloader)
+Collage: 157.139.46.96
+  from mssql://user@host/dbname
+  into postgresql:///dbname postgresql://postgres:pssword@servername:5432/mydb
+pgloader mssql://symfony2@157.139.46.96/ScanOrder mssql://symfony2:symfony2@157.139.46.96:5432/scanorder
+pgloader mssql://symfony2:symfony2@157.139.46.96:1433/scanorder postgresql:///scanorder
+Running: pgloader -v "mssql://symfony2:symfony2@157.139.46.96/ScanOrder" "postgres://symfony:symfony@127.0.0.1/scanorder"
+Problem: ERROR msql: Failed to connect to mssql at "a57.139.46.96" (port 1433) as user "symfony2": Connection to database failed for uknown reason.
+pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://postgres:postgres@157.139.46.96/scanorder6"
+Collage DB: pgloader -v "mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder" "postgres://postgres:postgres@167.71.169.61/scanorder10"
+Fix stack: batch size = 40MB did it for me as well. I also lowered it to concurrency = 1 just to be safe
+Example: https://stackoverflow.com/questions/27937842/pgloader-fast-data-loading-for-postgresql
+Copy data to existing schema: 
+pgloader --with "data only" --with truncate --with "drop indexes" --verbose mssql://symfonyc:symfonyc@157.139.46.96/ScanOrder postgres://symfony:symfony@157.139.226.86/ScanOrder
+
+4) DBConvert ($149): https://dbconvert.com/mssql/postgre/
+a) DBConvert -> Error: Database can not be converted correctly. Foreign keys problem ("Error! Some fields, indexes or foreign keys have too long name.").
+b) DBSync -> running for couple hours so far
+
+5) IntellegentConverter $49 (https://www.convert-in.com/software.htm):
+Problem: Cannot create table with OIDS
+Problem "Overwrite the entire database": "ERROR" cannot drop the currently open database". 
+Solution: Try to terminate all processes that work with the database using this statement:  
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'scanorder' 
+sudo -Hiu postgres psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'scanorder'"
+
+6) Ispirer (4,065.00 USD!)
+
+7) Full Convert $699 with 60 day money-back guarantee (https://www.spectralcore.com/order/fc-ent)
+No problems
+Migration problem1: "There was a fatal error. Creating foreign keys 42703: column defs.adscr does not exist. Conversion aborted!"
+"Demo" problems:
+1) TableNotFoundException: "An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')'
+ERROR:  relation "user_logger_id_seq" does not exist LINE 1: SELECT NEXTVAL('user_logger_id_seq') 
+[2019-11-15 15:30:04] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\TableNotFoundException: 
+"An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')':  SQLSTATE[42P01]: 
+Undefined table: 7 ERROR:  relation "user_logger_id_seq" does not exist LINE 1: SELECT NEXTVAL('user_logger_id_seq')                        ^" 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php line 75 
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\TableNotFoundException(code: 0): 
+An exception occurred while executing 'SELECT NEXTVAL('user_logger_id_seq')':\n\nSQLSTATE[42P01]: 
+Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" does not exist\nLINE 1: 
+SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php:75, 
+Doctrine\\DBAL\\Driver\\PDOException(code: 42P01): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" 
+does not exist\nLINE 1: SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:106, PDOException(code: 42P01): 
+SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation \"user_logger_id_seq\" does not exist\nLINE 1: SELECT NEXTVAL('user_logger_id_seq')\n                       ^ 
+at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:104)"} []
+Solution: https://stackoverflow.com/questions/45648139/unable-to-insert-data-into-postgresql-in-symfony-with-complex-relation
+
+8) Migrate2Postgres
+JDBC driver: CLASSPATH =.;C:\Program Files\Microsoft JDBC Driver 7.4 for SQL Server\Microsoft JDBC Driver 7.4 for SQL Server\sqljdbc_7.4\enu\mssql-jdbc-7.4.1.jre8.jar
+Problem: Primary and foreign keys are not generated.
+
+2) SQLSTATE[42703]: Undefined column: 7 ERROR:  column "min_value" does not exist
+LINE 1: SELECT min_value, increment_by FROM "oc_activity_mq_mail_id_...
+Change _getPortableSequenceDefinition https://github.com/nextcloud/server/issues/5930
+
+

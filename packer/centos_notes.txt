@@ -1,0 +1,301 @@
+Centos:
+
+Postgresql 12: /var/lib/pgsql/12/data/pg_hba.conf
+Postgresql 9.2: /var/lib/pgsql/data/pg_hba.conf
+
+/etc/php.ini
+
+/usr/local/bin/order-lab/Scanorders2
+
+sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+sudo -Hiu postgres psql -c "ALTER USER symfony WITH SUPERUSER"
+sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfony"
+
+php bin/console doctrine:schema:validate
+
+https://stackoverflow.com/questions/6674327/redirect-all-output-to-file
+Write output to a file: foo > allout.txt 2>&1
+
+sudo systemctl restart postgresql
+sudo systemctl restart httpd.service
+
+"sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
+		   "sudo mkdir /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler",
+		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod",
+		   "sudo chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache/prod/profiler"
+		   
+
+Postgres login: psql -d scanorder -U symfony
+List Databases: \l		   
+
+SELECT version();
+Server version: pg_config --version
+Client version: psql --version
+SELECT * FROM public.user_fosuser;
+
+Apache: /etc/httpd/
+
+Error: centos SQLSTATE[08006] [7] could not connect to server: Permission denied
+Is the server running on host "localhost" (127.0.0.1) and accepting TCP/IP connections on port 5432 on PDOConnection.php:43
+
+/etc/httpd/conf.d
+
+| symbol got >
+temporarily: loadkeys us-intl
+permanently: localectl set-keymap us-intl
+
+Setting up Permissions
+
+One common issue when installing Symfony is that the app/cache and app/logs directories must be writable both by the web server and the command line user. 
+On a UNIX system, if your web server user is different from your command line user, you can try one of the following solutions.
+Use the same user for the CLI and the web server
+
+In development environments, it is a common practice to use the same UNIX user for the CLI and the web server because 
+it avoids any of these permissions issues when setting up new projects. This can be done by editing your web server configuration 
+(e.g. commonly httpd.conf or apache2.conf for Apache) and setting its user to be the same as your CLI user 
+(e.g. for Apache, update the User and Group values).
+
+
+HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
+sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var
+sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var
+The first setfacl command sets permissions for future files and folders, while the second one sets permissions on the existing files and folders. 
+Both of these commands assign permissions for the system user and the Apache user.
+echo $HTTPDUSER => apache
+echo $(whoami) => root
+Install ACL: yum install acl
+
+
+
+To switch to apache user:
+su -s /bin/bash apache
+
+Disable in Linux 
+https://linuxize.com/post/how-to-disable-selinux-on-centos-7/
+sestatus
+sudo setenforce 0
+Open the /etc/selinux/config file and set the SELINUX mod to disabled: SELINUX=disabled
+
+Reboot: sudo shutdown -r now
+
+
+wkhtmltopdf: cannot connect to X server
+
+[2019-10-21 17:22:42] app.NOTICE: cmd=[
+"phantomjs" --disk-cache=true "/usr/local/bin/order-lab/Scanorders2/packer/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/1 "/usr/local/bin/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-HP1-REQ1-administrator-10-21-2019.pdf" "A4"] [] []
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /usr/local/bin/order-lab/Scanorders2/packer/rasterize.js http://yahoo.com /usr/local/bin/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/test_21-10-2019.pdf A4
+
+[2019-10-21 19:46:14] console.ERROR: Error thrown while running command "fellapp:generatereportrun --env=prod". Message: 
+"An exception occurred while executing 
+'INSERT INTO user_document (
+1) id, 
+2) originalname, 
+3) uniquename, 
+4) uploadDirectory, 
+5) size, 
+6) createdate, 
+7) externalCreatedate, 
+8) title, 
+9) uniqueid, 
+10) entityNamespace, 
+11) entityName, 
+12) entityId, 
+13) type_id, 
+14) creator_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params [
+1) 12, 
+2) "Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf", 
+3) "Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf", 
+4) "Uploaded\/fellapp\/Reports", 
+5) false, 
+6) "2019-10-21 19:46:13", 
+7) null, 
+8) "Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf", 
+9) "Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf", 
+10) "Oleg\\FellAppBundle\\Entity", 
+11) "FellowshipApplication", 
+12) 1, 
+13) 16, 
+14) 1
+]:  SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type numeric: """ {"error":"[object] (Doctrine\\DBAL\\Exception\\DriverException(code: 0): An exception occurred while executing 'INSERT INTO user_document (id, originalname, uniquename, uploadDirectory, size, createdate, externalCreatedate, title, uniqueid, entityNamespace, entityName, entityId, type_id, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params [12, \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Uploaded\\/fellapp\\/Reports\", false, \"2019-10-21 19:46:13\", null, \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Oleg\\\\FellAppBundle\\\\Entity\", \"FellowshipApplication\", 1, 16, 1]:\n\nSQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type numeric: \"\" at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php:91, Doctrine\\DBAL\\Driver\\PDOException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type numeric: \"\" at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:107, PDOException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type numeric: \"\" at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:105)","command":"fellapp:generatereportrun --env=prod","message":"An exception occurred while executing 'INSERT INTO user_document (id, originalname, uniquename, uploadDirectory, size, createdate, externalCreatedate, title, uniqueid, entityNamespace, entityName, entityId, type_id, creator_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' with params [12, \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Uploaded\\/fellapp\\/Reports\", false, \"2019-10-21 19:46:13\", null, \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Pain-Medicine-Fellowship-Application-2021-ID1-Doe-John-generated-on-10-21-2019-at-07-45-53-pm_UTC.pdf\", \"Oleg\\\\FellAppBundle\\\\Entity\", \"FellowshipApplication\", 1, 16, 1]:\n\nSQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type numeric: \"\""} []
+
+DB Migrating:
+https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know
+
+Using MSSQL Management Studio:
+https://stackoverflow.com/questions/1370326/migrate-data-from-ms-sql-to-postgresql/50919468#50919468
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=142.93.180.104;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=ODBC_POSTGRESQL_SYSTEM
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=142.93.188.82;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W2
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=142.93.188.82;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL302
+
+Driver={PostgreSQL Unicode};Server=142.93.188.82;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL30
+Driver={PostgreSQL Unicode};Server=142.93.188.82;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+
+Driver={PostgreSQL Unicode};Server=142.93.180.104;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W1
+Driver={PostgreSQL ANSI};Server=142.93.180.104;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL301
+
+Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W_216
+Driver={PostgreSQL Unicode};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+
+Driver={PostgreSQL Unicode};Server=167.71.169.61;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=167.71.175.216;Port=5432;Database=scanorder;UID=symfony;PWD=symfony;DSN=PostreSQL30
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30W;Trusted_Connection=Yes
+DRIVER={PostgreSQL ODBC Driver(UNICODE)}
+DRIVER=PostgreSQL ODBC Driver(UNICODE);SERVER=localhost;DATABASE=scanorder;Trusted_Connection=Yes;DSN=TestPostgreSQLODBC.dsn
+Driver={PostgreSQL ODBC Driver(UNICODE)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W
+Driver={PostgreSQL ODBC Driver(ANSI)};Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL30
+Driver=PostgreSQL Unicode;Server=127.0.0.1;Port=5432;Database=scanorder;UID=postgres;PWD=postgres;DSN=PostreSQL35W32
+Please enable XA transaction in MSDTC: https://www.ibm.com/support/knowledgecenter/SSFTBX_8.5.5/com.ibm.wbpm.imuc.sbpm.doc/topics/db_xa_typ_nd_sol.html
+
+
+To remotely connect: in pg_hba.conf allow connection by all users to all databases from any IP if the 
+user has right MD5-encrypted password by adding the following line:
+host all all 0.0.0.0/0 md5
+In postgresql.conf add lines:
+listen_addresses='*'
+port = 5432
+
+How to add DNS:
+https://stackoverflow.com/questions/17115632/microsoftodbc-driver-manager-data-source-name-not-found-and-no-default-drive
+https://blogs.msdn.microsoft.com/sqlcat/2011/03/31/32-and-64-bit-connectivity-from-the-same-machine/
+https://www.codeproject.com/Questions/1003767/PostgreSQL-ODBC-driver-throws-error
+Use odbc posyresql the same version as installed Postgresql?
+32 bit: c:\Windows\System32\odbcad32.exe
+64 bit: C:\Windows\SysWOW64\odbcad32.exe
+
+sed -i -e "s/TEXTTOEND/'host all all 0.0.0.0/0 md5'/g" /var/lib/pgsql/12/data/pg_hba.conf
+sed -i -e "s/TEXTTOEND/TEXTTOEND1/g" /var/lib/pgsql/12/data/pg_hba.conf
+35 or 34 chars error
+
+Copy all tables to csv:
+https://stackoverflow.com/questions/30791482/sql-server-management-studio-2012-export-all-tables-of-database-as-csv
+
+https://www.youtube.com/watch?v=5eF9_UB73TI
+
+https://github.com/dimitri/pgloader
+pgloader mysql://mysql_username:password@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
+pgloader psql://symfony:symfony@mysql_server_ip_/source_database_name?option_1=value&option_n=value postgresql://postgresql_role_name:password@postgresql_server_ip/target_database_name?option_1=value&option_n=value
+Installation problem via VPN:
+xits-po-order-dev1
+150521.7.1
+ITS - Weill Medical College of Cornell University
+-=[ Unauthorized Use Prohibited ]=-
+-=[ All Connections Are Logged  ]=-
+You are attempting to access a system with confidential data. 
+This system is provided only for authorized use. 
+If you do not have appropriate permissions, you should not proceed. 
+By logging in, you acknowledge your understanding that system access is monitored for compliance with federal and/or state laws and regulations. 
+Inappropriate access may result in sanctions up to and including suspension, termination, or criminal penalties.
+
+
+
+
+echo -e ${COLOR} Install pgloader ${NC}
+	#yum install -y pgloader
+	sudo mkdir /usr/local/temp
+	cd /usr/local/temp
+	git clone https://github.com/dimitri/pgloader.git
+	cd pgloader
+	chmod +x ./bootstrap-centos7.sh
+	chmod -R 0777 /usr/local/bin/temp
+	sudo ./bootstrap-centos7.sh
+	make pgloader
+
+#https://github.com/dimitri/pgloader/blob/master/docs/ref/mssql.rst
+#Collage IP: 157.139.46.96
+pgloader mssql://symfony2@157.139.46.96/ScanOrder postgresql://symfony:symfony@167.71.169.61/scanorder
+
+
+https://stackoverflow.com/questions/2987433/how-to-import-csv-file-data-into-a-postgresql-table
+http://www.postgresqltutorial.com/import-csv-file-into-posgresql-table/
+
+php bin/console doctrine:database:drop --force
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:update --force
+
+#Commercial tool $149
+#https://www.postgresql.org/download/products/1-administrationdevelopment-tools/
+#https://dbconvert.com/mssql/postgresql/
+Working: DBSync looks ok
+
+#Copy: pgAdmin GUI -> import => ERROR:  syntax error at or near "OIDS" LINE 1: ...canonical, notificationemailuser_id ) FROM STDIN  OIDS  DELI...
+"C:\\Program Files (x86)\\pgAdmin 4\\v4\\runtime\\psql.exe" --command " "\\copy public.user_fosuser (id, keytype, preferences_id, credentials_id, avatar_id, author_id, username, username_canonical, enabled, salt, password, last_login) FROM 'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv' CSV QUOTE '\"' ESCAPE '''';""
+"C:\\Program Files (x86)\\pgAdmin 4\\v4\\runtime\\psql.exe" --command " "\\copy public.user_fosuser (id, username, username_canonical) FROM 
+'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv' DELIMITER ',' CSV QUOTE '\"' ESCAPE '''';""
+COPY user_fosuser FROM 'C:\Users\ch3\Documents\MyDocs\WCMC\Migration\cvs\fos_user_test.csv';
+
+INSERT INTO public.user_fosuser(id, username, username_canonical,enabled,password,roles,primarypublicuserid)
+VALUES (1, 'system', 'system',TRUE,'','a:0:{}','system');
+
+INSERT INTO public.user_fosuser(
+	id, keytype, preferences_id, credentials_id, avatar_id, author_id, username, username_canonical, enabled, salt, password, last_login, confirmation_token, password_requested_at, roles, primarypublicuserid, createdby, otheruserparam, testingaccount, createdate, failedattemptcounter, email, email_canonical, notificationemailuser_id)
+	VALUES (1, NULL, 1, 1, NULL, 'system', 'system', 1, 'l9kmqbscxq8ww44sckk008c0kgk84kc', '', NULL, NULL, NULL, 'a:1:{i:0;s:26:"ROLE_PLATFORM_DEPUTY_ADMIN";}', 'system', 'system', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+https://wiki.postgresql.org/wiki/Microsoft_SQL_Server_to_PostgreSQL_Migration_by_Ian_Harding
+List all migrations: https://wiki.postgresql.org/wiki/Converting_from_other_Databases_to_PostgreSQL
+Working: https://www.spectralcore.com/fullconvert
+Migrating from MSSQL to PostgreSQL - What You Should Know: https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know
+
+#Copy from console on digitalocean side:
+1) upload csv file to digitalocean server
+2) psql -d scanorder -U symfony (EXIT \q)
+
+#COPY trip.test(VendorID int,passenger_count int) FROM '/home/Documents/trip.csv' DELIMITER ',' CSV HEADER;
+#COPY zip_codes FROM '/path/to/csv/ZIP_CODES.txt' WITH (FORMAT csv);
+3)COPY user_fosuser(id,username,username_canonical,enabled,password,roles,primarypublicuserid) FROM '/usr/local/bin/order-lab/temp/fos_user_test.csv' DELIMITER ',' CSV HEADER;
+COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test.csv' DELIMITER ',' CSV HEADER;
+COPY user_fosuser FROM '/usr/local/bin/order-lab/temp/fos_user_test_int.csv' DELIMITER ',' CSV HEADER;
+
+
+
+
+IntellegentConverter:
+[dbo].[calllog_calllogentrymessage_document]: 
+Cannot create table: CREATE TABLE "dbo"."calllog_calllogentrymessage_document" ("message_id" INTEGER NOT NULL, "document_id" INTEGER NOT NULL) WITH OIDS. 
+ERROR:  syntax error at or near "OIDS" LINE 1: ... INTEGER NOT NULL, "document_id" INTEGER NOT NULL) WITH OIDS  
+Sent a question to tech support.
+
+Ispirer:
+https://www.ispirer.com/products/sql-server-to-postgresql-migration
+Can not connect to the specifica DB:
+Choose the specific DB in options: Create a new data source to SQL Server->"Change the default databse to:") - Looks OK
+Install psql.exe for import (https://www.enterprisedb.com/thank-you-downloading-postgresql?anid=1256972)
+
+TODO:
+1)Try Management Studio again now when PostgreSQL is installed on Collage
+https://docs.microsoft.com/en-us/sql/integration-services/import-export-data/connect-to-a-postgresql-data-source-sql-server-import-and-export-wizard?view=sql-server-2017
+
+2) Try https://severalnines.com/database-blog/migrating-mssql-postgresql-what-you-should-know (Pgloader)
+
+Test as apache: su -s /bin/bash apache
+Generate Invoice PDF:
+[2019-12-02 20:19:10] request.CRITICAL: Uncaught PHP Exception RuntimeException: "The exit status code '127' says something went wrong: 
+stderr: "sh: --lowquality: command not found " stdout: "" command:  
+--lowquality --cookie 'PHPSESSID' 'oa09mpp6rncmg7q3p1l6pknop7' --javascript-delay '9000' 
+--load-error-handling 'ignore' 'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' 
+'/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-02-2019.pdf'
+." at /opt/order-lab/Scanorders2/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php line 336 {"exception":"[object] 
+(RuntimeException(code: 0): The exit status code '127' says something went wrong:\nstderr: \"sh: --lowquality: command not found\n\"\nstdout: \"\"\ncommand:  
+--lowquality --cookie 'PHPSESSID' 'oa09mpp6rncmg7q3p1l6pknop7' --javascript-delay '9000' --load-error-handling 'ignore' 
+'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' 
+'/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-02-2019.pdf'
+. at /opt/order-lab/Scanorders2/vendor/knplabs/knp-snappy/src/Knp/Snappy/AbstractGenerator.php:336)"} []
+
+/usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' 'lgl591vfh1p0esokkqcdv5crj5' --javascript-delay '9000' --load-error-handling 'ignore' 'http://157.139.226.86/order/translational-research/invoice/download-invoice-pdf/5' '/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/InvoicePDF/Invoice-APCP2173-REQ15079-V2-nyptestuser1-12-03-2019.pdf'
+Error: Failed to load http://127.0.0.1/order/translational-research/invoice/download-invoice-pdf/5, with network status code 1 and http status code 0 - Connection refused
+Check: /usr/bin/xvfb-run wkhtmltopdf --load-error-handling 'ignore' http://localhost/order/css/2d57033.css?1575379007 /opt/order-lab/Scanorders2/web/Uploaded/transres/InvoicePDF/test.pdf
+/usr/bin/xvfb-run wkhtmltopdf --lowquality --cookie 'PHPSESSID' 'lgl591vfh1p0esokkqcdv5crj5' --javascript-delay '9000' --load-error-handling 'ignore' 'http://localhost/order/translational-research/invoice/download-invoice-pdf/5' '/opt/order-lab/Scanorders2/web/Uploaded/transres/InvoicePDF/Invoice.pdf'
+
+Packing Slip PDF:
+"/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs" --disk-cache=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://157.139.226.86/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP2173-REQ15079-Ivanov-12-03-2019.pdf" "A4"
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --ssl-protocol=any "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true --debug=yes --ignore-ssl-errors=true --ssl-protocol=any --web-security=true "/opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js" http://localhost/order/translational-research/work-request/download-packing-slip-pdf/15079 "/opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlipTest.pdf" "A4"
+Result: Resource request error: QNetworkReply::NetworkError(ConnectionRefusedError) ( "Connection refused" )
+/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --disk-cache=true /opt/order-lab/Scanorders2/vendor/olegutil/phantomjs/rasterize.js http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14017 /opt/order-lab/Scanorders2/app/../web/Uploaded/transres/PackingSlipPDF/PackingSlip-PDF-APCP585-REQ14017_(14542-RS73305)-Hebding-12-04-2019.pdf "A4"
+
+Accept connection from localhost?
+"knplabs/knp-components": "^1.3",
+"knplabs/knp-paginator-bundle": "~2.5",
+"knplabs/knp-snappy-bundle": "v1.4",		
+Seacrh why knp-snappy-bundle does not show generated barcodes

@@ -1,0 +1,43 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+    {#<meta charset="UTF-8">#}
+    {#<title>Title</title>#}
+{#</head>#}
+{#<body>#}
+
+{#test page#}
+
+{#</body>#}
+{#</html>#}
+
+
+{#'sitename'#}
+{#'mytitle' #}
+{#'testData' #}
+
+{#{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}#}
+{% extends "AppDashboardBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ mytitle }}
+{% endblock %}
+
+
+{% block content %}
+
+
+    <p>This is site {{ sitename }}</p>
+
+    {% for testD in testData %}
+        {{ testD }}<br>
+    {% endfor %}
+
+{% endblock %}
+
+
+
+
+
+

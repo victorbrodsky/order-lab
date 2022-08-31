@@ -1,0 +1,141 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    Testing
+{% endblock %}
+
+{% block content %}
+
+    <div class="well">
+        Test Files: {{ testFiles }}
+    </div>
+    <br>
+    <input type="hidden" id="testFiles" value="{{ testFiles }}" />
+
+    {#<p><div class="totalTests">Total Tests</div></p>#}
+    {#<p>Completed tests <div class="completedCounter"></div></p>#}
+    <br>
+    <div class="infomessage alert alert-primary" role="alert">
+        <p id="pleasewait">
+            Please wait ...
+        </p>
+        <p>
+            Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>
+        </p>
+    </div>
+
+    {#<code><pre>#}
+    <div id="result"></div>
+    {#</pre></code>#}
+
+    {#<div id="message" class="alert alert-primary" role="alert">Please Wait ...</div>#}
+
+    <br>
+    <div class="infomessage alert alert-primary" role="alert">
+        <p id="pleasewait">
+            Please wait ...
+        </p>
+        <p>
+            Total Tests <span class="totalTests">0</span>; Completed tests <span class="completedCounter">0</span>; Failed tests <span class="failedTests">0</span>
+        </p>
+    </div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+
+        var _testCompleted = 0;
+        var _testFailed = 0;
+
+        $(document).ready(function () {
+
+            var testFiles = $('#testFiles').val();
+            var filesArray = testFiles.split(",");
+
+            var totalCount = filesArray.length;
+
+            //$('#message').text("Running "+totalCount+" tests. Please Wait ...");
+            $('.totalTests').text(totalCount);
+            $('.completedCounter').text(_testCompleted);
+
+            var counter = 1;
+
+            for(let i = 0; i < totalCount; i++) {
+                runTestingProcess(filesArray[i],counter,totalCount);
+                counter++;
+            }
+
+        });
+
+        function runTestingProcess(testFile,counter,totalCount) {
+            //var leftTest = totalCount - _testCompleted;
+            //$('#message').text("Running "+leftTest+" of "+totalCount+" tests. Please Wait ...");
+            //$('#message').text("Running "+totalCount+" tests (completed "+_testCompleted+" tests). Please Wait ...");
+
+            var url = Routing.generate('employees_run_test_ajax');
+            $.ajax({
+                url: url,
+                timeout: 600000, //in milliseconds. sets timeout to 10 minutes
+                dataType: 'json',
+                async: true,
+                data: {testFile: testFile},
+            }).done(function(data) {
+                _testCompleted = _testCompleted + 1;
+                $('.completedCounter').text(_testCompleted);
+                //TODO: check for 'FAILURES!' and change color
+                if( data.indexOf("FAILURES!") >= 0 || data.indexOf("ERRORS!") >= 0 ) {
+                    data = '<div class="alert alert-danger" role="alert">'+data+'</div>';
+                    _testFailed = _testFailed + 1;
+                    $('.failedTests').text(_testFailed);
+                } else {
+                    //_testFailed = _testFailed + 1; //testing
+                    data = '<div class="alert alert-success" role="alert">'+data+'</div>';
+                }
+                $('#result').append(data);
+                console.log("counter="+counter+", totalCount="+totalCount+", _testCompleted="+_testCompleted);
+                if( _testCompleted == totalCount ) {
+//                    $('#message').text("All "+totalCount+" tests are completed");
+//                    $('#message').removeClass('alert-primary').addClass('alert-success');
+                    if( _testFailed == 0 ) {
+                        $('.infomessage').removeClass('alert-primary').addClass('alert-success');
+                        $('#pleasewait').text('All tests has been successfully completed');
+                    } else {
+                        $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
+                        $('#pleasewait').text("All tests has been completed with "+_testFailed + ' test(s) failed');
+                    }
+
+                }
+            }).fail(function(jqXHR, exception) {
+//                $('#message').text("Error: test suite failed to start for "+testFile);
+//                $('#message').removeClass('alert-primary').addClass('alert-danger');
+                $('#pleasewait').text("Error: test suite failed to start the "+testFile+" with jqXHR.status="+jqXHR.status+" and exception="+exception);
+                $('.infomessage').removeClass('alert-primary').addClass('alert-danger');
+                //$('#result').append("Error: test suite failed to start");
+            }).always(function() {
+//                $('.completedCounter').text(_testCompleted);
+//                $('#message').hide();
+            });
+        }
+    </script>
+
+{% endblock %}

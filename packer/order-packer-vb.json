@@ -1,0 +1,100 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [
+	{
+	  "type": "virtualbox-iso",
+	  "guest_os_type": "Ubuntu_64",
+	  "iso_url": "ubuntu-16.04.2-server-amd64.iso",
+	  "iso_checksum": "769474248a3897f4865817446f9a4a53",
+	  "iso_checksum_type": "md5",
+	  "ssh_username": "packer",
+	  "ssh_password": "packer",
+	  "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+	}
+
+  ],
+
+  "provisioners": [
+  
+     {
+        "type": "shell",
+        "inline": [
+           "sleep 30",
+           "sudo apt-get update",
+           "sudo apt-get install -y apache2"          
+         ]
+     },
+   
+     {
+        "type": "shell",
+        "inline": [
+           "sleep 30",	
+	   "sudo apt-add-repository -y ppa:ondrej/php",
+           "sudo apt-get update",
+	   "sudo apt-get install -y php7.0 php5.6 php5.6-mysql php-gettext php5.6-mbstring php-mbstring php7.0-mbstring libapache2-mod-php5.6 libapache2-mod-php7.0",	
+           "sudo apt-get install -y php5.6-xml php5.6-cli php5.6-curl php5.6-json php5.6-intl php5.6-ldap php5.6-gd",   
+           "sudo apt-get install -y zip unzip php5.6-zip",                   
+           "sudo a2dismod php7.0 ; sudo a2enmod php5.6 ; sudo service apache2 restart ; echo 1 | sudo update-alternatives --config php"
+         ]     
+      },
+
+      {
+        "type": "shell",
+        "inline": [                      
+           "sudo apt-get install -y postgresql postgresql-contrib",
+           "sudo apt-get install -y php5.6-pgsql",
+           "sudo service apache2 restart"         
+         ]    
+      },
+
+      {
+        "type": "shell",
+        "inline": [                               
+           "sudo -u postgres createdb scanorder",
+	   "sudo -u postgres psql postgres postgres -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
+	   "sudo -u postgres psql postgres postgres -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
+           "sudo -u postgres psql postgres postgres -c \"GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser\""          
+         ]    
+      },
+
+      {
+        "type": "shell",
+        "inline": [  
+           "sudo apt-get install -y git",
+           "ssh-keyscan github.com >> ~/.ssh/known_hosts",
+           "cd /usr/local/bin/",
+           "git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab",
+           "sudo chmod a+x /usr/local/bin/order-lab",
+           "chown -R www-data:www-data /usr/local/bin/order-lab",
+           "cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available/",
+           "cp /usr/local/bin/order-lab/packer/php.ini /etc/php/5.6/apache2/",
+           "sudo a2enmod rewrite",
+           "sudo service apache2 restart",
+           "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer"                 
+         ]    
+      },
+ 
+      {
+          "type": "file",
+          "source": "parameters_bash_file",
+          "destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
+       },
+
+      {
+        "type": "shell",
+        "inline": [             
+           "cd /usr/local/bin/order-lab/Scanorders2",
+           "composer install",
+	   "chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod",
+	   "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod"	                          
+         ]    
+      }      
+      
+   ]
+
+}
+

@@ -1,0 +1,203 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Upload/upload-applications.html.twig" as reasappMacros %}
+
+{% block title %}
+    Upload Multiple Applications
+{% endblock %}
+
+
+{% block content %}
+
+    {{ form_start(form) }}
+
+        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+        {#https://bitbucket.org/victorbrodsky/trp/issues/182/bulk-application-upload#}
+
+        {#DropZone: Please drag and drop ERAS application files here#}
+        <div class="well form-element-holder user-erasfiles">
+            <label class="col-xs-12 control-label">Please drag and drop ERAS application files here</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                    {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+                </div>
+            </div>
+        </div>
+
+
+        {#button: Upload and Extract Data#}
+        {% if form.upload is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.upload) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+
+    {#hidden accordion titled “Uploaded Applications” with the Handsontable with 1 row as well as “Add Listed Apllications” button. The table should have the following columns:#}
+
+    {#Application Receipt Date (pre-populate with current date)#}
+
+    {#Residency Track#}
+
+    {#Application Season Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Application Season End Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Expected Residency Start Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#Expected Graduation Date (populate with the same default as on https://view.med.cornell.edu/residency-applications/new/ )#}
+
+    {#First Name#}
+
+    {#Last Name#}
+
+    {#Middle Name#}
+
+    {#Preferred Email#}
+
+    {#Medical School Graduation Date#}
+
+    {#Medical School Name#}
+
+    {#Degree (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#USMLE Step 1 Score#}
+
+    {#USMLE Step 2 CK Score#}
+
+    {#USMLE Step 3 Score#}
+
+    {#Country of Citizenship (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Visa Status (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Is the applicant a member of any of the following groups? (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Number of 1st author publications#}
+
+    {#Number of all publications#}
+
+    {#AOA (show the same checkmark in the Handsontable cell as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Couple’s Match:#}
+
+    {#Post-Sophomore Fellowship#}
+
+    {#Previous Residency Start Date#}
+
+    {#Previous Residency Graduation/Departure Date#}
+
+    {#Previous Residency Institution:#}
+
+    {#Previous Residency City#}
+
+    {#Previous Residency State (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Previous Residency Country (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#Previous Residency Track (show the same choices in the Handsontable cell dropdown menu as what is shown on https://view.med.cornell.edu/residency-applications/new/ for this field)#}
+
+    {#ERAS Application ID#}
+
+    {#ERAS Application (show the cells in this column as blank - this is where you will show the file name of the PDF once it uploads)#}
+
+    {#Action (Drop down Handsontable field with two options “Add” and “Do not add”; Select “Add” by default.)#}
+
+    {{ reasappMacros.resappUploadHandsontable(form,inputDataFile,cycle) }}
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {#Fix for numbro.min.js.map: From Handsontable README.md: Use Handsontable bare files => **handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>#}
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppResAppBundle/form/js/handsontable.js') }}" ></script>
+
+    <script language="Javascript">
+
+        var _handsometableDataArr = [];
+
+        $(document).ready(function() {
+            var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            //console.log(_handsometableDataArr);
+
+            // Wait until idle (busy must be false)
+            var _TIMEOUT = 300; // waitfor test rate [msec]
+
+            //console.log('before wait for');
+            waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                //console.log('The show can resume !');
+                resappMakeColumnData();
+
+                handsonTableInit(_handsometableDataArr);
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% macro resappUploadHandsontable( form, inputDataFile, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        Uploaded Applications
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    {#{{ formmacros.field(form.antibodyReferences) }}#}
+                    <br>
+
+                    <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}

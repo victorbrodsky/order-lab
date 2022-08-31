@@ -1,0 +1,30 @@
+ Volume in drive C is Windows
+ Volume Serial Number is D2AD-D1C2
+
+ Directory of C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\web
+
+03/22/2017  12:32 PM    <DIR>          .
+03/22/2017  12:32 PM    <DIR>          ..
+07/05/2016  12:07 PM             2,951 .htaccess
+12/02/2015  11:52 AM             1,233 app.php
+07/28/2016  11:00 AM             1,687 app_dev.php
+03/22/2017  12:32 PM    <DIR>          bundles
+03/22/2017  12:32 PM            18,823 config.php
+02/01/2017  08:21 PM    <DIR>          css
+03/22/2017  12:34 PM                 0 deploylog.txt
+01/12/2017  10:20 AM             1,223 favicon.ico
+01/12/2017  11:08 AM             1,150 file.ico
+01/12/2017  10:20 AM             1,242 glyphicons-37-file.png
+01/12/2017  10:20 AM             1,389 glyphicons-39-plane.png
+01/12/2017  10:20 AM             1,411 glyphicons-442-phone-alt.png
+01/12/2017  10:20 AM             1,335 glyphicons-81-retweet.png
+11/23/2015  11:56 AM                22 info.php
+02/01/2017  07:12 PM    <DIR>          js
+01/12/2017  11:09 AM             1,150 retweet.ico
+11/23/2015  11:56 AM               110 robots.txt
+11/23/2015  11:56 AM    <DIR>          test
+11/23/2015  11:56 AM                48 testopcache.php
+11/23/2015  11:56 AM             7,168 Thumbs.db
+04/01/2016  04:10 PM    <DIR>          Uploaded
+              16 File(s)         40,942 bytes
+               7 Dir(s)  1,710,733,172,736 bytes free

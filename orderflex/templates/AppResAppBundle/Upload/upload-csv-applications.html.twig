@@ -1,0 +1,573 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Upload/upload-applications.html.twig" as reasappMacros %}
+
+{% block title %}
+    Upload Multiple Applications
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="default-residency-track" value="{{ resapp_util.getDefaultResidencyTrack() }}" />
+
+    {#{{ form_start(form) }}#}
+    {{ form_start(form,{'attr':{'onsubmit':'return validateUploadForm();'}}) }}
+
+        {% if form.file is defined %}
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6" align="center">
+                    {{ form_row(form.file) }}
+                </div>
+                <div class="col-xs-3"></div>
+            </div>
+            <br>
+        {% endif %}
+
+        {% if form.erasFiles is defined %}
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+            {#data-dropzoneconfirmation-disable = "1"#}
+
+            {#DropZone: Please drag and drop ERAS application files here#}
+            {#dropzoneconfirmation-disable - disable alert when upload or remove#}
+            <div class="well form-element-holder user-erasfiles dropzoneconfirmation-disable">
+                <label class="col-xs-12 control-label">
+                    Please drag and drop ERAS application PDF files and the CSV file listing them here.
+                    It is recommended to upload one CSV file and the corresponding ERAS application PDF files (unzipped) together.
+                    <br>Only CSV file is able to accurately populate these application fields,
+                    while populating using only PDF files is not accurate and some fields can be missed.
+                    <br>Uploaded PDF files will be attached to the corresponding residency application using common "ERAS Application ID" and/or "AAMC ID".
+
+                    <br><br>Please make sure that all files are uploaded correctly and marked with a green check icon on the top left in the each file box.
+                    <br>Please verify that "ERAS Application" and all other important fields such as medical school and score are populated.
+
+                    <br>For more detailed instruction, please refer to the <a href="{{ path('resapp_help_page') }}" target="_blank">help page</a>.
+                 </label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.erasFiles,cycle,'noprototype',100,'default','ERAS application files') }}
+                        {#{{ usermacros.documentsContainer(form,form.platformLogos,cycle,'noprototype',100,'default','ERAS application files','asForm') }}#}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {#button: Upload and Extract Data#}
+        {% if form.upload is defined %}
+            <br>
+            <p>
+                {% if withdata %}
+                    {% set showBtnStyle = 'display: none;' %}
+                    {% set showMsgStyle = '' %}
+                {% else %}
+                    {% set showBtnStyle = '' %}
+                    {% set showMsgStyle = 'display: none;' %}
+                {% endif %}
+                <div id="upload-extract-button" style="{{ showBtnStyle }}">
+                    {{ form_widget(form.upload) }}
+                </div>
+                {#<div id="uploading-extracting-message" style="display: none;">Uploading and extracting data…</div>#}
+                {#<div id="uploading-extracting-message" style="{{ showMsgStyle }}">Uploading and extracting data…</div>#}
+            </p>
+        {% endif %}
+
+        {% if form.addbtn is defined %}
+            <br>
+            <p>
+            <div id="add-listed-button" style="display: none;">
+                {{ form_widget(form.addbtn) }}
+            </div>
+            <div id="add-listed-button-novalidation" style="display: none;">
+                {{ form_widget(form.addbtnforce) }}
+            </div>
+            <div id="add-listed-message" style="display: none;">Adding Applications...</div>
+            </p>
+        {% endif %}
+
+        <p><div id="wait-message" style="{{ showMsgStyle }}">Processing...</div></p>
+
+    {{ form_end(form) }}
+
+    <div id="please-wait" style="display: none;">Please Wait ...</div>
+
+    <p>
+        <div id="projectError" class="alert alert-danger" style="display: none;"></div>
+    </p>
+
+    {{ reasappMacros.resappUploadHandsontable(form,cycle) }}
+
+{% endblock %}
+
+{% block additionalcss %}
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />#}
+    {#From Handsontable README.md: Use Handsontable bare files => **handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/numbro/numbro.js') }}" ></script>#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/moment/moment.js') }}" ></script>#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/pikaday/pikaday.js') }}" ></script>#}
+    {#From Handsontable README.md: Use Handsontable bare files => **handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.#}
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.js') }}" ></script>
+
+    <script type="text/javascript" src="{{ asset('orderassets/AppResAppBundle/form/js/handsontable.js') }}" ></script>
+
+    <script language="Javascript">
+
+        var _handsometableDataArr = [];
+
+        $(document).ready(function() {
+
+            //testing
+//            var confirmResDuplicateError = creatConfirmationModal("Are you sure?",function(){alert('Clicked OK'); return true;},function(){alert('Clicked Cancel'); return false;});
+//            console.log("confirmResDuplicateError="+confirmResDuplicateError);
+//            if( confirmResDuplicateError == true ) {
+//                alert("OK");
+//            } else {
+//                alert("Cancel");
+//            }
+
+            //document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
+
+            var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            //console.log("_handsometableDataArr:");
+            //console.log(_handsometableDataArr);
+
+//            var uploadLaddaBtn = null;
+//            if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
+//                $("#upload-extract-button").hide();
+//                $("#uploading-extracting-message").show();
+//                //uploadLaddaBtn = startLaddaBtn();
+//            }
+
+            getResidencytracks();
+            getResidencyEthnicities();
+            getResApplicationsForThisYear();
+            getResidencyStartEndDates();
+
+            // Wait until idle (busy must be false)
+            var _TIMEOUT = 300; // waitfor test rate [msec]
+
+            //console.log('before wait for');
+            waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                //console.log('The show can resume !');
+                resappMakeColumnData();
+
+                handsonTableInit(_handsometableDataArr);
+
+                //stopLaddaBtn(uploadLaddaBtn);
+                if( _handsometableDataArr && _handsometableDataArr.length > 0 ) {
+                    $("#upload-extract-button").hide();
+                    //$("#uploading-extracting-message").hide();
+                    $("#wait-message").hide();
+
+                    //enable "Add Listed Applications" button
+                    $("#add-listed-button").show();
+                }
+            });
+        });
+
+        function startLaddaBtn() {
+            var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
+            //console.log("startLaddaBtn:");
+            //console.log(uploadBtn);
+            var uploadLaddaBtn = Ladda.create( uploadBtn );
+            uploadLaddaBtn.start();
+            return uploadLaddaBtn;
+        }
+        function stopLaddaBtn(uploadLaddaBtn) {
+            if( uploadLaddaBtn ) {
+                //var uploadBtn = document.getElementById("oleg_resappbundle_bulkupload_upload");
+                //console.log("stopLaddaBtn:");
+                //console.log(uploadBtn);
+                //var uploadLaddaBtn = Ladda.create( uploadBtn );
+                uploadLaddaBtn.stop();
+            }
+            document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = false;
+        }
+        function disableUploadBtn() {
+            $("#upload-extract-button").hide();
+            //$("#uploading-extracting-message").show();
+            $("#wait-message").show();
+            return;
+
+            var file = document.getElementById("oleg_resappbundle_bulkupload_file");
+            if( file.files.length > 0 ) {
+                document.getElementById("oleg_resappbundle_bulkupload_upload").disabled = true;
+            }
+        }
+
+        function validateUploadForm() {
+            //alert("form submit");
+            $("#upload-extract-button").hide();
+            //$("#uploading-extracting-message").show();
+
+            $("#add-listed-button").hide();
+            //$("#add-listed-message").show();
+
+            $("#wait-message").show();
+
+            //return false;
+        }
+
+        function resappValidateRequest(withConfirm) {
+            resappHideBtn();
+
+            var validated = true;
+            var label = null;
+            var value = null;
+
+            //validate submit confirmation
+            $("#projectError").hide();
+            $("#projectError").html(null);
+
+//            //validate "Requested Quantity" in product and service
+//            $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
+//                //console.log( "Required: "+index + ": " + $( this ).text() );
+//                label = $( this ).text();   //$(this).find("label").text();
+//                value = null;
+//
+//                var holder = $(this).closest(".row");
+//
+//                //input
+//                var inputField = holder.find(".form-control");
+//                if( inputField.length > 0 ) {
+//                    value = inputField.val();
+//                    //console.log("label="+label+"; value="+value);
+//                    if( !value ) {
+//                        //console.log("Error Input form-control. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//                //select combobox
+//                var selectField = holder.find("select.combobox");
+//                if( selectField.length > 0 ) {
+//                    value = selectField.val();
+//                    //console.log("select combobox: label="+label+"; value="+value);
+//                    if( !value ) {
+//                        console.log("Error Select select combobox. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//                //input combobox
+//                var inputSelectField = holder.find("input.combobox");
+//                if( inputSelectField.length > 0 ) {
+//                    value = inputSelectField.val();
+//                    //console.log("input combobox: label="+label+"; value="+value);
+//                    if( !value ) {
+//                        console.log("Error Select input combobox. label="+label);
+//                        validated = false;
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//
+//            });
+
+//            if( validated == false ) {
+//                console.log("Error: required value is NULL! label="+label+"; value="+value);
+//                var msg = "The required field '" + label + "' is empty";
+//                $("#projectError").show();
+//                $("#projectError").html(msg);
+//
+//                resappShowBtn();
+//                return false;
+//            }
+
+//            if( withConfirm == true ) {
+//                var confirmationSubmit = $('#confirmationSubmit');
+//                if (confirmationSubmit.length) {
+//                    if (confirmationSubmit.is(':checked')) {
+//                        //ok confirmed
+//                        //console.log("ok confirmed");
+//                    } else {
+//                        var msg = "Please confirm the agreement in order to submit a new work request.";
+//                        $("#projectError").show();
+//                        $("#projectError").html(msg);
+//                        //console.log("not confirmed");
+//                        transresShowBtn();
+//                        return false;
+//                    }
+//                }
+//            }
+
+//            var requiredQunatities = $(".product-requested-quantity");
+//            $.each(requiredQunatities, function( index, valueField ) {
+//                //console.log("valueField:");
+//                //console.log(valueField);
+//                //transresShowBtn();
+//                //return false;
+//                var value = valueField.value;
+//                //alert( index + ": " + value );
+//                //console.log("requiredQunatity="+value);
+//                if( Math.floor(value) == value && $.isNumeric(value) ) {
+//                    //integer ok
+//                } else {
+//                    var msg = "Please enter an integer (a number) into the 'Requested Quantity' field before submitting.";
+//                    $("#projectError").show();
+//                    $("#projectError").html(msg);
+//
+//                    transresShowBtn();
+//                    return false;
+//                }
+//            });
+
+            //validate
+            //If “Create New Record” is selected and a record for the person already exists (search for the Last Name + First Name among
+            // the existing applications in the current year’s applications without statuses of Hidden and Archived),
+            // before beginning the bulk import, show a modal:
+            //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system.
+            // Would you like to create new (possibly duplicate) records for these applications?” (Yes) (No)
+
+            var validationError = resappValidateHandsonTable();
+            //console.log("validationError:");
+            //console.log(validationError);
+            var validationDuplicateError = validationError.validationDuplicateError;
+            //console.log("validationDuplicateError="+validationDuplicateError);
+            //console.log(validationDuplicateError);
+            var validationFieldsError = validationError.validationFieldsError;
+            //console.log("validationFieldsError="+validationFieldsError);
+            //console.log(validationFieldsError);
+
+            if( validationFieldsError ) {
+
+                //validationFieldsError = "Missing fields: " + validationFieldsError;
+
+                validationFieldsError = validationFieldsError + " Would you like to proceed? The applications with missing fields will be ignored.";
+
+                //console.log("resappValidateRequest: validationFieldsError="+validationFieldsError);
+                $("#projectError").show();
+                $("#projectError").html(validationFieldsError);
+                resappShowBtn();
+
+                //var confirmResFieldsError = confirm(validationFieldsError);
+                var confirmResFieldsError = creatConfirmationModal(
+                        validationFieldsError,
+                        function(){return true;},
+                        function(){return false;}
+                );
+                //console.log("confirmResFieldsError="+confirmResFieldsError);
+                if( confirmResFieldsError == true ) {
+                    //OK
+                    //console.log("confirmResFieldsError OK");
+                    //TODO: it would be good to change Action to "Do not add"
+                } else {
+                    //console.log("confirmResFieldsError Cancel");
+                    return false;
+                }
+            }
+
+            if( validationDuplicateError ) {
+                //console.log("resappValidateRequest: validationDuplicateError="+validationDuplicateError);
+                $("#projectError").show();
+                $("#projectError").html(validationDuplicateError);
+                resappShowBtn();
+
+                //“Applications for LastName1 FirstName1, LastName2 FirstName2, … already exist in the system. Would you like to create new (possibly duplicate) records for these applications?”
+                validationDuplicateError = validationDuplicateError + " Would you like to create new (possibly duplicate) records for these applications?";
+
+                //TODO: submit form: click on id=oleg_resappbundle_bulkupload_addbtn onclick="return resappValidateRequest(true);"
+                var confirmResDuplicateError = creatConfirmationModal(
+                        validationDuplicateError,
+                        function(){return true;},
+                        function(){return false;}
+                );
+                //var confirmResDuplicateError = confirm(validationDuplicateError);
+                //console.log("confirmResDuplicateError="+confirmResDuplicateError);
+                if( confirmResDuplicateError == true ) {
+                    //OK
+                    //console.log("confirmResDuplicateError OK");
+                } else {
+                    //console.log("confirmResDuplicateError Cancel");
+                    return false;
+                }
+            }
+
+//            if( validationDuplicateError || validationFieldsError ) {
+//                var validationErrorStr = validationDuplicateError + " " + validationFieldsError;
+//                console.log("resappValidateRequest: validationErrorStr="+validationErrorStr);
+//                $("#projectError").show();
+//                $("#projectError").html(validationErrorStr);
+//                resappShowBtn();
+//
+//                var confirmRes = confirm(validationErrorStr);
+//                if( confirmRes == true ) {
+//                    //OK
+//                } else {
+//                    return false;
+//                }
+//            }
+
+            //clear error message
+            $("#projectError").hide();
+            $("#projectError").html(null);
+
+            //validation of the application to add with empty fields
+            //var validationFieldsError = resappValidateFieldsHandsonTable();
+
+            //testing
+            //console.log("resappValidateRequest: test finished");
+            //resappShowBtn();
+            //return false;
+
+            return true;
+        }//EOF resappValidateRequest
+
+        function resappHideBtn() {
+            //console.log("hide submit");
+            $(":submit").hide();
+            $('#please-wait').show();
+        }
+        function resappShowBtn() {
+            //console.log("show submit");
+            $(":submit").show();
+            $('#please-wait').hide();
+        }
+
+        //http://jsfiddle.net/MjmVr/363/
+        function creatConfirmationModal( validationDuplicateError, true_func, false_func ) {
+            var modalHtml =
+                '<div id="resappDataConfirmModal" class="modal fade resapp-data-confirm-modal" tabindex="-1" role="dialog">' +
+                    '<div class="modal-dialog" role="document">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+    //                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center">' +
+                                validationDuplicateError+
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statusnotify" id="dataConfirmStatusNotify">Change status and notify applicant</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok resapp-data-confirm-ok-statuswithoutnotify" id="dataConfirmStatusWithoutNotify">Change status without notification</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statusnotify">OK</a>' +
+                                //'<a class="btn btn-primary resapp-data-confirm-ok" id="dataConfirmOK-statuswithoutnotify">OK</a>' +
+                                '<button class="btn btn-primary resapp-data-confirm-ok">OK</button>' +
+                                '<button class="btn btn-default resapp-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+
+            $('#resappDataConfirmModal').modal({show:true});
+
+            $('.resapp-data-confirm-ok').on('click', function(event){
+                //alert("on modal js: dataConfirmOK clicked");
+                //var footer = $('.modal-footer');
+                //footer.html('Please wait ...');
+                //console.log("confirmation ok");
+                $(this).modal( 'hide' ).data( 'bs.modal', null );
+                $(this).remove();
+                $('.modal-backdrop').remove();
+                $('body').removeClass( "modal-open" );
+                $('#resappDataConfirmModal').remove();
+
+                //Additional add button without validation. Used by JS to add the listed application in handsontable by confirmation modal
+                $("#oleg_resappbundle_bulkupload_addbtnforce").click();
+
+                true_func();
+            });
+
+            $('.resapp-data-confirm-cancel').on('click', function(event){
+                //alert("on modal js: dataConfirmOK clicked");
+                //var footer = $('.modal-footer');
+                //footer.html('Please wait ...');
+                //console.log("confirmation cancel");
+                $(this).modal( 'hide' ).data( 'bs.modal', null );
+                $(this).remove();
+                $('.modal-backdrop').remove();
+                $('body').removeClass( "modal-open" );
+                $('#resappDataConfirmModal').remove();
+                false_func();
+            });
+
+//            $('#resappDataConfirmModal').on('hidden.bs.modal', function () {
+//                //console.log("hidden.bs.modal");
+//                $(this).modal( 'hide' ).data( 'bs.modal', null );
+//                $(this).remove();
+//                $('.modal-backdrop').remove();
+//                $('body').removeClass( "modal-open" );
+//                false_func();
+//            });
+
+            //console.log("confirmation end");
+            return false;
+        }
+
+
+        function dropzoneDisableButtons() {
+            //$(':input[type="submit"]').prop('disabled', true);
+            $('#oleg_resappbundle_bulkupload_upload').prop('disabled', true);
+        }
+        function dropzoneEnableButtons() {
+            //$(':input[type="submit"]').prop('disabled', false);
+            $('#oleg_resappbundle_bulkupload_upload').prop('disabled', false);
+        }
+
+    </script>
+{% endblock %}
+
+{% macro resappUploadHandsontable( form, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        Uploaded Applications
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    {#{{ formmacros.field(form.antibodyReferences) }}#}
+                    <br>
+
+                    <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}

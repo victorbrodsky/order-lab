@@ -1,0 +1,141 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+<!-- Uploads -->
+<div id="panel-uploads" class="panel panel-info">
+
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a data-toggle="collapse" href="#uploads">
+            Uploads (Please upload PDFs to ensure proper integration in the Complete Application PDF)
+        </a>
+    </h4>
+</div>
+
+<div id="uploads" class="panel-collapse collapse {{ collapsein }}">
+    <div class="panel-body">
+
+
+        {#<div class="well form-element-holder">#}
+            {#<label class="col-xs-12 control-label">Applicant Photo</label>#}
+            {#<div class="row withpaddingtop">#}
+                {#<div class="col-xs-12">#}
+
+                    {#&#123;&#35;{{ usermacros.fileuploadLabelField( form.user.avatar, cycle, 'avatar', '' ) }}&#35;&#125;#}
+                    {#&#123;&#35;{{ usermacros.singleUploadWell(form.user.vars.value.avatar,cycle,'user-avatar','noprototype') }}&#35;&#125;#}
+                    {#&#123;&#35;{{ usermacros.avatarForm(entity.user,cycle) }}&#35;&#125;#}
+
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+
+        <div class="well form-element-holder user-ResidencyApplication">
+            <label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="well form-element-holder user-ResidencyApplication">
+            <label class="col-xs-12 control-label">Curriculum Vitae - CV (Only the last CV will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {{ usermacros.documentsContainer(null,form.cvs,cycle,'noprototype',8,'default','Residency CV') }}
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="well form-element-holder user-ResidencyApplication">
+            <label class="col-xs-12 control-label">Cover Letter and/or Personal Statement (Only the last document will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {#{{ usermacros.fileuploadLabelField( null, form.coverLetters, cycle, 'user-coverLetters', 'noprototype' ) }}#}
+                    {{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Residency Cover Letter') }}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="well form-element-holder user-Examination">
+            <label class="col-xs-12 control-label">USMLE Scores (All documents will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {% if form.examinations is defined %}
+                        {% for examination in form.examinations %}
+                            {#{{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}#}
+                            {{ usermacros.documentsContainer(null,examination.scores,cycle,'noprototype',8,'default','Residency USMLE Scores') }}
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+
+        {#<div class="well form-element-holder user-Reference">#}
+            {#<label class="col-xs-12 control-label">Reference Letters</label>#}
+            {#<div class="row withpaddingtop">#}
+                {#<div class="col-xs-12">#}
+
+                    {#{% if form.references is defined %}#}
+                        {#{% for reference in form.references %}#}
+                            {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+
+
+        <div class="well form-element-holder user-Otherdocuments">
+            <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+
+                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}
+
+                </div>
+            </div>
+        </div>
+
+
+    </div> <!-- panel-body -->
+</div> <!-- panel-collapse -->
+
+</div> <!-- panel panel-info -->
+
+
+
+
+
+

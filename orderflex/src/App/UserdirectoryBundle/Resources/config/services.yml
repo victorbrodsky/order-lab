@@ -1,0 +1,190 @@
+parameters:
+
+  employees.sitename: employees
+  employees.uploadpath:
+  employees.avataruploadpath:
+
+  default_time_zone: America/New_York
+  default_system_email: your_value
+  institution_url: your_value
+  institution_name: your_value
+  subinstitution_url: your_value
+  subinstitution_name: your_value
+  department_url: your_value
+  department_name: your_value
+  showcopyrightonfooter: your_value
+
+  wkhtmltopdfpath:
+
+  #ldap
+#  ldaphost: your_value
+#  ldapport: your_value
+#  ldapou: your_value
+#  ldapusername: your_value
+#  ldappassword: your_value
+#  ldapexepath: ../src/App/UserdirectoryBundle/Util/
+#  ldapexefilename: LdapSaslCustom.exe
+
+  #titles
+  mainhome_title:
+  listmanager_title:
+  eventlog_title:
+  sitesettings_title:
+  contentabout_page:
+
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true        # Allows optimizing the container by removing unused services; this also means
+                                # fetching services directly from the container via $container->get() won't work.
+                                # The best practice is to be explicit about your dependencies anyway.
+
+    custom_guard_authenticator:
+        class:     App\UserdirectoryBundle\Security\Authentication\CustomGuardAuthenticator
+
+    authenticator_utility:
+        class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
+
+    oleg.listener.maintenance:
+        class: App\UserdirectoryBundle\Services\MaintenanceListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    oleg.listener.exception:
+        class: App\UserdirectoryBundle\Services\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    #Custom selector fields
+    oleg.type.employees_custom_selector:
+        class: App\UserdirectoryBundle\Form\CustomType\CustomSelectorType
+#        arguments: ["@doctrine.orm.entity_manager","@service_container"]
+        tags:
+            - { name: form.type, alias: employees_custom_selector }
+
+    #idle time out handler (can pass %session_max_idle_time%. Now use DB)
+    oleg.handler.session_idle:
+        class: App\UserdirectoryBundle\Services\SessionIdleHandler
+#        arguments: ["@service_container", "@router", "@doctrine.orm.entity_manager"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #Redirect admin to index
+    employees_authentication_handler:
+        class: App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler
+
+    #twig listener
+    twigdate.listener.request:
+        class: App\UserdirectoryBundle\Services\TwigDateRequestListener
+        arguments: ["@twig", '%default_time_zone%']
+        tags:
+              - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    #user security util (removed "@security.token_storage" and "@security.authorization_checker")
+    user_security_utility:
+        class: App\UserdirectoryBundle\Util\UserSecurityUtil
+
+    user_utility:
+        class: App\UserdirectoryBundle\Util\UserUtil
+
+    #user generator util
+    user_generator:
+        class: App\UserdirectoryBundle\Util\UserGenerator
+
+    #user download util
+    user_download_utility:
+        class: App\UserdirectoryBundle\Util\UserDownloadUtil
+
+    #OneupUploaderBundle upload listener
+    oleg.upload_listener:
+        class: App\UserdirectoryBundle\Services\UploadListener
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist, method: onUpload }
+
+    #Doctrine listener for postPersist
+    doctrine.listener:
+        class: App\UserdirectoryBundle\Services\DoctrineListener
+        #arguments: ["@service_container"]
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: preUpdate, connection: default }
+
+#    foscomment.listener:
+#        class: App\UserdirectoryBundle\Services\FosCommentListener
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#        tags:
+#            - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
+#            - { name: "kernel.event_listener", event: "fos_comment.comment.post_persist", method: onCommentPostPersist }
+
+    #user mailer util
+    user_mailer_utility:
+        class: App\UserdirectoryBundle\Util\EmailUtil
+
+    user_role_voter:
+        class: App\UserdirectoryBundle\Security\Voter\UserRoleVoter
+        public: false
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    user_permission_voter:
+        class: App\UserdirectoryBundle\Security\Voter\UserPermissionVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+    user_formnode_utility:
+        class: App\UserdirectoryBundle\Util\FormNodeUtil
+
+    user_service_utility:
+        class: App\UserdirectoryBundle\Util\UserServiceUtil
+
+    oleg.logout.listener:
+          class: App\UserdirectoryBundle\Services\LogoutEventSubscriber
+
+#    user_comment_utility:
+#        class: App\UserdirectoryBundle\Util\UserCommentUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+#
+#    user_comment_listener_utility:
+#        class: App\UserdirectoryBundle\Util\FosCommentListenerUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+#    fos_comment.manager.comment:
+#        class: App\UserdirectoryBundle\Comment\Model\CommentManagerInterface
+#    fos_comment.manager.thread:
+#        class: App\UserdirectoryBundle\Comment\Model\ThreadManagerInterface
+
+    user_password_updater:
+        class: App\UserdirectoryBundle\User\Model\PasswordUpdater
+    user_manager:
+        class: App\UserdirectoryBundle\User\Model\UserManager
+#        arguments: ["@doctrine.orm.entity_manager", "@user_password_updater"]
+
+#    user_cache_clear:
+#        class: Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand
+#        calls:
+#            - [setContainer, ["@service_container"] ]
+#    user_install_assets:
+#            class: Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand
+#            calls:
+#                - [setContainer, ["@service_container"] ]
+
+#    Doctrine\ORM\Query\AST\Functions\FunctionNode:
+#        autowire: false
+#        autoconfigure: false
+##        public: false
+#        arguments:
+#          $name: '@name'
+
+#    App\UserdirectoryBundle\Query\CastFunction:
+#        autowire: false
+#        autoconfigure: false
+#        public: false
+#        arguments:
+#            $name: '@name'
+
+#    fos_comment.manager.thread:
+#        class: App\UserdirectoryBundle\Comment\Model\ThreadManager

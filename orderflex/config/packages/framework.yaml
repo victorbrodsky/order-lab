@@ -1,0 +1,48 @@
+framework:
+    #esi:             ~
+#    translator:      { fallback: %locale% }
+#    translator: ~
+    #translator:
+      #enabled: false
+
+    secret: '%secret%'
+#    secret: '%env(APP_SECRET)%'
+    #secret: '123'
+
+#    router:
+#        resource: "%kernel.project_dir%/config/routes.yml"
+#        strict_requirements: ~
+    form: 
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    #templating:
+        #engines: ['twig']
+#        assets_version: SomeVersionScheme
+    default_locale: "%locale%"
+#    trusted_proxies: ~
+#    session:         ~
+#        save_path: ~
+    session:
+        handler_id: null
+        cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
+        #cookie_samesite: lax
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
+        #storage_id: session.storage.filesystem
+        storage_factory_id: session.storage.factory.native
+    #fragments: ~
+    fragments: {path: /_fragment}
+    http_method_override: true
+    profiler:
+        collect: true #show profiler toolbar
+        #collect: false
+
+    #Testing http cache: With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass your application entirely on subsequent requests
+    #http_cache: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+

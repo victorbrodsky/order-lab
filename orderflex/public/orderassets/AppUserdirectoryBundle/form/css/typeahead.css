@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2017 Cornell University
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/*http://twitter.github.io/typeahead.js/examples/*/
+
+/*fix for small display for navbar*/
+.form-group-typeahead .twitter-typeahead {
+    display: block !important;
+}
+
+.tt-dropdown-menu,
+.gist {
+    text-align: left;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+    /*height: 30px;*/
+    padding: 8px 12px;
+    font-size: 24px;
+    line-height: 30px;
+    /*border: 2px solid #ccc;*/
+    /*-webkit-border-radius: 8px;*/
+    /*-moz-border-radius: 8px;*/
+    /*border-radius: 8px;*/
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.typeahead {
+    background-color: #fff;
+}
+
+.typeahead:focus {
+    border: 1px solid #0097cf;
+}
+
+.tt-query {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+    color: #999
+}
+
+.tt-dropdown-menu {
+    //width: 550px;
+    margin-top: 12px;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor {
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+.gist {
+    font-size: 14px;
+}
+
+/* example specific styles */
+/* ----------------------- */
+#multiple-datasets-typeahead-search .search-name, #navbar-multiple-datasets-typeahead-search .search-name {
+    color: #428bca;
+    font-weight: bold;
+    //width: 550px;
+    margin: 0 20px 5px 20px;
+    padding: 3px 0;
+    border-bottom: 1px solid #ccc;
+}
+

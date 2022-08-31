@@ -1,0 +1,262 @@
+# This file is the entry point to configure your own HTTP routes.
+# Files in the routes/ subdirectory configure the routes for your dependencies.
+
+#controllers:
+#    resource: ../src/App/*/Controller/
+#    type: annotation
+
+#main_common_home:
+#    path:      /
+#    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
+main_common_home:
+    path:      /
+#    defaults:  { _controller: AppUserdirectoryBundle:Home:mainCommonHome }
+    controller: App\UserdirectoryBundle\Controller\HomeController::mainCommonHomeAction
+
+main_under_construction:
+    path:      /under-construction
+    defaults:  { _controller: AppUserdirectoryBundle:Home:underConstruction }
+    schemes:  ['%connection_channel%']
+
+#order is important: base bundle userdirectory must be the last one
+#    resource: "@AppDeidentifierBundle/Controller/"
+app_dashboard:
+    resource: "../src/App/DashboardBundle/Controller/"
+    type:     annotation
+    prefix:   /dashboards
+    schemes:  ['%connection_channel%']
+
+app_deidentifier:
+    resource: "../src/App/DeidentifierBundle/Controller/"
+    type:     annotation
+    prefix:   /deidentifier
+    schemes:  ['%connection_channel%']
+
+app_fellapp:
+#    resource: "@AppFellAppBundle/Controller/"
+    resource: "../src/App/FellAppBundle/Controller/"
+    type:     annotation
+    prefix:   /fellowship-applications
+    schemes:  ['%connection_channel%']
+
+app_resapp:
+    resource: "../src/App/ResAppBundle/Controller/"
+    type:     annotation
+    prefix:   /residency-applications
+    schemes:  ['%connection_channel%']
+
+app_vacreq:
+    resource: "../src/App/VacReqBundle/Controller/"
+    type:     annotation
+    prefix:   /vacation-request
+    schemes:  ['%connection_channel%']
+
+app_calllog:
+    resource: "../src/App/CallLogBundle/Controller/"
+    type:     annotation
+    prefix:   /call-log-book
+    schemes:  ['%connection_channel%']
+
+app_crn:
+    resource: "../src/App/CrnBundle/Controller/"
+    type:     annotation
+    prefix:   /critical-result-notifications
+    schemes:  ['%connection_channel%']
+
+app_orderform:
+    resource: "../src/App/OrderformBundle/Controller/"
+    type:     annotation
+    prefix:   /scan
+    schemes:  ['%connection_channel%']
+
+app_translationalresearch:
+    resource: "../src/App/TranslationalResearchBundle/Controller/"
+    type:     annotation
+    prefix:   /translational-research
+    schemes:  ['%connection_channel%']
+
+app_utilbundles_foscomment:
+    resource: "../src/App/UtilBundles/FOSCommentBundle/Controller/"
+    type:     annotation
+    prefix:   /utilbundles-foscomment
+    schemes:  ['%connection_channel%']
+
+app_userdirectory:
+    resource: "../src/App/UserdirectoryBundle/Controller/"
+    type:     annotation
+    prefix:   /directory
+    schemes:  ['%connection_channel%']
+
+
+#adesigns_calendar:
+#    resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
+#    prefix:   /vacation-request
+#    schemes:  ['%connection_channel%']
+
+
+#acme_demo:
+#    resource: "@AcmeDemoBundle/Controller/"
+#    type:     annotation
+#    prefix:   /demo
+
+app_testpage:
+    path: /directory/testpage
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'AppUserdirectoryBundle/Default/testpage.html.twig'
+
+fellapp_instructions:
+    path: /fellowship-applications/instructions-to-change-import-interval
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template:    'AppFellAppBundle/Instructions/taskSchedulerWindows.html.twig'
+
+#login and logout routes
+
+#logout - is a general logout route used in SessionIdleHandler and MaintenanceListener
+idle-log-out:
+    path:   /directory/idle-log-out
+
+#testlogin:
+#    path:   /directory/testlogin
+
+logout:
+    path:   /directory/logout
+login:
+    path:   /directory/login
+
+platform_login:
+    path:   /directory/login
+platform_logout:
+    path:   /directory/logout
+
+scan_login_check:
+    path:   /scan/login_check
+scan_logout:
+    path:   /scan/logout
+
+login_check:
+    path: /directory/login_check
+#logout:
+#    path: /directory/logout
+
+employees_login_check:
+    path:   /directory/login_check
+employees_logout:
+    path:   /directory/logout
+
+#fellapp_login:
+#    path:   /fellowship-applications/login
+dashboard_login_check:
+    path:   /dashboards/login_check
+dashboard_logout:
+    path:   /dashboards/logout
+
+fellapp_login_check:
+    path:   /fellowship-applications/login_check
+fellapp_logout:
+    path:   /fellowship-applications/logout
+
+resapp_login_check:
+    path:   /residency-applications/login_check
+resapp_logout:
+    path:   /residency-applications/logout
+
+deidentifier_login_check:
+    path:   /deidentifier/login_check
+deidentifier_logout:
+    path:   /deidentifier/logout
+
+vacreq_login_check:
+    path:   /vacation-request/login_check
+vacreq_logout:
+    path:   /vacation-request/logout
+
+calllog_login_check:
+    path:   /call-log-book/login_check
+calllog_logout:
+    path:   /call-log-book/logout
+
+crn_login_check:
+    path:   /critical-result-notifications/login_check
+crn_logout:
+    path:   /critical-result-notifications/logout
+
+translationalresearch_login_check:
+    path:   /translational-research/login_check
+translationalresearch_logout:
+    path:   /translational-research/logout
+
+#fos user bundle
+#fos_user_security:
+#    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+#
+#fos_user_profile:
+#    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+#    prefix: /profile
+#
+#fos_user_register:
+#    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+#    prefix: /register
+#
+#fos_user_resetting:
+#    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+#    prefix: /resetting
+#
+#fos_user_change_password:
+#    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+#    prefix: /profile
+
+#fos_user_group:
+#    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
+#    prefix: /group
+
+
+#OneupUploaderBundle  file uploader
+oneup_uploader:
+    resource: .
+    type: uploader
+
+#TreeBrowserBundle
+#cmf_tree:
+#    resource: .
+#    type: 'cmf_tree'
+
+#FOSJsRoutingBundle
+fos_js_routing:
+#    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
+
+#fos_comment_api:
+#    type: annotation
+#    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+#    prefix: /api
+#    defaults: { _format: html }
+
+#fos_comment.controller.thread:
+##    type: rest
+#    resource: "@FOSCommentBundle/Resources/config/controller.xml"
+
+#fos_comment_api:
+#    type: annotation
+#    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+#    prefix: /api
+#    defaults: { _format: html }
+
+#  https://view-test.med.cornell.edu/
+#  api/threads/transres-Project-3350-irb_review/
+#  comments?permalink=https%3A%2F%2Fview-test.med.cornell.edu%2Ftranslational-research%2Fproject%2Freview%2F3350&view=tree
+# http://127.0.0.1/order/index_dev.php/
+#  api/threads/transres-Project-3358-admin_review/
+#  comments?permalink=http://127.0.0.1/order/index_dev.php/translational-research/project/review/3358&view=tree
+#fos_comment_get_threads:
+#    path: /api/threads
+#    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadAction"
+#    methods:    GET
+
+##http://127.0.0.1/order/index_dev.php/comment_api/threads/transres-Project-3358-irb_review/comments
+#fos_comment_get_thread_comments:
+#    path: /api/threads/{id}/comments
+#    controller: "@FOSCommentBundle/src/Controller/ThreadController::getThreadCommentsAction"
+#    methods:    GET
+

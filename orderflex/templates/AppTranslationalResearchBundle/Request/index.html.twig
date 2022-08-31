@@ -1,0 +1,627 @@
+
+{#{% stopwatch "### header ###" %}#}
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{#{% endstopwatch %}#}
+
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+{% if project is not defined %}
+    {% set project = null %}
+{% endif %}
+
+{% if matchingStrWorkRequestIds is not defined %}
+    {% set matchingStrWorkRequestIds = null %}
+{% endif %}
+
+{% block title %}
+    {% if project %}
+        Requests for Project ID {{ project.oid }}
+    {% else %}
+        {{ title|raw }}
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+        {% if matchingStrWorkRequestIds %}
+            <label
+                for="download-spreadsheet-form" tabindex="0"
+                data-toggle="tooltip"
+                title="Download the spreadsheet with matching work requests">
+                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
+            </label>
+
+            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                <label
+                        for="download-email-list" tabindex="0"
+                        data-toggle="tooltip"
+                        title="Generate the list of the requester emails for the matching work requests">
+                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                </label>
+            {% endif %}
+        {% endif %}
+    </h4>
+
+    <form action="{{ path('translationalresearch_download_request_spreadsheet') }}" method="post">
+        <input type="hidden" name="ids" value="{{ matchingStrWorkRequestIds }}">
+        <button type="submit"
+                id="download-spreadsheet-form"
+                class="btn hidden"
+        >Download the spreadsheet with matching work requests</button>
+    </form>
+
+    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+        <form action="{{ path('translationalresearch_download_requester_emails') }}" method="post" target="_blank">
+            <input type="hidden" name="ids" value="{{ matchingStrWorkRequestIds }}">
+            <button type="submit"
+                    id="download-email-list"
+                    class="btn hidden"
+            >Generate the list of the requester emails for the matching work requests</button>
+        </form>
+    {% endif %}
+
+    <br>
+
+{% if filterError is not defined or (filterError is defined and not filterError) %}
+
+    {% if requestTotalFeeHtml is defined and requestTotalFeeHtml %}
+        <p>
+            {{ requestTotalFeeHtml|raw }}
+        </p>
+    {% endif %}
+
+    {#{% stopwatch "### New Work Request ###" %}#}
+    {% if project %}
+        {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
+        {% if isRequestCanBeCreated == 1 %}
+            {#<br>#}
+            <p>
+                <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+                >New Work Request</a>
+            </p>
+            {#<br>#}
+        {% endif %}
+    {% endif %}
+    {#{% endstopwatch %}#}
+
+    {#{% stopwatch "### transresRequestsFilter ###" %}#}
+    {% if filterDisable is not defined %}
+        {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
+    {% endif %}
+    {#{% endstopwatch %}#}
+
+    <br>
+
+    {% if transres_util.isAdminOrPrimaryReviewer() %}
+        {% set showValue = true %}
+    {% else %}
+        {% set showValue = false %}
+    {% endif %}
+
+    {#{% stopwatch "### table ###" %}#}
+    {#<table class="table table-hover table-condensed text-left table-bordered">#}
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.id') }}</th>
+                {% if not project %}
+                    <th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>
+                {% endif %}
+                <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Fund Number', 'transresRequest.fundedAccountNumber') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
+
+                <th>Products/Services</th>
+                {% if showValue %}
+                    {#grandTotal#}
+                    <th title="Work Request's value (billed and unbilled)">Value</th>
+                {% endif %}
+                {#<th title="Total calculated work request's default fee">Total</th>#}
+                <th title="Total amount of the most recent invoice including subsidy (Paid + Due + Positive Subsidy)">Total</th>
+                <th title="Number of all invoices">Invoice Version</th>
+                <th title="Status of the most recent invoice status">Status</th>
+                <th title="Total amount of the most recent issued invoice charge to the customer (or expected, unbilled charge if invoice is not issued)">Charge</th>
+                <th title="Paid amount of the most recent issued invoices">Paid</th>
+                <th title="Due amount of the most recent issued invoices">Due</th>
+                <th title="Subsidy of the most recent issued invoices (or expected subsidy if invoice is not issued)">Subsidy</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {#{% set count = 0 %}#}
+        {% for transresRequest in transresRequests %}
+
+            {#{% stopwatch "### getLatestInvoice ###" %}#}
+            {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
+            {% if latestInvoice and latestInvoice.oid %}
+                {{ transresRequestMacros.unpaidModal(latestInvoice) }}
+            {% endif %}
+            {#{% endstopwatch %}#}
+
+            {#{% if count is odd %}#}
+                {#{% set trclassname = "table-row-separator-gray" %}#}
+            {#{% else %}#}
+                {#{% set trclassname = "table-row-separator-white" %}#}
+            {#{% endif %}#}
+            {#{% set count = count + 1 %}#}
+
+            {% set trclassname = null %}
+            {% if transresRequest.progressState == 'draft' %}
+                {#table-row-separator-gray#}
+                {% set trclassname = "order-complete-status" %}
+            {% endif %}
+
+            {% if transresRequest.project.getFunded() == false %}
+                {% set trclassname = "order-onhold-status" %}
+            {% endif %}
+
+            {% set idColor = transres_util.getPriceListColorByRequest(transresRequest) %}
+
+            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
+                {% if hiderows is not defined or not hiderows %}
+                <td>
+                    <a
+                        href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                        target="_blank"
+                        style="color:{{ idColor }}"
+                    >{{ transresRequest.oid }}{{ transresRequest.project.getPriceListAbbreviationPostfix() }}</a>
+                </td>
+
+                {#{% stopwatch "### transresRequest.project.getOid() ###" %}#}
+                {% if not project %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': transresRequest.project.id }) }}"
+                           target="_blank">{{ transresRequest.project.getOid() }}</a>
+                    </td>
+                {% endif %}
+                {#{% endstopwatch %}#}
+
+                {#{% stopwatch "### submitter.getUsernameOptimal() ###" %}#}
+                <td class="rowlink-skip">
+                    {#{{ principalInvestigator }}<br>#}
+                    {% if transresRequest.submitter %}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endif %}
+                </td>
+                {#{% endstopwatch %}#}
+
+                <td>
+                    {% if transresRequest.createDate %}
+                        {{ transresRequest.createDate|date('m/d/Y') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ transresRequest.fundedAccountNumber }}
+                </td>
+
+                {#{% stopwatch "### getProgressStateLabelByName ###" %}#}
+                <td>
+                    {{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}
+                </td>
+                {#{% endstopwatch %}#}
+
+                {#{% stopwatch "### getBillingStateLabelByName ###" %}#}
+                <td>
+                    {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
+                </td>
+                {#{% endstopwatch %}#}
+
+                {#{% stopwatch "### product.category.getShortInfo() ###" %}#}
+                <td>
+                    {% for product in transresRequest.products %}
+                        {% if product.category %}
+                            {{ product.category.getShortInfo(transresRequest) }}<br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {#{% endstopwatch %}#}
+
+                {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
+                {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
+                {#{% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}#}
+
+                {#{% if 0 %}#}
+                    {#<td>#}
+                        {#Total#}
+                        {#{% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}#}
+                        {#Bing: Total fees should use external (default) pricing#}
+                        {#Total is equal to charge+subsidy, where subsidy does not include admin fee.#}
+                        {#If invoice is null, total is equal to expected total#}
+                        {#{% set fee = transres_request_util.calculateDefaultTotalByRequest(transresRequest) %}#}
+                        {#{% if invoicesInfos.grandTotal %}#}
+                            {#${{ invoicesInfos.grandTotal }}#}
+                            {#{{ transres.dollarSignValue(invoicesInfos.grandTotal) }}#}
+                        {#{% endif %}#}
+                        {#{% if requestValue != invoicesInfos.grandTotal %}#}
+                            {#{% if requestValue > 0 or#}
+                            {#(requestValue < 0 and ( is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') ))#}
+                            {#%}#}
+                                {#(value: ${{ requestValue }})#}
+                                {#(value: {{transres.dollarSignValue(requestValue)}})#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                    {#</td>#}
+                {#{% endif %}#}
+
+                {#Value - only for TRP admin role#}
+                {% if showValue %}
+                    <td>
+                        {% if invoicesInfos.grandTotal is not null %}
+                            {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
+                            {{ transres.dollarSignValue(invoicesInfos.grandTotal) }}
+                        {% else %}
+                            {% set requestValue = transresRequest.calculateDefaultTotalByRequest() %}
+                            {{transres.dollarSignValue(requestValue)}}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {#
+                Total (Paid+Due+Subsidy): sum of the “Paid”, “Due” and “Subsidy” columns,
+                except, when the Subsidy is negative - in that case show the value in this column as a
+                sum of only “Paid” and “Due” columns (not the Subsidy)
+                #}
+                <td>
+                    {% if invoicesInfos.sumTotal is not null %}
+                        {{ transres.dollarSignValue(invoicesInfos.sumTotal) }}
+                    {% endif %}
+                </td>
+                {#{% endstopwatch %}#}
+
+                {#{% stopwatch "### invoicesCount ###" %}#}
+                <td class="rowlink-skip">
+                    {% set invoicesCount = transresRequest.invoices|length %}
+                    {% if invoicesCount > 0 %}
+                        {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                            <a target="_blank" data-toggle="tooltip" title="Show associated invoices"
+                               href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
+                            >{{ invoicesCount }}</a>
+                        {% else %}
+                            {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view-pdf") %}
+                                <a target="_blank" data-toggle="tooltip" title="Show the most recent associated PDF invoice"
+                                   href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"
+                                ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                {#{% endstopwatch %}#}
+
+                <td>
+                {% if latestInvoice and latestInvoice.oid %}
+                    {{ latestInvoice.status }}
+                {% endif %}
+                </td>
+
+                {#{% stopwatch "### getInvoicesInfosByRequest ###" %}#}
+                {#Invoices #}
+                {#{% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}#}
+                <td>
+                    {# Charge #}
+                    {% if invoicesInfos.total is not null %}
+                        {#${{ invoicesInfos.total }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.total) }}
+                    {% else %}
+                        {#if invoice does not exists, show expected charge calculated based on the request's products and price list#}
+                        {#${{ transres_request_util.getTransResRequestSubTotal(transresRequest) }} (unbilled)#}
+                        {{ transres.dollarSignValue(transres_request_util.getTransResRequestSubTotal(transresRequest)) }} (unbilled)
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.paid is not null %}
+                        {#${{ invoicesInfos.paid }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.paid) }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.due is not null %}
+                        {#${{ invoicesInfos.due }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.due) }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.subsidy is not null %}
+                        {#${{ invoicesInfos.subsidy }}#}
+                        {#{{ transres.dollarSignValue(invoicesInfos.subsidy) }}#}
+                        {{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}
+                    {% else %}
+                        {#expected Subsidy amount calculated by work request#}
+                        {#${{ transres_request_util.calculateSubsidyByRequest(transresRequest) }}#}
+                        {#{{ transres.dollarSignValue(transres_request_util.calculateSubsidyByRequest(transresRequest)) }}#}
+                        {% set calculatedSubsidy = transresRequest.calculateSubsidyByRequest() %}
+                        {% if calculatedSubsidy != 0 %}
+                            {{ transres.dollarSignValue(transresRequest.calculateSubsidyByRequest()) }} (expected)
+                        {% else %}
+                            {#show nothing#}
+                        {% endif %}
+
+                    {% endif %}
+                </td>
+                {#{% endstopwatch %}#}
+                {% endif %} {#hiderows#}
+
+                {% if hideaction is not defined or not hideaction %}
+                {#{% stopwatch "### Action ###" %}#}
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                                >Show work request details</a>
+                            </li>
+
+
+                            {#transresRequest.submitter.id == app.user.id and#}
+                            {#{% if#}
+                                {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+                                {#is_granted('ROLE_TRANSRES_TECHNICIAN') or#}
+                                {#(#}
+                                    {#transres_util.isProjectRequester(transresRequest.project) and#}
+                                    {#transresRequest.getProgressState() == 'draft'#}
+                                {#)#}
+                            {#%}#}
+                            {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                                    >Edit work request</a>
+                                </li>
+                            {% endif %}
+
+                            {#{% if transres_request_util.isRequestProgressReviewable(transresRequest) %}#}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}#}
+                            {% if transres_permission_util.hasRequestPermission('progress-review',transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
+                                    >Change work progress status</a>
+                                </li>
+                            {% endif %}
+                            {#{% endif %}#}
+
+                            {#{% if transres_request_util.isRequestBillingReviewable(transresRequest) %}#}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}#}
+                            {% if transres_permission_util.hasRequestPermission('billing-review',transresRequest) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} "
+                                    >Change billing status</a>
+                                </li>
+                            {% endif %}
+                            {#{% endif %}#}
+
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
+                            {% if transres_permission_util.hasRequestPermission("packing-slip",transresRequest) %}
+                                {% set generatePackingSlipTitle = "Generate and view packing slip PDF" %}
+                                {% if transresRequest.packingSlipPdfs|length > 0 %}
+                                    {% set generatePackingSlipTitle = "Generate and view an updated packing slip PDF" %}
+                                {% endif %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a general-data-confirm="Are you sure you want to generate and view packing slip PDF?"
+                                       target="_blank"
+                                       href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
+                                    >{{ generatePackingSlipTitle }}</a>
+                                </li>
+                                {% if transresRequest.packingSlipPdfs|length > 0 %}
+                                    <li>
+                                        <a
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_file_view', { 'id': transresRequest.packingSlipPdfs[0].id }) }}"
+                                        >Show packing slip PDF</a>
+                                    </li>
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Review?"
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
+                                        >E-mail packing slip PDF to PIs and submitter for review</a>
+                                    </li>
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'?"
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
+                                        >E-Mail packing slip PDF to PIs and submitter for confirmation + Change request status to 'Pending Investigator'</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            <li class="divider"></li>
+                            {% if invoicesCount > 0 %}
+                                {% if transres_permission_util.areInvoicesShowableToUser(transresRequest.project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
+                                        >Show associated invoices</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            {% if transres_request_util.isUserHasInvoicePermission(null,"create") %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "
+                                    >Create new invoice</a>
+                                </li>
+                            {% endif %}
+
+                            {% if latestInvoice and latestInvoice.oid %}
+
+                                <li class="divider"></li>
+
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                                    <li>
+                                        <a href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">Show most recent invoice</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if latestInvoice.latestVersion %}
+
+                                    {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                        <li>
+                                            <a href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">Edit most recent invoice</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if latestInvoice.documents|length > 0 and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view-pdf") %}
+                                        <li>
+                                            <a target="_blank"
+                                               href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"
+                                            >Show most recent invoice PDF</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                        {% if latestInvoice.documents|length > 0 %}
+                                            {% set generateLabel = "Regenerate the most recent invoice PDF" %}
+                                        {% else %}
+                                            {% set generateLabel = "Generate the most recent invoice PDF" %}
+                                        {% endif %}
+                                        <li>
+                                            <a
+                                                general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ latestInvoice.oid }}?"
+                                                href="{{ path('translationalresearch_invoice_generate_pdf', {'id': latestInvoice.id }) }}"
+                                            >{{ generateLabel }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if latestInvoice.documents|length > 0 and transres_request_util.isUserHasInvoicePermission(latestInvoice,"send-invoice-pdf-email") %}
+                                        <li>
+                                            {#Send the most recent invoice PDF by e-mail#}
+                                            <a
+                                                general-data-confirm="Are you sure you want to send the latest invoice {{ latestInvoice.oid }} PDF by email to PI and Billing Contact?"
+                                                href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': latestInvoice.oid }) }}"
+                                            >Send the most recent invoice PDF by email to PI and Billing Contact{{ transres_request_util.getInvoicePisStr(latestInvoice) }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {#<hr>#}
+                                    {#Add actions in the invoice list - "Change status to ..."#}
+                                    {#{% set statuses = transres_request_util.getInvoiceStatuses() %}#}
+                                    {#{% for status in statuses %}#}
+                                        {#{% if status != latestInvoice.status %}#}
+                                            {#{% if status == "Paid Partially" %}#}
+                                                {#<li>#}
+                                                    {#<a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"#}
+                                                    {#>Change the Most Recent Status to {{ status }} (update 'Paid' value)</a>#}
+                                                {#</li>#}
+                                            {#{% else %}#}
+                                                {#<li>#}
+                                                    {#<a#}
+                                                            {#general-data-confirm="Are you sure you want to change the status of this invoice {{ latestInvoice.oid }} to {{ status }}?"#}
+                                                            {#href="{{ path('translationalresearch_invoice_change_status', {'oid':latestInvoice.oid, 'status':status }) }}"#}
+                                                    {#>Change the Most Recent Invoice Status to {{ status }}</a>#}
+                                                {#</li>#}
+                                            {#{% endif %}#}
+
+                                        {#{% endif %}#}
+                                    {#{% endfor %}#}
+                                    {#<hr>#}
+
+                                    {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"change-status") %}
+                                        <li>
+                                            <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.id }}"
+                                            >Update status of the most recent invoice</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endif %}
+
+                                {#{% if latestInvoice.documents|length > 0 %}#}
+                                    {#<li>#}
+                                        {#<a target="_blank"#}
+                                           {#href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"#}
+                                        {#>Show most recent invoice PDF</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
+
+                            {% endif %}
+
+                            {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <hr>
+                                    <li>
+                                        <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': transresRequest.id}) }}"
+                                        >View associated events</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+                </td>
+                {#{% endstopwatch %}#}
+                {% endif %} {#hideaction#}
+            </tr>
+            {#<tr class="table-no-border">#}
+                {#<td style="display: none">#}
+                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show work request details</a>#}
+                {#</td>#}
+                {#{{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}#}
+            {#</tr>#}
+        {% endfor %}
+        </tbody>
+    </table>
+    {#{% endstopwatch %}#}
+
+    {#{% stopwatch "### knp_pagination_render ###" %}#}
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(transresRequests) }}
+    </div>
+    {#{% endstopwatch %}#}
+
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    {% if project %}
+        {% if isRequestCanBeCreated == 1 %}
+            <br>
+            <p>
+                <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+                >New Work Request</a>
+            </p>
+            <br>
+        {% endif %}
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/invoice.js'#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filter-request.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filter-request.js') }}"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+{% endblock %}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}

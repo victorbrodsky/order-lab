@@ -1,0 +1,76 @@
+parameters:
+
+  scan.sitename: scan
+  scan.uploadpath:
+
+
+twig:
+    globals:
+        user_security_utility: "@user_security_utility"
+        scan_sitename: '%scan.sitename%'
+
+
+services:
+    _defaults:
+         autowire: true      # Automatically injects dependencies in your services.
+         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+         public: true       # Allows optimizing the container by removing unused services; this also means
+                                         # fetching services directly from the container via $container->get() won't work.
+                                         # The best practice is to be explicit about your dependencies anyway.
+
+    #Custom selector fields
+    order_form.type.scan_custom_selector:
+#        autowire: true
+#        autoconfigure: true
+#        public: true
+        class: App\OrderformBundle\Form\CustomType\ScanCustomSelectorType
+#        arguments: ["@doctrine.orm.entity_manager","@service_container"]
+        tags:
+            - { name: form.type, alias: scan_custom_selector }
+
+    #Redirect admin to index
+#    authentication_handler:
+#        class: App\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
+#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
+
+    scan_authentication_handler:
+        class: App\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
+#        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
+
+    #security utility
+#    order_security_utility: use user_security_utility instead
+#        class: App\OrderformBundle\Util\SecurityUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    #scanorder utility
+    scanorder_utility:
+        class: App\OrderformBundle\Util\OrderUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    #patient utility
+    search_utility:
+        class: App\OrderformBundle\Util\SearchUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    scanorder_email_utility:
+        class: App\OrderformBundle\Util\ScanEmailUtil
+#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
+    scan_role_voter:
+        class: App\OrderformBundle\Security\Voter\ScanRoleVoter
+#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+        # small performance boost
+        public: false
+
+    scan_permission_voter:
+            class: App\OrderformBundle\Security\Voter\ScanPermissionVoter
+#            arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+            tags:
+                - { name: security.voter }
+            # small performance boost
+            public: false
+
+#    Doctrine\ORM\Mapping\ClassMetadata:
+#      autowire: false

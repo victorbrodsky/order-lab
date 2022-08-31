@@ -1,0 +1,285 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    {#{% extends "AppUserdirectoryBundle/Default/base-main.html.twig" %}#}
+    {#{% block javascripts %}#}
+        {#{{ parent() }}#}
+        {#{{ encore_entry_script_tags('entry') }}#}
+    {#{% endblock %}#}
+    {#{% block stylesheets %}#}
+        {#{{ parent() }}#}
+        {#{{ encore_entry_link_tags('entry') }}#}
+    {#{% endblock %}#}
+
+    {% block stylesheets_base %}
+        {#{{ encore_entry_link_tags('dashboard_base') }}#}
+    {% endblock %}
+    {% block stylesheets %}
+        {#{{ encore_entry_link_tags('app') }}#}
+    {% endblock %}
+
+    {% block bootstrapcss %}
+        {#{% stylesheets#}
+            {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+            {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
+        {#%}#}
+            {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+        {#{% endstylesheets %}#}
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
+    {% endblock %}
+
+    {% block errorwatchjs %}
+        {#{% javascripts#}
+            {#'@AppUserdirectoryBundle/Resources/public/form/js/errorwatch.js'#}
+        {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/errorwatch.js') }}"></script>
+    {% endblock %}
+
+    {% if security is not defined %}
+        {% set security = 'true' %}
+    {% endif %}
+
+    {% block maincss %}
+
+        {#jasny is used for clickable rows#}
+
+        {#{% stylesheets#}
+        {#'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
+        {#'bundles/appuserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'#}
+        {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+        {#{% endstylesheets %}#}
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jasny/css/jasny-bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda-themeless.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/action.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/css/dropzone.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/css/bootstrap-datepicker3.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/typeahead.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/cropper.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/crop-avatar.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/themes/default/style.min.css') }}" />
+
+    {% endblock %}
+
+    {% block additionalcss %}{% endblock %}
+    {% block additionalcss2 %}{% endblock %}
+
+    {% block ie8fixjs %}
+
+        {#HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->#}
+        {#[if lt IE 9]>#}
+        {#{% javascripts#}
+            {#'@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'#}
+        {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/html5-bootstrap-fix/html5shiv.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/html5-bootstrap-fix/respond.min.js') }}"></script>
+        {#[endif]#}
+
+    {% endblock %}
+        
+    {% block headeradditionaljs %}{% endblock %}    
+
+
+    <title>
+        {% block title %}
+            User Directory
+        {% endblock %}
+    </title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {{ usermacros.nonLiveSiteRedirect() }}
+
+    <!-- we want to force people to click a button, so hide the close link in the toolbar -->
+    {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
+
+    {% block favicon %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" />
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <div class="container col-xs-12">
+
+        {{ usermacros.nonLiveSiteWarning() }}
+
+        {% block browsercheck %}
+            {% if cycle is not defined or cycle != "download" %}
+                {{ usermacros.browserCheck() }}
+            {% endif %}
+        {% endblock %}
+
+        <div class="col-xs-12">
+
+            {% block header %}
+                {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                {% include 'AppUserdirectoryBundle/Default/navbar.html.twig' %}
+            {% endblock %}
+
+        </div>
+
+        <div class="text-center col-xs-12">
+
+            {% include 'AppUserdirectoryBundle/Security/idle_timeout.html.twig' %}
+            
+            <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
+
+            {% for flashMessage in app.flashes('notice') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-info center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+            {% endfor %}
+
+            {% for flashMessage in app.flashes('status-changed') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+            {% endfor %}
+
+            {% for flashMessage in app.flashes('warning') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
+            {% endfor %}
+
+            {% for flashMessage in app.flashes('pnotify') %}
+                <input type="hidden" id="pnotify-notice" value="{{ flashMessage|raw }}" />
+            {% endfor %}
+            {% for flashMessage in app.flashes('pnotify-error') %}
+                <input type="hidden" id="pnotify-notice" class="pnotify-notice-error" value="{{ flashMessage|raw }}" />
+            {% endfor %}
+            {% for flashMessage in app.flashes('pnotify-success') %}
+                <input type="hidden" id="pnotify-notice" class="pnotify-notice-success" value="{{ flashMessage|raw }}" />
+            {% endfor %}
+
+            <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+            <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
+            <input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
+
+            {% if app.user %}
+                {% set userId = app.user.getId() %}
+            {% else %}
+                {% set userId = null %}
+            {% endif %}
+            <input type="hidden" id="authuser_id" value="{{userId}}" />
+
+        </div>
+
+
+        <div class="order-content text-center col-xs-12">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="order-content col-xs-12">
+            {% block contentleft %}{% endblock %}
+        </div>
+
+        {% block footer %}
+        <div class="order-content text-center col-xs-12">
+            <!-- footer -->
+            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
+        </div>
+        {% endblock %}
+
+        {% block mainjs %}
+
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+            {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
+
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-validation.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/cropper.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-crop-avatar.js') }}"></script>
+            {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimeout.js') }}"></script>#}
+            {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/idletimeout/jquery.idletimer.js') }}"></script>#}
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+
+            <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+
+
+
+            {#FOSJsRoutingBundle#}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+        {% endblock %}
+
+        {% block additionaljs %}{% endblock %}
+
+
+        {#{% block javascripts %}#}
+            {#{{ encore_entry_script_tags('app') }}#}
+        {#{% endblock %}#}
+
+    </div>
+
+    {% block javascripts_base %}
+        {#{{ encore_entry_script_tags('app') }}#}
+    {% endblock %}
+    {% block javascripts %}
+        {#{{ encore_entry_script_tags('app') }}#}
+    {% endblock %}
+
+</body>
+         
+</html>

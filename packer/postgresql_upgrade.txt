@@ -1,0 +1,97 @@
+Windows:
+//http://lampblogs.com/blog/install-postgresql-in-xampp-on-windows-and-integrate-phppgadmin
+0) Create DB backup. Shutdown apache.
+1) Install new postgresql, for example to a new folder C:\xampp\pgsql\14
+2) In httpd-xampp.conf (httpd.conf?) add line:
+LoadFile "C:\xampp\pgsql\14\bin\libpq.dll"
+3) Bind postgresql 14 in C:\xampp\phpMyAdmin\config.inc.php
+$cfg['Servers'][0]['pg_dump_path'] = 'C:\\xampp\\pgsql\\14\\bin\\pg_dump.exe';
+$cfg['Servers'][0]['pg_dumpall_path'] = 'C:\\xampp\\pgsql\\14\\bin\\pg_dumpall.exe';
+4) Restart apache server
+5a) Start cmd as admin. Stop: C:\xampp\pgsql\14\bin\pg_ctl -D "C:\xampp\pgsql\12\data" stop
+5b) Start cmd as admin. Start: C:\xampp\pgsql\14\bin\pg_ctl.exe -D "C:\xampp\pgsql\14\data" start
+6) Create DB 'ScanOrder' and user. Restore DB from backup.
+
+
+3) Use backup
+
+http://www.dbaglobe.com/2021/10/upgrade-postgresql-13-to-postgresql-14.html
+
+ Upgrade PostgreSQL 13 to PostgreSQL 14 on Oracle Linux 8 using YUM/RPM
+
+ 1. Install the PostgreSQL 14 Packages
+#  yum install postgresql14-server.x86_64  postgresql14.x86_64  postgresql14-contrib.x86_64
+
+2. Initialize PostgreSQL 14 database
+# /usr/pgsql-14/bin/postgresql-14-setup initdb
+
+3. Start PostgreSQL 13 database (required for pre-upgrade check) su - postgres
+ $ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ start
+
+
+4. Run pre-upgrade check:
+
+/usr/pgsql-14/bin/pg_upgrade \
+  --old-bindir=/usr/pgsql-12/bin \
+  --new-bindir=/usr/pgsql-14/bin \
+  --old-datadir=/var/lib/pgsql/12/data \
+  --new-datadir=/var/lib/pgsql/14/data \
+  --user=postgres \
+  --check
+ 
+//Error: PGSQL.5432 failed: fe_sendauth: no password supplied Failure 
+vi /var/lib/pgsql/12/data/pg_hba.conf (temporary change all to trust for pg_hba.conf in 12 and 14)
+add: host    all             all             localhost            trust
+restart: systemctl restart httpd.service 
+  
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres --check
+
+/usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --check
+
+//pg_upgrade no password supplied fe_sendauth: https://stackoverflow.com/questions/27107557/what-is-the-default-password-for-postgres
+  
+5. Shutdown original PostgreSQL 13
+ 
+$ /usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+
+6. Run the actual upgrade
+
+/usr/pgsql-14/bin/pg_upgrade \
+  --old-bindir=/usr/pgsql-12/bin \
+  --new-bindir=/usr/pgsql-14/bin \
+  --old-datadir=/var/lib/pgsql/12/data \
+  --new-datadir=/var/lib/pgsql/14/data \
+  --user=postgres 
+  
+  /usr/pgsql-14/bin/pg_upgrade --old-bindir=/usr/pgsql-12/bin --new-bindir=/usr/pgsql-14/bin --old-datadir=/var/lib/pgsql/12/data --new-datadir=/var/lib/pgsql/14/data --user=postgres
+  
+7. Start PostgreSQL 14 cluster
+/usr/pgsql-12/bin/pg_ctl -D /var/lib/pgsql/12/data/ stop
+  
+8. Upgrade the extension
+There are no extenstions.
+get extension list: 1) psql 2) \dx  
+plpgsql | 1.0     | pg_catalog | PL/pgSQL procedural language
+  
+9. Update optimiser statistics
+[postgres@ol8 ~]$  /usr/pgsql-14/bin/vacuumdb -U postgres --all --analyze-in-stages  
+  
+10. Clean up
+#Get postgres library: rpm -qa|grep postgres
+yum remove postgresql12-server-12.11-1PGDG.rhel7.x86_64 postgresql12-libs-12.11-1PGDG.rhel7.x86_64 postgresql12-12.11-1PGDG.rhel7.x86_64
+# rm -rf '/var/lib/pgsql/12/data'  
+  
+  
+//https://www.uxlinux.com/how-to-upgrade-postgresql-to-latest-version-postgresql-in-cwp-centos-7-8-el7-el8/
+
+//Create DB backup, install new postgre, restore data:
+//https://www.postgresql.org/docs/current/upgrading.html
+
+//How To Install PostgreSQL 14 CentOS 7 | RHEL 7:
+https://computingforgeeks.com/how-to-install-postgresql-14-centos-rhel-7/
+
+Login as root:
+pg_dump -U symfony -h 159.203.100.56 -p 5432 scanorder > scanorder.sql
+  
+  
+  

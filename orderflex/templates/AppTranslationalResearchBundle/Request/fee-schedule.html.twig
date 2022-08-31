@@ -1,0 +1,255 @@
+
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ title|raw }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }} ({{ fees.getTotalItemCount }} matching)
+
+        {% if filterform.vars.value.search is defined and filterform.vars.value.search %}
+            <a
+                href="{{ path('trp_download_fees_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':filterform.vars.value.search}) }}"
+                data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
+        {% else %}
+            <a href="{{ path('trp_download_fees_list_excel',
+                {'pathbase':pathbase, 'linkToListId':linkToListId, 'search':null}) }}"
+               data-toggle="tooltip" title="Download as a spreadsheet"
+            ><span class="fa fa-file-excel fa-lg"></span></a>
+        {% endif %}
+    </h4>
+
+    <br>
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <div class="col-xs-11">
+                        {{ form_widget(filterform.search) }}
+                    </div>
+
+                    <div class="col-xs-1">
+                        <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                    </div>
+
+                </div>
+            </div>
+            {{ form_rest(filterform) }}
+        {{ form_end(filterform) }}
+    </div>
+    <br>
+
+    {#on the user facing fee schedule page, show internal pricing if the #}
+    {#logged in user is associated with (PI, etc) and has any projects #}
+    {#(even closed) that have “Internal pricing” attribute associated with it#}
+    {% set specificPriceListArr = NULL %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+        {% set showSpecificFee = 1 %}
+    {% else %}
+        {#specificPriceListArr has priceList ids which can be seen by a user#}
+        {% set specificPriceListArr = transres_util.getUserAssociatedSpecificPriceList() %}
+        {% if specificPriceListArr|length > 0 %}
+            {% set showSpecificFee = 1 %}
+        {% else %}
+            {% set showSpecificFee = 0 %}
+        {% endif %}
+    {% endif %}
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(fees, 'ID', 'list.id') }}</th>
+
+                {#Product ID#}
+                <th>{{ knp_pagination_sortable(fees, 'Catalog', 'list.productId') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Name', 'list.name') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Description', 'list.description') }}</th>
+
+
+                <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
+                {#<th>{{ knp_pagination_sortable(fees, 'Initial Quantity', 'list.initialQuantity') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(fees, 'Work Queues', 'list.workQueues') }}</th>#}
+
+                {% if showSpecificFee %}
+                    {#<th>Specific Fees</th>#}
+                    <th>{{ knp_pagination_sortable(fees, 'Specific Fees', 'prices.fee') }}</th>
+                {% endif %}
+
+                <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
+
+                {#<th>{{ knp_pagination_sortable(fees, 'Hide for specialty', 'projectSpecialties.name') }}</th>#}
+                <th>{{ knp_pagination_sortable(fees, 'Orderable for specialty', 'projectSpecialties.name') }}</th>
+
+                <th>{{ knp_pagination_sortable(fees, 'Type', 'list.type') }}</th>
+
+                {% if adminUser %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+
+        {#{% set count = 0 %}#}
+        {% set break = false %}
+        {% for fee in fees %}
+        {% if not break %}
+
+            {#hide rows with empty prices using specificPriceListArr#}
+            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                {% set nonEmptyPrices = true %}
+            {% else %}
+                {% set nonEmptyPrices = transres_util.getPriceListsWithNonEmptyPrices(fee,specificPriceListArr) %}
+            {% endif %}
+
+            {#{% if nonEmptyPrices|length == 0 %}#}
+                {#{% set break = true %}#}
+            {#{% endif %}#}
+
+            {% if nonEmptyPrices %}
+
+            <tr>
+                <td>
+                    {{ fee.id }}
+                </td>
+
+                <td>
+                    {{ fee.productId }}
+                </td>
+
+                <td>
+                    {{ fee.name }}
+                </td>
+
+                <td>
+                    {{ fee.description }}
+                </td>
+
+                <td>
+                    {% if fee.fee %}
+                        ${{ fee.fee }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if fee.feeAdditionalItem %}
+                        ${{ fee.feeAdditionalItem }}
+                    {% endif %}
+                </td>
+
+                {#<td>#}
+                    {#{% if fee.initialQuantity %}#}
+                        {#{{ fee.initialQuantity }}#}
+                    {#{% endif %}#}
+                {#</td>#}
+
+                {#<td>#}
+                    {#{% if fee.workQueues %}#}
+                        {#{% for workQueue in fee.workQueues %}#}
+                            {#{{ workQueue }}<br>#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+                {#</td>#}
+
+                {% if showSpecificFee %}
+                    <td>
+                        {{ fee.getSpecificPricesInfo(specificPriceListArr)|raw }}<br>
+                        {#specificPriceListArr#}
+                        {#{% for specificPriceList in specificPriceListArr %}#}
+                            {#{{ specificPriceList.getPriceInfo()|raw }}#}
+                            {#{{ specificPriceList }}#}
+                        {#{% endfor %}#}
+                    </td>
+                {% endif %}
+
+                <td>
+                    {{ fee.getFeeUnitStr() }}
+                </td>
+
+                {#Hide for specialty#}
+                {#<td>#}
+                    {#{% for specialty in fee.projectSpecialties %}#}
+                        {#{{ specialty.getUppercaseShortName() }}<br>#}
+                    {#{% endfor %}#}
+                {#</td>#}
+
+                {#Orderable for specialty#}
+                <td>
+                    {% for orderableSpecialty in transres_util.orderableProjectSpecialties(fee) %}
+                        {{ orderableSpecialty.getUppercaseShortName() }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{ fee.type }}
+                </td>
+
+                {% if adminUser %}
+                    <td class="rowlink-skip">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                <li>
+                                    <a href="{{ path('transresrequestcategorytypes_edit_translationalresearch', { 'id': fee.id }) }}"
+                                    >Edit</a>
+                                </li>
+
+                                {% if fee.getType()|lower != 'disabled' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to disable this entry?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':fee.id, 'type':'disabled' }) }}">Disable
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if fee.getType()|lower != 'default' and fee.getType()|lower != 'user-added' %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you would like to enable and set this entry's type to 'Default'?"
+                                                href="{{ path('platform_list_manager_element_change_type', { 'pathbase':pathbase, 'entityId':fee.id, 'type':'default' }) }}">Enable
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+            {% endif %}
+
+        {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(fees) }}
+    </div>
+
+{% endblock %}
+
+
+{% block additionaljs %}
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,8 @@
+To specify http channel run it as:
+HTTP=1 ./vendor/bin/phpunit -d memory_limit=-1 --stop-on-failure (dev)
+
+To specify https channel (default) run it as:
+./vendor/bin/phpunit (test,live)
+
+
+

@@ -1,0 +1,44 @@
+{% extends "AppResAppBundle/Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+    <h2>{{ title }}</h2>
+
+
+    <p>
+        It is recommended to upload one CSV file and the corresponding ERAS application PDF files (unzipped) together.
+        <br>Only CSV file is able to accurately populate these application fields,
+        while populating using only PDF files is not accurate and some fields can be missed.
+        <br>Uploaded PDF files will be attached to the corresponding residency application using common "ERAS Application ID" and/or "AAMC ID".
+
+        <br><br>Please make sure that all files are uploaded correctly and marked with a green check icon on the top left in the each file box.
+        <br>Please verify that "ERAS Application" and all other important fields such as medical school and score are populated.
+    </p>
+
+
+{% endblock %}
+
+
+{#{% block additionaljs %}#}
+
+    {#<script language="Javascript">#}
+
+        {#$(document).ready(function() {#}
+
+            {#$('#div1').hide();#}
+
+            {#$('#result').html(result);#}
+
+        {#});#}
+
+        {##}
+
+    {#</script>#}
+
+{#{% endblock %}#}
+
+

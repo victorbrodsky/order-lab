@@ -1,0 +1,534 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppResAppBundle/Default/resappmacros.html.twig" as resappmacros %}
+{% import _self as resapp %}
+
+
+
+{% set trclassname = "well well-sm" %}
+
+{% if cycle != "download" %}
+    {% if entity.appStatus %}
+        {% if entity.appStatus.name == 'archive' %}
+            {% set trclassname = "alert alert-info" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'hide' %}
+            {% set trclassname = "alert alert-danger" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'complete' %}
+            {% set trclassname = "alert order-neutral-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'active' %}
+            {#{% set trclassname = "alert order-neutral-status" %}#}
+        {% endif %}
+        {% if entity.appStatus.name == 'interviewee' %}
+            {% set trclassname = "order-interviewee-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'reject' %}
+            {% set trclassname = "order-reject-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'onhold' %}
+            {% set trclassname = "order-onhold-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'priority' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'accepted' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'acceptedandnotified' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'rejectedandnotified' %}
+            {% set trclassname = "order-reject-status" %}
+        {% endif %}
+        {% if entity.appStatus.name == 'declined' %}
+            {% set trclassname = "order-declined-status" %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% if cycle != "new" %}
+    <h4 class="text-info" align="center">
+        <div class="{{ trclassname }}">
+            {% if entity.appStatus and cycle != "download" %}
+                <p>{{ entity.appStatus.action }}</p>
+            {% endif %}
+            Residency Application ID {{ entity.id }}, {{ entity.getApplicantFullName() }}, submitted on {{ entity.timestamp|date('m/d/Y H:i A (T)','UTC') }}, imported on {{ entity.createdate|date('m/d/Y H:i A (T)','UTC') }}
+        </div>
+    </h4>
+{% endif %}
+
+{% if cycle == "show" %}
+    <p>
+        <a class="btn btn-info" href="{{ path('resapp_download_pdf', { 'id': entity.id}) }}">Download Application as a PDF</a>
+    </p>
+{% endif %}
+
+
+{#applicant's snapshot#}
+{#{{ resappmacros.snapshot(entity,sitename,cycle) }}#}
+<br>
+
+
+{% if cycle != "download" %}
+<p>
+    <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
+    <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="extendAll()" >Expand All Application Sections</button>
+</p>
+<br>
+{% endif %}
+
+{#testing embed PDF#}
+{#{% set embedPdf = resapp_pdfutil.getEmbedPdf(entity.getRecentReport()) %}#}
+{#<p>{{ embedPdf|raw }}</p>#}
+
+{{ form_start(form,{'attr': {'id': 'resapp-applicant-form'}}) }}
+
+{{ form_errors(form) }}
+
+{#{% set testing = true %}#}
+{% set testing = false %}
+
+{% if not testing %}
+
+<div id="form-prototype-data"
+     data-prototype-resapp-interviews = "{{ resappmacros.interviewForm(form.interviews,cycle,'resapp-interviews','prototype', sitename,1)|e }}"
+     data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+     data-uploadurl = "{{ oneup_uploader_endpoint('resapp_gallery') }}"
+     data-userid = "{{ entity.user.id }}"
+></div>
+
+{% endif %}
+
+
+    <input type="hidden" id="resapp_id" value="{{ entity.id }}" />
+    <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
+    <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+
+
+{% if form.timestamp is defined %}
+    <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            {{ formmacros.fieldDateLabel_vertical(form.timestamp,'allow-future-date') }}
+        </div>
+        <div class="col-xs-4"></div>
+    </div>
+{% endif %}
+
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
+
+<div class="resapp-application-holder">
+
+{% include 'AppResAppBundle/Form/AdminData.html.twig' %}
+
+<!-- Residency Type, Training period, Applicant Name -->
+{#{% include 'AppResAppBundle/Form/ResidencyType.html.twig' %}#}
+
+<!-- Personal Data -->
+{#{% include 'AppResAppBundle/Form/PersonalData.html.twig' %}#}
+
+{#<!-- Residency Application Admin Data -->#}
+{#{% include 'AppResAppBundle/Form/ApplicantData.html.twig' %}#}
+
+{#{% if not testing %}#}
+
+{#<!-- Education -->#}
+{#{% include 'AppResAppBundle/Form/Education.html.twig' %}#}
+
+{#<!-- National Boards -->#}
+{#{% include 'AppResAppBundle/Form/NationalBoards.html.twig' %}#}
+
+{#<!-- MedicalLicensure -->#}
+{#{% include 'AppResAppBundle/Form/MedicalLicensure.html.twig' %}#}
+
+{#<!-- Board Certification -->#}
+{#{% include 'AppResAppBundle/Form/BoardCertification.html.twig' %}#}
+
+{#<!-- Recommendations -->#}
+{#{% include 'AppResAppBundle/Form/Recommendations.html.twig' %}#}
+
+{#testing#}
+{#{% set cycle = "download" %}#}
+
+<!-- Uploads -->
+{#{% if cycle != "download" %}#}
+    {#{% include 'AppResAppBundle/Form/Uploads.html.twig' %}#}
+{#{% endif %}#}
+
+<!-- Honors and Awards -->
+{#{% include 'AppResAppBundle/Form/Honors.html.twig' %}#}
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#residencyApplicantData">
+                    Applicant Data
+                </a>
+            </h4>
+        </div>
+        <div id="residencyApplicantData" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                {{ formmacros.field(form.residencyTrack) }}
+
+                {{ formmacros.fieldDateLabel(form.applicationSeasonStartDate,'allow-future-date') }}
+                {{ formmacros.fieldDateLabel(form.applicationSeasonEndDate,'allow-future-date') }}
+
+                {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
+                {{ formmacros.fieldDateLabel(form.endDate,'allow-future-date') }}
+
+                {% if form.user.infos is defined %}
+                    {% for info in form.user.infos %}
+                        {{ formmacros.field(info.firstName) }}
+                        {{ formmacros.field(info.lastName) }}
+                        {{ formmacros.field(info.middleName) }}
+                        {{ formmacros.field(info.email) }}
+                    {% endfor %}
+                {% endif %}
+
+                {#Education: Medical School#}
+                {% for training in form.trainings %}
+
+                    {#{% if training.vars.value.trainingType %}#}
+                        {#training: {{ training.vars.value.trainingType.name }}<br>#}
+                    {#{% endif %}#}
+
+                    {% set trainingLabel = "Training:" %}
+                    {% set majorLabel = "Major:" %}
+                    {#{% set degreeLabel = "Degree:" %}#}
+                    {#{% set showTraining = false %}#}
+
+                    {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
+                        {#{% set trainingLabel = "Medical School" %}#}
+                        {#{% set showTraining = true %}#}
+
+                        <div class="well">
+                            <label class="control-label">Medical School</label>
+                            <br>
+                            {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
+                            {{ formmacros.field(training.institution) }}
+                            {#{{ form_row(training.institution) }}#}
+                            {#{{ formmacros.field(training.degree) }}#}
+                        </div>
+
+                    {% endif %}
+
+                    {#{% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}#}
+
+                        {#<div class="well">#}
+                            {#<label class="control-label">Previous Residency</label>#}
+                            {#<br>#}
+                            {#{{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}#}
+                            {#{{ formmacros.field(training.institution) }}#}
+                            {#{{ formmacros.field(training.degree) }}#}
+                        {#</div>#}
+
+                    {#{% endif %}#}
+
+                {% endfor %}
+
+                {#National Board#}
+                <div class="well">
+                    <label class="control-label">National Boards</label>
+                    <br>
+                    {% for examination in form.examinations %}
+                        {{ formmacros.field(examination.USMLEStep1Score) }}
+                        {{ formmacros.field(examination.USMLEStep2CKScore) }}
+                        {{ formmacros.field(examination.USMLEStep2CSScore) }}
+                        {{ formmacros.field(examination.USMLEStep3Score) }}
+
+                        <br>
+
+                        {{ formmacros.field(examination.COMLEXLevel1Score) }}
+                        {{ formmacros.field(examination.COMLEXLevel2Score) }}
+                        {{ formmacros.field(examination.COMLEXLevel2PEScore) }}
+                        {{ formmacros.field(examination.COMLEXLevel3Score) }}
+                    {% endfor %}
+                </div>
+
+
+                {% if form.citizenships is defined %}
+                    {% for citizenship in form.citizenships %}
+                        {{ formmacros.field(citizenship.country) }}
+                        {{ formmacros.field(citizenship.visa) }}
+                    {% endfor %}
+                {% endif %}
+
+                {% if cycle != "download" %}
+                    {% if form.ethnicity is defined %}
+                        {{ formmacros.field(form.ethnicity) }}
+                    {% endif %}
+                {% endif %}
+
+                {{ formmacros.field(form.firstPublications) }}
+                {{ formmacros.field(form.allPublications) }}
+                {{ formmacros.checkbox(form.aoa) }}
+                {{ formmacros.checkbox(form.couple) }}
+                {{ formmacros.field(form.postSoph) }}
+
+                {#Education: Previous Residency#}
+                {% for training in form.trainings %}
+
+                    {#{% if training.vars.value.trainingType %}#}
+                        {#training: {{ training.vars.value.trainingType.name }}<br>#}
+                    {#{% endif %}#}
+
+                    {% set trainingLabel = "Training:" %}
+                    {% set majorLabel = "Major:" %}
+                    {#{% set degreeLabel = "Degree:" %}#}
+                    {#{% set showTraining = false %}#}
+
+                    {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
+
+                        <div class="well">
+                            {% if cycle == "download" %}
+                                {% if training.vars.value.isEmpty() %}
+                                    <label class="control-label">Previous Residency - not entered</label>
+                                {% else %}
+                                    <label class="control-label">Previous Residency</label>
+                                    <br>
+
+                                    {{ formmacros.fieldDateLabel_notempty(training.startDate,'show','allow-future-date') }}
+                                    {{ formmacros.fieldDateLabel_notempty(training.completionDate,'show','allow-future-date') }}
+                                    {{ formmacros.field_notempty(training.institution,'show') }}
+                                    {#{{ formmacros.field_notempty(training.degree,'show') }}#}
+
+                                    {{ formmacros.field_notempty(training.geoLocation.city,'show') }}
+                                    {{ formmacros.field_notempty(training.geoLocation.state,'show') }}
+                                    {{ formmacros.field_notempty(training.geoLocation.country,'show') }}
+
+                                    {{ formmacros.field_notempty(training.residencyTrack,'show') }}
+                                {% endif %}
+                            {% else %}
+                                <label class="control-label">Previous Residency</label>
+                                <br>
+
+                                {{ formmacros.fieldDateLabel(training.startDate,'allow-future-date') }}
+                                {{ formmacros.fieldDateLabel(training.completionDate,'allow-future-date') }}
+                                {{ formmacros.field(training.institution) }}
+                                {#{{ formmacros.field(training.degree) }}#}
+
+                                {{ formmacros.field(training.geoLocation.city) }}
+                                {{ formmacros.field(training.geoLocation.state) }}
+                                {{ formmacros.field(training.geoLocation.country) }}
+
+                                {{ formmacros.field(training.residencyTrack) }}
+                            {% endif %}
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+                {#{% if cycle != "download" %}#}
+                    {#<div class="well form-element-holder user-ResidencyApplication">#}
+                        {#<label class="col-xs-12 control-label">Photo (Only the last photo will be added to the Complete Application PDF)</label>#}
+                        {#<div class="row withpaddingtop">#}
+                            {#<div class="col-xs-12">#}
+                                {#{{ usermacros.documentsContainer(null,form.avatars,cycle,'noprototype',8,'default','Residency Photo') }}#}
+                            {#</div>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#{% endif %}#}
+
+                {{ formmacros.field(form.aamcId) }}
+                {{ formmacros.field(form.erasApplicantId) }}
+
+                {#<div class="panel panel-default">#}
+                    {#<div class="panel-heading">#}
+                        {#<h4 class="panel-title">#}
+                            {#<a data-toggle="collapse" href="#residencyUploads">#}
+                                {#Uploads#}
+                            {#</a>#}
+                        {#</h4>#}
+                    {#</div>#}
+                    {#<div id="residencyUploads" class="panel-collapse collapse in">#}
+                        {#<div class="panel-body">#}
+
+                            {#Use Cover Letter DB for ERAS (Electronic Residency Application Service) files. Only the latest ERAS file will be used in the application's PDF#}
+                            {#<div class="well form-element-holder user-ResidencyApplication">#}
+                                {#<label class="col-xs-12 control-label">ERAS files (Only the last document will be added to the Complete Application PDF)</label>#}
+                                {#<div class="row withpaddingtop">#}
+                                    {#<div class="col-xs-12">#}
+                                        {#{{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Residency ERAS Document') }}#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+
+                            {#<div class="well form-element-holder user-Otherdocuments">#}
+                                {#<label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>#}
+                                {#<div class="row withpaddingtop">#}
+                                    {#<div class="col-xs-12">#}
+                                        {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}#}
+                                    {#</div>#}
+                                {#</div>#}
+                            {#</div>#}
+
+                        {#</div> <!-- panel-body -->#}
+                    {#</div> <!-- panel-collapse -->#}
+                {#</div> <!-- panel panel-info -->#}
+
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    {#Questionnaire and Responses#}
+    {% if form.applyingTracks is defined %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#residencyQuestionnaireResponses">
+                    Questionnaire and Responses
+                </a>
+            </h4>
+        </div>
+        <div id="residencyQuestionnaireResponses" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                {{ formmacros.field(form.applyingTracks) }}
+                {{ formmacros.field(form.learnAreas) }}
+                {{ formmacros.field(form.specificIndividuals) }}
+                {{ formmacros.field(form.questionnaireComments) }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+    {% endif %}
+
+    {#Uploads Section#}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#residencyUploads">
+                    Uploads
+                </a>
+            </h4>
+        </div>
+        <div id="residencyUploads" class="panel-collapse collapse {{ collapsein }}">
+            <div class="panel-body">
+
+                Use Cover Letter DB for ERAS (Electronic Residency Application Service) files. Only the latest ERAS file will be used in the application's PDF
+                <div class="well form-element-holder user-ResidencyApplication">
+                    <label class="col-xs-12 control-label">ERAS files (Only the last document will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Residency ERAS Document') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="well form-element-holder user-Otherdocuments">
+                    <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Residency Application Document') }}
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
+<!-- PDF Reports -->
+{#and cycle != "new"#}
+{% if cycle != "download" %}
+    {% include 'AppResAppBundle/Form/reportsPDF.html.twig' %}
+{% endif %}
+
+<!-- Itinerary -->
+{% if cycle != "download" %}
+    {% include 'AppResAppBundle/Form/Itinerary.html.twig' %}
+{% endif %}
+
+<!-- Interviews -->
+{% if cycle != "download" %}
+    {% if is_granted('ROLE_RESAPP_COORDINATOR') or is_granted('ROLE_RESAPP_DIRECTOR') or is_granted('ROLE_RESAPP_INTERVIEWER') %}
+        {% include 'AppResAppBundle/Form/Interviews.html.twig' %}
+    {% endif %}
+{% endif %}
+
+<!-- Signature -->
+{#{% include 'AppResAppBundle/Form/Signature.html.twig' %}#}
+
+
+</div>
+
+{#{% do form.setRendered %}#}
+{#{{ form_widget(form._token) }}#}
+
+{#{{ form_row(form.submit) }}#}
+{#{{ form_widget(form.update) }}#}
+
+<div id="error-box" class="alert alert-danger" style="display: none"></div>
+
+{% if cycle == "edit" %}
+    <p>
+        <button class="btn btn-warning" type="submit">Update</button>
+        {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(resapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
+        {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="resapp-applicant-form" onclick="updateResapp({{ entity.id }})">Update</button>#}
+
+        <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(resapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+    </p>
+{% endif %}
+
+{% if cycle == "new" %}
+    <p>
+        {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
+        <button class="btn btn-warning" name="btnSubmit" type="button" form="resapp-applicant-form" onclick="validateResapp()">Add Applicant</button>
+    </p>
+{% endif %}
+
+{#{{ form_end(form) }}#}
+{{ form_end(form, {'render_rest': false}) }}
+
+<br>
+
+{% if cycle == "show" %}
+    {% if is_granted('ROLE_RESAPP_COORDINATOR') or is_granted('ROLE_RESAPP_DIRECTOR') %}
+        <p>
+            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(resapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+{% endif %}
+
+{#{% if cycle == "edit" %}#}
+    {#<p>#}
+        {#<button class="btn btn-warning" type="submit">Update</button>#}
+        {#&#123;&#35;<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(resapp_sitename~'_update',{'id':entity.id}) }}">Update</a>&#35;&#125;#}
+        {#&#123;&#35;<button class="btn btn-warning" name="btnSubmit" type="submit" form="resapp-applicant-form" onclick="updateResapp({{ entity.id }})">Update</button>&#35;&#125;#}
+
+        {#<a class="btn_margin_top btn btn-primary btn-success" href="{{ path(resapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>#}
+    {#</p>#}
+{#{% endif %}#}
+
+
+
+
+

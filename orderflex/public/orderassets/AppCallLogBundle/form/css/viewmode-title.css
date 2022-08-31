@@ -1,0 +1,19 @@
+/* Add this CSS code to make sure the title link is not underlined */
+
+.nonUnderlinedLink:link {
+    color: #31708f;
+    text-decoration: none;
+}
+
+.nonUnderlinedLink:visited {
+    text-decoration: none;
+}
+
+.nonUnderlinedLink:hover {
+    text-decoration: none;
+    border-bottom-color: #424242;
+}
+
+.nonUnderlinedLink:active {
+    text-decoration: none;
+}

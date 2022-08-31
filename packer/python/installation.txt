@@ -1,0 +1,14 @@
+Python centos installation:
+https://tecadmin.net/install-python-3-7-on-centos/
+
+yum install gcc openssl-devel bzip2-devel libffi-devel zlib-devel xz-devel 
+
+
+
+
+https://docs.vmware.com/en/VMware-vSphere-Bitfusion/4.0/Example-Guide/GUID-D3A136D1-0EA1-4CD0-AFCF-7FD88299A53A.html
+
+https://www.liquidweb.com/kb/how-to-install-python-3-on-centos-7/
+yum update -y
+yum install -y python3
+

@@ -1,0 +1,105 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+
+
+{% block header %}
+    {% include 'AppDashboardBundle/Default/navbar.html.twig' %}
+{% endblock %}
+
+{% block favicon %}
+    {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon-stats.png') }}" />#}
+    <link rel="icon" type="image/x-icon" href="{{ asset('bar-chart-fill.svg') }}" />
+    {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon-stats-copied.png') }}" />#}
+{% endblock %}
+
+{% block mainjs %}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/q-1/q.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.min.js') }}"></script>
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>#}
+
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.min.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>#}
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+    {#custom js#}
+    {% set directJs = 1 %}
+    {% if directJs %}
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-navbar.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>
+        <script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>
+        <script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>
+    {% endif %}
+
+{% endblock %}
+
+{#{% block stylesheets_base %}#}
+    {#{{ encore_entry_link_tags('dashboard_base') }}#}
+{#{% endblock %}#}
+{#{% block javascripts_base %}#}
+    {#{{ encore_entry_script_tags('dashboard_base') }}#}
+{#{% endblock %}#}
+
+

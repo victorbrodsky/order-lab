@@ -1,0 +1,67 @@
+{% extends "AppDashboardBundle/Default/base.html.twig" %}
+
+{% import "AppDashboardBundle/React/dashboardmacros.html.twig" as dashboardmacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    {% if cycle is not defined %}
+        {% set cycle = "edit" %}
+    {% endif %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    {#<input type="hidden" id="useWarning" value="{{ useWarning }}" />#}
+    <input type="hidden" id="chartTypesCount" value="{{ chartTypesCount }}" />
+    <input type="hidden" id="maxDisplayCharts" value="{{ maxDisplayCharts }}" />
+
+    {% if testflag is defined %}
+        <input type="hidden" id="testflag" value="{{ testflag }}" />
+    {% endif %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+    {{ dashboardmacros.filter(filterform,spinnerColor) }}
+
+    {{ dashboardmacros.body() }}
+
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('dashboard') }}
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('dashboard') }}
+{% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/font-awesome-4.7/css/font-awesome.min.css') }}" />
+{% endblock %}
+
+{% block additionaljs %}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>
+
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            console.log("dashboard-choices.html.twig");
+        });
+        function dashboardTopicSearchNavbar() {
+            var dashboardTopicSearch = $('#dashboardTopicSearch').val();
+            //console.log("dashboardTopicSearch="+dashboardTopicSearch);
+            if( dashboardTopicSearch.length > 0 ) {
+                $('#dashboardtopicsearchform').submit();
+            } else {
+                alert("Chart topic is empty");
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,91 @@
+[2019-11-20 19:06:27] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\InvalidFieldNameException: 
+"An exception occurred while executing 'SELECT COUNT(*) AS dctrn_count FROM (SELECT DISTINCT id_0 FROM 
+(SELECT s0_.id AS id_0, s0_.idnumber AS idnumber_1, s0_.comment AS comment_2, s0_.orderdate AS orderdate_3, s0_.formnodesCache AS formnodescache_4, 
+s0_.patientNameCache AS patientnamecache_5, s0_.patientMrnCache AS patientmrncache_6, s0_.messageTitle AS messagetitle_7, 
+s0_.purpose AS purpose_8, s0_.priority AS priority_9, s0_.deadline AS deadline_10, s0_.returnoption AS returnoption_11, s0_.oid AS oid_12, 
+s0_.version AS version_13 FROM scan_message s0_ LEFT JOIN scan_message_patient s2_ ON s0_.id = s2_.message_id LEFT JOIN scan_patient s1_ ON 
+s1_.id = s2_.patient_id LEFT JOIN scan_patientmrn s3_ ON s1_.id = s3_.patient_id LEFT JOIN scan_patientlastname s4_ ON s1_.id = s4_.patient_id 
+LEFT JOIN scan_patientfirstname s5_ ON s1_.id = s5_.patient_id LEFT JOIN scan_message_encounter s7_ ON s0_.id = s7_.message_id 
+LEFT JOIN scan_encounter s6_ ON s6_.id = s7_.encounter_id LEFT JOIN scan_calllogEntryMessage s8_ ON s0_.calllogEntryMessage_id = s8_.id 
+LEFT JOIN scan_calllogTask s9_ ON s8_.id = s9_.calllogEntryMessage_id LEFT JOIN scan_encounterReferringProvider s10_ ON s6_.id = s10_.encounter_id 
+LEFT JOIN user_userWrapper u11_ ON s10_.referringProvider = u11_.id LEFT JOIN user_tracker u12_ ON s6_.tracker_id = u12_.id 
+LEFT JOIN user_spot u13_ ON u12_.id = u13_.tracker_id LEFT JOIN user_location u14_ ON u13_.currentLocation_id = u14_.id 
+LEFT JOIN scan_message_editors s16_ ON s0_.id = s16_.message_id LEFT JOIN user_modifierInfo u15_ ON u15_.id = s16_.editorInfo_id 
+LEFT JOIN user_modifierInfo u17_ ON s0_.signeeInfo_id = u17_.id LEFT JOIN user_fosuser u18_ ON u17_.modifiedBy_id = u18_.id 
+LEFT JOIN user_userInfo u19_ ON u18_.id = u19_.user_id LEFT JOIN scan_messageCategory s20_ ON s0_.messageCategory_id = s20_.id 
+LEFT JOIN scan_messageStatusList s21_ ON s0_.messageStatus_id = s21_.id WHERE ((s20_.root = 30 AND s20_.lft > 3 AND s20_.rgt < 78 OR s20_.id = 33)) 
+AND s3_.keytype_id = ? AND s21_.name <> ? ORDER BY s0_.oid DESC, u15_.modifiedOn DESC) dctrn_result) dctrn_table' 
+with params [1, "Deleted"]:  
+SQLSTATE[42703]: Undefined column: 7 ERROR:  column s0_.oid does not exist LINE 1: ...deadline_10, s0_.returnoption AS returnoption_11, s0_.oid AS... 
+                                                             ^ HINT:  Perhaps you meant to reference the column "s0_.id"." at 
+/usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php line 72 
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\InvalidFieldNameException(code: 0): An exception occurred while executing 
+'SELECT COUNT(*) AS dctrn_count FROM (SELECT DISTINCT id_0 FROM (SELECT s0_.id AS id_0, s0_.idnumber AS idnumber_1, s0_.comment AS comment_2, 
+s0_.orderdate AS orderdate_3, s0_.formnodesCache AS formnodescache_4, s0_.patientNameCache AS patientnamecache_5, 
+s0_.patientMrnCache AS patientmrncache_6, s0_.messageTitle AS messagetitle_7, s0_.purpose AS purpose_8, s0_.priority AS priority_9, 
+s0_.deadline AS deadline_10, s0_.returnoption AS returnoption_11, s0_.oid AS oid_12, s0_.version AS version_13 
+FROM scan_message s0_ LEFT JOIN scan_message_patient s2_ ON s0_.id = s2_.message_id LEFT JOIN scan_patient s1_ ON s1_.id = s2_.patient_id 
+LEFT JOIN scan_patientmrn s3_ ON s1_.id = s3_.patient_id LEFT JOIN scan_patientlastname s4_ ON s1_.id = s4_.patient_id 
+LEFT JOIN scan_patientfirstname s5_ ON s1_.id = s5_.patient_id LEFT JOIN scan_message_encounter s7_ ON s0_.id = s7_.message_id 
+LEFT JOIN scan_encounter s6_ ON s6_.id = s7_.encounter_id LEFT JOIN scan_calllogEntryMessage s8_ ON s0_.calllogEntryMessage_id = s8_.id 
+LEFT JOIN scan_calllogTask s9_ ON s8_.id = s9_.calllogEntryMessage_id LEFT JOIN scan_encounterReferringProvider s10_ ON s6_.id = s10_.encounter_id 
+LEFT JOIN user_userWrapper u11_ ON s10_.referringProvider = u11_.id LEFT JOIN user_tracker u12_ ON s6_.tracker_id = u12_.id 
+LEFT JOIN user_spot u13_ ON u12_.id = u13_.tracker_id LEFT JOIN user_location u14_ ON u13_.currentLocation_id = u14_.id 
+LEFT JOIN scan_message_editors s16_ ON s0_.id = s16_.message_id LEFT JOIN user_modifierInfo u15_ ON u15_.id = s16_.editorInfo_id 
+LEFT JOIN user_modifierInfo u17_ ON s0_.signeeInfo_id = u17_.id LEFT JOIN user_fosuser u18_ ON u17_.modifiedBy_id = u18_.id 
+LEFT JOIN user_userInfo u19_ ON u18_.id = u19_.user_id LEFT JOIN scan_messageCategory s20_ ON s0_.messageCategory_id = s20_.id 
+LEFT JOIN scan_messageStatusList s21_ ON s0_.messageStatus_id = s21_.id WHERE ((s20_.root = 30 AND s20_.lft > 3 AND s20_.rgt < 78 OR s20_.id = 33)) 
+AND s3_.keytype_id = ? AND s21_.name <> ? ORDER BY s0_.oid DESC, u15_.modifiedOn DESC) dctrn_result) dctrn_table' 
+with params [1, \"Deleted\"]:\n\nSQLSTATE[42703]: Undefined column: 7 ERROR:  column s0_.oid does not exist\nLINE 1: ...deadline_10, s0_.returnoption AS returnoption_11,
+ s0_.oid AS...\n                                                             
+ ^\nHINT:  Perhaps you meant to reference the column \"s0_.id\". at 
+ /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php:72, 
+ Doctrine\\DBAL\\Driver\\PDOException(code: 42703): SQLSTATE[42703]: Undefined column: 7 
+ ERROR:  column s0_.oid does not exist\nLINE 1: ...deadline_10, s0_.returnoption AS returnoption_11, s0_.oid AS...\n                                                             
+ ^\nHINT:  Perhaps you meant to reference the column \"s0_.id\". at 
+ /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:107, 
+ PDOException(code: 42703): SQLSTATE[42703]: Undefined column: 7 ERROR:  column s0_.oid does not exist\nLINE 1: ...deadline_10, 
+ s0_.returnoption AS returnoption_11, s0_.oid AS...\n                                                             
+ ^\nHINT:  Perhaps you meant to reference the column \"s0_.id\". at 
+ /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:105)"} []
+ ==> rename oid0000 to oid in (message,invoice,project,TransResRequest)
+ 
+[2019-11-20 19:46:11] request.CRITICAL: Uncaught PHP Exception Doctrine\DBAL\Exception\DriverException: 
+"An exception occurred while executing 'SELECT s0_.id AS id_0, s0_.description AS description_1, s0_.systemStatus AS systemstatus_2, 
+s0_.status AS status_3, s0_.createdDate AS createddate_4, s0_.updatedDate AS updateddate_5, s0_.statusUpdatedDate AS statusupdateddate_6, 
+s0_.calllogEntryMessage_id AS calllogentrymessage_id_7, s0_.calllogTaskType_id AS calllogtasktype_id_8, s0_.createdBy_id AS createdby_id_9, 
+s0_.updatedBy_id AS updatedby_id_10, s0_.statusUpdatedBy_id AS statusupdatedby_id_11 FROM scan_calllogTask s0_ 
+LEFT JOIN scan_calllogEntryMessage s1_ ON s0_.calllogEntryMessage_id = s1_.id LEFT JOIN scan_message s2_ ON s1_.id = s2_.calllogEntryMessage_id 
+LEFT JOIN scan_message_patient s4_ ON s2_.id = s4_.message_id LEFT JOIN scan_patient s3_ ON s3_.id = s4_.patient_id 
+LEFT JOIN scan_messageStatusList s5_ ON s2_.messageStatus_id = s5_.id WHERE s3_.id IN (?) AND (s0_.status IS NULL OR s0_.status = 0) 
+AND s5_.name <> ? ORDER BY s0_.createdDate DESC' with params ["2481", "Deleted"]:  
+SQLSTATE[42883]: Undefined function: 7 ERROR:  operator does not exist: boolean = integer LINE 1: ....id IN ($1) AND 
+(s0_.status IS NULL OR s0_.status = 0) AND s...                                                              
+^ HINT:  No operator matches the given name and argument types. You might need to add explicit type casts." at 
+/usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php line 91 
+{"exception":"[object] (Doctrine\\DBAL\\Exception\\DriverException(code: 0): An exception occurred while executing 
+'SELECT s0_.id AS id_0, s0_.description AS description_1, s0_.systemStatus AS systemstatus_2, s0_.status AS status_3, 
+s0_.createdDate AS createddate_4, s0_.updatedDate AS updateddate_5, s0_.statusUpdatedDate AS statusupdateddate_6, 
+s0_.calllogEntryMessage_id AS calllogentrymessage_id_7, s0_.calllogTaskType_id AS calllogtasktype_id_8, s0_.createdBy_id AS createdby_id_9, 
+s0_.updatedBy_id AS updatedby_id_10, s0_.statusUpdatedBy_id AS statusupdatedby_id_11 FROM scan_calllogTask s0_ 
+LEFT JOIN scan_calllogEntryMessage s1_ ON s0_.calllogEntryMessage_id = s1_.id LEFT JOIN scan_message s2_ ON s1_.id = s2_.calllogEntryMessage_id 
+LEFT JOIN scan_message_patient s4_ ON s2_.id = s4_.message_id LEFT JOIN scan_patient s3_ ON s3_.id = s4_.patient_id
+ LEFT JOIN scan_messageStatusList s5_ ON s2_.messageStatus_id = s5_.id WHERE s3_.id IN (?) AND (s0_.status IS NULL OR s0_.status = 0) 
+ AND s5_.name <> ? ORDER BY s0_.createdDate DESC' with params [\"2481\", \"Deleted\"]:\n\nSQLSTATE[42883]: Undefined function: 7 
+ ERROR:  operator does not exist: boolean = integer\nLINE 1: ....id IN ($1) AND (s0_.status IS NULL OR s0_.status = 0) AND s...\n   
+ ^\nHINT:  No operator matches the given name and argument types. You might need to add explicit type casts. at 
+ /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/AbstractPostgreSQLDriver.php:91, 
+Doctrine\\DBAL\\Driver\\PDOException(code: 42883): SQLSTATE[42883]: Undefined function: 7 
+ERROR:  operator does not exist: boolean = integer\nLINE 1: ....id IN ($1) AND (s0_.status IS NULL OR s0_.status = 0) AND s...\n 
+^\nHINT:  No operator matches the given name and argument types. 
+You might need to add explicit type casts. at /usr/local/bin/order-lab/Scanorders2/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOStatement.php:107, 
+PDOException(code: 42883): SQLSTATE[42883]: Undefined function: 7 ERROR:  operator does not exist: boolean = integer\nLINE 1: ....id 
+IN ($1) AND (s0_.status IS NULL OR s0_.status = 0) AND s...\n  
+
+
+
+
+ 
+ 
+ 
+ 

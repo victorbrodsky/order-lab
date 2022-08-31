@@ -1,0 +1,386 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+{% block browsercheck %}
+    {#no browserCheck#}
+{% endblock %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block header %}
+    {#<div class="text-center col-xs-12">#}
+        {#<h1 style="color:#ff633b;"><b>{{ invoice.status|upper }}</b></h1>#}
+    {#</div>#}
+{% endblock %}
+
+{% block contentleft %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#<h4 class="text-info" align="center">#}
+        {#{{ title }}#}
+    {#</h4>#}
+    {#<br>#}
+
+    {% set bundleFileName = transres_request_util.getDefaultFile("transresLogos",invoice)|raw %}
+    {% if bundleFileName %}
+
+
+    <div class="row">
+        <div class="col-xs-8" align="left">
+            <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+        </div>
+        <div class="col-xs-4" align="left">
+            <p><h2><b>Invoice</b></h2></p>
+            {#<br>#}
+            {#<br>#}
+            <p>
+                Date: {{ "now"|date("m/d/Y") }}
+            </p>
+            <p>
+                <b>Invoice No.: {{ invoice.oid }}</b>
+            </p>
+            {#{% set irbNum = invoice.getIrbNumber() %}#}
+            {% set irbNum = invoice.getProjectIrbIacucNumber() %}
+            {% if irbNum %}
+                <p>
+                    {{ transres_util.getHumanAnimalName("brackets") }} No.: {{ irbNum|raw }}
+                </p>
+            {% endif %}
+            {#<p>#}
+                {#<b>Account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
+            {#</p>#}
+            {% if invoice.getTransresRequest() and invoice.getTransresRequest().getCreateDate() %}
+                <p>
+                    Service Date: {{ invoice.getTransresRequest().getCreateDate()|date("m/d/Y",false) }}
+                </p>
+            {% endif %}
+            <p>
+                Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
+            </p>
+            <p>
+                {#Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}#}
+                {#Requester: {{ invoice.submitter.getUsernameOptimal() }}#}
+                {#Work Request's submitter as Requester $transresRequest = $invoice->getTransresRequest();#}
+                Requester: {{ invoice.getTransresRequest().getSubmitter().getUsernameOptimal() }}
+            </p>
+            <p>
+                Status: {{ invoice.status }}
+            </p>
+        </div>
+    </div>
+
+
+    {% endif %}
+
+
+    {#<P>#}
+        {#<b>Bill From:</b><br>#}
+        {#<textarea class="transres-textarea-noborder">{{ invoice.invoiceFrom }}</textarea>#}
+    {#</P>#}
+    {#<P>#}
+        {#<div>#}
+            {#{{ invoice.invoiceFrom|raw }}#}
+        {#</div>#}
+    {#</P>#}
+
+    {#<br>#}
+
+    {#<P>#}
+        {#<b>Bill To:</b>#}
+    {#</P>#}
+    {#<P>#}
+        {#<b>Bill To:</b><br>#}
+        {#<div>#}
+        {#{{ invoice.invoiceTo|raw }}#}
+        {#</div>#}
+        {#<textarea class="transres-textarea-noborder">{{ invoice.invoiceTo }}</textarea>#}
+    {#</P>#}
+
+
+    <p>
+    <div class="row">
+        <div class="col-xs-6" align="left">
+            <b>Bill From:</b><br>
+            <textarea class="transres-textarea-noborder">{{ invoice.invoiceFrom }}</textarea>
+            {#{{ invoice.invoiceFrom|raw }}#}
+        </div>
+        <div class="col-xs-6" align="left">
+            <b>Bill To:</b><br>
+            <textarea class="transres-textarea-noborder">{{ invoice.invoiceTo }}</textarea>
+            {#{{ invoice.invoiceTo|raw }}#}
+        </div>
+        {#<div class="col-xs-2" align="left">#}
+        {#</div>#}
+    </div>
+    </p>
+
+    {#<br>#}
+    {#<br>#}
+
+    {#show additionalUnitPrice if exists on a new row#}
+    {% if showAdditionalUnitPrice is not defined %}
+        {% set showAdditionalUnitPrice = 0 %}
+    {% endif %}
+
+    {% set colspan = 3 %}
+    {% if showAdditionalUnitPrice %}
+        {% set colspan = 4 %}
+    {% endif %}
+
+    <p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Description</th>
+                <th class='text-center'>Quantity</th>
+                <th class='text-center'>Item Code</th>
+                <th class='text-right'>Unit Price ($)</th>
+                {#<th>Price per one item ($)</th>#}
+
+                {% if showAdditionalUnitPrice %}
+                    <th>Additional Item Price ($)</th>
+                {% endif %}
+
+                <th class='text-right'>Total ($)</th>
+            </tr>
+            {% for invoiceItem in invoice.invoiceItems %}
+                {#<tr>#}
+                    {#{% set strlimit = 60 %}#}
+                    {#{% set descriptionStr = invoiceItem.description %}#}
+                    {#{% if descriptionStr|length > strlimit %}#}
+                        {#{% set descriptionStr = descriptionStr|slice(0, strlimit) ~ '...' %}#}
+                    {#{% endif %}#}
+                    {#<td>{{ descriptionStr }}</td>#}
+
+                    {#<td>{{ invoiceItem.quantity }}</td>#}
+                    {#<td>{{ invoiceItem.itemCode }}</td>#}
+
+                    {#<td>{{ invoiceItem.unitPrice }}</td>#}
+
+                    {#{% if showAdditionalUnitPrice %}#}
+                        {#<td>{{ invoiceItem.additionalUnitPrice }}</td>#}
+                    {#{% endif %}#}
+
+                    {#<td>{{ invoiceItem.total }}</td>#}
+                {#</tr>#}
+                {{ transres_request_util.getInvoiceItemInfoHtml(invoiceItem)|raw }}
+            {% endfor %}
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                <td>Subtotal ($)</td>
+                {#<td class='text-right'>{{ invoice.subTotal }}</td>#}
+                {#<td class='text-right'>{{ 100000000.76|number_format(2, '.', ',') }}</td>#}
+                <td class='text-right'>{{ invoice.subTotal|number_format(2, '.', ',') }}</td>
+            </tr>
+
+            {% if invoice.discountNumeric %}
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                <td>Discount ($)</td>
+                <td class='text-right'>{{ invoice.discountNumeric }}</td>
+            </tr>
+            {% endif %}
+
+            {% if invoice.discountPercent %}
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                <td>Discount (%)</td>
+                <td class='text-right'>{{ invoice.discountPercent|number_format(2,'.',',') }}</td>
+            </tr>
+            {% endif %}
+
+            {% if invoice.administrativeFee %}
+                <tr>
+                    <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                    <td>Administrative Fee ($)</td>
+                    {#<td class='text-right'>{{ invoice.administrativeFee|number_format(0,'','') }}</td>#}
+                    <td class='text-right'>{{ invoice.administrativeFee|number_format(2, '.', ',') }}</td>
+                </tr>
+            {% endif %}
+
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                <td><b>Total ($)</b></td>
+                <td class='text-right'>{{ invoice.total|number_format(2, '.', ',') }}</td>
+            </tr>
+
+            {% if invoice.paid %}
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                {#<td><b>{{ invoice.status }}</b></td>#}
+                <td><b>Paid ($)</b></td>
+                <td class='text-right'>{{ invoice.paid|number_format(2, '.', ',') }}</td>
+            </tr>
+            {% endif %}
+
+            <tr>
+                <td COLSPAN={{ colspan }} ALIGN=CENTER></td>
+                <td>Balance Due ($)</td>
+                <td class='text-right'>{{ invoice.due|number_format(2, '.', ',') }}</td>
+            </tr>
+
+            {% set subsidyInfo = transres_request_util.getSubsidyInfo(invoice,false) %}
+            {% if subsidyInfo %}
+                <tr>
+                    <td COLSPAN={{ colspan+2 }} ALIGN=CENTER>
+                        <b>
+                            {{ subsidyInfo|raw }}
+                        </b>
+                    </td>
+                </tr>
+            {% endif %}
+
+        </table>
+    </div>
+    </p>
+
+    {#<br>#}
+    {#<br>#}
+
+    <div class="col-xs-12 text-center">
+        {#<P>#}
+        <P style="font-size:12px">
+            {{ invoice.footer }}
+        </P>
+
+        <P>
+            <b>{{ invoice.footer2 }}</b>
+        </P>
+
+        <P>
+            {{ invoice.footer3 }}
+        </P>
+    </div>
+
+    <br><br>
+    {#<br><br>#}
+
+    {#<p>Detach and return with payment</p>#}
+    {% if showRemittance is not defined %}
+        {% set showRemittance = 1 %}
+    {% endif %}
+    {% if showRemittance %}
+        <div class="row">
+            <div class="col-xs-4">
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+            </div>
+            <div class="col-xs-4 text-center">
+                <p>Detach and return with payment</p>
+            </div>
+            <div class="col-xs-4">
+                <hr style="height:1px;border:none;color:#333;background-color:#333;">
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center">
+            <p><b>REMITTANCE</b></p>
+        </div>
+
+        <br><br>
+
+        <table class="transres-noborder">
+            <tr>
+                <td>Invoice No.:</td>
+                <td>{{ invoice.oid }}</td>
+            </tr>
+            <tr>
+                <td>Customer Name:</td>
+                <td>
+                    {#{% for pi in invoice.principalInvestigators %}#}
+                        {#{{ pi.getUsernameOptimal() }}<br>#}
+                    {#{% endfor %}#}
+                    {{ invoice.principalInvestigator.getUsernameOptimal() }}
+                </td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Amount Enclosed:</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <hr style="height:1px;border:none;color:#333;background-color:#333;">
+    {% endif %}
+
+{% endblock %}
+
+{% block footer %}
+    <div class="order-content text-center col-xs-12">
+        <!-- footer -->
+        {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
+
+        <div style="margin-top: 10px;">
+
+            {#<a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>#}
+            {#&copy; {{ "now"|date('Y') }} by#}
+            {#<a href="{{ department_url }}" target="_blank">{{ department_name }}</a>#}
+            {#at#}
+            {#<a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.#}
+
+            {% if showcopyrightonfooter %}
+                <a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>
+                &copy; {{ "now"|date('Y') }}
+                {% if institution_url and institution_name %}
+                    <a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.
+                {% else %}
+                    <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Institution's Name]</a>.
+                {% endif %}
+
+                {#<br>#}
+                {#<br>#}
+            {% endif %}
+
+            {% if department_url and department_name and subinstitution_url and subinstitution_name %}
+                <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+                <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
+            {% else %}
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+            {% endif %}
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block additionalcss %}
+
+    {#{% stylesheets#}
+        {#'orderassets/apptranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppTranslationalResearchBundle/form/css/pdf-show.css') }}" />
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('textarea').each(function () {
+                this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+            }).on('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+        });
+
+    </script>
+
+{% endblock %}
+

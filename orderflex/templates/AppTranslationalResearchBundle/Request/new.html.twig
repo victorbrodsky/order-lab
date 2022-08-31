@@ -1,0 +1,1355 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    {#{% set bwipjsSrcpath = "/order/bundles/appuserdirectory/bwip-js/" %}#}
+    {% set bwipjsSrcpath = "/orderassets/AppUserdirectoryBundle/bwip-js/" %}
+    <input type="hidden" id="bwipjs-srcpath" value="{{ bwipjsSrcpath }}" />
+
+    {#<input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />#}
+    {#<input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />#}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
+    <input type="hidden" id="default-antibody" value="{{ defaultAntibodyType }}" />
+
+    <input type="hidden" id="workrequest-id" value="{{ transresRequest.id }}" />
+    <input type="hidden" id="work-request-latest-invoice-id" value="{{ transres_request_util.getLatestInvoiceId(transresRequest) }}" />
+
+    {#<input type="hidden" id="update-invoice-answer" name="update-invoice-answer" value="" />#}
+    {#<input id="update-invoice-answer" name="update-invoice-answer" value="test-answer!!!" />#}
+    {{ transresRequestMacros.updateInvoiceQuestionModal(transresRequest) }}
+
+    {% if project and project.id %}
+        {% set projectFunded = project.getFunded() %}
+        {% set projectApprovedProjectBudget = project.getApprovedProjectBudget() %}
+        {% set projectRemainingBudget = project.getRemainingBudget() %}
+        {#{% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project) %}#}
+        {#{% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}#}
+        {#{% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}#}
+    {% else %}
+        {% set projectFunded = null %}
+        {% set projectApprovedProjectBudget = null %}
+        {% set projectRemainingBudget = null %}
+        {#{% set projectAdminEmailStr = null %}#}
+        {#{% set messageToUsers = null %}#}
+        {#{% set projectRemainingBudgetNote = null %}#}
+    {% endif %}
+
+    {% set projectAdminEmailStr = transres_util.getAdminEmailsStr(project,false) %}
+
+    <input type="hidden" id="project-funded" value="{{ projectFunded }}" />
+    <input type="hidden" id="project-approved-budget" value="{{ projectApprovedProjectBudget }}" />
+    <input type="hidden" id="project-original-remaining-budget" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-remaining-budget" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-remaining-budget-value" value="{{ projectRemainingBudget }}" />
+    <input type="hidden" id="project-admin-emails" value="{{ projectAdminEmailStr }}" />
+
+    {#project might be null#}
+    {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% if messageToUsers is defined and messageToUsers %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h5>
+    {% endif %}
+
+
+    {% set invoiceShowUrl = transres_request_util.getInvoiceShowUrlByWorkRequest(transresRequest) %}
+    {% set projectRemainingBudgetNote = transres_util.getProjectRemainingBudgetNote(project) %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {% if invoiceShowUrl %}
+            (See latest invoice {{ invoiceShowUrl|raw }})
+        {% endif %}
+    </h4>
+
+    {% if projectRemainingBudgetNote %}
+        <div class="well well-sm">
+            {% if projectRemainingBudget > 0 %}
+                {% set alertClass = "alert-secondary" %}
+            {% else %}
+                {% set alertClass = "alert-warning" %}
+            {% endif %}
+            <div id="project-remaining-budget-note" class="alert {{ alertClass }}" role="alert">
+                <p>
+                    {{ projectRemainingBudgetNote|raw }}
+                </p>
+            </div>
+
+            {#Modal for over budget 222(7)#}
+            <div class="modal fade" id="over-budget-warning-modal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Over the Approved Project Budget</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {#This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy. #}
+                            {#You may need to submit an updated budget estimate along with an explanation. #}
+                            {#Please contact the administrator by emailing [FirstName LastName at email - first user with admin review role for this project type] #}
+                            {#to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)”#}
+
+                            <p>
+                                <div id="over-budget-warning-modal-text">
+                                    This work request appears to exceed the approved estimated budget of $xxx.xx for this project by $yyy.yy.
+                                    You may need to submit an updated budget estimate along with an explanation.
+                                    Please contact the administrator by emailing [FirstName LastName at email -
+                                    first user with admin review role for this project type] to ensure this work request is completed.
+                                    Are you sure you would like to submit this work request?
+                                </div>
+                            </p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if cycle == "new" %}
+        <div class="well well-sm">
+        <p>
+            <i>
+                Please make sure to save your work request as a draft or submit the request prior leaving this page.
+            </i>
+        </p>
+        </div>
+    {% endif %}
+    {% if cycle == "edit" %}
+        <div class="well well-sm">
+        <p>
+            <i>
+                Please make sure to update/save your Work Request prior leaving this page.
+            </i>
+        </p>
+        </div>
+    {% endif %}
+
+
+    {#barcode image test#}
+    {#<button onclick="render()">Show Barcode</button>#}
+    {#Img:<img id="myimg">#}
+    {#<br>#}
+    {#Canvas:<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>#}
+    {#<br><br><hr>#}
+    {#{{ transresRequestMacros.barcodedemo() }}#}
+    {#<div id="barcodeholder"></div>#}
+    {#<hr><br><br>#}
+
+
+
+    {% if cycle == "show" %}
+        {#{% if#}
+        {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+        {#is_granted('ROLE_TRANSRES_TECHNICIAN') or#}
+        {#(#}
+        {#transres_util.isProjectRequester(transresRequest.project) and#}
+        {#transresRequest.getProgressState() == 'draft'#}
+        {#)#}
+        {#%}#}
+        {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
+            <p>
+                <a class="btn btn-default"
+                   href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                >Edit work request</a>
+            </p>
+            <br>
+        {% endif %}
+    {% endif %}
+
+{% if routeName == "translationalresearch_new_standalone_request" and form.project is not defined %}
+    <p>There are no approved projects are available at this time.</p>
+{% else %}
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ form_start(form) }}
+    {#{{ form_start(form,{'attr':{'onsubmit':'return transresValidateRequest();'}}) }}#}
+
+        {{ form_widget(form.updateinvoiceanswer) }}
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+
+             data-prototype-transres-products = "{{ transresRequestMacros.productForm(form.products,cycle,'transres-products','prototype',sitename,1)|e }}"
+        ></div>
+
+        {% if form.project is defined %}
+            {% if routeName != "translationalresearch_new_standalone_request" %}
+                <div style="display: none;">
+            {% endif %}
+            {{ formmacros.field(form.project) }}
+            {% if routeName != "translationalresearch_new_standalone_request" %}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {#{{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}#}
+
+        {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
+
+        {% if cycle != "new" %}
+            {% if showPackingSlip is not defined %}
+                {% set showPackingSlip = false %}
+            {% endif %}
+            {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle,showPackingSlip) }}
+        {% endif %}
+
+        {% if cycle != "new" %}
+            {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
+        {% endif %}
+
+        {#<p>#}
+            {#Table Triggered:<br>#}
+            {#<div id="test-barcode-image"></div>#}
+        {#</p>#}
+
+        {#<p>#}
+            {#Datamatrix Triggered:<br>#}
+            {#<div id="test-datamatrix"></div>#}
+        {#</p>#}
+
+        {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
+
+        {% set showFosComment = 'showFosComment' %}
+        {% if cycle == "new" %}
+            {% set showFosComment = null %}
+        {% endif %}
+        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle,showFosComment) }}
+
+        {#{% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}#}
+        {% if cycle != "new" %}
+            {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
+        {% endif %}
+
+        {% if form.updateDate is defined or form.updateUser is defined  %}
+            <div class="well well-sm">
+                {% if form.updateDate is defined %}
+                    {{ formmacros.field(form.updateDate) }}
+                {% endif %}
+                {% if form.updateUser is defined %}
+                    {{ formmacros.field(form.updateUser) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+
+        {% if form.saveAsUpdate is defined %}
+            {{ form_widget(form.saveAsUpdate) }}
+        {% endif %}
+        {% if form.saveAsDraft is defined %}
+            {{ form_widget(form.saveAsDraft) }}
+        {% endif %}
+        {% if form.saveAsComplete is defined %}
+            <div class="alert alert-success" role="alert" style="margin-top: 30px; margin-bottom: 5px;">
+                {#This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.#}
+                <input type="checkbox" id="confirmationSubmit" name="confirm" value="confirm">
+                <label for="subscribeNews">I have verified the contents of this work request and authorize the department of pathology to charge the listed fund number for the listed amount.</label>
+            </div>
+
+            {{ form_widget(form.saveAsComplete) }}
+        {% endif %}
+
+        {% if form.saveAsUpdateChangeProgressState is defined %}
+            {{ form_widget(form.saveAsUpdateChangeProgressState) }}
+        {% endif %}
+        {% if form.saveAsUpdateChangeBillingState is defined %}
+            {{ form_widget(form.saveAsUpdateChangeBillingState) }}
+        {% endif %}
+
+        <div id="projectError" class="alert alert-danger" style="display: none; margin: 5px;"></div>
+
+    {{ form_end(form) }}
+
+    <div id="please-wait" style="display: none;">Please Wait ...</div>
+
+    {% if cycle == "show" %}
+        {#{% if#}
+            {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+            {#is_granted('ROLE_TRANSRES_TECHNICIAN') or#}
+            {#(#}
+                {#transres_util.isProjectRequester(transresRequest.project) and#}
+                {#transresRequest.getProgressState() == 'draft'#}
+            {#)#}
+        {#%}#}
+            {#<br>#}
+            {#<p>#}
+                {#<a class="btn btn-default"#}
+                   {#href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"#}
+                {#>Edit work request</a>#}
+            {#</p>#}
+        {#{% endif %}#}
+        {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
+            <p>
+                <a class="btn btn-default"
+                   href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                >Edit work request</a>
+            </p>
+        {% endif %}
+    {% endif %}
+
+
+    {% if project and project.id %}
+        <br>
+        {#{{ transres.projectObjFullInfo(project,cycle) }}#}
+        {{ transres.projectIncludeInfo(project,cycle) }}
+        <p>
+            <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the work request list</a>
+        </p>
+    {% endif %}
+
+{% endif %} {#routeName and project#}
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('@FOSCommentBundle/Resources/public/css/comments.css') }}" />#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/FOSCommentBundle/css/comments.css') }}" />
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppOrderformBundle/form/css/handsontable.css') }}" />
+
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    {#Fix for numbro.min.js.map: From Handsontable README.md: Use Handsontable bare files => **handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.#}
+    {#<script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.full.js') }}" ></script>#}
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/handsontable-5/dist/handsontable.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/handsontable.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/bwip-js/freetype.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppOrderformBundle/form/js/selectAjax.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppOrderformBundle/form/js/masking.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/barcode.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/qrcode/qrcode.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-qrcode/jquery.qrcode.min.js') }}" ></script>
+
+    <script type="text/javascript">
+
+        var _handsometableDataArr = [];
+
+        var _productServices = [];
+        var _projectSpecialtyId = null;
+
+        var _submitBtn = null;
+        var _workRequestUpdated = false;
+
+        $(document).ready(function() {
+
+            fieldInputMask();
+
+            //if( $('#oleg_translationalresearchbundle_request_project') ) {
+                //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project') );
+
+                //update project related request's fields
+                $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
+                    //console.log("project changed: change");
+                    //var projectId = $(this).val();
+
+                    if(1) {
+                        transresPrepopulateProjectDetails($(this));
+                        //transresPrepopulateProductServices( $(this) );
+                        transresIncludeProjectDetails($(this));
+                    } else {
+                        //reload page with project as it was clicked on the "New work request" from the project's action menu
+                        var projectId = $(this).val();
+                        //console.log("project changed: projectId="+projectId);
+                        //redirect to translationalresearch_new_standalone_request with projectId and keep project choice field.
+                        var url = Routing.generate('translationalresearch_new_standalone_request',{id: projectId});
+                        location.href = url;
+                    }
+                });
+            //}
+
+            var tableFormCycle = '{{ cycle }}';
+            //console.log('tableFormCycle='+tableFormCycle);
+
+            if( tableFormCycle != "new" ) {
+
+                getComboboxAccessionType(null,true); //TODO: test why it's fail and if it is needed
+                getAntobodies(null,true); //TODO: test why it's fail and if it is needed
+
+                var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+                //console.log('init _handsometableDataArr:');
+                //console.log(_handsometableDataArr);
+
+                //handsonTableInit(_handsometableDataArr, tableFormCycle);
+
+
+                // Wait until idle (busy must be false)
+                var _TIMEOUT = 300; // waitfor test rate [msec]
+
+                //console.log('before wait for');
+                waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                    //console.log('The show can resume !');
+                    transresMakeColumnData();
+
+                    handsonTableInit(_handsometableDataArr, tableFormCycle);
+                });
+
+            }
+
+//            $('.table-barcode').on("change", function(event) {
+//                transresTableBarcodeGeneration( $(this) );
+//            });
+
+            //bwipInit();
+
+            var showPackingSlip = document.getElementById("latest-packing-slip-pdf-view");
+            //console.log("1 show showPackingSlip");
+            if( showPackingSlip ) {
+                //console.log("2 show showPackingSlip");
+                showPackingSlip.click();
+            }
+
+            //transresProductCloneListener();
+
+            transresProductItemListener(this);
+
+            transresDetectMajorWorkRequestChanges();
+
+            transresHideShowRemoveProductSection();
+            transresAddRemoveProductSection();
+
+        });
+
+
+        //https://stackoverflow.com/questions/32666100/jquery-form-submit-with-bootstrap-modal-confirmation
+//        $("#dischargeform").validate({
+//            rules: {
+//                firstname: "required",
+//                lastname: "required",
+//            },
+//            messages: {
+//                firstname: "Please enter your firstname",
+//                lastname: "Please enter your lastname",
+//            },
+//            submitHandler: function (form) {
+//                $("#myModal").modal('show');
+//                $('#SubForm').click(function () {
+//                    form.submit();
+//                });
+//            }
+//        });
+
+        function transresValidateRequest(submitBtn,withConfirm) {
+
+            var latestInvoiceId = $('#work-request-latest-invoice-id').val();
+            //console.log('latestInvoiceId=' + latestInvoiceId);
+            //console.log('cycle=' + cycle);
+            //if( cycle == 'edit' ) {
+            if( latestInvoiceId ) {
+                var answer = $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val();
+                //console.log("transresValidateRequest answer=" + answer);
+                if (answer) {
+                    //console.log("submit answer=" + answer);
+                    return true;
+                }
+            }
+
+            transresHideBtn();
+
+            var validated = true;
+            var label = null;
+            var value = null;
+
+            //validate submit confirmation
+            $("#projectError").hide();
+            $("#projectError").html(null);
+
+            //validate "Requested Quantity" in product and service
+            $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
+                //console.log( "Required: "+index + ": " + $( this ).text() );
+                label = $( this ).text();   //$(this).find("label").text();
+                value = null;
+
+                var holder = $(this).closest(".row");
+
+                //input
+                var inputField = holder.find(".form-control");
+                if( inputField.length > 0 ) {
+                    value = inputField.val();
+                    //console.log("label="+label+"; value="+value);
+                    if( !value ) {
+                        //console.log("Error Input form-control. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+                //select combobox
+                var selectField = holder.find("select.combobox");
+                if( selectField.length > 0 ) {
+                    value = selectField.val();
+                    //console.log("select combobox: label="+label+"; value="+value);
+                    if( !value ) {
+                        //console.log("Error Select select combobox. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+                //input combobox
+                var inputSelectField = holder.find("input.combobox");
+                if( inputSelectField.length > 0 ) {
+                    value = inputSelectField.val();
+                    //console.log("input combobox: label="+label+"; value="+value);
+                    if( !value ) {
+                        //console.log("Error Select input combobox. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+            }); //required fields
+
+            if( validated == false ) {
+                //console.log("Error: required value is NULL! label="+label+"; value="+value);
+                var msg = "The required field '" + label + "' is empty";
+                $("#projectError").show();
+                $("#projectError").html(msg);
+
+                transresShowBtn();
+                return false;
+            }
+
+            if( withConfirm == true ) {
+                var confirmationSubmit = $('#confirmationSubmit');
+                if (confirmationSubmit.length) {
+                    if (confirmationSubmit.is(':checked')) {
+                        //ok confirmed
+                        //console.log("ok confirmed");
+                    } else {
+                        var msg = "Please confirm the agreement in order to submit a new work request.";
+                        $("#projectError").show();
+                        $("#projectError").html(msg);
+                        //console.log("not confirmed");
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+            }
+
+            var requiredQunatities = $(".product-requested-quantity");
+            $.each(requiredQunatities, function( index, valueField ) {
+                //console.log("valueField:");
+                //console.log(valueField);
+                //transresShowBtn();
+                //return false;
+                var value = valueField.value;
+                //alert( index + ": " + value );
+                //console.log("requiredQunatity="+value);
+                if( Math.floor(value) == value && $.isNumeric(value) ) {
+                    //integer ok
+                } else {
+                    var msg = "Please enter an integer (a number) into the 'Requested Quantity' field before submitting.";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+
+                    transresShowBtn();
+                    return false;
+                }
+            });
+
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+            } else {
+                //un-funded => use over budget warning
+                //var projectRemainingBudget = $('#project-remaining-budget').val();
+                //console.log("projectRemainingBudget="+projectRemainingBudget);
+                var projectRemainingBudgetValue = $('#project-remaining-budget-value').val();
+                //console.log("projectRemainingBudgetValue="+projectRemainingBudgetValue);
+                if( projectRemainingBudgetValue != null ) { //testing "0 &&"
+                    if ( projectRemainingBudgetValue < 0 ) {
+                        //This work request appears to exceed the approved estimated budget of $xxx.xx
+                        // for this project by $yyy.yy. You may need to submit an updated budget estimate
+                        // along with an explanation. Please contact the administrator by emailing
+                        // [FirstName LastName at email - first user with admin review role for this project type]
+                        // to ensure this work request is completed. Are you sure you would like to submit this work request? (Yes) (No)
+
+                        var approvedBudget = $('#project-approved-budget').val();
+                        var adminEmails = $('#project-admin-emails').val();
+                        projectRemainingBudgetValue = Math.abs(projectRemainingBudgetValue);
+                        //console.log("abs projectRemainingBudgetValue="+projectRemainingBudgetValue);
+
+                        //over-budget-warning-modal
+                        var modalText = "This work request appears to exceed the approved estimated budget of $"+approvedBudget+
+                                " for this project by $"+projectRemainingBudgetValue+". " +
+                                "You may need to submit an updated budget estimate along with an explanation. " +
+                                "Please contact the administrator by emailing " + adminEmails
+                                //"[FirstName LastName at email - first user with admin review role for this project type] " +
+                                " to ensure this work request is completed. Are you sure you would like to submit this work request?";
+                        //$('#over-budget-warning-modal-text').text(modalText);
+                        //$('#over-budget-warning-modal').modal();
+                        //console.log("modal: finished");
+                        //https://www.codeply.com/go/Dz7rguXIQ2/bootstrap-bootstrap-modal-confirm-form-submit
+
+                        //var msg = "This work request appears to exceed the approved estimated budget of $"+approvedBudget+" by $"+projectRemainingBudgetValue+".";
+                        $("#projectError").show();
+                        $("#projectError").html(modalText);
+
+                        //var txt;
+                        var r = confirm(modalText);
+                        if ( r == true ) {
+                            //txt = "Yes";
+                        } else {
+                            //txt = "No";
+                            transresShowBtn();
+                            return false;
+                        }
+
+                        //transresShowBtn();
+                        //return false;
+                    } else {
+//                        //testing
+//                        var msg = "budget OK";
+//                        $("#projectError").show();
+//                        $("#projectError").html(msg);
+//
+//                        transresShowBtn();
+//                        return false;
+                    }
+                }
+            }
+
+            //console.log("transresValidateRequest: finished");
+
+            transresValidateHandsonTable();
+
+            //if( cycle == 'edit' ) {
+            if( latestInvoiceId ) {
+                //console.log('_workRequestUpdated=' + _workRequestUpdated);
+                if (_workRequestUpdated == true) {
+                    //console.log("submit button=" + $(submitBtn).attr('id'));
+                    transresUpdateInvoiceQuestion($(submitBtn));
+
+                    //return false => stop form submission, then in modal when button clicked $("form").submit(); with parameter which button clicked
+                    return false;
+                } else {
+                    //if request is changed
+                    $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
+                }
+            }
+
+            //return false; //testing
+            return true;
+        }
+
+        function transresHideBtn() {
+            //console.log("hide submit");
+            $(":submit").hide();
+            $('#please-wait').show();
+        }
+        function transresShowBtn() {
+            //console.log("show submit");
+            $(":submit").show();
+            $('#please-wait').hide();
+        }
+
+        function transresPrepopulateProjectDetails( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            //console.log("projectId="+projectId);
+            if( projectId ) {
+                //console.log("get project account number");
+
+                var url = Routing.generate('translationalresearch_get_project_ajax',{id: projectId});
+                //url = url + "/" + projectId;
+
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "GET",
+                    //data: {id: projectId },
+                    dataType: 'json',
+                    async: asyncflag
+                }).success(function(response) {
+                    //console.log(response);
+                    //set fundedAccountNumber
+                    $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(response.fundedAccountNumber);
+
+                    //set oleg_translationalresearchbundle_request_principalInvestigators
+                    $("#oleg_translationalresearchbundle_request_principalInvestigators").select2('val',response.principalInvestigators);
+
+                    //set BillingContact oleg_translationalresearchbundle_request_contact
+                    $("#oleg_translationalresearchbundle_request_contact").select2('val',response.contact);
+
+                    //set supportEndDate (project's irbExpirationDate)
+                    $("#oleg_translationalresearchbundle_request_supportEndDate").val(response.implicitExpirationDate);
+
+                    //set businessPurposes (project's projectType)
+                    //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
+                    $("#oleg_translationalresearchbundle_request_businessPurposes").select2('val',response.businessPurposes);
+
+                    $('#transer-funded').val(response.fundedStr);
+
+                }).done(function() {
+                    //
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    //console.log('Error : ' + errorThrown);
+                    $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(errorThrown);
+                });
+
+            } else {
+                $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(null);
+                $("#oleg_translationalresearchbundle_request_supportEndDate").val(null);
+                $("#oleg_translationalresearchbundle_request_principalInvestigators").select2('val',null);
+                $("#oleg_translationalresearchbundle_request_contact").select2('val',null);
+                $("#oleg_translationalresearchbundle_request_businessPurposes").select2('val',null);
+                $('#transer-funded').val(null);
+            }
+        }
+
+        function transresIncludeProjectDetails( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            //console.log("transresIncludeProjectDetails projectId="+projectId);
+            if( projectId ) {
+                //console.log("get project account number");
+                if(1) {
+                    //$("#panel-projectFullInfo").load(Routing.generate('translationalresearch_project_show_simple', {id: projectId}));
+
+                    $( "#panel-projectFullInfo" ).html('Loading project '+projectId+'...');
+                    $( "#panel-projectFullInfo" ).load(
+                            Routing.generate(
+                                    'translationalresearch_project_show_simple',
+                                    {id: projectId}
+                            ),
+                            function( response, status, xhr ) {
+                        if ( status == "error" ) {
+                            var msg = "Error loading project "+projectId+": ";
+                            $( "#panel-projectFullInfo" ).html( msg + xhr.status + " " + xhr.statusText );
+                        }
+                    });
+
+                } else {
+                    var url = Routing.generate('translationalresearch_project_show_simple', {id: projectId});
+                    //url = url + "/" + projectId;
+
+                    $.ajax({
+                        url: url,
+                        timeout: _ajaxTimeout,
+                        type: "GET",
+                        //data: {id: projectId},
+                        //dataType: 'json',
+                        async: asyncflag
+                    }).success(function (response) {
+                        $('#panel-projectFullInfo').html(response);
+                    }).done(function () {
+                        //
+                    }).error(function (jqXHR, textStatus, errorThrown) {
+                        //console.log('Error : ' + errorThrown);
+                        $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(errorThrown);
+                        $('#panel-projectFullInfo').html(errorThrown);
+                    });
+                }
+            }
+        }
+
+        //NOT USED
+        //populate filteres list products according to the project type
+        function transresPrepopulateProductServices( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            if( _projectSpecialtyId == projectId && _productServices.length > 0 ) {
+                //console.log(_projectSpecialtyId+": _productServices already exists:");
+                //console.log(_productServices);
+                return;
+            }
+
+            //_productServices
+            if( _productServices.length == 0 ) {
+                //console.log("projectId="+projectId);
+                if( projectId ) {
+                    console.log("transresPrepopulateProductServices before ajax projectId=: "+projectId);
+
+                    var url = Routing.generate('translationalresearch_get_productservice_ajax',{id: projectId});
+                    //url = url + "/" + projectId;
+
+                    $.ajax({
+                        url: url,
+                        timeout: _ajaxTimeout,
+                        type: "GET",
+                        //data: {id: projectId },
+                        dataType: 'json',
+                        async: false //asyncflag
+                    }).success(function(response) {
+
+                        console.log("transresPrepopulateProductServices after ajax");
+                        //console.log(response);
+
+                        _productServices = response.products;
+
+//                        var productServices = response.products;
+//                        console.log(productServices);
+//                        console.log("productServices len="+productServices.length);
+//
+//                        if( productServices && productServices.length > 0 ) {
+//                            console.log("set products");
+//                            //$('.product-category-combobox').val(null).trigger('change');
+//                            //$(".product-category-combobox").trigger('change');
+//
+//                            //$("select.product-category-combobox").select2('data', null);
+//                            $('select.product-category-combobox').empty().trigger("change");
+//
+//                            trpUpdateProducts(productServices);
+//                        }
+//
+//                        $("#panel-title-products").show();
+//                        $("#panel-title-products").html(response.projectSpecialty);
+                    }).done(function() {
+                        //
+                    }).error(function(jqXHR, textStatus, errorThrown) {
+                        //console.log('Error : ' + errorThrown);
+                        _productServices = [];
+                        _projectSpecialtyId = null;
+                        $("#panel-title-products").show();
+                        $("#panel-title-products").html(errorThrown);
+                    });
+
+                } else {
+                    $("#panel-title-products").html(null);
+                }
+            }//_productServices.length == 0
+
+            if( _productServices.length > 0 ) {
+                //console.log("set products");
+                //$('.product-category-combobox').val(null).trigger('change');
+                //$(".product-category-combobox").trigger('change');
+
+                //$("select.product-category-combobox").select2('data', null);
+                $('select.product-category-combobox').empty().trigger("change");
+
+                trpUpdateProducts(_productServices);
+            }
+
+//            //console.log("projectId="+projectId);
+//            if( projectId ) {
+//                //console.log("get project account number");
+//
+//                var url = Routing.generate('translationalresearch_get_productservice_ajax');
+//                url = url + "/" + projectId;
+//
+//                $.ajax({
+//                    url: url,
+//                    timeout: _ajaxTimeout,
+//                    type: "GET",
+//                    //data: {id: projectId },
+//                    dataType: 'json',
+//                    async: asyncflag
+//                }).success(function(response) {
+//                    console.log(response);
+//
+//                    var productServices = response.products;
+//                    console.log(productServices);
+//                    console.log("productServices len="+productServices.length);
+//
+//                    if( productServices && productServices.length > 0 ) {
+//                        console.log("set products");
+//                        //$('.product-category-combobox').val(null).trigger('change');
+//                        //$(".product-category-combobox").trigger('change');
+//
+//                        //$("select.product-category-combobox").select2('data', null);
+//                        $('select.product-category-combobox').empty().trigger("change");
+//
+//                        trpUpdateProducts(productServices);
+//                    }
+//
+//
+//                    $("#panel-title-products").show();
+//                    $("#panel-title-products").html(response.projectSpecialty);
+//                }).done(function() {
+//                    //
+//                }).error(function(jqXHR, textStatus, errorThrown) {
+//                    //console.log('Error : ' + errorThrown);
+//                    $("#panel-title-products").show();
+//                    $("#panel-title-products").html(errorThrown);
+//                });
+//
+//            } else {
+//                $("#panel-title-products").html(null);
+//            }
+        }
+
+        function trpUpdateProducts(products,comboboxEl) {
+            products.forEach(function(item){
+
+//                if( $(this).find("option[value='" + userId + "']").length ) {
+//
+//                } else {
+//
+//                }
+
+                var thisEncounterId = item['id'];
+                var thisEncounterText = item['text'];
+                //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+                //text += thisEncounterText;
+                if( thisEncounterText ) {
+                    var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                    //var newOption = new Option(thisEncounterId, thisEncounterText, false, false);
+                    $("select.product-category-combobox").append(newOption).trigger('change');
+                    //$("select.combobox-previous-encounters").append(newOption);
+                }
+            });
+        }
+        function updateUserComboboxes(response,fieldId) {
+            //console.log("update user comboboxes; response:");
+            //console.log(response);
+
+            var userId = response.userId;
+            var userName = response.userName;
+            //console.log("userId="+userId+"; userName="+userName);
+
+            $("select.add-new-user-on-enter").each(function(){
+
+                if( $(this).find("option[value='" + userId + "']").length ) {
+                    //$("#state").val(userId).trigger("change");
+                } else {
+
+                    //console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
+                    if( fieldId == $(this).attr('id') ) {
+                        //console.log("set this user fieldId="+fieldId);
+                        var newOption = new Option(userName, userId, true, true);
+                    } else {
+                        //console.log("just add this user fieldId="+fieldId);
+                        var newOption = new Option(userName, userId, false, false);
+                    }
+                    $(this).append(newOption).trigger('change');
+
+                }
+
+            });
+
+        }
+
+        function transresCloneExistingObject(btn,classname,confirmationMessage) {
+            transresProductItemListener();
+
+            var cloneBtnEl = $(btn);
+
+            var addBtn = $(".transres-products-holder").find(".transres-add-product-btn");
+            //printF(addBtn,"addBtn:");
+
+            addBtn.click();
+
+            //populate visible fields
+            var holder = cloneBtnEl.closest('.user-collection-holder');
+
+            var newHolder = $('.transres-products-holder').find('.user-collection-holder').last();
+
+            if( newHolder.length == 0 ) {
+                return;
+            }
+
+            var requestedQuantity = holder.find('.product-requested-quantity').val();
+            //console.log("requestedQuantity="+requestedQuantity);
+            if( requestedQuantity ) {
+                newHolder.find('.product-requested-quantity').val(requestedQuantity);
+            }
+
+            var completedQuantity = holder.find('.product-completed-quantity').val();
+            //console.log("completedQuantity="+completedQuantity);
+            if( completedQuantity ) {
+                newHolder.find('.product-completed-quantity').val(completedQuantity);
+            }
+
+            var comment = holder.find('.product-comment').val();
+            //console.log("comment="+comment);
+            if( comment ) {
+                newHolder.find('.product-comment').val(comment);
+            }
+
+            var note = holder.find('.product-note').val();
+            //console.log("note="+note);
+            if( note ) {
+                newHolder.find('.product-note').val(note);
+            }
+
+            var category = holder.find('.product-category-combobox').select2('data');
+            //console.log("category="+category);
+            //console.log(category);
+            if( category ) {
+                newHolder.find('.product-category-combobox').select2('data',category);
+            }
+
+            //change alert color of newHolder to primary
+            newHolder.addClass('alert-success').removeClass('alert-default').removeClass('well');
+
+            //var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget();
+        }
+
+        function transresAddRemoveProductSection() {
+            $('.transres-product-remove-btn, .transres-add-product-btn, .transres-product-clone-btn').on('click', function(event) {
+                //console.log("transresAddRemoveProductSection");
+                transresHideShowRemoveProductSection();
+            });
+        }
+        function transresHideShowRemoveProductSection() {
+            //removeWorkRequestProductObject, transresCloneExistingObject, transres-add-product-btn
+            //if only one product => don't remove
+            if( $('.transres-product-remove-btn').length <= 1 ) {
+                $('.transres-product-remove-btn').hide();
+            } else {
+                $('.transres-product-remove-btn').show();
+            }
+        }
+
+        function removeWorkRequestProductObject( delBtn, classname ) {
+
+            //removeWorkRequestProductObject, transresCloneExistingObject, transres-add-product-btn
+            //TODO: if only one product => don't remove
+            if( $('.transres-products').length <= 1 ) {
+                alert("You can not remove the last product/service section");
+                return;
+            }
+
+            removeExistingObject(delBtn,classname);
+            //console.log("removeInvoiceItemExistingObject");
+
+            //var thisEl = $('#oleg_translationalresearchbundle_request_project');
+            transresRecalculateRemaniningBudget();
+
+            //console.log("removeWorkRequestProductObject transres-product-remove-btn click");
+            _workRequestUpdated = true;
+
+            transresHideShowRemoveProductSection();
+        }
+
+        //transresProductItemListener
+        function transresRecalculateRemaniningBudget() {
+            //return; //testing
+
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                return;
+            }
+
+            var projectField = $('#oleg_translationalresearchbundle_request_project');
+
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField && projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                //return;
+            }
+            //console.log("projectId="+projectId);
+
+            var currentRemainingBudget = $('#project-remaining-budget').val();
+            //$('#project-remaining-budget-amount').text(currentRemainingBudget);
+            transresSetRemainingBudgetNote(currentRemainingBudget);
+            //$('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
+
+            if( projectId ) {
+                //console.log("get project account number");
+
+                //foreach product: get categoryId, quantity
+                var productsArr = [];
+//                var productArr = [
+//                    'categoryId',
+//                    '1'
+//                ];
+
+                var workrequestId = $('#workrequest-id').val();
+
+                $('.transres-products').each(function(){
+                    var requestedQuantity = $(this).find('.product-requested-quantity').val();
+                    var completedQuantity = $(this).find('.product-completed-quantity').val();
+                    var quantity = requestedQuantity;
+                    if( completedQuantity != null ) {
+                        quantity = completedQuantity;
+                    }
+
+                    var categoryData = $(this).find('.product-category-combobox').select2('data');
+
+                    var productId = $(this).find('.product-id').val();
+
+                    if( quantity && categoryData ) {
+
+                        var categoryId = categoryData.id;
+
+                        var productArr = {
+                            'productId': productId,
+                            'categoryId': categoryId,
+                            'quantity': quantity
+                        };
+                        productsArr.push(productArr);
+                    }
+                });
+                //console.log(productsArr);
+
+                if( productsArr.length == 0 ) {
+                    //console.log("products are empty");
+
+                    var originalRemainingBudget = $('#project-original-remaining-budget').val();
+                    //$('#project-remaining-budget-amount').text(originalRemainingBudget);
+                    originalRemainingBudget = transresDollarSignValue(originalRemainingBudget);
+                    transresSetRemainingBudgetNote(originalRemainingBudget);
+
+                    return;
+                }
+
+                var url = Routing.generate('translationalresearch_get_project_remaining_budget_ajax');
+
+                //console.log("call translationalresearch_get_project_remaining_budget_ajax: projectId="+projectId+", workrequestId="+workrequestId);
+
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "POST",
+                    data: {
+                        projectId: projectId,
+                        workrequestId: workrequestId,
+                        productsArr: productsArr
+                    },
+                    dataType: 'json',
+                    async: asyncflag,
+                }).success(function(responses) {
+                    if( responses ) {
+                        var response = responses[0];
+                        //console.log(response);
+                        //console.log("remainingBudget=" + response.remainingBudget);
+                        if (response.error == null) {
+                            //$('#project-remaining-budget-amount').text(response.remainingBudget);
+                            //$('#project-remaining-budget').val(response.remainingBudget);
+                            transresSetRemainingBudgetNote(response.remainingBudget);
+                            $('#project-remaining-budget-value').val(response.remainingBudgetValue);
+                        }
+                    }
+                }).done(function() {
+                    //lbtn.stop();
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error : ' + errorThrown);
+                });
+
+            } else {
+
+            }
+        }
+
+        function transresSetRemainingBudgetNote(remainingBudgetValue) {
+            //$('#project-remaining-budget-value').val(response.remainingBudgetValue);
+            //$('#project-remaining-budget-amount').val(originalRemainingBudget);
+
+            //var currentRemainingBudget = response.remainingBudget;
+            $('#project-remaining-budget-amount').text(remainingBudgetValue);
+            $('#project-remaining-budget').val(remainingBudgetValue);
+            if( remainingBudgetValue.indexOf('-') !== -1 ) {
+                //'-' exists
+                $('#project-remaining-budget-note').removeClass('alert-secondary').addClass('alert-warning');
+            } else {
+                $('#project-remaining-budget-note').removeClass('alert-warning').addClass('alert-secondary');
+            }
+        }
+
+
+        function transresDollarSignValue(value) {
+            //return value;
+            if( value !== null ) {
+                //value = transresToDecimal(value);
+                //echo "value=".$value."<br>";
+                if( value >= 0 ) {
+                    value = transresToMoney(value);
+                    value = "$"+value;
+                } else {
+                    value = Math.abs(value);
+                    value = transresToMoney(value);
+                    value = "-$"+value;
+                }
+            }
+
+            return value;
+        }
+        function transresToDecimal(value) {
+            return parseFloat(value).toFixed(2);
+        }
+        function transresToMoney(value) {
+            return transresNumberFormat(value, 2, '.', ',');
+        }
+        function transresNumberFormat(number, decimals, dec_point, thousands_point) {
+
+            if (number == null || !isFinite(number)) {
+                throw new TypeError("number is not valid");
+            }
+
+            if (!decimals) {
+                var len = number.toString().split('.').length;
+                decimals = len > 1 ? len : 0;
+            }
+
+            if (!dec_point) {
+                dec_point = '.';
+            }
+
+            if (!thousands_point) {
+                thousands_point = ',';
+            }
+
+            number = parseFloat(number).toFixed(decimals);
+
+            number = number.replace(".", dec_point);
+
+            var splitNum = number.split(dec_point);
+            splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_point);
+            number = splitNum.join(dec_point);
+
+            return number;
+        }
+
+        function transresProductItemListener() {
+            if( $('#project-funded').val() ) {
+                //funded => do not use remaining budget recalculation
+                return;
+            }
+
+//            $('.product-requested-quantity').on('input', function(event) {
+//                console.log("product-requested-quantity changed");
+//                transresRecalculateRemaniningBudget();
+//            });
+
+            //delay user input listener
+            var timer = 700; //0.7 sec, 2000=>2 sec
+            $(".product-requested-quantity").bind("input propertychange", function (evt) {
+                // If it's the propertychange event, make sure it's the value that changed.
+                if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                    return;
+
+                // Clear any previously set timer before setting a fresh one
+                window.clearTimeout($(this).data("timeout"));
+                $(this).data("timeout", setTimeout(function () {
+                    //console.log("product-requested-quantity changed");
+                    transresRecalculateRemaniningBudget();
+                }, timer));
+            });
+
+            $('.product-category-combobox').on('change', function(event) {
+                //console.log("product-category-combobox changed");
+                transresRecalculateRemaniningBudget();
+            });
+        }
+
+        //Ask to update invoice if: (a) any of the Completed quantities or (b) ordered items are changed (added, removed, or switched)
+
+        function transresUpdateInvoiceQuestion(submitBtn) {
+
+            //if request is changed
+            //$('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val('no-update');
+
+            //var clickedButtonId = clickedButton.attr('id');
+            //$('#submit-button-id').val('clickedButtonId');
+            _submitBtn = submitBtn;
+
+            var latestInvoiceId = $('#work-request-latest-invoice-id').val();
+            if( latestInvoiceId ) {
+                //console.log("show question modal");
+                $('#modal-update-invoice-question').modal('show');
+
+//                //attach listener for modal cancel 'transres-btn-update-invoice-modal-close'
+//                $( "#transres-btn-update-invoice-modal-close" ).on('click', function(event) {
+//                    console.log('modal closed');
+//                    transresShowBtn();
+//                });
+            }
+        }
+
+        function transresupdateInvoiceAnswer(answer) {
+            //hide modal buttons
+            $('.transres-btn-update-invoice-answer').hide();
+            $('#transres-modal-title').text("Please wait...");
+
+
+            $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val(answer);
+            $('#oleg_translationalresearchbundle_request_updateinvoiceanswer').show();
+            //resubmit the form?
+            //console.log("answer="+answer+"; click button "+_submitBtn.attr('id'));
+            transresShowBtn();
+            //console.log('answerval='+$('#oleg_translationalresearchbundle_request_updateinvoiceanswer').val());
+            _submitBtn.click();
+        }
+
+        function transresDetectMajorWorkRequestChanges() {
+
+            $('.product-requested-quantity, .product-completed-quantity').on('input', function(event) {
+                //console.log("quantity changed");
+                _workRequestUpdated = true;
+            });
+
+            $('.product-category-combobox').on('change', function(event) {
+                //console.log("product-category-combobox changed");
+                _workRequestUpdated = true;
+            });
+
+            //add product button
+            $('.transres-add-product-btn').on('click', function(event) {
+                //console.log("transres-add-product-btn click");
+                _workRequestUpdated = true;
+            });
+
+            //clone product button
+            $('.transres-product-clone-btn').on('click', function(event) {
+                //console.log("transres-product-clone-btn click");
+                _workRequestUpdated = true;
+            });
+
+            //Placed in removeWorkRequestProductObject
+//            //remove product button
+//            $('.transres-product-remove-btn').on('click', function(event) {
+//                console.log("transres-product-remove-btn click");
+//                _workRequestUpdated = true;
+//            });
+
+        }
+
+    </script>
+
+
+{% endblock %}
+
+
+
+

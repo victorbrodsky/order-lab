@@ -1,0 +1,163 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+{% set holderId = "patient-holder-1" %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#crn-previous-tasks">
+                {{ title|raw }}
+            </a>
+        </h4>
+    </div>
+    <div id="crn-previous-tasks" class="panel-collapse collapse in">
+        <div class="panel-body">
+
+        {% if filterform is defined and filterform %}
+        <p>
+        {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
+        {{ form_start(filterform, {'action': path(route_path), 'attr': {'class': 'well form-search'}}) }}
+            {#<div class="well">#}
+
+                {#basic search#}
+                <div class="row">
+
+                    <div class="col-xs-3"></div>
+
+                    <div class="col-xs-3" align="right">
+                        {{ form_widget(filterform.messageCategory) }}
+                    </div>
+
+                    <div class="col-xs-1" align="left">
+                        <button id="Search_button" type="button" class="btn btn-default"
+                                onclick="crnListPreviousTasksForPatient( '{{ holderId }}','{{ cycle }}', $('#filter_messageCategory').val() )"
+                        >Filter</button>
+                    </div>
+
+                    <div class="col-xs-5"></div>
+
+                </div>
+
+                {#{{ form_rest(filterform) }}#}
+            {#</div>#}
+        {#</form>#}
+        {{ form_end(filterform) }}
+        </p>
+        {% endif %}
+
+        {#Tasks List#}
+
+        <table class="records_list table table-hover table-condensed table-striped text-left">
+            <thead>
+            <tr>
+                <th>Created Date</th>
+                <th>Created By</th>
+                <th>Source Entry’s Issue Type</th>
+                {#<th>Source Entry</th>#}
+                <th>Task Type</th>
+                <th>Task Description</th>
+                <th>Status </th>
+            </tr>
+            </thead>
+            {#<tbody data-link="row" class="rowlink">#}
+            <tbody>
+
+            {#{% set count = 0 %}#}
+            {% for task in tasks %}
+
+                {#{% set count = count + 1 %}#}
+                {% set trclassname = "" %}
+
+                {% if task.status %}
+                    {% set statusValue = "checked" %}
+                    {% set trclassname = "success" %}
+                {% else %}
+                    {% set statusValue = "" %}
+                    {% set trclassname = "danger" %}
+                {% endif %}
+
+                {% set message = task.crnEntryMessage.message %}
+
+                {#{% if messageid is defined and messageid and message.id == messageid %}#}
+                    {#{% set trclassname = "success" %}#}
+                {#{% endif %}#}
+
+                <tr class="crn-task-tr {{ trclassname }}">
+
+                    <td>
+                        {{ task.createdDate|date('m/d/Y H:i:s') }}
+                    </td>
+
+                    <td>
+                        {{ task.createdBy }}
+                    </td>
+
+                    <td>
+                        {#<a href="{{ path(crn_sitename~'_crnentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>#}
+                        <a href="{{ path(crn_sitename~'_crnentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">ID:{{ message.getMessageOidVersion }} {{ message.messageCategory.getNodeNameWithParents }}</a>
+                    </td>
+
+                    <td>
+                        {{ task.crnTaskType }}
+                    </td>
+
+                    <td>
+                        {{ task.description }}
+                    </td>
+
+
+                    {#<td>#}
+                        {#TODO: Show as checkbox with the same functionality as on home page#}
+                        {#{{ task.getTaskStatusStr() }}#}
+                    {#</td>#}
+                    <td class="crn-checkbox-checkbox">
+                        <input
+                                type="checkbox"
+                                class="task-status-checkbox" data-taskstatus=""
+                                id="{{ task.id }}"
+                                onclick="crnTaskStatusCheckboxClick(this);"
+                                data-toggle="tooltip"
+                                title="Check to mark task as completed"
+                                {{ statusValue }}
+                        >
+                        &nbsp;
+                        <div class="btn btn-sm btn-primary btn-update-task" style="display: none;"
+                             onclick="crnUpdateTaskBtnClicked(this,'{{ cycle }}')">Update
+                        </div>
+                        &nbsp;
+                        <div class="alert alert-danger crn-danger-box" style="display: none;">Update</div>
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {# display navigation #}
+        {#<div class="navigation">#}
+            {#{{ knp_pagination_render(tasks) }}#}
+        {#</div>#}
+
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-primary -->
+

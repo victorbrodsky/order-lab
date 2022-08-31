@@ -1,0 +1,531 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="projectid" value="{{ project.id }}" />
+    <input type="hidden" id="project-irbExpirationDate" value="{{ project.irbExpirationDate|date("m/d/Y",false) }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    <div class="transres-alert" style="display: none">
+        <p class="alert alert-info center-block" align="middle" style="width: 70%;"></p>
+    </div>
+
+    {% set sitename = translationalresearch_sitename %}
+
+
+    {{ transres.getActionReviewCommentsSection(project,cycle,sitename,1) }}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    {#{{ form_start(form,{'attr': {'onsubmit':'transresUpdateIrbExpDate(this);'}}) }}#}
+    {{ form_start(form) }}
+
+    {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
+
+    {{ transres.projectRequesters(form,project,cycle) }}
+
+    {{ transres.projectReviews(form,cycle,sitename,0) }}
+
+    {{ transres.projectInfo(form,project,cycle) }}
+
+    {{ transres.projectBodyFormFields(form,project,cycle) }}
+
+    {{ form_end(form) }}
+
+    {#{% set threadId = project.id %}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+
+    {#{% set callLogViewClass = "order-white-background" %}#}
+    {#<div class="text-left {{ callLogViewClass }}">#}
+        {#{{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}#}
+    {#</div>#}
+
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+
+    <div>
+
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+            {#<br>#}
+            {#<p>#}
+                {#<a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>#}
+            {#</p>#}
+        {#{% endif %}#}
+        {#{{ transres.projectHeader(project) }}#}
+
+        <br>
+        <br>
+        <p>
+            <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+        </p>
+
+    </div>
+
+{% endblock %}
+
+
+
+{#{% block headeradditionaljs %}#}
+
+    {#<script type="text/javascript">#}
+        {#// thread id#}
+        {#var fos_comment_thread_id = 'test';#}
+
+        {#// api base url to use for initial requests#}
+        {#var fos_comment_thread_api_base_url = '/sf2.1.2/web/app.php/api/threads';#}
+
+        {#// Snippet for asynchronously loading the comments#}
+        {#(function() {#}
+            {#var fos_comment_script = document.createElement('script');#}
+            {#fos_comment_script.async = true;#}
+            {#fos_comment_script.src = '/sf2.1.2/web/js/35a8e64.js';#}
+            {#fos_comment_script.type = 'text/javascript';#}
+
+            {#(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(fos_comment_script);#}
+        {#})();#}
+    {#</script>#}
+
+{#{% endblock %}#}
+
+{#{% block headeradditionaljs %}#}
+    {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-2.0.0.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
+{#{% endblock %}#}
+
+{% block additionalcss %}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/foscomment/css/comments.css') }}" />#}
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/FOSCommentBundle/css/comments.css') }}" />
+{% endblock %}
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/comments.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {#{% javascripts#}
+    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
+    <script src="{{ asset('orderassets/FOSCommentBundle/js/comments.js') }}"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //expandTextarea();
+
+        //transres-review-submit
+        $('.transres-review-submit').click(function(event) {
+            //console.log("btn click:");
+            //console.log($(this));
+
+            //var submitLaddaBtn = Ladda.create(this);
+            //submitLaddaBtn.start();
+
+            ////////////// Submit comment //////////////
+            var reviewHolder = $(this).closest('.transres-review-holder');
+            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+            console.log("comment="+comment);
+            if( comment ) {
+                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+                console.log("submit comment clicked");
+            }
+            ////////////// EOF Submit comment //////////////
+
+
+            event.stopPropagation();
+            window.onbeforeunload = null;
+
+//            var reviewHolder = $(this).closest('.transres-review-holder');
+
+//            //click all transres-update-project-specific-btn buttons
+//            reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
+//                //console.log( index + ": " + $( this ).text() );
+//                $( this ).click();
+//                //alert("index="+index);
+//            });
+
+            //Submit Comment on review btn click
+//            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+//            //console.log("comment="+comment);
+//            if( comment ) {
+//                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+//            }
+
+            //get alert if the additional info button clicked and no comment is provided
+//            if( $(this).hasClass('transres-missinginfo') && !comment ) {
+//                //below the button and then press this 'Request...' button again
+//                alert("Please specify what additional information you would like the submitter to provide in the comment field.");
+//                return false;
+//            }
+
+            ////////// Update IRB Expiration Date by transres-irb_review //////////
+//            if( $(this).hasClass('transres-irb_review') ) {
+//                transresUpdateIrbExpDate();
+//            }
+            ////////// EOF Update IRB Expiration Date //////////
+
+            console.log("done review");
+
+            //return false;
+        });
+
+        //transres-update-irbexpirationdate
+        $('.transres-update-irbexpirationdate').click(function(event) {
+            transresUpdateIrbExpDate();
+        });
+
+        $('.transres-update-project-pricelist').click(function(event) {
+            transresUpdateProjectPriceList();
+        });
+
+        $('.transres-update-project-approvedProjectBudget').click(function(event) {
+            transresUpdateApprovedProjectBudget();
+        });
+
+        $('.transres-update-project-noBudgetLimit').click(function(event) {
+            transresUpdateNoBudgetLimit();
+        });
+
+        //addCommentButtonClickListener();
+
+    });
+
+    //use 'general-post-process=transresUpdateProjectSpecificBtn' on modal to call this function after modal's "OK" clicked
+    function transresUpdateProjectSpecificBtn(btnEl) {
+
+        if(0) {
+            var reviewHolder = $(btnEl).closest('.transres-review-holder');
+            //click all transres-update-project-specific-btn buttons
+            reviewHolder.find('.transres-update-project-specific-btn').each(function (index) {
+                //console.log( index + ": " + $( this ).text() );
+                $(this).click();
+                //alert("index="+index);
+            });
+        }
+
+        //console.log( "transres UpdateProjectSpecificBtn!" );
+
+        //Submit Comment on review btn click
+        var reviewHolder = $('.transres-review-holder');
+        var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+        //console.log("comment="+comment);
+        if( comment ) {
+            reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+        }
+
+        transresUpdateIrbExpDate();
+        transresUpdateProjectPriceList();
+
+        transresUpdateApprovedProjectBudget();
+        transresUpdateNoBudgetLimit();
+    }
+
+
+    function transresUpdateIrbExpDate() {
+
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var projectId = null;
+        var irbExpDate = null;
+        var irbExpDateEl = $('#transres_irbExpirationDate');
+        if( irbExpDateEl && irbExpDateEl.length > 0 ) {
+            irbExpDate = irbExpDateEl.val();
+            //console.log("transres-review-submit: irbExpDate=" + irbExpDate);
+            if( !irbExpDate ) {
+                return false;
+            }
+
+            projectId = $("#projectid").val();
+            var irbExpirationDate = $("#project-irbExpirationDate").val(); //MM/dd/yyyy
+            //console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
+            if( irbExpDate == irbExpirationDate ) {
+                return false;
+            }
+            //return false;
+            //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+        } else {
+            return false;
+        }
+
+        //console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+
+        if( projectId == null || irbExpDate == null ) {
+            //console.log("return false: projectId or irbExpDate is null");
+            return false;
+        }
+
+        var url = Routing.generate('translationalresearch_update_irb_exp_date');
+        //url = url + "/" + projectId + "/" + irbExpDate
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, value: irbExpDate },
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function(response) {
+            //console.log(response);
+            if( response != "NotOK" ) { //if( response == "NotOK" ) ???
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-irbExpirationDate").val(irbExpDate);
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
+
+    function transresUpdateProjectPriceList() {
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var priceListEl = $('#transres_project_pricelist');
+
+        if( priceListEl && priceListEl.length ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
+        if( $(".transres-project-priceList").length ) {
+            //ok
+        } else {
+            //price list is hidden for this user
+            return false;
+        }
+
+        var priceListData = priceListEl.select2('data');
+        var priceListId = null;
+        if( priceListData ) {
+            priceListId = priceListData.id;
+        }
+
+        //if( priceListId ) {
+            var projectId = $("#projectid").val();
+
+            var url = Routing.generate('translationalresearch_update_project_pricelist');
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "POST",
+                data: {projectId: projectId, pricelistid: priceListId },
+                //dataType: 'json',
+                //async: asyncflag
+                async: false
+            }).success(function(response) {
+                //console.log(response);
+                if( response != "NotOK" ) {
+                    $(".transres-alert").find(".alert").html(response);
+                    $(".transres-alert").show();
+                    $(".transres-project-priceList").select2('val', priceListId);
+                }
+            }).done(function() {
+                //lbtn.stop();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+
+        //}
+
+        return false;
+    }
+
+    function transresUpdateApprovedProjectBudget() {
+
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var approvedProjectBudgetEl = $('#transres_update_project_approvedProjectBudget');
+
+        if( approvedProjectBudgetEl && approvedProjectBudgetEl.length > 0 ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
+        if( $(".transres-project-approvedProjectBudget").length ) {
+            //ok
+        } else {
+            //price list is hidden for this user
+            return false;
+        }
+
+        var approvedProjectBudget = approvedProjectBudgetEl.val();
+
+        //if( priceListId ) {
+        var projectId = $("#projectid").val();
+
+        var url = Routing.generate('translationalresearch_update_project_approvedprojectbudget');
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function (response) {
+            //console.log(response);
+            if (response != "NotOK") {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
+            }
+        }).done(function () {
+            //lbtn.stop();
+        }).error(function (jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
+
+    function transresUpdateNoBudgetLimit() {
+
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var noBudgetLimitEl = $('#transres_update_project_noBudgetLimit');
+
+        if( noBudgetLimitEl && noBudgetLimitEl.length > 0 ) {
+            //exists
+        } else {
+            //doesn't exist
+            return false;
+        }
+
+        if( $(".transres-project-noBudgetLimit").length ) {
+            //ok
+        } else {
+            //price list is hidden for this user
+            return false;
+        }
+
+        //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
+        var noBudgetLimit = 0;
+        if( noBudgetLimitEl.is(":checked") ) {
+            // it is checked
+            noBudgetLimit = 1;
+        }
+
+        var projectId = $("#projectid").val();
+
+        var url = Routing.generate('translationalresearch_update_project_nobudgetlimit');
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, noBudgetLimit: noBudgetLimit },
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function(response) {
+            //console.log(response);
+            if( response != "NotOK" ) {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+
+                //console.log("noBudgetLimit="+noBudgetLimit);
+                if( noBudgetLimit ) {
+                    //console.log("checked");
+                    $('.transres-project-noBudgetLimit').attr('checked', true); //Deprecated
+                    $('.transres-project-noBudgetLimit').prop('checked', true); //modern Jquery
+                } else {
+                    //console.log("un-checked");
+                    $('.transres-project-noBudgetLimit').attr('checked', false); //Deprecated
+                    $('.transres-project-noBudgetLimit').prop('checked', false); //modern Jquery
+                }
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        //}
+
+        return false;
+    }
+
+//    function addCommentButtonClickListener() {
+//        //fos_comment_submit_btn
+//        $('.fos_comment_submit_btn').on('submit', function(event){
+//            console.log("fos_comment_submit_btn");
+//            var addSubmitBtn = $(this).get(0);
+//            var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            submitLaddaBtn.start();
+//        });
+//
+//        $('form').on('submit', function(event) {
+//            console.log("form submit");
+//        });
+//
+//        $("#fos_comment_comment_new_form_oleg").on('submit', function(event) {
+//            console.log("fos_comment_comment_new_form_oleg submit");
+//        });
+//
+//        $("#fos_comment_submit_btn_oleg").on('click', function(event){
+//            console.log("fos_comment_submit_btn_oleg click");
+//        });
+//
+//        $('#fos_comment_submit_btn_oleg').click(function(event) {
+//            console.log("fos_comment_submit_btn_oleg click 2");
+//        });
+//
+//
+//        $('#fos_comment_comment_new_form_oleg').on('DOMNodeInserted', 'div', function () {
+//            console.log("DOMNodeInserted div");
+//            //var addSubmitBtn = $(this).get(0);
+//            //var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            //submitLaddaBtn.stop();
+//        });
+//
+//    }
+
+</script>
+
+{% endblock %}
+
+

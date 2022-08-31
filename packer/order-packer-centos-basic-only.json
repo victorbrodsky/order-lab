@@ -1,0 +1,51 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [{
+    "type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "centos-7-x64",
+    "ssh_username": "{{user `ssh_name`}}"  
+  }],
+  
+  "provisioners": [
+  
+	{
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass"
+		],
+        "script": "centos_install_basic.sh"
+    },
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+        "inline": [ 
+           "echo @### Disable SELinux again ###",
+		   "sudo setenforce 0",
+		   "echo @### Reboot Server ###",
+		   "sudo shutdown -r now"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+		"pause_before": "60s",
+        "inline": [ 
+		   "echo @### Check SELinux status ###",	
+		   "sestatus",
+           "echo @### PostgreSQL Version after centos_install ###",		
+		   "psql --version"
+         ]
+	}
+      
+   ]
+}

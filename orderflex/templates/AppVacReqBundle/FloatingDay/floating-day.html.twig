@@ -1,0 +1,481 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+{% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
+{% import "AppUserdirectoryBundle/Default/userformmacros.html.twig" as userform %}
+
+
+{% if "show" in cycle %}
+    {% set showFlag = true %}
+{% else %}
+    {% set showFlag = false %}
+{% endif %}
+
+
+{% if review is not defined %}
+    {% set review = false %}
+{% endif %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    {% set floatingRequestId = null %}
+    {% if entity is defined and entity %}
+        {% set floatingRequestId = entity.getId() %}
+    {% endif %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="floating-request-id" value="{{ floatingRequestId }}" />
+
+    {% if floatingNote is defined and floatingNote %}
+        <div class="alert alert-info" role="alert">
+            {{ floatingNote|raw }}
+        </div>
+    {% endif %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br>
+
+    {% if (cycle == 'show' or review) and entity.user.id is defined %}
+        {{ userform.snapshot_steve(entity.user,vacreq_sitename,cycle) }}
+    {% endif %}
+
+    <hr>
+
+    {{ form_start(form,{'attr': {'id': 'vacreq-floatingday-form'}}) }}
+
+        {#<div class="my-custom-class-for-errors">#}
+            {#{{ form_errors(form) }}#}
+        {#</div>#}
+
+        {% if not form.vars.valid %}
+            {#form has error!!!!!!!!!#}
+            <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+                Error: This form contains not valid fields. Please check the fields below.
+            </div>
+        {% endif %}
+
+        {#{{ treemacros.compositeTreeNode(form.institution,cycle,'') }}#}
+
+        {% if form.approver is defined %}
+            {{ formmacros.field(form.approver) }}
+        {% endif %}
+
+        {% if form.submitter is defined %}
+            {{ formmacros.field(form.submitter) }}
+        {% endif %}
+
+        {% if form.user is defined %}
+            {{ formmacros.field(form.user) }}
+        {% endif %}
+
+        {% if form.phone is defined %}
+            {#{{ formmacros.field(form.phone) }}#}
+            {{ usermacros.emailPhoneField(form.phone,cycle,'phone',"") }}
+        {% endif %}
+
+        {#organizationalInstitution => institution#}
+        {% if form.tentativeInstitution is defined %}
+            {{ formmacros.field(form.tentativeInstitution) }}
+        {% endif %}
+        {% if form.institution is defined %}
+            {{ formmacros.field(form.institution) }}
+        {% endif %}
+        {% if form.organizationalInstitution is defined %}
+            {{ formmacros.field(form.organizationalInstitution) }}
+        {% endif %}
+
+
+        <hr>
+
+        {% if form.status is defined %}
+            <div class="well well-sm">
+                {{ formmacros.field(form.status) }}
+                {{ formmacros.field(form.approverComment) }}
+            </div>
+        {% endif %}
+
+        {{ formmacros.field(form.floatingType) }}
+
+        {#{{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}#}
+
+        {#“Floating Day Attestation Text” value (by default it will show the value “I have worked on”#}
+        {#{{ formmacros.field(form.work) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right" style1="white-space: nowrap;">
+                {#{{ form_label(form.work) }} <strong><div id="work-on-floating-daytype"></div></strong>#}
+                <div>
+                    <strong>
+                        <div style="display:inline-block; margin-right:3px;">{{ form.work.vars.label }}</div>
+                        <div style="display:inline-block; color: darkblue;" id="work-on-floating-daytype"></div>:
+                    </strong>
+                    {#<strong>11111111111111111111111111111111111111111111111 <div id="work-on-floating-daytype"></div>:</strong>#}
+                </div>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(form.work) }}
+            </div>
+        </div>
+        </p>
+
+        {#Please make sure the date for your requested day off occurs during the current fiscal year (7/1/CURRENT_YEAR and 6/30/CURRENT_YEAR).#}
+        {% set floatingDayRangeNote = vacreq_util.getFloatingDayRangeNote() %}
+        {% if floatingDayRangeNote %}
+            <div class="alert alert-info" role="alert">
+                {{ floatingDayRangeNote|raw }}
+            </div>
+        {% endif %}
+
+        {#The floating day I am requesting is [date selection menu, defaulting to tomorrow’s date - ***If “Restrict Floating Date Range”is checked in Site Settings, ONLY allow the selection of a date between June 21st and June 30th of the current year*** in Javascript]#}
+        {{ formmacros.fieldDateLabel(form.floatingDay,'allow-future-date') }}
+
+
+        {#{{ form_rest(form) }}#}
+        {{ form_row(form._token) }}
+
+        {% if form.save is defined %}
+            <br>
+            <p>
+                {{ form_widget(form.save) }}
+            </p>
+        {% endif %}
+
+    {{ form_end(form,{'render_rest': false}) }}
+
+    {#<br>#}
+
+
+    <div id="error-box" class="alert alert-danger" style="display: none; margin: 5px;"></div>
+
+    {#<br>#}
+
+    {#{% if not form.vars.valid %}#}
+    {#{% set formError = form_errors(form) %}#}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
+            {#<div class="list-group">#}
+            {#<p class="text-danger">#}
+            {{ form_errors(form) }}
+            {#{{ formError }}#}
+            {#</p>#}
+            {#</div>#}
+        </div>
+        <br>
+    {% endif %}
+
+    {% if cycle == "new" or cycle == "edit" %}
+        <p>
+            <button id="btnCreateVacReq"
+                    class="btn btn-warning"
+                    name="btnCreate"
+                    type="button"
+                    onclick="validateVacReqFloatingDayForm(this)">Submit</button>
+        </p>
+    {% endif %}
+
+    {#{% if review %}#}
+        {#<p>#}
+            {#<button id="btnCreateVacReq"#}
+                    {#class="btn btn-warning"#}
+                    {#name="btnCreate"#}
+                    {#type="button"#}
+                    {#>Submit Review</button>#}
+        {#</p>#}
+    {#{% endif %}#}
+
+    {#{% set statusPending = false %}#}
+    {#{% if entity.status == 'pending' or entity.getOverallStatus() == 'pending' %}#}
+        {#{% set statusPending = true %}#}
+    {#{% endif %}#}
+
+    {% if cycle == "edit" or review %}
+        <p>
+            {#<button id="btnCreateVacReq"#}
+                    {#class="btn btn-warning"#}
+                    {#name="btnUpdate"#}
+                    {#type="button"#}
+                    {#onclick="validateVacReqFloatingDayForm(this)">Update</button>#}
+            {% if review %}
+                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_floatingrequests') }}">Cancel</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path(vacreq_sitename~'_floating_show',{'id':entity.id}) }}">Cancel</a>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {#{% if cycle == "show" and statusPending %}#}
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_floating_edit',{'id':entity.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+
+    {#<a general-data-confirm="Test confirmation" href="www.google.com">#}
+    {#test#}
+    {#</a>#}
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            //console.log("cycle="+cycle);
+
+            $('#oleg_vacreqbundle_requestfloating_floatingType').on("change", function(e) {
+                setWorkingFloatingDayType();
+            });
+
+            setWorkingFloatingDayType();
+
+        });
+
+        function validateVacReqFloatingDayForm(btn) {
+            //console.log("validateVacReqFloatingDayForm");
+
+            var lbtn = Ladda.create( document.getElementById("btnCreateVacReq") );
+            lbtn.start();
+
+            if( cycle == 'review' ) {
+                $('#vacreq-floatingday-form').submit();
+            }
+
+            var inst = $('#oleg_vacreqbundle_requestfloating_institution').select2('val');
+            //console.log("inst=",inst);
+            if( !inst ) {
+                var error = "Please select the organizational group";
+                $('#error-box').html(error).show();
+                lbtn.stop();
+                return false;
+            }
+
+            var subjectUserId = $('#oleg_vacreqbundle_requestfloating_user').select2('val');
+            //console.log("subjectUserId=",subjectUserId);
+            if( !subjectUserId ) {
+                var error = "Person away is not specified.";
+                $('#error-box').html(error).show();
+                lbtn.stop();
+                return false;
+            }
+
+            var floatingDayType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('val');
+            //console.log("floatingDayType=",floatingDayType);
+            if( !floatingDayType ) {
+                var error = "Floating day type is not specified.";
+                $('#error-box').html(error).show();
+                lbtn.stop();
+                return false;
+            }
+
+            var work = $('.floatingday-work').is(":checked");
+            //console.log("work="+work);
+            var floatingDay = $('.floatingDay').val();
+            //console.log("floatingDay="+floatingDay);
+
+            if( !work ) {
+                var error = "If you have worked or plan to work on the specified floating day, please mark the checkbox above.";
+                $('#error-box').html(error).show();
+                lbtn.stop();
+                return false;
+            }
+
+            if( work && !floatingDay ) {
+                var error = "Please enter the date for the requested day off.";
+                $('#error-box').html(error).show();
+                lbtn.stop();
+                return false;
+            }
+
+            //TODO: check if selected day has already been approved
+            if(0) {
+                var error = "The page and functionality are under construction! " +
+                        "If a Floating Day of the selected type has already been approved for this same academic year: " +
+                        "A Floating day of [date] has already been approved for this [2021-2022] academic year by " +
+                        "ApproverFirstName ApproverLastName on MM/DD/YYYY and HH:MM. " +
+                        "Only one [floating day type] floating day can be approved per academic year";
+                $('#error-box').html(error).show();
+            }
+            if(1) {
+//                var subjectUserId = $('#oleg_vacreqbundle_request_user').select2('val');
+//                console.log("subjectUserId="+subjectUserId);
+//                if( subjectUserId ) {
+
+                var floatingRequestId = $('#floating-request-id').val();
+                console.log("floatingRequestId="+floatingRequestId);
+
+                var checkRes = checkExistedFloatingDay(floatingDayType, floatingDay, subjectUserId, floatingRequestId);
+                if (checkRes) {
+                    //console.log("checkRes:",checkRes);
+                    if (checkRes.error == true) {
+                        if( checkRes.errorMsg ) {
+                            $('#error-box').html(checkRes.errorMsg).show();
+                            generalConfirmAction();
+                        } else {
+                            var error = "Logical error to verify existing floating day";
+                            $('#error-box').html(error).show();
+                        }
+                        lbtn.stop();
+                        return false;
+                    }
+                }
+                else {
+                    var error = "Unknown Logical Error";
+                    $('#error-box').html(error).show();
+                    lbtn.stop();
+                    return false;
+                }
+            }
+
+            //console.log("form is valid");
+            //lbtn.stop(); //testing
+            //return false; //testing
+
+            $('#vacreq-floatingday-form').submit();
+        }
+
+        function setWorkingFloatingDayType() {
+            //get select2 oleg_vacreqbundle_request_floatingType
+            var floatingType = $('#oleg_vacreqbundle_requestfloating_floatingType').select2('data');
+            if( floatingType ) {
+                //console.log('floatingType=' + floatingType.text);
+                if (floatingType.text) {
+                    $('#work-on-floating-daytype').text(floatingType.text);
+                }
+            }
+        }
+
+        function checkExistedFloatingDay( floatingTypeId, floatingDay, subjectUserId, floatingRequestId ) {
+            console.log("floatingRequestId="+floatingRequestId);
+            var resData = null;
+            var thisAsyncflag = false;
+            var url = Routing.generate('vacreq_check_existed_floating_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: thisAsyncflag,
+                data: {floatingTypeId: floatingTypeId, floatingDay: floatingDay, subjectUserId: subjectUserId, floatingRequestId: floatingRequestId},
+            }).done(function(data) {
+                resData = data;
+            });
+            //console.log("resData:",resData);
+            return resData;
+        }
+
+        function changeFloatingStatusAjax(id,status,routeName) {
+            //console.log("changeFloatingStatusAjax: id:"+id+", status="+status);
+            //alert("changeFloatingStatusAjax: id:"+id+", status="+status);
+            //return false;
+
+            //var resData = null;
+            var thisAsyncflag = true;
+            //var url = Routing.generate('vacreq_floating_status_ajax_change');
+            var url = Routing.generate(routeName);
+            //console.log("url:"+url);
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: thisAsyncflag,
+                data: {id: id, status: status},
+            }).done(function(data) {
+                //resData = data;
+                //console.log("Done: id:"+id+", status="+status);
+
+                //if data.error == false
+                if( data.error == true ) {
+                    //console.log("Case: error");
+                    $('#error-existing-'+id).html(data.message).show();
+                } else
+                if( data.error == false ) {
+                    //console.log("Case: no error");
+
+//                    if( status == 'cancellation-request' ) {
+//                        status = 'requesting cancellation';
+//                    }
+
+                    var msg = 'Floating day request ID #'+id+' has been '+status + '. ';
+
+                    if( data.message  ) {
+                        msg = data.message;
+                    }
+
+                    //remove/update this error box
+                    $('#warning-existing-'+id).html(msg);
+                } else {
+                    //console.log("Case: Unknown error");
+                    $('#error-existing-'+id).html("Unknown error").show();
+                }
+
+                //remove modal
+                $('.modal').modal('hide').data('bs.modal', null );
+                $('.modal').remove();
+                $( '.modal-backdrop' ).remove();
+                $( 'body' ).removeClass( "modal-open" );
+                $("#generalDataConfirmModal").remove();
+
+            });
+            //console.log("resData:",resData);
+
+            //alert("resData:"+resData);
+            return false;
+
+            //return resData;
+        }
+//        function refreshpage(id,status) {
+//            console.log("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+//            //alert("changeFloatingStatusAjax Test: id:"+id+", status="+status);
+//            //exit('111');
+//            return false;
+//            return;
+//        }
+//        function vacreqdonothing(id,status) {
+//            return "222";
+//        }
+
+    </script>
+{% endblock %}
+
+
+{#Snapshot css#}
+{% block additionalcss %}
+    {#{% stylesheets#}
+        {#'orderassets/appuserdirectory/form/css/steve-snapshot.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/steve-snapshot.css') }}" />
+
+{% endblock %}

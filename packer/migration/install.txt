@@ -1,0 +1,166 @@
+COLOR='\033[1;36m'
+NC='\033[0m'  # No Color
+
+echo -e ${COLOR} sudo yum update -y ${NC}
+sudo yum update -y
+echo -e ${COLOR} sudo yum upgrade -y ${NC}
+sudo yum upgrade -y
+
+#Optional if setenforce is enabled
+echo -e ${COLOR} Disable SELinux ${NC}
+sudo setenforce 0
+sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
+echo -e ${COLOR} Check SELinux Status ${NC}
+sestatus
+	
+	
+########## INSTALL APACHE ##########
+    echo -e "${COLOR} Installing apache ... ${NC}"
+    sleep 1
+
+	sudo yum install httpd -y
+	sudo systemctl enable httpd.service
+	sudo systemctl start httpd.service
+	sudo systemctl status httpd.service
+
+
+########## INSTALL Postgresql 12 ##########
+yum install -y postgresql12
+yum install -y postgresql12-server
+sudo yum -y install oidentd
+
+sudo /usr/pgsql-12/bin/postgresql-12-setup initdb
+sudo systemctl enable postgresql-12
+sudo systemctl start postgresql-12
+
+sudo -Hiu postgres createdb scanorder
+sudo -Hiu postgres psql -c "CREATE USER symfony WITH PASSWORD 'symfony'"
+sudo -Hiu postgres psql -c "ALTER USER symfony WITH SUPERUSER"
+sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to symfony"
+
+sed -i -e "s/peer/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+sed -i -e "s/ident/md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+
+sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/12/data/pg_hba.conf
+sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/12/data/pg_hba.conf
+
+echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/12/data/postgresql.conf	
+echo -e ${COLOR} Set port ${NC}
+sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/12/data/postgresql.conf		
+sudo systemctl restart postgresql-12
+
+#Check iptables: 
+sudo iptables -L
+#Important: Open all incoming traffic in port 80:
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 5432 -j ACCEPT
+sudo /sbin/service iptables save
+
+########## INSTALL PHP 5.6 ##########
+#Install php 5.6 on Rhel 7
+#https://docs.nextcloud.com/server/13.0.0/admin_manual/installation/php_56_installation.html
+#1) subscription-manager repos --enable rhel-server-rhscl-7-eus-rpms
+#2) yum install rh-php56 rh-php56-php rh-php56-php-gd rh-php56-php-mbstring
+#3) sudo yum install rh-php56-php-pgsql
+#4) cp /opt/rh/httpd24/root/etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/
+#   cp /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/
+#   cp /opt/rh/httpd24/root/etc/httpd/modules/librh-php56-php5.so /etc/httpd/modules/	
+#yum install php56-php-cli
+
+yum install rh-php56-xmlreader
+yum install rh-php56-pdo
+yum install rh-php56-xml
+yum install rh-php56-dom
+
+#/opt/rh/rh-php56/root/usr/bin/php -v
+#ln -s /opt/rh/rh-php56/root/usr/bin/php /usr/bin/php	
+
+########### Upgrade to PHP 7.4 #################
+Follow f_install_php74
+list installed php packages: yum list installed | grep -i php
+remove all php56 packages: yum remove php56...
+Set new PHP path: 
+export PATH=/opt/remi/php74/root/bin:$PATH
+sudo yum -y install php74-php php74-php-mcrypt php74-php-cli php74-php-gd php74-curl php74-php-ldap php74-php-zip 
+php74-php-fileinfo php74-php-opcache php74-php-fpm php74-php-mbstring php74-php-xml php74-php-json
+sudo yum -y install php74-php-pgsql php74-php-xmlreader php74-php-pdo php74-php-dom php74-php-intl
+sudo systemctl enable php74-php-fpm.service
+sudo systemctl start php74-php-fpm.service
+
+#Use https://github.com/owncloud/documentation/issues/3149
+#Enable PHP 7.4 system-wide:
+cp /opt/remi/php74/enable /etc/profile.d/rh-php74.sh
+source /opt/rh/rh-php74/enable
+
+#Disable loading the old PHP 5.4 Apache modules by changing their names:
+mv /etc/httpd/conf.d/rh-php56-php.conf /etc/httpd/conf.d/rh-php56-php.off
+mv /etc/httpd/conf.modules.d/10-rh-php56-php.conf /etc/httpd/conf.modules.d/10-rh-php56-php.off
+
+#Copy the PHP 7.4 Apache modules into place:
+
+#update php.ini
+/etc/opt/remi/php74/php.ini
+
+systemctl restart httpd.service
+
+Install 7.4
+https://blog.remirepo.net/post/2019/12/03/Install-PHP-7.4-on-CentOS-RHEL-or-Fedora
+
+################################################
+	
+#Install everything in this funstion	
+f_install_util ()	
+
+########## Clone ORDER ##########	
+#Install scanorder to /opt/order-lab
+cd /usr/local/bin/
+git clone https://github.com/victorbrodsky/order-lab.git /opt/order-lab	
+sudo chmod a+x /opt/order-lab
+sudo chown -R apache:apache /opt/order-lab
+sudo chmod a+x /srv/order-lab
+sudo chown -R apache:apache /srv/order-lab
+
+########## Modify httpd and php.ini (/etc/opt/rh/rh-php56/php.ini) ##########	
+#1) httpd.conf: 
+#Listen *:80
+#ServerName 157.139.226.86:80 
+#2) Copy 000-default.conf to conf.d and make sure path is pointed to /opt/order-lab/Scanorders2/web/
+cp /opt/order-lab/packer/000-default.conf /etc/httpd/conf.d
+f_install_prepare()	
+
+SSL:
+sudo yum install mod_ssl
+
+
+
+
+
+#Modify parameters.yml
+#Collage IP: 157.139.46.96
+#C.med IP: 140.251.6.82
+
+#DigitalOcean install: 
+#1) git clone github.com/.../order-lab.git
+#2) cd order-lab/packer
+#3) bash deploy-order-digital-ocena.sh --token xxx --os centos 
+
+Multiple PHP: https://stackoverflow.com/questions/50004406/multiple-php-version-with-apache-on-centos-7
+https://computingforgeeks.com/how-to-install-php-7-4-on-centos-7/	
+	
+LDAP:
+CN=Users,DC=a,DC=wcmc-ad,DC=net;
+ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
+ou=Qatar Users,ou=External,dc=a,dc=wcmc-ad,dc=net;
+Optional Script: ./LdapSaslCustom.exe a.wcmc-ad.net 389 cwid 'password'
+
+Generate Certificate Signing Request:
+view-test.med.cornell.edu:
+openssl req -new -newkey rsa:2048 -nodes -keyout view-test.key -out view-test.csr	
+view.med.cornell.edu:
+openssl req -new -newkey rsa:2048 -nodes -keyout view.key -out view.csr
+
+PHP error:
+/etc/httpd/conf/ error_log
+	

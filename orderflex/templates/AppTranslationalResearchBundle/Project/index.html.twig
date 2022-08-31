@@ -1,0 +1,839 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+        {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
+            <label
+                    for="download-spreadsheet-form-indexpage" tabindex="0"
+                    data-toggle="tooltip"
+                    title="Export all matching project summaries to a spreadsheet">
+                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
+            </label>
+        {% endif %}
+    </h4>
+
+    {% if allProjectIdsArr is defined and allProjectIdsArr|length > 0 %}
+        <form action="{{ path('translationalresearch_download_projects_excel_post') }}" method="post">
+            <input type="hidden" name="ids" value="{{ allProjectIdsArr|join(',') }}">
+            <button type="submit"
+                    id="download-spreadsheet-form-indexpage"
+                    class="btn hidden"
+            ><span class="fa fa-file-excel fa-lg" aria-hidden="true"></span> Export all matching project summaries to a spreadsheet</button>
+        </form>
+    {% endif %}
+
+    {#{{ projects.getTotalItemCount }}#}
+
+{% if filterError is not defined or (filterError is defined and not filterError) %}
+
+    {#{% if allProjectIdsArr|length > 0 %}#}
+        {#{% set exportProjectLimit = 500 %}#}
+        {#{% if allProjectIdsArr|length <= exportProjectLimit %}#}
+            {#transres_util.getProjectsIdsStr(allProjectIds)#}
+            {#<p>#}
+                {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">#}
+                    {#<i class="fa fa-file-excel fa-lg"></i> Export matching project summaries to Excel</a>#}
+            {#</p>#}
+        {#{% else %}#}
+            {#<p>Project export to Excel is not available (too many projects). Limit is {{ exportProjectLimit }} project requests.</p>#}
+        {#{% endif %}#}
+
+    {#{% endif %}#}
+
+    {% if filterDisable is not defined %}
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+
+            <div class="row">
+                <div class="col-xs-3">
+                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_widget(filterform.searchId) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
+                </div>
+                <div class="col-xs-1">
+                    {#<a data-toggle="collapse" href="#transres-AdvancedSearch">#}
+                        {#Advanced Search#}
+                        {#<span class="glyphicon glyphicon-wrench"></span>#}
+                    {#</a>#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                    <div class="btn-group btn-group-sm">
+                        <span data-toggle="buttons-checkbox">
+                            <div
+                                    data-toggle="collapse"
+                                    {#data-toggle="buttons-checkbox"#}
+                                    href="#transres-AdvancedSearch"
+                                    class="btn btn-default btn-sm toggle-btn-state"
+                                    data-active-class="advance-search-wrench"
+                            >
+                                    <span class="glyphicon glyphicon-wrench"></span>
+                            </div>
+                        </span>
+                        <button id="filter-btn" type="submit" class="btn btn-default btn-sm">Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            {#<br>#}
+            {#<div class="row">#}
+                {#<div class="col-xs-12">#}
+                    {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                {#</div>#}
+            {#</div>#}
+
+            {#advanced search#}
+            {% if advancedFilter %}
+                {% set advacedCollapse = 'in' %}
+            {% else %}
+                {% set advacedCollapse = '' %}
+            {% endif %}
+            {#<br>#}
+            {#<div class="row">#}
+                {#<a data-toggle="collapse" href="#transres-AdvancedSearch">#}
+                    {#Advanced Search#}
+                    {#glyphicon glyphicon-wrench#}
+                {#</a>#}
+            {#</div>#}
+            <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.state,{'attr': {'placeholder': 'Status'}}) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.searchIrbNumber) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.searchTitle) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingNumber) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.searchProjectType) }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.reviewers) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.exportId) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.humanTissue) }}
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.exemptIrbApproval) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.fromExpectedCompletionDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.toExpectedCompletionDate,'allow-future-date') }}
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.briefDescription) }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.fromImplicitExpDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-4">
+                            {{ formmacros.fielddate(filterform.toImplicitExpDate,'allow-future-date') }}
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-4" title="Pricing">
+                            {% if filterform.priceList is defined %}
+                                {{ form_widget(filterform.priceList) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4" title="Budget">
+                            {% if filterform.overBudget is defined %}
+                                {{ form_widget(filterform.overBudget) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4" title="Expiration filter for non-funded projects only">
+                            {% if filterform.expectedExpirationDateChoices is defined %}
+                                {{ form_widget(filterform.expectedExpirationDateChoices) }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-4" title="Associated users">
+                            {% if filterform.associatedUsers is defined %}
+                                {{ form_widget(filterform.associatedUsers, {'attr': {'placeholder': 'Associated users'}}) }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                    </div>
+
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+
+        {{ form_end(filterform) }}
+    </div>
+    <br>
+    {% endif %}
+
+    {#check performance   scan_perSiteSettings?     #}
+    {% if projectsTableDisable is not defined %}
+
+        {#isAdminOrPrimaryReviewerOrExecutive#}
+        {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
+        {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
+            {#{% set showRemainingBudget = true %}#}
+            {% set showValue = true %}
+        {% else %}
+            {#{% set showRemainingBudget = false %}#}
+            {% set showValue = false %}
+        {% endif %}
+
+        {% set showRemainingBudget = transres_util.showRemainingBudgetForProjects(projects) %}
+
+    {#<table class="table table-hover table-condensed text-left table-bordered">#}
+    {#<table class="records_list table table-condensed table-hover text-left my-table-class">#}
+    <table class="table table-condensed table-hover text-left">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'ID', 'project.id') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Submitted', 'project.createDate') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'PI(s) for the project', 'principalInvestigatorsInfos.displayName') }}</th>
+                {#<th>IRB Number</th>#}
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB Number', 'project.irbNumber') }}</th>#}
+                <th>{{ transres_util.getHumanAnimalName("brackets") }} Number</th>
+                {#<th>Project Title</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
+                {#<th>Funding</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'Funding', 'project.funded') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Status', 'project.state') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+                {#<th>IRB Expiration Date</th>#}
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.irbExpirationDate') }}</th>#}
+                <th>{{ knp_pagination_sortable(projects, transres_util.getHumanAnimalName()~' Expiration Date', 'project.implicitExpirationDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expectedExpirationDate') }}</th>
+                <th>Work Requests</th>
+
+                <th title="Number of the most recent issued invoices">Issued Invoices</th>
+
+                {% if showRemainingBudget %}
+                    <th title="Difference between approved project budget and project's total (billed and unbilled)">Remaining Budget</th>
+                {% endif %}
+
+                {% if showValue %}
+                    {#grandTotal -> Value#}
+                    <th title="Project's value (billed and unbilled)">{{ knp_pagination_sortable(projects, 'Value', 'project.total') }}</th>
+                {% endif %}
+
+                <th title="Total amount of the most recent issued invoices including subsidy (Paid + Due + Positive Subsidy)">Total</th>
+                <th title="Total amount of the most recent issued invoices charge to the customer">Charge</th>
+                <th title="Paid amount of the most recent issued invoices">Paid</th>
+                <th title="Due amount of the most recent issued invoices">Due</th>
+                <th title="Subsidy of the most recent issued invoices">Subsidy</th>
+
+                <th>Actions</th>
+            </tr>
+        </thead>
+        {#<tbody data-link="row" class="rowlink table-tbody-hover">#}
+        <tbody data-link="row" class="rowlink">
+
+        {#{% set count = 0 %}#}
+        {% for project in projects %}
+
+            {#{% if count is odd %}#}
+                {#{% set trclassname = "table-row-separator-gray" %}#}
+            {#{% else %}#}
+                {#{% set trclassname = "table-row-separator-white" %}#}
+            {#{% endif %}#}
+            {#{% set count = count + 1 %}#}
+
+            {#add if state has "_rejected"?#}
+            {% set trclassname = null %}
+            {% if project.state == 'final_rejected' or project.state == 'closed' or project.state == 'canceled' %}
+                {% set trclassname = "order-complete-status" %}
+            {% endif %}
+
+            {#NOT equal to Draft AND NOT equal to Closed#}
+            {#Active Project Requests with IRB Expiring Soon#}
+            {% if
+                    (
+                    project.state != 'draft' and project.state != 'closed' and project.state != 'canceled' and
+                    project.state != 'irb_rejected' and project.state != 'admin_rejected' and
+                    project.state != 'committee_rejected' and project.state != 'final_rejected'
+                    )
+                    and
+                    date(project.implicitExpirationDate) < date()|date_modify("+3 months")
+            %}
+                {% set trclassname = "table-row-lightyellow" %}
+            {% endif %}
+            {#Active Project Requests with Expired IRB#}
+            {% if
+                    (
+                    project.state != 'draft' and project.state != 'closed' and project.state != 'canceled' and
+                    project.state != 'irb_rejected' and project.state != 'admin_rejected' and
+                    project.state != 'committee_rejected' and project.state != 'final_rejected'
+                    )
+                    and
+                    date(project.implicitExpirationDate) < date()
+            %}
+                {% set trclassname = "table-row-lightred" %}
+            {% endif %}
+
+            {#{% set projectTitle = project.getTitle() %}#}
+            {% set projectTitleReason = project.getTitleAndReason() %}
+
+            {% set idColor = transres_util.getPriceListColorByProject(project) %}
+
+            {% set invoicesInfos = transres_util.getInvoicesInfosByProject(project) %}
+
+            {% if showRemainingBudget %}
+                {#{% set remainingBudget = project.getRemainingBudget(invoicesInfos.grandTotal) %}#}
+                {% set remainingBudget = project.getRemainingBudget() %}
+                {% if remainingBudget < 0 %}
+                    {% set trclassname = "table-row-budget-negative" %}
+                {% endif %}
+            {% endif %}
+
+            {% if transres_util.isProjectExpired(project) %}
+                {% set trclassname = "table-row-project-expired" %}
+            {% endif %}
+
+            {#
+            append “ Approved Budget: $xx.xx” at the end of the title again,
+            only for users listed as PIs or Billing contacts or
+            Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
+            ONLY for projects with status = Final Approved or Closed
+            #}
+            {% set approvedBudgetInfo = "" %}
+            {% set appendApprovedBudget = transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+            {% if appendApprovedBudget %}
+                {% set thisApprovedProjectBudget = project.getApprovedProjectBudget() %}
+                {% if thisApprovedProjectBudget %}
+                    {% set approvedBudgetInfo = " (Approved Budget: "~transres.dollarSignValue(thisApprovedProjectBudget)~")" %}
+                {% endif %}
+            {% endif %}
+
+            <tr class="{{ trclassname }}" data-toggle="tooltip" title="{{ projectTitleReason }}{{ approvedBudgetInfo }}">
+                <td>
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
+                       target="_blank"
+                       style="color:{{ idColor }}"
+                    >{{ project.oid }}{{ project.getPriceListAbbreviationPostfix() }}</a>
+                </td>
+
+                <td>
+                    {% if project.createDate %}
+                        {{ project.createDate|date('m/d/Y',false) }}
+                    {% endif %}
+                </td>
+
+                <td class="rowlink-skip">
+                    {% for principalInvestigator in project.principalInvestigators %}
+                        {#{{ principalInvestigator }}<br>#}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~principalInvestigator.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {#{% set irbNumber = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Number") %}#}
+                    {#{% if irbNumber %}#}
+                        {#{{ irbNumber }}#}
+                    {#{% endif %}#}
+                    {#{{ project.getIrbNumber() }}#}
+                    {#IRB (IACUC) Number#}
+                    {{ project.getIrbIacucNumber()|raw }}
+                </td>
+
+                {% set projectTitle = project.getTitle() %}
+                {#data-toggle="tooltip" title="{{ projectTitle }}"#}
+                <td>
+                    {#{% set projectTitle = transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") %}#}
+                    {{ projectTitle|length > 30 ? projectTitle|slice(0, 30) ~ '...' : projectTitle  }}
+                </td>
+
+                <td>
+                    {% if project.getFunded() %}
+                    {#{% if transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded") %}#}
+                        Funded
+                    {% else %}
+                        Non-funded
+                    {% endif %}
+                </td>
+
+                <td>
+                    {#{{ project.state }}#}
+                    {{ transres_util.getStateLabelByName(project.state) }}
+                </td>
+
+                <td>
+                    {% if project.approvalDate %}
+                        {#show in the original timezone#}
+                        {{ project.approvalDate|date('m/d/Y',false) }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {#{{ project.title }}#}
+                    {#{{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}#}
+                    {% if project.implicitExpirationDate %}
+                        {{ project.implicitExpirationDate|date("m/d/Y",false) }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if project.expectedExpirationDate %}
+                        {{ project.expectedExpirationDate|date("m/d/Y",false) }}
+                    {% endif %}
+                </td>
+
+                {#Requests#}
+                <td class="rowlink-skip">
+                    {#{{ project.getRequests()|length }}#}
+                    {% if project.getRequests()|length > 0 %}
+                        <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
+                           target="_blank"
+                           data-toggle="tooltip" title="Show all work requests associated with this project"
+                        >{{ project.getRequests()|length }}</a>
+                    {% else %}
+                        {{ project.getRequests()|length }}
+                    {% endif %}
+                </td>
+
+                {#Invoices #}
+                {#all issued invoices associated with the project#}
+                <td class="rowlink-skip">
+                    {% if invoicesInfos.count > 0 and transres_permission_util.areInvoicesShowableToUser(project) %}
+                        <a target="_blank" data-toggle="tooltip" title="Show all issued invoices associated with this project"
+                           href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
+                               'filter[idSearch]': project.getOid(false),
+                               'filter[status][0]': 'Unpaid/Issued',
+                               'filter[status][1]': 'Paid in Full',
+                               'filter[status][2]': 'Paid Partially',
+                               'filter[status][3]': 'Refunded Fully',
+                               'filter[status][4]': 'Refunded Partially'
+                           }) }} "
+                        >{{ invoicesInfos.count }}</a>
+                    {% else %}
+                        {{ invoicesInfos.count }}
+                    {% endif %}
+                </td>
+
+                {#Remaining Budget#}
+                {#projectState={{ project.getState() }}#}
+                {% if showRemainingBudget %}
+                    <td>
+                        {% if remainingBudget %}
+                            {% if transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+                                {{ transres.dollarSignValue(remainingBudget) }}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                {#Value - only for TRP admin role#}
+                {% if showValue %}
+                    <td>
+                        {#{% if invoicesInfos.grandTotal is not null %}#}
+                            {#grandTotal includes subsidy: invoicesInfos.total + invoicesInfos.subsidy#}
+                            {#{{ transres.dollarSignValue(invoicesInfos.grandTotal) }}#}
+                        {#{% endif %}#}
+                        {{ transres.dollarSignValue(project.getTotal()) }}
+                    </td>
+                {% endif %}
+
+                {#
+                Total (Paid+Due+Subsidy): sum of the “Paid”, “Due” and “Subsidy” columns,
+                except, when the Subsidy is negative - in that case show the value in this column as a
+                sum of only “Paid” and “Due” columns (not the Subsidy)
+                #}
+                <td>
+                    {% if invoicesInfos.sumTotal is not null %}
+                        {{ transres.dollarSignValue(invoicesInfos.sumTotal) }}
+                    {% endif %}
+                    {#<br>PTotal:{{ transres.dollarSignValue(project.getTotal()) }}#}
+                </td>
+
+                {#Charge#}
+                <td>
+                    {% if invoicesInfos.total is not null %}
+                        {#${{ invoicesInfos.total }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.total) }}
+                    {% endif %}
+                </td>
+                {#Paid#}
+                <td>
+                    {% if invoicesInfos.paid is not null %}
+                        {#${{ invoicesInfos.paid }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.paid) }}
+                    {% endif %}
+                </td>
+                {#Due#}
+                <td>
+                    {% if invoicesInfos.due is not null %}
+                        {#${{ invoicesInfos.due }}#}
+                        {{ transres.dollarSignValue(invoicesInfos.due) }}
+                    {% endif %}
+                </td>
+                {#Subsidy#}
+                <td>
+                    {% if invoicesInfos.subsidy is not null %}
+                        {{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}
+                        {#{% if invoicesInfos.subsidy > 0 %}#}
+                            {#{{ transres.dollarSignValue(invoicesInfos.subsidy) }}#}
+                        {#{% else %}#}
+                            {#{{ transres.dollarAbsValue(invoicesInfos.subsidy, "Surcharge: ") }}#}
+                        {#{% endif %}#}
+                    {% endif %}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
+                                >Show project request details</a>
+                            </li>
+
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() %}#}
+                                {#isAdminOrPrimaryReviewer<br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectReviewer(project) %}#}
+                                {#isProjectReviewer<br>#}
+                            {#{% endif %}#}
+                            {#{% if transres_util.isProjectStateReviewer(project,app.user) %}#}
+                                {#isProjectStateReviewer<br>#}
+                            {#{% endif %}#}
+                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
+                                {% if transres_util.isProjectStateReviewer(project,app.user) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }} "
+                                    >Review Project</a>
+                                </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if transres_util.isProjectStateRequesterResubmit(project) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                    >Edit/Resubmit Project</a>
+                                </li>
+                            {% else %}
+
+                                {#add verification: requester => project is on the draft stage or in the reject stage#}
+                                {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}#}
+                                {% if transres_permission_util.hasProjectPermission("update",project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                        >Edit project request</a>
+                                    </li>
+                                {% endif %}
+
+                            {% endif %}
+
+                            {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <li>
+                                    <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
+                                        >View events associated with this project request</a>
+                                    {#<a href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
+                                    {#>View Event Log</a>#}
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            <li>
+                                <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
+                                    <i class="fa fa-file-excel fa-lg"></i> Export project summary to a spreadsheet</a>
+                            </li>
+
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing only!)</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
+
+                            {#{% set actionLinks = transres_util.getProjectReviewLinks(project,app.user) %}#}
+                            {#{% if actionLinks|length > 0 %}#}
+                                {#<li class="divider"></li>#}
+                            {#{% endif %}#}
+                            {#{% for actionLink in actionLinks %}#}
+                                {#<li>#}
+                                    {#{{ actionLink|raw }}#}
+                                {#</li>#}
+                            {#{% endfor %}#}
+
+                            {#{% if actionLinks|length > 0 %}#}
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Review Project</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
+
+                            {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
+                            {% if isRequestCanBeCreated == 1 %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
+                                       >New work request</a>
+                                </li>
+                            {% endif %}
+                            {#{% if isRequestCanBeCreated == -1 %}#}
+                                {#You don't have a permission to create a new request#}
+                            {#{% endif %}#}
+                            {#{% if isRequestCanBeCreated == -2 %}#}
+                                {#<li class="divider"></li>#}
+                                {#<li>#}
+                                    {#Project is not approved#}
+                                {#</li>#}
+                            {#{% endif %}#}
+                            {% if isRequestCanBeCreated == -3 %}
+                                <li class="divider"></li>
+                                {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                           >Update {{ transres_util.getHumanAnimalName() }} approval expiration date to submit new requests</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            {#{% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}#}
+                                {% if project.getRequests()|length > 0 %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
+                                           >Show associated work requests</a>
+                                    </li>
+                                {% endif %}
+                            {#{% endif %}#}
+
+
+                            {% if invoicesInfos.count > 0 %}
+                                {% if transres_permission_util.areInvoicesShowableToUser(project) %}
+                                    <li>
+                                        <a target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
+                                               'filter[idSearch]': project.getOid(false)
+                                           }) }} "
+                                        >Show associated invoices</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if transres_permission_util.hasProjectPermission("cancel",project) and project.state != 'canceled' %}
+                                <li>
+                                    <a general-data-confirm="Are you sure you want to cancel project {{ project.oid }}?"
+                                       href="{{ path(translationalresearch_sitename~'_project_cancel', { 'id': project.id }) }}"
+                                       >Cancel project request</a>
+                                </li>
+                            {% endif %}
+
+                            {% set simpleProjectClosure = transres_util.getTransresSiteProjectParameter('sendProjectReactivationRequest',project) %}
+                            {% set simpleProjectClosure = true %}
+                            {% set simpleProjectClosure = false %}
+
+                            {% if transres_permission_util.hasProjectPermission("close",project) and project.state != 'closed' %}
+
+                                {% if simpleProjectClosure %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to close project {{ project.oid }}?"
+                                           href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
+                                        >Close project request</a>
+                                    </li>
+                                {% else %}
+                                    {#trp-closure-data-confirm#}
+                                    <li>
+                                        <a trp-closure-data-confirm="{{ project.id }}"
+                                           trp-closure-title-data="Are you sure you want to close project {{ project.oid }}?"
+                                           trp-closure-routename-data="translationalresearch_project_close"
+                                           trp-closure-reason-title-data="Reason for project closure:"
+                                           href="{{ path(translationalresearch_sitename~'_project_close', { 'id': project.id }) }}"
+                                        >Close project request</a>
+                                    </li>
+                                {% endif %}
+                                {% if transres_util.isAdminOrPrimaryReviewer() %}
+                                    {% if simpleProjectClosure %}
+                                        <li>
+                                            <a general-data-confirm="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
+                                               href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
+                                            >Close project request without notifications</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a trp-closure-data-confirm="{{ project.id }}"
+                                               trp-closure-title-data="Are you sure you want to close project {{ project.oid }} without sending any email notifications?"
+                                               trp-closure-routename-data="translationalresearch_project_close_without_notifications"
+                                               trp-closure-reason-title-data="Reason for project closure:"
+                                               href="{{ path(translationalresearch_sitename~'_project_close_without_notifications', { 'id': project.id }) }}"
+                                            >Close project request without notifications</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {#create a separate modal for TRP for project closure similarly as "Add New" user#}
+
+                            {% endif %}
+
+                            {#approve => final_approved#}
+                            {% if
+                                (
+                                    transres_permission_util.hasProjectPermission("approve",project) or
+                                    transres_permission_util.hasProjectPermission("funded-final-review",project)
+                                )
+                                and
+                                project.state != 'final_approved'
+                            %}
+                                {% if simpleProjectClosure or project.state != 'closed' %}
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to approve project {{ project.oid }}?"
+                                           href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                                        >Approve project request</a>
+                                    </li>
+                                {% else %}
+                                    {#Reactivation#}
+                                    {#trp-closure-title-data="Are you sure you want to approve project {{ project.oid }}?"#}
+                                    <li>
+                                        <a
+                                            trp-closure-data-confirm="{{ project.id }}"
+                                            trp-closure-title-data="Are you sure you would like to change the status of this project from 'Closed' to 'Approved'?"
+                                            trp-closure-note-data="Your request to change the status will be sent to the designated reviewer for approval and the status will be changed once approved."
+                                            trp-closure-routename-data="translationalresearch_project_approve"
+                                            trp-closure-reason-title-data="Reason for project reactivation:"
+                                            href="{{ path(translationalresearch_sitename~'_project_approve', { 'id': project.id }) }}"
+                                        >Approve project request</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<li>#}
+                                    {#<a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"#}
+                                       {#href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"#}
+                                       {#target="_blank">Delete project request (Visible to Platform Admin Only)</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+            {#<tr class="table-no-border">#}
+                {#<td style="display: none">#}
+                    {#<a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show/Review Project</a>#}
+                {#</td>#}
+                {#{{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname,true,14)|raw }}#}
+            {#</tr>#}
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(projects) }}
+    </div>
+    {% endif %}
+
+    {#{{ render(controller('AppTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+    {% if transres_permission_util.hasProjectPermission('create') %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project Request</a>
+        </p>
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}
+
+{% block additionaljs %}
+    {#{% javascripts#}
+        {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-project-change-state.js') }}"></script>
+
+    <script language="Javascript">
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            //trpConstructClosureProjectModal_ORIG();
+
+            $('a[trp-closure-data-confirm]').click(function(ev) {
+                trpConstructClosureProjectModal(this,true,'afterFunctionReload');
+                return false;
+            }); //trp-closure-data-confirm click
+        });
+
+
+
+    </script>
+{% endblock %}

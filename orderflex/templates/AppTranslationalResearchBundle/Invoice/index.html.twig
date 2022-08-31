@@ -1,0 +1,460 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ metaTitle }}
+{% endblock %}
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+        {% if matchingStrInvoiceIds %}
+            <label
+                for="download-spreadsheet-form" tabindex="0"
+                data-toggle="tooltip"
+                title="Download the spreadsheet with matching invoices">
+                <span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>
+            </label>
+
+            {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                {% if exportUnpaidSummary %}
+
+                    <label
+                        for="download-spreadsheet-form-unpaid" tabindex="0"
+                        data-toggle="tooltip"
+                        title="Download unpaid billing summary spreadsheet with matching invoices">
+                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        {#<span class="fa fa-file-excel fa-lg" aria-hidden="true"></span>#}
+                    </label>
+
+                {% else %}
+
+                    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="warningModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Export Unpaid Billing Summary</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please filter invoices by project or PI first.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {#onclick="transresWarningDownloadSpreadsheetFormUnpaid()"#}
+                    {#id="warning-download-spreadsheet-form-unpaid"#}
+                    {#for="warning-download-spreadsheet-form-unpaid" tabindex="0"#}
+                    <label
+                            data-toggle="modal" data-target="#warningModal"
+                            {#data-toggle="tooltip"#}
+                            title="Download unpaid billing summary spreadsheet with matching invoices"
+                        ><span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                    </label>
+
+                {% endif %}
+
+            {% endif %}
+        {% endif %}
+    </h4>
+
+    <form action="{{ path('translationalresearch_download_invoice_spreadsheet') }}" method="post">
+        <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
+        {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
+        <button type="submit"
+                id="download-spreadsheet-form"
+                class="btn hidden"
+                {#aria-label="Left Align"#}
+                {#data-toggle="tooltip"#}
+                {#title="Download the spreadsheet with matching invoices"#}
+        >Download the spreadsheet with matching invoices</button>
+    </form>
+
+    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+        {#JV spreadsheet#}
+        <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
+            <input type="hidden" name="ids" value="{{ matchingStrInvoiceIds }}">
+            {#<input type="hidden" name="projectId" value="{{ projectId }}">#}
+            {#<input type="hidden" name="piId" value="{{ piId }}">#}
+            {#<input class="btn" type="submit" value="download matching invoices in CSV">#}
+
+            <button type="submit"
+                    id="download-spreadsheet-form-unpaid"
+                    class="btn hidden"
+            >Export Unpaid Billing Summary</button>
+        </form>
+    {% endif %}
+
+    <br>
+
+    {% if transresRequest and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+        <p>
+            <a class="btn btn-default" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
+        </p>
+        <br>
+    {% endif %}
+
+    {{ transresRequestMacros.transresInvoiceFilter(filterform,advancedFilter) }}
+    <br>
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.id') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Fund Number', 'invoice.fundedAccountNumber') }}</th>
+                {#<th>{{ knp_pagination_sortable(invoices, 'IRB Number', 'invoice.irbNumber') }}</th>#}
+                <th>{{ transres_util.getHumanAnimalName("brackets") }} Number</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salespersonInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Generated', 'invoice.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Updated', 'invoice.updateDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Version', 'invoice.version') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Bill To', 'invoice.invoiceTo') }}</th>
+                <th title="Invoice total including subsidy">Total</th>
+                <th title="Invoice charge billed to the customer">{{ knp_pagination_sortable(invoices, 'Charge', 'invoice.total') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Paid', 'invoice.paid') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Due', 'invoice.due') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Subsidy', 'invoice.subsidy') }}</th>
+                <th>PDFs</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+        {% for invoice in invoices %}
+
+            {{ transresRequestMacros.unpaidModal(invoice) }}
+
+            {% set idColor = transres_util.getPriceListColorByInvoice(invoice) %}
+
+            <tr>
+                <td style="display: none">
+                    <a target="_blank"
+                       href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}"
+                    >{{ invoice.oid }}</a>
+                </td>
+                <td class="rowlink-skip" style="color:{{ idColor }}">
+                    {#<a target="_blank"#}
+                       {#href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}"#}
+                       {#style="color:{{ idColor }}"#}
+                    {#>{{ invoice.oid }}</a><br>#}
+                    {{ transres_request_util.getInvoiceOidSplitWithUrls(invoice)|raw }}
+
+                    {#testing: get real invoice ID#}
+                    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                        {#(ID{{ invoice.id }})#}
+                    {#{% endif %}#}
+                </td>
+                <td>{{ invoice.fundedAccountNumber }}</td>
+                <td>{{ invoice.getProjectIrbIacucNumber()|raw }}</td>
+                <td>{{ invoice.salesperson }}</td>
+                <td>{% if invoice.createDate %}{{ invoice.createDate|date('m/d/Y') }}{% endif %}</td>
+                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('m/d/Y') }}{% endif %}</td>
+                <td>
+                    {{ invoice.version }}
+                    {% if invoice.latestVersion %}
+                        (Latest)
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoice.dueDate %}
+                        {{ invoice.dueDate|date('m/d/Y',false) }}
+                    {% endif %}
+                </td>
+                <td>{{ invoice.status }}</td>
+                <td class="rowlink-skip">
+                    {% if invoice.invoiceTo %}
+                        {{ invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo  }}
+                        {#{% set invoiceToStr = invoice.invoiceTo|length > 25 ? invoice.invoiceTo|slice(0, 25) ~ '...' : invoice.invoiceTo %}#}
+                        {#{% set personurl = path(translationalresearch_sitename~'_showuser',{'id':invoice.invoiceTo.id}) %}#}
+                        {#{% set personlink = '<a href="'~personurl~'" target="_blank">'~invoiceToStr~'</a>'  %}#}
+                        {#{{ personlink|raw }}#}
+                    {% endif %}
+                </td>
+                <td>
+                    {#${{ transres_request_util.getInvoiceTotalWithSubsidy(invoice) }}#}
+                    {{ transres.dollarSignValue(transres_request_util.getInvoiceTotalWithSubsidy(invoice)) }}
+                </td>
+                <td>
+                    {% if invoice.total %}
+                        {#${{ invoice.total }}#}
+                        {{ transres.dollarSignValue(invoice.total) }}
+                    {% else %}
+                        $0.00
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoice.paid %}
+                        {#${{ invoice.paid }}#}
+                        {{ transres.dollarSignValue(invoice.paid) }}
+                    {% else %}
+                        $0.00
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoice.due %}
+                        {#${{ invoice.due }}#}
+                        {{ transres.dollarSignValue(invoice.due) }}
+                        {#{{ transres.dollarSignValue(100000000) }}#}
+                    {% else %}
+                        $0.00
+                    {% endif %}
+                </td>
+                <td>
+                    {#${{ transres_request_util.getInvoiceSubsidy(invoice) }}<br>#}
+                    {#{{ transres.dollarSignValue(transres_request_util.getInvoiceSubsidy(invoice)) }}#}
+                    {{ transres.dollarAbsValue(transres_request_util.getInvoiceSubsidy(invoice), "Surcharge: ") }}
+                </td>
+                <td class="rowlink-skip">
+                    {#{{ invoice.documents|length }}#}
+                    {% if invoice.documents|length > 0 %}
+                        {% if transres_request_util.isUserHasInvoicePermission(invoice,"view-pdf") %}
+                            {#Replace PDF number ({{ invoice.documents|length }}) by eye icon on the Invoice list#}
+                            <a  data-toggle="tooltip" title="Show the most recent PDF invoice"
+                                target="_blank"
+                                href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
+                            ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+
+                {#Actions#}
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {% if transres_request_util.isUserHasInvoicePermission(invoice,"view") %}
+                                <li>
+                                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show invoice</a>
+                                </li>
+                            {% endif %}
+
+                            {% if invoice.latestVersion %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
+                                    <li>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit invoice</a>
+                                    </li>
+                                {% endif %}
+
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you want to delete this invoice?"#}
+                                        {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
+                                    {#>Delete</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}"#}
+                                    {#>PDF Invoice Preview</a>#}
+                                {#</li>#}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
+                                    {% if invoice.documents|length > 0 %}
+                                        {% set generateLabel = "Regenerate invoice PDF" %}
+                                    {% else %}
+                                        {% set generateLabel = "Generate invoice PDF" %}
+                                    {% endif %}
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ invoice.oid }}?"
+                                            href="{{ path('translationalresearch_invoice_generate_pdf', {'id': invoice.id }) }}"
+                                        >{{ generateLabel }}</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if invoice.documents|length > 0 %}
+                                    {% if transres_request_util.isUserHasInvoicePermission(invoice,"send-invoice-pdf-email") %}
+                                        <li>
+                                            {#Send the most recent invoice PDF by e-mail#}
+                                            <a
+                                                general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} PDF by email to PI and Billing Contact?"
+                                                href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+                                            >Send the most recent invoice PDF by email to PI and Billing Contact{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {#<hr>#}
+                                {#Add actions in the invoice list - "Change status to ..."#}
+                                {#{% set statuses = transres_request_util.getInvoiceStatuses() %}#}
+                                {#{% for status in statuses %}#}
+                                    {#{% if status != invoice.status %}#}
+                                        {#{% if status == "Paid Partially" %}#}
+                                            {#<li>#}
+                                                {#<a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"#}
+                                                {#>Change status to {{ status }} (update 'Paid' value)</a>#}
+                                            {#</li>#}
+                                        {#{% else %}#}
+                                            {#<li>#}
+                                                {#<a#}
+                                                    {#general-data-confirm="Are you sure you want to change the status of this invoice {{ invoice.oid }} to {{ status }}?"#}
+                                                    {#href="{{ path('translationalresearch_invoice_change_status', {'oid':invoice.oid, 'status':status }) }}"#}
+                                                {#>Change status to {{ status }}</a>#}
+                                            {#</li>#}
+                                        {#{% endif %}#}
+
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+
+
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"change-status") %}
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.id }}"
+                                        >Update invoice status</a>
+                                    </li>
+                                {% endif %}
+
+                                {#<hr>#}
+
+                            {% else %}
+
+                                {#Add “Show latest version of this invoice” and “Edit latest version of this invoice” links in the Action button for all non-latest invoices#}
+                                {% set latestInvoice = transres_request_util.getLatestInvoice(invoice.getTransresRequest()) %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"view") %}
+                                    <li>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">
+                                            Show latest version of this invoice
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(latestInvoice,"update") %}
+                                    <li>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">
+                                            Edit latest version of this invoice
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            {% endif %}
+
+                            {% if invoice.documents|length > 0 %}
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"view-pdf") %}
+                                    <li>
+                                        <a target="_blank"
+                                           href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
+                                        >Show most recent invoice PDF</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {#View associated events#}
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <li>
+                                        <a target="_blank"
+                                           href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': invoice.id}) }}"
+                                        >View associated events</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(invoices) }}
+    </div>
+
+    {% if transresRequest and transres_request_util.isUserHasInvoicePermission(null,"create") %}
+        <br>
+        <p>
+            <a class="btn btn-default" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
+        </p>
+    {% endif %}
+
+{% endblock %}
+
+
+{#{% block additionaljs %}#}
+
+{#{% javascripts#}
+{#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+{#%}#}
+{#<script type="text/javascript" src="{{ asset_url }}">#}
+
+    {#$(document).ready(function() {#}
+
+    {#});#}
+
+    {#function transresUpdateInvoice(invoiceOid) {#}
+        {#console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);#}
+
+        {#//var form = $("#change_invoice_form_"+invoiceOid);#}
+        {#//var paid = form.find("#invoice-paid").val();#}
+
+        {#var paid = $("#invoice-paid-"+invoiceOid).val();#}
+        {#console.log("paid="+paid);#}
+
+        {#var url = Routing.generate('translationalresearch_invoice_update_ajax');#}
+
+        {#$.ajax({#}
+            {#url: url,#}
+            {#timeout: _ajaxTimeout,#}
+            {#type: "POST",#}
+            {#data: {invoiceOid: invoiceOid, paid: paid},#}
+            {#async: false,#}
+        {#}).success(function(response) {#}
+            {#//console.log(response);#}
+            {#if( response == "OK" ) {#}
+                {#//reload parent page#}
+                {#window.location.reload(true);#}
+            {#}#}
+        {#}).done(function() {#}
+            {#//lbtn.stop();#}
+        {#}).error(function(jqXHR, textStatus, errorThrown) {#}
+            {#console.log('Error : ' + errorThrown);#}
+        {#});#}
+
+    {#}#}
+
+{#</script>#}
+
+{#{% endblock %}#}
+
+{% block additionaljs %}
+
+    {#{% javascripts#}
+        {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'#}
+        {#'@AppTranslationalResearchBundle/Resources/public/form/js/invoice.js'#}
+    {#%}#}
+        {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres-filterbtn.js') }}"></script>
+    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/invoice.js') }}"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //console.log("cycle="+cycle);
+            //transresInvoiceItemListeneres(); //Don't need this in index (?)
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+{% endblock %}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />#}
+{#{% endblock %}#}

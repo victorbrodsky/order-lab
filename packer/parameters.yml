@@ -1,0 +1,27 @@
+# DB and mailer parameters
+# swift_delivery_addresses is used by delivery_addresses: an array of email addresses where to send ALL emails
+parameters:
+    database_driver: pdo_pgsql
+    database_host: localhost
+    database_port: 5432
+    database_name: scanorder
+    database_user: bash_dbuser
+    database_password: bash_dbpass
+    database_driver_external: pdo_sqlsrv
+    database_host_external: null
+    database_port_external: null
+    database_name_external: null
+    database_user_external: null
+    database_password_external: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    mailer_auth_mode: null
+    mailer_encryption: null
+    locale: en
+    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9	
+    delivery_strategy: realtime
+    swift_delivery_addresses:
+        - oli2002@med.cornell.edu
+    connection_channel: http	

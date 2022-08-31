@@ -1,0 +1,128 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [{
+    "type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "centos-7-x64",
+    "ssh_username": "{{user `ssh_name`}}"  
+  }],
+
+  "provisioners": [
+  
+	{
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass"
+		],
+        "script": "centos_install.sh"
+    },
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+        "inline": [ 
+           "echo @### Disable SELinux again ###",
+		   "sudo setenforce 0",
+		   "echo @### Reboot Server ###",
+		   "sudo shutdown -r now"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+		"pause_before": "60s",
+        "inline": [ 
+		   "echo @### Check SELinux status ###",	
+		   "sestatus",
+           "echo @### PostgreSQL Version after centos_install ###",		
+		   "psql --version"
+         ]
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/orderflex/config/parameters_bash_file] ###"
+         ]    
+	},
+	
+	{
+		"type": "file",
+		"source": "parameters_bash_file",
+		"destination": "/usr/local/bin/order-lab/orderflex/config/parameters_bash_file"         
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
+		   "sudo mkdir /usr/local/bin/order-lab/ssl"
+         ]    
+	},
+	  
+	  {
+          "type": "file",
+          "source": "bash_sslcertificate",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+       },
+	   
+	   {
+          "type": "file",
+          "source": "bash_sslprivatekey",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
+       },
+	   
+	   {
+        "type": "shell",
+        "inline": [ 
+           "echo @### PostgreSQL Version before final step ###",		
+		   "psql --version"
+         ]    
+	   },
+	  
+	  {
+        "type": "shell",
+        "inline": [ 		   
+		   "echo @### Composer and deploy using orderflex###",
+           "cd /usr/local/bin/order-lab/orderflex",					   
+		   "composer self-update",
+		   "echo @### PostgreSQL Version after composer self-update ###",		
+		   "psql --version",
+		   "echo @### Check SELinux status before composer ###",	
+		   "sestatus",
+		   "echo @### Check OS Info before composer ###",
+		   "sudo hostnamectl",	   
+           "composer install",	   
+		   "echo @### Check OS Info after composer ###",
+		   "sudo hostnamectl",
+		   "echo @### PostgreSQL Version after composer install ###",		
+		   "psql --version",
+		   "echo @### Install yarn package.json ###",
+		   "sudo yarn install --frozen-lockfile",
+		   "echo @### Check OS Info after yarn ###",
+		   "sudo hostnamectl",		   
+           "git rev-parse HEAD",		   
+	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
+		   "echo @### Check OS Info before deploy_prod.sh ###",
+		   "sudo hostnamectl",
+	       "bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
+	       "sudo chown -R apache:apache /usr/local/bin/order-lab",		           
+           "sudo chown -R apache:apache /usr/local/bin/order-lab/.git/",
+		   "echo @### PostgreSQL Version end of installation ###",
+		   "echo @### Check OS Info end of installation ###",
+		   "sudo hostnamectl",		   
+		   "psql --version"
+         ]    
+      } 
+      
+   ]
+
+}

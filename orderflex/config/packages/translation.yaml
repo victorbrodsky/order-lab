@@ -1,0 +1,10 @@
+framework:
+    #default_locale: en_US
+    default_locale: en
+    translator:
+        #enabled: false
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks: ['en']
+        #fallbacks: #{ fallback: '%locale%' }
+        #    - en
+
