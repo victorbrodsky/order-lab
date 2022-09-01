@@ -24,9 +24,8 @@
 function windowCloseAlert() {
 
     //console.log("window Close Alert");
-
     //console.log("cycle="+cycle);
-    //console.log("_cycleShow="+_cycleShow);
+    //console.log("user-form.js: windowCloseAlert: _cycleShow="+_cycleShow);
 
     if( _cycleShow ) {
         return;
@@ -368,7 +367,7 @@ function userCloneListener() {
 
 // function initPasswordBox() {
 //     var userType = $('.user-keytype-field').select2('data').text;
-//     console.log('onchange userType='+userType);
+//     //console.log('onchange userType='+userType);
 //     if( userType && userType == "Local User" ) {
 //         $('#user-change-password-box').show();
 //         $('#user-password-box').show();
@@ -395,7 +394,7 @@ function userTypeListener() {
 
     $('.user-keytype-field').on("change", function(e) {
         var userType = $(this).select2('data').text;
-        console.log('onchange userType='+userType);
+        //console.log('onchange userType='+userType);
         showHidePasswordBox(userType);
         var newpassword = generatePassword(8, true);
         //console.log('newpassword='+newpassword);

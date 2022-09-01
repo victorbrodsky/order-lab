@@ -141,9 +141,9 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    //_idleAfter = 30; //sec testing
+    //_idleAfter = 25; //sec testing
     //sessionKeepAliveTimer = 3; //false; //testing
-    //dialogDisplayLimit = 5; //sec
+    //dialogDisplayLimit = 15; //sec
     //urlIdleTimeoutLogout = false; //testing
     /////// EOF TESTING PARAMETERS ///////
 
@@ -179,8 +179,9 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         idleCheckHeartbeat: idleCheckHeartbeat,    // Frequency to check for idle timeouts in seconds
 
         // optional custom callback to perform before logout
-        customCallback: false,
-        //customCallback: userCheckIfConnected(this),       // set to false for no customCallback
+        //customCallback: false,
+        customCallback: userCheckIfConnected,       // set to false for no customCallback
+
         // customCallback:    function () {    // define optional custom js function
         //     // perform custom action before logout
         //     var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out1");
@@ -241,8 +242,14 @@ function getAjaxTimeoutMsg() {
     return false;
 }
 
-function userCheckIfConnected(idleTimeout) {
-    console.log("userCheckIfConnected");
+function userCheckIfConnected() {
+    //console.log("userCheckIfConnected");
+
+    //event.stopPropagation();
+    //console.log("window.onbeforeunload = null");
+    window.onbeforeunload = null;
+    //return;
+
     //check whether internet connection is present AND ping the server to make sure VPN is still connected
     //if no network connection is present OR the server is not pingable,
     // (a) change “Auto-log out” modal title to “Network connection interrupted”,
@@ -252,7 +259,7 @@ function userCheckIfConnected(idleTimeout) {
     // if applicable) and log in again.”
     // (c) Change the button text from “Keep me logged in” to “Ok”
 
-    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out1");
+    var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
 
     //var idleTimeout = _idleTimeout;
 

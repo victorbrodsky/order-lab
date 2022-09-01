@@ -609,7 +609,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
 
     var accessiontype = holder.find(".accessiontype-combobox").select2('val');
     accessiontype = trimWithCheck(accessiontype);
-    console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
+    //console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
 
     //console.log('mrntype='+mrntype+", mrn="+mrn+", dob="+dob+", lastname="+lastname+", firstname="+firstname);
 
@@ -801,7 +801,7 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
     //     processed = true;
     // }
 
-    console.log("accessionFound="+accessionFound);
+    //console.log("accessionFound="+accessionFound);
 
     if( calllogAccessionExists() && accessionFound === true ) {
         allowCreateNewPatient = false;
@@ -826,7 +826,7 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
 
         //if( holder.find('#add_accession_to_this_patient_button') || holder.find('#add_accession_to_this_patient_button')|length > 0 ) {
         if( _addAccessionCliked === false ) {
-            console.log('show "Add Accession Number" button');
+            //console.log('show "Add Accession Number" button');
             //show button "Add Accession Number to this patient"
             holder.find('#add_accession_to_this_patient_button').show(_transTime);
             _addAccessionCliked = false;
@@ -937,7 +937,7 @@ function populatePatientsInfo( patients, searchedStr, holderId, singleMatch, all
 
     if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
 
-        console.log("show table with found patients");
+        //console.log("show table with found patients");
         //show table with found patients
         populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);
@@ -2390,10 +2390,10 @@ function locationNamePopulateLocationFields( holder, data ) {
             }
 
             if( fieldEl.hasClass('combobox') ) {
-                console.log("select2 set fieldVal=" + fieldVal);
+                //console.log("select2 set fieldVal=" + fieldVal);
                 fieldEl.select2('val', fieldVal);
             } else if( fieldEl.hasClass('ajax-combobox-compositetree') ) {
-                console.log("select2 set compositetree fieldVal=" + fieldVal);
+                //console.log("select2 set compositetree fieldVal=" + fieldVal);
                 fieldEl.select2('val', fieldVal);
             } else {
                 fieldEl.val(fieldVal);
@@ -2734,8 +2734,8 @@ function calllogAddPreviousEncounters(patient) {
         dataType: 'json',
         async: true //use synchronous => wait for response.
     }).done(function(response) {
-        console.log('response:');
-        console.log(response);
+        //console.log('response:');
+        //console.log(response);
         //TODO: add encounters to .combobox-previous-encounters select2 (implement as in updateUserComboboxes)
 
         response.forEach(function(item){
@@ -2794,7 +2794,7 @@ function calllogEncounterListener() {
     //update encounter fields
     $("select.combobox-previous-encounters").on("change", function(event) {
         var encounterId = $(this).select2('val');
-        console.log("encounter changed: change encounterId="+encounterId);
+        //console.log("encounter changed: change encounterId="+encounterId);
 
         //set previous EncounterId - it will be used by a controller to attach this previous encounter to the message
         $(".message-previousEncounterId").val(encounterId);
@@ -3020,7 +3020,7 @@ function findCalllogAccession(holderId,formtype) {
 
     var accessiontype = holder.find(".accessiontype-combobox").select2('val');
     accessiontype = trimWithCheck(accessiontype);
-    console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
+    //console.log('accessionnumber='+accessionnumber+", accessiontype="+accessiontype);
 
 
     if( accessionnumber && accessiontype ) {
@@ -3125,7 +3125,7 @@ function populateAccessionInfo(resData, holderId) {
     if( accessionId ) {
 
         if( processed == false ) {
-            console.log('single patient populate');
+            //console.log('single patient populate');
             //populatePatientInfo(patient, false, true, holderId); //single patient found
             //disableAllFields(true, holderId);
 
@@ -3207,7 +3207,7 @@ function addCalllogAccessionToList(holderId) {
     //accessionNumber
     //accessionType
 
-    console.log("accessionListId="+accessionListId+"; accessionId="+accessionId);
+    //console.log("accessionListId="+accessionListId+"; accessionId="+accessionId);
 
     //ajax
     var url = Routing.generate('calllog_add_accession_to_list_ajax');

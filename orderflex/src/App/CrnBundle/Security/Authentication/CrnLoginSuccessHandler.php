@@ -47,7 +47,7 @@ class CrnLoginSuccessHandler extends LoginSuccessHandler {
 
     public function __construct( ContainerInterface $container, EntityManagerInterface $em, Security $security )
     {
-        parent::__construct($container,$em);
+        parent::__construct($container,$em,$security);
 
         $this->siteName = $container->getParameter('crn.sitename');
         $this->siteNameStr = 'Critical Result Notification';

@@ -293,7 +293,7 @@ function keepWorking() {
 
 function logoff() {
     //return; //testing
-    //console.log("logoff");
+    console.log("logoff");
     window.onbeforeunload = null;
     var urlRegularLogout = getCommonBaseUrl("idle-log-out");
     window.location = urlRegularLogout;

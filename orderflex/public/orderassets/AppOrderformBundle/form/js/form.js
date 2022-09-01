@@ -27,7 +27,7 @@
 function windowCloseAlert() {
 
     //console.log("cycle="+cycle);
-    //console.log("_cycleShow="+_cycleShow);
+    //console.log("form.js: windowCloseAlert _cycleShow="+_cycleShow);
 
     if( _cycleShow ) {
         return;
