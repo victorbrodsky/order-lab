@@ -41,6 +41,7 @@ var _siteEmail = $("#siteEmail").val();
 
 $(document).ready(function() {
 
+    //testing
     // var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
     // $.get(urlIdleTimeoutLogout).done(function () {
     //     alert("success");
