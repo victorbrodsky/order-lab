@@ -2406,6 +2406,8 @@ class UserController extends OrderAbstractController
 
             //Send email notifications to platform administrators when new user records are created: [Yes/No]
             $sendEmailUserAdded = $userSecUtil->getSiteSettingParameter('sendEmailUserAdded');
+            //$logger = $this->container->get('logger');
+            //$logger.notice("sendEmailUserAdded=".$sendEmailUserAdded);
             if( $sendEmailUserAdded ) {
                 //Email to Admin
                 //$event = str_replace("<br>","\r\n",$event);

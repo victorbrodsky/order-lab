@@ -188,6 +188,7 @@
             {% endfor %}
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+            {#maxIdleTime={{app.session.get('maxIdleTime')}}#}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
             <input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
 

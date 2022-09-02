@@ -32,7 +32,7 @@
 
 var _idleAfter = 0; //in seconds
 var _ajaxTimeout = 300000;  //15000 => 15 sec, 180000 => 180 sec
-var _maxIdleTime = $("#maxIdleTime").val(); //in seconds
+var _maxIdleTime = $("#maxIdleTime").val(); //in seconds. set on login
 var _siteEmail = $("#siteEmail").val();
 //var _serverActive = false;
 //_countdownDialog = $("#dialog-countdown");
@@ -95,7 +95,7 @@ idleTimeoutClass.prototype.init = function () {
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     
     if( _maxIdleTime ) {
-        //console.log("_maxIdleTime is set = " + _maxIdleTime);
+        console.log("_maxIdleTime is set = " + _maxIdleTime);
         _idleAfter = _maxIdleTime;
         return;
     }
@@ -110,7 +110,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
         timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("data="+data);
-            //console.debug("idletime="+data.maxIdleTime);
+            //console.log("idletime="+data.maxIdleTime);
             //console.debug("maint="+data.maintenance);
             _idleAfter = data.maxIdleTime;
         },
