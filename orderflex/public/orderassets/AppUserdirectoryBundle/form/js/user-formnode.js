@@ -379,6 +379,10 @@ function calllogAttachHtml(element,html,type) {
 }
 
 function richTextInit(formNodeId) {
+    //https://summernote.org/
+    //https://summernote.org/getting-started/#simple-example
+    //https://stackoverflow.com/questions/56015767/how-to-set-summernote-set-image-to-take-full-width-always
+
     //$('.summernote').summernote();
 
     //Fontstyle: Bold, Italic, Underline, Superscript, Subscript,
