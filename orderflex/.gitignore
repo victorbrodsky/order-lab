@@ -36,10 +36,13 @@
 
 /src/App/UserdirectoryBundle/Util/Users*.xlsx
 /src/App/UserdirectoryBundle/Util/users.xlsx
+
 !/src/App/UserdirectoryBundle/Util/Cities.xlsx
+!/src/App/UserdirectoryBundle/Util/Encounter Locations (Import Columns A through O)-2 - Fixed-Ready For Import.xlsx
 !/src/App/UserdirectoryBundle/Util/ImportUsersTemplate.xlsx
-###!/src/App/UserdirectoryBundle/Util/Lab Result Names For Import.xlsx
-###!/src/App/UserdirectoryBundle/Util/Laboratory Units of Measure Compilation-1.xlsx
+!/src/App/UserdirectoryBundle/Util/Laboratory Units of Measure Compilation-1.xlsx
+!/src/App/UserdirectoryBundle/Util/Lab Result Names For Import.xlsx
+!/src/App/UserdirectoryBundle/Util/SpecialtiesResidenciesFellowshipsCertified.xlsx
 
 /src/App/VacReqBundle/Util/*.xls
 /src/App/FellAppBundle/Util/*.p12
