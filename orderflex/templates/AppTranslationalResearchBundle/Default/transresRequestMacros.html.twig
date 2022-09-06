@@ -1625,11 +1625,7 @@
                                 </p>
                             {#{% endif %}#}
 
-                            {#{% if invoice.discountPercent %}#}
-                            {#invoice.id={{ invoice.id }}#}
-                            {#invoice.discountPercent={{ invoice.discountPercent }}#}
-                            {#digit-mask#}
-                                <p>
+                            <p>
                                 <div class="row">
                                     <div class="col-xs-6" align="right">
                                         <strong>Discount (%):</strong>
@@ -1643,8 +1639,7 @@
                                                 value="{{ invoice.discountPercent }}">
                                     </div>
                                 </div>
-                                </p>
-                            {#{% endif %}#}
+                            </p>
 
                             <p>
                                 <div class="row">
