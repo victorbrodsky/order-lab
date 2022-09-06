@@ -66,6 +66,11 @@ class UserGenerator {
     //create template processing of the main user's fields
     public function generateUsersExcelV2($inputFileName) {
 
+        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        if( count($users) > 0 ) {
+            return ' 0 users. No new users have been imported.'.count($users).' are already exist in the system.';
+        }
+
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
         //$inputFileName = __DIR__ . '/../../../../../importLists/ImportUsersTemplate.xlsx';

@@ -5410,14 +5410,10 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
-//        if( $entities ) {
-            //return -1;
-//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:FellowshipSubspecialty c WHERE c.id > 0');
-//            $query->execute();
-//            $query = $em->createQuery('DELETE AppUserdirectoryBundle:ResidencySpecialty c WHERE c.id > 0');
-//            $query->execute();
-//        }
+        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
+        if( count($entities) > 0 ) {
+            return -1;
+        }
 
         $inputFileName = __DIR__ . '/../Util/SpecialtiesResidenciesFellowshipsCertified.xlsx';
 
