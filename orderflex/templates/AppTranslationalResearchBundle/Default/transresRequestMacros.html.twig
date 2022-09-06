@@ -1626,6 +1626,9 @@
                             {#{% endif %}#}
 
                             {#{% if invoice.discountPercent %}#}
+                            {#invoice.id={{ invoice.id }}#}
+                            {#invoice.discountPercent={{ invoice.discountPercent }}#}
+                            {#digit-mask#}
                                 <p>
                                 <div class="row">
                                     <div class="col-xs-6" align="right">
@@ -1634,7 +1637,7 @@
                                     <div class="col-xs-6" align="left">
                                         <input
                                                 id="invoice-discountPercent-{{ invoice.id }}"
-                                                class="form-control invoice-discountPercent digit-mask"
+                                                class="form-control invoice-discountPercent"
                                                 type="text"
                                                 oninput="transresDiscountPercentUpdate(this);"
                                                 value="{{ invoice.discountPercent }}">
