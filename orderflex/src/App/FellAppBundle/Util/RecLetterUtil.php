@@ -453,9 +453,24 @@ class RecLetterUtil {
 
         //exit('eof processFellAppFromGoogleDrive');
 
+        $filesGoogleDriveCount = "N/A";
+        if( $filesGoogleDrive ) {
+            $filesGoogleDriveCount = count($filesGoogleDrive);
+        }
+
+        $importedLettersCount = "N/A";
+        if( $importedLetters ) {
+            $importedLettersCount = count($importedLetters);
+        }
+
+        $populatedBackupApplicationsCount = "N/A";
+        if( $populatedBackupApplications ) {
+            $populatedBackupApplicationsCount = count($populatedBackupApplications);
+        }
+
         $result = "Finish processing Fellowship Recommendation Letters on Google Drive and on server.<br>".
-            "filesGoogleDrive=".count($filesGoogleDrive).", importedLetters=".count($importedLetters).", populatedCount=".$populatedCount.
-            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications)
+            "filesGoogleDrive=".$filesGoogleDriveCount.", importedLetters=".$importedLettersCount.", populatedCount=".$populatedCount.
+            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".$populatedBackupApplicationsCount
             //.", First generated report in queue=".$generatedReport
         ;
 

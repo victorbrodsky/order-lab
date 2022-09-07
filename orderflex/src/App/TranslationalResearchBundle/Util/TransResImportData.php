@@ -2684,7 +2684,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            return "AntibodyList is already exists.";
+            //return "AntibodyList is already exists.";
         }
 
         //$filename = 'ihc_antibody.sql';
