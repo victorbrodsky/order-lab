@@ -2687,6 +2687,29 @@ class TransResImportData
             //return "AntibodyList is already exists.";
         }
 
+        //check if db compatable with filename
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $dbInfo = strtolower($userServiceUtil->getDbVersion()); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64-bit
+        $dbInfoLower = strtolower($dbInfo);
+        //ihc_antibody_postgresql.sql
+        if( str_contains($filename, 'postgresql') ) {
+            if( str_contains($dbInfoLower, 'postgresql') === false ) {
+                return "File ".$filename. " is not compatable with current database " . $dbInfo;
+            }
+        }
+        //ihc_antibody_mssql.sql
+        if( str_contains($filename, 'mssql') ) {
+            if( str_contains($dbInfoLower, 'mssql') === false ) {
+                return "File ".$filename. " is not compatable with current database " . $dbInfo;
+            }
+        }
+        //ihc_antibody_mysql.sql
+        if( str_contains($filename, 'mysql') ) {
+            if( str_contains($dbInfoLower, 'mysql') === false ) {
+                return "File ".$filename. " is not compatable with current database " . $dbInfo;
+            }
+        }
+
         //$filename = 'ihc_antibody.sql';
         $inputFileName = __DIR__ . "/" . $filename;
 
@@ -2699,6 +2722,7 @@ class TransResImportData
         echo "==================== Processing $filename =====================<br>";
 
         $sql = file_get_contents($inputFileName);  // Read file contents
+
         $this->em->getConnection()->exec($sql);  // Execute native SQL
 
         $this->em->flush();
