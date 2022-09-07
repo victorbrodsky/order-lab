@@ -1764,7 +1764,7 @@ class AdminController extends OrderAbstractController
                 50
             ),
             "ROLE_VACREQ_APPROVER_EXPERIMENTALPATHOLOGY" => array(
-                "Vacation Request Approver for the Experimental Pathology",
+                "Vacation Request Approver for the Cell and Cancer Pathobiology",
                 "Can search and approve vacation requests for specified service",
                 50
             ),
@@ -1825,7 +1825,7 @@ class AdminController extends OrderAbstractController
                 30
             ),
             "ROLE_VACREQ_SUBMITTER_EXPERIMENTALPATHOLOGY" => array(
-                "Vacation Request Submitter for the Experimental Pathology",
+                "Vacation Request Submitter for the Cell and Cancer Pathobiology",
                 "Can search and create vacation requests for specified service",
                 30
             ),
@@ -2588,7 +2588,9 @@ class AdminController extends OrderAbstractController
         //bas2022@med.cornell.edu
         // +1 212 746 4842
         //Pathology and Laboratory Medicine (WCM)
-        $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","cwid");
+        //$this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Experimental Pathology","cwid");
+        //Please rename the Experimental Pathology group to Cell and Cancer Pathobiology in the faculty vacation site
+        $this->vacreqRoleSetSingleUserInstitution($entity,"EXPERIMENTALPATHOLOGY",$wcmc,"Cell and Cancer Pathobiology","cwid");
 
         //VASCULARBIOLOGY : "Vascular Biology" (in NYP onlys. Create a new under WCM => Pathology and Laboratory Medicine => Research)
         $this->vacreqRoleSetSingleUserInstitution($entity,"VASCULARBIOLOGY",$wcmc,"Vascular Biology","cwid");
