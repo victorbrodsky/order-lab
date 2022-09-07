@@ -8527,7 +8527,6 @@ class AdminController extends OrderAbstractController
 
     public function compositeTree(Request $request, $sitename)
     {
-
         $mapper = $this->getMapper($request->get('_route'));
 
         //show html tree
@@ -8555,7 +8554,14 @@ class AdminController extends OrderAbstractController
         //get filter types from request
         $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
         $formname = $filterform->getName();
-        $formData = $request->query->get($formname);
+        //dump($formname);
+        //exit('111');
+        //Error: Input value "filter" contains a non-scalar value.
+        //The root cause for this is Symfony's InputBag, in that they changed their get()
+        //method to only allow scalar values to be returned - thus not arrays!
+        //=> replace $request->query->get($formname) by $request->query->all($formname)
+        //$formData = $request->query->get($formname);
+        $formData = $request->query->all($formname);
         if( isset($formData['types']) ) {
             $types = $formData['types'];
         } else {
