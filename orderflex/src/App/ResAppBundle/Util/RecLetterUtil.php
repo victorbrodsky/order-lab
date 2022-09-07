@@ -453,9 +453,19 @@ class RecLetterUtil {
 
         //exit('eof processResAppFromGoogleDrive');
 
+        $filesGoogleDriveCount = "N/A";
+        if( $filesGoogleDrive ) {
+            $filesGoogleDriveCount = count($filesGoogleDrive);
+        }
+
+        $populatedBackupApplicationsCount = "N/A";
+        if( $populatedBackupApplications ) {
+            $populatedBackupApplicationsCount = count($populatedBackupApplications);
+        }
+
         $result = "Finish processing Residency Recommendation Letters on Google Drive and on server.<br>".
-            "filesGoogleDrive=".count($filesGoogleDrive).", populatedCount=".$populatedCount.
-            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".count($populatedBackupApplications)
+            "filesGoogleDrive=".$filesGoogleDriveCount.", populatedCount=".$populatedCount.
+            ", deletedSheetCount=".$deletedSheetCount.", populatedBackupApplications=".$populatedBackupApplicationsCount
             //.", First generated report in queue=".$generatedReport
         ;
 
