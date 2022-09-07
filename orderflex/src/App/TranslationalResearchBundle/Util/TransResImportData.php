@@ -2671,8 +2671,14 @@ class TransResImportData
 
     public function createAntibodyList($filename) {
         $importUtil = $this->container->get('transres_import');
+
         $res1 = $importUtil->generateAntibodyList($filename);
-        $res2 = $importUtil->setAntibodyListProperties();
+
+        $res2 = "";
+        if( $res1 === true ) {
+            $res2 = $importUtil->setAntibodyListProperties();
+        }
+
         //exit("generateAntibodyListAction: Finished with res=".$res);
         return $res1 . "<br>" . $res2;
     }
@@ -2689,7 +2695,7 @@ class TransResImportData
 
         //check if db compatable with filename
         $userServiceUtil = $this->container->get('user_service_utility');
-        $dbInfo = strtolower($userServiceUtil->getDbVersion()); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64-bit
+        $dbInfo = $userServiceUtil->getDbVersion(); //PostgreSQL 14.3, compiled by Visual C++ build 1914, 64-bit
         $dbInfoLower = strtolower($dbInfo);
         //ihc_antibody_postgresql.sql
         if( str_contains($filename, 'postgresql') ) {
@@ -2728,6 +2734,7 @@ class TransResImportData
         $this->em->flush();
 
         //exit("generateAntibodyList: Finished");
+        return true;
     }
     public function setAntibodyListProperties() {
         $userSecUtil = $this->container->get('user_security_utility');
