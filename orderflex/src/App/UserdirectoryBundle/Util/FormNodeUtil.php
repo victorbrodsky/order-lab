@@ -1704,6 +1704,8 @@ class FormNodeUtil
 
                     if( $table ) {
                         //html table
+                        //If data is summernote with a large image, limit the <img> with width and height
+                        // and on click open a image with a full size
 
                         if( array_key_exists("showLabel",$nameValueArr) ) {
                             $showLabel = $nameValueArr['showLabel'];
@@ -1725,7 +1727,10 @@ class FormNodeUtil
                             //'<tr class="' . $trclassname . '">' .
                             $tr .
                             '<td colspan='.$colspan1.' class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
-                            '<td colspan='.$colspan2.' class="rowlink-skip ggg '.$fieldValueClass.'" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+                            '<td colspan='.$colspan2.' class="rowlink-skip '.$fieldValueClass.
+                                '" style="width:80%;">' .
+                                $nameValueArr['value'] .
+                            '</td>' .
                             '</tr>';
                     } else {
                         //excel array

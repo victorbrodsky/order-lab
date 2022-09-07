@@ -1,0 +1,43 @@
+The folder is mounted on the postgres machine as the following.
+The database backup is scheduled as cronjobs to run on 3am daily and hourly,
+all backup files are written to /mnt/pathology/view-backup (should see some there now).
+The hourly and daily backup files are retained for 5 and 14 days respectively.
+
+
+//brbpathologyfs.med.cornell.edu/pathology/view-backup is mount on xits-po-order-prd1:/mnt/pathology/view-backup
+
+
+Hi Oleg,
+
+Please take a look at the cronjobs and let me know if you have any inputs.
+Any backup files under xits-po-order-prd1:/mnt/pathology/view-backup can be used to
+test database restoration.
+The easiest way is probably to clone this postgres server,
+then just overwrite the data directory with the backup file to see
+if the database instance can be started.
+I can certainly assist with this if required.
+
+
+Thanks
+Yan Shi
+Senior Database Administrator
+Information Technologies and Services
+Weill Cornell Medicine
+Direct: 212-746-6853 Mobile: 856-467-8080
+
+
+The cronjobs are scheduled in the postgresql server xits-po-order-prd1.
+You would first stop postgres instance in your machine 157.139.226.86,
+ then take any of the backup files under here /mnt/pathology/view-backup,
+ untar the file to the data directory (remove the existing one)
+ and then re-start postges instance.
+
+-bash-4.2$ hostname
+xits-po-order-prd1
+
+The cronjobs are under postgres user:
+sudo crontab -u postgres -l
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+
