@@ -2690,7 +2690,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            //return "AntibodyList is already exists.";
+            return "AntibodyList is already exists.";
         }
 
         //check if db compatable with filename
