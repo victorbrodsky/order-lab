@@ -68,7 +68,7 @@ class TreeController extends OrderAbstractController {
         $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
 
         $formname = $filterform->getName();
-        $formData = $request->query->get($formname);
+        $formData = $request->query->all($formname);
 
         $typesFilter = NULL;
         if( is_array($formData) ) {
