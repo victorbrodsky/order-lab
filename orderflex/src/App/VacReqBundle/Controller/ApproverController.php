@@ -749,7 +749,8 @@ class ApproverController extends OrderAbstractController
                 $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
 
                 $em->persist($approverRole);
-                $em->flush($approverRole);
+                //$em->flush($approverRole);
+                $em->flush();
 
                 $count++;
             } else {
@@ -757,7 +758,8 @@ class ApproverController extends OrderAbstractController
                 if( $approverType != 'default' && $approverType != 'user-added' ) {
                     $approverRole->setType('default');
                     $em->persist($approverRole);
-                    $em->flush($approverRole);
+                    //$em->flush($approverRole);
+                    $em->flush();
                     $count++;
                 }
             }
@@ -776,7 +778,8 @@ class ApproverController extends OrderAbstractController
                 $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
 
                 $em->persist($submitterRole);
-                $em->flush($submitterRole);
+                //$em->flush($submitterRole);
+                $em->flush();
 
                 $count++;
             } else {
@@ -784,7 +787,8 @@ class ApproverController extends OrderAbstractController
                 if( $submitterType != 'default' && $submitterType != 'user-added' ) {
                     $submitterRole->setType('default');
                     $em->persist($submitterRole);
-                    $em->flush($submitterRole);
+                    //$em->flush($submitterRole);
+                    $em->flush();
                     $count++;
                 }
             }
@@ -1312,7 +1316,8 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
 
             $em->persist($approverRole);
-            $em->flush($approverRole);
+            //$em->flush($approverRole);
+            $em->flush();
 
             $count++;
         } else {
@@ -1320,7 +1325,8 @@ class ApproverController extends OrderAbstractController
             if( $approverType != 'default' && $approverType != 'user-added' ) {
                 $approverRole->setType('default');
                 $em->persist($approverRole);
-                $em->flush($approverRole);
+                //$em->flush($approverRole);
+                $em->flush();
                 $count++;
             }
         }
@@ -1339,7 +1345,8 @@ class ApproverController extends OrderAbstractController
             $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
 
             $em->persist($submitterRole);
-            $em->flush($submitterRole);
+            //$em->flush($submitterRole);
+            $em->flush();
 
             $count++;
         } else {
@@ -1347,7 +1354,8 @@ class ApproverController extends OrderAbstractController
             if( $submitterType != 'default' && $submitterType != 'user-added' ) {
                 $submitterRole->setType('default');
                 $em->persist($submitterRole);
-                $em->flush($submitterRole);
+                //$em->flush($submitterRole);
+                $em->flush();
                 $count++;
             }
         }

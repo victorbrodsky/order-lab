@@ -49,7 +49,7 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 /**
  * Created by PhpStorm.
- * User: ch3
+ * User: oli2002 Oleg Ivanov
  * Date: 4/25/2016
  * Time: 11:16 AM
  */
@@ -2846,6 +2846,9 @@ class VacReqUtil
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
     public function getGroupsByPermission( $user=null, $params=array() ) {
 
+        //1) get roles associated with sitename and permission
+        //2) for each role: get associated institution
+
         //dump($params);
         //exit('111');
 
@@ -2874,6 +2877,7 @@ class VacReqUtil
             $actionStr = $permission['actionStr'];
             //echo "### objectStr=".$objectStr.", actionStr=".$actionStr."### <br>";
 
+            //1) get roles
             $roles = new ArrayCollection();
 
             if( !$user ) {
@@ -2932,6 +2936,7 @@ class VacReqUtil
 //            }
             //echo "<br><br>";
 
+            //2) for each role: get associated institution
             foreach( $roles as $role ) {
 
                 //echo "###role=".$role."<br>";
