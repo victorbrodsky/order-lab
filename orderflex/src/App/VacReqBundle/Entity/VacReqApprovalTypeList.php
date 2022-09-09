@@ -43,8 +43,53 @@ class VacReqApprovalTypeList extends ListAbstract {
      **/
     protected $original;
 
-    //associated vacation group (insitution)
-    //when add new group, choose institution and select VacReqApprovalTypeList which will link to this institution
-    //
+    //Add a reference to the “Time Away Approval Group Type” for each approver group vacation site
+    // and display this value in a select2 drop down menu under the approval group.
+    //associated with vacation group (insitution): one VacReqApprovalTypeList can have many Institution
+    //Institution n-----1 VacReqApprovalTypeList
+    //when add/edit group, choose institution and select VacReqApprovalTypeList which will link to this institution
+
+    //1) Institution has ManyToOne to VacReqApprovalTypeList: Institution->getVacReqApprovalTypeList
+    // => vac days accrued per month, max vac days, allow carry over
+    //Easy, but in this case Institution is UserDirectoryBundle will have a reference to VacReqBundle
+
+    //2) VacReqApprovalTypeList has OneToMany or ManyToMany (unique) to Institution: institution => getApprovalType(institution)
+//    /**
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+//     */
+//    private $institution;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
+     * @ORM\JoinTable(name="vacreq_approvaltypes_institutions",
+     *      joinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $institutions;
+
+
+
+
+    public function __construct() {
+        $this->institutions = new ArrayCollection();
+    }
+
+
+    public function getInstitutions()
+    {
+        return $this->institutions;
+    }
+    public function addInstitution($item)
+    {
+        if( $item && !$this->institutions->contains($item) ) {
+            $this->institutions->add($item);
+        }
+    }
+    public function removeInstitution($item)
+    {
+        $this->institutions->removeElement($item);
+    }
 
 }

@@ -144,7 +144,14 @@ class Institution extends BaseCompositeNode {
      */
     private $collaborationType;
 
-
+//    /**
+//     * If UserdirectoryBundle has entity "VacReqApprovalTypeList" then:
+//     * @ORM\ManyToOne(targetEntity="VacReqApprovalTypeList")
+//     * @ORM\JoinColumn(name="approvalType_id", referencedColumnName="id", nullable=true)
+//     */
+//    private $approvalType;
+    
+    
     //dummy field not linked to DB
     //private $institutionspositiontypes;
 

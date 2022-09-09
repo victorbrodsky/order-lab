@@ -334,6 +334,10 @@ class ListController extends OrderAbstractController
         //$useWalker = true;
 
         //$dql->leftJoin("ent.objectType", "objectType");
+        if( method_exists($entityClass,'getObjectType') ) {
+            $dql->leftJoin("ent.objectType", "objectType");
+            $dql->addGroupBy('objectType.name');
+        }
 
 //        if( method_exists($entityClass,'getResearchlab') ) {
 //            $dql->leftJoin("ent.researchlab", "researchlab");

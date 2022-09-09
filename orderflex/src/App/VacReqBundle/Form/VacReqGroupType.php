@@ -19,6 +19,7 @@ namespace App\VacReqBundle\Form;
 
 
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -75,6 +76,26 @@ class VacReqGroupType extends AbstractType
             ));
         });
         ///////////////////////// EOF tree node /////////////////////////
+
+        $builder->add('approvaltype', EntityType::class, array(
+            'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+            'label' => "Time Away Approval Group Type:",
+            'choice_label' => 'name',
+            'required' => true,
+            'multiple' => false,
+            'mapped' => false,
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Time Away Approval Group Type'),
+            //'choices' => $this->params['filterUsers'],
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
 
 
     }

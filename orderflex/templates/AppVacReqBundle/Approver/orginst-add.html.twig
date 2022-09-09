@@ -17,6 +17,7 @@
 {% extends "AppVacReqBundle/Default/base.html.twig" %}
 
 {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     Vacation/Business Request Add Groups
@@ -35,6 +36,8 @@
 
     {#<form method="POST">#}
     {{ form_start(form, {'method': 'POST'}) }}
+
+        {{ formmacros.field(form.approvaltype) }}
 
         {{ treemacros.compositeTreeNode(form.institution,'','') }}
 

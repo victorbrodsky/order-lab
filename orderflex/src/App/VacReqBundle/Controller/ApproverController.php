@@ -725,9 +725,13 @@ class ApproverController extends OrderAbstractController
             //add group
             //$instid = null;
             $institution = $form["institution"]->getData();
+            $approvalType = $form["approvaltype"]->getData();
 
             $instid = $institution->getId();
             //exit('instid='.$instid);
+
+            //TODO:
+            //$approvalType->addInstitution($institution);
 
             $count = 0;
 
