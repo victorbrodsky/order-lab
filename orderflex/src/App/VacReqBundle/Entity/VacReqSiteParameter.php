@@ -55,12 +55,16 @@ class VacReqSiteParameter
      */
     private $holidaysUrl;
 
+    ////////// Moved to the VacReqApprovalTypeList //////////////
     /**
+     * Moved to the VacReqApprovalTypeList
      * @ORM\Column(type="integer", nullable=true)
      */
     private $vacationAccruedDaysPerMonth;
 
     /**
+     * Moved to the VacReqApprovalTypeList
+     *
      * Maximum number vacation days per year (usually 12*2=24).
      * This should not be used for now, because we rely on the vacationAccruedDaysPerMonth.
      *
@@ -69,6 +73,8 @@ class VacReqSiteParameter
     private $maxVacationDays;
 
     /**
+     * Moved to the VacReqApprovalTypeList
+     *
      * Maximum number carry over vacation days per year (usually 15 carry over days)
      *
      * @ORM\Column(type="integer", nullable=true)
@@ -76,14 +82,19 @@ class VacReqSiteParameter
     private $maxCarryOverVacationDays;
 
     /**
+     * Moved to the VacReqApprovalTypeList
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $noteForVacationDays;
 
     /**
+     * Moved to the VacReqApprovalTypeList
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $noteForCarryOverDays;
+    ////////// EOF Moved to the VacReqApprovalTypeList //////////////
 
     /**
      * field titled “Floating Day Link Name” with a default value of “Floating Day”
