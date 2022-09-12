@@ -74,9 +74,9 @@ class VacReqApprovalTypeList extends ListAbstract {
     ////////// Moved from VacReqSiteParameter ///////////
     /**
      * Moved from VacReqSiteParameter
-     * Vacation days accrued per month (faculty, fellows)
+     * Vacation days accrued per month (faculty = 2, fellows = 1.666666667)
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=9, nullable=true)
      */
     private $vacationAccruedDaysPerMonth;
 

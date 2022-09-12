@@ -104,6 +104,7 @@ use App\UserdirectoryBundle\Entity\WeekDaysList;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use App\UserdirectoryBundle\Form\HierarchyFilterType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
+use App\VacReqBundle\Entity\VacReqApprovalTypeList;
 use App\VacReqBundle\Entity\VacReqFloatingTextList;
 use App\VacReqBundle\Entity\VacReqFloatingTypeList;
 use App\VacReqBundle\Entity\VacReqRequestTypeList;
@@ -987,6 +988,7 @@ class AdminController extends OrderAbstractController
         $count_ObjectTypeActions = $this->generateObjectTypeActions();
 
         $count_EventObjectTypeList = $this->generateEventObjectTypeList();
+        $count_VacReqApprovalTypeList = $this->generateVacReqApprovalTypeList();
         $count_VacReqRequestTypeList = $this->generateVacReqRequestTypeList();
         $logger->notice("Finished generateVacReqRequestTypeList");
         $count_VacReqFloatingTextList = $this->generateVacReqFloatingTextList();
@@ -1138,6 +1140,7 @@ class AdminController extends OrderAbstractController
             'setObjectTypeForAllLists='.$count_setObjectTypeForAllLists.', '.
             'Collaboration Types='.$collaborationtypes.', '.
             'EventObjectTypeList count='.$count_EventObjectTypeList.', '.
+            'VacReqApprovalTypeList count='.$count_VacReqApprovalTypeList.', '.
             'VacReqRequestTypeList count='.$count_VacReqRequestTypeList.', '.
             'VacReqFloatingTypeList count='.$count_VacReqFloatingTypeList.', '.
             'VacReqFloatingTextList count='.$count_VacReqFloatingTextList.', '.
@@ -6619,7 +6622,65 @@ class AdminController extends OrderAbstractController
     ////////////////////// EOF ResApp //////////////////////////////////////
 
 
+    public function generateVacReqApprovalTypeList() {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
 
+        $types = array(
+            array(
+                "name" => "Faculty",
+                "vacationAccruedDaysPerMonth" => 2,
+                "maxVacationDays" => 24,
+                "noteForVacationDays" => "",
+                "maxCarryOverVacationDays" => 10,
+                "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 10",
+                "allowCarryOver" => true
+            ),
+            array(
+                "name" => "Fellows",
+                "vacationAccruedDaysPerMonth" => 1.666,
+                "maxVacationDays" => 20,
+                "noteForVacationDays" => "",
+                "maxCarryOverVacationDays" => NULL,
+                "noteForCarryOverDays" => NULL,
+                "allowCarryOver" => false
+            ),
+        );
+
+        $count = 10;
+        foreach( $types as $type ) {
+
+            $name = $type["name"];
+            $vacationAccruedDaysPerMonth = $type["vacationAccruedDaysPerMonth"];
+            $maxVacationDays = $type["maxVacationDays"];
+            $noteForVacationDays = $type["noteForVacationDays"];
+            $maxCarryOverVacationDays = $type["maxCarryOverVacationDays"];
+            $noteForCarryOverDays = $type["noteForCarryOverDays"];
+            $allowCarryOver = $type["allowCarryOver"];
+
+            $listEntity = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new VacReqApprovalTypeList();
+            $this->setDefaultList($listEntity,$count,$user,$name);
+
+            $listEntity->setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth);
+            $listEntity->setMaxVacationDays($maxVacationDays);
+            $listEntity->setNoteForVacationDays($noteForVacationDays);
+            $listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
+            $listEntity->setNoteForCarryOverDays($noteForCarryOverDays);
+            $listEntity->setAllowCarryOver($allowCarryOver);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
     public function generateVacReqRequestTypeList() {
 
         $username = $this->getUser();
@@ -7699,6 +7760,7 @@ class AdminController extends OrderAbstractController
 
             "vacreqfloatingtexts" => array('VacReqFloatingTextList','vacreqfloatingtexts-list','Vacation Request Floating Text List'),
             "vacreqfloatingtypes" => array('VacReqFloatingTypeList','vacreqfloatingtypes-list','Vacation Request Floating Type List'),
+            "vacreqapprovaltypes" => array('VacReqApprovalTypeList','vacreqapprovaltypes-list','Vacation Request Approval Type List'),
         );
 
         if( $withcustom ) {

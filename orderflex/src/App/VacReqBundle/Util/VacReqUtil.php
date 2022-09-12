@@ -6608,5 +6608,36 @@ class VacReqUtil
 
         return NULL;
     }
+    
+    public function getVacReqApprovalGroupType( $groupInstitution ) {
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.institutions", "institutions");
+
+        $dql->where("institutions.id = :institutionId");
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'institutionId' => $groupInstitution->getId(),
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        ));
+
+        //echo "query=".$query->getSql()."<br>";
+        //echo "dql=".$dql."<br>";
+
+        $approvalGroupTypes = $query->getResult();
+
+        if( count($approvalGroupTypes) > 0 ) {
+            return $approvalGroupTypes[0];
+        }
+
+        return NULL;
+    }
 
 }

@@ -35,6 +35,26 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-approver-type">
+                    Approval Group Type
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-approver-type" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="well">
+                    {{ render( url('vacreq_orginst_approval_group_type',{'instid':organizationalGroupId})) }}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
                 <a data-toggle="collapse" href="#vacreq-organizational-group-approver">
                     Approver(s)
                 </a>
@@ -207,6 +227,40 @@
 
             //$('#'+formid).submit();
             $.get(updateUserUrl, function(data, status){
+                //console.log("Data: " + data + "\nStatus: " + status);
+                if( status == "success" ) {
+                    //reload page
+                    location.reload();
+                }
+            });
+        }
+
+        function updateVacReqApprovalGroupType(btn,instid) {
+            var formid = "vacreq_orginst_approvalgrouptype";
+            //console.log('formid='+formid);
+
+            var form = $('#'+formid);
+
+            //get roles by class vacreq-roles
+            var approvalGroupTypeId = 0;
+            var approvalGroupType = form.find('#oleg_vacreqbundle_approval_group_type_approvalGroupTypes').select2('data');
+            if( approvalGroupType ) {
+                approvalGroupTypeId = approvalGroupType.id;
+            }
+            console.log('approvalGroupTypeId='+approvalGroupTypeId);
+
+            if( !approvalGroupTypeId || approvalGroupTypeId == '' ) {
+                approvalGroupTypeId = 0;
+            }
+
+            var updateApprovalGroupUrl = Routing.generate(
+                    'vacreq_orginst_approval_group_type_update',
+                    {instid:instid, approvalgrouptypeid:approvalGroupTypeId}
+            );
+            //console.log('updateUserUrl='+updateUserUrl);
+
+            //$('#'+formid).submit();
+            $.get(updateApprovalGroupUrl, function(data, status){
                 //console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page

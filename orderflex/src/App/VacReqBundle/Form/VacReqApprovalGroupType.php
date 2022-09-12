@@ -18,20 +18,14 @@
 namespace App\VacReqBundle\Form;
 
 
-use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-
-use App\VacReqBundle\Form\VacReqRequestBusinessType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
-class VacReqGroupType extends AbstractType
+class VacReqApprovalGroupType extends AbstractType
 {
 
     protected $params;
@@ -45,39 +39,7 @@ class VacReqGroupType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
-
-            $label = null;
-            if( $title ) {
-                $institution = $title->getInstitution();
-                if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
-                }
-            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
-            }
-            //echo "label=".$label."<br>";
-
-            $form->add('institution', CustomSelectorType::class, array(
-                'label' => $label,
-                'required' => false,
-                //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                    'data-compositetree-classname' => 'Institution'
-                ),
-                'classtype' => 'institution'
-            ));
-        });
-        ///////////////////////// EOF tree node /////////////////////////
-
-        $builder->add('approvaltype', EntityType::class, array(
+        $builder->add('approvalGroupTypes', EntityType::class, array(
             'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
@@ -100,10 +62,10 @@ class VacReqGroupType extends AbstractType
 
     }
 
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            //'data_class' => 'App\UserdirectoryBundle\Entity\Institution',
             'csrf_protection' => false,
             'form_custom_value' => null
         ));
@@ -111,6 +73,6 @@ class VacReqGroupType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'oleg_vacreqbundle_group';
+        return 'oleg_vacreqbundle_approval_group_type';
     }
 }
