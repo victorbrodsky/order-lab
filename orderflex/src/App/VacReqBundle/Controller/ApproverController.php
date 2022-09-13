@@ -1087,7 +1087,12 @@ class ApproverController extends OrderAbstractController
         //exit("institution=$institution");
 
         $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
-        //echo "approvalGroupType=$approvalGroupType <br>";
+        echo "approvalGroupType=$approvalGroupType <br>";
+
+        $approvalGroupTypeId = NULL;
+        if( $approvalGroupType ) {
+            $approvalGroupTypeId = $approvalGroupType->getId();
+        }
 
         $params = array(
             'approvalGroupType' => $approvalGroupType
@@ -1103,7 +1108,7 @@ class ApproverController extends OrderAbstractController
         );
 
         return array(
-            'approvalGroupType' => $approvalGroupType,
+            'approvalGroupType' => $approvalGroupTypeId,
             'form' => $form->createView(),
             'organizationalGroupName' => $institution."",
             'organizationalGroupId' => $instid,
@@ -1142,6 +1147,7 @@ class ApproverController extends OrderAbstractController
                 //throw $this->createNotFoundException('Unable to find VacReqApprovalTypeList by id='.$approvalgrouptypeid);
                 $originalApprovalGroupType->removeInstitution($institution);
             } else {
+                $approvalGroupType->clearInstitutions();
                 $approvalGroupType->addInstitution($institution);
             }
 

@@ -145,6 +145,9 @@ class VacReqApprovalTypeList extends ListAbstract {
     {
         $this->institutions->removeElement($item);
     }
+    public function clearInstitutions() {
+        $this->institutions->clear();
+    }
 
     /**
      * @return mixed
