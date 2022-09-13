@@ -1077,7 +1077,7 @@ class ApproverController extends OrderAbstractController
      */
     public function approvalGroupTypeAction(Request $request, $instid) {
         $em = $this->getDoctrine()->getManager();
-        //$entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
@@ -1086,7 +1086,12 @@ class ApproverController extends OrderAbstractController
 
         //exit("institution=$institution");
 
-        $params = array();
+        $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
+        //echo "approvalGroupType=$approvalGroupType <br>";
+
+        $params = array(
+            'approvalGroupType' => $approvalGroupType
+        );
 
         $form = $this->createForm(
             VacReqApprovalGroupType::class,
@@ -1098,48 +1103,57 @@ class ApproverController extends OrderAbstractController
         );
 
         return array(
-            //'entity' => $institution,
+            'approvalGroupType' => $approvalGroupType,
             'form' => $form->createView(),
             'organizationalGroupName' => $institution."",
             'organizationalGroupId' => $instid,
         );
     }
     /**
-     * @Route("/organizational-institution-approval-group-type-update/{instid}/{approvalgrouptypeid}", name="vacreq_orginst_approval_group_type_update", methods={"GET", "POST"}, options={"expose"=true})
+     * @Route("/organizational-institution-approval-group-type-update/{instid}/{approvalgrouptypeid}",
+     *     name="vacreq_orginst_approval_group_type_update",
+     *     methods={"GET", "POST"},
+     *     options={"expose"=true}
+     *     )
      */
     public function approvalGroupTypeUpdateAction(Request $request, $instid, $approvalgrouptypeid)
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->getUser();
+        $user = $this->getUser();
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
-        $approvalGroupType = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvalgrouptypeid);
-        if( !$approvalGroupType ) {
-            throw $this->createNotFoundException('Unable to find VacReqApprovalTypeList by id='.$approvalgrouptypeid);
-        }
-
-        exit("institution=$institution, approvalgrouptype=$approvalGroupType");
-
         //vacreq_util
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        $originalApprovalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
 
-        if( $res ) {
+        if( $institution ) {
 
-            $originalApprovalGroupType->addInstitution($institution);
+            $originalApprovalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
 
-            //$em->flush();
+            $approvalGroupType = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvalgrouptypeid);
+            if( !$approvalGroupType ) {
+                //throw $this->createNotFoundException('Unable to find VacReqApprovalTypeList by id='.$approvalgrouptypeid);
+                $originalApprovalGroupType->removeInstitution($institution);
+            } else {
+                $approvalGroupType->addInstitution($institution);
+            }
+
+            //exit("institution=$institution, approvalgrouptype=$approvalGroupType");
+
+            $em->flush();
 
             //Event Log
             $event = "Approval group type has been updated for " . $institution .
-                "; Original email users=".implode(", ",$originalApprovalGroupType).
-                "; New email users=".implode(", ",$newType);
+                "; Original approval group type=".$originalApprovalGroupType.
+                "; New approval group type=".$approvalGroupType.", id=".$approvalgrouptypeid;
+
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent(
                 $this->getParameter('vacreq.sitename'),
@@ -1156,9 +1170,13 @@ class ApproverController extends OrderAbstractController
                 $event
             );
 
+            $response->setContent("success");
+            return $response;
         }
 
-        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        $response->setContent("not updated");
+        return $response;
+        //return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
     }
 
 

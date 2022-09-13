@@ -43,9 +43,10 @@ class VacReqApprovalGroupType extends AbstractType
             'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
-            //'required' => true,
+            'required' => false,
             'multiple' => false,
             'mapped' => false,
+            'data' => $this->params['approvalGroupType'],
             'attr' => array('class' => 'combobox', 'placeholder' => 'Time Away Approval Group Type'),
             //'choices' => $this->params['filterUsers'],
             'query_builder' => function(EntityRepository $er) {

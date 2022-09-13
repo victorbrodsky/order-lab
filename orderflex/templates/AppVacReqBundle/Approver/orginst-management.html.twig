@@ -209,6 +209,10 @@
         }
 
         function updateVacReqGroupEmailUsers(btn,instid) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
             var formid = "vacreq_orginst_emailusers";
             //console.log('formid='+formid);
 
@@ -227,6 +231,7 @@
 
             //$('#'+formid).submit();
             $.get(updateUserUrl, function(data, status){
+                lbtn.stop();
                 //console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page
@@ -236,6 +241,10 @@
         }
 
         function updateVacReqApprovalGroupType(btn,instid) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
             var formid = "vacreq_orginst_approvalgrouptype";
             //console.log('formid='+formid);
 
@@ -261,7 +270,8 @@
 
             //$('#'+formid).submit();
             $.get(updateApprovalGroupUrl, function(data, status){
-                //console.log("Data: " + data + "\nStatus: " + status);
+                lbtn.stop();
+                console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page
                     location.reload();

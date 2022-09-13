@@ -81,7 +81,7 @@ class VacReqGroupType extends AbstractType
             'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
-            //'required' => true,
+            'required' => false,
             'multiple' => false,
             'mapped' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => 'Time Away Approval Group Type'),

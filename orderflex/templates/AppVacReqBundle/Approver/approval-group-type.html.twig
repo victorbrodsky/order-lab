@@ -20,7 +20,20 @@
 
 <h4 class="text-info" align="center">
     Approval Group Type for {{ organizationalGroupName }}
+    {#<br>#}
+    {#{% if approvalGroupType %}#}
+        {#Current type is {{ approvalGroupType }}#}
+    {#{% else %}#}
+        {#Current type is not set#}
+    {#{% endif %}#}
 </h4>
+
+<p>{% if approvalGroupType %}
+        Current type is {{ approvalGroupType }}
+    {% else %}
+        Current type is not set
+    {% endif %}
+</p>
 
 <br>
 
