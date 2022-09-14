@@ -18,6 +18,7 @@
 namespace App\VacReqBundle\Controller;
 
 use App\VacReqBundle\Form\VacReqApprovalGroupType;
+use App\VacReqBundle\Form\VacReqGroupManageApprovaltypesType;
 use App\VacReqBundle\Util\VacReqUtil;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\Roles;
@@ -27,7 +28,7 @@ use App\VacReqBundle\Entity\VacReqCarryOver;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqSettings;
 use App\VacReqBundle\Entity\VacReqUserCarryOver;
-use App\VacReqBundle\Form\VacReqEmailusersType;
+use App\VacReqBundle\Form\VacReqGroupManageEmailusersType;
 use App\VacReqBundle\Form\VacReqGroupType;
 use App\VacReqBundle\Form\VacReqRequestType;
 use App\VacReqBundle\Form\VacReqUserCarryOverType;
@@ -758,6 +759,7 @@ class ApproverController extends OrderAbstractController
 
             //TODO: add approval type to the vacreq institution group
             $approvalType->addInstitution($institution);
+            //TODO: add approval group to VacReqSettings
 
             $count = 0;
 
@@ -996,7 +998,7 @@ class ApproverController extends OrderAbstractController
         $params = array();
 
         $form = $this->createForm(
-            VacReqEmailusersType::class,
+            VacReqGroupManageEmailusersType::class,
             $entity,
             array(
                 'form_custom_value' => $params,
@@ -1004,23 +1006,6 @@ class ApproverController extends OrderAbstractController
                 //'action' => $action
             )
         );
-
-//        $form->handleRequest($request);
-//
-//        if( $form->isSubmitted() && $form->isValid() ) {
-//
-//            foreach( $entity->getEmailUsers() as $emailUser ) {
-//                echo "emailUser=".$emailUser."<br>";
-//            }
-//            exit();
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
-//        }
-//        exit('form not valid');
 
         return array(
             'entity' => $entity,
@@ -1094,6 +1079,206 @@ class ApproverController extends OrderAbstractController
 
 
     /**
+     * @Route("/organizational-institution-approvaltypes/{instid}", name="vacreq_orginst_approvaltypes", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Approver/orginst-approvaltypes.html.twig")
+     */
+    public function approvalTypesAction(Request $request, $instid)
+    {
+
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        //exit('TODO approvaltypes');
+
+        $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
+        //echo "approvalGroupType=$approvalGroupType <br>";
+
+        $approvalGroupTypeId = NULL;
+        $approvalGroupTypeName = NULL;
+        if( $approvalGroupType ) {
+            $approvalGroupTypeId = $approvalGroupType->getId();
+            $approvalGroupTypeName = $approvalGroupType->getName();
+        }
+
+        $params = array(
+            'approvalGroupType' => $approvalGroupType
+        );
+
+        $form = $this->createForm(
+            VacReqGroupManageApprovaltypesType::class,
+            $entity,
+            array(
+                'form_custom_value' => $params,
+                'method' => "POST",
+                //'action' => $action
+            )
+        );
+
+        return array(
+            'approvalGroupTypeName' => $approvalGroupTypeName,
+            'approvalGroupType' => $approvalGroupTypeId,
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'organizationalGroupName' => $institution."",
+            'organizationalGroupId' => $instid,
+        );
+    }
+    /**
+     * @Route("/organizational-institution-approvaltypes-update/{instid}/{approvaltypes}", name="vacreq_orginst_approvaltypes_update", methods={"GET", "POST"}, options={"expose"=true})
+     */
+    public function approvalTypesUpdateAction(Request $request, $instid, $approvaltypes)
+    {
+
+        //exit('TODO approvaltypes');
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        $res = $this->vacreqUtil->settingsAddRemoveApprovalTypes( $entity, $approvaltypes );
+        exit('TODO ');
+        if( $res ) {
+
+            $originalUsers = $res['originalUsers'];
+            $newUsers = $res['newUsers'];
+
+            $em->persist($entity);
+            $em->flush();
+
+            //Event Log
+            $event = "Email users has been updated for Business/Vacation Group " . $institution .
+                "; Original email users=".implode(", ",$originalUsers).
+                "; New email users=".implode(", ",$newUsers);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+
+            //Flash
+            $this->addFlash(
+                'notice',
+                $event
+            );
+
+        }
+
+        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+    }
+
+    /**
+     * @Route("/organizational-institution-defaultinformusers/{instid}", name="vacreq_orginst_defaultinformusers", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Approver/orginst-defaultinformusers.html.twig")
+     */
+    public function defaultInformUsersAction(Request $request, $instid)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        exit('TODO defaultinformusers');
+
+        $params = array();
+
+        $form = $this->createForm(
+            VacReqGroupManageEmailusersType::class,
+            $entity,
+            array(
+                'form_custom_value' => $params,
+                'method' => "POST",
+                //'action' => $action
+            )
+        );
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'organizationalGroupName' => $institution."",
+            'organizationalGroupId' => $instid,
+        );
+    }
+    /**
+     * @Route("/organizational-institution-defaultinformusers-update/{instid}/{defaultinformusers}", name="vacreq_orginst_defaultinformusers_update", methods={"GET", "POST"}, options={"expose"=true})
+     */
+    public function defaultInformUsersUpdateAction(Request $request, $instid, $defaultinformusers)
+    {
+
+        exit('TODO defaultinformusers');
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        $res = $this->vacreqUtil->settingsAddRemoveUsers( $entity, $users );
+
+        if( $res ) {
+
+            $originalUsers = $res['originalUsers'];
+            $newUsers = $res['newUsers'];
+
+            $em->persist($entity);
+            $em->flush();
+
+            //Event Log
+            $event = "Email users has been updated for Business/Vacation Group " . $institution .
+                "; Original email users=".implode(", ",$originalUsers).
+                "; New email users=".implode(", ",$newUsers);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+
+            //Flash
+            $this->addFlash(
+                'notice',
+                $event
+            );
+
+        }
+
+        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+    }
+
+
+    /**
+     * OLD
+     *
      * @Route("/organizational-institution-approval-group-type/{instid}", name="vacreq_orginst_approval_group_type", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/approval-group-type.html.twig")
      */
@@ -1140,6 +1325,8 @@ class ApproverController extends OrderAbstractController
         );
     }
     /**
+     * OLD
+     *
      * @Route("/organizational-institution-approval-group-type-update/{instid}/{approvalgrouptypeid}",
      *     name="vacreq_orginst_approval_group_type_update",
      *     methods={"GET", "POST"},

@@ -261,6 +261,21 @@ class VacReqRequest
      */
     private $tentativeApprovedRejectDate;
 
+    //TODO: informUsers - users to inform about status of this request
+    /**
+     * //Send a notification to the following individuals on service (for Fellows)
+     * //https://stackoverflow.com/questions/7490488/convert-flat-array-to-a-delimited-string-to-be-saved-in-the-database
+     * //https://stackoverflow.com/questions/49324327/how-not-to-allow-delete-options-in-select2
+     * //On the group setting page, admin setup a list of default users (bosses, peers of this fellows institutional group).
+     * //On the new request page fellows can add any users in the system to this list, but can not remove the default bosses.
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="vacreq_request_informuser",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="informuser_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $informUsers;
 
 
     public function __construct($user=null) {
@@ -268,6 +283,7 @@ class VacReqRequest
         $this->setSubmitter($user);
         $this->setStatus('pending');
         $this->setCreateDate(new \DateTime());
+        $this->informUsers = new ArrayCollection();
     }
 
 
@@ -827,6 +843,22 @@ class VacReqRequest
     public function setExtraStatus($extraStatus)
     {
         $this->extraStatus = $extraStatus;
+    }
+
+    public function getInformUsers()
+    {
+        return $this->informUsers;
+    }
+    public function addInformUser($item)
+    {
+        if( $item && !$this->informUsers->contains($item) ) {
+            $this->informUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeInformUser($item)
+    {
+        $this->informUsers->removeElement($item);
     }
 
 

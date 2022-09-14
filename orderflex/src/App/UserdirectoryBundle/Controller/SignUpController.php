@@ -661,8 +661,12 @@ class SignUpController extends OrderAbstractController
             $emails = $userSecUtil->getUserEmailsByRole($this->siteName,"Administrator");
             $ccEmails = $userSecUtil->getUserEmailsByRole($this->siteName,"Platform Administrator");
             $adminEmails = $userSecUtil->getUserEmailsByRole($this->siteName,null,$this->roleAdmins);
-            $emails = array_merge($emails,$ccEmails);
-            $emails = array_merge($emails,$adminEmails);
+            if( $ccEmails ) {
+                $emails = array_merge($emails, $ccEmails);
+            }
+            if( $adminEmails ) {
+                $emails = array_merge($emails, $adminEmails);
+            }
             $emails = array_unique($emails);
             //echo "user emails=".implode(";",$emails)."<br>";
             $subject = "New ".$signUp->getUser()." account activation for ".$this->siteNameStr;

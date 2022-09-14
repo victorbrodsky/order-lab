@@ -132,6 +132,45 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-approvaltypes">
+                    Approval Group Type
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-approvaltypes" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="well">
+                    {{ render( url('vacreq_orginst_approvaltypes',{'instid':organizationalGroupId})) }}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-defaultinformusers">
+                    Send a notification to the following default individuals on service
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-defaultinformusers" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="well">
+                    {#{{ render( url('vacreq_orginst_defaultinformusers',{'instid':organizationalGroupId})) }}#}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    {#informUsers#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
                 <a data-toggle="collapse" href="#vacreq-organizational-group-emails">
                     Confirmation Email List
                 </a>
@@ -240,6 +279,7 @@
             });
         }
 
+        //OLD
         function updateVacReqApprovalGroupType(btn,instid) {
 
             var lbtn = Ladda.create(btn);
@@ -264,6 +304,44 @@
 
             var updateApprovalGroupUrl = Routing.generate(
                     'vacreq_orginst_approval_group_type_update',
+                    {instid:instid, approvalgrouptypeid:approvalGroupTypeId}
+            );
+            //console.log('updateUserUrl='+updateUserUrl);
+
+            //$('#'+formid).submit();
+            $.get(updateApprovalGroupUrl, function(data, status){
+                lbtn.stop();
+                console.log("Data: " + data + "\nStatus: " + status);
+                if( status == "success" ) {
+                    //reload page
+                    location.reload();
+                }
+            });
+        }
+        function updateVacReqGroupApprovalTypes(btn,instid) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
+            var formid = "vacreq_orginst_approvaltypes";
+            //console.log('formid='+formid);
+
+            var form = $('#'+formid);
+
+            //get roles by class vacreq-roles
+            var approvalGroupTypeId = 0;
+            var approvalGroupType = form.find('#oleg_vacreqbundle_settings_approvaltypes').select2('data');
+            if( approvalGroupType ) {
+                approvalGroupTypeId = approvalGroupType.id;
+            }
+            console.log('approvalGroupTypeId='+approvalGroupTypeId);
+
+            if( !approvalGroupTypeId || approvalGroupTypeId == '' ) {
+                approvalGroupTypeId = 0;
+            }
+
+            var updateApprovalGroupUrl = Routing.generate(
+                    'vacreq_orginst_approvaltypes_update',
                     {instid:instid, approvalgrouptypeid:approvalGroupTypeId}
             );
             //console.log('updateUserUrl='+updateUserUrl);

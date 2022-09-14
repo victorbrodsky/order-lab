@@ -131,6 +131,43 @@ class VacReqUtil
 
         return $res;
     }
+    public function settingsAddRemoveApprovalTypes( $settings, $approvaltypeIds ) {
+        return true;
+        $originalUsers = $settings->getEmailUsers();
+
+        $newUsers = new ArrayCollection();
+        foreach( explode(",",$userIds) as $userId ) {
+            //echo "userId=" . $userId . "<br>";
+            $emailUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            if( $emailUser ) {
+                $newUsers->add($emailUser);
+            }
+        }
+
+        if( $originalUsers == $newUsers ) {
+            return null;
+        }
+
+        $originalUsersNames = array();
+        foreach( $originalUsers as $originalUser ) {
+            $originalUsersNames[] = $originalUser;
+            $settings->removeEmailUser($originalUser);
+        }
+
+        $newUsersNames = array();
+        foreach( $newUsers as $newUser ) {
+            $newUsersNames[] = $newUser;
+            $settings->addEmailUser($newUser);
+        }
+
+        //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+        $res = array(
+            'originalUsers' => $originalUsersNames,
+            'newUsers' => $newUsersNames
+        );
+
+        return $res;
+    }
 
 
     //find role approvers by institution

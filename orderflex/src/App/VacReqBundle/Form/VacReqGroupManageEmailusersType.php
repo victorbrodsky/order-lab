@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormEvent;
 use App\VacReqBundle\Form\VacReqRequestBusinessType;
 
 
-class VacReqEmailusersType extends AbstractType
+class VacReqGroupManageEmailusersType extends AbstractType
 {
 
     protected $params;
