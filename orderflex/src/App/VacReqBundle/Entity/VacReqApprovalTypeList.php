@@ -71,6 +71,8 @@ class VacReqApprovalTypeList extends ListAbstract {
     private $institutions;
 
     /**
+     * Instead of creat relation to institution here, create relation to the group settings which has relation to institution
+     *
      * @ORM\ManyToMany(targetEntity="VacReqSettings", mappedBy="approvalTypes")
      **/
     private $vacreqSettings;

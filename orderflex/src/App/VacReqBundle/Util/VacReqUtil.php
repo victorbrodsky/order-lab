@@ -133,7 +133,7 @@ class VacReqUtil
     }
     public function settingsAddRemoveApprovalTypes( $settingsEntity, $approvaltypeid ) {
         //return true;
-        $institution = $settingsEntity->getInstitution();
+        //$institution = $settingsEntity->getInstitution();
         $originalApprovalTypes = $settingsEntity->getApprovalTypes();
 
         $originalApprovalType = NULL;
@@ -143,16 +143,16 @@ class VacReqUtil
             $originalApprovalType = $originalApprovalTypes[0];
         }
 
-        $res = array(
-            'originalApprovalType' => $originalApprovalType,
-            'newApprovalType' => NULL
-        );
+//        $res = array(
+//            'originalApprovalType' => $originalApprovalType,
+//            'newApprovalType' => NULL
+//        );
         
         if( $approvaltypeid ) {
             $newApprovalType = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvaltypeid);
         }
 
-        $originalApprovalGroupTypeId = NULL;
+        $originalApprovalTypeId = NULL;
         $newApprovalTypeId = NULL;
         if( $originalApprovalType ) {
             $originalApprovalTypeId = $originalApprovalType->getId();
@@ -161,15 +161,17 @@ class VacReqUtil
             $newApprovalTypeId = $newApprovalType->getId();
         }
 
-        if( $newApprovalTypeId && $originalApprovalTypeId == $newApprovalTypeId ) {
-            //ok updated
+        if( $originalApprovalTypeId == $newApprovalTypeId ) {
+            //the same => not updated
+            return NULL;
+//            //not updated
+//            $res = array(
+//                'originalApprovalType' => $originalApprovalType,
+//                'newApprovalType' => $newApprovalType
+//            );
+//            return $res;
         } else {
-            //not updated
-            $res = array(
-                'originalApprovalType' => $originalApprovalType,
-                'newApprovalType' => $newApprovalType
-            );
-            return $res;
+            //ok updated
         }
 
         //always remove original approval type
@@ -6662,8 +6664,17 @@ class VacReqUtil
 
         return NULL;
     }
-    
+
     public function getVacReqApprovalGroupType( $groupInstitution ) {
+        if( $groupInstitution ) {
+            $settings = $this->getSettingsByInstitution($groupInstitution->getId());
+            if( $settings ) {
+                return $settings->getApprovalType();
+            }
+        }
+        return NULL;
+        
+        //NOT USED BELOW
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');

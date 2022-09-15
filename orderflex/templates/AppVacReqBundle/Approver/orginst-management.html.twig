@@ -32,24 +32,24 @@
 
     <br>
 
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#vacreq-organizational-group-approver-type">
-                    Approval Group Type
-                </a>
-            </h4>
-        </div>
-        <div id="vacreq-organizational-group-approver-type" class="panel-collapse collapse in">
-            <div class="panel-body">
+    {#<div class="panel panel-info">#}
+        {#<div class="panel-heading">#}
+            {#<h4 class="panel-title">#}
+                {#<a data-toggle="collapse" href="#vacreq-organizational-group-approver-type">#}
+                    {#Approval Group Type#}
+                {#</a>#}
+            {#</h4>#}
+        {#</div>#}
+        {#<div id="vacreq-organizational-group-approver-type" class="panel-collapse collapse in">#}
+            {#<div class="panel-body">#}
 
-                <div class="well">
-                    {{ render( url('vacreq_orginst_approval_group_type',{'instid':organizationalGroupId})) }}
-                </div>
+                {#<div class="well">#}
+                    {#{{ render( url('vacreq_orginst_approval_group_type',{'instid':organizationalGroupId})) }}#}
+                {#</div>#}
 
-            </div> <!-- panel-body -->
-        </div> <!-- panel-collapse -->
-    </div> <!-- panel panel-info -->
+            {#</div> <!-- panel-body -->#}
+        {#</div> <!-- panel-collapse -->#}
+    {#</div> <!-- panel panel-info -->#}
 
 
     <div class="panel panel-info">
@@ -128,7 +128,7 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
 
-
+    {#approvalTypes#}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -148,6 +148,7 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
 
+    {#informUsers#}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -167,7 +168,6 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
 
-    {#informUsers#}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -352,7 +352,7 @@
                 console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page
-                    //location.reload();
+                    location.reload();
                 }
             });
         }

@@ -91,7 +91,7 @@ class VacReqSettings
      * inversedBy has to be specified on the owning side of a (bidirectional) association
      * 
      * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", inversedBy="vacreqSettings")
-     * @ORM\JoinTable(name="vacreq_settings_approvaltypes")
+     * @ORM\JoinTable(name="vacreq_settings_approvaltype")
      **/
     private $approvalTypes;
 
@@ -184,15 +184,25 @@ class VacReqSettings
     {
         if( $item && !$this->approvalTypes->contains($item) ) {
             $this->approvalTypes->add($item);
+            //$item->addVacreqSetting($this);
         }
         return $this;
     }
     public function removeApprovalType($item)
     {
         $this->approvalTypes->removeElement($item);
+        //$item->removeVacreqSetting($this);
     }
     public function clearApprovalTypes() {
         $this->approvalTypes->clear();
+    }
+    public function getApprovalType()
+    {
+        $types = $this->getApprovalTypes();
+        if( count($types) > 0 ) {
+            return $types[0];
+        }
+        return NULL;
     }
     
 

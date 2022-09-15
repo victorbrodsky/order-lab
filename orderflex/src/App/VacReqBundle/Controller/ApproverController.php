@@ -1101,7 +1101,8 @@ class ApproverController extends OrderAbstractController
 
         //exit('TODO approvaltypes');
 
-        $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
+        //$approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
+        $approvalGroupType = $entity->getApprovalType();
         //echo "approvalGroupType=$approvalGroupType <br>";
 
         $approvalGroupTypeId = NULL;
@@ -1146,6 +1147,16 @@ class ApproverController extends OrderAbstractController
 
         $user = $this->getUser();
         $response = new Response();
+
+        if( !$instid ) {
+            //Flash
+            $this->addFlash(
+                'warning',
+                'Approval group type is not updated: institution is not provided'
+            );
+            $response->setContent("not updated");
+            return $response;
+        }
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
