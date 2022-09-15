@@ -1135,15 +1135,17 @@ class ApproverController extends OrderAbstractController
         );
     }
     /**
-     * @Route("/organizational-institution-approvaltypes-update/{instid}/{approvaltypes}", name="vacreq_orginst_approvaltypes_update", methods={"GET", "POST"}, options={"expose"=true})
+     * @Route("/organizational-institution-approvaltypes-update/{instid}/{approvaltypeid}", name="vacreq_orginst_approvaltypes_update", methods={"GET", "POST"}, options={"expose"=true})
      */
-    public function approvalTypesUpdateAction(Request $request, $instid, $approvaltypes)
+    public function approvalTypesUpdateAction(Request $request, $instid, $approvaltypeid)
     {
 
         //exit('TODO approvaltypes');
 
         $em = $this->getDoctrine()->getManager();
+
         $user = $this->getUser();
+        $response = new Response();
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
@@ -1156,22 +1158,34 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        $res = $this->vacreqUtil->settingsAddRemoveApprovalTypes( $entity, $approvaltypes );
-        exit('TODO ');
+        //dump($approvaltypeid);
+        //exit('111');
+
+        $res = $this->vacreqUtil->settingsAddRemoveApprovalTypes($entity,$approvaltypeid);
+        //dump($res);
+        //exit('TODO ');
+
         if( $res ) {
 
-            $originalUsers = $res['originalUsers'];
-            $newUsers = $res['newUsers'];
+            $originalApprovalType = $res['originalApprovalType'];
+            $newApprovalType = $res['newApprovalType'];
 
             $em->persist($entity);
             $em->flush();
 
             //Event Log
-            $event = "Email users has been updated for Business/Vacation Group " . $institution .
-                "; Original email users=".implode(", ",$originalUsers).
-                "; New email users=".implode(", ",$newUsers);
+            $event = "Approval group type has been updated for " . $institution .
+                "; Original type=".$originalApprovalType.
+                "; New type=".$newApprovalType;
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+            $userSecUtil->createUserEditEvent(
+                $this->getParameter('vacreq.sitename'),
+                $event,
+                $user,
+                $institution,
+                $request,
+                'Time Away Approval Group Type Updated'
+            );
 
             //Flash
             $this->addFlash(
@@ -1179,9 +1193,18 @@ class ApproverController extends OrderAbstractController
                 $event
             );
 
+            $response->setContent("success");
+            return $response;
         }
 
-        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        //Flash
+        $this->addFlash(
+            'warning',
+            'Approval group type is not updated'
+        );
+
+        $response->setContent("not updated");
+        return $response;
     }
 
     /**

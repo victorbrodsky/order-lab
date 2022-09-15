@@ -342,7 +342,7 @@
 
             var updateApprovalGroupUrl = Routing.generate(
                     'vacreq_orginst_approvaltypes_update',
-                    {instid:instid, approvalgrouptypeid:approvalGroupTypeId}
+                    {instid:instid, approvaltypeid:approvalGroupTypeId}
             );
             //console.log('updateUserUrl='+updateUserUrl);
 
@@ -352,7 +352,7 @@
                 console.log("Data: " + data + "\nStatus: " + status);
                 if( status == "success" ) {
                     //reload page
-                    location.reload();
+                    //location.reload();
                 }
             });
         }

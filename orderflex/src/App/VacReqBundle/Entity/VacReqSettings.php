@@ -77,14 +77,24 @@ class VacReqSettings
      **/
     private $defaultInformUsers;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", cascade={"persist"})
+//     * @ORM\JoinTable(name="vacreq_settings_approvaltype",
+//     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $approvalTypes;
     /**
-     * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_settings_approvaltype",
-     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")}
-     *      )
+     * This owning side - repsonsible for this relation
+     * mappedBy has to be specified on the inversed side of a (bidirectional) association
+     * inversedBy has to be specified on the owning side of a (bidirectional) association
+     * 
+     * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", inversedBy="vacreqSettings")
+     * @ORM\JoinTable(name="vacreq_settings_approvaltypes")
      **/
     private $approvalTypes;
+
 
 
 
@@ -181,6 +191,10 @@ class VacReqSettings
     {
         $this->approvalTypes->removeElement($item);
     }
+    public function clearApprovalTypes() {
+        $this->approvalTypes->clear();
+    }
+    
 
 
     public function __toString()

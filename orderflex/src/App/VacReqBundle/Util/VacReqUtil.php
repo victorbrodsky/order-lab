@@ -131,39 +131,56 @@ class VacReqUtil
 
         return $res;
     }
-    public function settingsAddRemoveApprovalTypes( $settings, $approvaltypeIds ) {
-        return true;
-        $originalUsers = $settings->getEmailUsers();
+    public function settingsAddRemoveApprovalTypes( $settingsEntity, $approvaltypeid ) {
+        //return true;
+        $institution = $settingsEntity->getInstitution();
+        $originalApprovalTypes = $settingsEntity->getApprovalTypes();
 
-        $newUsers = new ArrayCollection();
-        foreach( explode(",",$userIds) as $userId ) {
-            //echo "userId=" . $userId . "<br>";
-            $emailUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-            if( $emailUser ) {
-                $newUsers->add($emailUser);
-            }
+        $originalApprovalType = NULL;
+        $newApprovalType = NULL;
+
+        if( count($originalApprovalTypes) > 0 ) {
+            $originalApprovalType = $originalApprovalTypes[0];
         }
 
-        if( $originalUsers == $newUsers ) {
-            return null;
+        $res = array(
+            'originalApprovalType' => $originalApprovalType,
+            'newApprovalType' => NULL
+        );
+        
+        if( $approvaltypeid ) {
+            $newApprovalType = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvaltypeid);
         }
 
-        $originalUsersNames = array();
-        foreach( $originalUsers as $originalUser ) {
-            $originalUsersNames[] = $originalUser;
-            $settings->removeEmailUser($originalUser);
+        $originalApprovalGroupTypeId = NULL;
+        $newApprovalTypeId = NULL;
+        if( $originalApprovalType ) {
+            $originalApprovalTypeId = $originalApprovalType->getId();
+        }
+        if( $newApprovalType ) {
+            $newApprovalTypeId = $newApprovalType->getId();
         }
 
-        $newUsersNames = array();
-        foreach( $newUsers as $newUser ) {
-            $newUsersNames[] = $newUser;
-            $settings->addEmailUser($newUser);
+        if( $newApprovalTypeId && $originalApprovalTypeId == $newApprovalTypeId ) {
+            //ok updated
+        } else {
+            //not updated
+            $res = array(
+                'originalApprovalType' => $originalApprovalType,
+                'newApprovalType' => $newApprovalType
+            );
+            return $res;
         }
+
+        //always remove original approval type
+        $settingsEntity->removeApprovalType($originalApprovalType);
+        //add original approval type
+        $settingsEntity->addApprovalType($newApprovalType);
 
         //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
         $res = array(
-            'originalUsers' => $originalUsersNames,
-            'newUsers' => $newUsersNames
+            'originalApprovalType' => $originalApprovalType,
+            'newApprovalType' => $newApprovalType
         );
 
         return $res;

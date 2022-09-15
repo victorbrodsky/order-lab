@@ -70,6 +70,11 @@ class VacReqApprovalTypeList extends ListAbstract {
      **/
     private $institutions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="VacReqSettings", mappedBy="approvalTypes")
+     **/
+    private $vacreqSettings;
+
 
     ////////// Moved from VacReqSiteParameter ///////////
     /**
@@ -126,11 +131,12 @@ class VacReqApprovalTypeList extends ListAbstract {
 
     public function __construct() {
         $this->institutions = new ArrayCollection();
+        $this->vacreqSettings = new ArrayCollection();
     }
 
 
 
-
+    //institutions
     public function getInstitutions()
     {
         return $this->institutions;
@@ -147,6 +153,27 @@ class VacReqApprovalTypeList extends ListAbstract {
     }
     public function clearInstitutions() {
         $this->institutions->clear();
+    }
+
+    //vacreqSettings
+    public function getVacreqSettings()
+    {
+        return $this->vacreqSettings;
+    }
+    public function addVacreqSetting($item)
+    {
+        if( $item && !$this->vacreqSettings->contains($item) ) {
+            $this->vacreqSettings->add($item);
+            $item->addApprovalType($this);
+        }
+    }
+    public function removeVacreqSetting($item)
+    {
+        $this->vacreqSettings->removeElement($item);
+        $item->removeApprovalType($this);
+    }
+    public function clearVacreqSettings() {
+        $this->vacreqSettings->clear();
     }
 
     /**
