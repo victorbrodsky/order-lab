@@ -44,7 +44,8 @@ class VacReqGroupManageEmailusersType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('emailUsers', EntityType::class, array(
+        //'emailUsers'
+        $builder->add($this->params['userFieldName'], EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
             'label' => $this->params['userLabel'],  //"E-Mail all requests and responses to:",
             'required' => false,

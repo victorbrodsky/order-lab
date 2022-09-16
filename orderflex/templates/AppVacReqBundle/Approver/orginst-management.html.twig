@@ -148,12 +148,37 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->
 
+
+    {#Time Away Group Request Submitter#}
+    {#They should be able to submit only on behalf of those who belong as submitters #}
+    {#to the same groups + see statistics on the “My Group” page for those same groups, #}
+    {#but NOT approve requests.#}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#vacreq-organizational-group-proxysubmitterusers">
+                    Proxy Submitter(s)
+                </a>
+            </h4>
+        </div>
+        <div id="vacreq-organizational-group-proxysubmitterusers" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="well">
+                    {{ render( url('vacreq_orginst_proxysubmitterusers',{'instid':organizationalGroupId})) }}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+
     {#informUsers#}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#vacreq-organizational-group-defaultinformusers">
-                    Send a notification to the following default individuals
+                    Default Individuals to Inform
                 </a>
             </h4>
         </div>
@@ -375,6 +400,37 @@
             }
 
             var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_update', {instid:instid,users:users});
+            //console.log('updateUserUrl='+updateUserUrl);
+
+            //$('#'+formid).submit();
+            $.get(updateUserUrl, function(data, status){
+                lbtn.stop();
+                //console.log("Data: " + data + "\nStatus: " + status);
+                if( status == "success" ) {
+                    //reload page
+                    location.reload();
+                }
+            });
+        }
+        function updateVacReqProxySubmitterUsers(btn,instid) {
+
+            var lbtn = Ladda.create(btn);
+            lbtn.start();
+
+            var formid = "vacreq_orginst_proxysubmitterusers";
+            //console.log('formid='+formid);
+
+            var form = $('#'+formid);
+
+            //get roles by class vacreq-roles
+            var users = form.find('.vacreq-proxysubmitterusers').select2('val');
+            //console.log('users='+users);
+
+            if( !users || users == '' ) {
+                users = 0;
+            }
+
+            var updateUserUrl = Routing.generate('vacreq_orginst_proxysubmitterusers_update', {instid:instid,users:users});
             //console.log('updateUserUrl='+updateUserUrl);
 
             //$('#'+formid).submit();

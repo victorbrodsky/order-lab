@@ -77,6 +77,19 @@ class VacReqSettings
      **/
     private $defaultInformUsers;
 
+    /**
+     * Time Away Group Request Submitter - proxy submitter, able to submit only on behalf of
+     * those who belong as submitters to the same groups + see statistics on the
+     * "My Group" page for those same groups, but NOT approve requests.
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinTable(name="vacreq_settings_proxysubmitteruser",
+     *      joinColumns={@ORM\JoinColumn(name="settings_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="proxysubmitteruser_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $proxySubmitterUsers;
+
 //    /**
 //     * @ORM\ManyToMany(targetEntity="VacReqApprovalTypeList", cascade={"persist"})
 //     * @ORM\JoinTable(name="vacreq_settings_approvaltype",
@@ -101,6 +114,7 @@ class VacReqSettings
     public function __construct($institution) {
         $this->emailUsers = new ArrayCollection();
         $this->defaultInformUsers = new ArrayCollection();
+        $this->proxySubmitterUsers = new ArrayCollection();
         $this->approvalTypes = new ArrayCollection();
         $this->setInstitution($institution);
     }
@@ -157,7 +171,13 @@ class VacReqSettings
     {
         $this->emailUsers->removeElement($item);
     }
-
+    public function getEmailUsersStr() {
+        $usersArr = array();
+        foreach( $this->getEmailUsers() as $user) {
+            $usersArr[] = $user."";
+        }
+        return implode(",",$usersArr);
+    }
 
     public function getDefaultInformUsers()
     {
@@ -173,6 +193,36 @@ class VacReqSettings
     public function removeDefaultInformUser($item)
     {
         $this->defaultInformUsers->removeElement($item);
+    }
+    public function getDefaultInformUsersStr() {
+        $usersArr = array();
+        foreach( $this->getDefaultInformUsers() as $user) {
+            $usersArr[] = $user."";
+        }
+        return implode(",",$usersArr);
+    }
+
+    public function getProxySubmitterUsers()
+    {
+        return $this->proxySubmitterUsers;
+    }
+    public function addProxySubmitterUser($item)
+    {
+        if( $item && !$this->proxySubmitterUsers->contains($item) ) {
+            $this->proxySubmitterUsers->add($item);
+        }
+        return $this;
+    }
+    public function removeProxySubmitterUser($item)
+    {
+        $this->proxySubmitterUsers->removeElement($item);
+    }
+    public function getProxySubmitterUsersStr() {
+        $usersArr = array();
+        foreach( $this->getProxySubmitterUsers() as $user) {
+            $usersArr[] = $user."";
+        }
+        return implode(",",$usersArr);
     }
 
     

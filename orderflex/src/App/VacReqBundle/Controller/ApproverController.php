@@ -992,9 +992,13 @@ class ApproverController extends OrderAbstractController
         }
 
         $params = array(
+            'userFieldName' => 'emailUsers',
             'userLabel' => "E-Mail all requests and responses to:",
             'userClass' => 'vacreq-emailusers'
         );
+
+        $users = $entity->getEmailUsersStr();
+        echo "emailUsers=".$users."<br>";
 
         $form = $this->createForm(
             VacReqGroupManageEmailusersType::class,
@@ -1231,8 +1235,11 @@ class ApproverController extends OrderAbstractController
         }
 
         //exit('TODO defaultinformusers');
+        $users = $entity->getDefaultInformUsersStr();
+        echo "defaultInformUsers=".$users."<br>";
 
         $params = array(
+            'userFieldName' => 'defaultInformUsers',
             'userLabel' => "Send a notification to the following default individuals:",
             'userClass' => 'vacreq-defaultinformusers'
         );
@@ -1286,8 +1293,110 @@ class ApproverController extends OrderAbstractController
 
             //Event Log
             $event = "Default inform users has been updated for Business/Vacation Group " . $institution .
-                "; Original email users=".implode(", ",$originalUsers).
-                "; New email users=".implode(", ",$newUsers);
+                "; Original users=".implode(", ",$originalUsers).
+                "; New users=".implode(", ",$newUsers);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent(
+                $this->getParameter('vacreq.sitename'),
+                $event,
+                $user,
+                $institution,
+                $request,
+                'Business/Vacation Group Updated' //replace 'Business/Vacation' by 'Time Away'
+            );
+
+            //Flash
+            $this->addFlash(
+                'notice',
+                $event
+            );
+
+        }
+
+        return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+    }
+
+
+    /**
+     * @Route("/organizational-institution-proxysubmitterusers/{instid}", name="vacreq_orginst_proxysubmitterusers", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Approver/orginst-proxysubmitterusers.html.twig")
+     */
+    public function proxySubmitterUsersAction(Request $request, $instid)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        //exit('TODO proxysubmitterusers');
+        $users = $entity->getProxySubmitterUsersStr();
+        echo "proxySubmitterUsers=".$users."<br>";
+
+        $params = array(
+            'userFieldName' => 'proxySubmitterUsers',
+            'userLabel' => "Proxy submitters:",
+            'userClass' => 'vacreq-proxysubmitterusers'
+        );
+
+        $form = $this->createForm(
+            VacReqGroupManageEmailusersType::class,
+            $entity,
+            array(
+                'form_custom_value' => $params,
+                'method' => "POST",
+                //'action' => $action
+            )
+        );
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'organizationalGroupName' => $institution."",
+            'organizationalGroupId' => $instid,
+        );
+    }
+    /**
+     * @Route("/organizational-institution-proxysubmitterusers-update/{instid}/{users}", name="vacreq_orginst_proxysubmitterusers_update", methods={"GET", "POST"}, options={"expose"=true})
+     */
+    public function proxySubmitterUsersUpdateAction(Request $request, $instid, $users)
+    {
+        //exit('TODO proxysubmitterusers');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
+
+        if( !$entity ) {
+            $entity = new VacReqSettings($institution);
+        }
+
+        $res = $this->vacreqUtil->settingsAddRemoveProxySubmitterUsers($entity,$users);
+
+        if( $res ) {
+
+            $originalUsers = $res['originalUsers'];
+            $newUsers = $res['newUsers'];
+
+            $em->persist($entity);
+            $em->flush();
+
+            //Event Log
+            $event = "Proxy submitter users has been updated for Business/Vacation Group " . $institution .
+                "; Original users=".implode(", ",$originalUsers).
+                "; New users=".implode(", ",$newUsers);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent(
                 $this->getParameter('vacreq.sitename'),

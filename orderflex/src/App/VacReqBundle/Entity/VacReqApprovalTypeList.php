@@ -60,15 +60,17 @@ class VacReqApprovalTypeList extends ListAbstract {
 //     */
 //    private $institution;
 
-    //Add unique=true if institution allows to have only one approvaltype
-    /**
-     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_approvaltypes_institutions",
-     *      joinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $institutions;
+//    //Add unique=true if institution allows to have only one approvaltype
+//    /**
+//     * TO REMOVE
+//     *
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
+//     * @ORM\JoinTable(name="vacreq_approvaltypes_institutions",
+//     *      joinColumns={@ORM\JoinColumn(name="approvaltype_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+//     *      )
+//     **/
+//    private $institutions;
 
     /**
      * Instead of creat relation to institution here, create relation to the group settings which has relation to institution
