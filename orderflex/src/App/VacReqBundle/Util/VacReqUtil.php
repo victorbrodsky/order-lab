@@ -187,6 +187,42 @@ class VacReqUtil
 
         return $res;
     }
+    public function settingsAddRemoveDefaultInformUsers( $settings, $userIds ) {
+        $originalUsers = $settings->getDefaultInformUsers();
+
+        $newUsers = new ArrayCollection();
+        foreach( explode(",",$userIds) as $userId ) {
+            //echo "userId=" . $userId . "<br>";
+            $defaultInformUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            if( $defaultInformUser ) {
+                $newUsers->add($defaultInformUser);
+            }
+        }
+
+        if( $originalUsers == $newUsers ) {
+            return null;
+        }
+
+        $originalUsersNames = array();
+        foreach( $originalUsers as $originalUser ) {
+            $originalUsersNames[] = $originalUser;
+            $settings->removeDefaultInformUser($originalUser);
+        }
+
+        $newUsersNames = array();
+        foreach( $newUsers as $newUser ) {
+            $newUsersNames[] = $newUser;
+            $settings->addDefaultInformUser($newUser);
+        }
+
+        //$arrayDiff = array_diff($originalUserSiteRoles, $newUserSiteRoles);
+        $res = array(
+            'originalUsers' => $originalUsersNames,
+            'newUsers' => $newUsersNames
+        );
+
+        return $res;
+    }
 
 
     //find role approvers by institution

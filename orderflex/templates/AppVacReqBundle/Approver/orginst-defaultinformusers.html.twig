@@ -19,32 +19,19 @@
 
 
 <h4 class="text-info" align="center">
-    Approval Group Type for {{ organizationalGroupName }}
-    {#<br>#}
-    {#{% if approvalGroupType %}#}
-        {#Current type is {{ approvalGroupType }}#}
-    {#{% else %}#}
-        {#Current type is not set#}
-    {#{% endif %}#}
+    Default individuals to inform for {{ organizationalGroupName }}
 </h4>
-
-<p>{% if approvalGroupType %}
-        Current type is {{ approvalGroupTypeName }}
-    {% else %}
-        Current type is not set
-    {% endif %}
-</p>
 
 <br>
 
-{#OLD TO REMOVE#}
-<form id="vacreq_orginst_approvalgrouptype" method="POST">
+<form id="vacreq_orginst_defaultinformusers" method="POST">
 
-    {{ formmacros.field(form.approvalGroupTypes) }}
+    {{ formmacros.field(form.emailUsers) }}
 
     <p>
-        <button type='button' class="btn btn-info btn-sm"
-                onclick="updateVacReqApprovalGroupType(this,{{ organizationalGroupId }})"
+        <button type='button'
+                class="btn btn-info btn-sm"
+                onclick="updateVacReqDefaultInformUsers(this,{{ organizationalGroupId }})"
         >Update</button>
     </p>
 

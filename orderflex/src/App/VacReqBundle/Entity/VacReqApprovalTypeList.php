@@ -132,30 +132,30 @@ class VacReqApprovalTypeList extends ListAbstract {
 
 
     public function __construct() {
-        $this->institutions = new ArrayCollection();
+        //$this->institutions = new ArrayCollection();
         $this->vacreqSettings = new ArrayCollection();
     }
 
 
 
-    //institutions
-    public function getInstitutions()
-    {
-        return $this->institutions;
-    }
-    public function addInstitution($item)
-    {
-        if( $item && !$this->institutions->contains($item) ) {
-            $this->institutions->add($item);
-        }
-    }
-    public function removeInstitution($item)
-    {
-        $this->institutions->removeElement($item);
-    }
-    public function clearInstitutions() {
-        $this->institutions->clear();
-    }
+//    //institutions
+//    public function getInstitutions()
+//    {
+//        return $this->institutions;
+//    }
+//    public function addInstitution($item)
+//    {
+//        if( $item && !$this->institutions->contains($item) ) {
+//            $this->institutions->add($item);
+//        }
+//    }
+//    public function removeInstitution($item)
+//    {
+//        $this->institutions->removeElement($item);
+//    }
+//    public function clearInstitutions() {
+//        $this->institutions->clear();
+//    }
 
     //vacreqSettings
     public function getVacreqSettings()

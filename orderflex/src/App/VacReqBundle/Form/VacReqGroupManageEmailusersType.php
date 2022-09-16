@@ -46,11 +46,11 @@ class VacReqGroupManageEmailusersType extends AbstractType
 
         $builder->add('emailUsers', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label' => "E-Mail all requests and responses to:",
+            'label' => $this->params['userLabel'],  //"E-Mail all requests and responses to:",
             'required' => false,
             'multiple' => true,
             //'choice_label' => 'name',
-            'attr' => array('class' => 'combobox vacreq-emailusers'),
+            'attr' => array('class' => 'combobox '.$this->params['userClass']),
             //'disabled' => ($this->params['review'] ? true : false),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('user')

@@ -978,12 +978,8 @@ class ApproverController extends OrderAbstractController
      */
     public function emailUsersAction(Request $request, $instid)
     {
-
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->getUser();
 
-        //vacreq_util
-        //$vacreqUtil = $this->container->get('vacreq_util');
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
         $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
@@ -995,7 +991,10 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        $params = array();
+        $params = array(
+            'userLabel' => "E-Mail all requests and responses to:",
+            'userClass' => 'vacreq-emailusers'
+        );
 
         $form = $this->createForm(
             VacReqGroupManageEmailusersType::class,
@@ -1060,7 +1059,14 @@ class ApproverController extends OrderAbstractController
                 "; Original email users=".implode(", ",$originalUsers).
                 "; New email users=".implode(", ",$newUsers);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+            $userSecUtil->createUserEditEvent(
+                $this->getParameter('vacreq.sitename'),
+                $event,
+                $user,
+                $institution,
+                $request,
+                'Business/Vacation Group Updated'
+            );
 
             //Flash
             $this->addFlash(
@@ -1084,8 +1090,6 @@ class ApproverController extends OrderAbstractController
      */
     public function approvalTypesAction(Request $request, $instid)
     {
-
-        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
@@ -1099,9 +1103,6 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        //exit('TODO approvaltypes');
-
-        //$approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
         $approvalGroupType = $entity->getApprovalType();
         //echo "approvalGroupType=$approvalGroupType <br>";
 
@@ -1140,9 +1141,6 @@ class ApproverController extends OrderAbstractController
      */
     public function approvalTypesUpdateAction(Request $request, $instid, $approvaltypeid)
     {
-
-        //exit('TODO approvaltypes');
-
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
@@ -1169,12 +1167,7 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        //dump($approvaltypeid);
-        //exit('111');
-
         $res = $this->vacreqUtil->settingsAddRemoveApprovalTypes($entity,$approvaltypeid);
-        //dump($res);
-        //exit('TODO ');
 
         if( $res ) {
 
@@ -1224,7 +1217,6 @@ class ApproverController extends OrderAbstractController
      */
     public function defaultInformUsersAction(Request $request, $instid)
     {
-
         $em = $this->getDoctrine()->getManager();
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
@@ -1238,9 +1230,12 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        exit('TODO defaultinformusers');
+        //exit('TODO defaultinformusers');
 
-        $params = array();
+        $params = array(
+            'userLabel' => "Send a notification to the following default individuals:",
+            'userClass' => 'vacreq-defaultinformusers'
+        );
 
         $form = $this->createForm(
             VacReqGroupManageEmailusersType::class,
@@ -1260,13 +1255,11 @@ class ApproverController extends OrderAbstractController
         );
     }
     /**
-     * @Route("/organizational-institution-defaultinformusers-update/{instid}/{defaultinformusers}", name="vacreq_orginst_defaultinformusers_update", methods={"GET", "POST"}, options={"expose"=true})
+     * @Route("/organizational-institution-defaultinformusers-update/{instid}/{users}", name="vacreq_orginst_defaultinformusers_update", methods={"GET", "POST"}, options={"expose"=true})
      */
-    public function defaultInformUsersUpdateAction(Request $request, $instid, $defaultinformusers)
+    public function defaultInformUsersUpdateAction(Request $request, $instid, $users)
     {
-
-        exit('TODO defaultinformusers');
-
+        //exit('TODO defaultinformusers');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -1281,7 +1274,7 @@ class ApproverController extends OrderAbstractController
             $entity = new VacReqSettings($institution);
         }
 
-        $res = $this->vacreqUtil->settingsAddRemoveUsers( $entity, $users );
+        $res = $this->vacreqUtil->settingsAddRemoveDefaultInformUsers($entity,$users);
 
         if( $res ) {
 
@@ -1292,11 +1285,18 @@ class ApproverController extends OrderAbstractController
             $em->flush();
 
             //Event Log
-            $event = "Email users has been updated for Business/Vacation Group " . $institution .
+            $event = "Default inform users has been updated for Business/Vacation Group " . $institution .
                 "; Original email users=".implode(", ",$originalUsers).
                 "; New email users=".implode(", ",$newUsers);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Updated');
+            $userSecUtil->createUserEditEvent(
+                $this->getParameter('vacreq.sitename'),
+                $event,
+                $user,
+                $institution,
+                $request,
+                'Business/Vacation Group Updated' //replace 'Business/Vacation' by 'Time Away'
+            );
 
             //Flash
             $this->addFlash(
@@ -1311,7 +1311,7 @@ class ApproverController extends OrderAbstractController
 
 
     /**
-     * OLD
+     * OLD TO DELETE
      *
      * @Route("/organizational-institution-approval-group-type/{instid}", name="vacreq_orginst_approval_group_type", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Approver/approval-group-type.html.twig")
@@ -1359,7 +1359,7 @@ class ApproverController extends OrderAbstractController
         );
     }
     /**
-     * OLD
+     * OLD TO DELETE
      *
      * @Route("/organizational-institution-approval-group-type-update/{instid}/{approvalgrouptypeid}",
      *     name="vacreq_orginst_approval_group_type_update",
