@@ -1558,6 +1558,17 @@ class RequestController extends OrderAbstractController
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );
 
+        //add inform users
+        //$vacreqUtil = $this->container->get('vacreq_util');
+        //dump($organizationalInstitutions);exit('111');
+        $vaqreqInstSettings = $vacreqUtil->getSettingsByInstitution(74);
+        $informUsers = $vaqreqInstSettings->getDefaultInformUsers();
+        $informUsersSelect = array();
+        foreach($informUsers as $informUser) {
+            $informUsersSelect[$informUser.""] = $informUser->getId();
+        }
+        $params['informUsers'] = $informUsersSelect;
+
         $disabled = false;
         $method = 'GET';
 
@@ -1619,6 +1630,7 @@ class RequestController extends OrderAbstractController
             );
             $params['destinationYearRanges'] = $destinationYearRanges;
         }
+
 
         $form = $this->createForm(
             VacReqRequestType::class,

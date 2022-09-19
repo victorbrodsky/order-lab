@@ -157,6 +157,10 @@
             {{ formmacros.field(form.organizationalInstitution) }}
         {% endif %}
 
+        {% if form.informUsers is defined %}
+            {{ formmacros.field(form.informUsers) }}
+        {% endif %}
+
 
         {#Carry Over#}
         {% if entity.getRequestTypeAbbreviation() == "carryover" %}

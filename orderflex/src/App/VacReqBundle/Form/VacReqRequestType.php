@@ -485,6 +485,14 @@ class VacReqRequestType extends AbstractType
                 );
         }//if tentativeInstitutions
 
-    }
+        //informUsers
+        $builder->add('informUsers', ChoiceType::class, array( //flipped
+            'label' => "Send a notification to the following individuals on service:",
+            'required' => false,
+            'choices' => $this->params['informUsers'],
+            'attr' => array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals'),
+        ));
+
+    }//addCommonFields
 
 }
