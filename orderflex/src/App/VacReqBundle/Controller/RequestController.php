@@ -357,7 +357,6 @@ class RequestController extends OrderAbstractController
             'title' => $title,
             'newCarryOverRequest' => $newCarryOverRequest, //function
             'overlappedMessage' => $overlappedMessage, //function
-            //'singleOrgInstitution' => 74
         );
     }
 
@@ -1558,25 +1557,6 @@ class RequestController extends OrderAbstractController
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );
-
-        //add inform users
-        //$vacreqUtil = $this->container->get('vacreq_util');
-        //dump($organizationalInstitutions);exit('111');
-//        $vaqreqInstSettings = $vacreqUtil->getSettingsByInstitution(74);
-//        $informUsers = $vaqreqInstSettings->getDefaultInformUsers();
-//        $informUsersSelect = array();
-//        foreach($informUsers as $informUser) {
-//            $informUsersSelect[$informUser.""] = $informUser->getId();
-//        }
-//        $params['informUsers'] = $informUsersSelect;
-
-//        $singleOrgInstitution = NULL;
-//        if( count($organizationalInstitutions) == 1 ) {
-//            $orgInstIds = array_keys($organizationalInstitutions);
-//            $singleOrgInstitution = $orgInstIds[0];
-//        }
-//        echo "singleOrgInstitution=$singleOrgInstitution <br>";
-//        $params['singleOrgInstitution'] = $singleOrgInstitution;
 
         $disabled = false;
         $method = 'GET';

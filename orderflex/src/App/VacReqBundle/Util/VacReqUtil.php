@@ -264,16 +264,19 @@ class VacReqUtil
         //echo '$institutionId='.$institutionId;
         //return array();
         $vacreqSettings = $this->getSettingsByInstitution($institutionId);
-        $defaultUsers = $vacreqSettings->getDefaultInformUsers();
-        //echo "defaultUsers=".count($defaultUsers)."<br>";
-        if( $asString ) {
-            $defaultUsersArr = array();
-            foreach($defaultUsers as $defaultUser) {
-                $defaultUsersArr[] = $defaultUser."";
+        if( $vacreqSettings ) {
+            $defaultUsers = $vacreqSettings->getDefaultInformUsers();
+            //echo "defaultUsers=".count($defaultUsers)."<br>";
+            if( $asString ) {
+                $defaultUsersArr = array();
+                foreach($defaultUsers as $defaultUser) {
+                    $defaultUsersArr[] = $defaultUser."";
+                }
+                return implode(", ",$defaultUsersArr);
             }
-            return implode(", ",$defaultUsersArr);
+            return $defaultUsers;
         }
-        return $defaultUsers;
+        return NULL;
     }
 
     //find role approvers by institution
