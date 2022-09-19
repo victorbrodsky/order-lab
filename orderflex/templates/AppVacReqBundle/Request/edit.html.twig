@@ -157,6 +157,20 @@
             {{ formmacros.field(form.organizationalInstitution) }}
         {% endif %}
 
+        {#show static defaultInformUsers#}
+        {#defUsers={{ vacreq_util.showDefaultInformUsers(singleOrgInstitution)|length }}#}
+        {% set singleOrgInstitution = 34 %}
+        {% set defaultInformUsers = vacreq_util.showDefaultInformUsers(singleOrgInstitution,true) %}
+        {#{% if singleOrgInstitution is defined and singleOrgInstitution %}#}
+        {% if defaultInformUsers %}
+            {#<label>Send a notification to the following individuals on service:</label>#}
+                {#<br>#}
+            {#{% for defaultInformUser in vacreq_util.showDefaultInformUsers(singleOrgInstitution) %}#}
+                {#{{ defaultInformUser }}#}
+            {#{% endfor %}#}
+            {#label, value, type, disabled, tooltip, id, shift#}
+            {{ formmacros.simplefield( "Send a notification to the following individuals on service:", defaultInformUsers, "input", "disabled", "", "vacreq-defaultInformUsers" ) }}
+        {% endif %}
         {% if form.informUsers is defined %}
             {{ formmacros.field(form.informUsers) }}
         {% endif %}
@@ -542,6 +556,9 @@
             vacreqRemoveErrorListener();
 
             //vacreqDayWeekListener();
+
+            vacreqSetDefaultInformUsers();
+            vacreqSetDefaultInformUsersListener();
 
         });
 
@@ -1020,6 +1037,45 @@
             $('#vacreq-request-form').submit();
         }
 
+        function vacreqSetDefaultInformUsersListener() {
+            $('.vacreq-institution').on("change", function(e) {
+                vacreqSetDefaultInformUsers();
+//                var holder = $(this).closest('#vacreq-request-form');
+//                var userInstitution = holder.find('.vacreq-institution').select2('data');
+//                if( userInstitution ) {
+//                    var instid = userInstitution.id;
+//                    console.log('instid='+instid);
+//
+//                    //update #vacreq-defaultInformUsers
+//                    var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid,users:users});
+//                    //console.log('updateUserUrl='+updateUserUrl);
+//                    $.get(updateUserUrl, function(data, status){
+//                        lbtn.stop();
+//                        //console.log("Data: " + data + "\nStatus: " + status);
+//                        if( status == "success" ) {
+//                            //reload page
+//                            location.reload();
+//                        }
+//                    });
+//                }
+            });
+        }
+        function vacreqSetDefaultInformUsers() {
+            var holder = $('#vacreq-request-form');
+            var userInstitution = holder.find('.vacreq-institution').select2('data');
+            if( userInstitution ) {
+                var instid = userInstitution.id;
+                console.log('instid='+instid);
+
+                //update #vacreq-defaultInformUsers
+                var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid});
+                //console.log('updateUserUrl='+updateUserUrl);
+                $.get(updateUserUrl, function(data, status){
+                    console.log('data='+data+", status="+status);
+                    $('#vacreq-defaultInformUsers').val(data);
+                });
+            }
+        }
 
     </script>
 {% endblock %}

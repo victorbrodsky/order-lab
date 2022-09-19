@@ -1315,6 +1315,21 @@ class ApproverController extends OrderAbstractController
 
         return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
     }
+    /**
+     * @Route("/organizational-institution-defaultinformusers-ajax/{instid}",
+     *     name="vacreq_orginst_defaultinformusers_ajax",
+     *     methods={"GET", "POST"},
+     *     options={"expose"=true}
+     *     )
+     */
+    public function defaultInformUsersAjaxAction(Request $request, $instid)
+    {
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        $defaultInformUsers = $this->vacreqUtil->showDefaultInformUsers($instid,true);
+        $response->setContent($defaultInformUsers);
+        return $response;
+    }
 
 
     /**
@@ -1568,6 +1583,7 @@ class ApproverController extends OrderAbstractController
         return $response;
         //return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
     }
+
 
 
     //My Group vacreq_mygroup

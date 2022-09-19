@@ -260,6 +260,22 @@ class VacReqUtil
         return $res;
     }
 
+    public function showDefaultInformUsers( $institutionId, $asString=false ) {
+        //echo '$institutionId='.$institutionId;
+        //return array();
+        $vacreqSettings = $this->getSettingsByInstitution($institutionId);
+        $defaultUsers = $vacreqSettings->getDefaultInformUsers();
+        //echo "defaultUsers=".count($defaultUsers)."<br>";
+        if( $asString ) {
+            $defaultUsersArr = array();
+            foreach($defaultUsers as $defaultUser) {
+                $defaultUsersArr[] = $defaultUser."";
+            }
+            return implode(", ",$defaultUsersArr);
+        }
+        return $defaultUsers;
+    }
+
     //find role approvers by institution
     public function getRequestApprovers( $entity, $institutionType="institution", $forceApproverRole=null, $onlyWorking=false ) {
 
