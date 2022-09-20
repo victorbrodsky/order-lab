@@ -345,7 +345,11 @@ class VacReqRequestType extends AbstractType
 
             //readonly if not admin or not roleApprover
             //if roleAdmin or roleApprover => readonly = false :^ !roleAdmin and !roleApprover => readonly = true
-            if( $this->params['roleAdmin'] === false && $this->params['roleApprover'] === false ) {
+            if(
+                $this->params['roleAdmin'] === false &&
+                $this->params['roleApprover'] === false &&
+                $this->params['roleProxySubmitter'] === false
+            ) {
                 $userAttr['readonly'] = true;
             }
 

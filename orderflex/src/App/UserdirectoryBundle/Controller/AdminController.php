@@ -8518,6 +8518,11 @@ class AdminController extends OrderAbstractController
             $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Approve a Floating Day Request","VacReqRequestFloating","changestatus");
         }
 
+        if( strpos((string)$role, "ROLE_VACREQ_PROXYSUBMITTER") !== false ) {
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Proxy Submit a Vacation Request","VacReqRequest","create");
+            $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Proxy Submit a Floating Day Request","VacReqRequestFloating","create");
+        }
+
         return $count;
     }
 

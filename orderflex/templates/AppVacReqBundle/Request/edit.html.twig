@@ -158,7 +158,14 @@
         {% endif %}
 
         {#show static defaultInformUsers#}
-        {{ formmacros.simplefield( "Send a notification to the following individuals on service:", "", "input", "disabled", "", "vacreq-defaultInformUsers" ) }}
+        {{ formmacros.simplefield(
+            "Send a notification to the following default individuals on service:",
+            "",
+            "input",
+            "disabled",
+            "These individuals are set by the administrator of the organizational group", "vacreq-defaultInformUsers"
+            )
+        }}
         {% if form.informUsers is defined %}
             {{ formmacros.field(form.informUsers) }}
         {% endif %}

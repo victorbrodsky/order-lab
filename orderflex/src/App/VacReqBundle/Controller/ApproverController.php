@@ -220,6 +220,19 @@ class ApproverController extends OrderAbstractController
         }
         //echo "submitters=".count($submitters)."<br>";
 
+        //find role proxy submitters by institution
+        $roleProxySubmitter = NULL;
+        $proxySubmitters = array();
+        $roleProxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
+        if( count($roleProxySubmitters) > 0 ) {
+            $roleProxySubmitter = $roleProxySubmitters[0];
+        }
+        //echo "roleSubmitter=".$roleSubmitter."<br>";
+        if( $roleProxySubmitter ) {
+            $proxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
+        }
+        //echo "proxySubmitters=".count($proxySubmitters)."<br>";
+
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         $panelClass = "panel-info";
@@ -239,9 +252,10 @@ class ApproverController extends OrderAbstractController
             'panelClass' => $panelClass,
             'approvers' => $approvers,
             'submitters' => $submitters,
+            'proxySubmitters' => $proxySubmitters,
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitution."",
-            'settings' => $settings
+            'settings' => $settings,
         );
     }
 
@@ -296,6 +310,18 @@ class ApproverController extends OrderAbstractController
             $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
 
+        //find role proxy submitters by institution
+        $proxySubmitters = array();
+        $roleProxySubmitter = NULL;
+        $roleProxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
+        if( count($roleProxySubmitters) > 0 ) {
+            $roleProxySubmitter = $roleProxySubmitters[0];
+        }
+        //echo "roleProxySubmitter=".$roleProxySubmitter."<br>";
+        if( $roleProxySubmitter ) {
+            $proxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
+        }
+
         $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         //get approval group type (Faculty, Fellows)
@@ -312,13 +338,20 @@ class ApproverController extends OrderAbstractController
             $roleSubmitterId = $roleSubmitter->getId();
         }
 
+        $roleProxySubmitterId = null;
+        if( $roleProxySubmitter ) {
+            $roleProxySubmitterId = $roleProxySubmitter->getId();
+        }
+
         //echo "approverRoleId=".$roleApproverId."<br>";
 
         return array(
             'approvers' => $approvers,
             'approverRoleId' => $roleApproverId,
             'submitters' => $submitters,
+            'proxySubmitters' => $proxySubmitters,
             'submitterRoleId' => $roleSubmitterId,
+            'proxySubmitterRoleId' => $roleProxySubmitterId,
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitution."",
             'approvalGroupType' => $approvalGroupType
@@ -825,6 +858,35 @@ class ApproverController extends OrderAbstractController
                 }
             }
 
+            //create submitter role
+            $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
+            $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if( !$submitterRole ) {
+                $submitterRole = new Roles();
+                $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+                $submitterRole->setLevel(35);
+                $submitterRole->setAlias('Vacation Request Proxy Submitter for the ' . $institution->getName());
+                $submitterRole->setDescription('Can search and create vacation requests for specified service on behalf of another person');
+                $submitterRole->addSite($site);
+                $submitterRole->setInstitution($institution);
+                $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+                $em->persist($submitterRole);
+                //$em->flush($submitterRole);
+                $em->flush();
+
+                $count++;
+            } else {
+                $submitterType = $submitterRole->getType();
+                if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                    $submitterRole->setType('default');
+                    $em->persist($submitterRole);
+                    //$em->flush($submitterRole);
+                    $em->flush();
+                    $count++;
+                }
+            }
+
             if( $count > 0 ) {
                 //Event Log
                 //$event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
@@ -882,6 +944,7 @@ class ApproverController extends OrderAbstractController
 
         $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
         $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_PROXYSUBMITTER_",$request);
 
         if( count($removedRoles) > 0 ) {
             //Event Log
@@ -920,6 +983,13 @@ class ApproverController extends OrderAbstractController
 
         //1a) set ROLE_VACREQ_SUBMITTER_ role status disabled
         if( $rolePartialName == "ROLE_VACREQ_SUBMITTER_" ) {
+            foreach ($roles as $thisRole) {
+                $thisRole->setType('disabled');
+            }
+        }
+
+        //1b) set ROLE_VACREQ_PROXYSUBMITTER_ role status disabled
+        if( $rolePartialName == "ROLE_VACREQ_PROXYSUBMITTER_" ) {
             foreach ($roles as $thisRole) {
                 $thisRole->setType('disabled');
             }
@@ -998,7 +1068,7 @@ class ApproverController extends OrderAbstractController
         );
 
         $users = $entity->getEmailUsersStr();
-        echo "emailUsers=".$users."<br>";
+        //echo "emailUsers=".$users."<br>";
 
         $form = $this->createForm(
             VacReqGroupManageEmailusersType::class,
@@ -1236,7 +1306,7 @@ class ApproverController extends OrderAbstractController
 
         //exit('TODO defaultinformusers');
         $users = $entity->getDefaultInformUsersStr();
-        echo "defaultInformUsers=".$users."<br>";
+        //echo "defaultInformUsers=".$users."<br>";
 
         $params = array(
             'userFieldName' => 'defaultInformUsers',
@@ -1353,7 +1423,7 @@ class ApproverController extends OrderAbstractController
 
         //exit('TODO proxysubmitterusers');
         $users = $entity->getProxySubmitterUsersStr();
-        echo "proxySubmitterUsers=".$users."<br>";
+        //echo "proxySubmitterUsers=".$users."<br>";
 
         $params = array(
             'userFieldName' => 'proxySubmitterUsers',
@@ -1882,6 +1952,35 @@ class ApproverController extends OrderAbstractController
             }
         }
 
+        //create submitter role
+        $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
+        $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$submitterRole ) {
+            $submitterRole = new Roles();
+            $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+            $submitterRole->setLevel(35);
+            $submitterRole->setAlias('Vacation Request Proxy Submitter for the ' . $institution->getName());
+            $submitterRole->setDescription('Can search and create vacation requests for specified service on behalf of another person');
+            $submitterRole->addSite($site);
+            $submitterRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+            $em->persist($submitterRole);
+            //$em->flush($submitterRole);
+            $em->flush();
+
+            $count++;
+        } else {
+            $submitterType = $submitterRole->getType();
+            if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                $submitterRole->setType('default');
+                $em->persist($submitterRole);
+                //$em->flush($submitterRole);
+                $em->flush();
+                $count++;
+            }
+        }
+
         if( $count > 0 ) {
             //Event Log
             //$event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
@@ -1898,5 +1997,7 @@ class ApproverController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
+
+    //TODO: Create proxyapprover roles for existing org group
 
 }

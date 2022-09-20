@@ -54,6 +54,19 @@
     <div id="vacreq-organizational-group-{{ organizationalGroupId }}" class="panel-collapse collapse in">
         <div class="panel-body">
 
+            {#approval group types#}
+            {% if settings is defined and settings %}
+                <div class="well" align="justify">
+                    <strong>Approval Group Type</strong>
+                    <br>
+                    {% for approvalType in settings.getApprovalTypes %}
+                        {% if approvalType %}
+                            {{ approvalType }}<br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="well" align="justify">
                 <strong>Approver(s)</strong>
                 <br>
@@ -76,8 +89,43 @@
                 {% endfor %}
             </div>
 
-            {#user emails#}
+            <div class="well" align="justify">
+                <strong>Proxy Submitter(s)</strong>
+                <br>
+                {% for proxySubmitter in proxySubmitters %}
+                    <a href="{{ path(vacreq_sitename~'_showuser', { 'id': proxySubmitter.id }) }}">{{ proxySubmitter.getUserNameStr(true) }}</a>
+                    <br>
+                {% endfor %}
+            </div>
+
+            {#Proxy Submitter#}
             {% if settings is defined and settings %}
+                {#<div class="well" align="justify">#}
+                    {#<strong>Proxy Submitter(s)</strong>#}
+                    {#<br>#}
+                    {#{% for proxySubmitterUser in settings.getProxySubmitterUsers %}#}
+                        {#<a href="{{ path(vacreq_sitename~'_showuser', { 'id': proxySubmitterUser.id }) }}">{{ proxySubmitterUser.getUserNameStr(true) }}</a>#}
+                        {#<br>#}
+                        {#{% set singleEmail = user.getSingleEmail %}#}
+                        {#{% if singleEmail %}#}
+                            {#<a href="mailto:{{ singleEmail }}" target="_top">{{ user.getDisplayName() }} {{ singleEmail }}</a><br>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+                {#</div>#}
+
+                <div class="well" align="justify">
+                    <strong>Default Individuals to Inform</strong>
+                    <br>
+                    {% for defaultInformUser in settings.getDefaultInformUsers %}
+                        <a href="{{ path(vacreq_sitename~'_showuser', { 'id': defaultInformUser.id }) }}">{{ defaultInformUser.getUserNameStr(true) }}</a>
+                        <br>
+                        {#{% set singleEmail = user.getSingleEmail %}#}
+                        {#{% if singleEmail %}#}
+                            {#<a href="mailto:{{ singleEmail }}" target="_top">{{ user.getDisplayName() }} {{ singleEmail }}</a><br>#}
+                        {#{% endif %}#}
+                    {% endfor %}
+                </div>
+
                 <div class="well" align="justify">
                     <strong>Confirmation Emails(s)</strong>
                     <br>

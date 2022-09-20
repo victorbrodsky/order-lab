@@ -1396,6 +1396,11 @@ class RequestController extends OrderAbstractController
             $roleApprover = true;
         }
 
+        $roleProxySubmitter = false;
+        if( $this->isGranted("ROLE_VACREQ_PROXYSUBMITTER", $entity) ) {
+            $roleProxySubmitter = true;
+        }
+
         $requestType = $entity->getRequestType();
 
         //get submitter groups: VacReqRequest, create
@@ -1548,6 +1553,7 @@ class RequestController extends OrderAbstractController
             'cycle' => $cycle,
             'roleAdmin' => $admin,
             'roleApprover' => $roleApprover,
+            'roleProxySubmitter' => $roleProxySubmitter,
             'roleCarryOverApprover' => $roleCarryOverApprover,
             'organizationalInstitutions' => $userServiceUtil->flipArrayLabelValue($organizationalInstitutions),
             'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
