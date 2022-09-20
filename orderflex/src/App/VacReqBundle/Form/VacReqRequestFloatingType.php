@@ -109,17 +109,18 @@ class VacReqRequestFloatingType extends AbstractType
         }
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
-            $userAttr = array('class' => 'combobox combobox-width');
-            if( $this->params['review'] ) {
-                $userAttr['readonly'] = true;
-            }
+            //$userAttr = array('class' => 'combobox combobox-width');
+            //if( $this->params['review'] ) {
+            //    $userAttr['readonly'] = true;
+            //}
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
                 //'choice_label' => 'name',
-                'attr' => $userAttr,    //array('class' => 'combobox combobox-width'),
+                //'attr' => $userAttr,    //array('class' => 'combobox combobox-width'),
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true),
                 //'disabled' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
@@ -132,6 +133,10 @@ class VacReqRequestFloatingType extends AbstractType
                 },
             ));
 
+            $userAttr = array('class' => 'combobox combobox-width');
+            if( $this->params['review'] ) {
+                $userAttr['readonly'] = true;
+            }
             $builder->add('user', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:User',
                 'label' => "Person Away:",

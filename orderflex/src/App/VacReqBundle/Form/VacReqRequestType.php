@@ -186,11 +186,11 @@ class VacReqRequestType extends AbstractType
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
 
-            //enabled ($readOnly = false) for admin only
-            $readOnly = true;
-            if( $this->params['roleAdmin'] ) {
-                $readOnly = false;
-            }
+//            //enabled ($readOnly = false) for admin only
+//            $readOnly = true;
+//            if( $this->params['roleAdmin'] ) {
+//                $readOnly = false;
+//            }
 
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:User',

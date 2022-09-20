@@ -48,6 +48,7 @@ class CalendarController extends OrderAbstractController
         if(
             false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
             false == $this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
             false == $this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {

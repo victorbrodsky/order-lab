@@ -54,6 +54,7 @@ class RequestController extends OrderAbstractController
 
         if( $this->isGranted('ROLE_VACREQ_OBSERVER') &&
             !$this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            !$this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             !$this->isGranted('ROLE_VACREQ_APPROVER') &&
             !$this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {

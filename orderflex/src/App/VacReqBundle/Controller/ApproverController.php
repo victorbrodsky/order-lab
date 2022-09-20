@@ -185,17 +185,20 @@ class ApproverController extends OrderAbstractController
 
         if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+            false == $this->isGranted('ROLE_VACREQ_ADMIN') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
         //echo " => institutionId=".$institutionId."<br>";
         $em = $this->getDoctrine()->getManager();
-
-        //vacreq_util
-        //$vacreqUtil = $this->container->get('vacreq_util');
         $vacreqUtil = $this->vacreqUtil;
+
+        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //echo "organizationalGroupInstitution=$organizationalGroupInstitution <br>";
+        //Create proxyapprover and other new roles for existing org group
+        $vacreqUtil->checkAndCreateVacReqRoles($organizationalGroupInstitution, $request);
 
         //$onlyWorking = true;
         $onlyWorking = false;
@@ -232,8 +235,6 @@ class ApproverController extends OrderAbstractController
             $proxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "proxySubmitters=".count($proxySubmitters)."<br>";
-
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
 
         $panelClass = "panel-info";
         $approvalGroupTypeStr = ""; //"None";
@@ -1666,6 +1667,7 @@ class ApproverController extends OrderAbstractController
 
         if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             false == $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -1760,6 +1762,7 @@ class ApproverController extends OrderAbstractController
 
         if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             false == $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -1998,6 +2001,6 @@ class ApproverController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
-    //TODO: Create proxyapprover roles for existing org group
+
 
 }

@@ -37,7 +37,7 @@
     {#<br>#}
 
     {% for organizationalInstitution in organizationalInstitutions %}
-
+        {#organizationalInstitutionId={{ organizationalInstitution.id }}#}
         <p>
             {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::organizationalInstitutionAction', { 'institutionId': organizationalInstitution.id })) }}
         </p>

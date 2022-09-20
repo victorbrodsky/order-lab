@@ -17,6 +17,7 @@
 
 namespace App\VacReqBundle\Util;
 
+use App\UserdirectoryBundle\Entity\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
@@ -386,6 +387,158 @@ class VacReqUtil
         }
 
         return $users;
+    }
+
+    //Create new role for org institution if role does not exists
+    public function checkAndCreateVacReqRoles( $institution, $request=null ) {
+        $testing = false;
+        //$testing = true;
+
+        $user = $this->security->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $site = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+
+        $count = 0;
+        $addedRoles = array();
+
+        //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
+        $roleNameBase = str_replace(" ","",$institution->getName());
+        $roleNameBase = strtoupper($roleNameBase);
+
+        if( $institution->getName() == "Executive Committee" ) {
+            $roleNameBase = "EXECUTIVE";
+        }
+        if( $institution->getName() == "Laboratory Medicine" ) {
+            $roleNameBase = "CLINICALPATHOLOGY";
+        }
+        if( $institution->getName() == "Cell and Cancer Pathobiology" ) {
+            $roleNameBase = "EXPERIMENTALPATHOLOGY";
+        }
+        if( $institution->getName() == "Anatomic Pathology" ) {
+            $roleNameBase = "SURGICALPATHOLOGY";
+        }
+
+        //create approver role
+        $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
+        $approverRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$approverRole ) {
+            $approverRole = new Roles();
+            $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
+            $approverRole->setLevel(50);
+            $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+            $approverRole->setDescription('Can search and approve vacation requests for specified service');
+            $approverRole->addSite($site);
+            $approverRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
+
+            if( $testing === false ) {
+                $this->em->persist($approverRole);
+                $this->em->flush();
+            }
+
+            $addedRoles[] = $roleName;
+            $count++;
+        } else {
+            $approverType = $approverRole->getType();
+            if( $approverType != 'default' && $approverType != 'user-added' ) {
+                $approverRole->setType('default');
+                if( $testing === false ) {
+                    $this->em->persist($approverRole);
+                    $this->em->flush();
+                }
+                $count++;
+            }
+        }
+
+        //create submitter role
+        $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
+        $submitterRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$submitterRole ) {
+            $submitterRole = new Roles();
+            $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+            $submitterRole->setLevel(30);
+            $submitterRole->setAlias('Vacation Request Submitter for the ' . $institution->getName());
+            $submitterRole->setDescription('Can search and create vacation requests for specified service');
+            $submitterRole->addSite($site);
+            $submitterRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+            if( $testing === false ) {
+                $this->em->persist($submitterRole);
+                $this->em->flush();
+            }
+
+            $addedRoles[] = $roleName;
+            $count++;
+        } else {
+            $submitterType = $submitterRole->getType();
+            if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                $submitterRole->setType('default');
+                if( $testing === false ) {
+                    $this->em->persist($submitterRole);
+                    $this->em->flush();
+                }
+                $count++;
+            }
+        }
+
+        //create submitter role
+        $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
+        $submitterRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        if( !$submitterRole ) {
+            $submitterRole = new Roles();
+            $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+            $submitterRole->setLevel(35);
+            $submitterRole->setAlias('Vacation Request Proxy Submitter for the ' . $institution->getName());
+            $submitterRole->setDescription('Can search and create vacation requests for specified service on behalf of another person');
+            $submitterRole->addSite($site);
+            $submitterRole->setInstitution($institution);
+            $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+            if( $testing === false ) {
+                $this->em->persist($submitterRole);
+                $this->em->flush();
+            }
+
+            $addedRoles[] = $roleName;
+            $count++;
+        } else {
+            $submitterType = $submitterRole->getType();
+            if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                $submitterRole->setType('default');
+                if( $testing === false ) {
+                    $this->em->persist($submitterRole);
+                    $this->em->flush();
+                }
+                $count++;
+            }
+        }
+
+        //echo "count=$count <br>";
+        if( $count > 0 ) {
+            //Event Log
+            //$event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+            $event = "New roles ".implode(", ",$addedRoles)." for Business/Vacation Group ".$institution->getName()." have been created.";
+            $userSecUtil = $this->container->get('user_security_utility');
+
+            if( $testing === false ) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+            }
+
+            //Flash
+            //echo "event=$event <br>";
+            if( $request ) {
+                $session = $request->getSession();
+                if ($session) {
+                    $session->getFlashBag()->add(
+                        'notice',
+                        $event
+                    );
+                }
+            }
+        }
+
+        return $addedRoles;
     }
 
 
