@@ -96,6 +96,10 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             return true;
         }
 
+        if( $this->isSubmitter($subject, $token) ) {
+            return true;
+        }
+
         //author can view
         if( $this->isAuthor($subject, $token) ) {
             //echo "canView: author can view <br><br>";
@@ -116,8 +120,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         }
 
         //author can not edit?
-        if( $this->isAuthor($subject, $token) ) {
+        if( $this->isAuthor($subject, $token) || $this->isSubmitter($subject, $token) ) {
             //echo "author can not edit? <br>";
+            //echo "OverallStatus=".$subject->getOverallStatus()."<br>";
 
             //status == pending/canceled => can edit
             if( $subject->getOverallStatus() === 'pending' || $subject->getOverallStatus() === 'canceled' ) {
@@ -220,6 +225,27 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
 //                return false;
 //            }
         }
+        return false;
+    }
+
+    protected function isSubmitter( $subject, TokenInterface $token ) : bool
+    {
+        $user = $token->getUser();
+        if( !$user instanceof User ) {
+            return false;
+        }
+
+        if( is_object($subject) ) {
+            if( method_exists($subject,'getSubmitter') ) {
+                if( $subject->getSubmitter()->getId() == $user->getId() ) {
+                    return true;
+                }
+            }
+
+        } else {
+            //echo "isSubmitter: subject is not object<br>";
+        }
+
         return false;
     }
 

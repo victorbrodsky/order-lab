@@ -516,7 +516,7 @@
     {% endif %}
 
     {#{% if cycle == "show" and statusPending %}#}
-    {% if cycle == "show" %}
+    {% if cycle == "show" and is_granted("update",entity) %}
         <p>
             <a class="btn btn_margin_top btn-primary" href="{{ path(vacreq_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>

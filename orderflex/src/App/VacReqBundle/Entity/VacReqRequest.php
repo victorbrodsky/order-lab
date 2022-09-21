@@ -967,7 +967,7 @@ class VacReqRequest
         return false;
     }
 
-    //return pending or complete
+    //return pending, canceled or complete
     public function getOverallStatus() {
 
         $requestType = $this->getRequestType();
@@ -997,6 +997,17 @@ class VacReqRequest
         }
         if( $statusB == 'pending' && $statusV == null ) {
             return 'pending';
+        }
+
+        //canceled
+        if( $statusB == 'canceled' && $statusV == 'canceled' ) {
+            return 'canceled';
+        }
+        if( $statusB == null && $statusV == 'canceled' ) {
+            return 'canceled';
+        }
+        if( $statusB == 'canceled' && $statusV == null ) {
+            return 'canceled';
         }
 
         return 'completed';

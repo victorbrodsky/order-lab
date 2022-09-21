@@ -386,6 +386,7 @@ class RequestController extends OrderAbstractController
 
         if( false == $this->isGranted("read", $entity) ) {
             //exit('show: no permission');
+            //TODO: fix it for proxy submitter
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
         //exit('show: ok permission');
@@ -828,7 +829,8 @@ class RequestController extends OrderAbstractController
      * @Route("/estatus/{id}/{requestName}/{status}", name="vacreq_status_email_change", methods={"GET"})
      * @Template("AppVacReqBundle/Request/edit.html.twig")
      */
-    public function statusAction(Request $request, $id, $requestName, $status) {
+    public function statusAction(Request $request, $id, $requestName, $status)
+    {
 
         //if( false == $this->isGranted('ROLE_VACREQ_APPROVER') ) {
         //    return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -842,8 +844,8 @@ class RequestController extends OrderAbstractController
 
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
-        if( !$entity ) {
-            throw $this->createNotFoundException('Unable to find Request by id='.$id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Request by id=' . $id);
         }
 
         //check permissions
@@ -862,12 +864,35 @@ class RequestController extends OrderAbstractController
         $originalStatus = $entity->getStatus();
 
         /////////////// log status ////////////////////////
-        $logger->notice("RequestController statusAction: ".$entity->getId()." (".$routeName.")".": status=".$status."; set by user=".$user);
+        $logger->notice("RequestController statusAction: " . $entity->getId() . " (" . $routeName . ")" . ": status=" . $status . "; set by user=" . $user);
         /////////////// EOF log status ////////////////////////
+
+//        if( $this->isGranted("update", $entity) ) {
+//            exit($entity->getId().": can update OK");
+//        }
+//        exit($entity->getId().": can not update");
 
         if( $this->isGranted("changestatus", $entity) ) {
             //Approvers can change status to anything
-        } elseif( $this->isGranted("update", $entity) ) {
+        }
+//        elseif( $this->isGranted("read", $entity) )
+//        {
+//            //viewers (submitter, person away) can only set status to: canceled, pending
+//            if( $status != "canceled" && $status != "pending" ) {
+//                //Flash
+//                $this->addFlash(
+//                    'warning',
+//                    "You can not change status of this ".$entity->getRequestName()." with ID #".$entity->getId()." to ".$status
+//                );
+//                $logger->error($user." has no permission to change status to ".
+//                    $status." for request ID #".$entity->getId().
+//                    ". Reason: status can be changed only to pending or canceled");
+//                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+//
+//        }
+        elseif( $this->isGranted("update", $entity) )
+        {
+            //exit("can update OK");
             //Owner can only set status to: canceled, pending
             if( $status != "canceled" && $status != "pending" ) {
                 //Flash
@@ -1113,7 +1138,10 @@ class RequestController extends OrderAbstractController
         }
 
         //redirect to myrequests for owner
-        if( $entity->getUser()->getId() == $user->getId() ) {
+        if(
+            $entity->getUser()->getId() == $user->getId() ||
+            $entity->getSubmitter()->getId() == $user->getId()
+        ) {
             return $this->redirectToRoute("vacreq_myrequests",array('filter[requestType]'=>$entity->getRequestType()->getId()));
         }
 
@@ -1249,7 +1277,6 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser();
-
         $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
 
         if (!$entity) {
