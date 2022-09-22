@@ -221,6 +221,17 @@ class RequestController extends OrderAbstractController
                 $entity->setTentativeStatus(NULL);
             }
 
+            //TODO: add default inform users to informUsers: $entity->addInformUser($informUser);
+            $orgInstitution = $entity->getInstitution();
+            if( $orgInstitution ) {
+                $vacreqSettings = $vacreqUtil->getSettingsByInstitution($orgInstitution->getId());
+                foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+                    $entity->addInformUser($defaultInformUser);
+                }
+            } else {
+                throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
+            }
+
             //testing
             //echo "sourceYear=".$entity->getSourceYear()."<br>";
             //exit('1');

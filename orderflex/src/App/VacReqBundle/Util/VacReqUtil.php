@@ -3801,6 +3801,16 @@ class VacReqUtil
 
             }
 
+            //send email to the individuals to inform (VacReqSettings->defaultInformUsers) + additional inform users on request
+            //$entity->getInformUsers()
+            foreach( $entity->getInformUsers() as $informUser ) {
+                //echo "informUser=".$informUser."<br>";
+                $informUserEmail = $informUser->getSingleEmail();
+                if ($informUserEmail) {
+                    $emailUserEmailArr[] = $informUserEmail;
+                }
+            }
+
             //Add approvers for a notification email for carry over request (if copy user is not in $approverEmailArr)
             if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
                 //echo "getting carry over request approvers<br>";
