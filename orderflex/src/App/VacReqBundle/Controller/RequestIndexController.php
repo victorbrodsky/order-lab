@@ -127,6 +127,9 @@ class RequestIndexController extends OrderAbstractController
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
         //echo "approver=".$approver."<br>";s
 
+        $forceShowAllRows = true;
+        $forceShowAllRows = false;
+
         $routeName = $request->get('_route');
 
         $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
@@ -407,6 +410,7 @@ class RequestIndexController extends OrderAbstractController
             'sitename' => $sitename,
             'filtered' => $filtered,
             'routename' => $routeName,
+            //'forceShowAllRows' => $forceShowAllRows,
             'title' => $indexTitle,
             'pageTitle' => $pageTitle,
             'requestTypeAbbreviation' => $requestTypeAbbreviation,

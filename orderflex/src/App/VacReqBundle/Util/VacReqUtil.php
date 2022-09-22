@@ -3802,7 +3802,6 @@ class VacReqUtil
             }
 
             //send email to the individuals to inform (VacReqSettings->defaultInformUsers) + additional inform users on request
-            //$entity->getInformUsers()
             foreach( $entity->getInformUsers() as $informUser ) {
                 //echo "informUser=".$informUser."<br>";
                 $informUserEmail = $informUser->getSingleEmail();
@@ -3832,7 +3831,6 @@ class VacReqUtil
 
             //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
             if (count($emailUserEmailArr) > 0) {
-                //print_r($emailUserEmailArr);
                 $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users and supervisors=" . implode("; ", $emailUserEmailArr) . "; subject=" . $subject . "; message=" . $message);
                 $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
             }
@@ -3851,10 +3849,27 @@ class VacReqUtil
             $approversNameStr = " None (No Approvers found for $institution)";
         }
 
+        if( count($emailUserEmailArr) > 0 ) {
+            $approversNameStr = $approversNameStr . ";<br> Copy sent to ".implode(", ",$emailUserEmailArr);
+        }
+
         return $approversNameStr;
     }
 
-
+    //add default inform users to informUsers: $entity->addInformUser();
+    public function setInformUsers( $vacreqRequest ) {
+        $orgInstitution = $vacreqRequest->getInstitution();
+        if( $orgInstitution ) {
+            $vacreqSettings = $this->getSettingsByInstitution($orgInstitution->getId());
+            foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+                $vacreqRequest->addInformUser($defaultInformUser);
+            }
+        } else {
+            throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$vacreqRequest);
+        }
+        //echo "count=".count($vacreqRequest->getInformUsers())."<br>";
+        //exit('eof setInformUsers');
+    }
 
     //User log should record all changes in user: subjectUser, Author, field, old value, new value.
     public function setEventLogChanges($request) {

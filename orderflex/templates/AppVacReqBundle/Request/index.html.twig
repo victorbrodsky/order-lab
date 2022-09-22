@@ -48,14 +48,18 @@
     </h4>
 
 
+    {% if forceShowAllRows is not defined %}
+        {% set forceShowAllRows = false %}
+    {% endif %}
+
     {#filter form#}
-    {% if routename == 'vacreq_incomingrequests' %}
+    {% if routename == 'vacreq_incomingrequests' or forceShowAllRows %}
         {{ vacreqmacros.incomingRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
     {% else %}
         {{ vacreqmacros.myRequestsFilter( vacreqfilter, routename, requestTypeAbbreviation ) }}
     {% endif %}
 
-    {% if routename == 'vacreq_incomingrequests' %}
+    {% if routename == 'vacreq_incomingrequests' or forceShowAllRows %}
         {#incoming-requests#}
         {% if requestTypeAbbreviation == 'carryover' %}
             {% set colspanRequestInfo = 6 %}

@@ -526,7 +526,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $flatArray = $this->flatten($flatArray,$this);
         return $flatArray;
     }
-    function flatten($flatArray=array(),$element)
+    function flatten($flatArray,$element)
     {
         $flatArray[] = $element->getName();
         //$flatArray = array();

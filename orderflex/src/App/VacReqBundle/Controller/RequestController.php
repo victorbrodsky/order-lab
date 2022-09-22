@@ -221,16 +221,18 @@ class RequestController extends OrderAbstractController
                 $entity->setTentativeStatus(NULL);
             }
 
-            //TODO: add default inform users to informUsers: $entity->addInformUser($informUser);
-            $orgInstitution = $entity->getInstitution();
-            if( $orgInstitution ) {
-                $vacreqSettings = $vacreqUtil->getSettingsByInstitution($orgInstitution->getId());
-                foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
-                    $entity->addInformUser($defaultInformUser);
-                }
-            } else {
-                throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
-            }
+            ///////////// TODO: add default inform users to informUsers: $entity->addInformUser(); /////////////
+//            $orgInstitution = $entity->getInstitution();
+//            if( $orgInstitution ) {
+//                $vacreqSettings = $vacreqUtil->getSettingsByInstitution($orgInstitution->getId());
+//                foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+//                    $entity->addInformUser($defaultInformUser);
+//                }
+//            } else {
+//                throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
+//            }
+            $vacreqUtil->setInformUsers($entity);
+            ///////////// EOF add default inform users to informUsers: $entity->addInformUser(); /////////////
 
             //testing
             //echo "sourceYear=".$entity->getSourceYear()."<br>";
@@ -736,6 +738,22 @@ class RequestController extends OrderAbstractController
                     //$em->persist($entity->getRequestVacation());
                 }
                 //exit('1');
+
+                ///////////// TODO: add default inform users to informUsers: $entity->addInformUser(); /////////////
+//                $orgInstitution = $entity->getInstitution();
+//                if( $orgInstitution ) {
+//                    $vacreqSettings = $vacreqUtil->getSettingsByInstitution($orgInstitution->getId());
+//                    foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+//                        $entity->addInformUser($defaultInformUser);
+//                    }
+//                } else {
+//                    throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
+//                }
+                //echo "1count=".count($entity->getInformUsers())."<br>";
+                $vacreqUtil->setInformUsers($entity);
+                //echo "2count=".count($entity->getInformUsers())."<br>";
+                    //exit('111');
+                ///////////// EOF add default inform users to informUsers: $entity->addInformUser(); /////////////
 
                 /////////////// Add event log on edit (edit or add collection) ///////////////
                 /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
