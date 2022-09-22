@@ -1203,9 +1203,12 @@ class RequestController extends OrderAbstractController
         //check permissions
         if(
             false == $this->isGranted("update", $entity) &&
-            $entity->getUser()->getId() != $user->getId() //author can request cancellation
+            (
+                $entity->getUser()->getId() != $user->getId() &&
+                $entity->getSubmitter()->getId() != $user->getId()
+            )//author can request cancellation
         ) {
-            //exit("No permission");
+            //exit("No permission: update");
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
