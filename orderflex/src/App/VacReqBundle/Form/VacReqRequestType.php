@@ -490,18 +490,16 @@ class VacReqRequestType extends AbstractType
         }//if tentativeInstitutions
 
         //informUsers
-//        $builder->add('informUsers', ChoiceType::class, array( //flipped
-//            'label' => "Send a notification to the following individuals on service:",
-//            'required' => false,
-//            'choices' => $this->params['informUsers'],
-//            'attr' => array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals'),
-//        ));
+        $informUsersAttr = array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals');
+        if( $this->params['review'] ) {
+            $informUsersAttr['readonly'] = true;
+        }
         $builder->add('informUsers', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
             'label' => "Send notifications about this request to the following individuals as well:", //"Send a notification to the following individuals on service:",
             'required' => false,
             'multiple' => true,
-            'attr' => array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals'),
+            'attr' => $informUsersAttr, //array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('user')
                     ->leftJoin("user.infos","infos")

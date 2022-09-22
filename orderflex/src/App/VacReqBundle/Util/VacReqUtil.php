@@ -3802,7 +3802,8 @@ class VacReqUtil
             }
 
             //send email to the individuals to inform (VacReqSettings->defaultInformUsers) + additional inform users on request
-            foreach( $entity->getInformUsers() as $informUser ) {
+            $informUsers = $this->getAllInformUsers($entity);
+            foreach( $informUsers as $informUser ) {
                 //echo "informUser=".$informUser."<br>";
                 $informUserEmail = $informUser->getSingleEmail();
                 if ($informUserEmail) {
@@ -3856,19 +3857,31 @@ class VacReqUtil
         return $approversNameStr;
     }
 
-    //add default inform users to informUsers: $entity->addInformUser();
-    public function setInformUsers( $vacreqRequest ) {
+    //get inform and default users
+    public function getAllInformUsers( $vacreqRequest ) {
+        $informUsers = array();
+        //1) get informUsers from $vacreqRequest->getInformUsers();
+        foreach( $vacreqRequest->getInformUsers() as $informUser ) {
+            if( !in_array($informUser, $informUsers) ) {
+                $informUsers[] = $informUser;
+            }
+        }
+        //2) get default inform users
         $orgInstitution = $vacreqRequest->getInstitution();
         if( $orgInstitution ) {
             $vacreqSettings = $this->getSettingsByInstitution($orgInstitution->getId());
             foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
-                $vacreqRequest->addInformUser($defaultInformUser);
+                if( !in_array($defaultInformUser, $informUsers) ) {
+                    $informUsers[] = $defaultInformUser;
+                }
             }
-        } else {
-            throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$vacreqRequest);
         }
+//        else {
+//            throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$vacreqRequest);
+//        }
         //echo "count=".count($vacreqRequest->getInformUsers())."<br>";
         //exit('eof setInformUsers');
+        return $informUsers;
     }
 
     //User log should record all changes in user: subjectUser, Author, field, old value, new value.

@@ -231,7 +231,7 @@ class RequestController extends OrderAbstractController
 //            } else {
 //                throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
 //            }
-            $vacreqUtil->setInformUsers($entity);
+            //$vacreqUtil->setInformUsers($entity);
             ///////////// EOF add default inform users to informUsers: $entity->addInformUser(); /////////////
 
             //testing
@@ -750,7 +750,7 @@ class RequestController extends OrderAbstractController
 //                    throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$entity);
 //                }
                 //echo "1count=".count($entity->getInformUsers())."<br>";
-                $vacreqUtil->setInformUsers($entity);
+                //$vacreqUtil->setInformUsers($entity);
                 //echo "2count=".count($entity->getInformUsers())."<br>";
                     //exit('111');
                 ///////////// EOF add default inform users to informUsers: $entity->addInformUser(); /////////////
