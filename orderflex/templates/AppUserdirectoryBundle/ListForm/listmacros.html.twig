@@ -1318,6 +1318,27 @@
         {{ formmacros.field(form.charts) }}
     {% endif %}
 
+    {#VacReqApprovalTypeList#}
+    {% if form.vacationAccruedDaysPerMonth is defined %}
+        {{ formmacros.field(form.vacationAccruedDaysPerMonth) }}
+    {% endif %}
+    {% if form.maxVacationDays is defined %}
+        {{ formmacros.field(form.maxVacationDays) }}
+    {% endif %}
+    {% if form.maxCarryOverVacationDays is defined %}
+        {{ formmacros.field(form.maxCarryOverVacationDays) }}
+    {% endif %}
+    {% if form.noteForVacationDays is defined %}
+        {{ formmacros.field(form.noteForVacationDays) }}
+    {% endif %}
+    {% if form.noteForCarryOverDays is defined %}
+        {{ formmacros.field(form.noteForCarryOverDays) }}
+    {% endif %}
+    {% if form.allowCarryOver is defined %}
+        {{ formmacros.field(form.allowCarryOver) }}
+    {% endif %}
+
+
 {% endmacro %}
 
 {#permissionList attributes#}

@@ -23,6 +23,7 @@ use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
+use App\VacReqBundle\Entity\VacReqApprovalTypeList;
 use Doctrine\ORM\EntityRepository;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
@@ -1480,6 +1481,44 @@ class GenericListType extends AbstractType
             $this->commonChartFields($builder);
         } //if TopicList
 
+        if( $this->params['entity'] instanceof VacReqApprovalTypeList ) {
+            //vacationAccruedDaysPerMonth
+            $builder->add('vacationAccruedDaysPerMonth',null,array(
+                'label' => "Vacation days accrued per month (i.e. faculty = 2, fellows = 1.666666667):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            //maxVacationDays
+            $builder->add('maxVacationDays',null,array(
+                'label' => "Maximum number vacation days per year (i.e. for faculty 12*2=24):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            //maxCarryOverVacationDays
+            $builder->add('maxCarryOverVacationDays',null,array(
+                'label' => "Maximum number of carry over vacation days per year (i.e. for faculty 10 days):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            //noteForVacationDays
+            $builder->add('noteForVacationDays',null,array(
+                'label' => "Note for vacation days (header on the new time away request page):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            //noteForCarryOverDays
+            $builder->add('noteForCarryOverDays',null,array(
+                'label' => "Note for carry over vacation days (header on the new carry over request page):",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            //allowCarryOver
+            $builder->add('allowCarryOver',null,array(
+                'label' => "Allow to request carry over of unused vacation days to the following year:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }//VacReqApprovalTypeList
 
     }
 

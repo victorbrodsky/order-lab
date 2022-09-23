@@ -1696,7 +1696,7 @@ class ApproverController extends OrderAbstractController
         //echo "groups=".count($groups)."<br>";
 
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $accruedDays = $this->vacreqUtil->getAccruedDaysUpToThisMonth();
+        //$accruedDays = $this->vacreqUtil->getAccruedDaysUpToThisMonth();
 
         //Current Academic Year
 //        $currentYear = new \DateTime();
@@ -1743,7 +1743,7 @@ class ApproverController extends OrderAbstractController
 
         return array(
             'groups' => $groups,
-            'accruedDays' => $accruedDays,
+            //'accruedDays' => $accruedDays,
             'yearRange' => $yearRange,
             //'entity' => $entity,
             'filterform' => $filterform->createView(),
@@ -1770,7 +1770,7 @@ class ApproverController extends OrderAbstractController
 
         //echo "groupId=".$groupId."<br>";
         $em = $this->getDoctrine()->getManager();
-        //$vacreqUtil = $this->container->get('vacreq_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
 
         //find role submitters by institution
         //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
@@ -1791,6 +1791,12 @@ class ApproverController extends OrderAbstractController
 
         $group = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
+        //get accrued days by institution
+        $accruedDays = NULL;
+        if( count($submitters) > 0 ) {
+            $accruedDays = $vacreqUtil->getAccruedDaysUpToThisMonthByInstitution($groupId);
+        }
+        
         $yearRanges = array();
         //Current Academic Year
         //$currentYear = new \DateTime();
@@ -1818,6 +1824,7 @@ class ApproverController extends OrderAbstractController
             'groupId' => $groupId,
             'submitters' => $submitters, //person away
             'groupName' => $group."",
+            'accruedDays' => $accruedDays,
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
             'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays(),

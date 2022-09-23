@@ -4008,7 +4008,7 @@ class VacReqUtil
         return $changeSet;
     }
 
-
+    //Used in header and in my-group page header "2022-2023 Accrued Vacation Days as of today: 4"
     public function getAccruedDaysUpToThisMonth() {
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4017,6 +4017,70 @@ class VacReqUtil
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
 
+        //get start academic date
+        $dates = $this->getCurrentAcademicYearStartEndDates(true);
+        $startAcademicYearDate = $dates['startDate'];
+
+        //get month difference between now and $startAcademicYearDate
+        $nowDate = new \DateTime();
+        $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
+        //$monthCount = $monthCount - 1;
+
+        //echo "monthCount=".$monthCount."<br>";
+        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
+        return $accruedDays;
+    }
+    public function getAccruedDaysUpToThisMonthByInstitution( $instituionId ) {
+        //1) find VacReqSettings by institution
+        //2) VacReqSettings has many approvalTypes (VacReqApprovalTypeList)
+        //use the Display Order to determine the "first" (lower number is better)
+        //3) find vacationAccruedDaysPerMonth from VacReqApprovalTypeList
+
+        //echo "instituionId=$instituionId <br>";
+
+        $params = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
+        $dql->leftJoin("vacreqSettings.institution", "institution");
+
+        $dql->where("institution.id = :institutionId");
+        $params['institutionId'] = $instituionId;
+
+        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
+        
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($params);
+
+        $approverTypes = $query->getResult();
+
+//        foreach($approverTypes as $approverType) {
+//            echo "approverType=$approverType <br>";
+//        }
+
+        $approverType = NULL;
+        if( count($approverTypes) > 0 ) {
+            $approverType = $approverTypes[0];
+        }
+
+        if( !$approverType ) {
+            return 0;
+        }
+
+        $vacationAccruedDaysPerMonth = $approverType->getVacationAccruedDaysPerMonth();
+
+//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+
+        return $this->getAccruedDaysUpToThisMonthByDaysPerMonth($vacationAccruedDaysPerMonth);
+    }
+    public function getAccruedDaysUpToThisMonthByDaysPerMonth( $vacationAccruedDaysPerMonth ) {
         //get start academic date
         $dates = $this->getCurrentAcademicYearStartEndDates(true);
         $startAcademicYearDate = $dates['startDate'];

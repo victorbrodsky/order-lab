@@ -52,6 +52,11 @@
         <div class="panel-body">
 
 {% if submittersExist %}
+
+    {% if accruedDays %}
+        <p>Accrued Vacation Days as of today: {{ accruedDays }}</p>
+    {% endif %}
+
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
     {#{% set trFontSize = "10px" %}#}

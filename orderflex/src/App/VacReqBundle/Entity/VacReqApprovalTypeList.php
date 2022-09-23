@@ -125,7 +125,7 @@ class VacReqApprovalTypeList extends ListAbstract {
     /**
      * Allow to request carry over of unused vacation days to the following year (faculty, fellows)
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $allowCarryOver;
 
