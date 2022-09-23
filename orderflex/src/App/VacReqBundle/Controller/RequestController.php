@@ -342,6 +342,8 @@ class RequestController extends OrderAbstractController
         $carriedOverDaysString = $messages['carriedOverDaysString'];
         $remainingDaysString = $messages['remainingDaysString'];
 
+        $fullMessages = $vacreqUtil->getFullHeaderMessages( $user );
+
         //get $requestTypeCarryOverId
         $carryoverPendingRequestsCount = 0;
         $carryoverPendingRequests = $vacreqUtil->getPendingCarryOverRequests($user);
@@ -364,13 +366,15 @@ class RequestController extends OrderAbstractController
             'accessreqs' => $accessreqsCount,
             'carryoverPendingRequests' => $carryoverPendingRequestsCount,
             'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
+            'title' => $title,
+            'newCarryOverRequest' => $newCarryOverRequest, //function
+            'overlappedMessage' => $overlappedMessage, //function
+            //header strings
             'totalApprovedDaysString' => $totalApprovedDaysString, //function
             'accruedDaysString' => $accruedDaysString, //getHeaderInfoMessages
             'carriedOverDaysString' => $carriedOverDaysString, //getHeaderInfoMessages
             'remainingDaysString' => $remainingDaysString, //getHeaderInfoMessages
-            'title' => $title,
-            'newCarryOverRequest' => $newCarryOverRequest, //function
-            'overlappedMessage' => $overlappedMessage, //function
+            'fullMessages' => $fullMessages
         );
     }
 

@@ -4352,6 +4352,10 @@ class VacReqUtil
 
         return $messages;
     }
+    //get noteForVacationDays and replace [[var]]
+    public function getFullHeaderMessages($user) {
+        return "Test message";
+    }
 
     //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
     // - approved vacation days for this academic year based on the requests
