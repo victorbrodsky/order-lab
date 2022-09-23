@@ -1791,6 +1791,21 @@ class ApproverController extends OrderAbstractController
 
         $group = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
 
+        //$approvalGroupType
+//        $approvalGroupTypeStr = $vacreqUtil->getVacReqApprovalGroupType($group,true);
+//        if( $approvalGroupTypeStr ) {
+//            $approvalGroupTypeStr = " (" . $approvalGroupTypeStr . ")";
+//        }
+        $panelClass = "panel-info";
+        $approvalGroupTypeStr = ""; //"None";
+        $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($group);
+        if( $approvalGroupType ) {
+            if( $approvalGroupType->getName() != "Faculty" ) {
+                $panelClass = "panel-success";
+            }
+            $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
+        }
+
         //get accrued days by institution
         $accruedDays = NULL;
         if( count($submitters) > 0 ) {
@@ -1825,6 +1840,8 @@ class ApproverController extends OrderAbstractController
             'submitters' => $submitters, //person away
             'groupName' => $group."",
             'accruedDays' => $accruedDays,
+            'approvalGroupTypeStr' => $approvalGroupTypeStr,
+            'panelClass' => $panelClass,
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
             'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays(),

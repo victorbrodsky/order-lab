@@ -637,11 +637,6 @@ class VacReqUtil
         if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
 
             $yearRange = $this->getCurrentAcademicYearRange();
-            //$accruedDays = $this->getAccruedDaysUpToThisMonth();
-            //$carriedOverDays = $this->getUserCarryOverDays($entity->getUser(),$entity->getSourceYear());
-            //if( !$carriedOverDays ) {
-            //    $carriedOverDays = 0;
-            //}
 
             //vacation
             $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
@@ -4008,7 +4003,7 @@ class VacReqUtil
         return $changeSet;
     }
 
-    //Used in header and in my-group page header "2022-2023 Accrued Vacation Days as of today: 4"
+    //Used in header
     public function getAccruedDaysUpToThisMonth() {
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4030,6 +4025,7 @@ class VacReqUtil
         $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
         return $accruedDays;
     }
+    //substitute getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq') by VacReqApprovalTypeList
     public function getAccruedDaysUpToThisMonthByInstitution( $instituionId ) {
         //1) find VacReqSettings by institution
         //2) VacReqSettings has many approvalTypes (VacReqApprovalTypeList)
@@ -4070,13 +4066,6 @@ class VacReqUtil
         }
 
         $vacationAccruedDaysPerMonth = $approverType->getVacationAccruedDaysPerMonth();
-
-//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
-//        if( !$vacationAccruedDaysPerMonth ) {
-//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-//        }
 
         return $this->getAccruedDaysUpToThisMonthByDaysPerMonth($vacationAccruedDaysPerMonth);
     }
@@ -4235,6 +4224,9 @@ class VacReqUtil
         return "";
     }
 
+    //TODO: get a full header message based on the noteForVacationDays and noteForCarryOverDays
+    //replace numbers from VacReqApprovalTypeList (accrued days, max days)
+    //Used in new vacation and carryover request new page
     public function getHeaderInfoMessages( $user ) {
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -7010,43 +7002,20 @@ class VacReqUtil
         return NULL;
     }
 
-    public function getVacReqApprovalGroupType( $groupInstitution ) {
+    public function getVacReqApprovalGroupType( $groupInstitution, $asString=false ) {
         if( $groupInstitution ) {
             $settings = $this->getSettingsByInstitution($groupInstitution->getId());
             if( $settings ) {
-                return $settings->getApprovalType();
+                if( $asString ) {
+                    $approvalType = $settings->getApprovalType();
+                    if( $approvalType ) {
+                        return $approvalType->getName();
+                    }
+                } else {
+                    return $settings->getApprovalType();
+                }
             }
         }
-        return NULL;
-        
-        //NOT USED BELOW
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
-        $dql =  $repository->createQueryBuilder("list");
-        $dql->select('list');
-        $dql->leftJoin("list.institutions", "institutions");
-
-        $dql->where("institutions.id = :institutionId");
-        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
-
-        $dql->orderBy("list.orderinlist","ASC");
-
-        $query = $this->em->createQuery($dql);
-
-        $query->setParameters( array(
-            'institutionId' => $groupInstitution->getId(),
-            'typedef' => 'default',
-            'typeadd' => 'user-added'
-        ));
-
-        //echo "query=".$query->getSql()."<br>";
-        //echo "dql=".$dql."<br>";
-
-        $approvalGroupTypes = $query->getResult();
-
-        if( count($approvalGroupTypes) > 0 ) {
-            return $approvalGroupTypes[0];
-        }
-
         return NULL;
     }
 

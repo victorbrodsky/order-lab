@@ -30,16 +30,23 @@
     {% set collapseClass = '' %}
 {% endif %}
 
+{% if approvalGroupTypeStr is not defined %}
+    {% set approvalGroupTypeStr = "" %}
+{% endif %}
+
+{% if panelClass is not defined %}
+    {% set panelClass = "panel-info" %}
+{% endif %}
 
 {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.user,groupId) %}
 {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
 
 <p>
-<div class="panel panel-info">
+<div class="panel {{ panelClass }}">
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" href="#vacreq-my-single-group-{{ groupId }}">
-                {{ groupName }}
+                {{ groupName }} {{ approvalGroupTypeStr }}
             </a>
             {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                 {% if pendingRequests is defined and pendingRequests > 0 %}
