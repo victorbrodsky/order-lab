@@ -55,10 +55,10 @@ def help():
         "-p, --mailerpassword   mailer password\n" \
         "-r, --receivers        comma separated receiver's emails\n" \
         "-s, --sender           sender's emails\n" \
-        "-c, --command          console command to execute if url is not responding\n" \
-        "-U, --urlcommand       run command if url is the same as this urlcommand\n" \
+        "-c, --command          console command to restore the server if url is not responding\n" \
+        "-U, --urlcommand       url of the local server; try to restore the server if the same as current url\n" \
         " \n" \
-        "-e, --env              environment or the source string attached to the notification email\n" \
+        "-e, --env              environment info as a string attached to the notification email\n" \
         "-H, --help             this help"
     )
 
