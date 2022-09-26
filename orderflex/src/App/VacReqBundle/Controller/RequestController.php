@@ -337,12 +337,21 @@ class RequestController extends OrderAbstractController
         //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
 
         //get header messages
-        $messages = $vacreqUtil->getHeaderInfoMessages( $user );
+        //$messages = $vacreqUtil->getHeaderInfoMessages( $user );
+        //$accruedDaysString = $messages['accruedDaysString'];
+        //$carriedOverDaysString = $messages['carriedOverDaysString'];
+        //$remainingDaysString = $messages['remainingDaysString'];
+
+        ///////////// TODO: get new header with parameters from VacReqApprovalTypeList /////////////
+        // (noteForVacationDays, noteForCarryOverDays, accrued days, max days)
+        $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
+        $messages = $vacreqUtil->getHeaderInfoMessages($user, $approvalGroupType);
         $accruedDaysString = $messages['accruedDaysString'];
         $carriedOverDaysString = $messages['carriedOverDaysString'];
         $remainingDaysString = $messages['remainingDaysString'];
-
-        $fullMessages = $vacreqUtil->getFullHeaderMessages( $user );
+        $noteForVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForVacationDays",$user,$approvalGroupType);
+        $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
+        ///////////// EOF get new header with parameters from VacReqApprovalTypeList /////////////
 
         //get $requestTypeCarryOverId
         $carryoverPendingRequestsCount = 0;
@@ -367,14 +376,19 @@ class RequestController extends OrderAbstractController
             'carryoverPendingRequests' => $carryoverPendingRequestsCount,
             'requestTypeCarryOverId' => $requestTypeCarryOverId, //function
             'title' => $title,
-            'newCarryOverRequest' => $newCarryOverRequest, //function
             'overlappedMessage' => $overlappedMessage, //function
-            //header strings
+            //Get header's note from VacReqApprovalTypeList
+            'noteForVacationDays' => $noteForVacationDays,
+            'noteForCarryOverDays' => $noteForCarryOverDays,
+            //First header - vacation infor + carry over
             'totalApprovedDaysString' => $totalApprovedDaysString, //function
+            //header
             'accruedDaysString' => $accruedDaysString, //getHeaderInfoMessages
             'carriedOverDaysString' => $carriedOverDaysString, //getHeaderInfoMessages
             'remainingDaysString' => $remainingDaysString, //getHeaderInfoMessages
-            'fullMessages' => $fullMessages
+            //Second header - only carry over
+            'newCarryOverRequest' => $newCarryOverRequest, //function
+
         );
     }
 

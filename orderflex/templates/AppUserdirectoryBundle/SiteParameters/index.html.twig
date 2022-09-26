@@ -256,8 +256,8 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'externalMonitorUrl'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Independent from using Symfony, PHP, Postgresql
-                    script to monitor if url on this server is running:
+                <td>Monitor independent of Symfony, PHP, Postgresql
+                    script to monitor if url on this server is running (help: webmonitor.py -H):
                     <br>python3 path/to/webmonitor.py -l 'url1,url2...'
                     <br>-h mailerhost -o mailerport -u mailerusername -p mailerpassword
                     <br>-s 'sender email' -r 'receiver email1, email2 ...'

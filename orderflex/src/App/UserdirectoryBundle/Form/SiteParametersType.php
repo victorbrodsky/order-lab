@@ -1168,8 +1168,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'monitorScript' ) {
             $builder->add('monitorScript', null, array(
-                'label' => "Independent from using Symfony, PHP, Postgresql 
-                    script to monitor if url on this server is running 
+                'label' => "Monitor independent of Symfony, PHP, Postgresql 
+                    script to monitor if url on this server is running; Help: webmonitor.py -H 
                     (python3 path/to/webmonitor.py 
                     -l 'url1,url2...' -h mailerhost -o mailerport -u mailerusername -p mailerpassword
                     -s 'sender email' -r 'receiver email1, email2 ...' 

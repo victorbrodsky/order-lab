@@ -277,7 +277,10 @@ class VacReqApprovalTypeList extends ListAbstract {
     }
 
 
-
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
 
 }

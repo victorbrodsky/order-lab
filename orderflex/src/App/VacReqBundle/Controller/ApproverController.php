@@ -1796,6 +1796,7 @@ class ApproverController extends OrderAbstractController
 //        if( $approvalGroupTypeStr ) {
 //            $approvalGroupTypeStr = " (" . $approvalGroupTypeStr . ")";
 //        }
+        $totalAllocatedDays = NULL;
         $panelClass = "panel-info";
         $approvalGroupTypeStr = ""; //"None";
         $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($group);
@@ -1804,6 +1805,7 @@ class ApproverController extends OrderAbstractController
                 $panelClass = "panel-success";
             }
             $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
+            $totalAllocatedDays = $vacreqUtil->getTotalAccruedDaysByGroup($approvalGroupType);
         }
 
         //get accrued days by institution
@@ -1844,7 +1846,8 @@ class ApproverController extends OrderAbstractController
             'panelClass' => $panelClass,
             'yearRanges' => $yearRanges,
             'yearRangesColor' => $yearRangesColor,
-            'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays(),
+            //'totalAllocatedDays' => $this->vacreqUtil->getTotalAccruedDays_OLD(),
+            'totalAllocatedDays' => $totalAllocatedDays, //$this->vacreqUtil->getTotalAccruedDays(),
             'trFontSize' => "10px",
             'fontWeight' => "normal"
         );

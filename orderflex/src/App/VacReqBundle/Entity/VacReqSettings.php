@@ -251,10 +251,14 @@ class VacReqSettings
 
     public function __toString()
     {
+        $approvalTypesArr = array();
+        foreach( $this->getApprovalTypes() as $approvalType) {
+            $approvalTypesArr[] = $approvalType->getName();
+        }
         return "VacReqSettings: institutionId=".$this->getId().": ".
-        implode(",",$this->getApprovalTypes())."".
-        " count emailUsers=".count($this->getEmailUsers()).
-        "; count informUsers=".count($this->getInformUsers()).
+        " approvaltypes=" . implode(",",$approvalTypesArr)."".
+        "; count emailUsers=".count($this->getEmailUsers()).
+        "; count informUsers=".count($this->getDefaultInformUsers()).
         //"; count approvalTypes=".count($this->getApprovalTypes()).
         "<br>";
     }

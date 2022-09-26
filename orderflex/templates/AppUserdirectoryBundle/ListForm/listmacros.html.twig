@@ -1328,14 +1328,14 @@
     {% if form.maxCarryOverVacationDays is defined %}
         {{ formmacros.field(form.maxCarryOverVacationDays) }}
     {% endif %}
+    {% if form.allowCarryOver is defined %}
+        {{ formmacros.field(form.allowCarryOver) }}
+    {% endif %}
     {% if form.noteForVacationDays is defined %}
         {{ formmacros.field(form.noteForVacationDays) }}
     {% endif %}
     {% if form.noteForCarryOverDays is defined %}
         {{ formmacros.field(form.noteForCarryOverDays) }}
-    {% endif %}
-    {% if form.allowCarryOver is defined %}
-        {{ formmacros.field(form.allowCarryOver) }}
     {% endif %}
 
 

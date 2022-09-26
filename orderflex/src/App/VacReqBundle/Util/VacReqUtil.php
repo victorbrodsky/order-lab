@@ -839,7 +839,7 @@ class VacReqUtil
     public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDaysToNextYear=null, $carryOverDaysFromPreviousYear=null, $yearRange=null ) {
 
         if( !$totalAllocatedDays ) {
-            $totalAllocatedDays = $this->getTotalAccruedDays();
+            $totalAllocatedDays = $this->getTotalAccruedDays($user);
         }
 
         if( !$yearRange ) {
@@ -4004,27 +4004,38 @@ class VacReqUtil
     }
 
     //Used in header
-    public function getAccruedDaysUpToThisMonth() {
-        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $userSecUtil = $this->container->get('user_security_utility');
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
-        if( !$vacationAccruedDaysPerMonth ) {
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//    public function getAccruedDaysUpToThisMonth_OLD() {
+//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+//
+//        //get start academic date
+//        $dates = $this->getCurrentAcademicYearStartEndDates(true);
+//        $startAcademicYearDate = $dates['startDate'];
+//
+//        //get month difference between now and $startAcademicYearDate
+//        $nowDate = new \DateTime();
+//        $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
+//        //$monthCount = $monthCount - 1;
+//
+//        //echo "monthCount=".$monthCount."<br>";
+//        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
+//        return $accruedDays;
+//    }
+    public function getAccruedDaysUpToThisMonth( $user, $approverType=null ) {
+        if( !$approverType ) {
+            $approverType = $this->getSingleApprovalGroupType($user);
         }
-
-        //get start academic date
-        $dates = $this->getCurrentAcademicYearStartEndDates(true);
-        $startAcademicYearDate = $dates['startDate'];
-
-        //get month difference between now and $startAcademicYearDate
-        $nowDate = new \DateTime();
-        $monthCount = $this->diffInMonths($startAcademicYearDate, $nowDate);
-        //$monthCount = $monthCount - 1;
-
-        //echo "monthCount=".$monthCount."<br>";
-        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
-        return $accruedDays;
+        if( !$approverType ) {
+            throw new \InvalidArgumentException('Error: group approve type is not found');
+        }
+        $vacationAccruedDaysPerMonth = $approverType->getVacationAccruedDaysPerMonth();
+        return $this->getAccruedDaysUpToThisMonthByDaysPerMonth($vacationAccruedDaysPerMonth);
     }
+
     //substitute getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq') by VacReqApprovalTypeList
     public function getAccruedDaysUpToThisMonthByInstitution( $instituionId ) {
         //1) find VacReqSettings by institution
@@ -4034,32 +4045,34 @@ class VacReqUtil
 
         //echo "instituionId=$instituionId <br>";
 
-        $params = array();
-
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
-        $dql =  $repository->createQueryBuilder("list");
-        $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
-        $dql->leftJoin("vacreqSettings.institution", "institution");
-
-        $dql->where("institution.id = :institutionId");
-        $params['institutionId'] = $instituionId;
-
-        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
-        
-        $query = $this->em->createQuery($dql);
-
-        $query->setParameters($params);
-
-        $approverTypes = $query->getResult();
-
-//        foreach($approverTypes as $approverType) {
-//            echo "approverType=$approverType <br>";
+//        $params = array();
+//
+//        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
+//        $dql =  $repository->createQueryBuilder("list");
+//        $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
+//        $dql->leftJoin("vacreqSettings.institution", "institution");
+//
+//        $dql->where("institution.id = :institutionId");
+//        $params['institutionId'] = $instituionId;
+//
+//        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        $query->setParameters($params);
+//
+//        $approverTypes = $query->getResult();
+//
+////        foreach($approverTypes as $approverType) {
+////            echo "approverType=$approverType <br>";
+////        }
+//
+//        $approverType = NULL;
+//        if( count($approverTypes) > 0 ) {
+//            $approverType = $approverTypes[0];
 //        }
 
-        $approverType = NULL;
-        if( count($approverTypes) > 0 ) {
-            $approverType = $approverTypes[0];
-        }
+        $approverType = $this->getApprovalGroupTypeByInstitution($instituionId);
 
         if( !$approverType ) {
             return 0;
@@ -4080,7 +4093,8 @@ class VacReqUtil
         //$monthCount = $monthCount - 1;
 
         //echo "monthCount=".$monthCount."<br>";
-        $accruedDays = (int)$monthCount * (int)$vacationAccruedDaysPerMonth;
+        $accruedDays = (int)$monthCount * $vacationAccruedDaysPerMonth;
+        $accruedDays = round($accruedDays);
         return $accruedDays;
     }
 
@@ -4110,15 +4124,41 @@ class VacReqUtil
         return (int)$months;
     }
 
-    public function getTotalAccruedDays() {
-        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $userSecUtil = $this->container->get('user_security_utility');
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+    //Use in totalVacationRemainingDays, getHeaderInfoMessages,
+    // getCurrentYearUnusedDays, getPreviousYearUnusedDays,
+    // getAvailableCurrentYearCarryOverRequestString, mySingleGroupAction (ApproverController)
+//    public function getTotalAccruedDays_OLD() {
+//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+//        //echo "monthCount=".$monthCount."<br>";
+//        $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+//        return $totalAccruedDays;
+//    }
+    //total accrued days calculated by vacationAccruedDaysPerMonth
+    public function getTotalAccruedDays( $user, $approvalGroupType=NULL ) {
+        //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+        $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
+
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
         //echo "monthCount=".$monthCount."<br>";
+        $totalAccruedDays = 12 * intval($vacationAccruedDaysPerMonth);
+        $totalAccruedDays = round($totalAccruedDays);
+        return $totalAccruedDays;
+    }
+    public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
+        $vacationAccruedDaysPerMonth = $approvalGroupType->getVacationAccruedDaysPerMonth();
+        if( !$vacationAccruedDaysPerMonth ) {
+            //return 0;
+            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined.');
+        }
         $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+        $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
     }
 
@@ -4224,21 +4264,149 @@ class VacReqUtil
         return "";
     }
 
+//    public function getHeaderInfoMessages_OLD( $user, $approvalGroupType=null ) {
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//
+//        //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
+//        //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
+//        //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
+//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
+//        $accruedDays = $this->getAccruedDaysUpToThisMonth($user,$approvalGroupType);
+//        $totalAccruedDays = $this->getTotalAccruedDays();
+//
+//
+//        //$currentStartYear
+//        $yearRange = $this->getCurrentAcademicYearRange();
+//        $yearRangeArr = explode("-",$yearRange);
+//        $currentStartYear = $yearRangeArr[1];
+//
+//        $startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "End" );
+//        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
+//        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+//
+////        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
+////                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
+//
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        $academicYearStartString = $academicYearStart->format("F jS");
+//
+//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+//        if( !$vacationAccruedDaysPerMonth ) {
+//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+//        }
+//
+//        if(0) {
+//            //If you have worked here since [July 1st] or before,
+//            // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
+//            $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued " .
+//                $accruedDays . " vacation days this academic year (and will accrue " . $totalAccruedDays . " by " . $startAcademicYearDateStr . ").";
+//            //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
+//            // you have accrued by multiplying the number of months since your start date by 2.
+//            $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days" .
+//                " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
+//        }
+//
+//        //Calculate May 30th as 1 month before End Year
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+//        //shift $academicYearEnd by month back
+//        $academicYearEnd->modify("-1 month"); //May 30th
+//        //$academicYearEnd->modify("last day of previous month"); //May 31st
+//        $academicYearEndString = $academicYearEnd->format("F jS");
+//
+//        //get max carry over days
+//        $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
+//        if( !$maxCarryOverVacationDays ) {
+//            $maxCarryOverVacationDays = 10;
+//        }
+//
+//        //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
+//        //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
+//        //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
+//        $accruedDaysString = "Faculty accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
+//        $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
+//        $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
+//        $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
+//        $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
+//
+//        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
+//        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
+//        $currentYearRange = $this->getCurrentAcademicYearRange();
+//        $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
+//        //echo "carriedOverDays=".$carriedOverDays."<br>";
+//        $carriedOverDaysString = null;
+//        if( $carriedOverDays ) {
+//            $lastYearRange = $this->getPreviousAcademicYearRange();
+//            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange;
+//        }
+//
+//        //Carry over days to the next academic year
+//        $nextYearRange = $this->getNextAcademicYearRange();
+//        $carriedOverDaysNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+//        //echo "carriedOverDaysNextYear=".$carriedOverDaysNextYear."<br>";
+//        //$carriedOverDaysNextYearString = null;
+//        if( $carriedOverDaysNextYear ) {
+//            if( $carriedOverDaysString ) {
+//                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
+//            } else {
+//                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
+//            }
+//        }
+//
+//        if( $carriedOverDaysString ) {
+//            $carriedOverDaysString = $carriedOverDaysString . ".";
+//        }
+//
+//        //totalAllocatedDays - vacationDays + carryOverDays
+//        $remainingDaysRes = $this->totalVacationRemainingDays($user);
+//        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+//        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
+//        // You have [17] remaining vacation days during the current academic year.
+//        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over ".
+//            "requests documented in this system,".
+//            " you have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+//        if( !$remainingDaysRes['accurate'] ) {
+//            $remainingDaysString .= " (".$this->getInaccuracyMessage().")";
+//        }
+//        $remainingDaysString .= ".";
+//
+//
+//        $messages = array();
+//        $messages['accruedDaysString'] = $accruedDaysString;
+//        //$messages['accruedDays'] = $accruedDays;
+//        $messages['totalAccruedDays'] = $totalAccruedDays;
+//        $messages['carriedOverDaysString'] = $carriedOverDaysString;
+//        //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
+//        $messages['remainingDaysString'] = $remainingDaysString;
+//
+//
+//        return $messages;
+//    }
     //TODO: get a full header message based on the noteForVacationDays and noteForCarryOverDays
     //replace numbers from VacReqApprovalTypeList (accrued days, max days)
     //Used in new vacation and carryover request new page
-    public function getHeaderInfoMessages( $user ) {
-
+    public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         $userSecUtil = $this->container->get('user_security_utility');
 
+        if( !$approvalGroupType ) {
+            $approvalGroupType = $this->getSingleApprovalGroupType($user);
+        }
+
+        $approvalGroupTypeName = $approvalGroupType->getName();
 
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
         //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
         //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
         //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-        $accruedDays = $this->getAccruedDaysUpToThisMonth();
-        $totalAccruedDays = $this->getTotalAccruedDays();
-
+        //$accruedDays = $this->getAccruedDaysUpToThisMonth($user,$approvalGroupType);
+        $totalAccruedDays = $this->getTotalAccruedDays($user,$approvalGroupType);
 
         //$currentStartYear
         $yearRange = $this->getCurrentAcademicYearRange();
@@ -4249,29 +4417,16 @@ class VacReqUtil
         $startAcademicYearDate = new \DateTime($startAcademicYearStr);
         $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
 
-//        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
-//                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
-
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
             throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         $academicYearStartString = $academicYearStart->format("F jS");
 
-        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+        //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
+        $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser('vacationAccruedDaysPerMonth',$user,$approvalGroupType);
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-        }
-
-        if(0) {
-            //If you have worked here since [July 1st] or before,
-            // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-            $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued " .
-                $accruedDays . " vacation days this academic year (and will accrue " . $totalAccruedDays . " by " . $startAcademicYearDateStr . ").";
-            //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
-            // you have accrued by multiplying the number of months since your start date by 2.
-            $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days" .
-                " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
         }
 
         //Calculate May 30th as 1 month before End Year
@@ -4293,7 +4448,7 @@ class VacReqUtil
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
         //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
-        $accruedDaysString = "Faculty accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
+        $accruedDaysString = $approvalGroupTypeName." accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
         $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
         $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
@@ -4352,9 +4507,168 @@ class VacReqUtil
 
         return $messages;
     }
-    //get noteForVacationDays and replace [[var]]
-    public function getFullHeaderMessages($user) {
-        return "Test message";
+    
+    //get noteForVacationDays
+//    public function getNoteForVacationDays($user) {
+//        //If user member of two group Faculty and Fellows, consider Faculty as default
+//        //set Faculty's orderinlist to the lower value (lower value is default)
+//        $approvalGroup = $this->getSingleApprovalGroupType($user);
+//        //echo "approvalGroup=$approvalGroup <br>";
+//
+//        if( $approvalGroup ) {
+//            return $approvalGroup->getNoteForVacationDays();
+//        }
+//
+//        //return "Vacreq header N/A";
+//        return NULL; //"Test vac header";
+//    }
+//    public function getNoteForCarryOverDays($user) {
+//        $approvalGroup = $this->getSingleApprovalGroupType($user);
+//        //echo "approvalGroup=$approvalGroup <br>";
+//
+//        if( $approvalGroup ) {
+//            return $approvalGroup->getNoteForCarryOverDays();
+//        }
+//
+//        //return "Carryover header N/A";
+//        return NULL;
+//    }
+    //$getterValue = for example "noteForCarryOverDays"
+    public function getValueApprovalGroupTypeByUser( $getterValue, $user, $approvalGroupType=NULL ) {
+        if( !$approvalGroupType ) {
+            $approvalGroupType = $this->getSingleApprovalGroupType($user);
+        }
+        //echo "approvalGroupType=$approvalGroupType <br>";
+
+        if( $approvalGroupType ) {
+            $getterMethod = "get".$getterValue;
+            $value = $approvalGroupType->$getterMethod();
+            return $value;
+        }
+
+        //return "Carryover header N/A";
+        return NULL;
+    }
+
+    //If user member of two group Faculty and Fellows, consider Faculty as default
+    //set Faculty's orderinlist to the lower value (lower value is default)
+    public function getSingleApprovalGroupType( $user ) {
+        $approvalGroup = NULL;
+
+        //get user's associated group
+        $groupParams = array(
+            'asObject' => true,
+            'permissions' => array(
+                array('objectStr'=>'VacReqRequest','actionStr'=>'create')
+            )
+        );
+        $groupInstitutions = $this->getGroupsByPermission($user,$groupParams);
+        //dump($groupInstitutions);
+        //exit();
+        //echo "inst count=".count($groupInstitutions)."<br>";
+
+        if( count($groupInstitutions) == 1 ) {
+            $groupInstitution = $groupInstitutions[0];
+            $approvalGroup = $this->getVacReqApprovalGroupType($groupInstitution);
+            //echo "approvalType by single inst <br>";
+            return $approvalGroup;
+        }
+
+        //get all user's institutions => get all settings => get approvalType
+        //if only one approvalType (i.e. Faculty) => return this approvalType
+        //if multiple go next step
+        if( count($groupInstitutions) > 1 ) {
+            $approvalTypeArr = array();
+            foreach($groupInstitutions as $groupInstitution) {
+                //get VacReqSettings
+                $settings = $this->getSettingsByInstitution($groupInstitution->getId());
+                //echo "settings=$settings <br>";
+                if( $settings ) {
+                    //get getApprovalTypes
+                    $approvalTypes = $settings->getApprovalTypes();
+                    //we suppuse to have only one approvalType per setting, but just in case iterate over all
+                    foreach( $approvalTypes as $approvalType ) {
+                        //echo "approvalType=".$approvalType."<br>";
+                        $approvalTypeArr[] = $approvalType;
+                    }
+                }
+            }
+            $approvalTypeArr = array_unique($approvalTypeArr);
+            //echo "approvalType count=".count($approvalTypeArr)."<br>";
+            if( count($approvalTypeArr) == 1 ) {
+                return $approvalTypeArr[0];
+            }
+            if( count($approvalTypeArr) > 1 ) {
+                $minApprovalType = NULL;
+                $minOrderinlist = NULL;
+                foreach($approvalTypeArr as $approvalType) {
+                    $orderinlist = $approvalType->getOrderinlist();
+                    //echo $approvalType.": ".$orderinlist."<br>";
+                    if( !$minOrderinlist ) {
+                        $minOrderinlist = $orderinlist;
+                        $minApprovalType = $approvalType;
+                    } else {
+                        if( $orderinlist < $minOrderinlist ) {
+                            $minOrderinlist = $orderinlist;
+                            $minApprovalType = $approvalType;
+                        }
+                    }
+                }
+                //echo "approvalType by inst <br>";
+                return $minApprovalType;
+            }
+        }
+
+        if( !$approvalGroup ) {
+            //get default approval group with the lowest orderinlist
+            //echo "approvalType default <br>";
+            return $this->getDefaultApprovalGroupType();
+        }
+        
+        return NULL;
+    }
+    //get default approval type (VacReqApprovalTypeList) with the lowest orderinlist
+    public function getDefaultApprovalGroupType() {
+        $approverTypes = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findBy(
+            array('type' => array('default','user-added')),
+            array('orderinlist' => 'ASC') //first with lower orderinlist
+        );
+        
+        if( count($approverTypes) > 0 ) {
+            return $approverTypes[0];
+        }
+        
+        return NULL;
+    }
+    public function getApprovalGroupTypeByInstitution( $instituionId ) {
+        $params = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
+        $dql->leftJoin("vacreqSettings.institution", "institution");
+
+        $dql->where("institution.id = :institutionId");
+        $params['institutionId'] = $instituionId;
+
+        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters($params);
+
+        $approverTypes = $query->getResult();
+
+//        foreach($approverTypes as $approverType) {
+//            echo "approverType=$approverType <br>";
+//        }
+
+        $approverType = NULL;
+        if( count($approverTypes) > 0 ) {
+            $approverType = $approverTypes[0];
+        }
+
+        return $approverType;
     }
 
     //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
@@ -4409,7 +4723,7 @@ class VacReqUtil
 
     public function getCurrentYearUnusedDays( $user, $asString=true ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $totalAccruedDays = $this->getTotalAccruedDays();
+        $totalAccruedDays = $this->getTotalAccruedDays($user);
         $requestTypeStr = 'vacation';
 
         $currentYearRange = $this->getCurrentAcademicYearRange();
@@ -4470,7 +4784,7 @@ class VacReqUtil
     }
 
     public function getPreviousYearUnusedDays( $user, $asString=true ) {
-        $totalAccruedDays = $this->getTotalAccruedDays();
+        $totalAccruedDays = $this->getTotalAccruedDays($user);
         $requestTypeStr = 'vacation';
         //$break = "\r\n";
 
@@ -4657,7 +4971,7 @@ class VacReqUtil
         $year = ((int)$year) - 1;   //previous year
         //echo "year=".$year."<br>";
 
-        $totalAccruedDays = $this->getTotalAccruedDays();
+        $totalAccruedDays = $this->getTotalAccruedDays($user);
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year); //2015
 
         //carried over days from the current year to the next year.

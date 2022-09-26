@@ -84,12 +84,23 @@
         {% endif %}
     {% endif %}
 
-    {% if fullMessages is defined and fullMessages %}
-        <p id="vacreq-full-messages-str">
-            {{ fullMessages|raw }}
-        </p>
+    {% if noteForVacationDays is defined and noteForVacationDays %}
+        <div class="alert alert-success">
+            <p id="vacreq-noteForVacationDays-str">
+                {{ noteForVacationDays|raw }}
+            </p>
+        </div>
     {% endif %}
 
+    {% if noteForCarryOverDays is defined and noteForCarryOverDays %}
+        <div class="alert alert-success">
+            <p id="vacreq-noteForCarryOverDays-str">
+                {{ noteForCarryOverDays|raw }}
+            </p>
+        </div>
+    {% endif %}
+
+    {#First header - vacation infor + carry over#}
     {% if totalApprovedDaysString is defined and totalApprovedDaysString %}
         <div class="alert alert-success">
             <p id="vacreq-totalapproved-days-str">{{ totalApprovedDaysString|raw }}</p>
@@ -101,6 +112,7 @@
         </div>
     {% endif %}
 
+    {#Second header - only carry over#}
     {% if newCarryOverRequest is defined and newCarryOverRequest %}
         <div class="alert alert-success">
             <p id="vacreq-new-carryover-request-str">{{ newCarryOverRequest|raw }}</p>
