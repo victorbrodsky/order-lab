@@ -837,10 +837,13 @@ class VacReqUtil
     //carryOver days are from getUserCarryOverDays
     //TODO: might add "date of hire" and "end of employment date" to calculate the total vacation days
     public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDaysToNextYear=null, $carryOverDaysFromPreviousYear=null, $yearRange=null ) {
-
+        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
         if( !$totalAllocatedDays ) {
             $totalAllocatedDays = $this->getTotalAccruedDays($user);
+            //$totalAllocatedDays = $this->getTotalAccruedDaysByGroup($approvalGroupType);
         }
+        //$totalAllocatedDays = 20;
+        //echo "totalAllocatedDays=$totalAllocatedDays <br>";
 
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
@@ -876,6 +879,9 @@ class VacReqUtil
             'accurate' => $vacationAccurate
         );
 
+        //dump($res);
+        //exit('111');
+        
         return $res;
     }
 
@@ -4147,7 +4153,13 @@ class VacReqUtil
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
         //echo "monthCount=".$monthCount."<br>";
-        $totalAccruedDays = 12 * intval($vacationAccruedDaysPerMonth);
+        $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+
+        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays",$user,$approvalGroupType);
+        if( $maxVacationDays && $totalAccruedDays > $maxVacationDays ) {
+            $totalAccruedDays = $maxVacationDays;
+        }
+
         $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
     }
@@ -4158,6 +4170,12 @@ class VacReqUtil
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined.');
         }
         $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
+
+        $maxVacationDays = $approvalGroupType->getMaxVacationDays();
+        if( $maxVacationDays && $totalAccruedDays > $maxVacationDays ) {
+            $totalAccruedDays = $maxVacationDays;
+        }
+
         $totalAccruedDays = round($totalAccruedDays);
         return $totalAccruedDays;
     }
@@ -4551,11 +4569,24 @@ class VacReqUtil
 //        return NULL;
 //    }
     //$getterValue = for example "noteForCarryOverDays"
-    public function getValueApprovalGroupTypeByUser( $getterValue, $user, $approvalGroupType=NULL ) {
+    public function getValueApprovalGroupTypeByUser( $getterValue, $user=NULL, $approvalGroupType=NULL ) {
         if( !$approvalGroupType ) {
+            if( !$user ) {
+                $user = $this->security->getUser();
+            }
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
+            //echo "getSingleApprovalGroupType=$approvalGroupType <br>";
         }
-        //echo "approvalGroupType=$approvalGroupType <br>";
+
+        if( !$approvalGroupType ) {
+            //echo $getterValue.": approvalGroupType=$approvalGroupType <br>";
+            //echo "get default approval group type <br>";
+            //exit('222');
+            //return NULL;
+            //if group is not assigned => get default group
+            $approvalGroupType = $this->getDefaultApprovalGroupType();
+        }
+        //echo $getterValue.": approvalGroupType=$approvalGroupType <br>";
 
         if( $approvalGroupType ) {
             $getterMethod = "get".$getterValue;
@@ -4660,6 +4691,10 @@ class VacReqUtil
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC') //first with lower orderinlist
         );
+
+        //foreach($approverTypes as $approverType) {
+        //    echo $approverType->getOrderinlist().": approverTypes=$approverTypes <br>";
+        //}
         
         if( count($approverTypes) > 0 ) {
             return $approverTypes[0];

@@ -175,7 +175,8 @@ class RequestController extends OrderAbstractController
         if( $routeName == "vacreq_carryoverrequest" ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
-                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
                 $carryOverDays = $entity->getCarryOverDays();
                 if ($carryOverDays && $maxCarryOverVacationDays) {
                     if ($carryOverDays > $maxCarryOverVacationDays) {
@@ -585,8 +586,14 @@ class RequestController extends OrderAbstractController
         if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
-                $userSecUtil = $this->container->get('user_security_utility');
-                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                //$userSecUtil = $this->container->get('user_security_utility');
+                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                $groupInstitution = $entity->getInstitution();
+                $approvalGroupType = NULL;
+                if( $groupInstitution ) {
+                    $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($groupInstitution);
+                }
+                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
                 $carryOverDays = $entity->getCarryOverDays();
                 if ($carryOverDays && $maxCarryOverVacationDays) {
                     if ($carryOverDays > $maxCarryOverVacationDays) {
@@ -1451,7 +1458,7 @@ class RequestController extends OrderAbstractController
 
 
 
-    public function createRequestForm( $entity, $cycle, $request )
+    public function createRequestForm( $entity, $cycle, $request, $approvalGroupType=NULL )
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -1460,9 +1467,6 @@ class RequestController extends OrderAbstractController
         $routeName = $request->get('_route');
 
         $user = $this->getUser();
-//        if( !$entity ) {
-//            $entity = new VacReqRequest($user);
-//        }
 
         $roleCarryOverApprover = false;
 
@@ -1519,17 +1523,9 @@ class RequestController extends OrderAbstractController
         }
 
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user, $groupParams);
-//        echo "1 organizationalInstitutions count=" . count($organizationalInstitutions) . "<br>";
-//        foreach ($organizationalInstitutions as $organizationalInstitution) {
-//            echo "1 organizationalInstitution=" . $organizationalInstitution . "<br>";
-//        }
 
         //include this request institution to the $organizationalInstitutions array
         $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup($entity, $organizationalInstitutions);
-//        echo "2 organizationalInstitutions count=" . count($organizationalInstitutions) . "<br>";
-//        foreach ($organizationalInstitutions as $organizationalInstitution) {
-//            echo "2 organizationalInstitution=" . $organizationalInstitution . "<br>";
-//        }
 
         //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
         //set $organizationalInstitutions to empty if entity has only tentative institution and does not have org institution
@@ -1541,31 +1537,6 @@ class RequestController extends OrderAbstractController
 
         //include this request institution to the $tentativeInstitutions array
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup($entity, $tentativeInstitutions, "tentativeInstitution");
-
-        //testing Institutions
-//        if ($tentativeInstitutions) {
-//            //dump($tentativeInstitutions);
-//            foreach ($tentativeInstitutions as $tentativeInstitution) {
-//                echo "tentativeInstitution=" . $tentativeInstitution . "<br>";
-//            }
-//        } else {
-//            echo "NO tentativeInstitution<br>";
-//        }
-//        if( $organizationalInstitutions ) {
-//            foreach ($organizationalInstitutions as $orginstitution) {
-//                echo "orginstitution=" . $orginstitution . "<br>";
-//            }
-//        } else {
-//            echo "NO orginstitution<br>";
-//        }
-        //exit('1');
-
-        //set org institution as tentative if empty
-//        if( count($organizationalInstitutions) == 0 ) {
-//            if( $tentativeInstitutions && count($tentativeInstitutions) > 0 ) {
-//                $organizationalInstitutions = $tentativeInstitutions;
-//            }
-//        }
 
         //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
         //For example, Brooklyn Methodist is independent institution with a single stage approval
@@ -1625,6 +1596,29 @@ class RequestController extends OrderAbstractController
         //echo "roleApprover=".$roleApprover."<br>";
         //echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
 
+        //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
+        //$noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+        //$groupInstitution = $entity->getInstitution();
+        //echo "groupInstitution=$groupInstitution <br>";
+
+        $maxCarryOverVacationDays = NULL;
+        $noteForCarryOverDays = NULL;
+        if ($requestType->getAbbreviation() == "carryover") {
+            $approvalGroupType = NULL;
+            $groupInstitution = $entity->getTentativeInstitution();
+            if( !$groupInstitution ) {
+                $groupInstitution = $entity->getInstitution();
+            }
+            //echo "groupInstitution=$groupInstitution <br>";
+            if( $groupInstitution ) {
+                $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($groupInstitution);
+            }
+            //echo "approvalGroupType=$approvalGroupType <br>";
+            $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $entity->getUser(), $approvalGroupType);
+            $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);
+        }
+        //echo "maxCarryOverVacationDays=$maxCarryOverVacationDays, noteForCarryOverDays=$noteForCarryOverDays <br>";
+
         $params = array(
             'container' => $this->container,
             'em' => $em,
@@ -1638,8 +1632,8 @@ class RequestController extends OrderAbstractController
             'organizationalInstitutions' => $userServiceUtil->flipArrayLabelValue($organizationalInstitutions),
             'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
             'holidaysUrl' => $holidaysUrl,
-            'maxCarryOverVacationDays' => $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq'),
-            'noteForCarryOverDays' => $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq'),
+            'maxCarryOverVacationDays' => $maxCarryOverVacationDays,
+            'noteForCarryOverDays' => $noteForCarryOverDays,
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );

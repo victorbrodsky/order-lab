@@ -57,13 +57,13 @@ class VacReqSiteParameter
 
     ////////// TODO: Moved to the VacReqApprovalTypeList //////////////
     /**
-     * Moved to the VacReqApprovalTypeList
+     * Moved to the VacReqApprovalTypeList - Done
      * @ORM\Column(type="integer", nullable=true)
      */
     private $vacationAccruedDaysPerMonth;
 
     /**
-     * Moved to the VacReqApprovalTypeList
+     * Moved to the VacReqApprovalTypeList - Done
      *
      * Maximum number vacation days per year (usually 12*2=24).
      * This should not be used for now, because we rely on the vacationAccruedDaysPerMonth.

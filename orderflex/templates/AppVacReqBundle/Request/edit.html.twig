@@ -44,7 +44,8 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="requestType" value="{{ entity.getRequestTypeAbbreviation() }}" />
-    <input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />
+    {#<input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />#}
+    <input type="hidden" id="maxcarryovervacationdays" value="{{ vacreq_util.getValueApprovalGroupTypeByUser('maxCarryOverVacationDays') }}" />
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         <input type="hidden" id="vacreq_admin" value="admin" />
