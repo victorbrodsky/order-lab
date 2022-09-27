@@ -4428,6 +4428,13 @@ class VacReqUtil
         if( !$vacationAccruedDaysPerMonth ) {
             throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
+        if( floor($vacationAccruedDaysPerMonth) == $vacationAccruedDaysPerMonth ) {
+            //echo $vacationAccruedDaysPerMonth." is int <br>";
+            $vacationAccruedDaysPerMonthStr = intval($vacationAccruedDaysPerMonth);
+        } else {
+            //echo $vacationAccruedDaysPerMonth." is not int <br>";
+            $vacationAccruedDaysPerMonthStr = number_format((float)$vacationAccruedDaysPerMonth, 2, '.', '');
+        }
 
         //Calculate May 30th as 1 month before End Year
         $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
@@ -4440,7 +4447,8 @@ class VacReqUtil
         $academicYearEndString = $academicYearEnd->format("F jS");
 
         //get max carry over days
-        $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
+        //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
+        $maxCarryOverVacationDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
         if( !$maxCarryOverVacationDays ) {
             $maxCarryOverVacationDays = 10;
         }
@@ -4448,53 +4456,62 @@ class VacReqUtil
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
         //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
-        $accruedDaysString = $approvalGroupTypeName." accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
+        $accruedDaysString = $approvalGroupTypeName." accrue $totalAccruedDays vacation days per year, or";
+        $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month.";
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
-        $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
-        $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
-        $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
 
-        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
-        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
-        $currentYearRange = $this->getCurrentAcademicYearRange();
-        $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
-        //echo "carriedOverDays=".$carriedOverDays."<br>";
+        ////////////// carry over allowed ///////////////////
         $carriedOverDaysString = null;
-        if( $carriedOverDays ) {
-            $lastYearRange = $this->getPreviousAcademicYearRange();
-            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange;
-        }
+        $remainingDaysString = null;
+        $allowCarryOver = $this->getValueApprovalGroupTypeByUser('allowCarryOver',$user,$approvalGroupType);
+        if( $allowCarryOver ) {
+            $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
+            $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
+            $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
 
-        //Carry over days to the next academic year
-        $nextYearRange = $this->getNextAcademicYearRange();
-        $carriedOverDaysNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
-        //echo "carriedOverDaysNextYear=".$carriedOverDaysNextYear."<br>";
-        //$carriedOverDaysNextYearString = null;
-        if( $carriedOverDaysNextYear ) {
-            if( $carriedOverDaysString ) {
-                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
-            } else {
-                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
+
+            //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
+            // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
+            $currentYearRange = $this->getCurrentAcademicYearRange();
+            $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
+            //echo "carriedOverDays=".$carriedOverDays."<br>";
+            $carriedOverDaysString = null;
+            if ($carriedOverDays) {
+                $lastYearRange = $this->getPreviousAcademicYearRange();
+                $carriedOverDaysString = "You have " . $carriedOverDays . " additional vacation days carried over from " . $lastYearRange;
             }
-        }
 
-        if( $carriedOverDaysString ) {
-            $carriedOverDaysString = $carriedOverDaysString . ".";
-        }
+            //Carry over days to the next academic year
+            $nextYearRange = $this->getNextAcademicYearRange();
+            $carriedOverDaysNextYear = $this->getUserCarryOverDays($user, $nextYearRange);
+            //echo "carriedOverDaysNextYear=".$carriedOverDaysNextYear."<br>";
+            //$carriedOverDaysNextYearString = null;
+            if ($carriedOverDaysNextYear) {
+                if ($carriedOverDaysString) {
+                    $carriedOverDaysString = $carriedOverDaysString . " and " . $carriedOverDaysNextYear . " subtracted vacation days carried over to the next year " . $nextYearRange;
+                } else {
+                    $carriedOverDaysString = "You have " . $carriedOverDaysNextYear . " subtracted vacation days carried over to the next year " . $nextYearRange;
+                }
+            }
 
-        //totalAllocatedDays - vacationDays + carryOverDays
-        $remainingDaysRes = $this->totalVacationRemainingDays($user);
-        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
-        // You have [17] remaining vacation days during the current academic year.
-        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over ".
-            "requests documented in this system,".
-            " you have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-        if( !$remainingDaysRes['accurate'] ) {
-            $remainingDaysString .= " (".$this->getInaccuracyMessage().")";
-        }
-        $remainingDaysString .= ".";
+            if ($carriedOverDaysString) {
+                $carriedOverDaysString = $carriedOverDaysString . ".";
+            }
 
+            //totalAllocatedDays - vacationDays + carryOverDays
+            $remainingDaysRes = $this->totalVacationRemainingDays($user);
+            //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
+            ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
+            // You have [17] remaining vacation days during the current academic year.
+            $remainingDaysString = "Based on the assumed " . $totalAccruedDays . " accrued days per year and on approved carry over " .
+                "requests documented in this system," .
+                " you have " . $remainingDaysRes['numberOfDays'] . " remaining vacation days during the current academic year";
+            if (!$remainingDaysRes['accurate']) {
+                $remainingDaysString .= " (" . $this->getInaccuracyMessage() . ")";
+            }
+            $remainingDaysString .= ".";
+        }
+        ////////////// EOF carry over allowed ///////////////////
 
         $messages = array();
         $messages['accruedDaysString'] = $accruedDaysString;
@@ -4555,14 +4572,24 @@ class VacReqUtil
     public function getSingleApprovalGroupType( $user ) {
         $approvalGroup = NULL;
 
-        //get user's associated group
-        $groupParams = array(
-            'asObject' => true,
-            'permissions' => array(
-                array('objectStr'=>'VacReqRequest','actionStr'=>'create')
-            )
-        );
+        //get user's associated group, get only submiiter group
+//        $groupParams = array(
+//            'asObject' => true,
+//            'permissions' => array(
+//                array('objectStr'=>'VacReqRequest','actionStr'=>'create')
+//            ),
+//            'asUser' => true //get only submitters
+//        );
+        $groupParams = array();
+        $groupParams['statusArr'] = array('default','user-added');
+        $groupParams['asObject'] = true;
+        $groupParams['asUser'] = true;
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
         $groupInstitutions = $this->getGroupsByPermission($user,$groupParams);
+        //foreach($groupInstitutions as $groupInstitution) {
+        //    echo "$groupInstitution <br>";
+        //}
         //dump($groupInstitutions);
         //exit();
         //echo "inst count=".count($groupInstitutions)."<br>";
@@ -4675,7 +4702,21 @@ class VacReqUtil
     // - approved vacation days for this academic year based on the requests
     // with the status of "Approved" or "Cancelation denied (Approved)"
     //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
-    public function getNewCarryOverRequestString( $user ) {
+    public function getNewCarryOverRequestString( $user, $approvalGroupType=null ) {
+
+        //check if this group is allow carry over
+        if( !$approvalGroupType ) {
+            $approvalGroupType = $this->getSingleApprovalGroupType($user);
+        }
+
+        if( $approvalGroupType ) {
+            $allowCarryOver = $this->getValueApprovalGroupTypeByUser("allowCarryOver",$user,$approvalGroupType);
+            if( !$allowCarryOver ) {
+                return NULL;
+            }
+        } else {
+            return NULL;
+        }
 
         //$res = $this->getAvailableCurrentYearCarryOverRequestString($user);
         //exit('current res='.$res);

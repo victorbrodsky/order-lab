@@ -84,6 +84,8 @@ class RequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
+
         //set request type
         $routeName = $request->get('_route');
         if( $routeName == "vacreq_carryoverrequest" ) {
@@ -128,7 +130,7 @@ class RequestController extends OrderAbstractController
             $title = "Vacation/Business Travel Request";
             $eventType = "Business/Vacation Request Created";
 
-            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user);
+            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
         }
 
         //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
@@ -344,7 +346,7 @@ class RequestController extends OrderAbstractController
 
         ///////////// TODO: get new header with parameters from VacReqApprovalTypeList /////////////
         // (noteForVacationDays, noteForCarryOverDays, accrued days, max days)
-        $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
+        //$approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
         $messages = $vacreqUtil->getHeaderInfoMessages($user, $approvalGroupType);
         $accruedDaysString = $messages['accruedDaysString'];
         $carriedOverDaysString = $messages['carriedOverDaysString'];
