@@ -78,7 +78,6 @@ class VacReqUtil
         return $setting;
     }
 
-
     public function getInstitutionSettingArray() {
         $settings = $this->em->getRepository('AppVacReqBundle:VacReqSettings')->findAll();
 
@@ -94,7 +93,108 @@ class VacReqUtil
         return $arraySettings;
     }
 
+    public function showDefaultInformUsers( $institutionId, $asString=false ) {
+        //echo '$institutionId='.$institutionId;
+        //return array();
+        $vacreqSettings = $this->getSettingsByInstitution($institutionId);
+        if( $vacreqSettings ) {
+            $defaultUsers = $vacreqSettings->getDefaultInformUsers();
+            //echo "defaultUsers=".count($defaultUsers)."<br>";
+            if( $asString ) {
+                $defaultUsersArr = array();
+                foreach($defaultUsers as $defaultUser) {
+                    $defaultUsersArr[] = $defaultUser."";
+                }
+                return implode(", ",$defaultUsersArr);
+            }
+            return $defaultUsers;
+        }
+        return NULL;
+    }
 
+    //get inform and default users
+    public function getAllInformUsers( $vacreqRequest ) {
+        $informUsers = array();
+        //1) get informUsers from $vacreqRequest->getInformUsers();
+        foreach( $vacreqRequest->getInformUsers() as $informUser ) {
+            if( !in_array($informUser, $informUsers) ) {
+                $informUsers[] = $informUser;
+            }
+        }
+        //2) get default inform users
+//        $orgInstitution = $vacreqRequest->getInstitution();
+//        if( $orgInstitution ) {
+//            $vacreqSettings = $this->getSettingsByInstitution($orgInstitution->getId());
+//            echo $orgInstitution->getId().": vacreqSettings=$vacreqSettings <br>"; //testing
+//            foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+//                if( !in_array($defaultInformUser, $informUsers) ) {
+//                    $informUsers[] = $defaultInformUser;
+//                }
+//            }
+//        }
+        //2) get default inform users
+        $vacreqSettings = $this->getSettingsByVacreq($vacreqRequest);
+        if( $vacreqSettings ) {
+            foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
+                if( !in_array($defaultInformUser, $informUsers) ) {
+                    $informUsers[] = $defaultInformUser;
+                }
+            }
+        }
+//        else {
+//            throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$vacreqRequest);
+//        }
+        //echo "count=".count($vacreqRequest->getInformUsers())."<br>";
+        //exit('eof setInformUsers');
+        return $informUsers;
+    }
+
+    public function getSettingsByVacreq( $vacreqRequest ) {
+        if( !$vacreqRequest ) {
+            return NULL;
+        }
+
+        $abbreviation = $vacreqRequest->getRequestTypeAbbreviation();
+
+        if( $abbreviation == "carryover" ) {
+            $orgInstitution = $vacreqRequest->getTentativeInstitution();
+            if( !$orgInstitution ) {
+                $orgInstitution = $vacreqRequest->getInstitution();
+            }
+            if( $orgInstitution ) {
+                return $this->getSettingsByInstitution($orgInstitution->getId());
+            }
+        }
+
+        if( $abbreviation == "business-vacation" ) {
+            $orgInstitution = $vacreqRequest->getInstitution();
+            if( !$orgInstitution ) {
+                $orgInstitution = $vacreqRequest->getTentativeInstitution();
+            }
+            if( $orgInstitution ) {
+                return $this->getSettingsByInstitution($orgInstitution->getId());
+            }
+        }
+
+        return NULL;
+    }
+
+    public function getVacReqApprovalGroupType( $groupInstitution, $asString=false ) {
+        if( $groupInstitution ) {
+            $settings = $this->getSettingsByInstitution($groupInstitution->getId());
+            if( $settings ) {
+                if( $asString ) {
+                    $approvalType = $settings->getApprovalType();
+                    if( $approvalType ) {
+                        return $approvalType->getName();
+                    }
+                } else {
+                    return $settings->getApprovalType();
+                }
+            }
+        }
+        return NULL;
+    }
 
     public function settingsAddRemoveUsers( $settings, $userIds ) {
         $originalUsers = $settings->getEmailUsers();
@@ -259,25 +359,6 @@ class VacReqUtil
         );
 
         return $res;
-    }
-
-    public function showDefaultInformUsers( $institutionId, $asString=false ) {
-        //echo '$institutionId='.$institutionId;
-        //return array();
-        $vacreqSettings = $this->getSettingsByInstitution($institutionId);
-        if( $vacreqSettings ) {
-            $defaultUsers = $vacreqSettings->getDefaultInformUsers();
-            //echo "defaultUsers=".count($defaultUsers)."<br>";
-            if( $asString ) {
-                $defaultUsersArr = array();
-                foreach($defaultUsers as $defaultUser) {
-                    $defaultUsersArr[] = $defaultUser."";
-                }
-                return implode(", ",$defaultUsersArr);
-            }
-            return $defaultUsers;
-        }
-        return NULL;
     }
 
     //find role approvers by institution
@@ -3858,33 +3939,6 @@ class VacReqUtil
         return $approversNameStr;
     }
 
-    //get inform and default users
-    public function getAllInformUsers( $vacreqRequest ) {
-        $informUsers = array();
-        //1) get informUsers from $vacreqRequest->getInformUsers();
-        foreach( $vacreqRequest->getInformUsers() as $informUser ) {
-            if( !in_array($informUser, $informUsers) ) {
-                $informUsers[] = $informUser;
-            }
-        }
-        //2) get default inform users
-        $orgInstitution = $vacreqRequest->getInstitution();
-        if( $orgInstitution ) {
-            $vacreqSettings = $this->getSettingsByInstitution($orgInstitution->getId());
-            foreach ($vacreqSettings->getDefaultInformUsers() as $defaultInformUser) {
-                if( !in_array($defaultInformUser, $informUsers) ) {
-                    $informUsers[] = $defaultInformUser;
-                }
-            }
-        }
-//        else {
-//            throw $this->createNotFoundException('Unable to find orgInstitution in vacreq request: '.$vacreqRequest);
-//        }
-        //echo "count=".count($vacreqRequest->getInformUsers())."<br>";
-        //exit('eof setInformUsers');
-        return $informUsers;
-    }
-
     //User log should record all changes in user: subjectUser, Author, field, old value, new value.
     public function setEventLogChanges($request) {
 
@@ -4824,10 +4878,10 @@ class VacReqUtil
 
         if( $asString && $unusedDays > 0 ) {
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_carryoverrequest',
-                array(
-                    'days' => $unusedDays,
-                )
+                'vacreq_carryoverrequest'
+                //array(
+                //    'days' => $unusedDays,
+                //)
             //UrlGeneratorInterface::ABSOLUTE_URL
             );
 
@@ -4836,9 +4890,11 @@ class VacReqUtil
             //$useCarryOverNoteAndMaxdaysTogether = true;
             $useCarryOverNoteAndMaxdaysTogether = false;
             if( $useCarryOverNoteAndMaxdaysTogether ) {
-                $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+                $maxCarryOverVacationDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
                 if ($maxCarryOverVacationDays && $unusedDays > $maxCarryOverVacationDays) {
-                    $noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays', 'vacreq');
+                    //$noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays', 'vacreq');
+                    $noteForCarryOverDays = $this->getValueApprovalGroupTypeByUser('noteForCarryOverDays',$user);
                     if (!$noteForCarryOverDays) {
                         $noteForCarryOverDays = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
                             . $maxCarryOverVacationDays;
@@ -4852,7 +4908,9 @@ class VacReqUtil
                 }
             }
 
-            $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
+            //$link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
+            $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining vacation days' . $carryOverNote . '</a>';
+
             return $link;
         }
 
@@ -4894,7 +4952,7 @@ class VacReqUtil
             $actionRequestUrl = $this->container->get('router')->generate(
                 'vacreq_carryoverrequest',
                 array(
-                    'days' => $unusedDays,
+                    //'days' => $unusedDays,
                     'sourceYear' => $sourceYear,
                     'destinationYear' => $destinationYear,
                 )
@@ -4902,7 +4960,9 @@ class VacReqUtil
             );
 
             $link = "You have " . $unusedDays . " unused vacation days in the previous " . $yearRange . " academic year.";
-            $link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining ' . $unusedDays . ' vacation days</a>';
+            //$link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining ' . $unusedDays . ' vacation days</a>';
+            $link .= ' <a href="' . $actionRequestUrl . '" target="_blank">Request to carry over the remaining vacation days</a>';
+
 
             // If the carry over request has a status of "Approved" (final),
             // show the following statement in the second well INSTEAD of the one that is shown now (link the word "request" to the request page):
@@ -5066,14 +5126,15 @@ class VacReqUtil
 
         if( $daysToRequest && $daysToRequest > 0 ) {
             $actionRequestUrl = $this->container->get('router')->generate(
-                'vacreq_carryoverrequest',
-                array(
-                    'days' => $daysToRequest,
-                )
+                'vacreq_carryoverrequest'
+                //array(
+                //    'days' => $daysToRequest,
+                //)
             //UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
+            //$link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining '.$daysToRequest.' vacation days</a>';
+            $link = '<a href="'.$actionRequestUrl.'">Request to carry over the remaining vacation days</a>';
             return $link;
         }
 
@@ -7393,23 +7454,6 @@ class VacReqUtil
             return $note;
         }
 
-        return NULL;
-    }
-
-    public function getVacReqApprovalGroupType( $groupInstitution, $asString=false ) {
-        if( $groupInstitution ) {
-            $settings = $this->getSettingsByInstitution($groupInstitution->getId());
-            if( $settings ) {
-                if( $asString ) {
-                    $approvalType = $settings->getApprovalType();
-                    if( $approvalType ) {
-                        return $approvalType->getName();
-                    }
-                } else {
-                    return $settings->getApprovalType();
-                }
-            }
-        }
         return NULL;
     }
 

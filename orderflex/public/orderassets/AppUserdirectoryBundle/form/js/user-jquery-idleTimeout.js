@@ -69,14 +69,24 @@ $(document).ready(function() {
 
     //console.log('idleTimeout cycle=('+cycle+')');
     if( cycle !== 'download' ) {
-        var idleTimeout = new idleTimeoutClass();
-        idleTimeout.init();
-        idleTimeout.checkIdleTimeout();
+        // var idleTimeout = new idleTimeoutClass();
+        // idleTimeout.init();
+        // idleTimeout.checkIdleTimeout();
+
+        var delayInMilliseconds = 2000; //1 second
+        setTimeout(function(){
+            console.debug("initIdleTimeout after "+delayInMilliseconds+" milliseconds");
+            initIdleTimeout();
+        }, delayInMilliseconds);
     }
 
 });
 
-
+function initIdleTimeout() {
+    var idleTimeout = new idleTimeoutClass();
+    idleTimeout.init();
+    idleTimeout.checkIdleTimeout();
+}
 
 function idleTimeoutClass() { }
 

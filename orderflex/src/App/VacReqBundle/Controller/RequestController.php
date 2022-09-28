@@ -588,12 +588,13 @@ class RequestController extends OrderAbstractController
                 //check carry over days limit
                 //$userSecUtil = $this->container->get('user_security_utility');
                 //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
-                $groupInstitution = $entity->getInstitution();
                 $approvalGroupType = NULL;
-                if( $groupInstitution ) {
-                    $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($groupInstitution);
+                $vacreqSettings = $vacreqUtil->getSettingsByVacreq($entity);
+                if( $vacreqSettings ) {
+                    $approvalGroupType = $vacreqSettings->getApprovalType();
                 }
-                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
+
+                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$entity->getUser(),$approvalGroupType);
                 $carryOverDays = $entity->getCarryOverDays();
                 if ($carryOverDays && $maxCarryOverVacationDays) {
                     if ($carryOverDays > $maxCarryOverVacationDays) {
@@ -1604,15 +1605,22 @@ class RequestController extends OrderAbstractController
         $maxCarryOverVacationDays = NULL;
         $noteForCarryOverDays = NULL;
         if ($requestType->getAbbreviation() == "carryover") {
+//            $approvalGroupType = NULL;
+//            $groupInstitution = $entity->getTentativeInstitution();
+//            if( !$groupInstitution ) {
+//                $groupInstitution = $entity->getInstitution();
+//            }
+//            //echo "groupInstitution=$groupInstitution <br>";
+//            if( $groupInstitution ) {
+//                $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($groupInstitution);
+//            }
+
             $approvalGroupType = NULL;
-            $groupInstitution = $entity->getTentativeInstitution();
-            if( !$groupInstitution ) {
-                $groupInstitution = $entity->getInstitution();
+            $vacreqSettings = $vacreqUtil->getSettingsByVacreq($entity);
+            if( $vacreqSettings ) {
+                $approvalGroupType = $vacreqSettings->getApprovalType();
             }
-            //echo "groupInstitution=$groupInstitution <br>";
-            if( $groupInstitution ) {
-                $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($groupInstitution);
-            }
+
             //echo "approvalGroupType=$approvalGroupType <br>";
             $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $entity->getUser(), $approvalGroupType);
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);

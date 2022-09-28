@@ -73,7 +73,7 @@ class VacReqSiteParameter
     private $maxVacationDays;
 
     /**
-     * Moved to the VacReqApprovalTypeList
+     * Moved to the VacReqApprovalTypeList - Done
      *
      * Maximum number carry over vacation days per year (usually 15 carry over days)
      *
@@ -82,14 +82,14 @@ class VacReqSiteParameter
     private $maxCarryOverVacationDays;
 
     /**
-     * Moved to the VacReqApprovalTypeList
+     * Moved to the VacReqApprovalTypeList - Done ?
      *
      * @ORM\Column(type="text", nullable=true)
      */
     private $noteForVacationDays;
 
     /**
-     * Moved to the VacReqApprovalTypeList
+     * Moved to the VacReqApprovalTypeList - Done ?
      *
      * @ORM\Column(type="text", nullable=true)
      */
