@@ -100,7 +100,8 @@ class RequestController extends OrderAbstractController
             //$entity->setDestinationYear( date("Y") );
 
             //$newCarryOverRequest = null;
-            $newCarryOverRequest = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+            //$newCarryOverRequest = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
 
             //check if 'days' parameter is set in http request
             $carryOverRequestDays = $request->query->get('days');

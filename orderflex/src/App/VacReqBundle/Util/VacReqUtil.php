@@ -4902,7 +4902,8 @@ class VacReqUtil
                     $carryOverNote = " (" . $noteForCarryOverDays . ")";
                 }
             } else {
-                $noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+                //$noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
+                $noteForCarryOverDays = $this->getValueApprovalGroupTypeByUser('noteForCarryOverDays',$user);
                 if( $noteForCarryOverDays ) {
                     $carryOverNote = " (" . $noteForCarryOverDays . ")";
                 }
