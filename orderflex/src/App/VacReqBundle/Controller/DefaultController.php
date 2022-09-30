@@ -754,4 +754,46 @@ class DefaultController extends OrderAbstractController
 
         exit('EOF cancelOldPendingCarryoverRequestsAction');
     }
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/vacation-request/add-default-approval-group-type
+     *
+     * @Route("/add-default-approval-group-type", name="vacreq_add_default_approval_group_type")
+     */
+    public function addDefaultApprovalGroupTypeAction( Request $request )
+    {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        exit('addDefaultApprovalGroupTypeAction Not allowed.');
+
+        //$user = $this->getUser();
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $defaultApprovalType = 'Faculty';
+        $facultyApprovalType = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findOneByName($defaultApprovalType);
+        echo "facultyApprovalType=$facultyApprovalType <br><br>";
+
+        $settings = $vacreqUtil->getInstitutionSettingArray();
+        foreach($settings as $setting) {
+            $approvalTypesArr = array();
+            foreach( $setting->getApprovalTypes() as $approvalType) {
+                $approvalTypesArr[] = $approvalType->getName();
+            }
+            echo $setting->getId().": setting=".implode(",",$approvalTypesArr).", inst=".$setting->getInstitution()."<br>";
+
+            if( count($setting->getApprovalTypes()) == 0 ) {
+                echo "Add Faculty $facultyApprovalType to ".$setting->getId()."<br>";
+                $setting->addApprovalType($facultyApprovalType);
+                $em->flush();
+            }
+            echo "<br>";
+        }
+
+        exit('EOF addDefaultApprovalGroupTypeAction');
+    }
+
 }
