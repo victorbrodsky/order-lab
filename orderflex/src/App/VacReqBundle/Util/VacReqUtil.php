@@ -4786,6 +4786,17 @@ class VacReqUtil
 
         return $approverType;
     }
+    
+    public function canCreateNewCarryOverRequest( $user=null ) {
+        if( !$user ) {
+            $user = $this->security->getUser();
+        }
+        $allowCarryOver = $this->getValueApprovalGroupTypeByUser("allowCarryOver",$user);
+        if( !$allowCarryOver ) {
+            return false;
+        }
+        return true;
+    }
 
     //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
     // - approved vacation days for this academic year based on the requests

@@ -66,6 +66,22 @@ class RequestController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
+        $routeName = $request->get('_route');
+
+        //permitted only for users with allowCarryOver
+        if( $routeName == "vacreq_carryoverrequest" ) {
+            if (
+                $vacreqUtil->canCreateNewCarryOverRequest($user) == false &&
+                $this->isGranted('ROLE_VACREQ_SUPERVISOR') == false &&
+                $this->isGranted('ROLE_VACREQ_ADMIN') == false
+            ) {
+                $this->addFlash(
+                    'warning',
+                    "As a fellows, you are not permitted to submit carry over requests."
+                );
+                return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            }
+        }
 
         $entity = new VacReqRequest($user);
 
@@ -87,7 +103,6 @@ class RequestController extends OrderAbstractController
         $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
 
         //set request type
-        $routeName = $request->get('_route');
         if( $routeName == "vacreq_carryoverrequest" ) {
             //carryover request
             $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");

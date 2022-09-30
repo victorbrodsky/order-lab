@@ -32,6 +32,12 @@ You would first stop postgres instance in your machine 157.139.226.86,
  untar the file to the data directory (remove the existing one)
  and then re-start postges instance.
 
+Replace backup data folder:
+/var/lib/pgsql/14/data/
+Start/Stop server:
+sudo systemctl stop postgresql-14
+sudo systemctl start postgresql-14
+
 -bash-4.2$ hostname
 xits-po-order-prd1
 
@@ -39,5 +45,9 @@ The cronjobs are under postgres user:
 sudo crontab -u postgres -l
 0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+create crontab: crontab -e -u postgres
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
 

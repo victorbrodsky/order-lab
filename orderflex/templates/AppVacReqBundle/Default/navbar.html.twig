@@ -145,11 +145,17 @@
                             is_granted('ROLE_VACREQ_APPROVER') or
                             is_granted('ROLE_VACREQ_SUPERVISOR')
                     %}
-                        <li id="nav-bar-carryoverrequest" class="divider-vertical">
-                            <a href="{{ path('vacreq_carryoverrequest') }}">
-                                Request Carry Over
-                            </a>
-                        </li>
+                        {% if
+                            vacreq_util.canCreateNewCarryOverRequest() or
+                            is_granted('ROLE_VACREQ_SUPERVISOR') or
+                            is_granted('ROLE_VACREQ_ADMIN')
+                        %}
+                            <li id="nav-bar-carryoverrequest" class="divider-vertical">
+                                <a href="{{ path('vacreq_carryoverrequest') }}">
+                                    Request Carry Over
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
 
                     {% set floatingDayName = user_security_utility.getSiteSettingParameter('floatingDayName',vacreq_sitename) %}
