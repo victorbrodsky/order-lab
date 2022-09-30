@@ -2306,17 +2306,25 @@ class UserSecurityUtil {
         //1) get pid group
         $firstCombinedArr = array();
         foreach( $instArr as $recordArr ) {
+            $firstTitleId = "";
+            $firstInstPid = "";
+            $firstInst = NULL;
             //echo "0firstTitleId=".$recordArr['titleInfo'][0]['id']."<br>";
-            if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
-                $firstInstPid = $recordArr['instInfo'][0]['pid'];
+            //if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
+                if( array_key_exists('instInfo',$recordArr) && count($recordArr['instInfo']) > 0 ) {
+                    $firstInst = $recordArr['instInfo'][0];
+                    $firstInstPid = $firstInst['pid'];
+                }
                 //$firstInstId = $recordArr['instInfo'][0]['id'];
-                $firstTitleId = $recordArr['titleInfo'][0]['id'];
+                if( array_key_exists('titleInfo',$recordArr) && count($recordArr['titleInfo']) > 0 ) {
+                    $firstTitleId = $recordArr['titleInfo'][0]['id'];
+                }
                 if( $firstTitleId ) {
                     $firstCombineId = $firstTitleId . "-" . $firstInstPid;
-                    $firstCombinedArr[$firstCombineId][] = $recordArr['instInfo'][0];
+                    $firstCombinedArr[$firstCombineId][] = $firstInst;
                 }
                 //echo "1firstTitleId=$firstTitleId<br>";
-            }
+            //}
         }
 //        echo "firstCombinedArr:<pre>";
 //        print_r($firstCombinedArr);

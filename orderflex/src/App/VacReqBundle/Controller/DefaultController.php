@@ -766,10 +766,8 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        exit('addDefaultApprovalGroupTypeAction Not allowed.');
+        //exit('addDefaultApprovalGroupTypeAction Not allowed.');
 
-        //$user = $this->getUser();
-        //$userSecUtil = $this->container->get('user_security_utility');
         $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
@@ -783,7 +781,7 @@ class DefaultController extends OrderAbstractController
             foreach( $setting->getApprovalTypes() as $approvalType) {
                 $approvalTypesArr[] = $approvalType->getName();
             }
-            echo $setting->getId().": setting=".implode(",",$approvalTypesArr).", inst=".$setting->getInstitution()."<br>";
+            echo $setting->getId().": setting=[".implode(",",$approvalTypesArr)."], inst=".$setting->getInstitution()."<br>";
 
             if( count($setting->getApprovalTypes()) == 0 ) {
                 echo "Add Faculty $facultyApprovalType to ".$setting->getId()."<br>";
