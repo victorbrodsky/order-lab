@@ -4471,7 +4471,11 @@ class VacReqUtil
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
         }
 
-        $approvalGroupTypeName = $approvalGroupType->getName();
+        if( $approvalGroupType ) {
+            $approvalGroupTypeName = $approvalGroupType->getName();
+        } else {
+            $approvalGroupTypeName = "N/A";
+        }
 
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
         //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
