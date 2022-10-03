@@ -6630,21 +6630,21 @@ class AdminController extends OrderAbstractController
             array(
                 "name" => "Faculty",
                 "vacationAccruedDaysPerMonth" => 2.0,
-                "maxVacationDays" => NULL, //24,
+                "maxVacationDays" => 24,
                 "noteForVacationDays" => NULL,
-                "maxCarryOverVacationDays" => NULL, //10,
+                "maxCarryOverVacationDays" => 10,
                 "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 10",
                 "allowCarryOver" => true
             ),
-//            array(
-//                "name" => "Fellows",
-//                "vacationAccruedDaysPerMonth" => 1.666,
-//                "maxVacationDays" => 20,
-//                "noteForVacationDays" => "",
-//                "maxCarryOverVacationDays" => NULL,
-//                "noteForCarryOverDays" => NULL,
-//                "allowCarryOver" => false
-//            ),
+            array(
+                "name" => "Fellows",
+                "vacationAccruedDaysPerMonth" => 1.666,
+                "maxVacationDays" => 20,
+                "noteForVacationDays" => "",
+                "maxCarryOverVacationDays" => NULL,
+                "noteForCarryOverDays" => NULL,
+                "allowCarryOver" => false
+            ),
         );
 
         $count = 10;
@@ -6666,12 +6666,12 @@ class AdminController extends OrderAbstractController
             $listEntity = new VacReqApprovalTypeList();
             $this->setDefaultList($listEntity,$count,$user,$name);
 
-            //$listEntity->setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth);
-            //$listEntity->setMaxVacationDays($maxVacationDays);
-            //$listEntity->setNoteForVacationDays($noteForVacationDays);
-            //$listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
+            $listEntity->setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth);
+            $listEntity->setMaxVacationDays($maxVacationDays);
+            $listEntity->setNoteForVacationDays($noteForVacationDays);
+            $listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
             //$listEntity->setNoteForCarryOverDays($noteForCarryOverDays);
-            //$listEntity->setAllowCarryOver($allowCarryOver);
+            $listEntity->setAllowCarryOver($allowCarryOver);
 
             $em->persist($listEntity);
             $em->flush();
