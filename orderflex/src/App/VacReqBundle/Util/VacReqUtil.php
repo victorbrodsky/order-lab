@@ -4204,7 +4204,8 @@ class VacReqUtil
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
 
         if( !$vacationAccruedDaysPerMonth ) {
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+            $vacationAccruedDaysPerMonth = 2;
+            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
         //echo "monthCount=".$monthCount."<br>";
         $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
@@ -4221,7 +4222,8 @@ class VacReqUtil
         $vacationAccruedDaysPerMonth = $approvalGroupType->getVacationAccruedDaysPerMonth();
         if( !$vacationAccruedDaysPerMonth ) {
             //return 0;
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined.');
+            $vacationAccruedDaysPerMonth = 2;
+            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined.');
         }
         $totalAccruedDays = 12 * $vacationAccruedDaysPerMonth;
 
@@ -4502,7 +4504,8 @@ class VacReqUtil
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
         $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser('vacationAccruedDaysPerMonth',$user,$approvalGroupType);
         if( !$vacationAccruedDaysPerMonth ) {
-            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
+            $vacationAccruedDaysPerMonth = 2;
+            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
         }
         if( floor($vacationAccruedDaysPerMonth) == $vacationAccruedDaysPerMonth ) {
             //echo $vacationAccruedDaysPerMonth." is int <br>";
