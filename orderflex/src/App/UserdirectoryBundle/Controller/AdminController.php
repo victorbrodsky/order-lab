@@ -6629,9 +6629,9 @@ class AdminController extends OrderAbstractController
         $types = array(
             array(
                 "name" => "Faculty",
-                "vacationAccruedDaysPerMonth" => 2,
+                "vacationAccruedDaysPerMonth" => 2.0,
                 "maxVacationDays" => 24,
-                "noteForVacationDays" => "",
+                "noteForVacationDays" => NULL,
                 "maxCarryOverVacationDays" => 10,
                 "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 10",
                 "allowCarryOver" => true
