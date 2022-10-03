@@ -6629,7 +6629,7 @@ class AdminController extends OrderAbstractController
         $types = array(
             array(
                 "name" => "Faculty",
-                "vacationAccruedDaysPerMonth" => 2.0,
+                "vacationAccruedDaysPerMonth" => NULL, //2.0,
                 "maxVacationDays" => 24,
                 "noteForVacationDays" => NULL,
                 "maxCarryOverVacationDays" => 10,
