@@ -1311,7 +1311,7 @@ class ApproverController extends OrderAbstractController
 
         $params = array(
             'userFieldName' => 'defaultInformUsers',
-            'userLabel' => "Send a notification to the following default individuals:",
+            'userLabel' => "Send a notification to the following individuals:",
             'userClass' => 'vacreq-defaultinformusers'
         );
 

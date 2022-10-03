@@ -490,7 +490,7 @@ class VacReqRequestType extends AbstractType
         }//if tentativeInstitutions
 
         //informUsers
-        $informUsersAttr = array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to this individuals');
+        $informUsersAttr = array('class' => 'combobox vacreq-informUsers', 'placeholder' => 'Send a notification to these individuals');
         if( $this->params['review'] ) {
             $informUsersAttr['readonly'] = true;
         }

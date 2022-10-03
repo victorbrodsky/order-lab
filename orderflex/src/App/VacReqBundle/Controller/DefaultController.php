@@ -766,7 +766,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //exit('addDefaultApprovalGroupTypeAction Not allowed.');
+        exit('addDefaultApprovalGroupTypeAction Not allowed.');
 
         $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
