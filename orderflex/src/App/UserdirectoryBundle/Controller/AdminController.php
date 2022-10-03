@@ -6666,10 +6666,10 @@ class AdminController extends OrderAbstractController
             $listEntity = new VacReqApprovalTypeList();
             $this->setDefaultList($listEntity,$count,$user,$name);
 
-            $listEntity->setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth);
-            $listEntity->setMaxVacationDays($maxVacationDays);
-            $listEntity->setNoteForVacationDays($noteForVacationDays);
-            $listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
+            //$listEntity->setVacationAccruedDaysPerMonth($vacationAccruedDaysPerMonth);
+            //$listEntity->setMaxVacationDays($maxVacationDays);
+            //$listEntity->setNoteForVacationDays($noteForVacationDays);
+            //$listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
             $listEntity->setNoteForCarryOverDays($noteForCarryOverDays);
             $listEntity->setAllowCarryOver($allowCarryOver);
 
