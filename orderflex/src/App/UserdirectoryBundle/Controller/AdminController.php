@@ -6671,7 +6671,7 @@ class AdminController extends OrderAbstractController
             $listEntity->setNoteForVacationDays($noteForVacationDays);
             $listEntity->setMaxCarryOverVacationDays($maxCarryOverVacationDays);
             //$listEntity->setNoteForCarryOverDays($noteForCarryOverDays);
-            $listEntity->setAllowCarryOver($allowCarryOver);
+            //$listEntity->setAllowCarryOver($allowCarryOver);
 
             $em->persist($listEntity);
             $em->flush();
