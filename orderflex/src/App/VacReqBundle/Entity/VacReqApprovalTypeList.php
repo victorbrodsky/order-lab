@@ -273,6 +273,7 @@ class VacReqApprovalTypeList extends ListAbstract {
      */
     public function setAllowCarryOver($allowCarryOver)
     {
+        exit('$allowCarryOver='.$allowCarryOver);
         $this->allowCarryOver = $allowCarryOver;
     }
 
