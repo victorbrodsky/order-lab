@@ -792,7 +792,7 @@ class ApproverController extends OrderAbstractController
             //exit('instid='.$instid);
 
             //TODO: add approval type to the vacreq institution group
-            $approvalType->addInstitution($institution);
+            //$approvalType->addInstitution($institution);
             //TODO: add approval group to VacReqSettings
 
             $count = 0;
