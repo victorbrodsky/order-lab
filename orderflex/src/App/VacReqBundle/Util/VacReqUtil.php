@@ -4476,7 +4476,7 @@ class VacReqUtil
         if( $approvalGroupType ) {
             $approvalGroupTypeName = $approvalGroupType->getName();
         } else {
-            $approvalGroupTypeName = "N/A";
+            $approvalGroupTypeName = "Faculty";
         }
 
         //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
