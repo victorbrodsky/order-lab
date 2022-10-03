@@ -6636,15 +6636,15 @@ class AdminController extends OrderAbstractController
                 "noteForCarryOverDays" => "As per policy, the number of days that can be carried over to the following year is limited to the maximum of 10",
                 "allowCarryOver" => true
             ),
-            array(
-                "name" => "Fellows",
-                "vacationAccruedDaysPerMonth" => 1.666,
-                "maxVacationDays" => 20,
-                "noteForVacationDays" => "",
-                "maxCarryOverVacationDays" => NULL,
-                "noteForCarryOverDays" => NULL,
-                "allowCarryOver" => false
-            ),
+//            array(
+//                "name" => "Fellows",
+//                "vacationAccruedDaysPerMonth" => 1.666,
+//                "maxVacationDays" => 20,
+//                "noteForVacationDays" => "",
+//                "maxCarryOverVacationDays" => NULL,
+//                "noteForCarryOverDays" => NULL,
+//                "allowCarryOver" => false
+//            ),
         );
 
         $count = 10;
