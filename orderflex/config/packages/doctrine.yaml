@@ -45,7 +45,10 @@ doctrine:
                 password: '%database_password_external%'
                 charset:  UTF8			
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
+        #auto_generate_proxy_classes: '%kernel.debug%'
+        #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
+        #Warning: rename cache Proxies Access is denied (code: 5): set auto_generate_proxy_classes: false
+        auto_generate_proxy_classes: false
 #        auto_mapping: true
         default_entity_manager: default
         entity_managers:

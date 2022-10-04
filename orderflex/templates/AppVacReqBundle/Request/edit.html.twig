@@ -46,6 +46,7 @@
     <input type="hidden" id="requestType" value="{{ entity.getRequestTypeAbbreviation() }}" />
     {#<input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />#}
     <input type="hidden" id="maxcarryovervacationdays" value="{{ vacreq_util.getValueApprovalGroupTypeByUser('maxCarryOverVacationDays') }}" />
+    <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
 
     {% if is_granted('ROLE_VACREQ_ADMIN') %}
         <input type="hidden" id="vacreq_admin" value="admin" />
@@ -571,7 +572,7 @@
 
             //vacreqDayWeekListener();
 
-            //vacreqSetPersonAway();
+            vacreqSetPersonAway();
             vacreqSetDefaultInformUsers();
             vacreqSetDefaultInformUsersListener();
 
@@ -888,6 +889,11 @@
 
             var error = null;
 
+            var personAwayData = $('.vacreq-person-away').select2('data');
+            if( !error && !personAwayData ) {
+                error = "Please choose a person away";
+            }
+
             //var userInstitution = $('.vacreq-institution').select2('data');
             //For carry over request, only vacreq-tentativeInstitution is required
             var userInstitution = $('.vacreq-tentativeInstitution').select2('data');
@@ -955,6 +961,11 @@
             var userData = $('.vacreq-user').select2('data');
             if( !error && !userData ) {
                 error = "Please choose a requester";
+            }
+
+            var personAwayData = $('.vacreq-person-away').select2('data');
+            if( !error && !personAwayData ) {
+                error = "Please choose a person away";
             }
 
             var userInstitution = $('.vacreq-institution').select2('data');
@@ -1053,15 +1064,36 @@
         }
 
         function vacreqSetDefaultInformUsersListener() {
-            $('.vacreq-institution').on("change", function(e) {
+
+            console.log("_requestType="+_requestType);
+            //vacreq-tentativeInstitution
+            //var instSelector = '.vacreq-institution';
+            //if( _requestType == "business-vacation" ) {
+            //}
+//            if( _requestType == "carryover" ) {
+//                instSelector = '.vacreq-tentativeInstitution';
+//            }
+
+            var instSelector = '.vacreq-institution';
+            if( _requestType == "carryover" ) {
+                instSelector = '.vacreq-tentativeInstitution';
+            }
+
+            $(instSelector).on("change", function(e) {
                 console.log('vacreqSetDefaultInformUsersListener');
                 vacreqSetPersonAway();
-                //vacreqSetDefaultInformUsers();
+                vacreqSetDefaultInformUsers();
             });
         }
         function vacreqSetDefaultInformUsers() {
+
+            var instSelector = '.vacreq-institution';
+            if( _requestType == "carryover" ) {
+                instSelector = '.vacreq-tentativeInstitution';
+            }
+
             var holder = $('#vacreq-request-form');
-            var userInstitution = holder.find('.vacreq-institution').select2('data');
+            var userInstitution = holder.find(instSelector).select2('data');
             var instid = 0;
             if( userInstitution ) {
                 var instid = userInstitution.id;
@@ -1080,14 +1112,22 @@
             var holder = $('#vacreq-request-form');
 
             if( $('#s2id_oleg_vacreqbundle_request_user').hasClass('select2-container-disabled') ) {
-                //console.log("2vacreq-person-away is disabled");
+                console.log("vacreq-person-away is disabled");
                 return;
+            } else {
+                console.log("vacreq-person-away is enabled");
             }
-            //else {
-                //console.log("2vacreq-person-away is enabled");
+
+            //if( _requestType == "carryover" ) {
+            //    return;
             //}
-            
-            var userInstitution = holder.find('.vacreq-institution').select2('data');
+
+            var instSelector = '.vacreq-institution';
+            if( _requestType == "carryover" ) {
+                instSelector = '.vacreq-tentativeInstitution';
+            }
+
+            var userInstitution = holder.find(instSelector).select2('data');
 
             var instid = 0;
             if( userInstitution ) {
@@ -1112,6 +1152,7 @@
                 async: asyncflag,
                 data: {instid: instid},
             }).done(function(data) {
+                console.log('vacreqSetPersonAway reset person away');
                 $('select.vacreq-person-away').empty().trigger("change");
                 vacreqUpdatePersonAway(data);
             });
@@ -1125,6 +1166,12 @@
                     $("select.vacreq-person-away").append(newOption).trigger('change');
                 }
             });
+            //$("select.vacreq-person-away").select2('val',null);
+            var userid = $('#authuser_id').val();
+            if( userid && userid.length > 0 ) {
+                console.log('vacreqSetPersonAway set user userid='+userid);
+                $("select.vacreq-person-away").select2('val',userid);
+            }
         }
 
     </script>

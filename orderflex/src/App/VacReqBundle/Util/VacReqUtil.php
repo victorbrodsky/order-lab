@@ -4660,6 +4660,7 @@ class VacReqUtil
             }
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
             //echo "getSingleApprovalGroupType=$approvalGroupType <br>";
+            //exit('111');
         }
 
         if( !$approvalGroupType ) {
@@ -4822,10 +4823,10 @@ class VacReqUtil
             $user = $this->security->getUser();
         }
         $allowCarryOver = $this->getValueApprovalGroupTypeByUser("allowCarryOver",$user);
-        if( !$allowCarryOver ) {
-            return false;
+        if( $allowCarryOver === true ) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     //(number of days accrued per month from site settings x 12) + days carried over from previous academic year
