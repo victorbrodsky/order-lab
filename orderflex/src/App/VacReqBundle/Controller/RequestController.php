@@ -66,6 +66,7 @@ class RequestController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         $user = $this->getUser();
+        $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
         $routeName = $request->get('_route');
 
         //permitted only for users with allowCarryOver
@@ -75,9 +76,15 @@ class RequestController extends OrderAbstractController
                 $this->isGranted('ROLE_VACREQ_SUPERVISOR') == false &&
                 $this->isGranted('ROLE_VACREQ_ADMIN') == false
             ) {
+
+                if( $approvalGroupType ) {
+                    $warning = "As a ".$approvalGroupType.", you are not permitted to submit carry over requests.";
+                } else {
+                    $warning = "You are not permitted to submit carry over requests.";
+                }
                 $this->addFlash(
                     'warning',
-                    "As a fellows, you are not permitted to submit carry over requests."
+                    $warning
                 );
                 return $this->redirect($this->generateUrl('vacreq-nopermission'));
             }
@@ -100,7 +107,7 @@ class RequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
+        //$approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
 
         //set request type
         if( $routeName == "vacreq_carryoverrequest" ) {
