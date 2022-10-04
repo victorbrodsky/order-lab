@@ -330,7 +330,7 @@ class VacReqRequestType extends AbstractType
         }
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
-            $userAttr = array('class' => 'combobox combobox-width');
+            $userAttr = array('class' => 'combobox combobox-width vacreq-person-away');
 
 //            if( $this->params['roleAdmin'] ) {
 //                echo "roleAdmin <br>";

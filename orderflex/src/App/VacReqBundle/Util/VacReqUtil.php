@@ -453,12 +453,23 @@ class VacReqUtil
     public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false ) {
         $users = array();
 
+        if( !$groupId ) {
+            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
+            //echo "0user count=".count($users)."<br>";
+            //exit('111');
+            return $users;
+        }
+
         $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
                             findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
 
         if( count($roles) == 0 ) {
             return array();
         }
+
+//        foreach($roles as $role){
+//            echo "role=".$role."<br>";
+//        }
 
         $role = $roles[0];
 
@@ -468,6 +479,18 @@ class VacReqUtil
         }
 
         return $users;
+    }
+    public function getUsersByGroupSelect( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false ) {
+        $users = $this->getUsersByGroupId($groupId,$rolePartialName,$onlyWorking);
+        $resArr = array();
+        foreach($users as $user){
+            //$resArr[$user.""] = $user->getId();
+            $resArr[] = array(
+                'id' => $user->getId(),
+                'text' => $user.""
+            );
+        }
+        return $resArr;
     }
 
     //Create new role for org institution if role does not exists
@@ -3524,8 +3547,8 @@ class VacReqUtil
         return implode(", ",$approversArr);
     }
 
+    //not used. use getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER")
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
-
         //TODO: this might optimized to get user objects in one query. groupBy does not work in MSSQL.
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");

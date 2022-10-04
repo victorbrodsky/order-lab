@@ -1401,6 +1401,28 @@ class ApproverController extends OrderAbstractController
         $response->setContent($defaultInformUsers);
         return $response;
     }
+    
+    /**
+     * @Route("/organizational-institution-personaway-ajax/{instid}",
+     *     name="vacreq_orginst_personaway_ajax",
+     *     methods={"GET", "POST"},
+     *     options={"expose"=true}
+     *     )
+     */
+    public function personAwayAjaxAction(Request $request, $instid)
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        //$response->headers->set('Content-Type', 'application/json');
+        //$submitters = $this->vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($instid);
+        $submittersSelect = $this->vacreqUtil->getUsersByGroupSelect($instid,"ROLE_VACREQ_SUBMITTER");
+        if( count($submittersSelect) == 0 ) {
+            //person away field can not be empty = > if zero => get default users
+            $submittersSelect = $this->vacreqUtil->getUsersByGroupSelect(0,"ROLE_VACREQ_SUBMITTER");
+        }
+        $response->setContent(json_encode($submittersSelect));
+        return $response;
+    }
 
 
     /**

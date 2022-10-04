@@ -571,6 +571,7 @@
 
             //vacreqDayWeekListener();
 
+            //vacreqSetPersonAway();
             vacreqSetDefaultInformUsers();
             vacreqSetDefaultInformUsersListener();
 
@@ -1053,24 +1054,68 @@
 
         function vacreqSetDefaultInformUsersListener() {
             $('.vacreq-institution').on("change", function(e) {
-                vacreqSetDefaultInformUsers();
+                console.log('vacreqSetDefaultInformUsersListener');
+                vacreqSetPersonAway();
+                //vacreqSetDefaultInformUsers();
             });
         }
         function vacreqSetDefaultInformUsers() {
             var holder = $('#vacreq-request-form');
             var userInstitution = holder.find('.vacreq-institution').select2('data');
+            var instid = 0;
             if( userInstitution ) {
                 var instid = userInstitution.id;
-                //console.log('instid='+instid);
-
-                //update #vacreq-defaultInformUsers
-                var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid});
-                //console.log('updateUserUrl='+updateUserUrl);
-                $.get(updateUserUrl, function(data, status){
-                    //console.log('data='+data+", status="+status);
-                    $('#vacreq-defaultInformUsers').val(data);
-                });
             }
+            //console.log('instid='+instid);
+
+            //update #vacreq-defaultInformUsers
+            var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid});
+            //console.log('updateUserUrl='+updateUserUrl);
+            $.get(updateUserUrl, function(data, status){
+                //console.log('data='+data+", status="+status);
+                $('#vacreq-defaultInformUsers').val(data);
+            });
+        }
+        function vacreqSetPersonAway() {
+            var holder = $('#vacreq-request-form');
+            var userInstitution = holder.find('.vacreq-institution').select2('data');
+
+            var instid = 0;
+            if( userInstitution ) {
+                var instid = userInstitution.id;
+            }
+            console.log('vacreqSetPersonAway instid='+instid);
+
+            //update #vacreq-defaultInformUsers
+            var url = Routing.generate('vacreq_orginst_personaway_ajax', {instid:instid});
+            //console.log('url='+url);
+
+//                $.get(url, function(data, status){
+//                    //console.log('data=',data,", status="+status);
+//                    console.log('data=',data,", status="+status);
+//                    var newOption = new Option(thisUserText, thisUserId, false, false);
+//                    $("select.vacreq-person-away").append(newOption).trigger('change');
+//                });
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: asyncflag,
+                data: {instid: instid},
+            }).done(function(data) {
+                $('select.vacreq-person-away').empty().trigger("change");
+                vacreqUpdatePersonAway(data);
+            });
+        }
+        function vacreqUpdatePersonAway(users) {
+            users.forEach(function(item){
+                var thisUserId = item['id'];
+                var thisUserText = item['text'];
+                if( thisUserText ) {
+                    var newOption = new Option(thisUserText, thisUserId, false, false);
+                    $("select.vacreq-person-away").append(newOption).trigger('change');
+                }
+            });
         }
 
     </script>

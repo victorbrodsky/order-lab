@@ -208,6 +208,8 @@ class UserRepository extends EntityRepository {
     public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false ) {
 
         //$user = null;
+        //exit("findUserByRole");
+        //echo "role=".$role."<br>";
 
         $query = $this->_em->createQueryBuilder()
             ->from('AppUserdirectoryBundle:User', 'user')
@@ -215,7 +217,8 @@ class UserRepository extends EntityRepository {
             ->leftJoin("user.infos","infos")
             ->where("user.roles LIKE :role")
             ->orderBy($orderBy,"ASC")
-            ->setParameter('role', '%"' . $role . '"%');
+            //->setParameter('role', '%"' . $role . '"%'); //%" is not correct, but it was working before?
+            ->setParameter('role', '%' . $role . '%');
 
         if( $onlyWorking ) {
             $curdate = date("Y-m-d", time());
