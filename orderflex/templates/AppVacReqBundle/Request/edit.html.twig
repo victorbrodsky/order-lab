@@ -1078,6 +1078,15 @@
         }
         function vacreqSetPersonAway() {
             var holder = $('#vacreq-request-form');
+
+            if( $('#s2id_oleg_vacreqbundle_request_user').hasClass('select2-container-disabled') ) {
+                //console.log("2vacreq-person-away is disabled");
+                return;
+            }
+            //else {
+                //console.log("2vacreq-person-away is enabled");
+            //}
+            
             var userInstitution = holder.find('.vacreq-institution').select2('data');
 
             var instid = 0;
