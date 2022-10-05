@@ -78,7 +78,7 @@ class RequestController extends OrderAbstractController
             ) {
 
                 if( $approvalGroupType ) {
-                    $warning = "As a ".$approvalGroupType.", you are not permitted to submit carry over requests.";
+                    $warning = "As ".strtolower($approvalGroupType).", you are not permitted to submit carry over requests.";
                 } else {
                     $warning = "You are not permitted to submit carry over requests.";
                 }

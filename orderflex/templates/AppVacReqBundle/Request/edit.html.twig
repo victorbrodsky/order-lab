@@ -178,6 +178,7 @@
         {% endif %}
 
         {#show static defaultInformUsers#}
+        <div id="vacreq-holder-defaultInformUsers">
         {{ formmacros.simplefield(
             "Send a notification to the following individuals:",
             "",
@@ -186,6 +187,7 @@
             "These individuals are set by the administrator of the organizational group", "vacreq-defaultInformUsers"
             )
         }}
+        </div>
         {% if form.informUsers is defined %}
             {{ formmacros.field(form.informUsers) }}
         {% endif %}
@@ -1106,6 +1108,11 @@
             $.get(updateUserUrl, function(data, status){
                 //console.log('data='+data+", status="+status);
                 $('#vacreq-defaultInformUsers').val(data);
+                if( data ) {
+                    $('#vacreq-holder-defaultInformUsers').show();
+                } else {
+                    $('#vacreq-holder-defaultInformUsers').hide();
+                }
             });
         }
         function vacreqSetPersonAway() {
