@@ -95,7 +95,8 @@ DirectoryIndex index.php
     #working
     #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=301,NC,L]
 
-    RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=301,NC,L]
+    RewriteCond %{HTTP_HOST} ^/view.med.cornell.edu/vacation-request/
+    RewriteRule /vacation-request/(.*)$ https://view.med.cornell.edu/time-away-request/$1 [R=301,NC,L]
 </IfModule>
 
 
