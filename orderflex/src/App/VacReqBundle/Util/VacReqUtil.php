@@ -6483,7 +6483,7 @@ class VacReqUtil
         return $ids;
     }
 
-    //127.0.0.1/order/index_dev.php/vacation-request/download-summary-report-spreadsheet/
+    //127.0.0.1/order/index_dev.php/time-away-request/download-summary-report-spreadsheet/
     public function createtSummaryReportByNameSpout( $userIdsStr, $fileName, $yearRangeStr ) {
 
         set_time_limit(600);

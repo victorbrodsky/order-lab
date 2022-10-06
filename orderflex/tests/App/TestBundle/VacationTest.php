@@ -18,7 +18,7 @@ class VacationTest extends WebTestBase
         echo "[Vacation,PHP=".$phpVersion."]";
         
         //$this->getTestClient();
-        $crawler = $this->client->request('GET', '/vacation-request/login');
+        $crawler = $this->client->request('GET', '/time-away-request/login');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -82,7 +82,7 @@ class VacationTest extends WebTestBase
 
     public function testHomeAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/');
+        $crawler = $this->client->request('GET', '/time-away-request/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -117,7 +117,7 @@ class VacationTest extends WebTestBase
 
     public function testCalendar() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/away-calendar/');
+        $crawler = $this->client->request('GET', '/time-away-request/away-calendar/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Away Calendar")')->count()
@@ -132,7 +132,7 @@ class VacationTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/vacation-request/event-log/');
+        $crawler = $this->client->request('GET', '/time-away-request/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -145,7 +145,7 @@ class VacationTest extends WebTestBase
 
     public function testAboutAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/about');
+        $crawler = $this->client->request('GET', '/time-away-request/about');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("PHP_VERSION")')->count()
@@ -165,7 +165,7 @@ class VacationTest extends WebTestBase
 
     public function testListIncomingRequestsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/incoming-requests/');
+        $crawler = $this->client->request('GET', '/time-away-request/incoming-requests/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Incoming Business Travel & Vacation Requests")')->count()
@@ -178,7 +178,7 @@ class VacationTest extends WebTestBase
 
     public function testMyRequestsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/my-requests/');
+        $crawler = $this->client->request('GET', '/time-away-request/my-requests/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("My Business Travel & Vacation Requests")')->count()
@@ -193,10 +193,10 @@ class VacationTest extends WebTestBase
         );
     }
 
-    ///vacation-request/incoming-requests/?filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5BrequestType%5D=2&filter%5BacademicYear%5D=&filter%5Buser%5D=&filter%5Bsubmitter%5D=&filter%5BorganizationalInstitutions%5D=
+    ///time-away-request/incoming-requests/?filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5BrequestType%5D=2&filter%5BacademicYear%5D=&filter%5Buser%5D=&filter%5Bsubmitter%5D=&filter%5BorganizationalInstitutions%5D=
     public function testIncomingCarryOverAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/incoming-requests/?filter[startdate]=&filter[enddate]=&filter[requestType]=2&filter[academicYear]=&filter[user]=&filter[submitter]=&filter[organizationalInstitutions]=');
+        $crawler = $this->client->request('GET', '/time-away-request/incoming-requests/?filter[startdate]=&filter[enddate]=&filter[requestType]=2&filter[academicYear]=&filter[user]=&filter[submitter]=&filter[organizationalInstitutions]=');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Incoming Carry Over Requests")')->count()
@@ -213,7 +213,7 @@ class VacationTest extends WebTestBase
 
     public function testSiteSettingsAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/settings/');
+        $crawler = $this->client->request('GET', '/time-away-request/settings/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Platform Settings")')->count()
@@ -230,7 +230,7 @@ class VacationTest extends WebTestBase
 
     public function testMyGroupAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/my-group/');
+        $crawler = $this->client->request('GET', '/time-away-request/my-group/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -249,7 +249,7 @@ class VacationTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
-        $crawler = $this->client->request('GET', '/vacation-request/authorized-users/');
+        $crawler = $this->client->request('GET', '/time-away-request/authorized-users/');
 
         $this->assertGreaterThan(
             0,
@@ -263,7 +263,7 @@ class VacationTest extends WebTestBase
 
     public function testProfileAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/user/1');
+        $crawler = $this->client->request('GET', '/time-away-request/user/1');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("View Details")')->count()
@@ -276,7 +276,7 @@ class VacationTest extends WebTestBase
 
     public function testManageGroups() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/groups/');
+        $crawler = $this->client->request('GET', '/time-away-request/groups/');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Vacation & Business Travel Request Groups")')->count()
@@ -289,7 +289,7 @@ class VacationTest extends WebTestBase
 
     public function testCreateRequestCarryOver() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/vacation-request/carry-over-request/new');
+        $crawler = $this->client->request('GET', '/time-away-request/carry-over-request/new');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Request carry over of vacation days")')->count()
@@ -310,7 +310,7 @@ class VacationTest extends WebTestBase
             $requestId = $request->getId();
             //echo "[$requestId=".$requestId."]";
 
-            $crawler = $this->client->request('GET', '/vacation-request/show/'.$requestId);
+            $crawler = $this->client->request('GET', '/time-away-request/show/'.$requestId);
 
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");
@@ -350,7 +350,7 @@ class VacationTest extends WebTestBase
                 $crawler->filter('html:contains("Edit")')->count()
             );
 
-            $crawler = $this->client->request('GET', '/vacation-request/edit/'.$requestId);
+            $crawler = $this->client->request('GET', '/time-away-request/edit/'.$requestId);
 
             //$content = $this->client->getResponse()->getContent();
             //exit("content=$content");

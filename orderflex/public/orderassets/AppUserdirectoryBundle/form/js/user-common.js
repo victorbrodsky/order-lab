@@ -640,7 +640,7 @@ function siteNameMapper(full) {
     if( url.indexOf("residency-applications") !== -1 ) {
         sitename = 'residency-applications';
     }
-    if( url.indexOf("vacation-request") !== -1 ) {
+    if( url.indexOf("time-away-request") !== -1 ) {
         sitename = 'vacation-request';
     }
     if( url.indexOf("translational-research") !== -1 ) {

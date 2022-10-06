@@ -176,7 +176,7 @@ class EmailUtilSwiftMailer {
                 $sitenameAbbreviation = "crn";
                 $subject = "[Critical Result Notifications] " . $subject;
             }
-            if (strpos((string)$url, "/vacation-request/") !== false) {
+            if (strpos((string)$url, "/time-away-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
                 $subject = "[Vacation Request] " . $subject;
             }

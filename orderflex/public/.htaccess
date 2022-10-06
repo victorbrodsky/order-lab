@@ -68,6 +68,22 @@ DirectoryIndex index.php
     #RewriteRule ^Uploaded/\.(gif|jpg|pdf)$ - [F]
     #RewriteRule ^Uploaded/(.*) - [F]
 
+    #redirect
+    #RewriteRule ^vacation-request$ ^time-away-request/$1 [R=301,L]
+    #RewriteCond %{HTTP_HOST} ^vacation-request/
+    #RewriteRule  ^/?vacation-request/(.\*)$ /time-away-request/$1  [R=301, L]
+    #RewriteRule /vacation-request/$ /time-away-request/$1
+    #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,L]
+    #RewriteRule ^/vacation-request /time-away-request [R=301,L]
+    RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
+    #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+    RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
 </IfModule>
 
 <IfModule !mod_rewrite.c>

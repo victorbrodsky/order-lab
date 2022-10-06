@@ -388,7 +388,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/multiple-carry-over-requests
+     * http://127.0.0.1/order/index_dev.php/time-away-request/multiple-carry-over-requests
      *
      * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")
      */
@@ -500,7 +500,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/diff-carry-over-days
+     * http://127.0.0.1/order/index_dev.php/time-away-request/diff-carry-over-days
      *
      * @Route("/diff-carry-over-days", name="vacreq_diff_carry_over_days")
      */
@@ -578,9 +578,9 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-vacation-requests
+     * http://127.0.0.1/order/index_dev.php/time-away-request/cancel-old-pending-time-away-requests
      *
-     * @Route("/cancel-old-pending-vacation-requests", name="vacreq_cancel-old-pending-vacation-requests")
+     * @Route("/cancel-old-pending-time-away-requests", name="vacreq_cancel-old-pending-vacation-requests")
      */
     public function cancelOldPendingVacationRequestsAction( Request $request )
     {
@@ -683,7 +683,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/cancel-old-pending-carryover-requests
+     * http://127.0.0.1/order/index_dev.php/time-away-request/cancel-old-pending-carryover-requests
      *
      * @Route("/cancel-old-pending-carryover-requests", name="vacreq_cancel-old-pending-carryover-requests")
      */
@@ -756,7 +756,7 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
-     * http://127.0.0.1/order/index_dev.php/vacation-request/add-default-approval-group-type
+     * http://127.0.0.1/order/index_dev.php/time-away-request/add-default-approval-group-type
      *
      * @Route("/add-default-approval-group-type", name="vacreq_add_default_approval_group_type")
      */

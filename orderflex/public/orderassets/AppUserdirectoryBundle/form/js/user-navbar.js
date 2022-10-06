@@ -480,37 +480,37 @@ function setVacReqNavBar() {
 
     var full = window.location.pathname;
 
-    if( full.indexOf("/vacation-request/my-requests/") !== -1 ) {
+    if( full.indexOf("/time-away-request/my-requests/") !== -1 ) {
         id = 'myrequests';
     }
 
-    if( full.indexOf("/vacation-request/incoming-requests/") !== -1 ) {
+    if( full.indexOf("/time-away-request/incoming-requests/") !== -1 ) {
         id = 'incomingrequests';
     }
 
-    if( full.indexOf("/vacation-request/groups/") !== -1 || full.indexOf("/vacation-request/organizational-institution-management/") !== -1 ) {
+    if( full.indexOf("/time-away-request/groups/") !== -1 || full.indexOf("/time-away-request/organizational-institution-management/") !== -1 ) {
         id = 'approvers';
     }
 
-    if( full.indexOf("/vacation-request/away-calendar/") !== -1 ) {
+    if( full.indexOf("/time-away-request/away-calendar/") !== -1 ) {
         id = 'awaycalendar';
     }
 
-    if( full.indexOf("/vacation-request/my-group/") !== -1 || full.indexOf("/vacation-request/carry-over-vacation-days/") !== -1 ) {
+    if( full.indexOf("/time-away-request/my-group/") !== -1 || full.indexOf("/time-away-request/carry-over-vacation-days/") !== -1 ) {
         id = 'mygroup';
     }
 
-    if( full.indexOf("/vacation-request/carry-over-request/") !== -1 ) {
+    if( full.indexOf("/time-away-request/carry-over-request/") !== -1 ) {
         id = 'carryoverrequest';
     }
 
-    if( full.indexOf("/vacation-request/floating-day") !== -1 ) {
+    if( full.indexOf("/time-away-request/floating-day") !== -1 ) {
         id = 'floatingdayrequest';
     }
 
     id = commonNavBar(full,id);
 
-    if( full.indexOf("/vacation-request/re-identify") !== -1 ) {
+    if( full.indexOf("/time-away-request/re-identify") !== -1 ) {
         id = null;
     }
 

@@ -93,8 +93,11 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
         //if this is the only role the user has on the Vacation Request Site, be instantly redirected to the Away Calendar page
         //$subdomain = "/order";
         $subdomain = "";
-        if( $url != $subdomain."/vacation-request/away-calendar/" ) {
-            $redirectResponse->setTargetUrl($subdomain."/vacation-request/away-calendar/");
+        #if( $url != $subdomain."/vacation-request/away-calendar/" ) {
+        #    $redirectResponse->setTargetUrl($subdomain."/vacation-request/away-calendar/");
+        #}
+        if( $url != $subdomain."/time-away-request/away-calendar/" ) {
+            $redirectResponse->setTargetUrl($subdomain."/time-away-request/away-calendar/");
         }
 
         return $redirectResponse;
