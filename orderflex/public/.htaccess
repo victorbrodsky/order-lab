@@ -17,6 +17,7 @@ DirectoryIndex index.php
     Options -MultiViews
 </IfModule>
 
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -75,16 +76,27 @@ DirectoryIndex index.php
     #RewriteRule /vacation-request/$ /time-away-request/$1
     #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,L]
     #RewriteRule ^/vacation-request /time-away-request [R=301,L]
-    RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
+    #RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
     #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
 
 </IfModule>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    #127.0.0.1/order/index_dev.php/vacation-request/
+    #127.0.0.1/order/index_dev.php/vacation-request/groups/
+    #http://127.0.0.1/order/index_dev.php/vacation-request/show/6926
+
     #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
-    RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
+    #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
+    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1
+
+    #working
+    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=301,NC,L]
+
+    RewriteRule /vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
 </IfModule>
+
 
 <IfModule !mod_rewrite.c>
     <IfModule mod_alias.c>
