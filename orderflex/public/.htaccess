@@ -95,7 +95,7 @@ DirectoryIndex index.php
     #working
     #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=301,NC,L]
 
-    RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
+    #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
 </IfModule>
 
 
