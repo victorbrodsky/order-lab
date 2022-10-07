@@ -85,6 +85,7 @@ DirectoryIndex index.php
     #127.0.0.1/order/index_dev.php/vacation-request/
     #127.0.0.1/order/index_dev.php/vacation-request/groups/
     #http://127.0.0.1/order/index_dev.php/vacation-request/show/6926
+    #http://127.0.0.1/order/vacation-request/show/6926
     #https://view-test.med.cornell.edu/vacation-request/
     #https://view-test.med.cornell.edu/vacation-request/show/6925
 
@@ -123,8 +124,8 @@ DirectoryIndex index.php
 
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
-    RewriteEngine On
-    RewriteRule /vacation-request/(.*)$ /time-away-request/$1 [r=301,nc]
+    #RewriteEngine On
+    RewriteRule vacation-request/(.*)$ time-away-request/$1 [R=301,NC]
 </IfModule>
 
 
