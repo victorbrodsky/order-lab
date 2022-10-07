@@ -1,3 +1,5 @@
+Redirect /foobar/ https://example.com
+
 # Use the front controller as index file. It serves as a fallback solution when
 # every other rewrite/redirect fails (e.g. in an aliased environment without
 # mod_rewrite). Additionally, this reduces the matching process for the
@@ -78,6 +80,11 @@ DirectoryIndex index.php
     #RewriteRule ^/vacation-request /time-away-request [R=301,L]
     #RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
     #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+
+    #http://127.0.0.1/foobar
+    #Redirect /foobar/ https://example.com
+    #RewriteEngine on
+    #RewriteRule ^foobar/$ https://example.com/ [R]
 
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
