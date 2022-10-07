@@ -53,14 +53,15 @@ DirectoryIndex index.php
     # - disable this feature by commenting the following 2 lines or
     # - use Apache >= 2.3.9 and replace all L flags by END flags and remove the
     #   following RewriteCond (best solution)
-    RewriteCond %{ENV:REDIRECT_STATUS} =""
-    RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+    #RewriteCond %{ENV:REDIRECT_STATUS} =""
+    #RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301] #[R=301,L]
 
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.
     # Rewrite all other queries to the front controller.
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ %{ENV:BASE}/index.php [L]
+    #RewriteRule ^ %{ENV:BASE}/index.php [L]
+    RewriteRule ^ %{ENV:BASE}/index.php
 
     #https://stackoverflow.com/questions/10236717/how-to-prevent-a-file-from-direct-url-access
     #RewriteCond %{HTTP_REFERER} !^http://(www\.)?127.0.0.1 [NC]
@@ -78,9 +79,14 @@ DirectoryIndex index.php
     #RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
     #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
 
+    #Working
+    #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
+    #RewriteEngine On
+    RewriteRule /vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
+
 </IfModule>
 
-<IfModule mod_rewrite.c>
+#<IfModule mod_rewrite.c>
     #RewriteEngine On
     #127.0.0.1/order/index_dev.php/vacation-request/
     #127.0.0.1/order/index_dev.php/vacation-request/groups/
@@ -125,8 +131,8 @@ DirectoryIndex index.php
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
     #RewriteEngine On
-    RewriteRule vacation-request/(.*)$ time-away-request/$1 [R=301,NC]
-</IfModule>
+    #RewriteRule /vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
+#</IfModule>
 
 
 
