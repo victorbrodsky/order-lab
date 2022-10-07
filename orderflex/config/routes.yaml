@@ -51,14 +51,14 @@ app_vacreq:
     #prefix:   /vacation-request
     prefix: /time-away-request
     schemes:  ['%connection_channel%']
-#legacy_vacreq:
-#    path: /vacation-request/
-#    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
-#    defaults:
-#        # this value can be an absolute path or an absolute URL
-#        path: /time-away-request/
-#        #path: 'https://www.yahoo.com'
-#        permanent: true
+legacy_vacreq:
+    path: /vacation-request/
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+    defaults:
+        # this value can be an absolute path or an absolute URL
+        path: /time-away-request/
+        #path: 'https://www.yahoo.com'
+        permanent: true
 
 app_calllog:
     resource: "../src/App/CallLogBundle/Controller/"

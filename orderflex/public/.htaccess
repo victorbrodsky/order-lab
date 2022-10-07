@@ -82,7 +82,7 @@ DirectoryIndex index.php
 </IfModule>
 
 <IfModule mod_rewrite.c>
-    RewriteEngine On
+    #RewriteEngine On
     #127.0.0.1/order/index_dev.php/vacation-request/
     #127.0.0.1/order/index_dev.php/vacation-request/groups/
     #http://127.0.0.1/order/index_dev.php/vacation-request/show/6926
@@ -95,11 +95,14 @@ DirectoryIndex index.php
     #working
     #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=301,NC,L]
 
-    RewriteCond %{HTTP_HOST} ^/view.med.cornell.edu/vacation-request/
-    RewriteRule /vacation-request/(.*)$ https://view.med.cornell.edu/time-away-request/$1 [R=301,NC,L]
+    #RewriteCond http://127.0.0.1/order/index_dev.php/vacation-request/
+    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=302,NC,L]
 
-    RewriteCond %{HTTP_HOST} ^/view-test.med.cornell.edu/vacation-request/
-    RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=301,NC,L]
+    #RewriteCond %{HTTP_HOST} ^/view.med.cornell.edu/vacation-request/
+    #RewriteRule /vacation-request/(.*)$ https://view.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
+
+    #RewriteCond %{HTTP_HOST} ^/view-test.med.cornell.edu/vacation-request/
+    #RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
 </IfModule>
 
 
