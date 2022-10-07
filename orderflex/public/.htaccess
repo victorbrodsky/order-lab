@@ -1,4 +1,5 @@
-Redirect /foobar/ https://example.com
+#check if htaccess is working
+#Redirect /foobar/ https://example.com
 
 # Use the front controller as index file. It serves as a fallback solution when
 # every other rewrite/redirect fails (e.g. in an aliased environment without
@@ -89,9 +90,15 @@ DirectoryIndex index.php
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
     #RewriteEngine On
-    RewriteRule vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
+    #RewriteRule vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
     #RewriteRule vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC]
 
+    #http://127.0.0.1/foobar/
+    #Redirect /foobar/ https://example1.com
+    #Redirect http://127.0.0.1/order/index_dev.php/vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/
+    #http://127.0.0.1/vacation-request/show/6926
+    #Redirect /vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/ #working
+    Redirect /vacation-request/ /time-away-request/
 </IfModule>
 
 #<IfModule mod_rewrite.c>
