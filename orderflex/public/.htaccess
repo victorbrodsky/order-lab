@@ -87,6 +87,7 @@ DirectoryIndex index.php
     #127.0.0.1/order/index_dev.php/vacation-request/groups/
     #http://127.0.0.1/order/index_dev.php/vacation-request/show/6926
     #https://view-test.med.cornell.edu/vacation-request/
+    #https://view-test.med.cornell.edu/vacation-request/show/6925
 
     #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
     #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
@@ -101,8 +102,8 @@ DirectoryIndex index.php
     #RewriteCond %{HTTP_HOST} ^/view.med.cornell.edu/vacation-request/
     #RewriteRule /vacation-request/(.*)$ https://view.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
 
-    #RewriteCond %{HTTP_HOST} ^/view-test.med.cornell.edu/vacation-request/
-    #RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
+    RewriteCond %{HTTP_HOST} ^/view-test.med.cornell.edu/vacation-request/
+    RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
 </IfModule>
 
 
