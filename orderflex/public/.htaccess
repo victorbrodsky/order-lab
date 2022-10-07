@@ -82,7 +82,8 @@ DirectoryIndex index.php
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
     #RewriteEngine On
-    RewriteRule vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
+    #RewriteRule vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
+    RewriteRule vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC]
 
 </IfModule>
 
