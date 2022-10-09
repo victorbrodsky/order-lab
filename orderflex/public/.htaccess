@@ -97,6 +97,7 @@ DirectoryIndex index.php
     #Redirect /foobar/ https://example1.com
     #Redirect http://127.0.0.1/order/index_dev.php/vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/
     #http://127.0.0.1/vacation-request/show/6926
+    #https://view.med.cornell.edu/vacation-request/show/8106
     #Redirect /vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/ #working
     Redirect /vacation-request/ /time-away-request/
 </IfModule>
