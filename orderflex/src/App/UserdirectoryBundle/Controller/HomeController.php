@@ -224,7 +224,7 @@ class HomeController extends OrderAbstractController {
             'fellowship-applications' => 'fellapp',
             'residency-applications' => 'resapp',
             'deidentifier' => 'deidentifier',
-            'vacation-request' => 'vacreq',
+            'time-away-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
             'translational-research' => 'translationalresearch',

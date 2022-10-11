@@ -72,83 +72,17 @@ DirectoryIndex index.php
     #RewriteRule ^Uploaded/\.(gif|jpg|pdf)$ - [F]
     #RewriteRule ^Uploaded/(.*) - [F]
 
-    #redirect
-    #RewriteRule ^vacation-request$ ^time-away-request/$1 [R=301,L]
-    #RewriteCond %{HTTP_HOST} ^vacation-request/
-    #RewriteRule  ^/?vacation-request/(.\*)$ /time-away-request/$1  [R=301, L]
-    #RewriteRule /vacation-request/$ /time-away-request/$1
-    #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,L]
-    #RewriteRule ^/vacation-request /time-away-request [R=301,L]
-    #RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
-    #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
-
-    #http://127.0.0.1/foobar
-    #Redirect /foobar/ https://example.com
-    #RewriteEngine on
-    #RewriteRule ^foobar/$ https://example.com/ [R]
-
+    #Redirect from vacation-request to time-away-request
     #Working
     #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
-    #RewriteEngine On
-    #RewriteRule vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
-    #RewriteRule vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC]
-
     #http://127.0.0.1/foobar/
     #Redirect /foobar/ https://example1.com
     #Redirect http://127.0.0.1/order/index_dev.php/vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/
     #http://127.0.0.1/vacation-request/show/6926
     #https://view.med.cornell.edu/vacation-request/show/8106
-    #Redirect /vacation-request/ http://127.0.0.1/order/index_dev.php/time-away-request/ #working
     Redirect /vacation-request/ /time-away-request/
 </IfModule>
 
-#<IfModule mod_rewrite.c>
-    #RewriteEngine On
-    #127.0.0.1/order/index_dev.php/vacation-request/
-    #127.0.0.1/order/index_dev.php/vacation-request/groups/
-    #http://127.0.0.1/order/index_dev.php/vacation-request/show/6926
-    #http://127.0.0.1/order/vacation-request/show/6926
-    #https://view-test.med.cornell.edu/vacation-request/
-    #https://view-test.med.cornell.edu/vacation-request/show/6925
-
-    #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
-    #RewriteRule ^/vacation-request/(.*)$ /time-away-request/$1 [R=301,NC,L]
-    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1
-
-    #working
-    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=301,NC,L]
-
-    #RewriteCond http://127.0.0.1/order/index_dev.php/vacation-request/
-    #RewriteRule /vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [R=302,NC,L]
-
-    #RewriteCond %{HTTP_HOST} ^/view.med.cornell.edu/vacation-request/
-    #RewriteRule /vacation-request/(.*)$ https://view.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
-
-    #RewriteCond %{HTTP_HOST} ^/view-test.med.cornell.edu/vacation-request/
-    #RewriteRule /vacation-request/(.*)$ https://view-test.med.cornell.edu/time-away-request/$1 [R=302,NC,L]
-
-    #RewriteEngine on
-    #RewriteRule ^/vacation-request$ /time-away-request
-    #301 Redirect Entire Directory
-    #Options +FollowSymLinks
-    #RewriteEngine on
-    #RedirectMatch 301 ^/vacation-request/(.*) /time-away-request/$1
-
-    #Options +FollowSymLinks -MultiViews
-    #RewriteEngine On
-    #RewriteBase /
-    #RewriteRule ^vacation-request/(.*)$ /time-away-request/$1 [L,NC]
-
-    #Rewrite to www
-    #Options +FollowSymLinks
-    #RewriteEngine On
-    #RewriteCond %{HTTP_HOST} ^vacation-request[nc]
-
-    #Working
-    #RewriteRule vacation-request/(.*)$ http://127.0.0.1/order/index_dev.php/time-away-request/$1 [r=301,nc]
-    #RewriteEngine On
-    #RewriteRule /vacation-request/(.*)$ /time-away-request/$1 [R=302,NC]
-#</IfModule>
 
 
 

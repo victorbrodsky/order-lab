@@ -304,29 +304,22 @@ security:
 #                always_remember_me: true
 
         ldap_vacreq_firewall:
-            #pattern: ^/vacation-request
             pattern: ^/time-away-request
             context: scan_auth
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                #login_path: /vacation-request/login
                 login_path: /time-away-request/login
-                #check_path: /vacation-request/login
                 check_path: /time-away-request/login
             logout:
-                #path:   /vacation-request/logout
-                #target: /vacation-request/login
                 path:   /time-away-request/logout
                 target: /time-away-request/login
             lazy:  true
-            #access_denied_url: /vacation-request/access-requests/new/create
             access_denied_url: /time-away-request/access-requests/new/create
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                #path:     /vacation-request
                 path:     /time-away-request
 #                always_remember_me: true
 
@@ -587,16 +580,6 @@ security:
 
 
        ############################## VacReq SITE SETTINGS ##############################
-#       - { path: ^/vacation-request/access-requests/new/, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/login, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/setloginvisit, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/account-requests/, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/sign-up, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/activate-account, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/forgot-password, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/reset-password, role: PUBLIC_ACCESS }
-#       - { path: ^/vacation-request/, role: ROLE_VACREQ_USER }
-
        - { path: ^/time-away-request/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^/time-away-request/login, role: PUBLIC_ACCESS }
        - { path: ^/time-away-request/setloginvisit, role: PUBLIC_ACCESS }

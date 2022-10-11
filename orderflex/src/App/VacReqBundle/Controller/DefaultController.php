@@ -580,7 +580,7 @@ class DefaultController extends OrderAbstractController
     /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/cancel-old-pending-time-away-requests
      *
-     * @Route("/cancel-old-pending-time-away-requests", name="vacreq_cancel-old-pending-vacation-requests")
+     * @Route("/cancel-old-pending-time-away-requests", name="vacreq_cancel-old-pending-vacreq")
      */
     public function cancelOldPendingVacationRequestsAction( Request $request )
     {

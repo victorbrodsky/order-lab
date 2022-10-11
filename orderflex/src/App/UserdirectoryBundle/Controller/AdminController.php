@@ -2872,16 +2872,7 @@ class AdminController extends OrderAbstractController
     public function generateSitenameList($user=null) {
 
         $em = $this->getDoctrine()->getManager();
-
-//        $elements = array(
-//            'directory' => 'employees',
-//            'scan' => 'scan',
-//            'fellowship-applications' => 'fellapp',
-//            'deidentifier' => 'deidentifier',
-//            'vacation-request' => 'vacreq',
-//            'call-log-book' => 'calllog',
-//            'translational-research' => 'translationalresearch'
-//        );
+        
         $elements = $this->getSiteList();
 
         $count = 10;
@@ -2914,7 +2905,7 @@ class AdminController extends OrderAbstractController
             'fellowship-applications' => 'fellapp',
             'residency-applications' => 'resapp',
             'deidentifier' => 'deidentifier',
-            'vacation-request' => 'vacreq',
+            'time-away-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
             'translational-research' => 'translationalresearch',
@@ -8331,7 +8322,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_DEIDENTIFICATOR_', 'deidentifier' );
 
-            $resCount = $resCount + $this->addSites( $role, '_VACREQ_', 'vacation-request' );
+            $resCount = $resCount + $this->addSites( $role, '_VACREQ_', 'time-away-request' );
 
             $resCount = $resCount + $this->addSites( $role, '_FELLAPP_', 'fellowship-applications' );
 

@@ -641,7 +641,7 @@ function siteNameMapper(full) {
         sitename = 'residency-applications';
     }
     if( url.indexOf("time-away-request") !== -1 ) {
-        sitename = 'vacation-request';
+        sitename = 'time-away-request';
     }
     if( url.indexOf("translational-research") !== -1 ) {
         sitename = 'translational-research';

@@ -233,7 +233,7 @@ function setNavBar(sitename) {
     else if( sitename == "deidentifier" ){
         setDeidentificatorNavBar();
     }
-    else if( sitename == "vacation-request" ){
+    else if( sitename == "vacation-request" || sitename == "time-away-request" ){
         setVacReqNavBar();
     }
     else if( sitename == "call-log-book" ){

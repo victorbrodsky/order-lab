@@ -40,6 +40,7 @@ def help():
 
 #python filesbackup.py -s test -d myarchive
 #python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\backup' -d myarchive -b test -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
+#python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public' -d myarchive -b 'Uploaded' -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
 def start_backup(source, dest, basedir):
     print("source=",source,", dest=",dest,", basedir=",basedir)
     #logging.info("get_site_status: url="+url)
