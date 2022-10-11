@@ -9,9 +9,9 @@
 # -s
 
 import os, sys, getopt, logging
-#import smtplib
-#from smtplib import SMTPException
-#from email.mime.text import MIMEText
+import smtplib
+from smtplib import SMTPException
+from email.mime.text import MIMEText
 import time
 from datetime import datetime
 import subprocess
@@ -20,6 +20,10 @@ import shutil
 
 #SOURCE_PATH = ""
 #DESTINATION_PATH = ""
+MAILER_HOST = ""
+#MAILER_PORT = ""
+MAILER_USERNAME = ""
+#MAILER_PASSWORD = ""
 
 COMMAND_COUNTER = 0
 
@@ -35,7 +39,7 @@ def help():
 
 
 #python filesbackup.py -s test -d myarchive
-#python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\backup' -d myarchive
+#python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\backup' -d myarchive -b test -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
 def start_backup(source, dest, basedir):
     print("source=",source,", dest=",dest,", basedir=",basedir)
     #logging.info("get_site_status: url="+url)
@@ -75,19 +79,21 @@ def runCommand(command):
     # sleep in seconds
     time.sleep(10)
 
-def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
+def send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody):
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
     msg = MIMEText(emailBody)
     msg['Subject'] = emailSubject
     msg['From'] = fromEmail
     msg['To'] = ', '.join(toEmailList)
 
+    MAILER_PORT = ''
+
     try:
         #print("MAILER_HOST=" + MAILER_HOST+", MAILER_PORT="+MAILER_PORT)
-        smtpObj = smtplib.SMTP(MAILER_HOST, MAILER_PORT)
-        if MAILER_USERNAME != "" and MAILER_PASSWORD != "":
-            smtpObj.starttls()
-            smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
+        smtpObj = smtplib.SMTP(mailerhost, MAILER_PORT)
+        #if MAILER_USERNAME != "" and MAILER_PASSWORD != "":
+        #    smtpObj.starttls()
+        #    smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
         smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
         print("Successfully sent email")
     except SMTPException:
@@ -103,12 +109,16 @@ def main(argv):
     source = ''           # -s
     basedir = ''          # -b
     dest = ''             # -d
+    mailerhost = ''
+    maileruser = ''
+    receivers = ''  # -r
+    fromEmail = ''  # -s
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "s:b:d:h",
-            ["source=", "basedir=", "dest=", "help"]
+            "s:b:d:h:u:r:f:H",
+            ["source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "help"]
         )
     except getopt.GetoptError:
         print('Parameters error')
@@ -124,6 +134,14 @@ def main(argv):
             basedir = arg
         elif opt in ("-d", "--dest"):
             dest = arg
+        elif opt in ("-h", "--mailerhost"):             # == "--mailerhost":
+            mailerhost = arg
+        elif opt in ("-u", "--maileruser"):             # == "--maileruser":
+            maileruser = arg
+        elif opt in ("-r", "--receivers"):              #Array of the receiver emails
+            receivers = arg
+        elif opt in ("-f", "--fromemail"):                 #Sender email
+            fromEmail = arg
         elif opt in ("-H", "--help"):
            help()
            #sys.exit()
@@ -148,7 +166,15 @@ def main(argv):
     #     global DESTINATION_PATH
     #     DESTINATION_PATH = dest
 
-    print('source=',source,', basedir=',basedir, 'dest=',dest)
+    # if mailerhost:
+    #     global MAILER_HOST
+    #     MAILER_HOST = mailerhost
+    #
+    # if maileruser:
+    #    global MAILER_USERNAME
+    #    MAILER_USERNAME = maileruser
+
+    print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
     if source == '':
@@ -165,12 +191,24 @@ def main(argv):
         #logging.warning('Nothing to do: destination is not provided')
         return
 
+    toEmailList = ''
+    if receivers:
+        # receivers is comma separated string of receiver, convert to list
+        receivers = receivers.replace(" ", "")
+        # receivers is comma separated string of receiver, convert to list
+        toEmailList = list(receivers.split(","))
+
     runCommand('whoami') #testing
 
     archivefile = start_backup(source, dest, basedir)
 
     if archivefile == None:
-        send_email_alert(fromEmail, toEmailList, emailSubject, emailBody)
+        if mailerhost:
+            emailSubject = "Error archiving folder " + basedir
+            emailBody = "Error creating archive '" + dest + "' for folder " + basedir + " in " + source
+            send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
+        else:
+            print("Mailer parameters are not provided: Error email has not been sent")
 
     print("Result Archivefile=",archivefile)
 
