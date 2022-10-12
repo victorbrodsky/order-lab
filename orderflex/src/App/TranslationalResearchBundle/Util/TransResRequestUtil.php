@@ -5652,7 +5652,6 @@ class TransResRequestUtil
                     $projectBillingContact = $project->getBillingContact();
                     if( $projectBillingContact && $projectBillingContact->getId() == $user->getId() ) {
                         $iamProjectBillingContact = true;
-                        break;
                     }
                 }
 

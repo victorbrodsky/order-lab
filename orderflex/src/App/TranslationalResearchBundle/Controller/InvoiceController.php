@@ -665,12 +665,7 @@ class InvoiceController extends OrderAbstractController
 //        }
         if ($principalInvestigator) {
             //echo "PI=$principalInvestigator <br>";
-            $dql->andWhere(
-                "
-                principalInvestigator.id = :principalInvestigatorId OR 
-                projectPrincipalInvestigators.id = :principalInvestigatorId
-                "
-            );
+            $dql->andWhere("principalInvestigator.id = :principalInvestigatorId OR projectPrincipalInvestigators.id = :principalInvestigatorId");
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             //$advancedFilter++;
         }
