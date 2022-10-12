@@ -707,8 +707,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         if ($billingContact) {
-            //$dql->andWhere("billingContact.id = :billingContact OR projectBillingContact.id = :billingContact");
-            $dql->andWhere("billingContact.id = :billingContact");
+            $dql->andWhere("billingContact.id = :billingContact OR projectBillingContact.id = :billingContact");
             $dqlParameters["billingContact"] = $billingContact->getId();
             $advancedFilter++;
         }
