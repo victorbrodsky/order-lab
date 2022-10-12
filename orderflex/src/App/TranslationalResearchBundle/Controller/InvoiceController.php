@@ -86,7 +86,7 @@ class InvoiceController extends OrderAbstractController
         $dql->leftJoin('invoice.billingContact', 'billingContact');
 
         $dql->leftJoin('transresRequest.project', 'project');
-        $dql->leftJoin('project.principalInvestigators', 'projectPrincipalInvestigator');
+        $dql->leftJoin('project.principalInvestigators', 'projectPrincipalInvestigators');
         $dql->leftJoin('project.billingContact', 'projectBillingContact');
 
         $dqlParameters = array();
@@ -543,7 +543,7 @@ class InvoiceController extends OrderAbstractController
                     OR principalInvestigator.id = :projectUserId 
                     OR salesperson.id = :projectUserId 
                     OR billingContact.id = :projectUserId
-                    OR projectPrincipalInvestigator.id = :projectUserId
+                    OR projectPrincipalInvestigators.id = :projectUserId
                     OR projectBillingContact.id = :projectUserId
                     "
                 );
@@ -578,7 +578,7 @@ class InvoiceController extends OrderAbstractController
                 OR principalInvestigator.id = :userId 
                 OR salesperson.id = :userId 
                 OR billingContact.id = :userId
-                OR projectPrincipalInvestigator.id = :userId
+                OR projectPrincipalInvestigators.id = :userId
                 OR projectBillingContact.id = :userId
                 "
             );
@@ -602,7 +602,7 @@ class InvoiceController extends OrderAbstractController
                 OR principalInvestigator.id = :userId 
                 OR salesperson.id = :userId 
                 OR billingContact.id = :userId
-                OR projectPrincipalInvestigator.id = :userId
+                OR projectPrincipalInvestigators.id = :userId
                 OR projectBillingContact.id = :userId
                 "
             );
@@ -665,7 +665,12 @@ class InvoiceController extends OrderAbstractController
 //        }
         if ($principalInvestigator) {
             //echo "PI=$principalInvestigator <br>";
-            $dql->andWhere("principalInvestigator.id = :principalInvestigatorId OR projectPrincipalInvestigator.id = :principalInvestigatorId");
+            $dql->andWhere(
+                "
+                principalInvestigator.id = :principalInvestigatorId OR 
+                projectPrincipalInvestigators.id = :principalInvestigatorId
+                "
+            );
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             //$advancedFilter++;
         }
