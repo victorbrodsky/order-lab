@@ -102,6 +102,7 @@ class DataBackupManagementController extends OrderAbstractController
             //exit("No networkDrivePath is defined");
             $this->addFlash(
                 'pnotify-error',
+                //'notice',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
@@ -308,7 +309,7 @@ class DataBackupManagementController extends OrderAbstractController
 
     //SQL Server Database backup FULL
     //https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
-    public function creatingBackupSQLFull( $filepath ) {
+    public function creatingBackupSQLFull_OLD( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
         //echo "timePrefix=".$timePrefix."<br>";
@@ -369,6 +370,69 @@ class DataBackupManagementController extends OrderAbstractController
             echo $msg."<br>";
             exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
         }
+        ////////////////// EOF 2 //////////////////
+
+        ////////////////// 3) Backup log //////////////////
+        //2. Create periodic log backups. These capture activity since the last backup.
+        //$msgLog = $this->creatingBackupSQLLog($filepath);
+        //$msg = $msg . "<br>" . $msgLog;
+
+        return $msg;
+    }
+    public function creatingBackupSQLFull( $filepath ) {
+        $em = $this->getDoctrine()->getManager();
+        $msg = null;
+
+        $timePrefix = date("d-m-Y-H-i-s");
+        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+        echo "backupfile=".$backupfile."<br>";
+
+        $dbname = $this->getParameter('database_name');
+        echo "dbname=".$dbname."<br>";
+
+        //$em = $this->getDoctrine()->getManager();
+        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+
+//        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
+//        $setRecovery = false;
+//        if( $setRecovery ) {
+//            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+//            $stmt = sqlsrv_query($conn, $sql);
+//            if ($stmt === false) {
+//                die(print_r(sqlsrv_errors()));
+//            } else {
+//                $msg = "Recovery model set to FULL<br>";
+//                echo $msg;
+//            }
+//        }
+//        ////////////////// EOF 1 ////////////////////
+
+        ////////////////// 2) Full //////////////////
+        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
+        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        echo "FULL sql=".$sql."<br>";
+
+//        $sql = "
+//          SELECT id, field
+//          FROM scan_patientlastname
+//          WHERE field LIKE '%Doe%'
+//        ";
+
+        $params['backupfile'] = $backupfile;
+        $query = $em->getConnection()->prepare($sql);
+        //$res = $query->execute($params);
+        $res = $query->execute();
+        echo "res=".$res."<br>";
+        $results = $query->fetchAll();
+        dump($results);
+
+        //$query = $em->createQuery($sql);
+        //$res = $query->getResult();
+
+        dump($res);
+        exit('111');
+
+        return $res;
         ////////////////// EOF 2 //////////////////
 
         ////////////////// 3) Backup log //////////////////

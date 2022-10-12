@@ -489,12 +489,16 @@ class InvoiceController extends OrderAbstractController
         if ($invoicetype && strpos(strtolower($invoicetype), 'all') !== false) {
             $onlyForAdmin = true;
         }
+        //echo "1onlyForAdmin=$onlyForAdmin <br>";
+        //echo "routeName=$routeName <br>";
         if ($routeName == "translationalresearch_invoice_index_filter") {
             if (!$idSearch && !$filterTitle) {
                 //echo "check: idSearch and filterTitle null <br>";
                 $onlyForAdmin = true;
             }
         }
+        //$onlyForAdmin = false; //testing
+        //echo "3onlyForAdmin=$onlyForAdmin <br>";
         if ($onlyForAdmin) {
 
             //modify to be auto specialty
@@ -503,6 +507,7 @@ class InvoiceController extends OrderAbstractController
             $billingadminAllow = false;
             foreach($userSpecialties as $userSpecialty) {
                 $specialtyStr = $userSpecialty->getUppercaseName();
+                //echo "userSpecialty=$userSpecialty <br>";
                 if( $transresUtil->isAdminOrPrimaryReviewer(null,$userSpecialty) ) {
                     $adminOrReviewerAllow = true;
                 }
@@ -523,10 +528,19 @@ class InvoiceController extends OrderAbstractController
                 //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_COVID19') ||
                 //$this->isGranted('ROLE_TRANSRES_EXECUTIVE_MISI')
             ) {
-                //show
+                //show for admin, executive, billing admin without any restrictions
             } else {
-                //exit('no permission');
-                return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+                //exit('no permission onlyForAdmin');
+                //return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
+
+                //If a regualr user (IP, contact ... ), then filter by project's associates
+                $dql->andWhere(
+                    "submitter.id = :projectUserId 
+                    OR principalInvestigator.id = :projectUserId 
+                    OR salesperson.id = :projectUserId 
+                    OR billingContact.id = :projectUserId"
+                );
+                $dqlParameters["projectUserId"] = $user->getId();
             }
         }
 
@@ -551,7 +565,12 @@ class InvoiceController extends OrderAbstractController
         if( strtolower($filterTitle) == strtolower("All my invoices") ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
-            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
+            $dql->andWhere(
+                "submitter.id = :userId 
+                OR principalInvestigator.id = :userId 
+                OR salesperson.id = :userId 
+                OR billingContact.id = :userId"
+            );
             $dqlParameters["userId"] = $user->getId();
             //set all user filter to NULL to prevent AND query conditions
             $submitter = null;
@@ -566,7 +585,12 @@ class InvoiceController extends OrderAbstractController
 
         if( strtolower($filterTitle) == strtolower("All my outstanding invoices") ) {
             //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
-            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
+            $dql->andWhere(
+                "submitter.id = :userId 
+                OR principalInvestigator.id = :userId 
+                OR salesperson.id = :userId 
+                OR billingContact.id = :userId"
+            );
             $dqlParameters["userId"] = $user->getId();
             //set all user filter to NULL to prevent AND query conditions
             $submitter = null;
@@ -1984,10 +2008,11 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
+     * Allow all ROLE_TRANSRES_BILLING_ADMIN and PI and BILLING CONTACTS to have access to the JV download function
      * JV unpaid billing summary template.xlsx
      * http://127.0.0.1/order/index_dev.php/translational-research/invoice/download-unpaid-spreadsheet/
      *
-     * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"POST"})
+     * @Route("/download-unpaid-spreadsheet/", name="translationalresearch_download_unpaid_invoice_spreadsheet", methods={"GET","POST"})
      */
     public function downloadUnpaidInvoicesCsvAction( Request $request ) {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
@@ -1998,7 +2023,7 @@ class InvoiceController extends OrderAbstractController
 
         $ids = $request->request->get('ids');
         //echo "ids=".$ids."<br>";
-        //exit('111');
+        //exit('exit downloadUnpaidInvoicesCsvAction');
 
         $idsArr = explode('-', $ids);
         $idsArr = array_reverse($idsArr);

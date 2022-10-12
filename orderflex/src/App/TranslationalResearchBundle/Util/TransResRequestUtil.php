@@ -5607,20 +5607,41 @@ class TransResRequestUtil
             }
 
             $pi = $invoice->getPrincipalInvestigator();
-            if( $pi ) {
-                $piArr[$pi->getUsernameShortest()] = $pi->getUsernameShortest();
-            }
 
-            if(0) {
-                $transresRequest = $invoice->getTransresRequest();
-                if ($transresRequest) {
-                    $project = $transresRequest->getProject();
-                    if ($project) {
-                        $projectIdArr[] = $project->getOid();
+            ///// Show only to ROLE_TRANSRES_BILLING_ADMIN and this PI and this BILLING CONTACTS //////
+            $specialtyStr = "";
+            $transresRequest = $invoice->getTransresRequest();
+            if( $transresRequest ) {
+                $project = $transresRequest->getProject();
+                if( $project ) {
+                    $specialty = $project->getProjectSpecialty();
+                    if( $specialty ) {
+                        $specialtyStr = $specialty->getUppercaseName();
                     }
                 }
             }
 
+            if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) === false ) {
+                $iamBillingContact = false;
+                $iamPi = false;
+                $thisBillingContact = $invoice->getBillingContact();
+                if( $thisBillingContact && $thisBillingContact->getId() == $user->getId() ) {
+                    $iamBillingContact = true;
+                }
+                if( $pi && $pi->getId() == $user->getId() ) {
+                    $iamPi = true;
+                }
+                if( $iamBillingContact || $iamPi ) {
+                    //show for pi and billing contact
+                } else {
+                    continue;
+                }
+            }
+            ///// EOF Show only to ROLE_TRANSRES_BILLING_ADMIN and this PI and this BILLING CONTACTS //////
+
+            if( $pi ) {
+                $piArr[$pi->getUsernameShortest()] = $pi->getUsernameShortest();
+            }
 
             /////////// 1 row: GL Account = 700031 ////////////
 
