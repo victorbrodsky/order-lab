@@ -84,7 +84,10 @@ class InvoiceController extends OrderAbstractController
         $dql->leftJoin('invoice.transresRequest', 'transresRequest');
         $dql->leftJoin('invoice.principalInvestigator', 'principalInvestigator');
         $dql->leftJoin('invoice.billingContact', 'billingContact');
+
         $dql->leftJoin('transresRequest.project', 'project');
+        $dql->leftJoin('project.principalInvestigators', 'projectPrincipalInvestigator');
+        $dql->leftJoin('project.billingContact', 'projectBillingContact');
 
         $dqlParameters = array();
 
@@ -535,10 +538,14 @@ class InvoiceController extends OrderAbstractController
 
                 //If a regualr user (IP, contact ... ), then filter by project's associates
                 $dql->andWhere(
-                    "submitter.id = :projectUserId 
+                    "
+                    submitter.id = :projectUserId 
                     OR principalInvestigator.id = :projectUserId 
                     OR salesperson.id = :projectUserId 
-                    OR billingContact.id = :projectUserId"
+                    OR billingContact.id = :projectUserId
+                    OR projectPrincipalInvestigator.id = :projectUserId
+                    OR projectBillingContact.id = :projectUserId
+                    "
                 );
                 $dqlParameters["projectUserId"] = $user->getId();
             }
@@ -566,10 +573,14 @@ class InvoiceController extends OrderAbstractController
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere(
-                "submitter.id = :userId 
+                "
+                submitter.id = :userId 
                 OR principalInvestigator.id = :userId 
                 OR salesperson.id = :userId 
-                OR billingContact.id = :userId"
+                OR billingContact.id = :userId
+                OR projectPrincipalInvestigator.id = :userId
+                OR projectBillingContact.id = :userId
+                "
             );
             $dqlParameters["userId"] = $user->getId();
             //set all user filter to NULL to prevent AND query conditions
@@ -586,10 +597,14 @@ class InvoiceController extends OrderAbstractController
         if( strtolower($filterTitle) == strtolower("All my outstanding invoices") ) {
             //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
             $dql->andWhere(
-                "submitter.id = :userId 
+                "
+                submitter.id = :userId 
                 OR principalInvestigator.id = :userId 
                 OR salesperson.id = :userId 
-                OR billingContact.id = :userId"
+                OR billingContact.id = :userId
+                OR projectPrincipalInvestigator.id = :userId
+                OR projectBillingContact.id = :userId
+                "
             );
             $dqlParameters["userId"] = $user->getId();
             //set all user filter to NULL to prevent AND query conditions
@@ -650,7 +665,7 @@ class InvoiceController extends OrderAbstractController
 //        }
         if ($principalInvestigator) {
             //echo "PI=$principalInvestigator <br>";
-            $dql->andWhere("principalInvestigator.id = :principalInvestigatorId");
+            $dql->andWhere("principalInvestigator.id = :principalInvestigatorId OR projectPrincipalInvestigator.id = :principalInvestigatorId");
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             //$advancedFilter++;
         }
@@ -687,7 +702,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         if ($billingContact) {
-            $dql->andWhere("billingContact.id = :billingContact");
+            $dql->andWhere("billingContact.id = :billingContact OR projectBillingContact.id = :billingContact");
             $dqlParameters["billingContact"] = $billingContact->getId();
             $advancedFilter++;
         }

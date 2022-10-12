@@ -5626,30 +5626,33 @@ class TransResRequestUtil
                 $iamPi = false;
                 $iamProjectPi = false;
                 $iamProjectBillingContact = false;
+
+                #check invoice's billing contact
                 $thisBillingContact = $invoice->getBillingContact();
                 if( $thisBillingContact && $thisBillingContact->getId() == $user->getId() ) {
                     $iamBillingContact = true;
                 }
+
+                #check invoice's PI
                 if( $pi && $pi->getId() == $user->getId() ) {
                     $iamPi = true;
                 }
 
                 if( $project ) {
+                    #check project's PIs
                     $projectPis = $project->getPrincipalInvestigators();
-                    $projectBillingContacts = $project->getBillingContacts();
-                    
                     foreach($projectPis as $projectPi) {
                         if( $projectPi && $projectPi->getId() == $user->getId() ) {
                             $iamProjectPi = true;
                             break;
                         }
                     }
-                    
-                    foreach($projectBillingContacts as $projectBillingContact) {
-                        if( $projectBillingContact && $projectBillingContact->getId() == $user->getId() ) {
-                            $iamProjectBillingContact = true;
-                            break;
-                        }
+
+                    #check project's billing contacts
+                    $projectBillingContact = $project->getBillingContact();
+                    if( $projectBillingContact && $projectBillingContact->getId() == $user->getId() ) {
+                        $iamProjectBillingContact = true;
+                        break;
                     }
                 }
 

@@ -19,7 +19,8 @@
             </label>
 
             {#Allow to export for all requesters and filter out later in controller logic#}
-            {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') or is_granted('ROLE_TRANSRES_REQUESTER') %}
+            {#is_granted('ROLE_TRANSRES_BILLING_ADMIN')#}
+            {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                 {% if exportUnpaidSummary %}
 
                     <label
@@ -80,7 +81,8 @@
     </form>
 
     {#Allow to export for all requesters and filter out later in controller logic#}
-    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') or is_granted('ROLE_TRANSRES_REQUESTER') %}
+    {#is_granted('ROLE_TRANSRES_BILLING_ADMIN')#}
+    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
         {#matchingStrInvoiceIds={{ matchingStrInvoiceIds }}#}
         {#JV spreadsheet#}
         <form action="{{ path('translationalresearch_download_unpaid_invoice_spreadsheet') }}" method="post">
