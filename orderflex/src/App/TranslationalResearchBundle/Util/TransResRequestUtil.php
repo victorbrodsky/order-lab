@@ -5624,6 +5624,8 @@ class TransResRequestUtil
             if( $this->security->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) === false ) {
                 $iamBillingContact = false;
                 $iamPi = false;
+                $iamProjectPi = false;
+                $iamProjectBillingContact = false;
                 $thisBillingContact = $invoice->getBillingContact();
                 if( $thisBillingContact && $thisBillingContact->getId() == $user->getId() ) {
                     $iamBillingContact = true;
@@ -5631,7 +5633,27 @@ class TransResRequestUtil
                 if( $pi && $pi->getId() == $user->getId() ) {
                     $iamPi = true;
                 }
-                if( $iamBillingContact || $iamPi ) {
+
+                if( $project ) {
+                    $projectPis = $project->getPrincipalInvestigators();
+                    $projectBillingContacts = $project->getBillingContacts();
+                    
+                    foreach($projectPis as $projectPi) {
+                        if( $projectPi && $projectPi->getId() == $user->getId() ) {
+                            $iamProjectPi = true;
+                            break;
+                        }
+                    }
+                    
+                    foreach($projectBillingContacts as $projectBillingContact) {
+                        if( $projectBillingContact && $projectBillingContact->getId() == $user->getId() ) {
+                            $iamProjectBillingContact = true;
+                            break;
+                        }
+                    }
+                }
+
+                if( $iamBillingContact || $iamPi || $iamProjectPi || $iamProjectBillingContact ) {
                     //show for pi and billing contact
                 } else {
                     continue;
