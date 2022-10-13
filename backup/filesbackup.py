@@ -56,6 +56,10 @@ def start_backup(source, dest, basedir):
     #'/Users/tarek/myarchive.tar.gz'
     #archive_name = os.path.expanduser(os.path.join('~', 'myarchive'))
 
+    now = datetime.datetime.now()
+    #append now.hour
+    dest = dest . str(now.hour)
+
     archivefile = ''
     try:
         if basedir != None:
