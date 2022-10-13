@@ -191,7 +191,7 @@ def main(argv):
         if mailerhost:
             emailSubject = "Error archiving folder " + basedir
             emailBody = "Error creating archive '" + dest + "' for folder " + basedir + " in " + source
-            + "; Error=" + archivefileError
+            + "; Error=" + str(archivefileError)
             send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
         else:
             print("Mailer parameters are not provided: Error email has not been sent")
