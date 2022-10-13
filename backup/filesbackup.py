@@ -198,7 +198,7 @@ def main(argv):
 
         print("archivefileError=", archivefileError)
     else:
-        print("Archive completed")
+        print("Archive completed successfully")
 
 if __name__ == '__main__':
     #python filesbackup.py -s test -d myarchive
