@@ -96,7 +96,7 @@
             <tr>
                 <td class="rowlink-skip">filesBackup cron job</td>
                 <td class="rowlink-skip">
-                    {{ user_service_utility.getCronStatus("filesBackup",false)|raw }}
+                    {{ user_service_utility.getCronStatus("filesbackup",false)|raw }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -110,7 +110,7 @@
                             <li>
                                 <a
                                         general-data-confirm="Are you sure you would like to remove this cron job?"
-                                        href="{{ path('user_remove_cron_job', {'cronJobName': 'filesBackup'}) }}">Remove</a>
+                                        href="{{ path('user_remove_cron_job', {'cronJobName': 'filesbackup'}) }}">Remove</a>
                             </li>
 
                             <li>

@@ -20,7 +20,7 @@ Every 15 min
 
 
 LiveServer Every 4 hours
-* */4 * * * python3 /srv/order-lab/backup/filesbackup.py -s '/srv/order-lab/orderflex/public' -d /mnt/pathology/view-backup/uploadsarchive -b 'Uploaded' -h "smtp.med.cornell.edu" -f 'oli2002@med.cornell.edu' -r 'oli2002@med.cornell.edu'
+* */4 * * * python3 /srv/order-lab/backup/filesbackup.py -s '/srv/order-lab/orderflex/public' -d /mnt/pathology/view-backup/uploadsarchive -b 'Uploaded' -h 'smtp.med.cornell.edu' -f 'oli2002@med.cornell.edu' -r 'oli2002@med.cornell.edu'
 
 
 Show for specific user:     
@@ -30,7 +30,8 @@ crontab -u apache -e
 
 
 {
-"command":"python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public' -d 'C:\Users\ch3\Documents\myarchive' -b 'docs' -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu",
-"cronintervals":["1h","1d"]
+"command":"python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public' -d 'C:\Users\ch3\Documents\myarchive' -b 'docs' -h 'smtp.med.cornell.edu' -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu",
+"cronintervals":["1h","1d"],
+"keep":"1w"
 }
 

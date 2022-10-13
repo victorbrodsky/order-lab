@@ -2387,43 +2387,88 @@ Pathology and Laboratory Medicine",
             //exit("filesBackupConfig is not provided");
         }
 
+        //$json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+        //dump(json_decode($json));
+        //dump(json_decode($json, true));
+        //exit('test 111');
+
         //dump($filesBackupConfig);
         //exit('111');
 
-        $jsonObject = json_decode($filesBackupConfig,true);
+        //$result = '{"command":"python filesbackup.py -s C:\Users\ch3\"}';
+        //$json = json_encode($result);
+        //echo "json=[$json]<br>";
+        //exit('111 $json');
+
+        //$filesBackupConfig = '{"command":"python filesbackup.py -s C:\Users\ch3\"}';
+        //echo "$filesBackupConfig=[$filesBackupConfig]<br>";
+
+        //$filesBackupConfig = preg_replace('/\r|\n|\r\n/','',trim($filesBackupConfig));
+
+        // '\' not working on windows. replace by DIRECTORY_SEPARATOR
+        //$sep = "\\";
+        //echo "DIRECTORY_SEPARATOR=".DIRECTORY_SEPARATOR."<br>";
+        //$filesBackupConfig = str_replace($sep,DIRECTORY_SEPARATOR,$filesBackupConfig);
+        $filesBackupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $filesBackupConfig);
+        //echo "$filesBackupConfigPrepared=[$filesBackupConfigPrepared]<br>";
+        $jsonObject = json_decode($filesBackupConfigPrepared,true);
+
+        if( !$jsonObject ) {
+            $filesBackupConfigPrepared = str_replace(array('/', '\\'), '/', $filesBackupConfig);
+            //echo "$filesBackupConfigPrepared=[$filesBackupConfigPrepared]<br>";
+            $jsonObject = json_decode($filesBackupConfigPrepared,true);
+        }
+
+        if( !$jsonObject ) {
+            return "Cannot decode JSON configuration file: ".$filesBackupConfig;
+        }
+
         dump($jsonObject);
-        exit('111');
+        //exit('after json_decode');
 
         //parse $filesBackupConfig
-        $cronJobCommand = $jsonObject->{'command'};
+        $cronJobCommand = NULL;
+        $keep = NULL;
+        $cronIntervals = NULL;
 
-        $maxInterval = $jsonObject->{'maxinterval'};
+        if( array_key_exists('command', $jsonObject) ) {
+            $cronJobCommand = $jsonObject['command'];
+        }
 
-        $cronIntervals = $jsonObject->{'cronintervals'};
+        if( array_key_exists('keep', $jsonObject) ) {
+            $keep = $jsonObject['keep'];
+        }
 
-        $cronIntervalsArr = explode(",",$cronIntervals);
+        if( array_key_exists('cronintervals', $jsonObject) ) {
+            $cronIntervals = $jsonObject['cronintervals'];
+        }
+
+        //$cronIntervalsArr = explode(",",$cronIntervals);
+        if( !is_array($cronIntervals) ) {
+            $cronIntervals = array($cronIntervals);
+        }
 
         $resArr = array();
 
-        foreach($cronIntervalsArr as $cronInterval) {
+        foreach($cronIntervals as $cronInterval) {
 
             $cronJob = NULL;
 
             //$cronInterval = "1h";
             if( str_contains($cronInterval, 'h') ) {
-                exit("Hourly");
+                //exit("Hourly");
 
                 $cronHour = str_replace('h','',$cronInterval);
-                $cronJob = "0 */$cronHour * * * " . " " . $statusCronJobCommand;
+                $cronJob = "0 */$cronHour * * * " . " " . $cronJobCommand;
             }
 
-            //$cronInterval = "1d";
-            if( str_contains($cronInterval, 'd') ) {
-                exit("Daily");
-
-                $cronDay = str_replace('d','',$cronInterval);
-                $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
-            }
+//            //$cronInterval = "1d";
+//            if( str_contains($cronInterval, 'd') ) {
+//                exit("Daily");
+//
+//                $cronDay = str_replace('d','',$cronInterval);
+//                $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
+//            }
 
 
 
@@ -2441,61 +2486,7 @@ Pathology and Laboratory Medicine",
             return implode(", ",$resArr);
         }
 
-        //get $statusCronJobCommand from $monitorScript
-        $statusCronJobCommand = $userSecUtil->getSiteSettingParameter('monitorScript');
-        if( !$statusCronJobCommand ) {
-            return null; //do not setup monitor cron if monitorScript is empty
-
-            //$phpPath = $this->getPhpPath();
-            //$statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
-            $path = $projectDir . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "App" . DIRECTORY_SEPARATOR . "UserdirectoryBundle" . DIRECTORY_SEPARATOR . "Util";
-
-            //smtpServerAddress
-            $smtpHost = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
-            if (!$smtpHost) {
-                return null;
-            }
-
-            //siteEmail
-            $sender = $userSecUtil->getSiteSettingParameter('siteEmail');
-            if (!$sender) {
-                return null;
-            }
-
-            $receivers = $sender;
-
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-
-            //$smtpHost = "smtp.med.cornell.edu";
-            //$sender = "oli2002@med.cornell.edu";
-            //$receivers = "oli2002@med.cornell.edu";
-
-            //python webmonitor.py --urls "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu" -u "" -p "" -s "oli2002@med.cornell.edu" -r "oli2002@med.cornell.edu"
-            //python 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Util\webmonitor.py'
-            // -l "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu"
-            // -s [[siteEmail]] -r [[ROLE_PLATFORM_DEPUTY_ADMIN]] -e dev
-            $statusCronJobCommand = "python3 " . "'" . $path . DIRECTORY_SEPARATOR . "webmonitor.py" . "'" .
-                " -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu'" .
-                " -h $smtpHost -s $sender -r $receivers -e $environment";
-
-            //webmonitor.py cron job status: */2 * * * * python '/opt/order-lab/orderflexsrc/App/UserdirectoryBundle/Util/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r 'cinava@yahoo.com,glimpera@med.cornell.edu,vib9020@med.cornell.edu,oli2002@med.cornell.edu,bih2004@med.cornell.edu' -e test.
-            //test: python '/opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r 'cinava@yahoo.com,glimpera@med.cornell.edu,vib9020@med.cornell.edu,oli2002@med.cornell.edu,bih2004@med.cornell.edu' -e test.
-            //live: python '/srv/order-lab/orderflex/src/App/UserdirectoryBundle/Util/webmonitor.py'
-        }
-
-        //$externalUrlMonitorFrequency = 2;
-        $statusCronJob = "*/$externalUrlMonitorFrequency * * * *" . " " . $statusCronJobCommand;
-
-        if( $this->getCronJobFullNameLinux($commandName) === false ) {
-            $this->addCronJobLinux($statusCronJob);
-            $res = "Created $cronJobName cron job";
-        } else {
-            $res = "$cronJobName already exists";
-        }
-
-        $logger->notice($res);
-
-        return $res;
+        return NULL;
     }
 
     public function addCronJobLinux( $fullCommand ) {
