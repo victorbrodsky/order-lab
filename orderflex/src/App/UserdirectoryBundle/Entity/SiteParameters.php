@@ -1298,6 +1298,20 @@ class SiteParameters {
 //     */
 //    private $monitorScriptArgs;
 
+    /**
+     * Configuration json file for backup DB
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $dbBackupConfig;
+
+    /**
+     * Configuration json file for backup the uploaded file folder
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $filesBackupConfig;
+
 
     function __construct( $addobjects=true )
     {
@@ -4471,6 +4485,42 @@ class SiteParameters {
     {
         $this->sendEmailUserAdded = $sendEmailUserAdded;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDbBackupConfig()
+    {
+        return $this->dbBackupConfig;
+    }
+
+    /**
+     * @param mixed $dbBackupConfig
+     */
+    public function setDbBackupConfig($dbBackupConfig)
+    {
+        $this->dbBackupConfig = $dbBackupConfig;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFilesBackupConfig()
+    {
+        return $this->filesBackupConfig;
+    }
+
+    /**
+     * @param mixed $filesBackupConfig
+     */
+    public function setFilesBackupConfig($filesBackupConfig)
+    {
+        $this->filesBackupConfig = $filesBackupConfig;
+    }
+
+
+
+
 
     
 

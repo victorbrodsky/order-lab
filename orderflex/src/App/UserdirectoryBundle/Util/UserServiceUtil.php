@@ -772,6 +772,22 @@ class UserServiceUtil {
         return $href;
     }
 
+    //Get single or generate SettingParameter (Singleton)
+    public function getSingleSiteSettingParameter() {
+        $entities = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+
+        //make sure sitesettings is initialized
+        if( count($entities) != 1 ) {
+            $this->generateSiteParameters();
+            $entities = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        }
+
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
+        }
+
+        return $entities[0];
+    }
 
     public function generateSiteParameters() {
 
@@ -2313,6 +2329,138 @@ Pathology and Laboratory Medicine",
 //        } else {
 //            $receivers = $sender;
 //        }
+            $receivers = $sender;
+
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+
+            //$smtpHost = "smtp.med.cornell.edu";
+            //$sender = "oli2002@med.cornell.edu";
+            //$receivers = "oli2002@med.cornell.edu";
+
+            //python webmonitor.py --urls "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu" -u "" -p "" -s "oli2002@med.cornell.edu" -r "oli2002@med.cornell.edu"
+            //python 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Util\webmonitor.py'
+            // -l "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu"
+            // -s [[siteEmail]] -r [[ROLE_PLATFORM_DEPUTY_ADMIN]] -e dev
+            $statusCronJobCommand = "python3 " . "'" . $path . DIRECTORY_SEPARATOR . "webmonitor.py" . "'" .
+                " -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu'" .
+                " -h $smtpHost -s $sender -r $receivers -e $environment";
+
+            //webmonitor.py cron job status: */2 * * * * python '/opt/order-lab/orderflexsrc/App/UserdirectoryBundle/Util/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r 'cinava@yahoo.com,glimpera@med.cornell.edu,vib9020@med.cornell.edu,oli2002@med.cornell.edu,bih2004@med.cornell.edu' -e test.
+            //test: python '/opt/order-lab/orderflex/src/App/UserdirectoryBundle/Util/webmonitor.py' -l 'http://view.med.cornell.edu, http://view-test.med.cornell.edu' -h smtp.med.cornell.edu -s oli2002@med.cornell.edu -r 'cinava@yahoo.com,glimpera@med.cornell.edu,vib9020@med.cornell.edu,oli2002@med.cornell.edu,bih2004@med.cornell.edu' -e test.
+            //live: python '/srv/order-lab/orderflex/src/App/UserdirectoryBundle/Util/webmonitor.py'
+        }
+
+        //$externalUrlMonitorFrequency = 2;
+        $statusCronJob = "*/$externalUrlMonitorFrequency * * * *" . " " . $statusCronJobCommand;
+
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
+            $this->addCronJobLinux($statusCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+
+        return $res;
+    }
+
+    //TODO: FilesBackup
+    public function createFilesBackupCronLinux() {
+
+        if( $this->isWindows() ) {
+            //Windows
+            //return "Windows is not supported";
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating Independent Monitor cron job for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        $commandName = "filesbackup"; //"cron:independentmonitor";
+        $cronJobName = $commandName." --env=prod";
+
+        $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig'); //in min
+        if( !$filesBackupConfig ) {
+            return "filesBackupConfig is not provided";
+            //exit("filesBackupConfig is not provided");
+        }
+
+        //dump($filesBackupConfig);
+        //exit('111');
+
+        $jsonObject = json_decode($filesBackupConfig,true);
+        dump($jsonObject);
+        exit('111');
+
+        //parse $filesBackupConfig
+        $cronJobCommand = $jsonObject->{'command'};
+
+        $maxInterval = $jsonObject->{'maxinterval'};
+
+        $cronIntervals = $jsonObject->{'cronintervals'};
+
+        $cronIntervalsArr = explode(",",$cronIntervals);
+
+        $resArr = array();
+
+        foreach($cronIntervalsArr as $cronInterval) {
+
+            $cronJob = NULL;
+
+            //$cronInterval = "1h";
+            if( str_contains($cronInterval, 'h') ) {
+                exit("Hourly");
+
+                $cronHour = str_replace('h','',$cronInterval);
+                $cronJob = "0 */$cronHour * * * " . " " . $statusCronJobCommand;
+            }
+
+            //$cronInterval = "1d";
+            if( str_contains($cronInterval, 'd') ) {
+                exit("Hourly");
+
+                $cronDay = str_replace('d','',$cronInterval);
+                $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
+            }
+
+
+            if( $cronJob ) {
+                if( $this->getCronJobFullNameLinux($commandName) === false ) {
+                    $this->addCronJobLinux($cronJob);
+                    $resArr[] = "Created $cronJobName cron job";
+                } else {
+                    $resArr[] = "$cronJobName already exists";
+                }
+            }
+
+
+
+            return implode(", ",$resArr);
+        }
+
+        //get $statusCronJobCommand from $monitorScript
+        $statusCronJobCommand = $userSecUtil->getSiteSettingParameter('monitorScript');
+        if( !$statusCronJobCommand ) {
+            return null; //do not setup monitor cron if monitorScript is empty
+
+            //$phpPath = $this->getPhpPath();
+            //$statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+            $path = $projectDir . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "App" . DIRECTORY_SEPARATOR . "UserdirectoryBundle" . DIRECTORY_SEPARATOR . "Util";
+
+            //smtpServerAddress
+            $smtpHost = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+            if (!$smtpHost) {
+                return null;
+            }
+
+            //siteEmail
+            $sender = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if (!$sender) {
+                return null;
+            }
+
             $receivers = $sender;
 
             $environment = $userSecUtil->getSiteSettingParameter('environment');

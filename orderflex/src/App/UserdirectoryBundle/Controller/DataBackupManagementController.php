@@ -25,16 +25,196 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+use App\UserdirectoryBundle\Form\BackupManagementType;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\DBAL\Configuration;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class DataBackupManagementController extends OrderAbstractController
 {
+    /**
+     * Backup management page with JSON configuration
+     * @Route("/data-backup-management/show", name="employees_data_backup_management_show", methods={"GET"})
+     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
+     */
+    public function dataBackupManagementShowAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $entity = $userServiceUtil->getSingleSiteSettingParameter();
+
+        $form = $this->createEditForm($entity, $cycle="show");
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'title' => "Data Backup Management",
+            'cycle' => $cycle
+        );
+    }
+
+    /**
+     * Backup management page with JSON configuration
+     * @Route("/data-backup-management/edit", name="employees_data_backup_management_edit", methods={"GET","POST"})
+     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
+     */
+    public function dataBackupManagementUpdateAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        
+        $entity = $userServiceUtil->getSingleSiteSettingParameter();
+
+        $dbBackupConfigOrig = $entity->getDbBackupConfig();
+        $filesBackupConfigOrig = $entity->getFilesBackupConfig();
+
+        $form = $this->createEditForm($entity, $cycle="edit");
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entity = $form->getData();
+            //dump($entity);
+
+            $eventStr = "";
+
+            $dbBackupConfig = $entity->getDbBackupConfig();
+            if( $dbBackupConfig != $dbBackupConfigOrig ) {
+                $eventStr = $eventStr . "Site Settings parameter [dbBackupConfig] has been updated by ".$user;
+                $eventStr = $eventStr . "<br>original value:<br>".$dbBackupConfigOrig;
+                $eventStr = $eventStr . "<br>updated value:<br>".$dbBackupConfig;
+                $eventStr = $eventStr . "<br><br>";
+            }
+            //echo "dbBackupConfig=$dbBackupConfig <br>";
+
+            $filesBackupConfig = $entity->getFilesBackupConfig();
+            if( $filesBackupConfig != $filesBackupConfigOrig ) {
+                $eventStr = $eventStr . "Site Settings parameter [filesBackupConfig] has been updated by ".$user;
+                $eventStr = $eventStr . "<br>original value:<br>".$filesBackupConfigOrig;
+                $eventStr = $eventStr . "<br>updated value:<br>".$filesBackupConfig;
+                $eventStr = $eventStr . "<br><br>";
+            }
+            //echo "filesBackupConfig=$filesBackupConfig <br>";
+
+            //dump($eventStr);
+            //exit('111');
+
+            if( $eventStr ) {
+                $em->flush();
+
+                //add a new eventlog record for an updated parameter
+                $eventType = "Site Settings Parameter Updated";
+                $sitename = "employees";
+                $userSecUtil->createUserEditEvent($sitename, $eventStr, $user, $entity, $request, $eventType);
+            }
+
+            $this->addFlash(
+                'notice',
+                $eventStr
+            );
+
+            return $this->redirectToRoute('employees_data_backup_management_show');
+        }
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'title' => "Data Backup Management",
+            'cycle' => $cycle
+        );
+    }
+
+    private function createEditForm( SiteParameters $entity, $cycle )
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $params = array(
+            'cycle' => $cycle
+        );
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $form = $this->createForm(BackupManagementType::class, $entity, array(
+            'form_custom_value' => $params,
+            //'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),
+            //'method' => 'PUT',
+            'disabled' => $disabled
+        ));
+
+        //if( $disabled === false ) {
+        //    $form->add('submit', SubmitType::class, array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning','style'=>'margin-top: 15px;')));
+        //}
+
+        return $form;
+    }
+
+    /**
+     * @Route("/list/generate-cron-jobs/dbbackup", name="user_generate_cron_dbbackup", methods={"GET"})
+     */
+    public function generateDbBackupCronAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        //add ExternalUrlMonitor: view-test monitors view
+        $res = $userServiceUtil->createDbBackupCronLinux();
+
+        $this->addFlash(
+            'notice',
+            $res
+        );
+
+        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
+    }
+
+    /**
+     * @Route("/list/generate-cron-jobs/filesbackup", name="user_generate_cron_filesbackup", methods={"GET"})
+     */
+    public function generateFilesBackupCronAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        //add ExternalUrlMonitor: view-test monitors view
+        $res = $userServiceUtil->createFilesBackupCronLinux();
+
+        $this->addFlash(
+            'notice',
+            $res
+        );
+
+        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
+    }
+
+
+    
+    
+    
+    
 
     /**
      * Resources:
@@ -47,10 +227,10 @@ class DataBackupManagementController extends OrderAbstractController
      * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
      * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
      *
-     * @Route("/data-backup-management/", name="employees_data_backup_management", methods={"GET"})
-     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
+     * @Route("/data-backup-management-orig/", name="employees_data_backup_management_orig", methods={"GET"})
+     * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management_orig.html.twig")
      */
-    public function dataBackupManagementAction(Request $request) {
+    public function dataBackupManagementAction_ORIG(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

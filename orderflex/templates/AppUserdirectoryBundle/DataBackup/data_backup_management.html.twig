@@ -29,57 +29,100 @@
 
 {% block content %}
 
-    <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <input type="hidden" id="fileId" value="" />
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+    {#<input type="hidden" id="fileId" value="" />#}
 
     <h4 class="text-info" align="center">{{ title }}</h4>
 
-    <br>
-    <br>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
 
-    <p>
-        <div class="well">Current Network Drive Path: {{ networkDrivePath }}</div>
-    </p>
+        {{ formmacros.field(form.dbBackupConfig) }}
 
-    <br>
-    <br>
+        {{ formmacros.field(form.filesBackupConfig) }}
 
-    {% if backupFiles %}
+        {% if form.submit is defined %}
+            {{ form_widget(form.submit) }}
+        {% endif %}
 
-        <div class="row">
-            <div class="col-xs-3"></div>
-            <div class="col-xs-6">
-                {#{{ formmacros.field(backupFiles) }}#}
-                <p>
-                    <select id="backup-file-id" class="combobox" style="width: 30%;">
-                        {% for  backupFile in backupFiles %}
-                            <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
-                        {% endfor %}
-                    </select>
-                </p>
-            </div>
-            <div class="col-xs-3"></div>
-        </div>
+    {{ form_end(form) }}
 
-        <br>
-
+    {% if cycle == 'show' %}
         <p>
-            <a href="{{ path(employees_sitename~'_create_backup') }}">Create Backup</a>
+            <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
         </p>
-
-        {#<p>#}
-            {#<a#}
-                    {#general-data-confirm="Are you sure you want to load backup DB? This action will overwrite all existing data."#}
-                    {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
-                    {#href="#"#}
-                    {#onclick="return restoreBackup();"#}
-            {#>Load Backup</a>#}
-        {#</p>#}
-
-    {% else %}
-        <div class="alert alert-danger">Backup folder does not exists</div>
     {% endif %}
 
+    <table class="table table-bordered table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+            <tr>
+                <td class="rowlink-skip">dbBackup cron job</td>
+                <td class="rowlink-skip">
+                    {{ user_service_utility.getCronStatus("dbBackup",false)|raw }}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a
+                                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                                    href="{{ path('user_remove_cron_job', {'cronJobName': 'dbBackup'}) }}">Remove</a>
+                            </li>
+
+                            <li>
+                            <a  general-data-confirm="Are you sure? This action will generate dbBackup cron job."
+                                href="{{ path('user_generate_cron_dbbackup') }}">Generate dbBackup cron job</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="rowlink-skip">filesBackup cron job</td>
+                <td class="rowlink-skip">
+                    {{ user_service_utility.getCronStatus("filesBackup",false)|raw }}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a
+                                        general-data-confirm="Are you sure you would like to remove this cron job?"
+                                        href="{{ path('user_remove_cron_job', {'cronJobName': 'filesBackup'}) }}">Remove</a>
+                            </li>
+
+                            <li>
+                                <a  general-data-confirm="Are you sure? This action will generate filesBackup cron job."
+                                    href="{{ path('user_generate_cron_filesbackup') }}">Generate filesBackup cron job</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
 
 {% endblock %}
 
@@ -89,35 +132,11 @@
     <script>
         $(document).ready(function () {
 
-            $('#backup-file-id').on("change", function(e) {
-                var fileId = $(this).select2('val');
-                console.log('fileId='+fileId);
-                $('#fileId').val(fileId);
-            });
+
 
         });
 
-        function restoreBackup() {
 
-            var result = confirm("Are you sure you want to load backup DB? This action will overwrite all existing data.");
-            if (result) {
-                //Logic to delete the item
-            } else {
-                return;
-            }
-
-            var file = $('#backup-file-id').select2('data');
-            if( file ) {
-                var fileId = file.id;
-                console.log("fileId=" + fileId);
-
-                var url = Routing.generate('employees_restore_backup');
-                url = url + "/" + fileId;
-                console.log("url=" + url);
-
-                window.location.replace(url);
-            }
-        }
     </script>
 
 {% endblock %}
