@@ -66,9 +66,9 @@ def start_backup(source, dest, basedir):
             archivefile = shutil.make_archive(dest, 'gztar', source, base_dir=basedir)
         else:
             archivefile = shutil.make_archive(dest, 'gztar', source)
-    except Exception as inst:
-        print("Error archiving: ",inst)
-        return inst
+    except Exception as error:
+        print("Error archiving: ",error)
+        return error
 
     #print('archivefile=',archivefile)
 
@@ -191,10 +191,10 @@ def main(argv):
         if mailerhost:
             emailSubject = "Error archiving folder " + basedir
             emailBody = "Error creating archive '" + dest + "' for folder " + basedir + " in " + source
-            + "; Error=" + str(archivefileError)
+            + "; Error=" + repr(archivefileError)
             send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
         else:
-            print("Mailer parameters are not provided: Error email has not been sent")
+            print("Mailer parameters are not provided: Error email has not been sent. Error=",archivefileError)
 
         print("archivefileError=", archivefileError)
     else:
