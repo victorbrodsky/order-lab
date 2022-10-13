@@ -41,6 +41,7 @@ def help():
 #python filesbackup.py -s test -d myarchive
 #python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\backup' -d myarchive -b test -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
 #python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public' -d 'C:\Users\ch3\Documents\myarchive' -b 'Uploaded' -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
+#Testing: python filesbackup.py -s 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public' -d 'C:\Users\ch3\Documents\myarchive' -b 'docs' -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
 #python filesbackup.py -s '/opt/order-lab/orderflex/public' -d /mnt/pathology/view-test-backup/uploadsarchive -b 'Uploaded' -h "smtp.med.cornell.edu" -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu
 def start_backup(source, dest, basedir):
     print("source=",source,", dest=",dest,", basedir=",basedir)
@@ -58,16 +59,16 @@ def start_backup(source, dest, basedir):
     archivefile = ''
     try:
         if basedir != None:
-            archivefile = shutil.make_archive(dest, 'zip', source, base_dir=basedir)
+            archivefile = shutil.make_archive(dest, 'gztar', source, base_dir=basedir)
         else:
-            archivefile = shutil.make_archive(dest, 'zip', source)
+            archivefile = shutil.make_archive(dest, 'gztar', source)
     except Exception as inst:
         print("Error archiving: ",inst)
-        return None
+        return inst
 
     #print('archivefile=',archivefile)
 
-    return archivefile
+    return None
 
 #https://janakiev.com/blog/python-shell-commands/
 #https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
@@ -154,28 +155,6 @@ def main(argv):
             help()
             sys.exit(2)
 
-
-    # if source:
-    #     #print("source="+source)
-    #     global SOURCE_PATH
-    #     SOURCE_PATH = source
-    #
-    # if basedir:
-    #     global DESTINATION_PATH
-    #     DESTINATION_PATH = dest
-    #
-    # if dest:
-    #     global DESTINATION_PATH
-    #     DESTINATION_PATH = dest
-
-    # if mailerhost:
-    #     global MAILER_HOST
-    #     MAILER_HOST = mailerhost
-    #
-    # if maileruser:
-    #    global MAILER_USERNAME
-    #    MAILER_USERNAME = maileruser
-
     print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
@@ -202,17 +181,18 @@ def main(argv):
 
     runCommand('whoami') #testing
 
-    archivefile = start_backup(source, dest, basedir)
+    archivefileRes = start_backup(source, dest, basedir)
 
-    if archivefile == None:
+    if archivefileRes != None:
         if mailerhost:
             emailSubject = "Error archiving folder " + basedir
             emailBody = "Error creating archive '" + dest + "' for folder " + basedir + " in " + source
+            + "; Error=" + archivefileRes
             send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
         else:
             print("Mailer parameters are not provided: Error email has not been sent")
 
-    print("Result Archivefile=",archivefile)
+    print("Result Archivefile=",archivefileRes)
 
 if __name__ == '__main__':
     #python filesbackup.py -s test -d myarchive

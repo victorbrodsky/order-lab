@@ -2419,11 +2419,12 @@ Pathology and Laboratory Medicine",
 
             //$cronInterval = "1d";
             if( str_contains($cronInterval, 'd') ) {
-                exit("Hourly");
+                exit("Daily");
 
                 $cronDay = str_replace('d','',$cronInterval);
                 $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
             }
+
 
 
             if( $cronJob ) {

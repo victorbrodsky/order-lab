@@ -448,7 +448,8 @@ Calling Doctrine\ORM\EntityManager::flush() with any arguments to flush specific
 
 Cron (/var/spool/cron/ and /etc/crontab):
 Show for specific user:     crontab -u apache -l
-Edit crontab file, or create one if it doesn’t already exist: crontab -u apache -e
+Edit crontab file, or create one if it doesn’t already exist:
+crontab -u apache -e
 Remove for specific user:   crontab -u apache -r
 Problem: ^M at the end of each line?
 
