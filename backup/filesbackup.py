@@ -185,18 +185,20 @@ def main(argv):
 
     runCommand('whoami') #testing
 
-    archivefileRes = start_backup(source, dest, basedir)
+    archivefileError = start_backup(source, dest, basedir)
 
-    if archivefileRes != None:
+    if archivefileError:
         if mailerhost:
             emailSubject = "Error archiving folder " + basedir
             emailBody = "Error creating archive '" + dest + "' for folder " + basedir + " in " + source
-            + "; Error=" + archivefileRes
+            + "; Error=" + archivefileError
             send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
         else:
             print("Mailer parameters are not provided: Error email has not been sent")
 
-    print("Result Archivefile=",archivefileRes)
+        print("archivefileError=", archivefileError)
+    else:
+        print("Archive completed")
 
 if __name__ == '__main__':
     #python filesbackup.py -s test -d myarchive
