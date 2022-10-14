@@ -215,6 +215,10 @@ class UserTest extends WebTestBase
     public function testBackupShowAction() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/data-backup-management/show');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Data Backup Management")')->count()
