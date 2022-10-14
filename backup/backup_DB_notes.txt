@@ -47,7 +47,28 @@ sudo crontab -u postgres -l
 0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
 create crontab: crontab -e -u postgres
-0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "HOURLY" > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
-0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "DAILY" > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "HOURLY" "ScanOrder" "symfony"> /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh "/mnt/pathology/view-test-backup" "DAILY" "ScanOrder" "symfony"> /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
+0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
+
+
+
+{
+"sets" : 
+[
+{
+"idname" : "dbbackup-hourly",
+"command" : "/var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'dbname' 'dbpass' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1",
+"croninterval" : "2h"
+},
+{
+"idname" : "dbbackup-daily",
+"command" : "/var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'dbname' 'dbpass' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1",
+"croninterval" : "1d"
+}
+]
+}
 
 

@@ -5,12 +5,14 @@ send_alert()
    alert_dba -FALERT -S"PostgreSQL backup failed" -B"$LOG" -P"$PROG" -AY -GN -C"$HOSTNAME"
 }
 
-#dbname - DB name, username - DB username
+#DB_NAME - DB name, DB_USERNAME - DB username
 
 . $HOME/.bash_profile
 
 backup=$1
 backup_type=$2  #HOURLY or DAILY
+DB_NAME=$3
+DB_USERNAME=$4
 DATETIME=`date +%Y%m%d%H%M%S`
 PROG=`basename $0`
 HOSTNAME=`uname -n`
@@ -26,7 +28,7 @@ else
    BACKUP_LABEL=${DATETIME}_`pg_ctl status -D ${PGDATA} | grep PID | awk -F":" '{print $3}' | awk -F")" '{print $1}' | sed 's/ //g'`
    BACKUP_FNAME=postgres_${backup_type}_${BACKUP_LABEL}.tar.gz
    printf "Execute this SELECT pg_start_backup('${BACKUP_LABEL}') with this filename ${BACKUP_FNAME} to here ${backup}\n" >> $LOG
-   psql -d dbname -U username -c "SELECT pg_start_backup('${BACKUP_LABEL}')" 2>&1 | tee -a >> $LOG
+   psql -d ${DB_NAME} -U ${DB_USERNAME} -c "SELECT pg_start_backup('${BACKUP_LABEL}')" 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
       printf "Start backup command pg_start_backup failed\n" >> $LOG
       send_alert
@@ -42,7 +44,7 @@ else
       exit
    fi
    printf "Execute this: SELECT pg_stop_backup()\n" >> $LOG
-   psql -d dbname -U username -c "SELECT pg_stop_backup()" 2>&1 | tee -a >> $LOG
+   psql -d ${DB_USERNAME} -U ${DB_USERNAME} -c "SELECT pg_stop_backup()" 2>&1 | tee -a >> $LOG
    if [ ! "$?" -eq 0 ]; then
       printf "stop command pg_stop_backup failed\n" >> $LOG
       send_alert

@@ -35,3 +35,28 @@ crontab -u apache -e
 "keep":"1w"
 }
 
+{
+"command":"python3 /opt/order-lab/backup/filesbackup.py -s '/opt/order-lab/orderflex/public' -d /mnt/pathology/view-test-backup/uploadsarchive -b 'docs' -h 'smtp.med.cornell.edu' -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu",
+"cronintervals":"1h",
+"keep":"1w"
+}
+
+{
+"sets" : 
+[
+{
+"idname" : "filesbackup-1hour",
+"command" : "/opt/order-lab/backup/filesbackup.py -s /opt/order-lab/orderflex/public -d /mnt/pathology/view-test-backup/uploadsarchive-HOURLY -b 'docs' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu",
+"croninterval" : "1h",
+"destination" : "/mnt/pathology/view-test-backup/",
+"keepcount" : "6"
+},
+{
+"idname" : "filesbackup-daily",
+"command" : "python filesbackup.py -s /opt/order-lab/orderflex/public -d /mnt/pathology/view-test-backup/uploadsarchive-DAILY -b 'docs' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu",
+"croninterval" : "1d",
+"destination" : "/mnt/pathology/view-test-backup/",
+"keepcount" : "3"
+}
+]
+}
