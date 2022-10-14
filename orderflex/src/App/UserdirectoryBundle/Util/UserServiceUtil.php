@@ -2279,7 +2279,7 @@ Pathology and Laboratory Medicine",
 
         if( $this->isWindows() ) {
             //Windows
-            return "Windows is not supported";
+            //return "Windows is not supported";
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -2367,16 +2367,15 @@ Pathology and Laboratory Medicine",
 
     //TODO: FilesBackup
     public function createFilesBackupCronLinux() {
-
         if( $this->isWindows() ) {
             //Windows
-            //return "Windows is not supported";
+            return "Windows is not supported";
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         $logger->notice("Creating Independent Monitor cron job for Linux");
-        $projectDir = $this->container->get('kernel')->getProjectDir();
+        //$projectDir = $this->container->get('kernel')->getProjectDir();
 
         $commandName = "filesbackup"; //"cron:independentmonitor";
         $cronJobName = $commandName." --env=prod";
@@ -2384,31 +2383,8 @@ Pathology and Laboratory Medicine",
         $filesBackupConfig = $userSecUtil->getSiteSettingParameter('filesBackupConfig'); //in min
         if( !$filesBackupConfig ) {
             return "filesBackupConfig is not provided";
-            //exit("filesBackupConfig is not provided");
         }
 
-        //$json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
-        //dump(json_decode($json));
-        //dump(json_decode($json, true));
-        //exit('test 111');
-
-        //dump($filesBackupConfig);
-        //exit('111');
-
-        //$result = '{"command":"python filesbackup.py -s C:\Users\ch3\"}';
-        //$json = json_encode($result);
-        //echo "json=[$json]<br>";
-        //exit('111 $json');
-
-        //$filesBackupConfig = '{"command":"python filesbackup.py -s C:\Users\ch3\"}';
-        //echo "$filesBackupConfig=[$filesBackupConfig]<br>";
-
-        //$filesBackupConfig = preg_replace('/\r|\n|\r\n/','',trim($filesBackupConfig));
-
-        // '\' not working on windows. replace by DIRECTORY_SEPARATOR
-        //$sep = "\\";
-        //echo "DIRECTORY_SEPARATOR=".DIRECTORY_SEPARATOR."<br>";
-        //$filesBackupConfig = str_replace($sep,DIRECTORY_SEPARATOR,$filesBackupConfig);
         $filesBackupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $filesBackupConfig);
         //echo "$filesBackupConfigPrepared=[$filesBackupConfigPrepared]<br>";
         $jsonObject = json_decode($filesBackupConfigPrepared,true);
@@ -2423,24 +2399,29 @@ Pathology and Laboratory Medicine",
             return "Cannot decode JSON configuration file: ".$filesBackupConfig;
         }
 
-        dump($jsonObject);
+        //dump($jsonObject);
         //exit('after json_decode');
 
         //parse $filesBackupConfig
         $cronJobCommand = NULL;
-        $keep = NULL;
         $cronIntervals = NULL;
+        $destination = NULL;
+        $keepCount = NULL;               //number of latest files to keep
 
         if( array_key_exists('command', $jsonObject) ) {
             $cronJobCommand = $jsonObject['command'];
         }
 
-        if( array_key_exists('keep', $jsonObject) ) {
-            $keep = $jsonObject['keep'];
-        }
-
         if( array_key_exists('cronintervals', $jsonObject) ) {
             $cronIntervals = $jsonObject['cronintervals'];
+        }
+
+        if( array_key_exists('destination', $jsonObject) ) {
+            $destination = $jsonObject['destination'];
+        }
+
+        if( array_key_exists('keepcount', $jsonObject) ) {
+            $keepCount = $jsonObject['keepcount'];
         }
 
         //$cronIntervalsArr = explode(",",$cronIntervals);
@@ -2463,12 +2444,12 @@ Pathology and Laboratory Medicine",
             }
 
 //            //$cronInterval = "1d";
-//            if( str_contains($cronInterval, 'd') ) {
-//                exit("Daily");
+            if( str_contains($cronInterval, 'd') ) {
+                exit("Daily");
 //
 //                $cronDay = str_replace('d','',$cronInterval);
 //                $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
-//            }
+            }
 
 
 
@@ -2487,6 +2468,118 @@ Pathology and Laboratory Medicine",
         }
 
         return NULL;
+    }
+    public function createDbBackupCronLinux() {
+        return $this->createBackupCronLinux("filesbackup","dbBackupConfig");
+    }
+    //TODO: createBackupCronLinux
+    public function createBackupCronLinux($commandName="filesbackup", $configFieldName="dbBackupConfig" ) {
+        //return "Not implemented yet";
+        if( $this->isWindows() ) {
+            //Windows
+            //return "Windows is not supported";
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating Independent Monitor cron job for Linux");
+        //$projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //$commandName = "filesbackup"; //"cron:independentmonitor";
+        $cronJobName = $commandName." --env=prod";
+
+        $backupConfig = $userSecUtil->getSiteSettingParameter($configFieldName); //in min
+        if( !$backupConfig ) {
+            return $configFieldName." is not provided";
+        }
+
+        $backupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupConfig);
+
+        //$backupConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
+
+        //echo "backupConfigPrepared=$backupConfigPrepared<br>";
+        $jsonObject = json_decode($backupConfigPrepared,true);
+
+        if( !$jsonObject ) {
+            $backupConfigPrepared = str_replace(array('/', '\\'), '/', $backupConfig);
+            //echo "$backupConfigPrepared=[$backupConfigPrepared]<br>";
+            $jsonObject = json_decode($backupConfigPrepared,true);
+        }
+
+        dump($jsonObject);
+        //exit('after json_decode');
+
+        if( !$jsonObject ) {
+            return "Cannot decode JSON configuration file: ".$backupConfig;
+        }
+
+        $resArr = array();
+
+        $sets = NULL;
+        if( array_key_exists('sets', $jsonObject) ) {
+            $sets = $jsonObject['sets'];
+        }
+
+        foreach($sets as $set) {
+
+            //parse set
+            $cronJobCommand = NULL;
+            $cronInterval = NULL;
+            $destination = NULL;
+            $keepCount = NULL;               //number of latest files to keep
+
+            if( array_key_exists('command', $set) ) {
+                $cronJobCommand = $set['command'];
+            }
+
+            if( array_key_exists('croninterval', $set) ) {
+                $cronInterval = $set['croninterval'];
+            }
+
+            if( array_key_exists('destination', $set) ) {
+                $destination = $set['destination'];
+            }
+
+            if( array_key_exists('keepcount', $set) ) {
+                $keepCount = $set['keepcount'];
+            }
+
+            echo "parsed: [$cronJobCommand] [$cronInterval] [$destination] [$keepCount] <br>";
+
+            $cronJob = NULL;
+
+            //$cronInterval = "1h";
+            if( str_contains($cronInterval, 'h') ) {
+                //exit("Hourly");
+
+                $cronHour = str_replace('h','',$cronInterval);
+                $cronJob = "0 */$cronHour * * * " . " " . $cronJobCommand;
+            }
+
+            //$cronInterval = "1d";
+            if( str_contains($cronInterval, 'd') ) {
+                //exit("Daily");
+
+                $cronDay = str_replace('d','',$cronInterval);
+                $cronJob = "0 0 */$cronDay * * * " . " " . $cronJobCommand;
+            }
+
+            //Create cron job
+            if( $cronJob ) {
+                if( $this->getCronJobFullNameLinux($commandName) === false ) {
+                    $this->addCronJobLinux($cronJob);
+                    $resArr[] = "Created $cronJobName cron job";
+                } else {
+                    $resArr[] = "$cronJobName already exists";
+                }
+            }
+
+        }
+
+        dump($resArr);
+        exit('111');
+
+        return implode(", ",$resArr);
     }
 
     public function addCronJobLinux( $fullCommand ) {

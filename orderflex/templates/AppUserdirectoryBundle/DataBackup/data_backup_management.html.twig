@@ -37,12 +37,19 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
 
+        <div class="well">
         {{ formmacros.field(form.dbBackupConfig) }}
+        {{ _self.cronStatusCreate( "dbbackup" ) }}
+        </div>
 
+        <div class="well">
         {{ formmacros.field(form.filesBackupConfig) }}
+        {{ _self.cronStatusCreate( "filesbackup" ) }}
+        </div>
 
         {% if form.submit is defined %}
             {{ form_widget(form.submit) }}
+            <a class="btn btn-default" href="{{ path('employees_data_backup_management_show') }}">Cancel</a>
         {% endif %}
 
     {{ form_end(form) }}
@@ -53,6 +60,81 @@
         </p>
     {% endif %}
 
+    {#<table class="table table-bordered table-hover table-condensed text-left">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>Parameter</th>#}
+            {#<th>Value</th>#}
+            {#<th>Action</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody data-link="row" class="rowlink">#}
+            {#<tr>#}
+                {#<td class="rowlink-skip">dbBackup cron job</td>#}
+                {#<td class="rowlink-skip">#}
+                    {#{{ user_service_utility.getCronStatus("dbBackup",false)|raw }}#}
+                {#</td>#}
+
+                {#<td class="rowlink-skip">#}
+                    {#<div class="btn-group">#}
+                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                            {#Action <span class="caret"></span>#}
+                        {#</button>#}
+
+                        {#<ul class="dropdown-menu dropdown-menu-right">#}
+
+                            {#<li>#}
+                                {#<a#}
+                                    {#general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                                    {#href="{{ path('user_remove_cron_job', {'cronJobName': 'dbBackup'}) }}">Remove</a>#}
+                            {#</li>#}
+
+                            {#<li>#}
+                            {#<a  general-data-confirm="Are you sure? This action will generate dbBackup cron job."#}
+                                {#href="{{ path('user_generate_cron_dbbackup') }}">Generate dbBackup cron job</a>#}
+                            {#</li>#}
+
+                        {#</ul>#}
+
+                    {#</div>#}
+                {#</td>#}
+            {#</tr>#}
+
+            {#<tr>#}
+                {#<td class="rowlink-skip">filesBackup cron job</td>#}
+                {#<td class="rowlink-skip">#}
+                    {#{{ user_service_utility.getCronStatus("filesbackup",false)|raw }}#}
+                {#</td>#}
+
+                {#<td class="rowlink-skip">#}
+                    {#<div class="btn-group">#}
+                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                            {#Action <span class="caret"></span>#}
+                        {#</button>#}
+
+                        {#<ul class="dropdown-menu dropdown-menu-right">#}
+
+                            {#<li>#}
+                                {#<a#}
+                                        {#general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                                        {#href="{{ path('user_remove_cron_job', {'cronJobName': 'filesbackup'}) }}">Remove</a>#}
+                            {#</li>#}
+
+                            {#<li>#}
+                                {#<a  general-data-confirm="Are you sure? This action will generate filesBackup cron job."#}
+                                    {#href="{{ path('user_generate_cron_filesbackup') }}">Generate filesBackup cron job</a>#}
+                            {#</li>#}
+
+                        {#</ul>#}
+
+                    {#</div>#}
+                {#</td>#}
+            {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
+{% endblock %}
+
+{% macro cronStatusCreate( cronJobName ) %}
     <table class="table table-bordered table-hover table-condensed text-left">
         <thead>
         <tr>
@@ -63,9 +145,9 @@
         </thead>
         <tbody data-link="row" class="rowlink">
             <tr>
-                <td class="rowlink-skip">dbBackup cron job</td>
+                <td class="rowlink-skip">{{ cronJobName }} cron job</td>
                 <td class="rowlink-skip">
-                    {{ user_service_utility.getCronStatus("dbBackup",false)|raw }}
+                    {{ user_service_utility.getCronStatus(cronJobName,false)|raw }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -77,14 +159,14 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a
-                                    general-data-confirm="Are you sure you would like to remove this cron job?"
-                                    href="{{ path('user_remove_cron_job', {'cronJobName': 'dbBackup'}) }}">Remove</a>
+                                <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                                   href="{{ path('user_remove_cron_job', {'cronJobName': cronJobName}) }}">Remove</a>
                             </li>
 
                             <li>
-                            <a  general-data-confirm="Are you sure? This action will generate dbBackup cron job."
-                                href="{{ path('user_generate_cron_dbbackup') }}">Generate dbBackup cron job</a>
+                                <a  general-data-confirm="Are you sure? This action will generate {{ cronJobName }} cron job."
+                                    href="{{ path('user_generate_cron_'~cronJobName) }}"
+                                >Generate {{ cronJobName }} cron job</a>
                             </li>
 
                         </ul>
@@ -92,40 +174,9 @@
                     </div>
                 </td>
             </tr>
-
-            <tr>
-                <td class="rowlink-skip">filesBackup cron job</td>
-                <td class="rowlink-skip">
-                    {{ user_service_utility.getCronStatus("filesbackup",false)|raw }}
-                </td>
-
-                <td class="rowlink-skip">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            Action <span class="caret"></span>
-                        </button>
-
-                        <ul class="dropdown-menu dropdown-menu-right">
-
-                            <li>
-                                <a
-                                        general-data-confirm="Are you sure you would like to remove this cron job?"
-                                        href="{{ path('user_remove_cron_job', {'cronJobName': 'filesbackup'}) }}">Remove</a>
-                            </li>
-
-                            <li>
-                                <a  general-data-confirm="Are you sure? This action will generate filesBackup cron job."
-                                    href="{{ path('user_generate_cron_filesbackup') }}">Generate filesBackup cron job</a>
-                            </li>
-
-                        </ul>
-
-                    </div>
-                </td>
-            </tr>
-
-{% endblock %}
-
+        </tbody>
+    </table>
+{% endmacro %}
 
 {% block additionaljs %}
 
