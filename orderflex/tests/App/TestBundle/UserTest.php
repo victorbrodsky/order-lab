@@ -214,10 +214,10 @@ class UserTest extends WebTestBase
 
     public function testBackupShowAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/data-backup-management/show');
+        $crawler = $this->client->request('GET', '/directory/data-backup-management/show');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
@@ -231,7 +231,7 @@ class UserTest extends WebTestBase
 
     public function testBackupEditAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/data-backup-management/edit');
+        $crawler = $this->client->request('GET', '/directory/data-backup-management/edit');
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Data Backup Management")')->count()
