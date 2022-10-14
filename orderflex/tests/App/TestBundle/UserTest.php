@@ -212,4 +212,30 @@ class UserTest extends WebTestBase
         );
     }
 
+    public function testBackupShowAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/data-backup-management/show');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Data Backup Management")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Edit")')->count()
+        );
+    }
+
+    public function testBackupEditAction() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/data-backup-management/edit');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Data Backup Management")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Update")')->count()
+        );
+    }
+
 }
