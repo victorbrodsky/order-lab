@@ -2472,12 +2472,11 @@ Pathology and Laboratory Medicine",
     public function createDbBackupCronLinux() {
         return $this->createBackupCronLinux("filesbackup","dbBackupConfig");
     }
-    //TODO: createBackupCronLinux
-    public function createBackupCronLinux($commandName="filesbackup", $configFieldName="dbBackupConfig" ) {
+    public function createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" ) {
         //return "Not implemented yet";
         if( $this->isWindows() ) {
             //Windows
-            //return "Windows is not supported";
+            return "Windows is not supported";
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -2488,29 +2487,29 @@ Pathology and Laboratory Medicine",
         //$commandName = "filesbackup"; //"cron:independentmonitor";
         $cronJobName = $commandName." --env=prod";
 
-        $backupConfig = $userSecUtil->getSiteSettingParameter($configFieldName); //in min
-        if( !$backupConfig ) {
+        $backupJsonConfig = $userSecUtil->getSiteSettingParameter($configFieldName); //in min
+        if( !$backupJsonConfig ) {
             return $configFieldName." is not provided";
         }
 
-        $backupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupConfig);
+        $backupJsonConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupJsonConfig);
 
-        //$backupConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
+        //$backupJsonConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
 
-        //echo "backupConfigPrepared=$backupConfigPrepared<br>";
-        $jsonObject = json_decode($backupConfigPrepared,true);
+        //echo "backupConfigPrepared=$backupJsonConfigPrepared<br>";
+        $jsonObject = json_decode($backupJsonConfigPrepared,true);
 
         if( !$jsonObject ) {
-            $backupConfigPrepared = str_replace(array('/', '\\'), '/', $backupConfig);
-            //echo "$backupConfigPrepared=[$backupConfigPrepared]<br>";
-            $jsonObject = json_decode($backupConfigPrepared,true);
+            $backupJsonConfigPrepared = str_replace(array('/', '\\'), '/', $backupJsonConfig);
+            //echo "$backupJsonConfigPrepared=[$backupJsonConfigPrepared]<br>";
+            $jsonObject = json_decode($backupJsonConfigPrepared,true);
         }
 
-        dump($jsonObject);
+        //dump($jsonObject);
         //exit('after json_decode');
 
         if( !$jsonObject ) {
-            return "Cannot decode JSON configuration file: ".$backupConfig;
+            return "Cannot decode JSON configuration file: ".$backupJsonConfig;
         }
 
         $resArr = array();
@@ -2545,7 +2544,7 @@ Pathology and Laboratory Medicine",
                 $keepCount = $set['keepcount'];
             }
 
-            echo "parsed: [$cronJobCommand] [$cronInterval] [$destination] [$keepCount] <br>";
+            //echo "parsed: [$cronJobCommand] [$cronInterval] [$destination] [$keepCount] <br>";
 
             $cronJob = NULL;
 
@@ -2577,71 +2576,78 @@ Pathology and Laboratory Medicine",
 
         }
 
-        dump($resArr);
-        exit('111');
+        //dump($resArr);
+        //exit('EOF createBackupCronLinux');
 
         return implode(", ",$resArr);
     }
-    public function getBackupManageCronLinux( $backupConfig ) {
-        $sets = $this->getBackupConfigSets($backupConfig);
+    public function getBackupManageCronLinux( $backupJsonConfig ) {
+        //exit("backupJsonConfig=$backupJsonConfig");
+        $sets = $this->getBackupConfigSets($backupJsonConfig);
+        //dump($sets);
+
         $setCronManageArr = array();
+
+        if( !is_array($sets) ) {
+            return 'Error: invalid json file';
+            //dump($sets);
+            //exit('after getBackupConfigSets: Error: invalid json file');
+            $setCronManageArr[] = 'Error: invalid json file';
+            return $setCronManageArr;
+        }
+
+        //exit('after getBackupConfigSets');
 
         foreach($sets as $set) {
             //parse set
             $idName = NULL;
-            $cronJobCommand = NULL;
-            $cronInterval = NULL;
-            $destination = NULL;
-            $keepCount = NULL;               //number of latest files to keep
+//            $cronJobCommand = NULL;
+//            $cronInterval = NULL;
+//            $destination = NULL;
+//            $keepCount = NULL;               //number of latest files to keep
 
             if( array_key_exists('idname', $set) ) {
                 $idName = $set['idname'];
             }
-            if( array_key_exists('command', $set) ) {
-                $cronJobCommand = $set['command'];
-            }
-            if( array_key_exists('croninterval', $set) ) {
-                $cronInterval = $set['croninterval'];
-            }
-            if( array_key_exists('destination', $set) ) {
-                $destination = $set['destination'];
-            }
-            if( array_key_exists('keepcount', $set) ) {
-                $keepCount = $set['keepcount'];
-            }
-
-            //parameter
-            //status
-            //create url
-            //remove url
-
-            $setCronManageArr['idname'] = $idName;
+//            if( array_key_exists('command', $set) ) {
+//                $cronJobCommand = $set['command'];
+//            }
+//            if( array_key_exists('croninterval', $set) ) {
+//                $cronInterval = $set['croninterval'];
+//            }
+//            if( array_key_exists('destination', $set) ) {
+//                $destination = $set['destination'];
+//            }
+//            if( array_key_exists('keepcount', $set) ) {
+//                $keepCount = $set['keepcount'];
+//            }
+            $setCronManageArr[] = $idName;
         }
 
+        //dump($setCronManageArr);
+        //exit('after setCronManageArr');
         return $setCronManageArr;
     }
-    public function getBackupConfigSets( $backupConfig ) {
-        $backupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupConfig);
+    public function getBackupConfigSets( $backupJsonConfig ) {
+        $backupJsonConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupJsonConfig);
 
-        //$backupConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
+        //$backupJsonConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
 
-        //echo "backupConfigPrepared=$backupConfigPrepared<br>";
-        $jsonObject = json_decode($backupConfigPrepared,true);
+        //echo "backupConfigPrepared=$backupJsonConfigPrepared<br>";
+        $jsonObject = json_decode($backupJsonConfigPrepared,true);
 
         if( !$jsonObject ) {
-            $backupConfigPrepared = str_replace(array('/', '\\'), '/', $backupConfig);
-            //echo "$backupConfigPrepared=[$backupConfigPrepared]<br>";
-            $jsonObject = json_decode($backupConfigPrepared,true);
+            $backupJsonConfigPrepared = str_replace(array('/', '\\'), '/', $backupJsonConfig);
+            //echo "$backupJsonConfigPrepared=[$backupJsonConfigPrepared]<br>";
+            $jsonObject = json_decode($backupJsonConfigPrepared,true);
         }
 
-        dump($jsonObject);
+        //dump($jsonObject);
         //exit('after json_decode');
 
         if( !$jsonObject ) {
-            return "Cannot decode JSON configuration file: ".$backupConfig;
+            return "Cannot decode JSON configuration file: ".$backupJsonConfig;
         }
-
-        $resArr = array();
 
         $sets = NULL;
         if( array_key_exists('sets', $jsonObject) ) {

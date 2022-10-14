@@ -9059,6 +9059,27 @@ class AdminController extends OrderAbstractController
     }
 
     /**
+     * @Route("/list/create-cron-job/{cronJobName}/{configFieldName}", name="user_create_cron_job", methods={"GET"})
+     */
+    public function createCronJobAction(Request $request, $cronJobName, $configFieldName)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        //createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" )
+        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);
+
+        $this->addFlash(
+            'notice',
+            $res
+        );
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
+    /**
      * @Route("/list/remove-cron-job/{cronJobName}", name="user_remove_cron_job", methods={"GET"})
      */
     public function removeCronJobAction(Request $request, $cronJobName)
