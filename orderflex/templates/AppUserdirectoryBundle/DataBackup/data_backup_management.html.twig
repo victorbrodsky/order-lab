@@ -38,13 +38,15 @@
         {{ form_errors(form) }}
 
         <div class="well">
-        {{ formmacros.field(form.dbBackupConfig) }}
-        {{ _self.cronStatusCreate( "dbbackup" ) }}
+            {{ formmacros.field(form.dbBackupConfig) }}
+            {#{{ _self.cronStatusCreate( "dbbackup" ) }}#}
+            {{ _self.cronStatusCreateAuto(entity.dbBackupConfig) }}
         </div>
 
         <div class="well">
-        {{ formmacros.field(form.filesBackupConfig) }}
-        {{ _self.cronStatusCreate( "filesbackup" ) }}
+            {{ formmacros.field(form.filesBackupConfig) }}
+            {{ _self.cronStatusCreate( "filesbackup" ) }}
+            {{ _self.cronStatusCreateAuto(entity.dbBackupConfig) }}
         </div>
 
         {% if form.submit is defined %}
@@ -134,6 +136,12 @@
     {#</table>#}
 {% endblock %}
 
+{% macro cronStatusCreateAuto( backupEntityField ) %}
+    {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupEntityField) %}
+    {% for cronJobName in cronJobNames %}
+        {{ _self.cronStatusCreate(cronJobName) }}
+    {% endfor %}
+{% endmacro %}
 {% macro cronStatusCreate( cronJobName ) %}
     <table class="table table-bordered table-hover table-condensed text-left">
         <thead>

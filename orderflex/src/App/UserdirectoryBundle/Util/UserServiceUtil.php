@@ -2523,23 +2523,24 @@ Pathology and Laboratory Medicine",
         foreach($sets as $set) {
 
             //parse set
+            $idName = NULL;
             $cronJobCommand = NULL;
             $cronInterval = NULL;
             $destination = NULL;
             $keepCount = NULL;               //number of latest files to keep
 
+            if( array_key_exists('idname', $set) ) {
+                $idName = $set['idname'];
+            }
             if( array_key_exists('command', $set) ) {
                 $cronJobCommand = $set['command'];
             }
-
             if( array_key_exists('croninterval', $set) ) {
                 $cronInterval = $set['croninterval'];
             }
-
             if( array_key_exists('destination', $set) ) {
                 $destination = $set['destination'];
             }
-
             if( array_key_exists('keepcount', $set) ) {
                 $keepCount = $set['keepcount'];
             }
@@ -2580,6 +2581,74 @@ Pathology and Laboratory Medicine",
         exit('111');
 
         return implode(", ",$resArr);
+    }
+    public function getBackupManageCronLinux( $backupConfig ) {
+        $sets = $this->getBackupConfigSets($backupConfig);
+        $setCronManageArr = array();
+
+        foreach($sets as $set) {
+            //parse set
+            $idName = NULL;
+            $cronJobCommand = NULL;
+            $cronInterval = NULL;
+            $destination = NULL;
+            $keepCount = NULL;               //number of latest files to keep
+
+            if( array_key_exists('idname', $set) ) {
+                $idName = $set['idname'];
+            }
+            if( array_key_exists('command', $set) ) {
+                $cronJobCommand = $set['command'];
+            }
+            if( array_key_exists('croninterval', $set) ) {
+                $cronInterval = $set['croninterval'];
+            }
+            if( array_key_exists('destination', $set) ) {
+                $destination = $set['destination'];
+            }
+            if( array_key_exists('keepcount', $set) ) {
+                $keepCount = $set['keepcount'];
+            }
+
+            //parameter
+            //status
+            //create url
+            //remove url
+
+            $setCronManageArr['idname'] = $idName;
+        }
+
+        return $setCronManageArr;
+    }
+    public function getBackupConfigSets( $backupConfig ) {
+        $backupConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupConfig);
+
+        //$backupConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
+
+        //echo "backupConfigPrepared=$backupConfigPrepared<br>";
+        $jsonObject = json_decode($backupConfigPrepared,true);
+
+        if( !$jsonObject ) {
+            $backupConfigPrepared = str_replace(array('/', '\\'), '/', $backupConfig);
+            //echo "$backupConfigPrepared=[$backupConfigPrepared]<br>";
+            $jsonObject = json_decode($backupConfigPrepared,true);
+        }
+
+        dump($jsonObject);
+        //exit('after json_decode');
+
+        if( !$jsonObject ) {
+            return "Cannot decode JSON configuration file: ".$backupConfig;
+        }
+
+        $resArr = array();
+
+        $sets = NULL;
+        if( array_key_exists('sets', $jsonObject) ) {
+            $sets = $jsonObject['sets'];
+        }
+
+        return $sets;
     }
 
     public function addCronJobLinux( $fullCommand ) {
