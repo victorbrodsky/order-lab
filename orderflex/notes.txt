@@ -1177,6 +1177,7 @@ systemctl start httpd.service
 systemctl restart httpd.service
 /usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ stop
 /usr/pgsql-14/bin/pg_ctl -D /var/lib/pgsql/14/data/ start
+sudo systemctl stop postgresql-14
 sudo systemctl status postgresql-14
 sudo systemctl restart postgresql-14
 

@@ -161,7 +161,7 @@ def restartServer(url):
         # send email
         emailSubject = "Run on down commands"
         emailBody = "Trying to run on down commands for " + url + ":\n" + ON_DOWN_COMMANDS
-        emailBody = emailBody . ".\n\n Output=" . str(outputs)
+        emailBody = emailBody + "." + "\n\n Output=" + str(outputs)
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
 
         #check url again
@@ -182,7 +182,7 @@ def runCommand(command):
     output = subprocess.run([command], stdout=PIPE, stderr=PIPE, shell=True)
     print(output)
     # sleep in seconds
-    time.sleep(10)
+    #time.sleep(10)
     return output
 
 def isLocalServer(url):
