@@ -2549,7 +2549,7 @@ Pathology and Laboratory Medicine",
             $cronJob = NULL;
 
             //$cronInterval = "1h";
-            if( str_contains($cronInterval, 'h') ) {
+            if( $cronInterval && str_contains($cronInterval, 'h') ) {
                 //exit("Hourly");
 
                 $cronHour = str_replace('h','',$cronInterval);
@@ -2557,7 +2557,7 @@ Pathology and Laboratory Medicine",
             }
 
             //$cronInterval = "1d";
-            if( str_contains($cronInterval, 'd') ) {
+            if( $cronInterval && str_contains($cronInterval, 'd') ) {
                 //exit("Daily");
 
                 $cronDay = str_replace('d','',$cronInterval);
@@ -2629,6 +2629,11 @@ Pathology and Laboratory Medicine",
         return $setCronManageArr;
     }
     public function getBackupConfigSets( $backupJsonConfig ) {
+
+        if( !$backupJsonConfig ) {
+            return "Config JSON file is not provided";
+        }
+
         $backupJsonConfigPrepared = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $backupJsonConfig);
 
         //$backupJsonConfigPrepared = '{"command":[{"s":"sss","t":"ttt"},{"d":"ddd","n":"nnn"}]}';
