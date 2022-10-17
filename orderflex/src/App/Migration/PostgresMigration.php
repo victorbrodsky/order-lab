@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 //Update:   php bin/console doctrine:schema:update --force
 //Status:   php bin/console doctrine:migrations:status
 
-//Show versions: php bin/console doctrine:migrations:status --show-versions
+//Show versions: php bin/console doctrine:migrations:list
 //Delete Unavailable Migrations or before migrate again:
 // php bin/console doctrine:migrations:version DoctrineMigrations\\YYYYMMDDHHMMSS --delete
 

@@ -335,7 +335,7 @@ def main(argv):
     #statusResultMap = map(get_site_status, listUrls, listBool)
 
     runCommand('whoami') #testing runCommand
-    restartServer(url) #testing restartServer
+    restartServer("test url") #testing restartServer
 
     statusResultList = []
     for url in listUrls:
