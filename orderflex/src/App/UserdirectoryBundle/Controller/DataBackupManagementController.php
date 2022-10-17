@@ -43,7 +43,7 @@ class DataBackupManagementController extends OrderAbstractController
      */
     public function dataBackupManagementShowAction(Request $request)
     {
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -68,7 +68,7 @@ class DataBackupManagementController extends OrderAbstractController
      */
     public function dataBackupManagementUpdateAction(Request $request)
     {
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -141,7 +141,7 @@ class DataBackupManagementController extends OrderAbstractController
 
     private function createEditForm( SiteParameters $entity, $cycle )
     {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         $params = array(
             'cycle' => $cycle

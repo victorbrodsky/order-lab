@@ -214,6 +214,7 @@ class UserTest extends WebTestBase
 
     public function testBackupShowAction() {
         $this->logIn();
+
         $crawler = $this->client->request('GET', '/directory/data-backup-management/show');
 
         //$content = $this->client->getResponse()->getContent();
