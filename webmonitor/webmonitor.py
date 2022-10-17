@@ -156,7 +156,7 @@ def restartServer(url):
         for command in commands:
             #try to run command
             output = runCommand(command.strip())
-            outputs.append(append)
+            outputs.append(output)
 
         # send email
         emailSubject = "Run on down commands"
