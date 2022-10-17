@@ -152,13 +152,16 @@ def restartServer(url):
     if ON_DOWN_COMMANDS != "":
         #ON_DOWN_COMMANDS is a string or comma seperated string of commands
         commands = ON_DOWN_COMMANDS.split(",")
+        outputs = []
         for command in commands:
             #try to run command
-            runCommand(command.strip())
+            output = runCommand(command.strip())
+            outputs.append(append)
 
         # send email
         emailSubject = "Run on down commands"
         emailBody = "Trying to run on down commands for " + url + ":\n" + ON_DOWN_COMMANDS
+        emailBody = emailBody . ".\n\n Output=" . str(outputs)
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
 
         #check url again
@@ -180,6 +183,7 @@ def runCommand(command):
     print(output)
     # sleep in seconds
     time.sleep(10)
+    return output
 
 def isLocalServer(url):
     # check if url is located on the local server
