@@ -334,7 +334,9 @@ def main(argv):
     #listBool = [False]*len(listUrls) #False - disable email if site is up
     #statusResultMap = map(get_site_status, listUrls, listBool)
 
-    runCommand('whoami')
+    runCommand('whoami') #testing runCommand
+    restartServer(url) #testing restartServer
+
     statusResultList = []
     for url in listUrls:
         statusResult = get_site_status(url,False)
