@@ -2549,6 +2549,14 @@ Pathology and Laboratory Medicine",
 
             $cronJob = NULL;
 
+
+            //$cronInterval = "5m"; //every 5 minutes
+            if( $cronInterval && str_contains($cronInterval, 'm') ) {
+                //exit("Minutes");
+                $cronMin = str_replace('m','',$cronInterval);
+                $cronJob = "*/$cronMin * * * * " . " " . $cronJobCommand;
+            }
+
             //$cronInterval = "1h";
             if( $cronInterval && str_contains($cronInterval, 'h') ) {
                 //exit("Hourly");

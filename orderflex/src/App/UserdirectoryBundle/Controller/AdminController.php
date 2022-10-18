@@ -9077,7 +9077,7 @@ class AdminController extends OrderAbstractController
             $res
         );
 
-        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
     }
     /**
      * @Route("/list/remove-cron-job/{cronJobName}", name="user_remove_cron_job", methods={"GET"})
@@ -9095,7 +9095,7 @@ class AdminController extends OrderAbstractController
                 'warning',
                 "Windows is not supported"
             );
-            return $this->redirect($this->generateUrl('employees_siteparameters'));
+            return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
         }
 
         //$commandName = "cron:".$cronJobName;
@@ -9109,7 +9109,7 @@ class AdminController extends OrderAbstractController
             'Cron job '.$cronJobName.' has been removed.'
         );
 
-        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
     }
 
     /**
