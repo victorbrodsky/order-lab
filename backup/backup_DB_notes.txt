@@ -2,6 +2,10 @@ The folder is mounted on the postgres machine as the following.
 The database backup is scheduled as cronjobs to run on 3am daily and hourly,
 all backup files are written to /mnt/pathology/view-backup (should see some there now).
 The hourly and daily backup files are retained for 5 and 14 days respectively.
+daily at 3 am - keep for 14 days (14 files)
+hourly - keep for 5 days (24*5 = 120 files)
+Total: 134 files
+18Oct2022 a2 10:27am: 154 files
 
 
 //brbpathologyfs.med.cornell.edu/pathology/view-backup is mount on xits-po-order-prd1:/mnt/pathology/view-backup

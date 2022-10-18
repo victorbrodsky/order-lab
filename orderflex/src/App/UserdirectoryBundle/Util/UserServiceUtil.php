@@ -2470,9 +2470,10 @@ Pathology and Laboratory Medicine",
         return NULL;
     }
     public function createDbBackupCronLinux() {
-        return $this->createBackupCronLinux("filesbackup","dbBackupConfig");
+        $cronJobName = "dbbackup-hourly"; //or "dbbackup-daily"
+        return $this->createBackupCronLinux("dbbackup-hourly","dbBackupConfig");
     }
-    public function createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" ) {
+    public function createBackupCronLinux( $cronJobName="filesbackup", $configFieldName="dbBackupConfig" ) {
         //return "Not implemented yet";
         if( $this->isWindows() ) {
             //Windows
@@ -2484,8 +2485,8 @@ Pathology and Laboratory Medicine",
         $logger->notice("Creating Independent Monitor cron job for Linux");
         //$projectDir = $this->container->get('kernel')->getProjectDir();
 
-        //$commandName = "filesbackup"; //"cron:independentmonitor";
-        $cronJobName = $commandName." --env=prod";
+        //$cronJobName = "filesbackup"; //"cron:independentmonitor";
+        $cronJobName = $cronJobName." --env=prod";
 
         $backupJsonConfig = $userSecUtil->getSiteSettingParameter($configFieldName); //in min
         if( !$backupJsonConfig ) {
@@ -2566,7 +2567,7 @@ Pathology and Laboratory Medicine",
 
             //Create cron job
             if( $cronJob ) {
-                if( $this->getCronJobFullNameLinux($commandName) === false ) {
+                if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
                     $this->addCronJobLinux($cronJob);
                     $resArr[] = "Created $cronJobName cron job";
                 } else {

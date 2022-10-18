@@ -167,6 +167,8 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     /**
+     * NOT USED
+     *
      * @Route("/list/generate-cron-jobs/dbbackup", name="user_generate_cron_dbbackup", methods={"GET"})
      */
     public function generateDbBackupCronAction(Request $request)
@@ -189,6 +191,8 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     /**
+     * NOT USED
+     * 
      * @Route("/list/generate-cron-jobs/filesbackup", name="user_generate_cron_filesbackup", methods={"GET"})
      */
     public function generateFilesBackupCronAction(Request $request)
