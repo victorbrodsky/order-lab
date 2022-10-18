@@ -664,24 +664,26 @@ class DefaultController extends OrderAbstractController
         $applications = $query->getResult();
         echo "applications count=".count($applications)."<br>";
 
+        $count = 0;
         foreach( $applications as $application ) {
             echo "application=".$application->getId()."<br>";
             $modified = false;
             foreach( $application->getInterviews() as $interview ) {
                 if( $interview->isEmpty() ) {
-                    echo "remove interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
+                    echo "to remove interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
                     $application->removeInterview($interview);
-                    //$em->remove($interview);
+                    $em->remove($interview);
                     $modified = true;
+                    $count++;
                 }
             }
             if( $modified ) {
-                //$em->flush();
+                $em->flush();
             }
         }
 
 
-        exit("EOF removeDefaultInterviewersAction");
+        exit("EOF removeDefaultInterviewersAction: removed=".$count);
     }
 
 }
