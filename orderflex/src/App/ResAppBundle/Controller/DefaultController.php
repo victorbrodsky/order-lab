@@ -634,7 +634,7 @@ class DefaultController extends OrderAbstractController
      */
     public function removeDefaultInterviewersAction(Request $request) {
 
-        //exit("EOF removeDefaultInterviewersAction");
+        exit("EOF removeDefaultInterviewersAction");
 
         $resappUtil = $this->container->get('resapp_util');
         $em = $this->getDoctrine()->getManager();
