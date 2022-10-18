@@ -653,6 +653,8 @@ class DefaultController extends OrderAbstractController
         $endDate = $startEndDates['Season End Date'];
         $dql->andWhere("application.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
+        $dql->andWhere("application.id >= 896");
+
         $dql->orderBy("application.id","ASC");
 
         $query = $em->createQuery($dql);
@@ -664,14 +666,18 @@ class DefaultController extends OrderAbstractController
 
         foreach( $applications as $application ) {
             echo "application=".$application->getId()."<br>";
+            $modified = false;
             foreach( $application->getInterviews() as $interview ) {
                 if( $interview->isEmpty() ) {
-                    echo "interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
+                    echo "remove interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
                     $application->removeInterview($interview);
                     //$em->remove($interview);
+                    $modified = true;
                 }
             }
-            //$em->flush();
+            if( $modified ) {
+                //$em->flush();
+            }
         }
 
 

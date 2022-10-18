@@ -68,7 +68,7 @@ class InterviewType extends AbstractType
                     },
                 ));
             }
-            if(0) {
+            if(0) { //remove heavy locations
                 ///////////////// location //////////////////
                 $builder->add('location',null, array(
                     'label' => "Interview Location:",

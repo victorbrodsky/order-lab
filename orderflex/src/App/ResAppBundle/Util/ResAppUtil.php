@@ -736,7 +736,7 @@ class ResAppUtil {
             if( $this->isInterviewerExist($resapp,$interviewer) == false ) {
                 $interview = new Interview();
                 $interview->setInterviewer($interviewer);
-                $interview->setLocation($interviewer->getMainLocation());
+                //$interview->setLocation($interviewer->getMainLocation()); //remove heavy locations
                 $interview->setInterviewDate($resapp->getInterviewDate());
                 $resapp->addInterview($interview);
             }
