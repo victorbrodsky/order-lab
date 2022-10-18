@@ -1455,13 +1455,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('resapp_simple_confirmation',array('id' => $id)));
 
         } else {
-//            if( !$form->isSubmitted() ){
-//                echo "form is not submitted<br>";
-//            }
-//            if( !$form->isValid() ){
-//                echo "form is not valid<br>";
-//            }
-
+            
             if( $routeName == "resapp_edit_default_interviewers" ) {
                 $this->addFlash(
                     'pnotify',
@@ -1470,13 +1464,11 @@ class ResAppController extends OrderAbstractController {
             }
 
             //event log
-            $em = $this->getDoctrine()->getManager();
-            $actionStr = "viewed on edit page";
-            $eventType = 'Residency Application Page Viewed';
-            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-            $event = "Residency Application with ID".$id." has been ".$actionStr." by ".$user;
-
-            $userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,$eventType);
+            //$em = $this->getDoctrine()->getManager();
+            //$actionStr = "viewed on edit page";
+            //$eventType = 'Residency Application Page Viewed';
+            //$event = "Residency Application with ID".$id." has been ".$actionStr." by ".$user;
+            //$userSecUtil->createUserEditEvent($this->getParameter('resapp.sitename'),$event,$user,$entity,$request,$eventType);
         }
 
         $fullForm = false;
