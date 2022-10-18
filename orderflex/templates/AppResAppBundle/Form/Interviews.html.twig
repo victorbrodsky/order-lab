@@ -66,14 +66,15 @@
                 {% for interview in form.interviews %}
 
                     {% set showInterview = false %}
-                    {% if interview.interviewer and interview.vars.value.interviewer.id %}
-                        {#interview.interviewer.id=({{ interview.vars.value.interviewer.id }}) ?=#}
-                        {#app.user.id=({{ app.user.id }})<br>#}
-                        {% if interview.vars.value.interviewer.id == app.user.id %}
+                    {#{% if interview.interviewer and interview.vars.value.interviewer.id %}#}
+                    {% if interview.interviewer is defined %}
+                        {% if interview.interviewer and interview.vars.value.interviewer.id %}
+                            {% if interview.vars.value.interviewer.id == app.user.id %}
+                                {% set showInterview = true %}
+                            {% endif %}
+                        {% else %}
                             {% set showInterview = true %}
                         {% endif %}
-                    {% else %}
-                        {% set showInterview = true %}
                     {% endif %}
 
                     {% if is_granted('ROLE_RESAPP_COORDINATOR') or is_granted('ROLE_RESAPP_DIRECTOR') or showInterview  %}

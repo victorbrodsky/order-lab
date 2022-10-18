@@ -626,4 +626,56 @@ class DefaultController extends OrderAbstractController
 
         exit("EOF testingAction");
     }
+
+    /**
+     * Testing missing/corrupted attached files
+     *
+     * @Route("/remove-default-interviewers/", name="resapp_remove_default_interviewers", methods={"GET"})
+     */
+    public function removeDefaultInterviewersAction(Request $request) {
+
+        //exit("EOF removeDefaultInterviewersAction");
+
+        $resappUtil = $this->container->get('resapp_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //get spreadsheets older than X year
+        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        $dql =  $repository->createQueryBuilder("application");
+        $dql->select('application');
+
+        $dql->leftJoin("application.interviews", "interviews");
+
+        $dql->where("interviews IS NOT NULL");
+
+        $startEndDates = $resappUtil->getResAppAcademicYearStartEndDates();
+        $startDate = $startEndDates['Season Start Date'];
+        $endDate = $startEndDates['Season End Date'];
+        $dql->andWhere("application.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
+
+        $dql->orderBy("application.id","ASC");
+
+        $query = $em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $applications = $query->getResult();
+        echo "applications count=".count($applications)."<br>";
+
+        foreach( $applications as $application ) {
+            echo "application=".$application->getId()."<br>";
+            foreach( $application->getInterviews() as $interview ) {
+                if( $interview->isEmpty() ) {
+                    echo "interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
+                    $application->removeInterview($interview);
+                    //$em->remove($interview);
+                }
+            }
+            //$em->flush();
+        }
+
+
+        exit("EOF removeDefaultInterviewersAction");
+    }
+
 }

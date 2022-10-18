@@ -44,6 +44,9 @@
                     {#Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>#}
                 {#</a>#}
                 {#<br>#}
+                {#forminterview.vars.value.id={{ forminterview.vars.value.id }}<br>#}
+                {#forminterview.vars.value.interviewer={{ forminterview.vars.value.interviewer }}<br>#}
+                {#forminterview.vars.value.submitter={{ forminterview.vars.value.submitter }}<br>#}
                 {% set embedPdf = resapp_pdfutil.getEmbedPdfByInterview(forminterview.vars.value) %}
                 <a
                    general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
@@ -55,14 +58,18 @@
             {% endif %}
         {% endif %}
 
-        {{ formmacros.field(forminterview.interviewer) }}
+        {% if forminterview.interviewer is defined %}
+            {{ formmacros.field(forminterview.interviewer) }}
+        {% endif %}
 
         {#add submitter if exists (Submitted by)#}
         {% if forminterview.vars.value and forminterview.vars.value.submitter and forminterview.vars.value.interviewer.id != forminterview.vars.value.submitter.id %}
             {{ formmacros.simplefield("Submitted by:", forminterview.vars.value.submitter, "input", "disabled") }}
         {% endif %}
 
-        {{ formmacros.field(forminterview.location) }}
+        {% if forminterview.location is defined %}
+            {{ formmacros.field(forminterview.location) }}
+        {% endif %}
 
         {{ formmacros.fieldDateLabel(forminterview.interviewDate,'allow-future-date') }}
         {{ formmacros.field(forminterview.startTime) }}

@@ -51,21 +51,32 @@ class InterviewType extends AbstractType
 
         if( $this->params['showFull'] ) {
 
-            $builder->add('interviewer', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
-                'label' => "Interviewer:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
+            if(1) {
+                $builder->add('interviewer', EntityType::class, array(
+                    'class' => 'AppUserdirectoryBundle:User',
+                    'label' => "Interviewer:",
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width'),
+                    'query_builder' => function (EntityRepository $er) {
                         return $er->createQueryBuilder('user')
                             ->leftJoin("user.infos", "infos")
                             ->leftJoin("user.employmentStatus", "employmentStatus")
                             ->leftJoin("employmentStatus.employmentType", "employmentType")
                             ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)");
-                            //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
-                            //->setParameters(array('role1' => '%' . 'ROLE_RESAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_RESAPP_INTERVIEWER' . '%'));
+                        //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
+                        //->setParameters(array('role1' => '%' . 'ROLE_RESAPP_DIRECTOR' . '%', 'role2' => '%' . 'ROLE_RESAPP_INTERVIEWER' . '%'));
                     },
-            ));
+                ));
+            }
+            if(0) {
+                ///////////////// location //////////////////
+                $builder->add('location',null, array(
+                    'label' => "Interview Location:",
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width interview-location'),
+                ));
+                ///////////////// EOF location //////////////////
+            }
 
             $builder->add('interviewDate', DateType::class,array(
                 'widget' => 'single_text',
@@ -88,35 +99,7 @@ class InterviewType extends AbstractType
                 'label'=>'End Time:'
             ));
 
-            ///////////////// location //////////////////
-            $builder->add('location',null, array(
-                'label' => "Interview Location:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width interview-location'),
-            ));
-//            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//                $interview = $event->getData();
-//                $form = $event->getForm();
-//
-//                $options = array(
-//                    'label' => "Interview Location:",
-//                    'class' => 'AppUserdirectoryBundle:Location',
-//                    'required' => false,
-//                    'attr' => array('class' => 'combobox combobox-width interview-location'),
-//                );
-//
-//                if( $interview && $interview->getInterviewer() ) {
-//
-//                    $officeLocation = $interview->getInterviewer()->getMainLocation();
-//                    if( $officeLocation ) {
-//                        $options['data'] = $officeLocation; //this causes: "Entities passed to the choice field must be managed. Maybe persist them in the entity manager?"
-//                    }
-//
-//                }
-//                //$form->add('location','entity',$options);
-//                $form->add('location',null,$options);
-//            });
-            ///////////////// EOF location //////////////////
+            
 
         } //if showFull
 
