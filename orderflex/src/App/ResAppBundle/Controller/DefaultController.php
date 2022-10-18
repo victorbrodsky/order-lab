@@ -672,13 +672,13 @@ class DefaultController extends OrderAbstractController
                 if( $interview->isEmpty() ) {
                     echo "to remove interview ID=" . $interview->getId() . ", interviewer=" . $interview->getInterviewer() . "<br>";
                     $application->removeInterview($interview);
-                    $em->remove($interview);
+                    //$em->remove($interview);
                     $modified = true;
                     $count++;
                 }
             }
             if( $modified ) {
-                $em->flush();
+                //$em->flush();
             }
         }
 
