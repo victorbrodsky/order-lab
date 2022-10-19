@@ -9059,9 +9059,9 @@ class AdminController extends OrderAbstractController
     }
 
     /**
-     * @Route("/list/create-cron-job/{cronJobName}/{configFiledName}", name="user_create_cron_job", methods={"GET"})
+     * @Route("/list/create-cron-job/{cronJobName}/{configFieldName}", name="user_create_cron_job", methods={"GET"})
      */
-    public function createCronJobAction(Request $request, $cronJobName, $configFiledName)
+    public function createCronJobAction(Request $request, $cronJobName, $configFieldName)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
@@ -9069,8 +9069,8 @@ class AdminController extends OrderAbstractController
 
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        //createBackupCronLinux( $commandName="filesbackup", $configFiledName="dbBackupConfig" )
-        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFiledName);
+        //createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" )
+        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);
 
         $this->addFlash(
             'notice',
