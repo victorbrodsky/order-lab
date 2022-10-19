@@ -7,6 +7,10 @@ hourly - keep for 5 days (24*5 = 120 files)
 Total: 134 files
 18Oct2022 a2 10:27am: 154 files
 
+Set permission for pg_backup.sh and alert_dba:
+chmod 744 pg_backup.sh
+chmod 744 alert_dba
+
 
 //brbpathologyfs.med.cornell.edu/pathology/view-backup is mount on xits-po-order-prd1:/mnt/pathology/view-backup
 
@@ -57,6 +61,7 @@ create crontab: crontab -e -u postgres
 0 0-2,4-23 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 0 3 * * * /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_daily.sh.log 2>&1
 
+sudo -u postgres /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 
 
 {

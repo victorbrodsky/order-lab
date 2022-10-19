@@ -38,14 +38,16 @@ fi
 
 if [ -z $EMAIL_ADDRESS ]; then
    if [ $FLAG = "ALERT" ]; then
-      EMAIL_ADDRESS=dba-alerts@med.cornell.edu
+      #EMAIL_ADDRESS=dba-alerts@med.cornell.edu
+	  EMAIL_ADDRESS=oli2002@med.cornell.edu
    fi
    if [ $FLAG = "SUCCEED" ]; then
       EMAIL_ADDRESS=dba-logs@med.cornell.edu
    fi
 else
    if [ $FLAG = "ALERT" ]; then
-      EMAIL_ADDRESS="${EMAIL_ADDRESS},dba-alerts@med.cornell.edu"
+      #EMAIL_ADDRESS="${EMAIL_ADDRESS},dba-alerts@med.cornell.edu"
+	  EMAIL_ADDRESS="${EMAIL_ADDRESS},oli2002@med.cornell.edu"
    fi
    if [ $FLAG = "SUCCEED" ]; then
       EMAIL_ADDRESS="${EMAIL_ADDRESS},dba-logs@med.cornell.edu"
