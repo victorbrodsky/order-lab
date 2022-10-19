@@ -2575,7 +2575,7 @@ Pathology and Laboratory Medicine",
             if( $cronJob ) {
                 echo "Create cronJobName=".$cronJobName."<br>";
                 if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
-                    //$this->addCronJobLinux($cronJob);
+                    $this->addCronJobLinux($cronJob);
                     $resArr[] = "Created $cronJobName cron job";
                 } else {
                     $resArr[] = "$cronJobName already exists";
