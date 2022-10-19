@@ -49,6 +49,9 @@ class DataBackupManagementController extends OrderAbstractController
 
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        $title = "Data Backup Management";
+        $note = "Unique 'idname' must be included somwhere in the command";
+
         $entity = $userServiceUtil->getSingleSiteSettingParameter();
 
         $form = $this->createEditForm($entity, $cycle="show");
@@ -56,7 +59,8 @@ class DataBackupManagementController extends OrderAbstractController
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'title' => "Data Backup Management",
+            'title' => $title,
+            'note' => $note,
             'cycle' => $cycle
         );
     }
@@ -76,7 +80,10 @@ class DataBackupManagementController extends OrderAbstractController
         $user = $this->getUser();
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        
+
+        $title = "Data Backup Management";
+        $note = "Unique 'idname' must be included somwhere in the command";
+
         $entity = $userServiceUtil->getSingleSiteSettingParameter();
 
         $dbBackupConfigOrig = $entity->getDbBackupConfig();
@@ -134,7 +141,8 @@ class DataBackupManagementController extends OrderAbstractController
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
-            'title' => "Data Backup Management",
+            'title' => $title,
+            'note' => $note,
             'cycle' => $cycle
         );
     }
@@ -166,6 +174,11 @@ class DataBackupManagementController extends OrderAbstractController
         return $form;
     }
 
+
+
+
+
+    //NOT USED below. Old version of backup
     /**
      * NOT USED
      *
@@ -219,7 +232,7 @@ class DataBackupManagementController extends OrderAbstractController
     
     
     
-
+    //NOT USED below. Old version of backup
     /**
      * Resources:
      * https://blogs.msdn.microsoft.com/brian_swan/2010/07/01/restoring-a-sql-server-database-from-php/
