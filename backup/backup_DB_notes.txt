@@ -63,12 +63,12 @@ create crontab: crontab -e -u postgres
 "sets" : 
 [
 {
-"idname" : "dbbackup-hourly",
+"idname" : "pg_backup_hourly",
 "command" : "/var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'dbname' 'dbpass' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1",
 "croninterval" : "2h"
 },
 {
-"idname" : "dbbackup-daily",
+"idname" : "pg_backup_hourly",
 "command" : "/var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'DAILY' 'dbname' 'dbpass' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1",
 "croninterval" : "1d"
 }
