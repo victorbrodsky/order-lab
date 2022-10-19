@@ -2703,11 +2703,13 @@ Pathology and Laboratory Medicine",
         $jobs = $crontab->getJobs();
         
         if( isset($jobs) && is_array($jobs) ) {
-
+            $res = "";
             foreach ($jobs as $job) {
-                echo "job=[".$job."]<br>";
+                $res = $res . "<p>".$job."</p>";
+//                echo "job=[".$job."]<br>";
                 //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
             }
+            return $res;
         }
 
         return false;

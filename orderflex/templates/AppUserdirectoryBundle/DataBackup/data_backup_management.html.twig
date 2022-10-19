@@ -65,7 +65,7 @@
 
     <div class="well">
         List of all cron jobs<br>
-        {{ user_service_utility.listAllCronJobsLinux() }}
+        {{ user_service_utility.listAllCronJobsLinux()|raw }}
     </div>
 
 {% endblock %}
