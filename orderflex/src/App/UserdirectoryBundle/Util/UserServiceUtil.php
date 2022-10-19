@@ -2435,23 +2435,24 @@ Pathology and Laboratory Medicine",
 
             $cronJob = NULL;
 
-            //$cronInterval = "1h";
-            if( str_contains($cronInterval, 'h') ) {
+            if( $cronJob == NULL && str_contains($cronInterval, 'm') ) {
                 //exit("Hourly");
+                $cronMin = str_replace('m','',$cronInterval);
+                $cronJob = "*/$cronMin * * * * " . " " . $cronJobCommand;
+            }
 
+            if( $cronJob == NULL && str_contains($cronInterval, 'h') ) {
+                //exit("Hourly");
                 $cronHour = str_replace('h','',$cronInterval);
                 $cronJob = "0 */$cronHour * * * " . " " . $cronJobCommand;
             }
 
 //            //$cronInterval = "1d";
-            if( str_contains($cronInterval, 'd') ) {
+            if( $cronJob == NULL && str_contains($cronInterval, 'd') ) {
                 exit("Daily");
-//
 //                $cronDay = str_replace('d','',$cronInterval);
 //                $cronJob = "0 0 */$cronDay * * * " . " " . $statusCronJobCommand;
             }
-
-
 
             if( $cronJob ) {
                 if( $this->getCronJobFullNameLinux($commandName) === false ) {
@@ -2461,8 +2462,6 @@ Pathology and Laboratory Medicine",
                     $resArr[] = "$cronJobName already exists";
                 }
             }
-
-
 
             return implode(", ",$resArr);
         }
@@ -2549,16 +2548,15 @@ Pathology and Laboratory Medicine",
 
             $cronJob = NULL;
 
-
             //$cronInterval = "5m"; //every 5 minutes
-            if( $cronInterval && str_contains($cronInterval, 'm') ) {
+            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'm') ) {
                 //exit("Minutes");
                 $cronMin = str_replace('m','',$cronInterval);
                 $cronJob = "*/$cronMin * * * * " . " " . $cronJobCommand;
             }
 
             //$cronInterval = "1h";
-            if( $cronInterval && str_contains($cronInterval, 'h') ) {
+            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'h') ) {
                 //exit("Hourly");
 
                 $cronHour = str_replace('h','',$cronInterval);
@@ -2566,7 +2564,7 @@ Pathology and Laboratory Medicine",
             }
 
             //$cronInterval = "1d";
-            if( $cronInterval && str_contains($cronInterval, 'd') ) {
+            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'd') ) {
                 //exit("Daily");
 
                 $cronDay = str_replace('d','',$cronInterval);
