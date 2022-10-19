@@ -736,8 +736,9 @@ class ResAppUtil {
             if( $this->isInterviewerExist($resapp,$interviewer) == false ) {
                 $interview = new Interview();
                 $interview->setInterviewer($interviewer);
-                //$interview->setLocation($interviewer->getMainLocation()); //remove heavy locations
                 $interview->setInterviewDate($resapp->getInterviewDate());
+                //don't populate/show heavy locations (25 secs (with locations) vs 12 secs (no locations) for 48 interviews)
+                //$interview->setLocation($interviewer->getMainLocation());
                 $resapp->addInterview($interview);
             }
 

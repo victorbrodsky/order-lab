@@ -68,7 +68,7 @@ class InterviewType extends AbstractType
                     },
                 ));
             }
-            if(0) { //remove heavy locations
+            if(0) { //don't populate/show heavy locations (25 secs (with locations) vs 12 secs (no locations) for 48 interviews)
                 ///////////////// location //////////////////
                 $builder->add('location',null, array(
                     'label' => "Interview Location:",

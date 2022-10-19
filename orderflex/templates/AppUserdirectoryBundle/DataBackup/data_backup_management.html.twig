@@ -64,6 +64,7 @@
 {% endblock %}
 
 {% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}
+    listAllCronJobsLinux={{ user_service_utility.listAllCronJobsLinux() }}
     {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
     {% if "Error: invalid json file" in cronJobNames %}
         {{ cronJobNames|raw }}

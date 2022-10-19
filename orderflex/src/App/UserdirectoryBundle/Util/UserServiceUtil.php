@@ -2698,6 +2698,21 @@ Pathology and Laboratory Medicine",
         }
     }
 
+    public function listAllCronJobsLinux() {
+        $crontab = new Crontab();
+        $jobs = $crontab->getJobs();
+        
+        if( isset($jobs) && is_array($jobs) ) {
+
+            foreach ($jobs as $job) {
+                echo "job=[".$job."]<br>";
+                //$job = job=*/2 * * * * /opt/remi/php81/root/usr/bin/php /opt/order-lab/orderflex/bin/console cron:statustest --env=prod
+            }
+        }
+
+        return false;
+    }
+    
     //$commandName - 'cron:statustest'
     public function getCronJobFullNameLinux( $commandName, $asBoolean=true ) {
         $existingJobs = array();
