@@ -1,0 +1,71 @@
+#!/bin/bash
+
+send_mail()
+{
+   if [ $FILE = "Y" ]; then
+      cat $EMAIL_BODY | mailx -s "${FLAG}: ${EMAIL_SUB}: from program $PROG_NAME in the host $HOSTNAME" -r"${FROM_EMAIL}" $EMAIL_ADDRESS
+   else
+      echo $EMAIL_BODY | mailx -s "${FLAG}: ${EMAIL_SUB}: from program $PROG_NAME in the host $HOSTNAME" -r"${FROM_EMAIL}" $EMAIL_ADDRESS
+   fi
+}
+
+while getopts F:E:S:B:P:A:G:C:hH option
+do
+case "$option" in
+F) FLAG=$OPTARG ;;
+E) EMAIL_ADDRESS=$OPTARG ;;
+S) EMAIL_SUB=$OPTARG ;;
+B) EMAIL_BODY=$OPTARG ;;
+P) PROG_NAME=$OPTARG ;;
+A) SEND_ALERT=$OPTARG ;;
+G) SEND_SUCCEED=$OPTARG ;;
+C) HOSTNAME=$OPTARG ;;
+h|H)
+   echo "Usage: `basename $0` -F[Flag=ALERT or SUCCEED] -E[Email Address Separated by ,] -S[Email Subject] -B[Email Body, can be file or string] -P[Calling Program Name] -A[Want to Email Alert, Y or N] -G[Email Successful Email, Y or N] -C[Calling Hostname]" 
+   exit ;;
+esac
+done
+
+FROM_EMAIL="`uname -n | awk -F"." '{print $1}'`@med.cornell.edu"
+
+if [ -f "$EMAIL_BODY" ]; then
+   LOG_NAME=`echo $EMAIL_BODY | awk -F"/" '{print $NF}'`
+   FILE="Y"
+else
+   FILE="N"
+   EMAIL_BODY="Executed this script $PROG_NAME in this host $HOSTNAME"
+fi
+
+if [ -z $EMAIL_ADDRESS ]; then
+   if [ $FLAG = "ALERT" ]; then
+      EMAIL_ADDRESS=dba-alerts@med.cornell.edu
+   fi
+   if [ $FLAG = "SUCCEED" ]; then
+      EMAIL_ADDRESS=dba-logs@med.cornell.edu
+   fi
+else
+   if [ $FLAG = "ALERT" ]; then
+      EMAIL_ADDRESS="${EMAIL_ADDRESS},dba-alerts@med.cornell.edu"
+   fi
+   if [ $FLAG = "SUCCEED" ]; then
+      EMAIL_ADDRESS="${EMAIL_ADDRESS},dba-logs@med.cornell.edu"
+   fi
+fi
+ 
+if [ -z "$HOSTNAME" ]; then
+   HOSTNAME=`uname -n`
+fi
+
+if [ ! -z $SEND_ALERT ]; then
+   if [ $SEND_ALERT = "Y" ]; then
+      send_mail
+   fi
+fi
+
+if [ ! -z $SEND_SUCCEED ]; then
+   if [ $SEND_SUCCEED = "Y" ]; then
+      send_mail
+   fi
+fi
+
+exit
