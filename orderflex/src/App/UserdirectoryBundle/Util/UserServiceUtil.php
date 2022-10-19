@@ -2469,10 +2469,10 @@ Pathology and Laboratory Medicine",
         return NULL;
     }
     public function createDbBackupCronLinux() {
-        $cronJobName = "dbbackup-hourly"; //or "dbbackup-daily"
+        //$cronJobName = "dbbackup-hourly"; //or "dbbackup-daily"
         return $this->createBackupCronLinux("dbbackup-hourly","dbBackupConfig");
     }
-    public function createBackupCronLinux( $cronJobName="filesbackup", $configFieldName="dbBackupConfig" ) {
+    public function createBackupCronLinux( $cronJobName="uploadsarchive-DAILY", $configFieldName="dbBackupConfig" ) {
         //return "Not implemented yet";
         if( $this->isWindows() ) {
             //Windows
@@ -2573,8 +2573,9 @@ Pathology and Laboratory Medicine",
 
             //Create cron job
             if( $cronJob ) {
+                echo "Create cronJobName=".$cronJobName."<br>";
                 if( $this->getCronJobFullNameLinux($cronJobName) === false ) {
-                    $this->addCronJobLinux($cronJob);
+                    //$this->addCronJobLinux($cronJob);
                     $resArr[] = "Created $cronJobName cron job";
                 } else {
                     $resArr[] = "$cronJobName already exists";
