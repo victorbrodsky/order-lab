@@ -2365,7 +2365,7 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    //TODO: FilesBackup
+    //NOT USED
     public function createFilesBackupCronLinux() {
         if( $this->isWindows() ) {
             //Windows
@@ -2468,12 +2468,15 @@ Pathology and Laboratory Medicine",
 
         return NULL;
     }
+    //NOT USED
     public function createDbBackupCronLinux() {
         //$cronJobName = "dbbackup-hourly"; //or "dbbackup-daily"
         return $this->createBackupCronLinux("dbbackup-hourly","dbBackupConfig");
     }
-    public function createBackupCronLinux( $cronJobName="uploadsarchive-DAILY", $configFieldName="dbBackupConfig" ) {
-        //return "Not implemented yet";
+
+    //$cronJobName="uploadsarchive-DAILY"
+    //$configFieldName="dbBackupConfig"
+    public function createBackupCronLinux( $cronJobName, $configFieldName ) {
         if( $this->isWindows() ) {
             //Windows
             return "Windows is not supported";
@@ -2485,7 +2488,7 @@ Pathology and Laboratory Medicine",
         //$projectDir = $this->container->get('kernel')->getProjectDir();
 
         //$cronJobName = "filesbackup"; //"cron:independentmonitor";
-        $cronJobName = $cronJobName." --env=prod";
+        //$cronJobName = $cronJobName." --env=prod";
 
         $backupJsonConfig = $userSecUtil->getSiteSettingParameter($configFieldName); //in min
         if( !$backupJsonConfig ) {
@@ -2531,6 +2534,11 @@ Pathology and Laboratory Medicine",
             if( array_key_exists('idname', $set) ) {
                 $idName = $set['idname'];
             }
+
+            if( $idName != $cronJobName ) {
+                continue; //skip
+            }
+
             if( array_key_exists('command', $set) ) {
                 $cronJobCommand = $set['command'];
             }
