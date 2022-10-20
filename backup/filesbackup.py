@@ -233,7 +233,7 @@ def main(argv):
     if len(onlyfiles) > int(keepcount):
         lendiff = len(onlyfiles) - int(keepcount)
         for i in range(lendiff):
-            print("remove=", onlyfiles[i])
+            print(i," remove=", onlyfiles[i])
             #os.remove(onlyfiles[i])
 
 
