@@ -227,7 +227,8 @@ def main(argv):
     onlyfiles = sorted(onlyfiles, key=os.path.getmtime)
 
     for count, file in enumerate(onlyfiles):
-        print("count=",count,", file=",file)
+        timestamp_str = time.strftime('%m/%d/%Y :: %H:%M:%S', time.gmtime(os.path.getmtime(file)))
+        print("count=",count,", timestamp_str=",timestamp_str, file=",file)
 
     ### EOF remove old files from output directory based on keepcount ###
 
