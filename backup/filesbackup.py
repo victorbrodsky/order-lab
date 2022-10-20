@@ -230,7 +230,7 @@ def main(argv):
         timestamp_str = time.strftime('%m/%d/%Y :: %H:%M:%S', time.gmtime(os.path.getmtime(file)))
         print("count=",count,", timestamp_str=",timestamp_str, "file=",file)
 
-    if len(onlyfiles) > keepcount:
+    if len(onlyfiles) > int(keepcount):
         lendiff = len(onlyfiles) - int(keepcount)
         for i in range(lendiff):
             print("remove=", onlyfiles[i])
