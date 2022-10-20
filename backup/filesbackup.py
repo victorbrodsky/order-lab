@@ -210,14 +210,16 @@ def main(argv):
     else:
         print("Archive completed successfully")
 
-    #remove old files from output directory based on keepcount
+    ### remove old files from output directory based on keepcount ###
     #1) take output directory (dest or -d) and get base and filename
     basename, filename = os.path.split(dest)
     print("basename=",basename,", filename=",filename)
     #2) list all files in output directory
     onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
-    for file in onlyfiles:
-        print("file=",file)
+    for count, file in enumerate(onlyfiles):
+        print("count=",count,", file=",file)
+
+    ### EOF remove old files from output directory based on keepcount ###
 
 
 if __name__ == '__main__':
