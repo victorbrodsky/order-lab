@@ -215,7 +215,7 @@ def main(argv):
     basename, filename = os.path.split(dest)
     print("basename=",basename,", filename=",filename)
     #2) list all files in output directory
-    onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
+    onlyfiles = [f for f in os.listdir(basename) if isfile(join(basename, f))]
     for count, file in enumerate(onlyfiles):
         print("count=",count,", file=",file)
 
