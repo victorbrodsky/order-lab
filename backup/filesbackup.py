@@ -64,7 +64,7 @@ def start_backup(source, dest, basedir):
 
     now = datetime.now()
     #append now.hour
-    dest = dest + "_"  + str(now.hour)
+    dest = dest + "_"  + str(now.hour) + "_" + str(now.hour)
 
     archivefile = ''
     try:
