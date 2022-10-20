@@ -217,7 +217,14 @@ def main(argv):
     basename, filename = os.path.split(dest)
     print("basename=",basename,", filename=",filename)
     #2) list all files in output directory
-    onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
+
+    #onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
+
+    # Get list of all files only in the given directory
+    list_of_files = filter(os.path.isfile, glob.glob(basename + '/*'))
+    # Sort list of files based on last modification time in ascending order
+    list_of_files = sorted(list_of_files, key=os.path.getmtime)
+
     for count, file in enumerate(onlyfiles):
         print("count=",count,", file=",file)
 
