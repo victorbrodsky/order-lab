@@ -10,6 +10,9 @@ Total: 134 files
 Set permission for pg_backup.sh and alert_dba:
 chmod 744 pg_backup.sh
 chmod 744 alert_dba
+chmod 755 folders bin and logs
+chown postgres filename
+chgrp postgres filename
 
 
 //brbpathologyfs.med.cornell.edu/pathology/view-backup is mount on xits-po-order-prd1:/mnt/pathology/view-backup
@@ -45,6 +48,7 @@ Replace backup data folder:
 Start/Stop server:
 sudo systemctl stop postgresql-14
 sudo systemctl start postgresql-14
+su - postgres
 
 -bash-4.2$ hostname
 xits-po-order-prd1

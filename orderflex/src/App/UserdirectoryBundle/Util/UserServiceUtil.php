@@ -2780,9 +2780,9 @@ Pathology and Laboratory Medicine",
             return $cronJobFullName;
         } else {
             if( $cronJobFullName ) {
-                $resStr = '<font color="green">'.$commandName.' cron job status: '.$cronJobFullName.'.</font>';
+                $resStr = '<font color="green">'.$commandName.' cron job status: '.$cronJobFullName.'</font>';
             } else {
-                $resStr = '<font color="red">'.$commandName.' cron job status: not found.</font>';
+                $resStr = '<font color="red">'.$commandName.' cron job status: not found</font>';
             }
             return $resStr;
         }
