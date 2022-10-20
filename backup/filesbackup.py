@@ -231,7 +231,7 @@ def main(argv):
         print("count=",count,", timestamp_str=",timestamp_str, "file=",file)
 
     if len(onlyfiles) > keepcount:
-        lendiff = len(onlyfiles) - keepcount
+        lendiff = len(onlyfiles) - int(keepcount)
         for i in range(lendiff):
             print("remove=", onlyfiles[i])
             #os.remove(onlyfiles[i])
