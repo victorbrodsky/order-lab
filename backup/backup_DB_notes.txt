@@ -14,6 +14,8 @@ chmod 755 folders bin and logs
 chown postgres filename
 chgrp postgres filename
 
+network drive: Octavio Morales
+
 
 //brbpathologyfs.med.cornell.edu/pathology/view-backup is mount on xits-po-order-prd1:/mnt/pathology/view-backup
 

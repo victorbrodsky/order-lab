@@ -34,6 +34,9 @@ def help():
         "-s, --source           path to the source directory\n" \
         "-b, --basedir          directory to archive\n" \
         "-d, --dest             path to the destination directory\n" \
+        "-k, --keepcount        number of files to keep in backup destination\n" \
+        "-h, --mailerhost       mailerhost\n" \
+        "-u, --maileruser       maileruser\n" \
         "-H, --help             this help"
     )
 
@@ -120,12 +123,13 @@ def main(argv):
     maileruser = ''
     receivers = ''  # -r
     fromEmail = ''  # -s
+    keepcount = 1
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "s:b:d:h:u:r:f:H",
-            ["source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "help"]
+            "s:b:d:h:u:r:f:k:H",
+            ["source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "keepcount=", "help"]
         )
     except getopt.GetoptError:
         print('Parameters error')
@@ -149,6 +153,8 @@ def main(argv):
             receivers = arg
         elif opt in ("-f", "--fromemail"):                 #Sender email
             fromEmail = arg
+        elif opt in ("-k", "--keepcount"):                 #number of files to keep in backup destination
+            keepcount = arg
         elif opt in ("-H", "--help"):
            help()
            #sys.exit()
@@ -159,7 +165,7 @@ def main(argv):
             help()
             sys.exit(2)
 
-    print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail)
+    print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail,", keepcount=",keepcount)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
     if source == '':
@@ -175,6 +181,10 @@ def main(argv):
         print('Nothing to do: destination is not provided')
         #logging.warning('Nothing to do: destination is not provided')
         return
+
+    if keepcount == '':
+        print('Please provide keepcount - number of files to keep in backup destination. Default keepcount=1')
+        keepcount = 1
 
     toEmailList = ''
     if receivers:
@@ -199,6 +209,16 @@ def main(argv):
         print("archivefileError=", archivefileError)
     else:
         print("Archive completed successfully")
+
+    #remove old files from output directory based on keepcount
+    #1) take output directory (dest or -d) and get base and filename
+    basename, filename = os.path.split(dest)
+    print("basename=",basename,", filename=",filename)
+    #2) list all files in output directory
+    onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
+    for file in onlyfiles:
+        print("file=",file)
+
 
 if __name__ == '__main__':
     #python filesbackup.py -s test -d myarchive
