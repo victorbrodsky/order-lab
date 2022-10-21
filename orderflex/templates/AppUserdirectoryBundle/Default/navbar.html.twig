@@ -256,6 +256,8 @@
                                 {% if is_granted('ROLE_PLATFORM_ADMIN') %}
                                     <li class="divider"></li>
                                     <li><a href="{{ path(employees_sitename~'_data_backup_management_show') }}">Data Backup Management</a></li>
+                                    <li><a href="{{ path(employees_sitename~'_health_monitor_show') }}">Health Monitors</a></li>
+                                    <li><a href="{{ path(employees_sitename~'_general_cron_jobs') }}">Cron Jobs</a></li>
                                 {% endif %}
 
                             </ul>

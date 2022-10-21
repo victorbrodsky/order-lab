@@ -1,0 +1,256 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% extends extendStr %}
+
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+    <h5>{{ note }}</h5>
+
+    <br>
+
+    <p>
+        <a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."
+            href="{{ path('user_populate_cron_jobs') }}">
+            Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)</a>
+    </p>
+
+    <p>
+        <a  general-data-confirm="Are you sure? This action will pre-generate status cron job (check for Maintenance)."
+            href="{{ path('user_populate_cron_status_jobs') }}">
+            Pre-generate status cron job (check for Maintenance)</a>
+    </p>
+
+    <p>
+        <a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."
+            href="{{ path('user_populate_cron_status_test_jobs') }}">
+            Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>
+    </p>
+
+    <p>
+        <a  general-data-confirm="Are you sure? This action will generate external monitor cron job."
+            href="{{ path('user_generate_cron_externalurlmonitor') }}">
+            Generate external monitor cron job (monitor url on the external server)</a>
+    </p>
+    <p>
+        <a  general-data-confirm="Are you sure? This action will generate independent monitor cron job."
+            href="{{ path('user_generate_cron_independentmonitor') }}">
+            Generate independent monitor cron job (monitor url on this server by python webmonitor.py)</a>
+    </p>
+
+
+<table class="table table-bordered table-hover table-condensed text-left">
+    <thead>
+    <tr>
+        <th>Parameter</th>
+        <th>Value</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    {#Crons#}
+    <tr>
+        <td class="rowlink-skip" colspan="3" align="center">
+            <h3>Cron Jobs:</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>Email cron</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:swift",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:swift'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Fellowship Applications Import cron</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:importfellapp",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:importfellapp'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Fellowship Applications Verification Import cron</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:verifyimport",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:verifyimport'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Unpaid Invoices Reminder Email cron</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:invoice-reminder-emails'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Project Expiration Reminder Email cron</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:expiration-reminder-emails",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Status cron (check for Maintenance)</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:status",false)|raw }}
+        </td>
+        <td>
+            <a general-data-confirm="Are you sure you would like to remove this cron job?"
+               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:status'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Testing cron job (send every 2 minutes testing email to admin)</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:statustest",false)|raw }}
+        </td>
+        <td>
+            <a
+                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                    href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:statustest'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>External monitor cron job</td>
+        <td>
+            {{ user_service_utility.getCronStatus("cron:externalurlmonitor",false)|raw }}
+        </td>
+        <td>
+            <a
+                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                    href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:externalurlmonitor'}) }}">Remove</a>
+        </td>
+    </tr>
+    <tr>
+        <td>Internal monitor cron job</td>
+        <td>
+            {{ user_service_utility.getCronStatus("webmonitor.py",false)|raw }}
+        </td>
+        <td>
+            <a
+                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                    href="{{ path('user_remove_cron_job', {'cronJobName': 'webmonitor.py'}) }}">Remove</a>
+        </td>
+    </tr>
+
+    <div class="well">
+        <p>List of all cron jobs</p>
+        {{ user_service_utility.listAllCronJobsLinux()|raw }}
+    </div>
+
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}
+    {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
+    {% if "Error: invalid json file" in cronJobNames %}
+        {{ cronJobNames|raw }}
+    {% else %}
+        {% for cronJobName in cronJobNames %}
+            {#cronJobName={{ cronJobName }}#}
+            {{ _self.cronStatusCreate(cronJobName,configFieldName) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+{#configFieldName = 'dbBackupConfig'#}
+{% macro cronStatusCreate( cronJobName, configFieldName ) %}
+    <table class="table table-bordered table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>Cron job name</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+            <tr>
+                <td class="rowlink-skip">{{ cronJobName }} cron job</td>
+                <td class="rowlink-skip">
+                    {{ user_service_utility.getCronStatus(cronJobName,false)|raw }}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                                   href="{{ path('user_remove_cron_job', {'cronJobName': cronJobName}) }}">Remove</a>
+                            </li>
+
+                            <li>
+                                <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
+                                    href="{{ path('user_create_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
+                                >Generate {{ cronJobName }} cron job</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+
+
+        });
+
+
+    </script>
+
+{% endblock %}

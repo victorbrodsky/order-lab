@@ -1,0 +1,141 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% extends extendStr %}
+
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
+    {#<input type="hidden" id="fileId" value="" />#}
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+    <h5>{{ note }}</h5>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        <div class="well">
+            {{ formmacros.field(form.dbBackupConfig) }}
+            {#{{ _self.cronStatusCreate( "dbbackup" ) }}#}
+            {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
+        </div>
+
+        <div class="well">
+            {{ formmacros.field(form.filesBackupConfig) }}
+            {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
+            {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
+        </div>
+
+        {% if form.submit is defined %}
+            {{ form_widget(form.submit) }}
+            <a class="btn btn-default" href="{{ path('employees_data_backup_management_show') }}">Cancel</a>
+        {% endif %}
+
+    {{ form_end(form) }}
+
+    {% if cycle == 'show' %}
+        <p>
+            <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
+        </p>
+    {% endif %}
+
+    <div class="well">
+        <p>List of all cron jobs</p>
+        {{ user_service_utility.listAllCronJobsLinux()|raw }}
+    </div>
+
+{% endblock %}
+
+{% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}
+    {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
+    {% if "Error: invalid json file" in cronJobNames %}
+        {{ cronJobNames|raw }}
+    {% else %}
+        {% for cronJobName in cronJobNames %}
+            {#cronJobName={{ cronJobName }}#}
+            {{ _self.cronStatusCreate(cronJobName,configFieldName) }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+{#configFieldName = 'dbBackupConfig'#}
+{% macro cronStatusCreate( cronJobName, configFieldName ) %}
+    <table class="table table-bordered table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>Cron job name</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+            <tr>
+                <td class="rowlink-skip">{{ cronJobName }} cron job</td>
+                <td class="rowlink-skip">
+                    {{ user_service_utility.getCronStatus(cronJobName,false)|raw }}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                                   href="{{ path('user_remove_cron_job', {'cronJobName': cronJobName}) }}">Remove</a>
+                            </li>
+
+                            <li>
+                                <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
+                                    href="{{ path('user_create_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
+                                >Generate {{ cronJobName }} cron job</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endmacro %}
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+
+
+        });
+
+
+    </script>
+
+{% endblock %}
