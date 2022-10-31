@@ -510,8 +510,18 @@ ls -l --block-size=M
 systemctl restart httpd.service
 Get octal permission: stat -c "%a %n" *
 Get free space: df -Ph . | tail -1 | awk '{print $4}'
+Get the size of directory: sudo du -sh /var
+Get the disk usage of the first-level subdirectories: sudo du -shc /var/*
 Get system usage: htop, top, glances
 7 processes BESClient take 0.8% memory each and 2% CPU usage in total
+
+alias command:
+Bash – ~/.bashrc
+
+Mount:
+findmnt
+https://www.linuxfordevices.com/tutorials/centos/mount-cifs-share
+sudo mount -t cifs -o username=shareusername,password=sharepassword //server/share /mnt/pathology/view-backup
 
 vi:
     Press the ESC key for normal mode.

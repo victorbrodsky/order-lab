@@ -222,7 +222,7 @@ def main(argv):
     #onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
 
     # Get list of all files only in the given directory
-    onlyfiles = filter(os.path.isfile, glob.glob(basename + '/*'))
+    onlyfiles = filter(os.path.isfile, glob.glob(basename + '/' + filename + '*'))
     # Sort list of files based on last modification time in ascending order
     onlyfiles = sorted(onlyfiles, key=os.path.getmtime)
 

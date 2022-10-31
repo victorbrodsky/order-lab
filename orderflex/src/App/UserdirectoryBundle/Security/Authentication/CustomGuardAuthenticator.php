@@ -169,6 +169,22 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //dump($credentials);
         //exit('111');
 
+        $username = "N/A";
+        if( isset($credentials['username']) ) {
+            $username = $credentials['username'];
+        }
+        $usernametype = "N/A";
+        if( isset($credentials['usernametype']) ) {
+            $usernametype = $credentials['usernametype'];
+        }
+        $sitename = "N/A";
+        if( isset($credentials['sitename']) ) {
+            $sitename = $credentials['sitename'];
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("authenticate: login attempt username=[$username], usernametype=[$usernametype], sitename=[$sitename]");
+
         return new Passport(
             new UserBadge($credentials['username']),
             new CustomCredentials(
@@ -300,11 +316,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //exit();
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
 
         if( $token->getCredentials() ) {
             //ok
         } else {
-            $logger = $this->container->get('logger');
+            //$logger = $this->container->get('logger');
             $logger->error("authenticate Token: no credentials");
             throw new AuthenticationException('Invalid username or password');
         }
@@ -316,6 +333,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //auth type: ldap-user, local-user, external
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+
+        $logger->notice("authenticateToken: usernamePrefix=[$usernamePrefix]");
 
         //Default user type is 'local-user'
         if( !$usernamePrefix ) {
