@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CronManagementController extends OrderAbstractController
 {
     /**
-     * @Route("/general-cron-jobs/show", name="employees_general_cron_jobs", methods={"GET"})
+     * @Route("/general-cron-jobs", name="employees_general_cron_jobs", methods={"GET"})
      * @Template("AppUserdirectoryBundle/CronJobs/general_cron_jobs.html.twig")
      */
     public function generalCronJobsAction(Request $request)
@@ -69,7 +69,7 @@ class CronManagementController extends OrderAbstractController
     }
 
     /**
-     * @Route("/health-monitor/show", name="employees_health_monitor_show", methods={"GET"})
+     * @Route("/health-monitor", name="employees_health_monitor_show", methods={"GET"})
      * @Template("AppUserdirectoryBundle/CronJobs/health_monitor.html.twig")
      */
     public function healthMonitorCronJobsAction(Request $request)
@@ -87,98 +87,15 @@ class CronManagementController extends OrderAbstractController
 
         $entity = $userServiceUtil->getSingleSiteSettingParameter();
 
-        $form = $this->createEditForm($entity, $cycle="show");
+        //$form = $this->createEditForm($entity, $cycle="show");
 
         return array(
             'entity' => $entity,
-            'form' => $form->createView(),
+            //'form' => $form->createView(),
             'title' => $title,
             'note' => $note,
-            'cycle' => $cycle,
+            //'cycle' => $cycle,
             'sitename' => "employees"
-        );
-    }
-
-    /**
-     * @Route("/health-monitor/edit", name="employees_health_monitor_edit", methods={"GET","POST"})
-     * @Template("AppUserdirectoryBundle/CronJobs/health_monitor.html.twig")
-     */
-    public function dataBackupManagementUpdateAction(Request $request)
-    {
-        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
-
-        exit("Not implemented");
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $title = "Data Backup Management";
-        $note = "Unique 'idname' must be included somwhere in the command";
-
-        $entity = $userServiceUtil->getSingleSiteSettingParameter();
-
-        $dbBackupConfigOrig = $entity->getDbBackupConfig();
-        $filesBackupConfigOrig = $entity->getFilesBackupConfig();
-
-        $form = $this->createEditForm($entity, $cycle="edit");
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $entity = $form->getData();
-            //dump($entity);
-
-            $eventStr = "";
-
-            $dbBackupConfig = $entity->getDbBackupConfig();
-            if( $dbBackupConfig != $dbBackupConfigOrig ) {
-                $eventStr = $eventStr . "Site Settings parameter [dbBackupConfig] has been updated by ".$user;
-                $eventStr = $eventStr . "<br>original value:<br>".$dbBackupConfigOrig;
-                $eventStr = $eventStr . "<br>updated value:<br>".$dbBackupConfig;
-                $eventStr = $eventStr . "<br><br>";
-            }
-            //echo "dbBackupConfig=$dbBackupConfig <br>";
-
-            $filesBackupConfig = $entity->getFilesBackupConfig();
-            if( $filesBackupConfig != $filesBackupConfigOrig ) {
-                $eventStr = $eventStr . "Site Settings parameter [filesBackupConfig] has been updated by ".$user;
-                $eventStr = $eventStr . "<br>original value:<br>".$filesBackupConfigOrig;
-                $eventStr = $eventStr . "<br>updated value:<br>".$filesBackupConfig;
-                $eventStr = $eventStr . "<br><br>";
-            }
-            //echo "filesBackupConfig=$filesBackupConfig <br>";
-
-            //dump($eventStr);
-            //exit('111');
-
-            if( $eventStr ) {
-                $em->flush();
-
-                //add a new eventlog record for an updated parameter
-                $eventType = "Site Settings Parameter Updated";
-                $sitename = "employees";
-                $userSecUtil->createUserEditEvent($sitename, $eventStr, $user, $entity, $request, $eventType);
-            }
-
-            $this->addFlash(
-                'notice',
-                $eventStr
-            );
-
-            return $this->redirectToRoute('employees_data_backup_management_show');
-        }
-
-        return array(
-            'entity' => $entity,
-            'form' => $form->createView(),
-            'title' => $title,
-            'note' => $note,
-            'cycle' => $cycle
         );
     }
 

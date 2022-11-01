@@ -64,7 +64,10 @@
             {#Generate independent monitor cron job (monitor url on this server by python webmonitor.py)</a>#}
     {#</p>#}
 
-
+    <div class="well">
+        <p>
+            Email spooling settings
+        </p>
     <table class="table table-bordered table-hover table-condensed text-left">
         <thead>
         <tr>
@@ -74,11 +77,11 @@
         </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Email spooling settings</h3>
-                </td>
-            </tr>
+            {#<tr>#}
+                {#<td class="rowlink-skip" colspan="3" align="center">#}
+                    {#<h3>Email spooling settings</h3>#}
+                {#</td>#}
+            {#</tr>#}
             <tr>
                 <td>Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.)</td>
                 <td>
@@ -98,6 +101,7 @@
             </tr>
         </tbody>
     </table>
+    </div>
 
 
     <div class="well">

@@ -213,7 +213,7 @@ class SiteParametersController extends OrderAbstractController
         $routeName = $request->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
-        //exit('role='.$role."; sitename=".$sitename);
+        //exit('role='.$role."; sitename=".$sitename.", param=".$param);
 
         if( $role ) {
             if( false === $this->isGranted($role) ) {

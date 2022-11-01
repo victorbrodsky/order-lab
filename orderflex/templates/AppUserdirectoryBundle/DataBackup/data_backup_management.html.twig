@@ -35,6 +35,21 @@
     <h4 class="text-info" align="center">{{ title }}</h4>
     <h5>{{ note }}</h5>
 
+
+    <div class="well">
+        {#{{ formmacros.field(form.filesBackupConfig) }}#}
+        {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
+        {{ _self.cronStatusCreateAuto(
+            entity,
+            "Configuration json file for backup uploaded folder (filesBackup cron job). Unique 'idname' must be included somwhere in the command.",
+            entity.filesBackupConfig,
+            'filesBackupConfig',
+            sitename
+        ) }}
+    </div>
+
+
+    {% if 0 %}
     {{ form_start(form) }}
         {{ form_errors(form) }}
 
@@ -65,6 +80,7 @@
             <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
         </p>
     {% endif %}
+    {% endif %}
 
     <p>
     <div class="well">
@@ -75,7 +91,76 @@
 
 {% endblock %}
 
-{% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}
+{% macro cronStatusCreateAuto( entity, label, backupJsonConfig, configFieldName, sitename ) %}
+    {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
+    {% if "Error: invalid json file" in cronJobNames %}
+        {{ cronJobNames|raw }}
+    {% else %}
+
+        <table class="table table-bordered table-hover table-condensed text-left">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+            <tr>
+                <td>{{ label }}</td>
+                <td>
+                    <textarea rows="30" cols="200" disabled>{{ backupJsonConfig }}</textarea>
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': configFieldName}) }}">Edit</a></td>
+            </tr>
+
+            {% for cronJobName in cronJobNames %}
+                <tr>
+                    <td class="rowlink-skip">{{ cronJobName }} cron job</td>
+                    <td class="rowlink-skip">
+                        {{ user_service_utility.getCronStatus(cronJobName,false)|raw }}
+                    </td>
+
+                    <td class="rowlink-skip">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                <li>
+                                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                                       href="{{ path('user_remove_cron_job', {'cronJobName': cronJobName}) }}">Remove</a>
+                                </li>
+
+                                <li>
+                                    <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
+                                        href="{{ path('user_create_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
+                                    >Create {{ cronJobName }} cron job</a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {#{% for cronJobName in cronJobNames %}#}
+            {#cronJobName={{ cronJobName }}#}
+            {#{{ _self.cronStatusCreate(cronJobName,configFieldName) }}#}
+        {#{% endfor %}#}
+    {% endif %}
+{% endmacro %}
+
+
+
+
+{% macro cronStatusCreateAuto2( backupJsonConfig, configFieldName ) %}
     {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
     {% if "Error: invalid json file" in cronJobNames %}
         {{ cronJobNames|raw }}
@@ -86,7 +171,7 @@
         {% endfor %}
     {% endif %}
 {% endmacro %}
-{#configFieldName = 'dbBackupConfig'#}
+
 {% macro cronStatusCreate( cronJobName, configFieldName ) %}
     <table class="table table-bordered table-hover table-condensed text-left">
         <thead>

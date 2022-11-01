@@ -1188,6 +1188,20 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbBackupConfig' ) {
+            $builder->add('dbBackupConfig', null, array(
+                'label' => 'Configuration json file for DB backup. Unique \'idname\' must be included somwhere in the command.',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'filesBackupConfig' ) {
+            $builder->add('filesBackupConfig', null, array(
+                'label' => 'Configuration json file for backup uploaded folder (filesBackup cron job). Unique \'idname\' must be included somwhere in the command.',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'emailCriticalErrorExceptionUsers' ) {
 //            $builder->add('emailCriticalErrorExceptionUsers', null, array(
 //                'label' => 'Do not send critical error notifications to the following users:',

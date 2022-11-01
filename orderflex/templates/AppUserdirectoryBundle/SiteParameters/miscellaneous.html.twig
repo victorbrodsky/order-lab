@@ -194,6 +194,24 @@
                         {#href="{{ path('user_populate_cron_status_test_jobs') }}">#}
                         {#Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>#}
                 {#</p>#}
+
+            </div>
+
+            <div class="well">
+                <h4 class="text-info">Cron jobs</h4>
+
+                <p>
+                    <a href="{{ path('employees_data_backup_management_show') }}">Cron jobs management for data backup</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('employees_health_monitor_show') }}">Cron jobs management for health monitor</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('employees_general_cron_jobs') }}">General cron jobs management</a>
+                </p>
+
             </div>
 
         </div>
