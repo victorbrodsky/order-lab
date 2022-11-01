@@ -69,6 +69,9 @@ create crontab: crontab -e -u postgres
 
 sudo -u postgres /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-backup' 'HOURLY' 'ScanOrder' 'symfony' > /var/lib/pgsql/dba/logs/pg_backup_hourly.sh.log 2>&1
 
+Mount:
+sudo mount -t cifs -o username=shareusername,password=sharepassword //server/share /mnt/pathology/view-backup
+//brbpathologyfs.med.cornell.edu/pathology/order-backups/upload-backup
 
 {
 "sets" : 
@@ -86,4 +89,10 @@ sudo -u postgres /var/lib/pgsql/dba/bin/pg_backup.sh '/mnt/pathology/view-test-b
 ]
 }
 
+#Mount, backup, unmount:
+password="*****"
+backup_destination="/home/local_account_name/apps/local_folder_name"
+echo $password | sudo -S mount -o username=svc_aperio_spectrum,password='*****',domain='brbpathologyfs' //brbpathologyfs.med.cornell.edu/view-backup $backup_destination
+cp -R -u -v /home/local_account_name/apps/backup_data_to_upload/* $backup_destination
+sudo umount $backup_destination
 

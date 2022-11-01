@@ -522,6 +522,7 @@ Mount:
 findmnt
 https://www.linuxfordevices.com/tutorials/centos/mount-cifs-share
 sudo mount -t cifs -o username=shareusername,password=sharepassword //server/share /mnt/pathology/view-backup
+sudo umount /var
 
 vi:
     Press the ESC key for normal mode.
