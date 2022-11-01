@@ -33,155 +33,222 @@
     <h4 class="text-info" align="center">{{ title }}</h4>
     <h5>{{ note }}</h5>
 
-    <br>
+    {#<br>#}
 
-    <p>
-        <a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."
-            href="{{ path('user_populate_cron_jobs') }}">
-            Pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)</a>
-    </p>
+    {#<p>#}
+        {#<a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."#}
+            {#href="{{ path('user_populate_cron_jobs') }}">#}
+            {#Pre-generate cron jobs (Email, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)</a>#}
+    {#</p>#}
 
-    <p>
-        <a  general-data-confirm="Are you sure? This action will pre-generate status cron job (check for Maintenance)."
-            href="{{ path('user_populate_cron_status_jobs') }}">
-            Pre-generate status cron job (check for Maintenance)</a>
-    </p>
+    {#<p>#}
+        {#<a  general-data-confirm="Are you sure? This action will pre-generate status cron job (check for Maintenance)."#}
+            {#href="{{ path('user_populate_cron_status_jobs') }}">#}
+            {#Pre-generate status cron job (check for Maintenance)</a>#}
+    {#</p>#}
 
-    <p>
-        <a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."
-            href="{{ path('user_populate_cron_status_test_jobs') }}">
-            Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>
-    </p>
+    {#<p>#}
+        {#<a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."#}
+            {#href="{{ path('user_populate_cron_status_test_jobs') }}">#}
+            {#Pre-generate testing cron job (send every 2 minutes testing email to admin) (Optional)</a>#}
+    {#</p>#}
 
-    <p>
-        <a  general-data-confirm="Are you sure? This action will generate external monitor cron job."
-            href="{{ path('user_generate_cron_externalurlmonitor') }}">
-            Generate external monitor cron job (monitor url on the external server)</a>
-    </p>
-    <p>
-        <a  general-data-confirm="Are you sure? This action will generate independent monitor cron job."
-            href="{{ path('user_generate_cron_independentmonitor') }}">
-            Generate independent monitor cron job (monitor url on this server by python webmonitor.py)</a>
-    </p>
+    {#<p>#}
+        {#<a  general-data-confirm="Are you sure? This action will generate external monitor cron job."#}
+            {#href="{{ path('user_generate_cron_externalurlmonitor') }}">#}
+            {#Generate external monitor cron job (monitor url on the external server)</a>#}
+    {#</p>#}
+    {#<p>#}
+        {#<a  general-data-confirm="Are you sure? This action will generate independent monitor cron job."#}
+            {#href="{{ path('user_generate_cron_independentmonitor') }}">#}
+            {#Generate independent monitor cron job (monitor url on this server by python webmonitor.py)</a>#}
+    {#</p>#}
 
 
-<table class="table table-bordered table-hover table-condensed text-left">
-    <thead>
-    <tr>
-        <th>Parameter</th>
-        <th>Value</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody data-link="row" class="rowlink">
-    {#Crons#}
-    <tr>
-        <td class="rowlink-skip" colspan="3" align="center">
-            <h3>Cron Jobs:</h3>
-        </td>
-    </tr>
-    <tr>
-        <td>Email cron</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:swift",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:swift'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Fellowship Applications Import cron</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:importfellapp",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:importfellapp'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Fellowship Applications Verification Import cron</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:verifyimport",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:verifyimport'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Unpaid Invoices Reminder Email cron</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:invoice-reminder-emails'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Project Expiration Reminder Email cron</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:expiration-reminder-emails",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>
-        </td>
-    </tr>
+    <table class="table table-bordered table-hover table-condensed text-left">
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Email spooling settings</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.)</td>
+                <td>
+                    {% set mailerSpool = 'No' %}
+                    {% if entity.mailerSpool == true %}
+                        {% set mailerSpool = 'Yes' %}
+                    {% endif %}
+                    {{ mailerSpool }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerSpool'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                {% set cronStatus = user_service_utility.getCronStatus("cron:swift",false) %}
+                <td>Frequency of sending emails in the queue (in minutes between eruptions). {{ cronStatus|raw }}</td>
+                <td>{{ entity.mailerFlushQueueFrequency }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>
+            </tr>
+        </tbody>
+    </table>
 
-    <tr>
-        <td>Status cron (check for Maintenance)</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:status",false)|raw }}
-        </td>
-        <td>
-            <a general-data-confirm="Are you sure you would like to remove this cron job?"
-               href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:status'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Testing cron job (send every 2 minutes testing email to admin)</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:statustest",false)|raw }}
-        </td>
-        <td>
-            <a
-                    general-data-confirm="Are you sure you would like to remove this cron job?"
-                    href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:statustest'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>External monitor cron job</td>
-        <td>
-            {{ user_service_utility.getCronStatus("cron:externalurlmonitor",false)|raw }}
-        </td>
-        <td>
-            <a
-                    general-data-confirm="Are you sure you would like to remove this cron job?"
-                    href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:externalurlmonitor'}) }}">Remove</a>
-        </td>
-    </tr>
-    <tr>
-        <td>Internal monitor cron job</td>
-        <td>
-            {{ user_service_utility.getCronStatus("webmonitor.py",false)|raw }}
-        </td>
-        <td>
-            <a
-                    general-data-confirm="Are you sure you would like to remove this cron job?"
-                    href="{{ path('user_remove_cron_job', {'cronJobName': 'webmonitor.py'}) }}">Remove</a>
-        </td>
-    </tr>
+
+    <div class="well">
+        <p>
+            <a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."
+                href="{{ path('user_populate_cron_jobs') }}">
+                Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)</a>
+        </p>
+        <table class="table table-bordered table-hover table-condensed text-left">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+            {#Crons#}
+            {#<tr>#}
+                {#<td class="rowlink-skip" colspan="3" align="center">#}
+                    {#<h3>Cron Jobs:</h3>#}
+                {#</td>#}
+            {#</tr>#}
+
+            {#<tr>#}
+                {#<td class="rowlink-skip" colspan="3" align="center">#}
+                    {#<a  general-data-confirm="Are you sure? This action will pre-generate cron jobs (Email, Fellowship Import, Unpaid Invoices)."#}
+                        {#href="{{ path('user_populate_cron_jobs') }}">#}
+                        {#Pre-generate cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)</a>#}
+                {#</td>#}
+            {#</tr>#}
+
+            <tr>
+                <td>Email spooling cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:swift",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:swift'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Fellowship Applications Import cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:importfellapp",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:importfellapp'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Fellowship Applications Verification Import cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:verifyimport",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:verifyimport'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Unpaid Invoices Reminder Email cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:invoice-reminder-emails'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Project Expiration Reminder Email cron</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:expiration-reminder-emails",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {#user_populate_cron_status_jobs#}
+    <div class="well">
+        <p>
+            <a  general-data-confirm="Are you sure? This action will pre-generate status cron job (check for Maintenance)."
+                href="{{ path('user_populate_cron_status_jobs') }}">
+                Create status cron job (check if the system in the maintenance mode)</a>
+        </p>
+        <table class="table table-bordered table-hover table-condensed text-left well">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+                <tr>
+                    <td>Status cron (check for Maintenance)</td>
+                    <td>
+                        {{ user_service_utility.getCronStatus("cron:status",false)|raw }}
+                    </td>
+                    <td>
+                        <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                           href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:status'}) }}">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {#user_populate_cron_status_test_jobs#}
+    <div class="well">
+        <p>
+            <a  general-data-confirm="Are you sure? This action will pre-generate testing cron job."
+                href="{{ path('user_populate_cron_status_test_jobs') }}">
+                Create testing cron job (send every 2 minutes testing email to admin) (Optional)</a>
+        </p>
+        <table class="table table-bordered table-hover table-condensed text-left">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+                <tr>
+                    <td>Testing cron job (send every 2 minutes testing email to admin)</td>
+                    <td>
+                        {{ user_service_utility.getCronStatus("cron:statustest",false)|raw }}
+                    </td>
+                    <td>
+                        <a
+                            general-data-confirm="Are you sure you would like to remove this cron job?"
+                            href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:statustest'}) }}">Remove</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="well">
         <p>List of all cron jobs</p>
         {{ user_service_utility.listAllCronJobsLinux()|raw }}
     </div>
-
-    </tbody>
-</table>
 
 {% endblock %}
 

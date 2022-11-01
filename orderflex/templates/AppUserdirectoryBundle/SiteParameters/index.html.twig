@@ -237,37 +237,37 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
 
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Health Monitors:</h3>
+            {#<tr>#}
+                {#<td class="rowlink-skip" colspan="3" align="center">#}
+                    {#<h3>Health Monitors:</h3>#}
                     {#<p>#}
                         {#It is possible to use the parameter from this site setting as a sender email [[siteEmail]] and receiver email by role [[ROLE_PLATFORM_DEPUTY_ADMIN]]#}
                     {#</p>#}
-                </td>
-            </tr>
-            <tr>
-                <td>Monitor check interval in minutes. If changed, the monitor cron jobs must re-generated</td>
-                <td>{{ entity.monitorCheckInterval }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorCheckInterval'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>External server monitor url: view-med checks if view is running (i.e. http://view-test.med.cornell.edu)</td>
-                <td>{{ entity.externalMonitorUrl }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'externalMonitorUrl'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Monitor independent of Symfony, PHP, Postgresql
-                    script to monitor if url on this server is running (help: webmonitor.py -H):
-                    <br>python3 path/to/webmonitor.py -l 'url1,url2...'
-                    <br>-h mailerhost -o mailerport -u mailerusername -p mailerpassword
-                    <br>-s 'sender email' -r 'receiver email1, email2 ...'
-                    <br>-c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service'
-                    <br>-U 'http://view-test.med.cornell.edu'
-                    <br>-e 'server environment or description'
-                </td>
-                <td>{{ entity.monitorScript }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorScript'}) }}">Edit</a></td>
-            </tr>
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Monitor check interval in minutes. If changed, the monitor cron jobs must re-generated</td>#}
+                {#<td>{{ entity.monitorCheckInterval }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorCheckInterval'}) }}">Edit</a></td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>External server monitor url: view-med checks if view is running (i.e. http://view-test.med.cornell.edu)</td>#}
+                {#<td>{{ entity.externalMonitorUrl }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'externalMonitorUrl'}) }}">Edit</a></td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Monitor independent of Symfony, PHP, Postgresql#}
+                    {#script to monitor if url on this server is running (help: webmonitor.py -H):#}
+                    {#<br>python3 path/to/webmonitor.py -l 'url1,url2...'#}
+                    {#<br>-h mailerhost -o mailerport -u mailerusername -p mailerpassword#}
+                    {#<br>-s 'sender email' -r 'receiver email1, email2 ...'#}
+                    {#<br>-c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service'#}
+                    {#<br>-U 'http://view-test.med.cornell.edu'#}
+                    {#<br>-e 'server environment or description'#}
+                {#</td>#}
+                {#<td>{{ entity.monitorScript }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorScript'}) }}">Edit</a></td>#}
+            {#</tr>#}
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
@@ -342,23 +342,23 @@
                 <td>{{ entity.mailerPassword }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPassword'}) }}">Edit</a></td>
             </tr>
-            <tr>
-                <td>Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.)</td>
-                <td>
-                    {% set mailerSpool = 'No' %}
-                    {% if entity.mailerSpool == true %}
-                        {% set mailerSpool = 'Yes' %}
-                    {% endif %}
-                    {{ mailerSpool }}
-                </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerSpool'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                {% set cronStatus = user_service_utility.getCronStatus("cron:swift",false) %}
-                <td>Frequency of sending emails in the queue (in minutes between eruptions). {{ cronStatus|raw }}</td>
-                <td>{{ entity.mailerFlushQueueFrequency }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>
-            </tr>
+            {#<tr>#}
+                {#<td>Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.)</td>#}
+                {#<td>#}
+                    {#{% set mailerSpool = 'No' %}#}
+                    {#{% if entity.mailerSpool == true %}#}
+                        {#{% set mailerSpool = 'Yes' %}#}
+                    {#{% endif %}#}
+                    {#{{ mailerSpool }}#}
+                {#</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerSpool'}) }}">Edit</a></td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#{% set cronStatus = user_service_utility.getCronStatus("cron:swift",false) %}#}
+                {#<td>Frequency of sending emails in the queue (in minutes between eruptions). {{ cronStatus|raw }}</td>#}
+                {#<td>{{ entity.mailerFlushQueueFrequency }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>#}
+            {#</tr>#}
             <tr>
                 <td>Reroute all outgoing emails only to the following email address(es) listed in the "email1@example.com,email2@example.com,email3@example.com" format separated by commas. (This is useful for a non-live server environment to avoid sending emails to users. Leaving this field empty will result in emails being sent normally.)</td>
                 <td>{{ entity.mailerDeliveryAddresses }}</td>
@@ -366,105 +366,105 @@
             </tr>
 
             {#Crons#}
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Cron Jobs:</h3>
-                </td>
-            </tr>
-            <tr>
-                <td>Email cron</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:swift",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:swift'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Fellowship Applications Import cron</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:importfellapp",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:importfellapp'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Fellowship Applications Verification Import cron</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:verifyimport",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:verifyimport'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Unpaid Invoices Reminder Email cron</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:invoice-reminder-emails'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Project Expiration Reminder Email cron</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:expiration-reminder-emails",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>
-                </td>
-            </tr>
+            {#<tr>#}
+                {#<td class="rowlink-skip" colspan="3" align="center">#}
+                    {#<h3>Cron Jobs:</h3>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Email cron</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:swift",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:swift'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Fellowship Applications Import cron</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:importfellapp",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:importfellapp'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Fellowship Applications Verification Import cron</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:verifyimport",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:verifyimport'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Unpaid Invoices Reminder Email cron</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:invoice-reminder-emails'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Project Expiration Reminder Email cron</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:expiration-reminder-emails",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:expiration-reminder-emails'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
 
-            <tr>
-                <td>Status cron (check for Maintenance)</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:status",false)|raw }}
-                </td>
-                <td>
-                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:status'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Testing cron job (send every 2 minutes testing email to admin)</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:statustest",false)|raw }}
-                </td>
-                <td>
-                    <a
-                        general-data-confirm="Are you sure you would like to remove this cron job?"
-                        href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:statustest'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>External monitor cron job</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("cron:externalurlmonitor",false)|raw }}
-                </td>
-                <td>
-                    <a
-                        general-data-confirm="Are you sure you would like to remove this cron job?"
-                        href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:externalurlmonitor'}) }}">Remove</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Internal monitor cron job</td>
-                <td>
-                    {{ user_service_utility.getCronStatus("webmonitor.py",false)|raw }}
-                </td>
-                <td>
-                    <a
-                        general-data-confirm="Are you sure you would like to remove this cron job?"
-                        href="{{ path('user_remove_cron_job', {'cronJobName': 'webmonitor.py'}) }}">Remove</a>
-                </td>
-            </tr>
+            {#<tr>#}
+                {#<td>Status cron (check for Maintenance)</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:status",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                       {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:status'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Testing cron job (send every 2 minutes testing email to admin)</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:statustest",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a#}
+                        {#general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                        {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:statustest'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>External monitor cron job</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("cron:externalurlmonitor",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a#}
+                        {#general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                        {#href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:externalurlmonitor'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<td>Internal monitor cron job</td>#}
+                {#<td>#}
+                    {#{{ user_service_utility.getCronStatus("webmonitor.py",false)|raw }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#<a#}
+                        {#general-data-confirm="Are you sure you would like to remove this cron job?"#}
+                        {#href="{{ path('user_remove_cron_job', {'cronJobName': 'webmonitor.py'}) }}">Remove</a>#}
+                {#</td>#}
+            {#</tr>#}
 
             {#Accessibility#}
             <tr>

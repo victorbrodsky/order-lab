@@ -39,12 +39,14 @@ class BackupManagementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
-        
-        $builder->add('dbBackupConfig', TextareaType::class, array(
-            'label'=>'Configuration json file for backup DB (dbBackup cron job):',
-            'required'=>false,
-            'attr' => array('class'=>'form-control textarea backup_management_dbBackupConfig', ),
-        ));
+
+        if(0) {
+            $builder->add('dbBackupConfig', TextareaType::class, array(
+                'label' => 'Configuration json file for backup DB (dbBackup cron job):',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea backup_management_dbBackupConfig',),
+            ));
+        }
 
         $builder->add('filesBackupConfig', TextareaType::class, array(
             'label'=>'Configuration json file for backup uploaded folder (filesBackup cron job):',

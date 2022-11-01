@@ -48,21 +48,22 @@ class CronManagementController extends OrderAbstractController
 
         //exit("Not implemented");
 
-        //$userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $title = "Cron Jobs Management";
         //$note = "Unique 'idname' must be included somwhere in the command";
         $note = "";
 
-        //$entity = $userServiceUtil->getSingleSiteSettingParameter();
+        $entity = $userServiceUtil->getSingleSiteSettingParameter();
 
         //$form = $this->createEditForm($entity, $cycle="show");
 
         return array(
-            //'entity' => $entity,
+            'entity' => $entity,
             //'form' => $form->createView(),
             'title' => $title,
             'note' => $note,
+            'sitename' => "employees"
             //'cycle' => $cycle
         );
     }
@@ -77,11 +78,11 @@ class CronManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        exit("Not implemented");
+        //exit("Not implemented");
 
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $title = "Cron Jobs Management";
+        $title = "Cron jobs management for health monitor";
         $note = "Unique 'idname' must be included somwhere in the command";
 
         $entity = $userServiceUtil->getSingleSiteSettingParameter();
@@ -93,7 +94,8 @@ class CronManagementController extends OrderAbstractController
             'form' => $form->createView(),
             'title' => $title,
             'note' => $note,
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'sitename' => "employees"
         );
     }
 

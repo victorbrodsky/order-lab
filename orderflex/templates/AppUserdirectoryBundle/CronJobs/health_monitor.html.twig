@@ -33,71 +33,52 @@
     {#<input type="hidden" id="fileId" value="" />#}
 
     <h4 class="text-info" align="center">{{ title }}</h4>
-    <h5>{{ note }}</h5>
 
-    {{ form_start(form) }}
-        {{ form_errors(form) }}
-
-        <div class="well">
-            {{ formmacros.field(form.dbBackupConfig) }}
-            {#{{ _self.cronStatusCreate( "dbbackup" ) }}#}
-            {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
-        </div>
-
-        <div class="well">
-            {{ formmacros.field(form.filesBackupConfig) }}
-            {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
-            {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
-        </div>
-
-        {% if form.submit is defined %}
-            {{ form_widget(form.submit) }}
-            <a class="btn btn-default" href="{{ path('employees_data_backup_management_show') }}">Cancel</a>
-        {% endif %}
-
-    {{ form_end(form) }}
-
-    {% if cycle == 'show' %}
-        <p>
-            <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
-        </p>
-    {% endif %}
-
-    <div class="well">
-        <p>List of all cron jobs</p>
-        {{ user_service_utility.listAllCronJobsLinux()|raw }}
-    </div>
-
-{% endblock %}
-
-{% macro cronStatusCreateAuto( backupJsonConfig, configFieldName ) %}
-    {% set cronJobNames = user_service_utility.getBackupManageCronLinux(backupJsonConfig) %}
-    {% if "Error: invalid json file" in cronJobNames %}
-        {{ cronJobNames|raw }}
-    {% else %}
-        {% for cronJobName in cronJobNames %}
-            {#cronJobName={{ cronJobName }}#}
-            {{ _self.cronStatusCreate(cronJobName,configFieldName) }}
-        {% endfor %}
-    {% endif %}
-{% endmacro %}
-{#configFieldName = 'dbBackupConfig'#}
-{% macro cronStatusCreate( cronJobName, configFieldName ) %}
     <table class="table table-bordered table-hover table-condensed text-left">
         <thead>
         <tr>
-            <th>Cron job name</th>
-            <th>Status</th>
+            <th>Parameter</th>
+            <th>Value</th>
             <th>Action</th>
         </tr>
         </thead>
         <tbody data-link="row" class="rowlink">
-            <tr>
-                <td class="rowlink-skip">{{ cronJobName }} cron job</td>
-                <td class="rowlink-skip">
-                    {{ user_service_utility.getCronStatus(cronJobName,false)|raw }}
-                </td>
 
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Health Monitors:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Monitor check interval in minutes. If changed, the monitor cron jobs must re-generated</td>
+                <td>{{ entity.monitorCheckInterval }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorCheckInterval'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>External server monitor url: view-med checks if view is running (i.e. http://view-test.med.cornell.edu)</td>
+                <td>{{ entity.externalMonitorUrl }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'externalMonitorUrl'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Monitor independent of Symfony, PHP, Postgresql
+                    script to monitor if url on this server is running (help: webmonitor.py -H):
+                    <br>python3 path/to/webmonitor.py -l 'url1,url2...'
+                    <br>-h mailerhost -o mailerport -u mailerusername -p mailerpassword
+                    <br>-s 'sender email' -r 'receiver email1, email2 ...'
+                    <br>-c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service'
+                    <br>-U 'http://view-test.med.cornell.edu'
+                    <br>-e 'server environment or description'
+                </td>
+                <td>{{ entity.monitorScript }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'monitorScript'}) }}">Edit</a></td>
+            </tr>
+
+
+            <tr>
+                <td>External monitor cron job</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:externalurlmonitor",false)|raw }}
+                </td>
                 <td class="rowlink-skip">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -107,14 +88,15 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a general-data-confirm="Are you sure you would like to remove this cron job?"
-                                   href="{{ path('user_remove_cron_job', {'cronJobName': cronJobName}) }}">Remove</a>
+                                <a
+                                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                                    href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:externalurlmonitor'}) }}">Remove</a>
                             </li>
 
                             <li>
-                                <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
-                                    href="{{ path('user_create_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
-                                >Generate {{ cronJobName }} cron job</a>
+                                <a  general-data-confirm="Are you sure? This action will generate external monitor cron job."#}
+                                    href="{{ path('user_generate_cron_externalurlmonitor') }}">
+                                    Generate external monitor cron job (monitor url on the external server)</a>
                             </li>
 
                         </ul>
@@ -122,20 +104,42 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>Internal monitor cron job</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("webmonitor.py",false)|raw }}
+                </td>
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a
+                                    general-data-confirm="Are you sure you would like to remove this cron job?"
+                                    href="{{ path('user_remove_cron_job', {'cronJobName': 'webmonitor.py'}) }}">Remove</a>
+                            </li>
+                            <li>
+                                <a  general-data-confirm="Are you sure? This action will generate independent monitor cron job."
+                                    href="{{ path('user_generate_cron_independentmonitor') }}">
+                                    Generate independent monitor cron job (monitor url on this server by python webmonitor.py)</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+
         </tbody>
     </table>
-{% endmacro %}
-
-{% block additionaljs %}
-
-    <script>
-        $(document).ready(function () {
 
 
 
-        });
-
-
-    </script>
+    <div class="well">
+        <p>List of all cron jobs</p>
+        {{ user_service_utility.listAllCronJobsLinux()|raw }}
+    </div>
 
 {% endblock %}
+
+

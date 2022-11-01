@@ -38,17 +38,20 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
 
-        <div class="well">
-            {{ formmacros.field(form.dbBackupConfig) }}
-            {#{{ _self.cronStatusCreate( "dbbackup" ) }}#}
-            {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
-        </div>
+        {% if form.dbBackupConfig is defined %}
+            <div class="well">
+                {{ formmacros.field(form.dbBackupConfig) }}
+                {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
+            </div>
+        {% endif %}
 
-        <div class="well">
-            {{ formmacros.field(form.filesBackupConfig) }}
-            {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
-            {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
-        </div>
+        {% if form.filesBackupConfig is defined %}
+            <div class="well">
+                {{ formmacros.field(form.filesBackupConfig) }}
+                {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
+                {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
+            </div>
+        {% endif %}
 
         {% if form.submit is defined %}
             {{ form_widget(form.submit) }}
@@ -63,10 +66,12 @@
         </p>
     {% endif %}
 
+    <p>
     <div class="well">
         <p>List of all cron jobs</p>
         {{ user_service_utility.listAllCronJobsLinux()|raw }}
     </div>
+    </p>
 
 {% endblock %}
 
