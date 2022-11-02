@@ -3832,6 +3832,7 @@ class TransResRequestUtil
 
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
         $eco = false;
+        //$eco = true;
         if( $eco ) {
             echo "use short invoice";
             $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
