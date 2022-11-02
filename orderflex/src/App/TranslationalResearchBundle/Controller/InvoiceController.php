@@ -2035,9 +2035,9 @@ class InvoiceController extends OrderAbstractController
         }
 
         //testing
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            exit("This functionality is under maintenance. Please try again later.");
-        }
+        //if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        //    exit("This functionality is under maintenance. Please try again later.");
+        //}
 
         $transresRequestUtil = $this->container->get('transres_request_util');
 

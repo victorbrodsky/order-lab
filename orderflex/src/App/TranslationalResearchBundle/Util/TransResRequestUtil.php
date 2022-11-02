@@ -5591,8 +5591,8 @@ class TransResRequestUtil
         //remove duplicates
         $idsArr = array_unique($idsArr);
 
-        dump($idsArr);
-        exit('111');
+        //dump($idsArr);
+        //exit('111');
 
         foreach( $idsArr as $invoiceId ) {
             if( !$invoiceId ) {
