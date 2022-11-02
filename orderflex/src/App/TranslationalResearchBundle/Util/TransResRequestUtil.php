@@ -5588,6 +5588,9 @@ class TransResRequestUtil
         $testing = false;
         //$testing = true;
 
+        //remove duplicates
+        $idsArr = array_unique($idsArr);
+
         dump($idsArr);
         exit('111');
 
