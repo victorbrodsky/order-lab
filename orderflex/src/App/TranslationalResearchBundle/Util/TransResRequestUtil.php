@@ -3831,8 +3831,15 @@ class TransResRequestUtil
     }
 
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
-        $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
-        $dql->groupBy('invoice.id');
+        $eco = false;
+        if( $eco ) {
+            echo "use short invoice";
+            $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
+            $dql->groupBy('invoice.id');
+        } else {
+            echo "use full invoice";
+            $dql->select('invoice');
+        }
 
         $query = $dql->getQuery();
 
@@ -3840,7 +3847,11 @@ class TransResRequestUtil
             $query->setParameters($dqlParameters);
         }
 
-        $results = $query->getScalarResult();
+        if( $eco ) {
+            $results = $query->getScalarResult();
+        } else {
+            $results = $query->getResult();
+        }
         //print_r($results);
         //echo "<br><br>";
 
@@ -3857,13 +3868,26 @@ class TransResRequestUtil
         $maxDate = null;
 
         $counter = 0;
-        foreach($results as $idParams) {
+        foreach($results as $invoice) {
             //echo "id=".$idTotal.":$total"."<br>";
             //print_r($idTotal);
-            $id = $idParams['id'];
-            $total = $idParams['total'];
-            $paid = $idParams['paid'];
-            $due = $idParams['due'];
+            if( $eco ) {
+                $id = $invoice['id'];
+                $total = $invoice['total'];
+                $paid = $invoice['paid'];
+                $due = $invoice['due'];
+                $createDateStr = $invoice['createDate']; //2018-01-30 17:24:39
+            } else {
+                $id = $invoice->getId();
+                $total = $invoice->getTotal();
+                $paid = $invoice->getPaid();
+                $due = $invoice->getDue();
+                $createDateStr = $invoice->getCreateDate(); //2018-01-30 17:24:39
+                if( $createDateStr ) {
+                    $createDateStr = $createDateStr->format('Y-m-d H:i:s');
+                }
+            }
+
             //$total = $this->toDecimal($total);
             //echo "id=".$id.": $$total"."<br>";
             $totalSum = $totalSum + $total;
@@ -3871,7 +3895,6 @@ class TransResRequestUtil
             $dueSum = $dueSum + $due;
 
             //min and max dates
-            $createDateStr = $idParams['createDate']; //2018-01-30 17:24:39
             if( $createDateStr ) {
                 //echo $id.": createDateStr=$createDateStr<br>";
                 //$createDate = \DateTime::createFromFormat('Y-m-d H:i:s', $createDateStr);
