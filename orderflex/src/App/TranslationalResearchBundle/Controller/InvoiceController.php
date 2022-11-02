@@ -2034,6 +2034,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        //testing
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             exit("This functionality is under maintenance. Please try again later.");
         }
@@ -2046,6 +2047,7 @@ class InvoiceController extends OrderAbstractController
 
         $idsArr = explode('-', $ids);
         $idsArr = array_reverse($idsArr);
+        $idsArr = array_unique($idsArr);
 
         //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
         //$template = null;
