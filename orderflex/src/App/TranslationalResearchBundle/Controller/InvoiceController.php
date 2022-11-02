@@ -2047,6 +2047,8 @@ class InvoiceController extends OrderAbstractController
 
         $idsArr = explode('-', $ids);
         $idsArr = array_reverse($idsArr);
+
+        //remove duplicates
         $idsArr = array_unique($idsArr);
 
         //$fileName = "Invoices".".xlsx"; //cell type can not be set in xlsx
