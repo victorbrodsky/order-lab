@@ -1506,3 +1506,11 @@ oli2002 ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
 add to sudoer
 Defaults:apache !requiretty
 
+Get user id: sudo cat /etc/passwd
+
+postgres user:
+sudo mount -t cifs -o username='***',password='***',uid=26,forceuid,gid=26,forcegid,file_mode=0664,dir_mode=0775 //networkdrive/../db-backup /mnt/pathology/view-backup/db-backup
+apache user:
+sudo mount -t cifs -o username='***',password='***',uid=48,forceuid,gid=48,forcegid,file_mode=0664,dir_mode=0775 //networkdrive/.../upload-backup /mnt/pathology/view-backup/upload-backup
+
+

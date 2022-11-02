@@ -2034,6 +2034,10 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            exit("This functionality is under maintenance. Please try again later.");
+        }
+
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         $ids = $request->request->get('ids');

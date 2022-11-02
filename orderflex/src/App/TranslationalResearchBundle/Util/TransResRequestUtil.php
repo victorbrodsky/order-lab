@@ -5508,7 +5508,7 @@ class TransResRequestUtil
     }
 
     public function exportUnpaidInvoices( $idsArr, $template ) {
-
+        
         $colArr = array(
             "Counter",
             "Company Code",
@@ -5587,6 +5587,9 @@ class TransResRequestUtil
 
         $testing = false;
         //$testing = true;
+
+        dump($idsArr);
+        exit('111');
 
         foreach( $idsArr as $invoiceId ) {
             if( !$invoiceId ) {
