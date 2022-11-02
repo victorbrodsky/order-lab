@@ -3832,7 +3832,7 @@ class TransResRequestUtil
 
     public function getMatchingStrInvoiceByDqlParameters($dql,$dqlParameters) {
         $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
-        //$dql->groupBy('invoice.id');
+        $dql->groupBy('invoice.id');
 
         $query = $dql->getQuery();
 
