@@ -9112,6 +9112,30 @@ class AdminController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
     }
+    /**
+     * @Route("/list/update-cron-job/{cronJobName}/{configFieldName}", name="user_update_cron_job", methods={"GET"})
+     */
+    public function updateCronJobAction(Request $request, $cronJobName, $configFieldName)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        exit("not implemented");
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        //createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" )
+        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);
+
+        $this->addFlash(
+            'notice',
+            $res
+        );
+
+        //exit('111');
+        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
+    }
 
     /**
      * @Route("/list/init-dashboard-charts", name="user_init_dashboard_charts", methods={"GET"})

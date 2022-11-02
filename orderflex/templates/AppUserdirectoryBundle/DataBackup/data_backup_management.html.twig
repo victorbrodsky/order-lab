@@ -109,7 +109,8 @@
             <tr>
                 <td>{{ label }}</td>
                 <td>
-                    <textarea rows="30" cols="200" disabled>{{ backupJsonConfig }}</textarea>
+                    {#rows="30" cols="200"#}
+                    <textarea disabled>{{ backupJsonConfig }}</textarea>
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': configFieldName}) }}">Edit</a></td>
             </tr>
@@ -138,6 +139,12 @@
                                     <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
                                         href="{{ path('user_create_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
                                     >Create {{ cronJobName }} cron job</a>
+                                </li>
+
+                                <li>
+                                    <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
+                                        href="{{ path('user_update_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
+                                    >Update {{ cronJobName }} cron job</a>
                                 </li>
 
                             </ul>
