@@ -3834,11 +3834,11 @@ class TransResRequestUtil
         //$eco = false;
         $eco = true;
         if( $eco ) {
-            echo "use short invoice";
+            //echo "use short invoice";
             $dql->select('invoice.id,invoice.total,invoice.paid,invoice.due,invoice.createDate');
             $dql->groupBy('invoice.id');
         } else {
-            echo "use full invoice";
+            //echo "use full invoice";
             $dql->select('invoice');
         }
 
