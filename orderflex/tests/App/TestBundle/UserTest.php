@@ -239,7 +239,7 @@ class UserTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Update")')->count()
+            $crawler->filter('html:contains("Edit")')->count()
         );
     }
 
