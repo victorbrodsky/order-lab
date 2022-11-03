@@ -200,7 +200,7 @@ class SiteParametersController extends OrderAbstractController
      * @Route("/{id}/edit", name="employees_siteparameters_edit", methods={"GET"})
      * @Template("AppUserdirectoryBundle/SiteParameters/edit.html.twig")
      */
-    public function editAction(Request $request,$id)
+    public function editAction( Request $request, $id )
     {
         //exit("user editAction");
         return $this->editParameters($request,$id);
@@ -241,7 +241,7 @@ class SiteParametersController extends OrderAbstractController
             'edit_form'   => $editForm->createView(),
             'cycle' => 'edit',
             'param' => $param,
-            'sitename' => $sitename
+            'sitename' => $sitename,
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -358,6 +358,18 @@ class SiteParametersController extends OrderAbstractController
             $eventStr = $eventStr . "<br>original value:<br>".$originalParam;
             $eventStr = $eventStr . "<br>updated value:<br>".$updatedParam;
             $userSecUtil->createUserEditEvent($sitename, $eventStr, $user, $entity, $request, $eventType);
+
+            ///// redirect to the individual site setting parameters pages /////
+            if( $param == 'mailerSpool' || $param == 'mailerFlushQueueFrequency' ) {
+                return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
+            }
+            if( $param == 'monitorCheckInterval' || $param == 'externalMonitorUrl' || $param == 'monitorScript' ) {
+                return $this->redirect($this->generateUrl('employees_health_monitor'));
+            }
+            if( $param == 'filesBackupConfig' ) {
+                return $this->redirect($this->generateUrl('employees_data_backup_management'));
+            }
+            ///// EOF redirect to the individual site setting parameters pages /////
 
             return $this->redirect($this->generateUrl($sitename.$redirectPathPostfix)); //'_siteparameters'
         }

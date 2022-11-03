@@ -69,7 +69,7 @@ class CronManagementController extends OrderAbstractController
     }
 
     /**
-     * @Route("/health-monitor", name="employees_health_monitor_show", methods={"GET"})
+     * @Route("/health-monitor", name="employees_health_monitor", methods={"GET"})
      * @Template("AppUserdirectoryBundle/CronJobs/health_monitor.html.twig")
      */
     public function healthMonitorCronJobsAction(Request $request)

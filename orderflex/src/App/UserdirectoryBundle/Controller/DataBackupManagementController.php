@@ -38,7 +38,7 @@ class DataBackupManagementController extends OrderAbstractController
 {
     /**
      * Backup management page with JSON configuration
-     * @Route("/data-backup-management/show", name="employees_data_backup_management_show", methods={"GET"})
+     * @Route("/data-backup-management", name="employees_data_backup_management", methods={"GET"})
      * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
      */
     public function dataBackupManagementShowAction(Request $request)
@@ -54,19 +54,22 @@ class DataBackupManagementController extends OrderAbstractController
 
         $entity = $userServiceUtil->getSingleSiteSettingParameter();
 
-        $form = $this->createEditForm($entity, $cycle="show");
+        //$form = $this->createEditForm($entity, $cycle="show");
 
         return array(
             'entity' => $entity,
-            'form' => $form->createView(),
+            //'form' => $form->createView(),
             'title' => $title,
             'note' => $note,
-            'cycle' => $cycle,
-            'sitename' => "employees"
+            //'cycle' => $cycle,
+            'sitename' => "employees",
+            'returnurl' => "employees_data_backup_management"
         );
     }
 
     /**
+     * NOT USED
+     *
      * Backup management page with JSON configuration
      * @Route("/data-backup-management/edit", name="employees_data_backup_management_edit", methods={"GET","POST"})
      * @Template("AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig")
@@ -136,7 +139,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $eventStr
             );
 
-            return $this->redirectToRoute('employees_data_backup_management_show');
+            return $this->redirectToRoute('employees_data_backup_management');
         }
 
         return array(
@@ -148,6 +151,7 @@ class DataBackupManagementController extends OrderAbstractController
         );
     }
 
+    //NOT USED
     private function createEditForm( SiteParameters $entity, $cycle )
     {
         //$em = $this->getDoctrine()->getManager();
@@ -201,7 +205,7 @@ class DataBackupManagementController extends OrderAbstractController
             $res
         );
 
-        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
+        return $this->redirect($this->generateUrl('employees_data_backup_management'));
     }
 
     /**
@@ -225,7 +229,7 @@ class DataBackupManagementController extends OrderAbstractController
             $res
         );
 
-        return $this->redirect($this->generateUrl('employees_data_backup_management_show'));
+        return $this->redirect($this->generateUrl('employees_data_backup_management'));
     }
 
 

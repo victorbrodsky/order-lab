@@ -50,36 +50,36 @@
 
 
     {% if 0 %}
-    {{ form_start(form) }}
-        {{ form_errors(form) }}
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
 
-        {% if form.dbBackupConfig is defined %}
-            <div class="well">
-                {{ formmacros.field(form.dbBackupConfig) }}
-                {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
-            </div>
+            {% if form.dbBackupConfig is defined %}
+                <div class="well">
+                    {{ formmacros.field(form.dbBackupConfig) }}
+                    {{ _self.cronStatusCreateAuto(entity.dbBackupConfig,'dbBackupConfig') }}
+                </div>
+            {% endif %}
+
+            {% if form.filesBackupConfig is defined %}
+                <div class="well">
+                    {{ formmacros.field(form.filesBackupConfig) }}
+                    {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
+                    {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
+                </div>
+            {% endif %}
+
+            {% if form.submit is defined %}
+                {{ form_widget(form.submit) }}
+                <a class="btn btn-default" href="{{ path('employees_data_backup_management') }}">Cancel</a>
+            {% endif %}
+
+        {{ form_end(form) }}
+
+        {% if cycle == 'show' %}
+            <p>
+                <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
+            </p>
         {% endif %}
-
-        {% if form.filesBackupConfig is defined %}
-            <div class="well">
-                {{ formmacros.field(form.filesBackupConfig) }}
-                {#{{ _self.cronStatusCreate( "filesbackup" ) }}#}
-                {{ _self.cronStatusCreateAuto(entity.filesBackupConfig,'filesBackupConfig') }}
-            </div>
-        {% endif %}
-
-        {% if form.submit is defined %}
-            {{ form_widget(form.submit) }}
-            <a class="btn btn-default" href="{{ path('employees_data_backup_management_show') }}">Cancel</a>
-        {% endif %}
-
-    {{ form_end(form) }}
-
-    {% if cycle == 'show' %}
-        <p>
-            <a class="btn btn-default" href="{{ path('employees_data_backup_management_edit') }}">Edit</a>
-        </p>
-    {% endif %}
     {% endif %}
 
     <p>
@@ -112,7 +112,9 @@
                     {#rows="30" cols="200"#}
                     <textarea disabled>{{ backupJsonConfig }}</textarea>
                 </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': configFieldName}) }}">Edit</a></td>
+                <td>
+                    <a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': configFieldName}) }}">Edit</a>
+                </td>
             </tr>
 
             {% for cronJobName in cronJobNames %}
@@ -141,11 +143,11 @@
                                     >Create {{ cronJobName }} cron job</a>
                                 </li>
 
-                                <li>
-                                    <a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."
-                                        href="{{ path('user_update_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
-                                    >Update {{ cronJobName }} cron job</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."#}
+                                        {#href="{{ path('user_update_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"#}
+                                    {#>Update {{ cronJobName }} cron job (Not implemented yet)</a>#}
+                                {#</li>#}
 
                             </ul>
 
@@ -223,16 +225,3 @@
     </table>
 {% endmacro %}
 
-{% block additionaljs %}
-
-    <script>
-        $(document).ready(function () {
-
-
-
-        });
-
-
-    </script>
-
-{% endblock %}
