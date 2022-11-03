@@ -20,6 +20,7 @@ import shutil
 #from os import listdir
 import glob
 from os.path import isfile, join
+from mountdrive import check_and_mountdrive
 
 #SOURCE_PATH = ""
 #DESTINATION_PATH = ""
@@ -122,17 +123,27 @@ def main(argv):
     source = ''           # -s
     basedir = ''          # -b
     dest = ''             # -d
-    mailerhost = ''
-    maileruser = ''
-    receivers = ''  # -r
-    fromEmail = ''  # -s
-    keepcount = 1
+    mailerhost = ''       # -h
+    maileruser = ''       # -u
+    receivers = ''        # -r
+    fromEmail = ''        # -f
+    keepcount = 1         # -k
+
+    accessuser = ''
+    networkfolder = ''
+    localfolder = ''
+    username = ''
+    password = ''
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "s:b:d:h:u:r:f:k:H",
-            ["source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "keepcount=", "help"]
+            "s:b:d:h:u:r:f:k:" + "a:n:l:e:p:" + "H",
+            [
+                "source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "keepcount=",
+                "accessuser=", "networkfolder=", "localfolder=", "username=", "password=",
+                "help"
+            ]
         )
     except getopt.GetoptError:
         print('Parameters error')
@@ -158,6 +169,19 @@ def main(argv):
             fromEmail = arg
         elif opt in ("-k", "--keepcount"):                 #number of files to keep in backup destination
             keepcount = arg
+
+        #mountdrive parameters
+        elif opt in ("-a", "--accessuser"):
+            accessuser = arg
+        elif opt in ("-n", "--networkfolder"):
+            networkfolder = arg
+        elif opt in ("-l", "--localfolder"):
+            localfolder = arg
+        elif opt in ("-e", "--username"):
+            username = arg
+        elif opt in ("-p", "--password"):
+            password = arg
+
         elif opt in ("-H", "--help"):
            help()
            #sys.exit()
@@ -169,7 +193,7 @@ def main(argv):
             sys.exit(2)
 
     print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail,", keepcount=",keepcount)
-    #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
+    print('accessuser', accessuser, 'networkfolder=', networkfolder, ', localfolder=', localfolder, 'username=', username, ", password=", password)
 
     if source == '':
         print('Nothing to do: source is not provided')
@@ -197,6 +221,19 @@ def main(argv):
         toEmailList = list(receivers.split(","))
 
     runCommand('whoami') #testing
+
+    if accessuser and networkfolder and localfolder and username and password:
+        mountError = check_and_mountdrive(accessuser, networkfolder, localfolder, username, password)
+        if mountError:
+            if mailerhost:
+                emailSubject = "Error mount folder " + localfolder
+                emailBody = "Error mount folder: accessuser=" + str(accessuser) + ", networkfolder=" + str(networkfolder) \
+                            + ", localfolder=" + str(localfolder) + ", username=" + str(username) + "; Error=" + repr(mountError)
+                send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
+            else:
+                print("Mailer parameters are not provided: Error email has not been sent. Error=",mountError)
+    else:
+        print("Skip check_and_mountdrive: parameters are not provided")
 
     archivefileError = start_backup(source, dest, basedir)
 
