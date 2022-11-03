@@ -53,6 +53,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
 
     if check_if_mounted(localfolder) == True:
+        print("Already mounted=",localfolder)
         return None
 
     userid = get_user_id(accessuser)
