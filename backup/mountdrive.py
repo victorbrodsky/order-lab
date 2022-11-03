@@ -11,8 +11,6 @@ import shutil
 import glob
 from os.path import isfile, join
 
-from filesbackup import runCommand
-
 
 #Check and mount network shared drive:
 
@@ -21,6 +19,18 @@ from filesbackup import runCommand
 #localdrive     - local folder to mount
 #username       - username of the service account\
 #password       - password of the service account
+
+#https://janakiev.com/blog/python-shell-commands/
+#https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
+def runCommand(command):
+    # try to restart the server
+    print("run: " + command)
+    #print(os.popen(command).read())
+    #output = subprocess.run([command], capture_output=True) #capture_output is for python > 3.7
+    output = subprocess.run([command], stdout=PIPE, stderr=PIPE, shell=True)
+    print(output)
+    # sleep in seconds
+    time.sleep(10)
 
 def check_and_mountdrive(accessuser, networkfolder, localfolder, username, password):
     print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
