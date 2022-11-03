@@ -138,7 +138,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(
             argv,
-            "s:b:d:h:u:r:f:k:" + "a:n:l:e:p:" + "H",
+            "s:b:d:h:u:r:f:k:" + "a:n:l:U:P:" + "H",
             [
                 "source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "keepcount=",
                 "accessuser=", "networkfolder=", "localfolder=", "username=", "password=",
@@ -177,9 +177,9 @@ def main(argv):
             networkfolder = arg
         elif opt in ("-l", "--localfolder"):
             localfolder = arg
-        elif opt in ("-e", "--username"):
+        elif opt in ("-U", "--username"):
             username = arg
-        elif opt in ("-p", "--password"):
+        elif opt in ("-P", "--password"):
             password = arg
 
         elif opt in ("-H", "--help"):

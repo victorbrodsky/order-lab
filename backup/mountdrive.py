@@ -38,8 +38,8 @@ def help():
         "-a, --accessuser       access permission for this user (i.e. apache, postgres)\n" \
         "-n, --networkfolder    remote folder, mount point\n" \
         "-l, --localdrive       local folder to mount\n" \
-        "-e, --username         username of the service account\n" \
-        "-p, --password         password of the service account\n" \
+        "-U, --username         username of the service account\n" \
+        "-P, --password         password of the service account\n" \
         "-H, --help             this help"
     )
 
@@ -58,7 +58,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(
             argv,
-            "a:n:l:e:p:H",
+            "a:n:l:U:P:H",
             ["accessuser=", "networkfolder=", "localfolder=", "username=", "password=", "help"]
         )
     except getopt.GetoptError:
@@ -74,9 +74,9 @@ def main(argv):
             networkfolder = arg
         elif opt in ("-l", "--localfolder"):
             localfolder = arg
-        elif opt in ("-e", "--username"):
+        elif opt in ("-U", "--username"):
             username = arg
-        elif opt in ("-p", "--password"):
+        elif opt in ("-P", "--password"):
             password = arg
         elif opt in ("-H", "--help"):
            help()
