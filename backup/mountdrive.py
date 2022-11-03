@@ -46,6 +46,7 @@ def check_if_mounted(localfolder):
 
 def get_user_id(accessuser):
     #userid = 48
+    accessuser = "testuser"
     userid = pwd.getpwnam(accessuser).pw_uid
     print("userid=", userid)
     return userid
