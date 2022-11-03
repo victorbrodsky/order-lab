@@ -28,23 +28,45 @@ def runCommand(command):
     #print(os.popen(command).read())
     #output = subprocess.run([command], capture_output=True) #capture_output is for python > 3.7
     output = subprocess.run([command], stdout=PIPE, stderr=PIPE, shell=True)
-    print(output)
+    print("runCommand output=",output)
     # sleep in seconds
-    time.sleep(10)
+    time.sleep(3)
+    return output
+
+
+def check_if_mounted(localfolder):
+    ismount = os.path.ismount(localfolder)
+    print("ismount=",ismount)
+    if ismount == True:
+        return True
+    sys.exit(2)
+    return False
+
+
+def get_user_id(accessuser):
+    userid = 48
+    return userid
+
+
 
 def check_and_mountdrive(accessuser, networkfolder, localfolder, username, password):
     print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
 
+    if check_if_mounted(localfolder) == True:
+        return None
+
+    userid = get_user_id(accessuser)
+
     command = "sudo mount -t cifs -o"
-    command = command + " username='"+username+"',password='"+password+"'"+",uid=48,forceuid,gid=48,forcegid,file_mode=0664,dir_mode=0775"
+    command = command + " username='"+username+"',password='"+password+"'"
+    command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
+    comamnd = command + ",forcegid,file_mode=0664,dir_mode=0775"
     command = command + " " + networkfolder + " " + localfolder
     print("command="+command)
 
-    runCommand(command)  # testing
-
     try:
         if command != None:
-            mountError = runCommand(command)
+            runCommand(command)
         else:
             return "Mount command is empty"
     except Exception as error:
