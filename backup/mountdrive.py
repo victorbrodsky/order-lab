@@ -1,15 +1,16 @@
 import os, sys, getopt, logging
 import smtplib
 from smtplib import SMTPException
-from email.mime.text import MIMEText
+#from email.mime.text import MIMEText
 import time
 from datetime import datetime
 import subprocess
 from subprocess import PIPE
-import shutil
+#import shutil
 #from os import listdir
 import glob
 from os.path import isfile, join
+import pwd
 
 
 #Check and mount network shared drive:
@@ -39,12 +40,14 @@ def check_if_mounted(localfolder):
     print("ismount=",ismount)
     if ismount == True:
         return True
-    sys.exit(2)
+
     return False
 
 
 def get_user_id(accessuser):
-    userid = 48
+    #userid = 48
+    userid = pwd.getpwnam('aix').pw_uid
+    print("userid=", userid)
     return userid
 
 
@@ -57,6 +60,8 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
         return None
 
     userid = get_user_id(accessuser)
+
+    sys.exit(2)
 
     command = "sudo mount -t cifs -o"
     command = command + " username='"+username+"',password='"+password+"'"
