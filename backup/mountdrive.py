@@ -54,8 +54,7 @@ def help():
     )
 
 def main(argv):
-
-    print("\n### mountdrive.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
+    print("\n### mountdrive.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+", argv=",argv,"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
 
@@ -72,15 +71,17 @@ def main(argv):
             ["accessuser=", "networkfolder=", "localfolder=", "username=", "password=", "help"]
         )
     except getopt.GetoptError:
-        print('Parameters error')
+        print('Parameters error:',getopt.GetoptError)
         #logging.warning('Parameters error')
         #help()
         sys.exit(2)
 
     for opt, arg in opts:
+        #print("opt=",opt)
         if opt in ("-a", "--accessuser"):
+            #print("option -a")
             accessuser = arg
-        if opt in ("-n", "--networkfolder"):
+        elif opt in ("-n", "--networkfolder"):
             networkfolder = arg
         elif opt in ("-l", "--localfolder"):
             localfolder = arg
@@ -130,7 +131,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    #python filesbackup.py -s test -d myarchive
-
     main(sys.argv[1:])
 
