@@ -1,3 +1,5 @@
+import os, sys, getopt, logging
+
 #Check and mount network shared drive:
 
 #accessuser     - access permission for this user (i.e. apache, postgres)
