@@ -71,7 +71,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
         print(errorStr)
         return errorStr
 
-    sys.exit(2)
+    #sys.exit(2)
 
     command = "sudo mount -t cifs -o"
     command = command + " username='"+username+"',password='"+password+"'"
