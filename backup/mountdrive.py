@@ -57,6 +57,7 @@ def get_user_id(accessuser):
     return userid
 
 
+#Return None if success or error string
 def check_and_mountdrive(accessuser, networkfolder, localfolder, username, password):
     print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
 
@@ -66,8 +67,9 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
 
     userid = get_user_id(accessuser)
     if userid == None:
-        print("User not found=", accessuser)
-        return None
+        errorStr = "accessuser not found="+str(accessuser)
+        print(errorStr)
+        return errorStr
 
     sys.exit(2)
 
