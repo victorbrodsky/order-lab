@@ -46,11 +46,15 @@ def check_if_mounted(localfolder):
 
 def get_user_id(accessuser):
     #userid = 48
+    userid = None
     accessuser = "testuser"
-    userid = pwd.getpwnam(accessuser).pw_uid
+    try:
+        userid = pwd.getpwnam(accessuser).pw_uid
+    except Exception as error:
+        return None
+
     print("userid=", userid)
     return userid
-
 
 
 def check_and_mountdrive(accessuser, networkfolder, localfolder, username, password):
@@ -61,6 +65,9 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
         return None
 
     userid = get_user_id(accessuser)
+    if userid == None:
+        print("User not found=", accessuser)
+        return None
 
     sys.exit(2)
 
