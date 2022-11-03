@@ -2,6 +2,7 @@ import os, sys, getopt, logging
 import time
 from datetime import datetime
 
+
 #Check and mount network shared drive:
 
 #accessuser     - access permission for this user (i.e. apache, postgres)
