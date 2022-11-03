@@ -46,8 +46,8 @@ def check_if_mounted(localfolder):
 
 def get_user_id(accessuser):
     #userid = 48
+    # accessuser = "testuser"
     userid = None
-    accessuser = "testuser"
     try:
         userid = pwd.getpwnam(accessuser).pw_uid
     except Exception as error:
