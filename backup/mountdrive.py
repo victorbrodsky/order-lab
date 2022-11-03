@@ -34,7 +34,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
 
 def help():
     print(
-        "Usage: python filebackup.py [OPTION]...\n" \
+        "Usage: python mountdrive.py [OPTION]...\n" \
         "\n" \
         "-a, --accessuser       access permission for this user (i.e. apache, postgres)\n" \
         "-n, --networkfolder    remote folder, mount point\n" \
