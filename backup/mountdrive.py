@@ -1,6 +1,15 @@
 import os, sys, getopt, logging
+import smtplib
+from smtplib import SMTPException
+from email.mime.text import MIMEText
 import time
 from datetime import datetime
+import subprocess
+from subprocess import PIPE
+import shutil
+#from os import listdir
+import glob
+from os.path import isfile, join
 
 
 #Check and mount network shared drive:

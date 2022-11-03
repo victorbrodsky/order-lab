@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # Created by Oleg Ivanov
 
-
-#Ref: 
-
-# sample usage: python filebackup.py -s path/source/dirname -d path/destination/dirname
-# -i
-# -s
-
 import os, sys, getopt, logging
 import smtplib
 from smtplib import SMTPException
