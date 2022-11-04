@@ -74,6 +74,7 @@ def start_backup(source, dest, basedir):
 
     return None
 
+
 #https://janakiev.com/blog/python-shell-commands/
 #https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
 def runCommand(command):
@@ -84,7 +85,8 @@ def runCommand(command):
     output = subprocess.run([command], stdout=PIPE, stderr=PIPE, shell=True)
     print(output)
     # sleep in seconds
-    time.sleep(10)
+    time.sleep(3)
+
 
 def send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody):
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
@@ -106,6 +108,7 @@ def send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody
     except SMTPException:
         print("Error: unable to send email")
         #pass
+
 
 def main(argv):
 
@@ -248,9 +251,6 @@ def main(argv):
     basename, filename = os.path.split(dest)
     print("basename=",basename,", filename=",filename)
     #2) list all files in output directory
-
-    #onlyfiles = [f for f in listdir(basename) if isfile(join(basename, f))]
-
     # Get list of all files only in the given directory
     onlyfiles = filter(os.path.isfile, glob.glob(basename + '/' + filename + '*'))
     # Sort list of files based on last modification time in ascending order
