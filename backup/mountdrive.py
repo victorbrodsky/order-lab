@@ -80,7 +80,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     command = command + " username='"+username+"',password='"+password+"'"
     command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
     command = command + ",forcegid,file_mode=0664,dir_mode=0775"
-    command = command + ",sec=ntlmssp"
+    #command = command + ",sec=ntlmssp"
     command = command + " " + networkfolder + " " + localfolder
     print("command="+command)
 
