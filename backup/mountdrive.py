@@ -180,6 +180,11 @@ def main(argv):
     else:
         print("Mount completed successfully")
 
+    if check_if_mounted(localfolder) == True:
+        print("Mount result: successfully mounted=",localfolder)
+    else:
+        print("Mount result: failed mounted=", localfolder)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
