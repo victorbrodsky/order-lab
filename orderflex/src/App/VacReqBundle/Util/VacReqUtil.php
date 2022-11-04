@@ -4567,7 +4567,7 @@ class VacReqUtil
         $remainingDaysString = null;
         $allowCarryOver = $this->getValueApprovalGroupTypeByUser('allowCarryOver',$user,$approvalGroupType);
         if( $allowCarryOver ) {
-            $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
+            $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year is $maxCarryOverVacationDays days, no exceptions.";
             $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
             $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
 
