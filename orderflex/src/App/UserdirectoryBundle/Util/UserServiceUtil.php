@@ -2590,6 +2590,10 @@ Pathology and Laboratory Medicine",
                 }
             }
 
+            if( !$cronJob ) {
+                $resArr[] = "Cron job interval is not provided and cron job can not be created";
+            }
+
         }
 
         //dump($resArr);
