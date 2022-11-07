@@ -116,7 +116,7 @@ def help():
     )
 
 def main(argv):
-    print("\n### mountdrive.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+", argv=",argv,"###")
+    print("\n\n\n### mountdrive.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+", argv=",argv,"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
 
