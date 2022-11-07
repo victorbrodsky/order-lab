@@ -75,7 +75,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     #https://unix.stackexchange.com/questions/124342/mount-error-13-permission-denied
 
     #command = "sudo mount -t cifs -o"
-    command = "sudo /usr/bin/mount"
+    command = "sudo mount"
     command = command + " --verbose"
     command = command + " -t cifs --verbose -o"
     command = command + " username='"+username+"',password='"+password+"'"
