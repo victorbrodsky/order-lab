@@ -76,8 +76,8 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
 
     #command = "sudo mount -t cifs -o"
     command = "sudo mount"
-    command = command + " -v"
-    command = command + " -t cifs -o"
+    command = command + " --verbose"
+    command = command + " -t cifs --verbose -o"
     command = command + " username='"+username+"',password='"+password+"'"
     command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
     command = command + ",forcegid,file_mode=0664,dir_mode=0775"
