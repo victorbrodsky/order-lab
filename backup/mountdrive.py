@@ -77,8 +77,8 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     # get env. Include: PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
     runCommand('/usr/bin/printenv')
 
-    #command = "sudo mount -t cifs -o"
-    command = "sudo /usr/bin/mount"
+    #command = "sudo /usr/bin/mount -t cifs -o"
+    command = "sudo /sbin/mount.cifs"
     command = command + " --verbose"
     command = command + " -t cifs --verbose -o"
     command = command + " username='"+username+"',password='"+password+"'"
