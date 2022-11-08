@@ -2692,8 +2692,9 @@ Pathology and Laboratory Medicine",
     public function getJsonHelpStr() {
         $helpStr = '
                 {"sets" : [
-                    {"idname" : "unique-cronjob-name","command" : "my command containing unique-cronjob-name string","croninterval" : "5m"},
-                    {"idname" : "unique-cronjob-name2","command" : "my command2 containing unique-cronjob-name2 string","croninterval" : "5m"}
+                    {"idname" : "unique-cronjob-name1","command" : "command1 with unique-cronjob-name1 string","croninterval" : "15m"},
+                    {"idname" : "unique-cronjob-name2","command" : "command2 with unique-cronjob-name2 string","croninterval" : "3h"},
+                    {"idname" : "unique-cronjob-name3","command" : "command3 with unique-cronjob-name3 string","croninterval" : "1d"}
                 ]}
             ';
         $helpStr = "Example of valid JSON file: <br>" . $helpStr;
