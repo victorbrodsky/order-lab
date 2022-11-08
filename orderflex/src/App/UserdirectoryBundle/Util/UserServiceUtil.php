@@ -2514,7 +2514,7 @@ Pathology and Laboratory Medicine",
         $helpStr = $this->getJsonHelpStr();
 
         if( !$jsonObject ) {
-            return "Cannot decode JSON configuration file: ".$backupJsonConfig. "; ".$helpStr;
+            return "Cannot decode JSON configuration file: ".$backupJsonConfig. " <br>".$helpStr;
         }
 
         $resArr = array();
@@ -2599,7 +2599,7 @@ Pathology and Laboratory Medicine",
         }
 
         if( count($resArr) == 0 ) {
-            $resArr[] = "Cron failed. Probably invalid JSON file. Please make sure 'sets' keyword is exists; ".$helpStr;
+            $resArr[] = "Cron failed. Probably invalid JSON file. Please make sure 'sets' keyword is exists. <br>".$helpStr;
         }
 
         //dump($resArr);
@@ -2696,6 +2696,7 @@ Pathology and Laboratory Medicine",
                     {"idname" : "unique-cronjob-name2","command" : "my command2 containing unique-cronjob-name2 string","croninterval" : "5m"}
                 ]}
             ';
+        $helpStr = "Example of valid JSON file: <br>" . $helpStr;
         return $helpStr;
     }
 
