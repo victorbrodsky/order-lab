@@ -74,7 +74,14 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     #sys.exit(2)
     #https://unix.stackexchange.com/questions/124342/mount-error-13-permission-denied
 
-    # get env. Include: PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    # get crontab env. Include: PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    runCommand('/usr/bin/printenv')
+
+    #original PATH: PATH=/usr/bin:/bin
+    #export PATH="$HOME/bin:$PATH"
+    #export PATH=$PATH:/place/with/the/file
+    runCommand('PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin')
+
     runCommand('/usr/bin/printenv')
 
     #command = "sudo /usr/bin/mount -t cifs -o"
