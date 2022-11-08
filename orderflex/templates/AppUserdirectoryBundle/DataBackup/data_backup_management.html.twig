@@ -146,11 +146,11 @@
                                     >Create {{ cronJobName }} cron job</a>
                                 </li>
 
-                                {#<li>#}
-                                    {#<a  general-data-confirm="Are you sure? This action will create {{ cronJobName }} cron job."#}
-                                        {#href="{{ path('user_update_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"#}
-                                    {#>Update {{ cronJobName }} cron job (Not implemented yet)</a>#}
-                                {#</li>#}
+                                <li>
+                                    <a  general-data-confirm="Are you sure? This action will update {{ cronJobName }} cron job."
+                                        href="{{ path('user_update_cron_job', {'cronJobName': cronJobName, 'configFieldName': configFieldName}) }}"
+                                    >Update {{ cronJobName }} cron job</a>
+                                </li>
 
                             </ul>
 

@@ -9121,19 +9121,34 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        exit("not implemented");
+        //exit("not implemented");
 
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        //createBackupCronLinux( $commandName="filesbackup", $configFieldName="dbBackupConfig" )
-        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);
+        if( $userServiceUtil->isWindows() ){
+            $this->addFlash(
+                'warning',
+                "Windows is not supported"
+            );
+            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+        }
 
+        $commandName = $cronJobName;
+
+        //remove cron job
+        $userServiceUtil->removeCronJobLinuxByCommandName($commandName);
+        $this->addFlash(
+            'notice',
+            'Cron job '.$cronJobName.' has been removed.'
+        );
+
+        //create cron job
+        $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);
         $this->addFlash(
             'notice',
             $res
         );
 
-        //exit('111');
         return $this->redirect($this->generateUrl('employees_data_backup_management'));
     }
 
