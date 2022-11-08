@@ -9136,11 +9136,13 @@ class AdminController extends OrderAbstractController
         $commandName = $cronJobName;
 
         //remove cron job
-        $userServiceUtil->removeCronJobLinuxByCommandName($commandName);
-        $this->addFlash(
-            'notice',
-            'Cron job '.$cronJobName.' has been removed.'
-        );
+        $res = $userServiceUtil->removeCronJobLinuxByCommandName($commandName);
+        if( $res ) {
+            $this->addFlash(
+                'notice',
+                'Cron job ' . $cronJobName . ' has been removed.'
+            );
+        }
 
         //create cron job
         $res = $userServiceUtil->createBackupCronLinux($cronJobName,$configFieldName);

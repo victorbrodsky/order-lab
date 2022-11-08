@@ -2511,8 +2511,15 @@ Pathology and Laboratory Medicine",
         //dump($jsonObject);
         //exit('after json_decode');
 
+        $helpStr = '
+                {"sets" : [
+                    {"idname" : "unique-cronjob-name","command" : "my command containing unique-cronjob-name string","croninterval" : "5m"},
+                    {"idname" : "unique-cronjob-name2","command" : "my command2 containing unique-cronjob-name2 string","croninterval" : "5m"}
+                ]}
+            ';
+
         if( !$jsonObject ) {
-            return "Cannot decode JSON configuration file: ".$backupJsonConfig;
+            return "Cannot decode JSON configuration file: ".$backupJsonConfig. "; ".$helpStr;
         }
 
         $resArr = array();
@@ -2594,6 +2601,10 @@ Pathology and Laboratory Medicine",
                 $resArr[] = "Cron job interval is not provided and cron job can not be created";
             }
 
+        }
+
+        if( count($resArr) == 0 ) {
+            $resArr[] = "Cron failed. Probably invalid JSON file. Please make sure 'sets' keyword is exists; ".$helpStr;
         }
 
         //dump($resArr);
