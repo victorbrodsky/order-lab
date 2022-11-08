@@ -80,7 +80,7 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     #original PATH: PATH=/usr/bin:/bin
     #export PATH="$HOME/bin:$PATH"
     #export PATH=$PATH:/place/with/the/file
-    runCommand('PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin')
+    runCommand('export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin')
 
     runCommand('/usr/bin/printenv')
 
