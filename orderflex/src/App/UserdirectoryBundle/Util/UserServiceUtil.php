@@ -2511,12 +2511,7 @@ Pathology and Laboratory Medicine",
         //dump($jsonObject);
         //exit('after json_decode');
 
-        $helpStr = '
-                {"sets" : [
-                    {"idname" : "unique-cronjob-name","command" : "my command containing unique-cronjob-name string","croninterval" : "5m"},
-                    {"idname" : "unique-cronjob-name2","command" : "my command2 containing unique-cronjob-name2 string","croninterval" : "5m"}
-                ]}
-            ';
+        $helpStr = $this->getJsonHelpStr();
 
         if( !$jsonObject ) {
             return "Cannot decode JSON configuration file: ".$backupJsonConfig. "; ".$helpStr;
@@ -2620,7 +2615,8 @@ Pathology and Laboratory Medicine",
         $setCronManageArr = array();
 
         if( !is_array($sets) ) {
-            return 'Error: invalid json file';
+            $helpStr = $this->getJsonHelpStr();
+            return 'Error: invalid json file. <br><br>'.$helpStr;
             //dump($sets);
             //exit('after getBackupConfigSets: Error: invalid json file');
             $setCronManageArr[] = 'Error: invalid json file';
@@ -2691,6 +2687,16 @@ Pathology and Laboratory Medicine",
         }
 
         return $sets;
+    }
+
+    public function getJsonHelpStr() {
+        $helpStr = '
+                {"sets" : [
+                    {"idname" : "unique-cronjob-name","command" : "my command containing unique-cronjob-name string","croninterval" : "5m"},
+                    {"idname" : "unique-cronjob-name2","command" : "my command2 containing unique-cronjob-name2 string","croninterval" : "5m"}
+                ]}
+            ';
+        return $helpStr;
     }
 
     public function addCronJobLinux( $fullCommand ) {
