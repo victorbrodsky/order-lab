@@ -1506,6 +1506,8 @@ oli2002 ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
 add to sudoer
 Defaults:apache !requiretty
 
+After delete /var/log/messages, run systemctl restart rsyslog
+
 Get user id: sudo cat /etc/passwd
 
 postgres user:
