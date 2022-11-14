@@ -120,12 +120,26 @@
                         is_granted('ROLE_VACREQ_PROXYSUBMITTER') or
                         is_granted('ROLE_VACREQ_SUPERVISOR')
                     %}
-                        <li id="nav-bar-mygroup" class="divider-vertical">
-                            <a href="{{ path('vacreq_mygroup') }}">
+                        {#<li id="nav-bar-mygroup" class="divider-vertical">#}
+                            {#<a href="{{ path('vacreq_mygroup') }}">#}
                                 {#My Group#}
-                                Summary
-                            </a>
+                                {#Summary#}
+                            {#</a>#}
                         </li>
+
+                        <li id="nav-bar-mygroup" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {#<li id="nav-bar-summary-all" class="divider-vertical"><a href="{{ path('vacreq_mygroup') }}">All</a></li>#}
+                                {#<li id="nav-bar-summary-faculty" class="divider-vertical"><a href="{{ path('vacreq_mygroup_faculty') }}">Faculty</a></li>#}
+                                {#<li id="nav-bar-summary-fellows" class="divider-vertical"><a href="{{ path('vacreq_mygroup_fellows') }}">Fellows</a></li>#}
+
+                                <li id="nav-bar-summary-all" class="divider-vertical"><a href="{{ path('vacreq_mygroup', {'types': 'all'}) }}">All</a></li>
+                                <li id="nav-bar-summary-faculty" class="divider-vertical"><a href="{{ path('vacreq_mygroup', {'types': 'faculty'}) }}">Faculty</a></li>
+                                <li id="nav-bar-summary-fellows" class="divider-vertical"><a href="{{ path('vacreq_mygroup', {'types': 'fellows'}) }}">Fellows</a></li>
+                            </ul>
+                        </li>
+
                     {% endif %}
 
                     {% if

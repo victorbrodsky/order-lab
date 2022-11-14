@@ -1681,10 +1681,10 @@ class ApproverController extends OrderAbstractController
 
     //My Group vacreq_mygroup
     /**
-     * @Route("/my-group/", name="vacreq_mygroup", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
-     */
-    public function myGroupAction(Request $request)
+ * @Route("/summary/{types}", name="vacreq_mygroup", methods={"GET", "POST"})
+ * @Template("AppVacReqBundle/Group/mygroup.html.twig")
+ */
+    public function myGroupAction(Request $request, $types)
     {
 
         if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
@@ -1705,6 +1705,8 @@ class ApproverController extends OrderAbstractController
         //$vacreqUtil = $this->container->get('vacreq_util');
 
         $userids = null;
+        //$approvaltypes = null;
+        $filteredGroups = array();
 
         //find groups for logged in user
         //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
@@ -1727,7 +1729,7 @@ class ApproverController extends OrderAbstractController
 //        $yearRange = $previousYear."-".$currentYear;
         $yearRange = $this->vacreqUtil->getCurrentAcademicYearRange();
 
-        /////////////// users filter form ///////////////////
+        /////////////// filter form ///////////////////
         $filterform = $this->createFormBuilder()
             ->add('filterusers', EntityType::class, array(
                 'class' => 'AppUserdirectoryBundle:User',
@@ -1747,6 +1749,22 @@ class ApproverController extends OrderAbstractController
                         ->orderBy("infos.lastName","ASC");
                 },
             ))
+            ->add('filterapprovaltypes', EntityType::class, array(
+                'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class'=>'combobox', 'placeholder'=>"Time Away Approval Group Type"),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ))
             ->add('filter', SubmitType::class, array('label' => 'Filter','attr' => array('class' => 'btn btn-sm btn-default')))
             ->getForm();
 
@@ -1759,24 +1777,44 @@ class ApproverController extends OrderAbstractController
                 $useridsArr[] = $thisUser->getId();
             }
             $userids = implode("-",$useridsArr);
+
+            $filterapprovaltypes = $filterform["filterapprovaltypes"]->getData();
+            //dump($filterapprovaltypes);
+            //exit('111');
+            foreach( $groups as $group ) {
+                $thisApprovalGroupType = $this->vacreqUtil->getApprovalGroupTypeByInstitution($group->getId());
+                if( $thisApprovalGroupType ) {
+                    foreach( $filterapprovaltypes as $filterapprovaltype ) {
+                        if ($thisApprovalGroupType->getId() == $filterapprovaltype->getId()) {
+                            $filteredGroups[] = $group;
+                        }
+                    }
+                } else {
+                    if( count($filterapprovaltypes) == 0 ) {
+                        $filteredGroups[] = $group;
+                    }
+                }
+            }
         }
-        /////////////// EOF: users filter form ///////////////////
+        /////////////// EOF: filter form ///////////////////
 
 
         return array(
-            'groups' => $groups,
+            //'groups' => $groups,
+            'groups' => $filteredGroups,
             //'accruedDays' => $accruedDays,
             'yearRange' => $yearRange,
             //'entity' => $entity,
             'filterform' => $filterform->createView(),
-            'userids' => $userids
+            'userids' => $userids,
+            //'approvaltypes' => $approvaltypes
             //'organizationalGroupName' => $institution."",
             //'organizationalGroupId' => $instid,
         );
     }
 
     /**
-     * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup", methods={"GET", "POST"})
+     * @Route("/my-single-group/{groupId}/{userids}/{approvaltypes}", name="vacreq_mysinglegroup", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/my-single-group.html.twig")
      */
     public function mySingleGroupAction( Request $request, $groupId, $userids )
@@ -1873,6 +1911,42 @@ class ApproverController extends OrderAbstractController
             'trFontSize' => "10px",
             'fontWeight' => "normal"
         );
+    }
+
+    /**
+     * @Route("/summary/faculty", name="vacreq_mygroup_faculty", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
+     */
+    public function myGroupFacultyAction(Request $request)
+    {
+
+        if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        exit("myGroupFacultyAction");
+    }
+
+    /**
+     * @Route("/summary/fellows", name="vacreq_mygroup_fellows", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
+     */
+    public function myGroupFellowsAction(Request $request)
+    {
+
+        if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        exit("myGroupFellowsAction");
     }
 
 

@@ -26,13 +26,17 @@
 
     <h4 class="text-info" align="center">
         My Group
+        {% if groups and groups|length > 0 %}
+            ({{ groups|length }} matching)
+        {% endif %}
     </h4>
 
     <br><br>
     {{ form_start(filterform) }}
         {{ form_errors(filterform) }}
         <div class="row">
-            <div class="col-xs-10" align="right">{{ form_row(filterform.filterusers)}}</div>
+            <div class="col-xs-7" align="right">{{ form_row(filterform.filterusers)}}</div>
+            <div class="col-xs-3" align="right">{{ form_row(filterform.filterapprovaltypes)}}</div>
             <div class="col-xs-2" align="left">{{ form_row(filterform.filter) }}</div>
         </div>
     {{ form_end(filterform) }}
@@ -52,7 +56,10 @@
 
     {% for group in groups %}
         {#group.id={{ group.id }}, userids={{ userids }}<br>#}
-        {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::mySingleGroupAction', { 'groupId': group.id, 'userids': userids })) }}
+        {{ render(controller('App\\VacReqBundle\\Controller\\ApproverController::mySingleGroupAction',
+            { 'groupId': group.id, 'userids': userids }
+           ))
+        }}
     {% endfor %}
 
 
