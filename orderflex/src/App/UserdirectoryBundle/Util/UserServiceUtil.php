@@ -2405,8 +2405,6 @@ Pathology and Laboratory Medicine",
         //parse $filesBackupConfig
         $cronJobCommand = NULL;
         $cronIntervals = NULL;
-        $destination = NULL;
-        $keepCount = NULL;               //number of latest files to keep
 
         if( array_key_exists('command', $jsonObject) ) {
             $cronJobCommand = $jsonObject['command'];
@@ -2414,14 +2412,6 @@ Pathology and Laboratory Medicine",
 
         if( array_key_exists('cronintervals', $jsonObject) ) {
             $cronIntervals = $jsonObject['cronintervals'];
-        }
-
-        if( array_key_exists('destination', $jsonObject) ) {
-            $destination = $jsonObject['destination'];
-        }
-
-        if( array_key_exists('keepcount', $jsonObject) ) {
-            $keepCount = $jsonObject['keepcount'];
         }
 
         //$cronIntervalsArr = explode(",",$cronIntervals);
@@ -2530,8 +2520,6 @@ Pathology and Laboratory Medicine",
             $idName = NULL;
             $cronJobCommand = NULL;
             $cronInterval = NULL;
-            $destination = NULL;
-            $keepCount = NULL;               //number of latest files to keep
 
             if( array_key_exists('idname', $set) ) {
                 $idName = $set['idname'];
@@ -2547,14 +2535,8 @@ Pathology and Laboratory Medicine",
             if( array_key_exists('croninterval', $set) ) {
                 $cronInterval = $set['croninterval'];
             }
-            if( array_key_exists('destination', $set) ) {
-                $destination = $set['destination'];
-            }
-            if( array_key_exists('keepcount', $set) ) {
-                $keepCount = $set['keepcount'];
-            }
 
-            //echo "parsed: [$cronJobCommand] [$cronInterval] [$destination] [$keepCount] <br>";
+            //echo "parsed: [$cronJobCommand] [$cronInterval]<br>";
 
             $cronJob = NULL;
 
@@ -2617,10 +2599,6 @@ Pathology and Laboratory Medicine",
         if( !is_array($sets) ) {
             $helpStr = $this->getJsonHelpStr();
             return 'Error: invalid json file. <br><br>'.$helpStr;
-            //dump($sets);
-            //exit('after getBackupConfigSets: Error: invalid json file');
-            $setCronManageArr[] = 'Error: invalid json file';
-            return $setCronManageArr;
         }
 
         //exit('after getBackupConfigSets');
@@ -2628,26 +2606,10 @@ Pathology and Laboratory Medicine",
         foreach($sets as $set) {
             //parse set
             $idName = NULL;
-//            $cronJobCommand = NULL;
-//            $cronInterval = NULL;
-//            $destination = NULL;
-//            $keepCount = NULL;               //number of latest files to keep
 
             if( array_key_exists('idname', $set) ) {
                 $idName = $set['idname'];
             }
-//            if( array_key_exists('command', $set) ) {
-//                $cronJobCommand = $set['command'];
-//            }
-//            if( array_key_exists('croninterval', $set) ) {
-//                $cronInterval = $set['croninterval'];
-//            }
-//            if( array_key_exists('destination', $set) ) {
-//                $destination = $set['destination'];
-//            }
-//            if( array_key_exists('keepcount', $set) ) {
-//                $keepCount = $set['keepcount'];
-//            }
             $setCronManageArr[] = $idName;
         }
 
