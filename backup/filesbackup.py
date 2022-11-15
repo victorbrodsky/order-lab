@@ -33,7 +33,7 @@ def help():
         "-d, --dest             path to the destination directory\n" \
         "-k, --keepcount        number of files to keep in backup destination\n" \
         "-h, --mailerhost       mailerhost\n" \
-        "-u, --maileruser       maileruser\n" \
+        #"-u, --maileruser       maileruser\n" \
         "-H, --help             this help"
     )
 
@@ -120,7 +120,7 @@ def main(argv):
     basedir = ''          # -b
     dest = ''             # -d
     mailerhost = ''       # -h
-    maileruser = ''       # -u
+    #maileruser = ''       # -u
     receivers = ''        # -r
     fromEmail = ''        # -f
     keepcount = 1         # -k
@@ -128,16 +128,17 @@ def main(argv):
     accessuser = ''
     networkfolder = ''
     localfolder = ''
-    username = ''
-    password = ''
+    credentials = ''
+    #username = ''
+    #password = ''
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "s:b:d:h:u:r:f:k:" + "a:n:l:U:P:" + "H",
+            "s:b:d:h:r:f:k:" + "a:n:l:c:" + "H",
             [
-                "source=", "basedir=", "dest=", "mailerhost=", "maileruser=", "receivers=", "fromemail=", "keepcount=",
-                "accessuser=", "networkfolder=", "localfolder=", "username=", "password=",
+                "source=", "basedir=", "dest=", "mailerhost=", "receivers=", "fromemail=", "keepcount=",
+                "accessuser=", "networkfolder=", "localfolder=", "credentials=",
                 "help"
             ]
         )
@@ -157,8 +158,8 @@ def main(argv):
             dest = arg
         elif opt in ("-h", "--mailerhost"):             # == "--mailerhost":
             mailerhost = arg
-        elif opt in ("-u", "--maileruser"):             # == "--maileruser":
-            maileruser = arg
+        #elif opt in ("-u", "--maileruser"):             # == "--maileruser":
+        #    maileruser = arg
         elif opt in ("-r", "--receivers"):              #Array of the receiver emails
             receivers = arg
         elif opt in ("-f", "--fromemail"):                 #Sender email
@@ -173,10 +174,12 @@ def main(argv):
             networkfolder = arg
         elif opt in ("-l", "--localfolder"):
             localfolder = arg
-        elif opt in ("-U", "--username"):
-            username = arg
-        elif opt in ("-P", "--password"):
-            password = arg
+        elif opt in ("-c", "--credentials"):
+            credentials = arg
+        #elif opt in ("-U", "--username"):
+        #    username = arg
+        #elif opt in ("-P", "--password"):
+        #    password = arg
 
         elif opt in ("-H", "--help"):
            help()
@@ -189,7 +192,7 @@ def main(argv):
             sys.exit(2)
 
     print('source=',source,', basedir=',basedir, 'dest=',dest, ", mailerhost=",mailerhost,", receivers=",receivers,", fromEmail=",fromEmail,", keepcount=",keepcount)
-    print('accessuser', accessuser, 'networkfolder=', networkfolder, ', localfolder=', localfolder, 'username=', username, ", password=", password)
+    print('accessuser', accessuser, 'networkfolder=', networkfolder, ', localfolder=', localfolder, 'credentials=', credentials)
 
     if source == '':
         print('Nothing to do: source is not provided')
@@ -218,13 +221,13 @@ def main(argv):
 
     runCommand('whoami') #testing
 
-    if accessuser and networkfolder and localfolder and username and password:
-        mountError = check_and_mountdrive(accessuser, networkfolder, localfolder, username, password)
+    if accessuser and networkfolder and localfolder and credentials:
+        mountError = check_and_mountdrive(accessuser, networkfolder, localfolder, credentials)
         if mountError:
             if mailerhost:
                 emailSubject = "Error mount folder " + localfolder
                 emailBody = "Error mount folder: accessuser=" + str(accessuser) + ", networkfolder=" + str(networkfolder) \
-                            + ", localfolder=" + str(localfolder) + ", username=" + str(username) + "; Error=" + repr(mountError)
+                            + ", localfolder=" + str(localfolder) + ", credentials=" + str(credentials) + "; Error=" + repr(mountError)
                 send_email_alert(mailerhost, fromEmail, toEmailList, emailSubject, emailBody)
             else:
                 print("Mailer parameters are not provided: Error email has not been sent. Error=",mountError)

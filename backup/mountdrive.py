@@ -14,18 +14,22 @@ import pwd
 
 
 #Check and mount network shared drive
-#usermod -aG wheel apache
+#Note: modify permission for apache user
 #1) sudo visudo:
 # a) Defaults:apache !requiretty
 # b) apache ALL= NOPASSWD: /sbin/mount.cifs
 #Optional: Modify visudo to give apache permission to run mount command:
-#1) Add pache as root: usermod -aG wheel apache
+#Add pache as root: usermod -aG wheel apache
+
+#Note: if password contains special characters, using username=...,password=... in /sbin/mount.cifs might failed in crontab.
+#It's better to use option credentials= in /sbin/mount.cifs
 
 #accessuser     - access permission for this user (i.e. apache, postgres)
 #networkfolder  - remote folder, mount point
 #localdrive     - local folder to mount
 #username       - username of the service account\
 #password       - password of the service account
+#credentials    - credentials file containing username=... and password=...
 
 #https://janakiev.com/blog/python-shell-commands/
 #https://stackoverflow.com/questions/89228/how-do-i-execute-a-program-or-call-a-system-command
@@ -64,8 +68,8 @@ def get_user_id(accessuser):
 
 
 #Return None if success or error string
-def check_and_mountdrive(accessuser, networkfolder, localfolder, username, password):
-    print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
+def check_and_mountdrive(accessuser, networkfolder, localfolder, credentials):
+    print('check_and_mountdrive: accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'credentials=',credentials)
 
     if check_if_mounted(localfolder) == True:
         print("Already mounted=",localfolder)
@@ -97,12 +101,17 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
     command = command + " -o"
 
     #command = command + " username='"+username+"',domain=CUMC,password='"+password+"'"
-    command = command + "credentials=/mnt/pathology/view-backup/credentials.txt"
+    #command = command + "credentials=/mnt/pathology/view-backup/credentials.txt"
+
+    command = command + "credentials="+credentials
     command = command + ",uid="+str(userid)+",forceuid,gid="+str(userid)
     command = command + ",forcegid,file_mode=0664,dir_mode=0775"
+
     #command = command + ",vers=2.1"
     #command = command + ",sec=ntlmssp"
+
     command = command + " " + networkfolder + " " + localfolder
+
     print("command="+command)
 
     try:
@@ -131,8 +140,9 @@ def help():
         "-a, --accessuser       access permission for this user (i.e. apache, postgres)\n" \
         "-n, --networkfolder    remote folder, mount point\n" \
         "-l, --localdrive       local folder to mount\n" \
-        "-U, --username         username of the service account\n" \
-        "-P, --password         password of the service account\n" \
+        #"-U, --username         username of the service account\n" \
+        #"-P, --password         password of the service account\n" \
+        "-c, --credentials      credentials file containing username=, password= of the service account\n" \
         "-H, --help             this help"
     )
 
@@ -144,14 +154,15 @@ def main(argv):
     accessuser      = ''  #accessuser
     networkfolder   = ''  #networkfolder
     localfolder     = ''  #localfolder
-    username        = ''  #username
-    password        = ''  #password
+    #username        = ''  #username
+    #password        = ''  #password
+    credentials     = '' #credentials
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "a:n:l:U:P:H",
-            ["accessuser=", "networkfolder=", "localfolder=", "username=", "password=", "help"]
+            "a:n:l:c:H",
+            ["accessuser=", "networkfolder=", "localfolder=", "credentials=", "help"]
         )
     except getopt.GetoptError:
         print('Parameters error:',getopt.GetoptError)
@@ -168,10 +179,8 @@ def main(argv):
             networkfolder = arg
         elif opt in ("-l", "--localfolder"):
             localfolder = arg
-        elif opt in ("-U", "--username"):
-            username = arg
-        elif opt in ("-P", "--password"):
-            password = arg
+        elif opt in ("-c", "--credentials"):
+            credentials = arg
         elif opt in ("-H", "--help"):
            help()
            return
@@ -181,7 +190,7 @@ def main(argv):
             help()
             sys.exit(2)
 
-    print('accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'username=',username, ", password=",password)
+    print('accessuser',accessuser, 'networkfolder=',networkfolder, ', localfolder=',localfolder, 'credentials=',credentials)
 
     if accessuser == '':
         print('Nothing to do: accessuser is not provided')
@@ -195,17 +204,13 @@ def main(argv):
         print('Nothing to do: localfolder is not provided')
         return
 
-    if username == '':
-        print('Nothing to do: username is not provided')
-        #logging.warning('Nothing to do: destination is not provided')
+    if credentials == '':
+        print('Nothing to do: credentials is not provided')
         return
-
-    if password == '':
-        print('Nothing to do: password is not provided')
 
     runCommand('whoami') #testing
 
-    mountError = check_and_mountdrive(accessuser, networkfolder, localfolder, username, password)
+    mountError = check_and_mountdrive(accessuser, networkfolder, localfolder, credentials)
 
     if mountError:
         print("mountError=", mountError)
