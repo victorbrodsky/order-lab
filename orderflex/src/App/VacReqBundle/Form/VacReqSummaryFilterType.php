@@ -76,18 +76,20 @@ class VacReqSummaryFilterType extends AbstractType
             },
         ));
 
-        $builder->add('filter', SubmitType::class, array(
+        $builder->add('submit', SubmitType::class, array(
             'label' => 'Filter',
             'attr' => array('class' => 'btn btn-sm btn-default')
         ));
 
     }
 
+    
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'form_custom_value' => null,
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 

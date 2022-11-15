@@ -135,13 +135,14 @@
                                 {#<li id="nav-bar-summary-fellows" class="divider-vertical"><a href="{{ path('vacreq_mygroup_fellows') }}">Fellows</a></li>#}
 
                                 <li id="nav-bar-summary-all" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types]': '1'}) }}">All</a>
+                                    {#<a href="{{ path('vacreq_summary') }}">All</a>#}
+                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '1', 'filter[types][1]': '2'}) }}">All</a>
                                 </li>
                                 <li id="nav-bar-summary-faculty" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types]': '1'}) }}">Faculty</a>
+                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '1'}) }}">Faculty</a>
                                 </li>
                                 <li id="nav-bar-summary-fellows" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types]': '2'}) }}">Fellows</a>
+                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '2'}) }}">Fellows</a>
                                 </li>
                             </ul>
                         </li>

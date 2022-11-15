@@ -35,9 +35,9 @@
     {{ form_start(filterform) }}
         {{ form_errors(filterform) }}
         <div class="row">
-            <div class="col-xs-7" align="right">{{ form_row(filterform.filterusers)}}</div>
-            <div class="col-xs-3" align="right">{{ form_row(filterform.filterapprovaltypes)}}</div>
-            <div class="col-xs-2" align="left">{{ form_row(filterform.filter) }}</div>
+            <div class="col-xs-7" align="right">{{ form_row(filterform.users)}}</div>
+            <div class="col-xs-3" align="right">{{ form_row(filterform.types)}}</div>
+            <div class="col-xs-2" align="left">{{ form_row(filterform.submit) }}</div>
         </div>
     {{ form_end(filterform) }}
     <br><br>

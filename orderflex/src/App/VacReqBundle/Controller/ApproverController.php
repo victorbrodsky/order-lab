@@ -1678,12 +1678,12 @@ class ApproverController extends OrderAbstractController
 
 
     //My Group vacreq_mygroup
-     /*
+    //Route("/summary-types/{types}", name="vacreq_mygroup_types", methods={"GET", "POST"})
+     /**
      * @Route("/summary/", name="vacreq_summary", methods={"GET", "POST"})
-     * @Route("/summary-types/{types}", name="vacreq_mygroup_types", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/mygroup.html.twig")
      */
-    public function myGroupAction(Request $request, $types)
+    public function myGroupAction(Request $request)
     {
 
         if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
@@ -1779,14 +1779,14 @@ class ApproverController extends OrderAbstractController
         $filterform->handleRequest($request);
 
         if( $filterform->isSubmitted() && $filterform->isValid() ) {
-            $users = $filterform["filterusers"]->getData();
+            $users = $filterform["users"]->getData();
             $useridsArr = array();
             foreach( $users as $thisUser ) {
                 $useridsArr[] = $thisUser->getId();
             }
             $userids = implode("-",$useridsArr);
 
-            $filterapprovaltypes = $filterform["filterapprovaltypes"]->getData();
+            $filterapprovaltypes = $filterform["types"]->getData();
             //dump($filterapprovaltypes);
             //exit('111');
             foreach( $groups as $group ) {
