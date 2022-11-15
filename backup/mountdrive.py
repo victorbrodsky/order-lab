@@ -13,7 +13,13 @@ from os.path import isfile, join
 import pwd
 
 
-#Check and mount network shared drive:
+#Check and mount network shared drive
+#usermod -aG wheel apache
+#1) sudo visudo:
+# a) Defaults:apache !requiretty
+# b) apache ALL= NOPASSWD: /sbin/mount.cifs
+#Optional: Modify visudo to give apache permission to run mount command:
+#1) Add pache as root: usermod -aG wheel apache
 
 #accessuser     - access permission for this user (i.e. apache, postgres)
 #networkfolder  - remote folder, mount point
@@ -109,9 +115,9 @@ def check_and_mountdrive(accessuser, networkfolder, localfolder, username, passw
         return error
 
     if check_if_mounted(localfolder) == True:
-        print("Mount result: successfully mounted=",localfolder)
+        print("Try mount result: successfully mounted=",localfolder)
     else:
-        errorMsg = "Mount result: failed mounted="+str(localfolder)
+        errorMsg = "Try mount result: failed mounted="+str(localfolder)
         print(errorMsg)
         return errorMsg
 
