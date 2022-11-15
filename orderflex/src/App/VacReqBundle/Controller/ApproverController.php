@@ -19,6 +19,7 @@ namespace App\VacReqBundle\Controller;
 
 use App\VacReqBundle\Form\VacReqApprovalGroupType;
 use App\VacReqBundle\Form\VacReqGroupManageApprovaltypesType;
+use App\VacReqBundle\Form\VacReqSummaryFilterType;
 use App\VacReqBundle\Util\VacReqUtil;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\Roles;
@@ -36,11 +37,8 @@ use App\VacReqBundle\Form\VacReqUserComboboxType;
 use App\VacReqBundle\Form\VacReqUserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1680,10 +1678,11 @@ class ApproverController extends OrderAbstractController
 
 
     //My Group vacreq_mygroup
-    /**
- * @Route("/summary/{types}", name="vacreq_mygroup", methods={"GET", "POST"})
- * @Template("AppVacReqBundle/Group/mygroup.html.twig")
- */
+     /*
+     * @Route("/summary/", name="vacreq_summary", methods={"GET", "POST"})
+     * @Route("/summary-types/{types}", name="vacreq_mygroup_types", methods={"GET", "POST"})
+     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
+     */
     public function myGroupAction(Request $request, $types)
     {
 
@@ -1730,44 +1729,53 @@ class ApproverController extends OrderAbstractController
         $yearRange = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         /////////////// filter form ///////////////////
-        $filterform = $this->createFormBuilder()
-            ->add('filterusers', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
-                'label' => false,
-                'required' => false,
-                'multiple' => true,
-                //'choice_label' => 'name',
-                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
-                //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
-                        ->leftJoin("user.infos","infos")
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
-                        //->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                        ->orderBy("infos.lastName","ASC");
-                },
-            ))
-            ->add('filterapprovaltypes', EntityType::class, array(
-                'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
-                'label' => false,
-                'required' => false,
-                'multiple' => true,
-                'attr' => array('class'=>'combobox', 'placeholder'=>"Time Away Approval Group Type"),
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-            ))
-            ->add('filter', SubmitType::class, array('label' => 'Filter','attr' => array('class' => 'btn btn-sm btn-default')))
-            ->getForm();
+//        $filterform = $this->createFormBuilder()
+//            ->add('filterusers', EntityType::class, array(
+//                'class' => 'AppUserdirectoryBundle:User',
+//                'label' => false,
+//                'required' => false,
+//                'multiple' => true,
+//                //'choice_label' => 'name',
+//                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
+//                //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('user')
+//                        ->leftJoin("user.infos","infos")
+//                        ->leftJoin("user.employmentStatus", "employmentStatus")
+//                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+//                        //->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                        ->orderBy("infos.lastName","ASC");
+//                },
+//            ))
+//            ->add('filterapprovaltypes', EntityType::class, array(
+//                'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+//                'label' => false,
+//                'required' => false,
+//                'multiple' => true,
+//                'attr' => array('class'=>'combobox', 'placeholder'=>"Time Away Approval Group Type"),
+//                'query_builder' => function(EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist","ASC")
+//                        ->setParameters( array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ))
+//            ->add('filter', SubmitType::class, array('label' => 'Filter','attr' => array('class' => 'btn btn-sm btn-default')))
+//            ->getForm();
 
+        $params = array(
+
+        );
+
+        $filterform = $this->createForm(VacReqSummaryFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+        
         $filterform->handleRequest($request);
 
         if( $filterform->isSubmitted() && $filterform->isValid() ) {
