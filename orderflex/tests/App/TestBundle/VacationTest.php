@@ -230,7 +230,7 @@ class VacationTest extends WebTestBase
 
     public function testMyGroupAction() {
         $this->logIn();
-        $crawler = $this->client->request('GET', '/time-away-request/my-group/');
+        $crawler = $this->client->request('GET', '/time-away-request/summary/');
 
         //$content = $this->client->getResponse()->getContent();
         //exit("content=$content");
@@ -241,7 +241,7 @@ class VacationTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Accrued Vacation Days as of today")')->count()
+            $crawler->filter('html:contains("Current academic year")')->count()
         );
     }
 
