@@ -161,7 +161,7 @@ class CarryOverController extends OrderAbstractController
                 $event
             );
 
-            return $this->redirectToRoute('vacreq_mygroup');
+            return $this->redirectToRoute('vacreq_summary');
         }
 
         return array(

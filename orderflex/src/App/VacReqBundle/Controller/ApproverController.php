@@ -1729,44 +1729,6 @@ class ApproverController extends OrderAbstractController
         $yearRange = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         /////////////// filter form ///////////////////
-//        $filterform = $this->createFormBuilder()
-//            ->add('filterusers', EntityType::class, array(
-//                'class' => 'AppUserdirectoryBundle:User',
-//                'label' => false,
-//                'required' => false,
-//                'multiple' => true,
-//                //'choice_label' => 'name',
-//                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
-//                //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
-//                'query_builder' => function (EntityRepository $er) {
-//                    return $er->createQueryBuilder('user')
-//                        ->leftJoin("user.infos","infos")
-//                        ->leftJoin("user.employmentStatus", "employmentStatus")
-//                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
-//                        //->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                        ->orderBy("infos.lastName","ASC");
-//                },
-//            ))
-//            ->add('filterapprovaltypes', EntityType::class, array(
-//                'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
-//                'label' => false,
-//                'required' => false,
-//                'multiple' => true,
-//                'attr' => array('class'=>'combobox', 'placeholder'=>"Time Away Approval Group Type"),
-//                'query_builder' => function(EntityRepository $er) {
-//                    return $er->createQueryBuilder('list')
-//                        ->where("list.type = :typedef OR list.type = :typeadd")
-//                        ->orderBy("list.orderinlist","ASC")
-//                        ->setParameters( array(
-//                            'typedef' => 'default',
-//                            'typeadd' => 'user-added',
-//                        ));
-//                },
-//            ))
-//            ->add('filter', SubmitType::class, array('label' => 'Filter','attr' => array('class' => 'btn btn-sm btn-default')))
-//            ->getForm();
-
         $params = array(
 
         );
