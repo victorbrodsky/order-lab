@@ -120,21 +120,29 @@
                         is_granted('ROLE_VACREQ_PROXYSUBMITTER') or
                         is_granted('ROLE_VACREQ_SUPERVISOR')
                     %}
-                        <li id="nav-bar-mygroup" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li id="nav-bar-summary-all" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '1', 'filter[types][1]': '2'}) }}">All</a>
-                                </li>
-                                <li id="nav-bar-summary-faculty" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '1'}) }}">Faculty</a>
-                                </li>
-                                <li id="nav-bar-summary-fellows" class="divider-vertical">
-                                    <a href="{{ path('vacreq_summary', {'filter[types][0]': '2'}) }}">Fellows</a>
-                                </li>
-                            </ul>
-                        </li>
+                        {%  set hrefFilters = vacreq_util.getApprovalGroupTypeFilters() %}
+                        {% if hrefFilters|length > 0 %}
+                            <li id="nav-bar-mygroup" class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summary<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    {% for hrefFilter in hrefFilters %}
+                                        <li id="nav-bar-summary-all" class="divider-vertical">
+                                            {{ hrefFilter|raw }}
+                                        </li>
+                                    {% endfor %}
+                                    {#<li id="nav-bar-summary-all" class="divider-vertical">#}
+                                        {#<a href="{{ path('vacreq_summary', {'filter[types][0]': '1', 'filter[types][1]': '2'}) }}">All</a>#}
+                                    {#</li>#}
 
+                                    {#<li id="nav-bar-summary-faculty" class="divider-vertical">#}
+                                        {#<a href="{{ path('vacreq_summary', {'filter[types][0]': '1'}) }}">Faculty</a>#}
+                                    {#</li>#}
+                                    {#<li id="nav-bar-summary-fellows" class="divider-vertical">#}
+                                        {#<a href="{{ path('vacreq_summary', {'filter[types][0]': '2'}) }}">Fellows</a>#}
+                                    {#</li>#}
+                                </ul>
+                            </li>
+                        {% endif %}
                     {% endif %}
 
                     {% if

@@ -4770,16 +4770,19 @@ class VacReqUtil
         
         return NULL;
     }
-    //get default approval type (VacReqApprovalTypeList) with the lowest orderinlist
-    public function getDefaultApprovalGroupType() {
+    //get approval types (VacReqApprovalTypeList) with the lowest orderinlist
+    public function getApprovalGroupTypes() {
         $approverTypes = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC') //first with lower orderinlist
         );
 
-        //foreach($approverTypes as $approverType) {
-        //    echo $approverType->getOrderinlist().": approverTypes=$approverTypes <br>";
-        //}
+        return $approverTypes;
+    }
+    //get default approval type (VacReqApprovalTypeList) with the lowest orderinlist
+    public function getDefaultApprovalGroupType() {
+        $approverTypes = $this->getApprovalGroupTypes();
+
         
         if( count($approverTypes) > 0 ) {
             return $approverTypes[0];
@@ -4816,6 +4819,45 @@ class VacReqUtil
         }
 
         return $approverType;
+    }
+
+    //get approval types (VacReqApprovalTypeList) with the lowest orderinlist
+    public function getApprovalGroupTypeFilters() {
+        $approverTypes = $this->getApprovalGroupTypes();
+        //'filter[types][0]': '1'
+        //UrlGeneratorInterface::ABSOLUTE_URL
+        $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_PATH;
+        $hrefFilters = array();
+        $allHrefFilters = array();
+        $count = 0;
+        foreach($approverTypes as $approverType) {
+            //<a href="{{ path('vacreq_summary', {'filter[types][0]': '1'}) }}">Faculty</a>
+            $link = $this->container->get('router')->generate(
+                'vacreq_summary',
+                array(
+                    'filter[types]['.$count.']' => $approverType->getId(),
+                ),
+                $absoluteFlag
+            );
+            $href = '<a href="'.$link.'">'.$approverType->getName().'</a>';
+            $hrefFilters[] = $href;
+
+            $allHrefFilters['filter[types]['.$count.']'] = $approverType->getId();
+
+            $count++;
+        }
+
+        if( count($hrefFilters) > 1 ) {
+            $linkAll = $this->container->get('router')->generate(
+                'vacreq_summary',
+                $allHrefFilters,
+                $absoluteFlag
+            );
+            $hrefAll = '<a href="'.$linkAll.'">All</a>';
+            array_unshift($hrefFilters , $hrefAll);
+        }
+
+        return $hrefFilters;
     }
     
     public function canCreateNewCarryOverRequest( $user=null ) {
