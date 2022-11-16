@@ -237,7 +237,7 @@ class VacationTest extends WebTestBase
 
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("My Group")')->count()
+            $crawler->filter('html:contains("Summary")')->count()
         );
         $this->assertGreaterThan(
             0,
