@@ -1678,7 +1678,6 @@ class ApproverController extends OrderAbstractController
 
 
     //My Group vacreq_mygroup
-    //Route("/summary-types/{types}", name="vacreq_mygroup_types", methods={"GET", "POST"})
      /**
      * @Route("/summary/", name="vacreq_summary", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/mygroup.html.twig")
@@ -1882,43 +1881,6 @@ class ApproverController extends OrderAbstractController
             'fontWeight' => "normal"
         );
     }
-
-    /**
-     * @Route("/summary/faculty", name="vacreq_mygroup_faculty", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
-     */
-    public function myGroupFacultyAction(Request $request)
-    {
-
-        if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
-            false == $this->isGranted('ROLE_VACREQ_ADMIN')
-        ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
-
-        exit("myGroupFacultyAction");
-    }
-
-    /**
-     * @Route("/summary/fellows", name="vacreq_mygroup_fellows", methods={"GET", "POST"})
-     * @Template("AppVacReqBundle/Group/mygroup.html.twig")
-     */
-    public function myGroupFellowsAction(Request $request)
-    {
-
-        if( false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
-            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
-            false == $this->isGranted('ROLE_VACREQ_ADMIN')
-        ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
-
-        exit("myGroupFellowsAction");
-    }
-
 
     /**
      * @Route("/generate-default-group", name="vacreq_generate_default_group", methods={"GET"})
