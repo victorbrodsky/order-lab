@@ -106,6 +106,11 @@
                                     <li id="nav-bar-addlocation" class="divider-vertical"><a href="{{ path(employees_sitename~'_locations_pathaction_new_standalone') }}">Location</a></li>
                                 </ul>
                             </li>
+
+                            <li id="nav-bar-employment-dates">
+                                <a href="{{ path(employees_sitename~'_user_dates') }}">Employment dates</a>
+                            </li>
+
                         {% endif %}
 
                         <li id="nav-bar-add" class="dropdown">
@@ -119,6 +124,8 @@
                                 </li>
                             </ul>
                         </li>
+
+
                     {% endif %}
 
                 </ul>
