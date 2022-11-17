@@ -27,4 +27,15 @@
 {% block content %}
     <h4 class="text-info" align="center">{{ title }}</h4>
 
+    {#<nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+        {#<a class="navbar-brand" href="#"> {{ title }} </a>#}
+    {#</nav>#}
+
+    <div id="root"></div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('userdates') }}
 {% endblock %}

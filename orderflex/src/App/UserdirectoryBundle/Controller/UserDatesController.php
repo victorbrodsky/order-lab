@@ -36,10 +36,23 @@ class UserDatesController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
+        // [Checkmark column with title of “Deactivate”] |
+        // LastName |
+        // FirstName |
+        // Degree(s) |
+        // Email |
+        // Organizational Group(s) |
+        // Title(s) |
+        // Latest Employment Start Date |
+        // Latest Employment End Date |
+        // Account Status |
+        // Action
+
         return array(
             'title' => 'Employment dates'
         );
     }
 
+    
 
 }
