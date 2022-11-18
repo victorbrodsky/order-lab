@@ -31,10 +31,41 @@
         {#<a class="navbar-brand" href="#"> {{ title }} </a>#}
     {#</nav>#}
 
-    <div id="root"></div>
+    <table class="records_list table table-hover table-condensed text-left sortable">
+        <thead>
+        <tr>
+            {#<th style="display:none">ID</th>#}
+            <th style="display:none">
+                ID
+            </th>
+            <th>
+                {#{{ knp_pagination_sortable(entities, 'LastName', 'infos.lastName') }}#}
+                LastName
+            </th>
+            <th>
+                {#{{ knp_pagination_sortable(entities, 'FirstName', 'infos.firstName') }}#}
+                FirstName
+            </th>
+            <th>Degree</th>
+            <th>Email</th>
+            <th>Institution</th>
+            <th>Title(s)</th>
+            <th>Latest Employment Start Date</th>
+            <th>Latest Employment End Date</th>
+        </tr>
+        </thead>
+        <tbody data-link="row" className="rowlink" id="root">
+
+            {#<tr id="root"></tr>#}
+
+        </tbody>
+    </table>
 
 {% endblock %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('userdates-css') }}
+{% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('userdates') }}

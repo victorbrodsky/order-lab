@@ -1,25 +1,45 @@
 import React from 'react';
+import '../../css/index.css';
 
-const UserCard = ({ data }) => {
+const UserCard = ({ count, data }) => {
+    return (
+        <tr>
+            <td className="user-display-none">
+                <a target="_blank" href={data.showlink}>{data.id}</a>
+            </td>
+            <td>
+                {data.LastName}
+            </td>
+            <td>
+                {data.FirstName}
+            </td>
+            <td>
+                {data.Degree}
+            </td>
+            <td>
+                {data.Email}
+            </td>
+            <td>
+                {data.Institution}
+            </td>
+        </tr>
+    );
+};
+
+// className="user-display-none"
+// <td>
+//     {data.FirstName}
+// </td>
+// <td>
+//     {data.LastName}
+// </td>
+
+const UserCard_orig = ({ count, data }) => {
     return (
         <div className='p-4 border border-gray-500 rounded bg-white flex items-center'>
-            <div>
-                <img
-                    src={data.picture.medium}
-                    className='w-16 h-16 rounded-full border-2 border-green-600'
-                    alt='user'
-                />
-            </div>
-
             <div className='ml-3'>
                 <p className='text-base font-bold'>
-                    {data.name.first} {data.name.last}
-                </p>
-                <p className='text-sm text-gray-800'>
-                    {data.location.city}, {data.location.country}
-                </p>
-                <p className='text-sm text-gray-500 break-all'>
-                    {data.email}
+                    {count} {data.FirstName} {data.LastName} {data.Email}
                 </p>
             </div>
         </div>

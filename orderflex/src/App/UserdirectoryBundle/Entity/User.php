@@ -1937,6 +1937,24 @@ class User extends UserBase {
         return null;
     }
 
+    public function getSingleDegree(): ?string
+    {
+        
+        $degrees = array();
+        //get appended degrees
+        foreach( $this->getTrainings() as $training ) {
+            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
+                $degrees[] = $training->getDegree();
+            }
+        }
+        if( count($degrees) > 0 ) {
+            $degreesStr = implode(", ", $degrees);
+            return $degreesStr;
+        }
+
+        return null;
+    }
+
 
     //get all institutions from administrative and appointment titles.
     //status: 0-unverified, 1-verified
@@ -2453,6 +2471,65 @@ class User extends UserBase {
 
         return $res;
     }
+
+    public function getEmploymentStartEndDates(): ?string
+    {
+        $res = null;
+        $emplCount = 0;
+        $termCount = 0;
+        $resArr = array();
+
+        foreach( $this->getEmploymentStatus() as $employmentStatus ) {
+            if( $employmentStatus->getTerminationDate() ) {
+                $termCount++;
+                $instStr = "";
+                if( $employmentStatus->getInstitution() ) {
+                    $instStr = "at the ".$employmentStatus->getInstitution()."";
+                }
+                $startDate = $employmentStatus->getHireDate()->format("m/d/Y");
+                $endDate = $employmentStatus->getTerminationDate()->format("m/d/Y");
+                $resArr['startDate'] = $startDate;
+                $resArr['endDate'] = $endDate;
+            }
+            $emplCount++;
+        }
+
+        if( $emplCount != 0 && $emplCount == $termCount ) {
+            $res = implode("; ",$resArr);
+        }
+
+        return $res;
+    }
+
+    public function getDegreesTitles() {
+        $degrees = array();
+        $titles = array();
+
+        //get appended degrees
+        $trainings = $this->getTrainings();
+        //echo "trainings=".count($trainings)."<br>";
+        foreach($trainings as $training) {
+            //echo "training=".$training."<br>";
+            if ($training->getAppendDegreeToName() && $training->getDegree()) {
+                $degrees[] = $training->getDegree();
+            }
+            if ($training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle()) {
+                if ($training->getFellowshipTitle()->getAbbreviation()) {
+                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
+                }
+            }
+        }
+
+        $degreesStr = implode(", ", $degrees);
+        $titlesStr = implode(", ", $titles);
+    
+        return 
+            array(
+                'degree' => $degreesStr,
+                'title' => $titlesStr,
+            );
+    }
+
 
     /////////////////////// NOT USED!!! Return: Chief, Eyebrow Pathology ///////////////////////
     //Group by institutions
