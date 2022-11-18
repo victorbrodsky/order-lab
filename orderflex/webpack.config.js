@@ -34,7 +34,9 @@ Encore
 
     //.addEntry('dashboard_base', './assets/dashboard/js/dashboard_base.js')
     .addEntry('dashboard', './assets/dashboard/js/dashboard.js')
-    .addEntry('userdates', './assets/userdates/js/app.js')
+    //.addEntry('userdates', './assets/userdates/js/app.jsx')
+    //.addEntry('userdates', './assets/userdates/js/ScrollComponent.jsx')
+    .addEntry('userdates', './assets/userdates/js/index.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

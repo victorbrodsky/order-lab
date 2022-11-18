@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-
 class UserDatesController extends OrderAbstractController
 {
 
@@ -53,6 +52,80 @@ class UserDatesController extends OrderAbstractController
         );
     }
 
-    
+    /**
+     * @Route("/users/api", name="employees_users_api", options={"expose"=true})
+     */
+    public function getUsersApiAction( Request $request ) {
+
+        // [Checkmark column with title of “Deactivate”] |
+        // LastName |
+        // FirstName |
+        // Degree(s) |
+        // Email |
+        // Organizational Group(s) |
+        // Title(s) |
+        // Latest Employment Start Date |
+        // Latest Employment End Date |
+        // Account Status |
+        // Action
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos","infos");
+        $dql->orderBy("infos.lastName","ASC");
+        $query = $em->createQuery($dql);
+
+        //$users = $query->getResult();
+
+        $limit = 3;
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'user.id',
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
+        );
+
+        $paginator  = $this->container->get('knp_paginator');
+        $users = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit,                            /*limit per page*/
+            $paginationParams
+        );
+
+
+        $jsonArray = array();
+        foreach($users as $user) {
+            $jsonArray['LastName'] = $user->getLastName();
+            $jsonArray['FirstName'] = $user->getFirstName();
+            //$jsonArray['Degree'] = $user->getFirstName();
+            $jsonArray['Email'] = $user->getSingleEmail();
+            //$jsonArray['Institution'] = $user->getFirstName();
+            //$jsonArray['Title'] = $user->getFirstName();
+            //$jsonArray['StartDate'] = $user->getFirstName();
+            //$jsonArray['EndDate'] = $user->getFirstName();
+            //$jsonArray['Status'] = $user->getFirstName();
+        }
+
+//        return new JsonResponse([
+//            [
+//                'title' => 'The Princess Bride',
+//                'count' => 0
+//            ]
+//            $jsonArray
+//        ]);
+
+        $response = new Response();
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        $response->setContent(json_encode($jsonArray));
+
+        return $response;
+    }
 
 }
