@@ -179,8 +179,8 @@ class UserDatesController extends OrderAbstractController
             //}
 
             $startEndDate = $user->getEmploymentStartEndDates();
-            $startDate = "";
-            $endDate = "";
+            $startDate = $startEndDate['startDate'];
+            $endDate = $startEndDate['endDate'];
 
             $jsonArray[] = array(
                 'id'            => $user->getId(),
@@ -229,6 +229,13 @@ class UserDatesController extends OrderAbstractController
         $response->setContent(json_encode($results));
 
         return $response;
+    }
+
+    /**
+     * @Route("/update-users-dates/", name="employees_update_users_date")
+     */
+    public function updateUsersDateAction( Request $request ) {
+
     }
 
 }

@@ -2472,33 +2472,33 @@ class User extends UserBase {
         return $res;
     }
 
-    public function getEmploymentStartEndDates(): ?string
+    public function getEmploymentStartEndDates()
     {
-        $res = null;
-        $emplCount = 0;
-        $termCount = 0;
         $resArr = array();
+        $startDate = NULL;
+        $endDate = NULL;
 
-        foreach( $this->getEmploymentStatus() as $employmentStatus ) {
-            if( $employmentStatus->getTerminationDate() ) {
-                $termCount++;
-                $instStr = "";
-                if( $employmentStatus->getInstitution() ) {
-                    $instStr = "at the ".$employmentStatus->getInstitution()."";
-                }
-                $startDate = $employmentStatus->getHireDate()->format("m/d/Y");
-                $endDate = $employmentStatus->getTerminationDate()->format("m/d/Y");
-                $resArr['startDate'] = $startDate;
-                $resArr['endDate'] = $endDate;
+        //"terminationDate" = "ASC" - the earliest date is shown first, the latest date is shown last
+        $latestEmploymentStatus = NULL;
+        $employmentStatuses = $this->getEmploymentStatus();
+        if( count($employmentStatuses) > 0 ) {
+            $latestEmploymentStatus = $employmentStatuses->first();
+        }
+
+        if( $latestEmploymentStatus ) {
+
+            if( $latestEmploymentStatus->getHireDate() ) {
+                $startDate = $latestEmploymentStatus->getHireDate()->format("m/d/Y");
             }
-            $emplCount++;
+            if( $latestEmploymentStatus->getTerminationDate() ) {
+                $endDate = $latestEmploymentStatus->getTerminationDate()->format("m/d/Y");
+            }
         }
 
-        if( $emplCount != 0 && $emplCount == $termCount ) {
-            $res = implode("; ",$resArr);
-        }
+        $resArr['startDate'] = $startDate;
+        $resArr['endDate'] = $endDate;
 
-        return $res;
+        return $resArr;
     }
 
     public function getDegreesTitles() {

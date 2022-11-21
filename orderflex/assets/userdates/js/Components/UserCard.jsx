@@ -7,6 +7,9 @@ const UserCard = ({ count, data }) => {
             <td className="user-display-none">
                 <a target="_blank" href={data.showlink}>{data.id}</a>
             </td>
+            <td className="rowlink-skip">
+                <input type="checkbox" value=""></input>
+            </td>
             <td>
                 {data.LastName}
             </td>
@@ -22,10 +25,20 @@ const UserCard = ({ count, data }) => {
             <td>
                 {data.Institution}
             </td>
+            <td>
+                {data.Title}
+            </td>
+            <td>
+                {data.StartDate}
+            </td>
+            <td>
+                {data.EndDate}
+            </td>
         </tr>
     );
 };
 
+//<input type="checkbox" value=""></input>
 // className="user-display-none"
 // <td>
 //     {data.FirstName}
