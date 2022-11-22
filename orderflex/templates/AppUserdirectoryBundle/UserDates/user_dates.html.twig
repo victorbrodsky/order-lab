@@ -32,7 +32,7 @@
     {#</nav>#}
 
     <p>
-        <a href="{{ path( 'employees_update_users_date') }}"
+        <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
         >Deactivate selected accounts and save entered start and add dates</a>
     </p>
 
@@ -60,6 +60,7 @@
             <th>Title(s)</th>
             <th>Latest Employment Start Date</th>
             <th>Latest Employment End Date</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody data-link="row" className="rowlink" id="root">

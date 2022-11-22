@@ -5,7 +5,7 @@ const UserCard = ({ count, data }) => {
     return (
         <tr>
             <td className="user-display-none">
-                <a target="_blank" href={data.showlink}>{data.id}</a>
+                <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>
             <td className="rowlink-skip">
                 <input type="checkbox" value=""></input>
@@ -34,9 +34,24 @@ const UserCard = ({ count, data }) => {
             <td>
                 {data.EndDate}
             </td>
+            <td className="rowlink-skip">
+                <div className="btn-group">
+                    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Action <span className="caret"></span>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-right">
+                        <a target="_blank" href={data.viewLink}>View Profile</a>
+                        <a target="_blank" href={data.editLink}>Edit Profile</a>
+                        <a target="_blank" href={data.eventlogLink}>View event log</a>
+                    </ul>
+                </div>
+            </td>
         </tr>
     );
 };
+
+
+
 
 //<input type="checkbox" value=""></input>
 // className="user-display-none"

@@ -144,7 +144,7 @@ class UserDatesController extends OrderAbstractController
             //$jsonArray['EndDate'] = $user->getFirstName();
             //$jsonArray['Status'] = $user->getFirstName();
 
-            $link = $this->container->get('router')->generate(
+            $showLink = $this->container->get('router')->generate(
                 'employees_showuser',
                 array(
                     'id' => $user->getId()
@@ -152,7 +152,27 @@ class UserDatesController extends OrderAbstractController
                 //UrlGeneratorInterface::ABSOLUTE_PATH
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            //$link = ' <a href="' . $link . '">'.$user->getId().'</a>';
+            //$showLink = ' <a href="' . $showLink . '">'.$user->getId().'</a>';
+
+            $editLink = $this->container->get('router')->generate(
+                'employees_user_edit',
+                array(
+                    'id' => $user->getId()
+                ),
+                //UrlGeneratorInterface::ABSOLUTE_PATH
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            //<a href="{{ path(sitename~'_logger_user_all',{'id':user.id}) }}" target="_blank">Event Log</a>
+
+            $eventlogLink = $this->container->get('router')->generate(
+                'employees_logger_user_all',
+                array(
+                    'id' => $user->getId()
+                ),
+                //UrlGeneratorInterface::ABSOLUTE_PATH
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
 //            $degree = $user->getSingleDegree();
 //            if( !$degree ) {
@@ -182,9 +202,13 @@ class UserDatesController extends OrderAbstractController
             $startDate = $startEndDate['startDate'];
             $endDate = $startEndDate['endDate'];
 
+            $status = null;
+
             $jsonArray[] = array(
                 'id'            => $user->getId(),
-                'showlink'      => $link,
+                'showLink'      => $showLink,
+                'editLink'      => $editLink,
+                'eventlogLink'  => $eventlogLink,
                 'LastName'      => $user->getSingleLastName(),
                 'FirstName'     => $user->getSingleFirstName(),
                 'Degree'        => $degree,
@@ -193,6 +217,7 @@ class UserDatesController extends OrderAbstractController
                 'Title'         => $titles,
                 'StartDate'     => $startDate,
                 'EndDate'       => $endDate,
+                'status'        => $status
 
             );
             //$jsonArray['FirstName'] = $user->getFirstName();
