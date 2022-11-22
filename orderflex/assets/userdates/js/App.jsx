@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import UserCard from './Components/UserCard.jsx';
 // import '../css/index.css';
 
-const TOTAL_PAGES = 0; //3;
+const TOTAL_PAGES = 2; //0; //3;
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
@@ -35,12 +35,16 @@ const App = () => {
         let all = new Set([...allUsers, ...response.data.results]);
         setAllUsers([...all]);
         setLoading(false);
+
+        let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
+        updateButton.style.display = 'bloack';
+
     };
 
     useEffect(() => {
-        //if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
+        if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
             callUser();
-        //}
+        }
     }, [pageNum]);
 
     useEffect(() => {
@@ -63,8 +67,8 @@ const App = () => {
             {allUsers.length > 0 &&
             allUsers.map((user, i) => {
 
-                //return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                return i === allUsers.length - 1 && !loading ?
+                return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                //return i === allUsers.length - 1 && !loading ?
                 (
                     <div
                         //key={`${user.id}-${i}`}
@@ -83,10 +87,11 @@ const App = () => {
                 );
             })}
 
-            {loading && <p className='text-center'>loading...</p>}
+            {loading && <p className='container text-center'>loading...</p>}
 
         </>
     );
+
 
     // return (
     //     <div className="row">

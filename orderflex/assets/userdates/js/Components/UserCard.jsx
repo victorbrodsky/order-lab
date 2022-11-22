@@ -40,9 +40,9 @@ const UserCard = ({ count, data }) => {
                         Action <span className="caret"></span>
                     </button>
                     <ul className="dropdown-menu dropdown-menu-right">
-                        <a target="_blank" href={data.viewLink}>View Profile</a>
-                        <a target="_blank" href={data.editLink}>Edit Profile</a>
-                        <a target="_blank" href={data.eventlogLink}>View event log</a>
+                        <li><a target="_blank" href={data.showLink}>View Profile</a></li>
+                        <li><a target="_blank" href={data.editLink}>Edit Profile</a></li>
+                        <li><a target="_blank" href={data.eventlogLink}>View event log</a></li>
                     </ul>
                 </div>
             </td>

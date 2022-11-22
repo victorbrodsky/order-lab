@@ -31,9 +31,42 @@
         {#<a class="navbar-brand" href="#"> {{ title }} </a>#}
     {#</nav>#}
 
+    <br><br>
+    {{ form_start(filterform) }}
+    {{ form_errors(filterform) }}
+    <div class="row">
+        <div class="col-xs-4" align="right">{{ form_row(filterform.users)}}</div>
+        <div class="col-xs-3" align="right">{{ form_row(filterform.roles)}}</div>
+        <div class="col-xs-4" align="right">{{ form_row(filterform.search)}}</div>
+        <div class="col-xs-1" align="left">{{ form_row(filterform.submit) }}</div>
+    </div>
+    <br>
+    <div class="row">
+        {#<div class="col-xs-2" align="right">{{ form_row(filterform.startdate)}}</div>#}
+        {#<div class="col-xs-2" align="right">{{ form_row(filterform.enddate)}}</div>#}
+        <div class="col-xs-2">
+            <div class="input-group input-group-reg date allow-future-date">
+                {{ form_widget(filterform.startdate) }}
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+
+        <div class="col-xs-2">
+            <div class="input-group input-group-reg date allow-future-date">
+                {{ form_widget(filterform.enddate) }}
+                <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+        <div class="col-xs-3" align="right"></div>
+        <div class="col-xs-3" align="right"></div>
+
+    </div>
+    {{ form_end(filterform) }}
+    <br><br>
+
     <p>
         <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
-        >Deactivate selected accounts and save entered start and add dates</a>
+        >Deactivate selected accounts and save entered start and end dates</a>
     </p>
 
     <table class="records_list table table-hover table-condensed text-left sortable">
@@ -69,6 +102,13 @@
 
         </tbody>
     </table>
+
+    <div id="update-users-button" style="display: none;">
+    <p>
+        <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
+        >Deactivate selected accounts and save entered start and end dates</a>
+    </p>
+    </div>
 
 {% endblock %}
 

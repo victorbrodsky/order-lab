@@ -19,6 +19,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Form\UserDatesFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,7 +36,11 @@ class UserDatesController extends OrderAbstractController
      * @Route("/employment-dates", name="employees_user_dates")
      * @Template("AppUserdirectoryBundle/UserDates/user_dates.html.twig")
      */
-    public function aboutAction( Request $request ) {
+    public function userDatesAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
         // [Checkmark column with title of “Deactivate”] |
         // LastName |
@@ -48,6 +53,26 @@ class UserDatesController extends OrderAbstractController
         // Latest Employment End Date |
         // Account Status |
         // Action
+
+        $params = array(
+
+        );
+
+        $filterform = $this->createForm(UserDatesFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+
+        $filterform->handleRequest($request);
+
+        if( $filterform->isSubmitted() && $filterform->isValid() ) {
+            $users = $filterform["users"]->getData();
+            $useridsArr = array();
+            foreach( $users as $thisUser ) {
+                $useridsArr[] = $thisUser->getId();
+            }
+            $userids = implode("-",$useridsArr);
+        }
 
         $users = array();
 
@@ -81,7 +106,8 @@ class UserDatesController extends OrderAbstractController
 
         return array(
             'title' => 'Employment dates',
-            'entities' => $users
+            'entities' => $users,
+            'filterform' => $filterform->createView()
         );
     }
 
@@ -89,6 +115,10 @@ class UserDatesController extends OrderAbstractController
      * @Route("/users/api", name="employees_users_api", options={"expose"=true})
      */
     public function getUsersApiAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
         // [Checkmark column with title of “Deactivate”] |
         // LastName |
@@ -108,9 +138,15 @@ class UserDatesController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");
+
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+
         $dql->orderBy("infos.lastName","ASC");
         $query = $em->createQuery($dql);
 
+        //$query->setMaxResults(30);
         //$users = $query->getResult();
 
         $limit = 20;
