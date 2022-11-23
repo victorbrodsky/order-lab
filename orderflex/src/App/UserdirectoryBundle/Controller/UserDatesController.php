@@ -54,10 +54,7 @@ class UserDatesController extends OrderAbstractController
         // Account Status |
         // Action
 
-        $params = array(
-
-        );
-
+        $params = array();
         $filterform = $this->createForm(UserDatesFilterType::class, null, array(
             'method' => 'GET',
             'form_custom_value' => $params
@@ -143,8 +140,46 @@ class UserDatesController extends OrderAbstractController
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
         $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
 
+        $params = array();
+        $filterform = $this->createForm(UserDatesFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+
+        $filterform->handleRequest($request);
+
+        $queryParameters = array();
+        if( $filterform->isSubmitted() && $filterform->isValid() ) {
+            //echo "filterform=OK <br>";
+            dump($filterform);
+
+            $users = $filterform["users"]->getData();
+            if( $users && count($users) > 0 ) {
+                //echo "users=OK <br>";
+                $useridsArr = array();
+                foreach ($users as $thisUser) {
+                    $useridsArr[] = $thisUser->getId();
+                }
+                //$userids = implode(",",$useridsArr);
+                $dql->andWhere('user.id IN (:userids)');
+                $queryParameters['userids'] = $useridsArr;
+            }
+
+            $search = $filterform["search"]->getData();
+            //echo "search=$search <br>";
+            if( $search ) {
+                $dql->andWhere('infos.displayName LIKE :search OR infos.email LIKE :search');
+                //$queryParameters['search'] = $useridsArr;
+                $queryParameters['search'] = "%" . $search . "%";
+            }
+            //exit('111');
+        }
+        //exit('111');
+
         $dql->orderBy("infos.lastName","ASC");
         $query = $em->createQuery($dql);
+
+        $query->setParameters($queryParameters);
 
         //$query->setMaxResults(30);
         //$users = $query->getResult();

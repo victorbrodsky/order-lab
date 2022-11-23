@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from "react-dom/client";
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import UserCard from './Components/UserCard.jsx';
@@ -23,28 +24,38 @@ const App = () => {
         })
     );
 
-    //let url = Routing.generate('employees_users_api');
-    let url = window.location.href;
-    console.log("url="+url, ", pageNum="+pageNum);
-    console.log('current URL=', window.location.href);
-    console.log('current Pathname=', window.location.pathname);
+    let url = Routing.generate('employees_users_api');
+    //let url = window.location.href; //http://127.0.0.1/order/index_dev.php/directory/employment-dates
+    //let url = window.location.pathname;
+    //console.log("url=["+url+"]", ", pageNum="+pageNum);
+    //console.log('current URL=', window.location.href);
+    //console.log('current Pathname=', window.location.pathname);
+    //console.log("url2="+url+'&page='+pageNum, ", pageNum="+pageNum);
 
-    console.log("url2="+url+'&page='+pageNum, ", pageNum="+pageNum);
+    let queryString = window.location.search;
+    //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
         setLoading(true);
+        if( queryString ) {
+            queryString = queryString.replace('?','');
+            url = url+'/?page='+pageNum+'&'+queryString
+        }
+        //console.log("url2="+url);
+
         let response = await axios.get(
             //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
             //'https://randomuser.me/api/?page=${pageNum}&results=25&seed=abc'
-            url+'/?page='+pageNum
-            //url+'&page='+pageNum
+            //url+'/?page='+pageNum
+            //url+'&page='+pageNum+'&'+queryString
+            url
         );
         let all = new Set([...allUsers, ...response.data.results]);
         setAllUsers([...all]);
         setLoading(false);
 
-        let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
-        updateButton.style.display = 'bloack';
+        // let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
+        // updateButton.style.display = 'block';
 
     };
 
