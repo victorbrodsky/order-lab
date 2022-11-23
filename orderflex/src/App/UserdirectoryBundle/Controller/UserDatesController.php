@@ -172,6 +172,53 @@ class UserDatesController extends OrderAbstractController
                 //$queryParameters['search'] = $useridsArr;
                 $queryParameters['search'] = "%" . $search . "%";
             }
+
+            $roles = $filterform["roles"]->getData();
+            if( $roles && count($roles) > 0 ) {
+//                $rolesArr = array();
+//                foreach ($roles as $role) {
+//                    $rolesArr[] = "'".$role->getName()."'";
+//                }
+//                $rolesArr = implode(",",$rolesArr);
+//                $dql->andWhere('user.roles IN (:roles)');
+//                $queryParameters['roles'] = $rolesArr;
+
+                $rolesArr = array();
+                foreach ($roles as $role) {
+                    $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
+                }
+                $rolesStr = implode(" OR ", $rolesArr);
+                $dql->andWhere($rolesStr);
+            }
+
+            $startdate = $filterform["startdate"]->getData();
+            if( $startdate ) {
+                //$dql->andWhere('employmentStatus.hireDate ');
+                //$dql->andWhere("(employmentStatus.hireDate > :startdate AND :createDateEnd OR request.firstDayBackInOffice between :createDateStart AND :createDateEnd)");
+                $dql->andWhere("(employmentStatus.hireDate > :startdate)");
+                $startdate = $startdate->format('Y-m-d H:i:s');
+                $queryParameters['startdate'] = $startdate;
+            }
+
+            $enddate = $filterform["enddate"]->getData();
+            if( $enddate ) {
+                $dql->andWhere("(employmentStatus.terminationDate < :enddate)");
+                $enddate = $enddate->format('Y-m-d H:i:s');
+                $queryParameters['enddate'] = $enddate;
+            }
+
+//            if( $startdate && $enddate ) {
+//
+//            }
+
+            $status = $filterform["status"]->getData();
+            if( $status ) {
+                if( $status == 'locked' ) {
+                    //$enabled = false;
+                    $dql->andWhere("user.enabled = false");
+                }
+            }
+
             //exit('111');
         }
         //exit('111');
