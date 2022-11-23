@@ -710,7 +710,11 @@ function setDirectoryNavBar() {
     }
     if( full.indexOf("/location/new") !== -1 ) {
         id = 'add';
-    }   
+    }
+
+    if( full.indexOf("/employment-dates") !== -1 ) {
+        id = 'employment-dates';
+    }
 
     id = commonNavBar(full,id);
     

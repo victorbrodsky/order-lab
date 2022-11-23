@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -110,6 +111,19 @@ class UserDatesFilterType extends AbstractType
                     ));
             },
         ));
+
+        //status: Activated, Deactivated, Locked
+        $builder->add('status', ChoiceType::class, array(
+            'choices'   => array(
+                'Activated' => 'activated',
+                'Deactivated' => 'deactivated',
+                'Locked' => 'locked'
+            ),
+            'label' => false,
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Status'),
+        ));
+
 
         $builder->add('submit', SubmitType::class, array(
             'label' => 'Filter',

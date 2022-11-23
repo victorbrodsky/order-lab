@@ -23,14 +23,21 @@ const App = () => {
         })
     );
 
-    let url = Routing.generate('employees_users_api');
+    //let url = Routing.generate('employees_users_api');
+    let url = window.location.href;
     console.log("url="+url, ", pageNum="+pageNum);
+    console.log('current URL=', window.location.href);
+    console.log('current Pathname=', window.location.pathname);
+
+    console.log("url2="+url+'&page='+pageNum, ", pageNum="+pageNum);
 
     const callUser = async () => {
         setLoading(true);
         let response = await axios.get(
+            //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
             //'https://randomuser.me/api/?page=${pageNum}&results=25&seed=abc'
             url+'/?page='+pageNum
+            //url+'&page='+pageNum
         );
         let all = new Set([...allUsers, ...response.data.results]);
         setAllUsers([...all]);

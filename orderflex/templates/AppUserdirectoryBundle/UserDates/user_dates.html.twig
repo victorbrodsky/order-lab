@@ -18,6 +18,7 @@
 
 
 {% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 
 {% block title %}
@@ -57,7 +58,10 @@
                 <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
         </div>
-        <div class="col-xs-3" align="right"></div>
+        <div class="col-xs-3" align="right">
+            {{ form_row(filterform.status)}}
+            {#{{ formmacros.field(filterform.status) }}#}
+        </div>
         <div class="col-xs-3" align="right"></div>
 
     </div>
