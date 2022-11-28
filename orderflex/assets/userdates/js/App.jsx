@@ -6,7 +6,7 @@ import UserTableRow from './Components/UserTableRow.jsx';
 import Loading from './Components/Loading.jsx'
 // import '../css/index.css';
 
-const TOTAL_PAGES = 0; //0; //3;
+//const TOTAL_PAGES = 0; //0; //3;
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
@@ -15,6 +15,7 @@ const App = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [pageNum, setPageNum] = useState(1);
     const [lastElement, setLastElement] = useState(null);
+    const [TOTAL_PAGES, setTotalPages] = useState(1);
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -56,6 +57,7 @@ const App = () => {
         let all = new Set([...allUsers, ...response.data.results]);
         setAllUsers([...all]);
         setLoading(false);
+        setTotalPages(response.data.totalPages);
 
         // let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
         // updateButton.style.display = 'block';

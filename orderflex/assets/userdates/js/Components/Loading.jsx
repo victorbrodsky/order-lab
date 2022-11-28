@@ -1,14 +1,16 @@
 import React from 'react';
 import '../../css/index.css';
 
-const Loading = () => {
+const Loading = ({page}) => {
     return (
         <tr>
             <td>
-                Loading ...
+                Loading page {page}...
             </td>
         </tr>
     );
 };
 
 export default Loading;
+
+

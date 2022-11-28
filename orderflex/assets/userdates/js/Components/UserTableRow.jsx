@@ -1,9 +1,9 @@
 import React from 'react';
 import '../../css/index.css';
 
-const UserTableRow = ({ count, data }) => {
+const UserTableRow = ({ data, setfunc }) => {
     return (
-        <tr>
+        <tr ref={setfunc}>
             <td className="user-display-none">
                 <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>

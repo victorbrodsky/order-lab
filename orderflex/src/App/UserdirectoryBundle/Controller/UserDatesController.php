@@ -151,7 +151,7 @@ class UserDatesController extends OrderAbstractController
         $queryParameters = array();
         if( $filterform->isSubmitted() && $filterform->isValid() ) {
             //echo "filterform=OK <br>";
-            dump($filterform);
+            //dump($filterform);
 
             $users = $filterform["users"]->getData();
             if( $users && count($users) > 0 ) {
@@ -367,7 +367,8 @@ class UserDatesController extends OrderAbstractController
         $results = array(
             'results' => $jsonArray,
             'info'    => $info,
-            'totalPages'   => $totalPages
+            'totalPages'   => $totalPages,
+            'totalUsers' => $totalCount
         );
 
         //return new JsonResponse($results);
@@ -382,10 +383,14 @@ class UserDatesController extends OrderAbstractController
     }
 
     /**
-     * @Route("/update-users-dates/", name="employees_update_users_date")
+     * @Route("/update-users-dates/", name="employees_update_users_date", options={"expose"=true})
      */
     public function updateUsersDateAction( Request $request ) {
+        if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
+        exit('Not implemented');
     }
 
 }

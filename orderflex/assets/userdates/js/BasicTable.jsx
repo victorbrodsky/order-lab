@@ -7,6 +7,8 @@ import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import UserTableRow from './Components/UserTableRow.jsx';
 import Loading from './Components/Loading.jsx'
+import DeactivateButton from './Components/DeactivateButton.jsx'
+import MatchInfo from './Components/MatchInfo.jsx'
 // import '../css/index.css';
 
 //const TOTAL_PAGES = 0; //2; //0; //3;
@@ -20,6 +22,8 @@ const App = () => {
     const [pageNum, setPageNum] = useState(1);
     const [lastElement, setLastElement] = useState(null);
     const [TOTAL_PAGES, setTotalPages] = useState(1);
+    const [totalUsers, setTotalUsers] = useState(null);
+    const [matchMessage, setMatchMessage] = useState('Loading ...');
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -30,7 +34,8 @@ const App = () => {
         })
     );
 
-    let url = Routing.generate('employees_users_api');
+    let apiUrl = Routing.generate('employees_users_api');
+    let url = '';
     //let url = window.location.href; //http://127.0.0.1/order/index_dev.php/directory/employment-dates
     //let url = window.location.pathname;
     //console.log("url=["+url+"]", ", pageNum="+pageNum);
@@ -42,15 +47,17 @@ const App = () => {
     //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
-        //console.log("pageNum=["+pageNum+"]");
+        console.log("callUser!!!");
         setLoading(true);
+        //let url = apiUrl+'/?page='+pageNum
         if( queryString ) {
             queryString = queryString.replace('?','');
-            url = url+'/?page='+pageNum+'&'+queryString
-        } else {
-            url = url+'/?page='+pageNum
+            url = apiUrl+'/?page='+pageNum+'&'+queryString
         }
-        //console.log("url=["+url+"]");
+        else {
+            url = apiUrl+'/?page='+pageNum
+        }
+        //console.log("url2=["+url+"]");
 
         let response = await axios.get(
             //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
@@ -63,8 +70,21 @@ const App = () => {
         setAllUsers([...all]);
         setLoading(false);
 
-        //TOTAL_PAGES = response.data.totalPages;
+        //console.log("callUser: totalPages=" + response.data.totalPages);
         setTotalPages(response.data.totalPages);
+        setTotalUsers(response.data.totalUsers);
+        //console.log("callUser: TOTAL_PAGES=" + TOTAL_PAGES);
+        //console.log("totalPages="+TOTAL_PAGES+", totalUsers="+totalUsers);
+
+        let matchMessage = "Page " + pageNum + "/" + response.data.totalPages + "; Total matching users " + response.data.totalUsers;
+        //if( totalUsers ) {
+        //    matchMessage = matchMessage + "; Total matching users " + totalUsers;
+        //}
+        setMatchMessage(matchMessage);
+        //console.log("matchMessage="+matchMessage);
+
+        //const matchingInfo = ReactDOM.createRoot(document.getElementById("matching-info"));
+        //matchingInfo.innerHTML = "(Matching 1258, Total 1361)";
 
         // let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
         // updateButton.style.display = 'block';
@@ -74,12 +94,15 @@ const App = () => {
     useEffect(() => {
         if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
             callUser();
+        } else {
+            setMatchMessage("Total matching users " + totalUsers);
         }
     }, [pageNum]);
 
     useEffect(() => {
         const currentElement = lastElement;
         const currentObserver = observer.current;
+        //console.log("lastElement",lastElement);
 
         if (currentElement) {
             currentObserver.observe(currentElement);
@@ -93,7 +116,12 @@ const App = () => {
     }, [lastElement]);
 
     return (
-        <>
+        <div>
+
+        <MatchInfo message = {matchMessage}/>
+
+        <DeactivateButton />
+
         <table className="records_list table table-hover table-condensed text-left sortable">
             <thead>
             <tr>
@@ -123,33 +151,42 @@ const App = () => {
                     {allUsers.length > 0 && allUsers.map((user, i) => {
 
                     return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                    //return i === allUsers.length - 1 && !loading ?
+                        //return i === allUsers.length - 1 && !loading ?
                         (
-                            <div
-                                //key={`${user.id}-${i}`}
+                            <UserTableRow
+                                data={user}
                                 key={ user.id+'-'+i }
-                                ref={setLastElement}
-                            >
-                                <UserTableRow data={user} />
-                            </div>
+                                setfunc={setLastElement}
+                            />
                         ) : (
                             <UserTableRow
-                                count={i+1}
                                 data={user}
-                                //key={`${user.id}-${i}`}
                                 key={ user.id+'-'+i }
+                                //setfunc={null}
                             />
                         );
                     })}
 
-                    {loading && <Loading />}
+                    {loading && <Loading page={pageNum} />}
 
             </tbody>
         </table>
-        </>
+
+        {!loading && <DeactivateButton />}
+
+        </div>
     );
 
 };
+
+
+// <div
+//     //key={`${user.id}-${i}`}
+//     key={ user.id+'-'+i }
+//     ref={setLastElement}
+// >
+//     <UserTableRow data={user} key={ user.id+'-'+i } />
+// </div>
 
 // {loading && <p className='container text-center'>loading...</p>}
 

@@ -26,7 +26,11 @@
 {% endblock %}
 
 {% block content %}
-    <h4 class="text-info" align="center">{{ title }}</h4>
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {#(Matching 1258, Total 1361)#}
+        <div id="matching-info"></div>
+    </h4>
 
     {#<nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
         {#<a class="navbar-brand" href="#"> {{ title }} </a>#}
@@ -67,12 +71,14 @@
     {{ form_end(filterform) }}
     <br><br>
 
-    <p>
-        <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
-        >Deactivate selected accounts and save entered start and end dates</a>
-    </p>
 
     {% if 0 %}
+
+        <p>
+            <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
+            >Deactivate selected accounts and save entered start and end dates</a>
+        </p>
+
     <table class="records_list table table-hover table-condensed text-left sortable">
         <thead>
         <tr>
@@ -109,12 +115,12 @@
         <div id="root"></div>
     {% endif %}
 
-    <div id="update-users-button" style="display: none;">
-    <p>
-        <a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"
-        >Deactivate selected accounts and save entered start and end dates</a>
-    </p>
-    </div>
+    {#<div id="update-users-button" style="display: none;">#}
+    {#<p>#}
+        {#<a class="btn btn-warning" href="{{ path( 'employees_update_users_date') }}"#}
+        {#>Deactivate selected accounts and save entered start and end dates</a>#}
+    {#</p>#}
+    {#</div>#}
 
 {% endblock %}
 
