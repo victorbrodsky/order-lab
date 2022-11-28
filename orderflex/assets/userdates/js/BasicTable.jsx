@@ -1,3 +1,6 @@
+//https://cloudnweb.dev/2021/06/react-table-pagination/
+
+
 import React from 'react';
 import ReactDOM from "react-dom/client";
 import axios from 'axios';
@@ -6,7 +9,8 @@ import UserTableRow from './Components/UserTableRow.jsx';
 import Loading from './Components/Loading.jsx'
 // import '../css/index.css';
 
-const TOTAL_PAGES = 0; //0; //3;
+//const TOTAL_PAGES = 0; //2; //0; //3;
+//let TOTAL_PAGES = 0;
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
@@ -15,6 +19,7 @@ const App = () => {
     const [allUsers, setAllUsers] = useState([]);
     const [pageNum, setPageNum] = useState(1);
     const [lastElement, setLastElement] = useState(null);
+    const [TOTAL_PAGES, setTotalPages] = useState(1);
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -37,6 +42,7 @@ const App = () => {
     //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
+        //console.log("pageNum=["+pageNum+"]");
         setLoading(true);
         if( queryString ) {
             queryString = queryString.replace('?','');
@@ -44,7 +50,7 @@ const App = () => {
         } else {
             url = url+'/?page='+pageNum
         }
-        //console.log("url2="+url);
+        //console.log("url=["+url+"]");
 
         let response = await axios.get(
             //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
@@ -57,15 +63,18 @@ const App = () => {
         setAllUsers([...all]);
         setLoading(false);
 
+        //TOTAL_PAGES = response.data.totalPages;
+        setTotalPages(response.data.totalPages);
+
         // let updateButton = ReactDOM.createRoot(document.getElementById("update-users-button"));
         // updateButton.style.display = 'block';
 
     };
 
     useEffect(() => {
-        //if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
+        if (TOTAL_PAGES && pageNum <= TOTAL_PAGES) {
             callUser();
-        //}
+        }
     }, [pageNum]);
 
     useEffect(() => {
@@ -85,35 +94,65 @@ const App = () => {
 
     return (
         <>
-            {allUsers.length > 0 &&
-            allUsers.map((user, i) => {
+        <table className="records_list table table-hover table-condensed text-left sortable">
+            <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Deactivate
+                </th>
+                <th>
+                    LastName
+                </th>
+                <th>
+                    FirstName
+                </th>
+                <th>Degree</th>
+                <th>Email</th>
+                <th>Institution</th>
+                <th>Title(s)</th>
+                <th>Latest Employment Start Date</th>
+                <th>Latest Employment End Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" className="rowlink">
 
-                //return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                return i === allUsers.length - 1 && !loading ?
-                (
-                    <div
-                        //key={`${user.id}-${i}`}
-                        key={ user.id+'-'+i }
-                        ref={setLastElement}
-                    >
-                        <UserTableRow data={user} />
-                    </div>
-                ) : (
-                    <UserTableRow
-                        count={i+1}
-                        data={user}
-                        //key={`${user.id}-${i}`}
-                        key={ user.id+'-'+i }
-                    />
-                );
-            })}
+                    {allUsers.length > 0 && allUsers.map((user, i) => {
 
-            {loading && <Loading />}
+                    return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                    //return i === allUsers.length - 1 && !loading ?
+                        (
+                            <div
+                                //key={`${user.id}-${i}`}
+                                key={ user.id+'-'+i }
+                                ref={setLastElement}
+                            >
+                                <UserTableRow data={user} />
+                            </div>
+                        ) : (
+                            <UserTableRow
+                                count={i+1}
+                                data={user}
+                                //key={`${user.id}-${i}`}
+                                key={ user.id+'-'+i }
+                            />
+                        );
+                    })}
 
+                    {loading && <Loading />}
+
+            </tbody>
+        </table>
         </>
     );
 
-    // {loading && <p className='container text-center'>loading...</p>}
+};
+
+// {loading && <p className='container text-center'>loading...</p>}
+
 
     // return (
     //     <div className="row">
@@ -130,6 +169,6 @@ const App = () => {
     //         )}
     //     </div>
     // );
-};
 
 export default App;
+

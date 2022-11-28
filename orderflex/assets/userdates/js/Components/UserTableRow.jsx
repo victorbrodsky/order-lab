@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../css/index.css';
 
-const UserCard = ({ count, data }) => {
+const UserTableRow = ({ count, data }) => {
     return (
         <tr>
             <td className="user-display-none">
@@ -62,16 +62,16 @@ const UserCard = ({ count, data }) => {
 //     {data.LastName}
 // </td>
 
-const UserCard_orig = ({ count, data }) => {
-    return (
-        <div className='p-4 border border-gray-500 rounded bg-white flex items-center'>
-            <div className='ml-3'>
-                <p className='text-base font-bold'>
-                    {count} {data.FirstName} {data.LastName} {data.Email}
-                </p>
-            </div>
-        </div>
-    );
-};
+// const UserCard_orig = ({ count, data }) => {
+//     return (
+//         <div className='p-4 border border-gray-500 rounded bg-white flex items-center'>
+//             <div className='ml-3'>
+//                 <p className='text-base font-bold'>
+//                     {count} {data.FirstName} {data.LastName} {data.Email}
+//                 </p>
+//             </div>
+//         </div>
+//     );
+// };
 
-export default UserCard;
+export default UserTableRow;

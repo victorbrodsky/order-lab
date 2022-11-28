@@ -229,9 +229,9 @@ class UserDatesController extends OrderAbstractController
         $query->setParameters($queryParameters);
 
         //$query->setMaxResults(30);
-        //$users = $query->getResult();
+        //$totalUsers = $query->getResult();
 
-        $limit = 20;
+        $limit = 20; //20;
 
         $paginationParams = array(
             'defaultSortFieldName' => 'user.id',
@@ -351,6 +351,12 @@ class UserDatesController extends OrderAbstractController
 //            $jsonArray
 //        ]);
 
+        $totalCount = $users->getTotalItemCount();
+        //echo "totalCount=$totalCount <br>";
+        $totalPages = ceil($totalCount/$limit);
+        //echo "totalPages=$totalPages <br>";
+        //exit('111');
+
         $info = array(
             'seed' => "abc",
             'results' => $limit,
@@ -360,7 +366,8 @@ class UserDatesController extends OrderAbstractController
 
         $results = array(
             'results' => $jsonArray,
-            'info'    => $info
+            'info'    => $info,
+            'totalPages'   => $totalPages
         );
 
         //return new JsonResponse($results);

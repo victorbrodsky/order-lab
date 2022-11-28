@@ -32,7 +32,6 @@
         {#<a class="navbar-brand" href="#"> {{ title }} </a>#}
     {#</nav>#}
 
-    <br><br>
     {{ form_start(filterform) }}
     {{ form_errors(filterform) }}
     <div class="row">
@@ -73,6 +72,7 @@
         >Deactivate selected accounts and save entered start and end dates</a>
     </p>
 
+    {% if 0 %}
     <table class="records_list table table-hover table-condensed text-left sortable">
         <thead>
         <tr>
@@ -100,12 +100,14 @@
             <th>Action</th>
         </tr>
         </thead>
-        <tbody data-link="row" className="rowlink" id="root">
-
+        <tbody data-link="row" class="rowlink" id="root">
+            {#React app here UserTableRow#}
             {#<tr id="root"></tr>#}
-
         </tbody>
     </table>
+    {% else %}
+        <div id="root"></div>
+    {% endif %}
 
     <div id="update-users-button" style="display: none;">
     <p>
