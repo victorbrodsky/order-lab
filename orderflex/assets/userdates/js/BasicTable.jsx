@@ -73,13 +73,9 @@ const App = () => {
         //console.log("callUser: totalPages=" + response.data.totalPages);
         setTotalPages(response.data.totalPages);
         setTotalUsers(response.data.totalUsers);
-        //console.log("callUser: TOTAL_PAGES=" + TOTAL_PAGES);
         //console.log("totalPages="+TOTAL_PAGES+", totalUsers="+totalUsers);
 
         let matchMessage = "Page " + pageNum + "/" + response.data.totalPages + "; Total matching users " + response.data.totalUsers;
-        //if( totalUsers ) {
-        //    matchMessage = matchMessage + "; Total matching users " + totalUsers;
-        //}
         setMatchMessage(matchMessage);
         //console.log("matchMessage="+matchMessage);
 
