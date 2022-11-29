@@ -115,9 +115,9 @@ class UserDatesFilterType extends AbstractType
         //status: Activated, Deactivated, Locked
         $builder->add('status', ChoiceType::class, array(
             'choices'   => array(
-                'Active' => 'active',
-                'Terminated' => 'terminated',
-                'Locked' => 'locked'
+                'Active Account (Employed)' => 'active',
+                'Inactive Account (Not currently employed)' => 'inactive',
+                'Inactive Account (Locked)' => 'locked'
             ),
             'label' => false,
             'required' => false,

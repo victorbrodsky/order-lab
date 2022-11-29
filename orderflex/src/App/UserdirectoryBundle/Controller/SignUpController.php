@@ -669,7 +669,7 @@ class SignUpController extends OrderAbstractController
             }
             $emails = array_unique($emails);
             //echo "user emails=".implode(";",$emails)."<br>";
-            $subject = "New ".$signUp->getUser()." account activation for ".$this->siteNameStr;
+            $subject = "New ".$signUp->getUser()." account added on the ".$this->siteNameStr." site";
 
             $userDetalsArr = $signUp->getUser()->getDetailsArr();
             $titleArr = array();
@@ -677,7 +677,7 @@ class SignUpController extends OrderAbstractController
             $titleArr[] = $userDetalsArr["institution"];
 
             $body =
-                "New user has been activated for the ".$this->siteNameStr.":".
+                "New user has been created and given access for the ".$this->siteNameStr." site:".
                 $newline.$signUp->getUser().", ".implode(", ",$titleArr);
             ;
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null

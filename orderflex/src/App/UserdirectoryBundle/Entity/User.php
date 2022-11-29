@@ -2466,6 +2466,9 @@ class User extends UserBase {
         }
 
         if( $this->isLocked() ) {
+            if( $res ) {
+                $res = $res . ".";
+            }
             $res = $res . " Account is locked";
         }
 

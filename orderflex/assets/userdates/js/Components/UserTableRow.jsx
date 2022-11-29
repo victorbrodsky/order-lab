@@ -1,4 +1,5 @@
 import React from 'react';
+//import Form from "react-bootstrap/Form";
 import '../../css/index.css';
 
 const UserTableRow = ({ data, setfunc }) => {
@@ -28,8 +29,11 @@ const UserTableRow = ({ data, setfunc }) => {
             <td>
                 {data.Title}
             </td>
-            <td>
-                {data.StartDate}
+            <td className="rowlink-skip">
+                <div className="input-group input-group-reg date allow-future-date">
+                    <input type="text" id="filter_startdate" name="filter[startdate]" className="datepicker form-control" placeholder="Start Date/Time"/>
+                        <span className="add-on input-group-addon"><i className="glyphicon glyphicon-calendar"></i></span>
+                </div>
             </td>
             <td>
                 {data.EndDate}
