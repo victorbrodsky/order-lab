@@ -33,7 +33,7 @@ class UserDatesController extends OrderAbstractController
 {
 
     /**
-     * @Route("/employment-dates", name="employees_user_dates")
+     * @Route("/employment-dates/edit", name="employees_user_dates_edit")
      * @Template("AppUserdirectoryBundle/UserDates/user_dates.html.twig")
      */
     public function userDatesAction( Request $request ) {
@@ -309,8 +309,10 @@ class UserDatesController extends OrderAbstractController
 
             $degreeTitle = $user->getDegreesTitles();
 
-            $degree = $degreeTitle['degree'];
+            //$degree = $degreeTitle['degree'];
             $titles = $degreeTitle['title'];
+
+            $degree = $user->getSingleSalutation();
 
             //if( !$degree ) {
                 //$degree = "N/A        ";
@@ -320,7 +322,10 @@ class UserDatesController extends OrderAbstractController
             $startDate = $startEndDate['startDate'];
             $endDate = $startEndDate['endDate'];
 
-            $status = null;
+            $terminationStr = $user->getEmploymentTerminatedStr();
+            if( $terminationStr ) {
+                $status = $terminationStr; //"terminated";
+            }
 
             $jsonArray[] = array(
                 'id'            => $user->getId(),

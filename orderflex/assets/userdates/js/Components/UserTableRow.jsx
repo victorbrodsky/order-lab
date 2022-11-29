@@ -34,6 +34,9 @@ const UserTableRow = ({ data, setfunc }) => {
             <td>
                 {data.EndDate}
             </td>
+            <td>
+                {data.status}
+            </td>
             <td className="rowlink-skip">
                 <div className="btn-group">
                     <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">

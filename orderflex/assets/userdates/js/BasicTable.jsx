@@ -9,7 +9,7 @@ import UserTableRow from './Components/UserTableRow.jsx';
 import Loading from './Components/Loading.jsx'
 import DeactivateButton from './Components/DeactivateButton.jsx'
 import MatchInfo from './Components/MatchInfo.jsx'
-// import '../css/index.css';
+import '../css/index.css';
 
 //const TOTAL_PAGES = 0; //2; //0; //3;
 //let TOTAL_PAGES = 0;
@@ -121,7 +121,7 @@ const App = () => {
         <table className="records_list table table-hover table-condensed text-left sortable">
             <thead>
             <tr>
-                <th>
+                <th className="user-display-none">
                     ID
                 </th>
                 <th>
@@ -139,6 +139,7 @@ const App = () => {
                 <th>Title(s)</th>
                 <th>Latest Employment Start Date</th>
                 <th>Latest Employment End Date</th>
+                <th>Account Status</th>
                 <th>Action</th>
             </tr>
             </thead>
