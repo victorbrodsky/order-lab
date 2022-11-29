@@ -322,6 +322,7 @@ class UserDatesController extends OrderAbstractController
             $startDate = $startEndDate['startDate'];
             $endDate = $startEndDate['endDate'];
 
+            $status = "Active";
             $terminationStr = $user->getEmploymentTerminatedStr();
             if( $terminationStr ) {
                 $status = $terminationStr; //"terminated";
