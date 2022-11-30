@@ -677,7 +677,7 @@ class SignUpController extends OrderAbstractController
             $titleArr[] = $userDetalsArr["institution"];
 
             $body =
-                "New user has been created and given access for the ".$this->siteNameStr." site:".
+                "New user has been created and given access to the ".$this->siteNameStr." site:".
                 $newline.$signUp->getUser().", ".implode(", ",$titleArr);
             ;
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null

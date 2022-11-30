@@ -1,8 +1,17 @@
 import React from 'react';
+import { useEffect } from 'react';
 //import Form from "react-bootstrap/Form";
 import '../../css/index.css';
+//import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import BootstrapDatePickerComponent from './BootstrapDatePickerComponent.jsx'
 
 const UserTableRow = ({ data, setfunc }) => {
+
+    useEffect(() => {
+        //update datepicker
+        initSingleDatepicker( $('.datepicker') );
+    }, []);
+    
     return (
         <tr ref={setfunc}>
             <td className="user-display-none">
@@ -35,8 +44,8 @@ const UserTableRow = ({ data, setfunc }) => {
                         <span className="add-on input-group-addon"><i className="glyphicon glyphicon-calendar"></i></span>
                 </div>
             </td>
-            <td>
-                {data.EndDate}
+            <td className="rowlink-skip">
+                <BootstrapDatePickerComponent />
             </td>
             <td>
                 {data.status}
@@ -57,7 +66,8 @@ const UserTableRow = ({ data, setfunc }) => {
     );
 };
 
-
+// {data.EndDate}
+//<BootstrapDatePickerComponent />
 // <div class="input-group input-group-reg date allow-future-date">
 //     <input type="text" id="filter_startdate" name="filter[startdate]" class="datepicker form-control" placeholder="Start Date/Time">
 //         <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>

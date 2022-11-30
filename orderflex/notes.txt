@@ -696,6 +696,7 @@ New York Presbyterian Hospital
 Yarn:
 yarn add jquery
 yarn add spin
+yarn add react-bootstrap bootstrap
 
 React:
 Install yarn: https://classic.yarnpkg.com/lang/en/docs/install/#centos-stable:

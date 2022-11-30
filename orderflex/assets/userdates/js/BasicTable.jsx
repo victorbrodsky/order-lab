@@ -17,6 +17,7 @@ import '../css/index.css';
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
 const App = () => {
+
     const [loading, setLoading] = useState(true);
     const [allUsers, setAllUsers] = useState([]);
     const [pageNum, setPageNum] = useState(1);
@@ -47,7 +48,7 @@ const App = () => {
     //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
-        console.log("callUser!!!");
+        //console.log("callUser!!!");
         setLoading(true);
         //let url = apiUrl+'/?page='+pageNum
         if( queryString ) {
