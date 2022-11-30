@@ -2,14 +2,18 @@
 
 
 import React from 'react';
-import ReactDOM from "react-dom/client";
+//import ReactDOM from "react-dom/client";
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import UserTableRow from './Components/UserTableRow.jsx';
-import Loading from './Components/Loading.jsx'
-import DeactivateButton from './Components/DeactivateButton.jsx'
-import MatchInfo from './Components/MatchInfo.jsx'
+import Loading from './Components/Loading.jsx';
+import DeactivateButton from './Components/DeactivateButton.jsx';
+import MatchInfo from './Components/MatchInfo.jsx';
+import DatepickerComponent from './Components/DatepickerComponent.jsx';
+
 import '../css/index.css';
+
+
 
 //const TOTAL_PAGES = 0; //2; //0; //3;
 //let TOTAL_PAGES = 0;
@@ -118,6 +122,8 @@ const App = () => {
         <MatchInfo message = {matchMessage}/>
 
         <DeactivateButton />
+
+        <DatepickerComponent componentid = "iddd"/>
 
         <table className="records_list table table-hover table-condensed text-left sortable">
             <thead>

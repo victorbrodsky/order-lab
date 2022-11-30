@@ -757,7 +757,7 @@ function processAllDatepickers( targets ) {
 function initSingleDatepicker( datepickerElement ) {
     //console.log("1 initSingleDatepicker:");
     if( datepickerElement.hasClass('datepicker-ignore') ) {
-        //printF(datepickerElement,'Ignore:');
+        printF(datepickerElement,'Ignore:');
         return;
     }
 
@@ -767,7 +767,7 @@ function initSingleDatepicker( datepickerElement ) {
     //printF(inputField,'inputField:');
 
     if( inputField.hasClass('datepicker-ignore') ) {
-        //printF(inputField,'Ignore:');
+        printF(inputField,'Ignore:');
         return;
     }
 
@@ -776,7 +776,7 @@ function initSingleDatepicker( datepickerElement ) {
     //console.log(datepickerElement);
 
     var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
-    //console.log("calendarIconBtn:");
+    //console.log("calendarIconBtn:",calendarIconBtn);
     //console.log(calendarIconBtn);
 
     if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
@@ -794,6 +794,7 @@ function initSingleDatepicker( datepickerElement ) {
 
         var endDate = new Date(); //use current date as default
         if( datepickerElement.hasClass('allow-future-date') ) {
+            //console.log('allow future date');
             endDate = false;//'End of time';
         }
         //console.log('endDate='+endDate);
@@ -851,6 +852,7 @@ function initSingleDatepicker( datepickerElement ) {
             endDate = calendarEndDate;
         }
 
+        //console.log('endDate',endDate);
 
         //to prevent datepicker clear on Enter key, use the version from https://github.com/eternicode/bootstrap-datepicker/issues/775
         datepickerElement.datepicker({
@@ -909,7 +911,7 @@ function initSingleDatepicker( datepickerElement ) {
         //open/close the date picker on click icon (calendar-icon-button) or body
         calendarIconBtn.on( "click", function(event) {
             event.stopPropagation();
-            //console.log( "click calendar icon" );
+            console.log( "click calendar icon" );
             var inputField = $(this).closest('.input-group').find('input.datepicker');
             if( inputField.hasClass("datepicker-status-open") ) {
                 //console.log( "hide datepicker" );

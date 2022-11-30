@@ -1,7 +1,7 @@
 import React from 'react'
 //import { Form } from 'react-bootstrap';
 import Form from "react-bootstrap/Form";
-import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+//import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 class BootstrapDatePickerComponent extends React.Component{
 
