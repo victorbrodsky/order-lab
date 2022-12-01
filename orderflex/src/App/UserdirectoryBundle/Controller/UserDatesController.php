@@ -168,9 +168,18 @@ class UserDatesController extends OrderAbstractController
             $search = $filterform["search"]->getData();
             //echo "search=$search <br>";
             if( $search ) {
-                $dql->andWhere('infos.displayName LIKE :search OR infos.email LIKE :search');
+                $searchStr = "user.primaryPublicUserId LIKE :search";
+                //$searchStr = $searchStr . " OR " . "user.id LIKE :search";
+                $searchStr = $searchStr . " OR " . "LOWER(infos.email) LIKE :search";
+                $searchStr = $searchStr . " OR " . "LOWER(infos.lastName) LIKE :search";
+                $searchStr = $searchStr . " OR " . "LOWER(infos.firstName) LIKE :search";
+                $searchStr = $searchStr . " OR " . "LOWER(infos.displayName) LIKE :search";
+                $searchStr = $searchStr . " OR " . "infos.preferredPhone LIKE :search";
+                $searchStr = $searchStr . " OR " . "LOWER(user.usernameCanonical) LIKE :search";
+
+                $dql->andWhere($searchStr);
                 //$queryParameters['search'] = $useridsArr;
-                $queryParameters['search'] = "%" . $search . "%";
+                $queryParameters['search'] = "%" . strtolower($search) . "%";
             }
 
             $roles = $filterform["roles"]->getData();

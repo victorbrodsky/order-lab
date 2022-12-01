@@ -2,10 +2,15 @@ import React from 'react';
 import '../../css/index.css';
 
 const DeactivateButton = () => {
-    let url = Routing.generate('employees_update_users_date');
+    const url = Routing.generate('employees_update_users_date');
+
+    function disableAccounts() {
+
+    }
+
     return (
         <p>
-            <a className="btn btn-warning" href={ url }
+            <a className="btn btn-warning" href={ url } onClick={disableAccounts}
             >Deactivate selected accounts and save entered start and end dates</a>
         </p>
     );

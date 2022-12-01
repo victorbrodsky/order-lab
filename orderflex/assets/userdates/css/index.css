@@ -5,3 +5,11 @@
 .user-display-none {
     display: none;
 }
+
+input.check-input {
+    width: 20px;
+    height: 20px;
+}
+
+
+

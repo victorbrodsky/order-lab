@@ -5,6 +5,7 @@ import '../../css/index.css';
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 //import BootstrapDatePickerComponent from './BootstrapDatePickerComponent.jsx'
 import DatepickerComponent from './DatepickerComponent.jsx'
+//import Checkbox from './Checkbox.jsx'
 
 
 const UserTableRow = ({ data, setfunc }) => {
@@ -20,7 +21,7 @@ const UserTableRow = ({ data, setfunc }) => {
 
         var datepickerStartDateElement = $("#datepicker-start-date-"+data.id);
         var datepickerEndDateElement = $("#datepicker-end-date-"+data.id);
-        console.log("datepickerStartDateElement",datepickerStartDateElement);
+        //console.log("datepickerStartDateElement",datepickerStartDateElement);
 
         var checked = document.getElementById("checkbox-"+data.id);
         if (checked.checked) {
@@ -39,14 +40,22 @@ const UserTableRow = ({ data, setfunc }) => {
         //console.log("calendarIconBtn",calendarIconBtn);
         //calendarIconBtn.prop('disabled', true);
     }
+
     
     return (
         <tr ref={setfunc}>
             <td className="user-display-none">
-                <a target="_blank" href={data.showLink}>{data.id}</a>
+                 <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>
             <td className="rowlink-skip">
-                <input type="checkbox" id={"checkbox-"+data.id} value="" onClick={processDate}></input>
+                <input
+                    type="checkbox"
+                    className="check-input"
+                    id={"checkbox-"+data.id}
+                    name={"checkbox-"+data.id}
+                    value={"value-"+data.id} onChange={processDate}
+                >
+                </input>
             </td>
             <td>
                 {data.LastName}

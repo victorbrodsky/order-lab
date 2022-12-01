@@ -49,8 +49,7 @@ const DatepickerComponent = ({ data, componentid }) => {
         //         inputField.addClass("datepicker-status-open");
         //     }
         // });
-
-
+        
         $('#'+componentid).datepicker('update', data.StartDate);
         $('#'+componentid).prop('disabled', true);
 
