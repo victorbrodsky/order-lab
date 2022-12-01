@@ -47,9 +47,16 @@ const UserTableRow = ({ data, setfunc }) => {
     //         inputField.addClass('datepicker-dropdown').addClass('dropdown-menu'); // datepicker-orient-left datepicker-orient-bottom
     //     }
     // }
-    
-    
+
     return (
+        <tr>
+            <td className="rowlink-skip">
+                <DatepickerComponent componentid = {"datepicker-start-date-"+data}/>
+            </td>
+        </tr>
+    )
+    
+    return1 (
         <tr ref={setfunc}>
             <td className="user-display-none">
                 <a target="_blank" href={data.showLink}>{data.id}</a>

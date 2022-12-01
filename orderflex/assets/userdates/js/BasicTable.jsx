@@ -12,6 +12,8 @@ import MatchInfo from './Components/MatchInfo.jsx';
 import DatepickerComponent from './Components/DatepickerComponent.jsx';
 
 import '../css/index.css';
+import '../../../public/orderassets/AppUserdirectoryBundle/form/js/user-common.js';
+
 
 
 
@@ -116,53 +118,129 @@ const App = () => {
         };
     }, [lastElement]);
 
-    return (
-        <div>
+    if(1) {
+        var componentid = '3';
+        console.log("users:",allUsers);
+        console.log("users len=",allUsers.length);
 
-        <MatchInfo message = {matchMessage}/>
+        var i;
+        for(i=0; i < allUsers.length; i++) {
+            return (
+                <UserTableRow
+                    data={1}
+                    key={ {i} + '-' + 0 }
+                    //setfunc={setLastElement}
+                />
+            )
+        }
 
-        <DeactivateButton />
 
-        <DatepickerComponent componentid = "iddd"/>
+        if(0)
+        return (
+            <div>
+                <table className="records_list table1 table-hover table-condensed text-left sortable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody data-link="row" className="rowlink">
 
-        <table className="records_list table1 table-hover table-condensed text-left sortable">
-            <thead>
-            <tr>
-                <th className="user-display-none">
-                    ID
-                </th>
-                <th>
-                    Deactivate
-                </th>
-                <th>
-                    LastName
-                </th>
-                <th>
-                    FirstName
-                </th>
-                <th>Degree</th>
-                <th>Email</th>
-                <th>Institution</th>
-                <th>Title(s)</th>
-                <th>Latest Employment Start Date</th>
-                <th>Latest Employment End Date</th>
-                <th>Account Status</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody data-link="row" className="rowlink">
+                    <UserTableRow
+                        data={1}
+                        key={ 1 + '-' + 0 }
+                        //setfunc={setLastElement}
+                    />
+                    <div className="input-group input-group-reg date allow-future-date">
+                        <input
+                            type="text"
+                            id={componentid}
+                            name={componentid}
+                            className="datepicker form-control allow-future-date"
+                        />
+                                    <span
+                                        className="input-group-addon calendar-icon-button"
+                                        id={"calendar-icon-button-"+componentid}
+                                    ><i className="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+
+                    {allUsers.length > 0 && allUsers.map((user, i) => {
+                        return(
+                        <tr>
+                            <td className="rowlink-skip">
+                                <DatepickerComponent componentid = {"datepicker-start-date-"+2}/>
+                                <div className="input-group input-group-reg date allow-future-date">
+                                    <input
+                                        type="text"
+                                        id={componentid}
+                                        name={componentid}
+                                        className="datepicker form-control allow-future-date"
+                                    />
+                                    <span
+                                        className="input-group-addon calendar-icon-button"
+                                        id={"calendar-icon-button-"+componentid}
+                                    ><i className="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        )
+                    })}
+
+                    </tbody>
+                </table>
+            </div>
+        )
+    } else {
+
+        return (
+            <div>
+
+                <MatchInfo message={matchMessage}/>
+
+                <DeactivateButton />
+
+                <DatepickerComponent componentid="iddd"/>
+
+                <table className="records_list table1 table-hover table-condensed text-left sortable">
+                    <thead>
+                    <tr>
+                        <th className="user-display-none">
+                            ID
+                        </th>
+                        <th>
+                            Deactivate
+                        </th>
+                        <th>
+                            LastName
+                        </th>
+                        <th>
+                            FirstName
+                        </th>
+                        <th>Degree</th>
+                        <th>Email</th>
+                        <th>Institution</th>
+                        <th>Title(s)</th>
+                        <th>Latest Employment Start Date</th>
+                        <th>Latest Employment End Date</th>
+                        <th>Account Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody data-link="row" className="rowlink">
 
                     {allUsers.length > 0 && allUsers.map((user, i) => {
 
-                    return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
-                        //return i === allUsers.length - 1 && !loading ?
-                        (
-                            <UserTableRow
-                                data={user}
-                                key={ user.id+'-'+i }
-                                setfunc={setLastElement}
-                            />
-                        ) : (
+                        return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
+                            //return i === allUsers.length - 1 && !loading ?
+                            (
+                                <UserTableRow
+                                    data={user}
+                                    key={ user.id+'-'+i }
+                                    setfunc={setLastElement}
+                                />
+                            ) : (
                             <UserTableRow
                                 data={user}
                                 key={ user.id+'-'+i }
@@ -171,17 +249,28 @@ const App = () => {
                         );
                     })}
 
-                    {loading && <Loading page={pageNum} />}
+                    {loading && <Loading page={pageNum}/>}
 
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
 
-        {!loading && <DeactivateButton />}
+                {!loading && <DeactivateButton />}
 
-        </div>
-    );
+            </div>
+        );
+    }
 
 };
+
+        // <tr>
+        //     <th>
+        //         <UserTableRow
+        //             data={1}
+        //             key={2}
+        //             setfunc={setLastElement}
+        //         />
+        //     </th>
+        // </tr>
 
 
 // <div

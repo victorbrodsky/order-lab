@@ -755,7 +755,7 @@ function processAllDatepickers( targets ) {
 
 //Note: for bootstrap's "hide.bs.collapse" event use datepicker fix https://github.com/eternicode/bootstrap-datepicker/issues/978
 function initSingleDatepicker( datepickerElement ) {
-    //console.log("1 initSingleDatepicker:");
+    console.log("1 initSingleDatepicker:",datepickerElement);
     if( datepickerElement.hasClass('datepicker-ignore') ) {
         printF(datepickerElement,'Ignore:');
         return;
@@ -776,7 +776,7 @@ function initSingleDatepicker( datepickerElement ) {
     //console.log(datepickerElement);
 
     var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
-    //console.log("calendarIconBtn:",calendarIconBtn);
+    console.log("initSingleDatepicker: calendarIconBtn:",calendarIconBtn);
     //console.log(calendarIconBtn);
 
     if( inputField.is('[readonly]') || inputField.is('[disabled]') ) {
@@ -911,7 +911,7 @@ function initSingleDatepicker( datepickerElement ) {
         //open/close the date picker on click icon (calendar-icon-button) or body
         calendarIconBtn.on( "click", function(event) {
             event.stopPropagation();
-            console.log( "click calendar icon" );
+            console.log( "user-common: click calendar icon" );
             var inputField = $(this).closest('.input-group').find('input.datepicker');
             if( inputField.hasClass("datepicker-status-open") ) {
                 //console.log( "hide datepicker" );
@@ -965,6 +965,24 @@ function initSingleDatepicker( datepickerElement ) {
 
     return;
 }
+
+function clickCalendarButton() {
+    //event.stopPropagation();
+    console.log( "user-common: clickCalendarButton: click calendar icon" );
+    var inputField = $(this).closest('.input-group').find('input.datepicker');
+    if( inputField.hasClass("datepicker-status-open") ) {
+        //console.log( "hide datepicker" );
+        //$('body').off('click');
+        //$('body').click();
+        $(".datepicker-dropdown").remove();
+        inputField.removeClass("datepicker-status-open");
+    } else {
+        inputField.addClass("datepicker-status-open");
+    }
+}
+Window.prototype.clickCalendarButton  = clickCalendarButton;
+Window.prototype.initSingleDatepicker  = initSingleDatepicker;
+//export default clickCalendarButton;
 
 
 function expandTextarea(holder) {
