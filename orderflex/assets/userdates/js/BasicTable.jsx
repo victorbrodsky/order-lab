@@ -6,6 +6,7 @@ import React from 'react';
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import UserTableRow from './Components/UserTableRow.jsx';
+import UserTable from './Components/UserTable.jsx';
 import Loading from './Components/Loading.jsx';
 import DeactivateButton from './Components/DeactivateButton.jsx';
 import MatchInfo from './Components/MatchInfo.jsx';
@@ -118,22 +119,15 @@ const App = () => {
         };
     }, [lastElement]);
 
-    if(1) {
+    if(0) {
         var componentid = '3';
-        console.log("users:",allUsers);
+        //console.log("users:",allUsers);
         console.log("users len=",allUsers.length);
 
-        var i;
-        for(i=0; i < allUsers.length; i++) {
-            return (
-                <UserTableRow
-                    data={1}
-                    key={ {i} + '-' + 0 }
-                    //setfunc={setLastElement}
-                />
-            )
-        }
-
+        <UserTable
+            allUsers={allUsers}
+            setfunc={setLastElement}
+        />
 
         if(0)
         return (
@@ -200,9 +194,7 @@ const App = () => {
                 <MatchInfo message={matchMessage}/>
 
                 <DeactivateButton />
-
-                <DatepickerComponent componentid="iddd"/>
-
+                
                 <table className="records_list table1 table-hover table-condensed text-left sortable">
                     <thead>
                     <tr>
@@ -231,7 +223,6 @@ const App = () => {
                     <tbody data-link="row" className="rowlink">
 
                     {allUsers.length > 0 && allUsers.map((user, i) => {
-
                         return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
                             //return i === allUsers.length - 1 && !loading ?
                             (

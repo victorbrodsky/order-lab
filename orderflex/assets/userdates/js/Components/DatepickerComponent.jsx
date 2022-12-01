@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-const DatepickerComponent = ({ componentid }) => {
+const DatepickerComponent = ({ data, componentid }) => {
 
     useEffect(() => {
         //console.log( "useEffect" );
@@ -51,6 +51,8 @@ const DatepickerComponent = ({ componentid }) => {
         // });
 
 
+        $('#'+componentid).datepicker('update', data.StartDate);
+        $('#'+componentid).prop('disabled', true);
 
     }, []);
 
@@ -71,21 +73,36 @@ const DatepickerComponent = ({ componentid }) => {
         }
     }
 
-    return(
-        <div className="input-group input-group-reg date allow-future-date">
-            <input
-                type="text"
-                id={componentid}
-                name={componentid}
-                className="datepicker form-control allow-future-date"
-            />
-            <span
-                className="input-group-addon calendar-icon-button"
-                id={"calendar-icon-button-"+componentid}
-                //onClick={clickCalendarButton}
-            ><i className="glyphicon glyphicon-calendar"></i></span>
-        </div>
-    )
+    if(1) {
+        return(
+            <div className="input-group input-group-reg date allow-future-date">
+                <input
+                    type="text"
+                    id={componentid}
+                    name={componentid}
+                    className="datepicker form-control allow-future-date"
+                />
+            </div>
+        )
+    } else {
+        return(
+            <div className="input-group input-group-reg date allow-future-date">
+                <input
+                    type="text"
+                    id={componentid}
+                    name={componentid}
+                    className="datepicker form-control allow-future-date"
+                />
+                {/*
+                 <span
+                 className="input-group-addon calendar-icon-button"
+                 id={"calendar-icon-button-"+componentid}
+                 //onClick={clickCalendarButton}
+                 ><i className="glyphicon glyphicon-calendar"></i></span>
+                 */}
+            </div>
+        )
+    }
 }
 
 export default DatepickerComponent;

@@ -9,60 +9,44 @@ import DatepickerComponent from './DatepickerComponent.jsx'
 
 const UserTableRow = ({ data, setfunc }) => {
 
-    //useEffect(() => {
-        //console.log( "useEffect" );
-        //update datepicker
-        //initSingleDatepicker( $('#'+"datepicker-start-date-"+data.id) );
-        //initSingleDatepicker( $(this).find('.datepicker') );
-        //initSingleDatepicker( $(this).find('.datepicker') );
+    useEffect(() => {
+        initSingleDatepicker( $('#'+"datepicker-start-date-"+data.id) );
+        initSingleDatepicker( $('#'+"datepicker-end-date-"+data.id) );
+    }, []);
 
-        // //var calendarIconBtn = $('.datepicker').find('.calendar-icon-button');
-        // $('.calendar-icon-button').on( "click", function(event) {
-        //     event.stopPropagation();
-        //     console.log( "click calendar icon" );
-        //     var inputField = $('.datepicker').closest('.input-group').find('input.datepicker');
-        //     if( inputField.hasClass("datepicker-status-open") ) {
-        //         //console.log( "hide datepicker" );
-        //         //$('body').off('click');
-        //         //$('body').click();
-        //         $(".datepicker-dropdown").remove();
-        //         inputField.removeClass("datepicker-status-open");
-        //     } else {
-        //         inputField.addClass("datepicker-status-open");
-        //     }
-        // });
-    //}, []);
+    function processDate() {
+        console.log("disable checkbox");
+        //$(this).prop('disabled', true);
 
-    // function openCalendar() {
-    //     console.log( "click calendar icon" );
-    //     var inputField = $(this).closest('.input-group').find('input.datepicker');
-    //     if( inputField.hasClass("datepicker-status-open") ) {
-    //         //console.log( "hide datepicker" );
-    //         //$('body').off('click');
-    //         //$('body').click();
-    //         $(".datepicker-dropdown").remove();
-    //         inputField.removeClass("datepicker-status-open");
-    //     } else {
-    //         inputField.addClass("datepicker-status-open");
-    //         inputField.addClass('datepicker-dropdown').addClass('dropdown-menu'); // datepicker-orient-left datepicker-orient-bottom
-    //     }
-    // }
+        var datepickerStartDateElement = $("#datepicker-start-date-"+data.id);
+        var datepickerEndDateElement = $("#datepicker-end-date-"+data.id);
+        console.log("datepickerStartDateElement",datepickerStartDateElement);
 
-    return (
-        <tr>
-            <td className="rowlink-skip">
-                <DatepickerComponent componentid = {"datepicker-start-date-"+data}/>
-            </td>
-        </tr>
-    )
+        var checked = document.getElementById("checkbox-"+data.id);
+        if (checked.checked) {
+            datepickerStartDateElement.prop('disabled', false);
+            datepickerEndDateElement.prop('disabled', false);
+        } else {
+            datepickerStartDateElement.prop('disabled', true);
+            datepickerEndDateElement.prop('disabled', true);
+        }
+
+        //datepickerElement.datepicker("remove");
+        //datepickerElement.prop('disabled', false);
+
+        //calendarIconBtn.off();
+        //var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
+        //console.log("calendarIconBtn",calendarIconBtn);
+        //calendarIconBtn.prop('disabled', true);
+    }
     
-    return1 (
+    return (
         <tr ref={setfunc}>
             <td className="user-display-none">
                 <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>
             <td className="rowlink-skip">
-                <input type="checkbox" value=""></input>
+                <input type="checkbox" id={"checkbox-"+data.id} value="" onClick={processDate}></input>
             </td>
             <td>
                 {data.LastName}
@@ -83,10 +67,10 @@ const UserTableRow = ({ data, setfunc }) => {
                 {data.Title}
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent componentid = {"datepicker-start-date-"+data.id}/>
+                <DatepickerComponent data={data} componentid = {"datepicker-start-date-"+data.id}/>
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent componentid = {"datepicker-end-date-"+data.id}/>
+                <DatepickerComponent data={data} componentid = {"datepicker-end-date-"+data.id}/>
             </td>
             <td>
                 {data.status}
