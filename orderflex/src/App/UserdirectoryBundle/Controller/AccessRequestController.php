@@ -359,6 +359,12 @@ class AccessRequestController extends OrderAbstractController
         
         $question = $this->getAccessRequestQuestion();
 
+        $siteDescription = "";
+        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject ) {
+            $siteDescription = $siteObject->getDescription();
+        }
+
         return array(
             'user' => $user,
             'form' => $form->createView(),
@@ -367,7 +373,8 @@ class AccessRequestController extends OrderAbstractController
             'pendinguser' => true,
             'groupnote' => $groupnote,
             'reasonnote' => $reasonnote,
-            'question' => $question
+            'question' => $question,
+            'description' => $siteDescription
         );
     }
     public function getParams() {

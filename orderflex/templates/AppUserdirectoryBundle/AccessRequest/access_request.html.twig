@@ -75,6 +75,12 @@
                 <h3 class="text-info">{{ question|raw }}</h3>
             </p>
 
+            {% if description is defined and description %}
+                <p>
+                    {{ description|raw }}
+                </p>
+            {% endif %}
+
             <br><br>
 
             {#<form action="{{ path(sitename~'_access_request_create') }}" method="post">#}

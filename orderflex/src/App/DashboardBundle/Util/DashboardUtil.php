@@ -2640,6 +2640,14 @@ class DashboardUtil
         //echo "projectSpecialty=".$projectSpecialty."<br>";
         //echo "chartType=$chartType <br>";
         //exit('111');
+        
+        //testing
+        if(0) {
+            $error = "Test error [$chartType]";
+            $chartsArray['warning'] = false;
+            $chartsArray['error'] = $error;
+            return $chartsArray;
+        }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();

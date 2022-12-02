@@ -92,11 +92,12 @@ import Charts from './components/Charts';
 
 //ReactDOM.render(<Router><Charts /></Router>, document.getElementById('root'));
 
+const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <Router>
-            <Charts />
+            <Charts errorMessageRoot={errorMessageRoot}/>
         </Router>
     </React.StrictMode>
 );

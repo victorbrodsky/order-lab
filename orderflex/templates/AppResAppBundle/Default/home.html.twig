@@ -606,7 +606,14 @@
 
                     {% if route_path == "resapp_send_rejection_emails" %}
                         <td class="rowlink-skip">
-                            <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
+                            {#checkbox bootstrap table data-link="row" checkbox first toggle not working#}
+                            {#onclick="alert('click!');"#}
+                            <input
+                                    type="checkbox"
+                                    class="notificationemail"
+                                    name="notificationemail"
+                                    value="{{ entity.id }}"
+                            >
                         </td>
                         {#<td>#}
                             {#{{ entity.startDate|date('m/d/Y','UTC') }}#}

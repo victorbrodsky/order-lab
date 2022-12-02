@@ -172,6 +172,7 @@ use App\UserdirectoryBundle\Entity\RoleAttributeList;
 use App\UserdirectoryBundle\Entity\LanguageList;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 //Notes:
@@ -2874,12 +2875,21 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         
         $elements = $this->getSiteList();
+        $descriptions = $this->getSiteDescription();
 
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
             $entity = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($name);
             if( $entity ) {
+
+                if( !$entity->getDescription() ) {
+                    if( isset($descriptions[$name]) ) {
+                        $entity->setDescription($descriptions[$name]);
+                        $em->flush();
+                    }
+                }
+
                 continue;
             }
 
@@ -2887,6 +2897,10 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($entity,$count,$user,$name);
 
             $entity->setAbbreviation($abbreviation);
+
+            if( isset($descriptions[$name]) ) {
+                $entity->setDescription($descriptions[$name]);
+            }
 
             $em->persist($entity);
             $em->flush();
@@ -2910,6 +2924,59 @@ class AdminController extends OrderAbstractController
             'critical-result-notifications' => 'crn',
             'translational-research' => 'translationalresearch',
             'dashboards' => 'dashboard'
+        );
+        return $elements;
+    }
+    public function getSiteDescription() {
+
+        //https://view.med.cornell.edu/translational-research/project/select-new-project-type
+        $trpSelectNewProjectLink = $this->container->get('router')->generate(
+            'translationalresearch_project_new_selector',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $trpSelectNewProjectLink = '<a target="_blank" href="' . $trpSelectNewProjectLink . '">'.$trpSelectNewProjectLink.'</a>';
+
+        $elements = array(
+            'directory' => '"Employee Directory" is a site for finding and managing contact information,'
+            .' locations, titles, institutional affiliations, and documents associated with user profiles.',
+
+            'scan' => '"Scan Order" is a site for submission, management, and status tracking of requests to scan glass slides.',
+
+            'fellowship-applications' => '"Fellowship Applications" is a site for online submission'
+            .' and management of fellowship applications, recommendation letter submissions,'
+            .' interview scheduling, and candidate interview evaluation.',
+
+            'residency-applications' => '"Residency Applications" is a site for management of residency (ERAS) applications,'
+            .' interview scheduling, and candidate interview evaluation.',
+
+            'deidentifier' => '"De-identifier" is a site for assigning and tracking unique'
+            .' identifiers to specimens or specimen containers for research projects'
+            .' requiring deidentification of clinical specimens and aiding honest brokers.',
+
+            'time-away-request' => '"Away Request" is a site for submission and approval of vacation requests,'
+            .' business travel requests, year-to-year carryover requests'
+            .' and floating day requests for faculty and fellows.'
+            .' It includes an away calendar and summary statistics.',
+
+            'call-log-book' => 'Call Log Book" is a site for documenting interactions with'
+            .' the resident physicians on call and reviewing previous'
+            .' documentation related to specific patients or issue types.',
+
+            'critical-result-notifications' => '"Critical Result Notifications" is a site for logging and'
+            .' initiating manual and automated notifications of healthcare'
+            .' providers regarding critical test results,'
+            .' as well as for acknowledgement tracking confirming the'
+            .' receipt of automated notifications.',
+
+            'translational-research' => '"Translational Research" is a site for specimen-associated project request submission,'
+            .' multi-stage approval, subsequent work order submission and processing,'
+            .' as well as invoice generation and payment tracking with automated reminders.'
+            .' To submit a new project request without requesting access, please visit '.$trpSelectNewProjectLink,
+
+            'dashboards' => '"Dashboards" is a site for displaying categorized chart groups to authorized users,'
+            .' including charts to monitor productivity, financial statistics,'
+            .' turnaround times, applicant scores, and site activity.'
         );
         return $elements;
     }

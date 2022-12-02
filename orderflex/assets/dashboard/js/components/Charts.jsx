@@ -12,15 +12,15 @@ import ReactDOM from "react-dom/client";
 import SingleChart from './SingleChart';
 
 class Charts extends Component {
-    constructor() {
+    constructor(props) {
         console.log("Charts constructor");
 
-        super();
+        super(props);
 
+        //this.state = { charts: [], loading: true};
 
-        let errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
-
-        this.state = { charts: [], loading: true, errorMessageRoot: errorMessageRoot};
+        //const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
+        this.state = { charts: [], loading: true, errorMessageRoot: props.errorMessageRoot};
 
         //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
         window.ChartsComponent = this;
@@ -63,8 +63,9 @@ class Charts extends Component {
         if( typeof(errorMsg) != 'undefined' && errorMsg != null) {
             //ReactDOM.unmountComponentAtNode(errorMsg); //error: react_dom_client .unmountComponentAtNode is not a function
             //const root = ReactDOM.createRoot(document.getElementById("error-message"));
-            this.state.errorMessageRoot.render(<div></div>);
-            //root.unmount(errorMsg);
+            //this.state.errorMessageRoot.render(<div></div>);
+            this.state.errorMessageRoot.render();
+            //this.state.errorMessageRoot.unmount();
         }
     }
 
@@ -143,6 +144,7 @@ class Charts extends Component {
             const root = ReactDOM.createRoot(document.getElementById(divId));
             root.render(
                 <SingleChart
+                    key={divId}
                     startDate={startDate}
                     endDate={endDate}
                     projectSpecialty={projectSpecialty}

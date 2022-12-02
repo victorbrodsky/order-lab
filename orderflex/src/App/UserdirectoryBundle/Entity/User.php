@@ -2449,19 +2449,47 @@ class User extends UserBase {
         $resArr = array();
 
         foreach( $this->getEmploymentStatus() as $employmentStatus ) {
+
+            $startDateStr = null;
+            $endDateStr = null;
+            $intstitution = $employmentStatus->getInstitution();
+
             if( $employmentStatus->getTerminationDate() ) {
-                $termCount++;
-                $instStr = "";
-                if( $employmentStatus->getInstitution() ) {
-                    $instStr = "at the ".$employmentStatus->getInstitution()."";
-                }
-                $termStr = $employmentStatus->getTerminationDate()->format("m/d/Y");
-                $resArr[] = "No longer works $instStr as of $termStr";
+                $endDateStr = $employmentStatus->getTerminationDate()->format("m/d/Y");
             }
+
+            if( $employmentStatus->getHireDate() ) {
+                $startDateStr = $employmentStatus->getHireDate()->format("m/d/Y");
+            }
+
+            //1) if start date AND Organizational Group is NULL
+            if( !$startDateStr && $endDateStr && !$intstitution  ) {
+                //Employed prior to 11/28/2022.
+                $resArr[] = "Employed prior to $endDateStr";
+            }
+
+            //2) If “Start Date” is not NULL and “End Date” is not NULL, but Organizational Institution is NULL
+            if( $startDateStr && $endDateStr && !$intstitution  ) {
+                //Employed from 11/22/2022 to 11/28/2022.
+                $resArr[] = "Employed from $startDateStr to $endDateStr";
+            }
+
+            //3) If “Start Date” is not NULL (and “End Date” is not NULL) and Organizational Institution is not NULL
+            if( $startDateStr && $endDateStr && $intstitution  ) {
+                //Employed by [Organizational Group] from 11/22/2022 to 11/28/2022.
+                $resArr[] = "Employed by $intstitution from $startDateStr to $endDateStr";
+            }
+
+            //4) If “Start Date” is NULL (and “End Date” is not NULL) and Organizational Institution is not NULL
+            if( !$startDateStr && $endDateStr && $intstitution  ) {
+                //Employed by [Organizational Group] prior to 11/28/2022.
+                $resArr[] = "Employed by $intstitution prior to $endDateStr";
+            }
+
             $emplCount++;
         }
 
-        if( $emplCount != 0 && $emplCount == $termCount ) {
+        if( count($resArr) > 0 ) {
             $res = implode("; ",$resArr);
         }
 
