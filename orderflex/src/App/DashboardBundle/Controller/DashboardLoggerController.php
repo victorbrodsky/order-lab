@@ -110,7 +110,8 @@ class DashboardLoggerController extends LoggerController
         ///////////// make sure eventTypes are set /////////////
         $eventTypes = array();
 
-        $filter = $request->query->get('filter');
+        //$filter = $request->query->get('filter');
+        $filter = $request->get('filter');
 
         if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];

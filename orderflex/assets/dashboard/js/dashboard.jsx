@@ -69,7 +69,8 @@
 
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom/client";
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/app.css';
@@ -89,7 +90,16 @@ import Charts from './components/Charts';
 
 // ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
 
-ReactDOM.render(<Router><Charts /></Router>, document.getElementById('root'));
+//ReactDOM.render(<Router><Charts /></Router>, document.getElementById('root'));
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+    <React.StrictMode>
+        <Router>
+            <Charts />
+        </Router>
+    </React.StrictMode>
+);
 
 const REACT_VERSION = React.version;
 // ReactDOM.render(

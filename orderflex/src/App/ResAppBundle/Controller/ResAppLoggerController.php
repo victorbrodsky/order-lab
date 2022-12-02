@@ -135,10 +135,13 @@ class ResAppLoggerController extends LoggerController
         $objectTypes = array();
         $objectId = null;
 
-        $filter = $request->query->get('filter');
+        //$filter = $request->query->get('filter');
+        $filter = $request->get('filter');
 
         if( count($filter) > 0 ) {
-            $objectTypes = $filter['objectType'];
+            if( isset($filter['objectType']) ) {
+                $objectTypes = $filter['objectType'];
+            }
             $objectId = $filter['objectId'];
         }
 

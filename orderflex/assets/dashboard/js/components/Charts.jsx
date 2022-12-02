@@ -4,8 +4,10 @@
 
 import React, {Component} from 'react';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
-import { unmountComponentAtNode, render } from "react-dom";
+//import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom/client";
+//import { unmountComponentAtNode, render } from "react-dom";
+//import { unmountComponentAtNode, render } from "react-dom/client";
 //import { Routes ,Route, Redirect, Link, withRouter } from 'react-router-dom';
 import SingleChart from './SingleChart';
 
@@ -14,7 +16,11 @@ class Charts extends Component {
         console.log("Charts constructor");
 
         super();
-        this.state = { charts: [], loading: true};
+
+
+        let errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
+
+        this.state = { charts: [], loading: true, errorMessageRoot: errorMessageRoot};
 
         //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
         window.ChartsComponent = this;
@@ -45,13 +51,20 @@ class Charts extends Component {
         if( type == 'warning' ) {
             error = <div id="dashboard-alert-msg" className={'alert alert-warning dashboard-alert-msg added-by-charts-js'}>{msg}</div>
         }
-        ReactDOM.render(error, document.getElementById('error-message'));
+        //ReactDOM.render(error, document.getElementById('error-message'));
+        //const root = ReactDOM.createRoot(document.getElementById("error-message"));
+        this.state.errorMessageRoot.render(
+            error
+        );
     }
 
     removeErrorLine() {
         var errorMsg = document.getElementById('error-message');
         if( typeof(errorMsg) != 'undefined' && errorMsg != null) {
-            ReactDOM.unmountComponentAtNode(errorMsg);
+            //ReactDOM.unmountComponentAtNode(errorMsg); //error: react_dom_client .unmountComponentAtNode is not a function
+            //const root = ReactDOM.createRoot(document.getElementById("error-message"));
+            this.state.errorMessageRoot.render(<div></div>);
+            //root.unmount(errorMsg);
         }
     }
 
@@ -97,7 +110,11 @@ class Charts extends Component {
 
         if( totalChartCount == 0 ) {
             const element = <div></div>;
-            ReactDOM.render(element, document.getElementById('error-message'));
+            //ReactDOM.render(element, document.getElementById('error-message'));
+            //const root = ReactDOM.createRoot(document.getElementById("error-message"));
+            this.state.errorMessageRoot.render(
+                element
+            );
         }
 
         let retrievedChartCount = 0;
@@ -123,7 +140,8 @@ class Charts extends Component {
             div.setAttribute('id', divId);
             document.getElementById("charts").appendChild(div);
 
-            ReactDOM.render(
+            const root = ReactDOM.createRoot(document.getElementById(divId));
+            root.render(
                 <SingleChart
                     startDate={startDate}
                     endDate={endDate}
@@ -134,9 +152,23 @@ class Charts extends Component {
                     chartIndex={chartIndex}
                     chartDivId={divId}
                     chartDiv={div}
-                />,
-                document.getElementById(divId)
-            )
+                    errorMessageRoot={this.state.errorMessageRoot}
+                />
+            );
+            // root.render(
+            //     <SingleChart
+            //         startDate={startDate}
+            //         endDate={endDate}
+            //         projectSpecialty={projectSpecialty}
+            //         productservice={productservice}
+            //         showLimited={showLimited}
+            //         quantityLimit={quantityLimit}
+            //         chartIndex={chartIndex}
+            //         chartDivId={divId}
+            //         chartDiv={div}
+            //     />,
+            //     document.getElementById(divId)
+            // )
         }
 
         // var url = Routing.generate('dashboard_api_charts'); //use FOSJsRoutingBundle
@@ -302,7 +334,11 @@ class Charts extends Component {
 
         if( totalChartCount == 0 ) {
             const element = <div></div>;
-            ReactDOM.render(element, document.getElementById('error-message'));
+            //ReactDOM.render(element, document.getElementById('error-message'));
+            //const root = ReactDOM.createRoot(document.getElementById("error-message"));
+            this.state.errorMessageRoot.render(
+                element
+            );
         }
 
         let retrievedChartCount = 0;

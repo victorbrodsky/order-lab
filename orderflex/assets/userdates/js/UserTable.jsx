@@ -195,7 +195,7 @@ const App = () => {
 
                 <DeactivateButton />
 
-                <table className="records_list table table-hover table-condensed text-left sortable">
+                <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>
                     <tr>
                         <th className="user-display-none">
@@ -252,6 +252,9 @@ const App = () => {
     }
 
 };
+
+//records_list table table-hover table-condensed text-left sortable
+//records_list table table-hover table-condensed table-striped text-left
 
         // <tr>
         //     <th>

@@ -1,7 +1,9 @@
 
 import React, {Component} from 'react';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
+//import ReactDOM from "react-dom/client";
+import ReactDOM, {createRoot} from 'react-dom/client'
 //import { Routes ,Route, Redirect, Link, withRouter } from 'react-router-dom';
 
 class SingleChart extends Component {
@@ -29,7 +31,11 @@ class SingleChart extends Component {
         if( type == 'warning' ) {
             error = <div id="dashboard-alert-msg" className={'alert alert-warning dashboard-alert-msg added-by-singlechart-js'}>{msg}</div>
         }
-        ReactDOM.render(error, document.getElementById('error-message'));
+        //ReactDOM.render(error, document.getElementById('error-message'));
+        //createRoot(document.getElementById('error-message')).render(error);
+        this.props.errorMessageRoot.render(
+            error
+        );
     }
 
     plotlyAddChartReact(resultData, chartDiv) {
@@ -166,7 +172,11 @@ class SingleChart extends Component {
         if( chartIndex === null ) {
             //console.log("SingleChart: chartIndex is null");
             const element = <div>Logical error: chart is not defined</div>;
-            ReactDOM.render(element, document.getElementById('error-message'));
+            //ReactDOM.render(element, document.getElementById('error-message'));
+            //createRoot(document.getElementById('error-message')).render(element);
+            this.props.errorMessageRoot.render(
+                element
+            );
         }
 
         //console.log("SingleChart: chartIndex="+chartIndex);
@@ -184,9 +194,9 @@ class SingleChart extends Component {
                 chartType:chartIndex,
                 productservice:productservice
             },
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            //headers: {
+                //'Content-Type': 'application/x-www-form-urlencoded'
+            //}
         })
         .then((result) => {
             //console.log(result);

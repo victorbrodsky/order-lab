@@ -2440,6 +2440,10 @@ class DashboardUtil
                 //dump($content);
                 //exit('111');
                 $postData = json_decode($content, true);
+                //$postData = json_decode($content);
+                //dump($postData);
+                //exit('111');
+
                 $startDate = $postData['startDate'];
                 $endDate = $postData['endDate'];
                 $projectSpecialty = $postData['projectSpecialty'];

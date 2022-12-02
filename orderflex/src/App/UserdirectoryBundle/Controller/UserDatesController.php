@@ -240,7 +240,7 @@ class UserDatesController extends OrderAbstractController
         //$query->setMaxResults(30);
         //$totalUsers = $query->getResult();
 
-        $limit = 3; //20; //20;
+        $limit = 20; //20;
 
         $paginationParams = array(
             'defaultSortFieldName' => 'user.id',

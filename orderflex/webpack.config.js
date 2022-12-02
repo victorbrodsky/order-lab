@@ -33,7 +33,7 @@ Encore
     //.addEntry('page2', './assets/js/page2.js')
 
     //.addEntry('dashboard_base', './assets/dashboard/js/dashboard_base.js')
-    .addEntry('dashboard', './assets/dashboard/js/dashboard.js')
+    .addEntry('dashboard', './assets/dashboard/js/dashboard.jsx')
     //.addEntry('userdates', './assets/userdates/js/app.jsx')
     //.addEntry('userdates', './assets/userdates/js/ScrollComponent.jsx')
     .addEntry('userdates', './assets/userdates/js/index.jsx')

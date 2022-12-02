@@ -632,7 +632,9 @@ class SlideReturnRequestController extends OrderAbstractController
         } //if message
 
 
-        $filter = $request->query->get('filter');
+        //$filter = $request->query->get('filter');
+        $filter = $request->get('filter');
+
         if( $filter && $filter != "" ) {
             $paramUrl = array('filter_search_box[filter]'=>$filter);
         } else {

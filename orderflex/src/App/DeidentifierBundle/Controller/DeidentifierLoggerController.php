@@ -110,7 +110,10 @@ class DeidentifierLoggerController extends LoggerController
         ///////////// make sure eventTypes are set /////////////
         $eventTypes = array();
 
-        $filter = $request->query->get('filter');
+        //$filter = $request->query->get('filter');
+        $filter = $request->get('filter');
+        //dump($filter);
+        //exit(111);
 
         if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];
@@ -118,6 +121,8 @@ class DeidentifierLoggerController extends LoggerController
 
         if( count($eventTypes) == 0 ) {
             //add eventTypes
+            //echo "id=".$eventType->getId()."<br>";
+            //exit('111');
             return $this->redirect($this->generateUrl('deidentifier_generation_log',
                 array(
                     'filter[eventType][]' => $eventType->getId()
@@ -125,8 +130,6 @@ class DeidentifierLoggerController extends LoggerController
             ));
         }
         ///////////// EOF make sure eventTypes and users are set /////////////
-
-
         $params = array(
             'sitename' => $this->getParameter('deidentifier.sitename'),
             'hideEventType' => true,
@@ -173,7 +176,8 @@ class DeidentifierLoggerController extends LoggerController
         $eventTypes = array();
         $users = array();
 
-        $filter = $request->query->get('filter');
+        //$filter = $request->query->get('filter');
+        $filter = $request->get('filter');
 
         if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];

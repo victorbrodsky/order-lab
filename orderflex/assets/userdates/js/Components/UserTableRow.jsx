@@ -53,7 +53,8 @@ const UserTableRow = ({ data, setfunc }) => {
                     className="check-input"
                     id={"checkbox-"+data.id}
                     name={"checkbox-"+data.id}
-                    value={"value-"+data.id} onChange={processDate}
+                    value={"value-"+data.id}
+                    onChange={processDate}
                 >
                 </input>
             </td>
