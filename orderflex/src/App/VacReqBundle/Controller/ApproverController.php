@@ -1678,7 +1678,8 @@ class ApproverController extends OrderAbstractController
 
 
     //My Group vacreq_mygroup
-     /**
+    /**
+     * @Route("/my-group/", name="vacreq_my_group", methods={"GET", "POST"})
      * @Route("/summary/", name="vacreq_summary", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/mygroup.html.twig")
      */
@@ -1691,6 +1692,25 @@ class ApproverController extends OrderAbstractController
             false == $this->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $routename = $request->get('_route');
+        if( $routename == 'vacreq_my_group' ) {
+            $vacreqUtil = $this->container->get('vacreq_util');
+            $groupTypes = $vacreqUtil->getApprovalGroupTypes();
+            $arr = array();
+            foreach($groupTypes as $groupType) {
+                $arr['filter[types]['.$groupType->getId().']'] = $groupType->getId();
+            }
+
+            return $this->redirectToRoute(
+                'vacreq_summary',
+                $arr
+                //array(
+                    //'filter[types][0]' => "Pending",
+                    //'filter[types][1]' => $invoicetype,
+                //)
+            );
         }
 
         set_time_limit(600);
