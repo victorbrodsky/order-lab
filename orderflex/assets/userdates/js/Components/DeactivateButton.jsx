@@ -5,7 +5,7 @@ const DeactivateButton = () => {
     const url = Routing.generate('employees_update_users_date');
 
     function disableAccounts() {
-
+        alert("To be implemented");
     }
 
     return (

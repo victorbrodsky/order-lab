@@ -32,6 +32,7 @@ const App = () => {
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalUsers, setTotalUsers] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
+    const [deactivateElements, setDeactivateElement] = useState([]);
 
     const observer = useRef(
         new IntersectionObserver((entries) => {

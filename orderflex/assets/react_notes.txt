@@ -17,6 +17,7 @@ Update nodejs:
 1)
 curl --silent --location https://rpm.nodesource.com/setup_18.x | sudo bash -
 curl --silent --location https://rpm.nodesource.com/setup_14.x | sudo bash -
+curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
 2)
 not working: sudo yum -y install nodejs (optional if error: --skip-broken)
 working: sudo dnf install -y nodejs

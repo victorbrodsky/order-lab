@@ -1706,10 +1706,6 @@ class ApproverController extends OrderAbstractController
             return $this->redirectToRoute(
                 'vacreq_summary',
                 $arr
-                //array(
-                    //'filter[types][0]' => "Pending",
-                    //'filter[types][1]' => $invoicetype,
-                //)
             );
         }
 

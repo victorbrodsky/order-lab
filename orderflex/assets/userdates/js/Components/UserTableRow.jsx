@@ -1,5 +1,6 @@
 import React from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
 //import Form from "react-bootstrap/Form";
 import '../../css/index.css';
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -41,6 +42,28 @@ const UserTableRow = ({ data, setfunc }) => {
         //calendarIconBtn.prop('disabled', true);
     }
 
+    // function getActionMenu() {
+    //     let links = '<li><a target="_blank" href={data.showLink}>View Profile</a></li>';
+    //     if( data.keytype == "ldap-user" || data.keytype == "ldap2-user" ) {
+    //         /*links = links + '<li><a target="_blank" href={data.showLink}>View Profile</a></li>';
+    //             '<li><a target="_blank" href={data.showLink}>View Profile</a></li>'*/
+    //             /*<li><a target="_blank" href={data.editLink}>Edit Profile</a></li>
+    //
+    //             <li><a target="_blank" href={data.eventlogLink}>Check Active Directory account status</a></li>
+    //             <li><a target="_blank" href={data.eventlogLink}>View event log</a></li>*/
+    //     }
+    //     return links;
+    // }
+
+    function checkLdapStatus(userId) {
+        let checkLdap = Routing.generate('employees_check_ldap-usertype-userid');
+        console.log("checkLdapStatus userId="+userId);
+        axios.get(checkLdap, { userId: userId })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
     
     return (
         <tr ref={setfunc}>
@@ -82,12 +105,24 @@ const UserTableRow = ({ data, setfunc }) => {
             <td className="rowlink-skip">
                 <DatepickerComponent data={data} componentid = {"datepicker-end-date-"+data.id}/>
             </td>
-            <td>
+            <td className="rowlink-skip">
                 {data.status}
+                { (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
+                    <button
+                        id={"ldap-status-"+data.id}
+                        className="btn btn-sm btn-light"
+                        title="Check Active Directory status"
+                        onClick={() => checkLdapStatus(data.id)}
+                    >Check Status</button>
+                }
             </td>
             <td className="rowlink-skip">
                 <div className="btn-group">
-                    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button
+                            type="button"
+                            className="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown"
+                    >
                         Action <span className="caret"></span>
                     </button>
                     <ul className="dropdown-menu dropdown-menu-right">
@@ -100,6 +135,7 @@ const UserTableRow = ({ data, setfunc }) => {
         </tr>
     );
 };
+
 
 
 // <div className="input-group input-group-reg date allow-future-date">

@@ -337,6 +337,13 @@ class UserDatesController extends OrderAbstractController
                 $status = $terminationStr; //"terminated";
             }
 
+            //get usernametype => local or ldap
+            $userKeyTypeAbbreviation = "";
+            $userKeyType = $user->getKeyType();
+            if( $userKeyType ) {
+                $userKeyTypeAbbreviation = $userKeyType->getAbbreviation(); //ldap-user, ldap2-user, local-user
+            }
+
             $jsonArray[] = array(
                 'id'            => $user->getId(),
                 'showLink'      => $showLink,
@@ -350,7 +357,8 @@ class UserDatesController extends OrderAbstractController
                 'Title'         => $titles,
                 'StartDate'     => $startDate,
                 'EndDate'       => $endDate,
-                'status'        => $status
+                'status'        => $status,
+                'keytype'       => $userKeyTypeAbbreviation
 
             );
             //$jsonArray['FirstName'] = $user->getFirstName();
