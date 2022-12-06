@@ -25,7 +25,11 @@ Remove nodejs: sudo yum remove nodejs
 
 https://www.twilio.com/blog/building-a-single-page-application-with-symfony-php-and-react
 New files (node.js dependencies, Node Package Manager (NPM)): yarn.lock, package.json
-On dev: yarn encore dev --watch
+On dev:
+to watch for js updates: yarn encore dev --watch
+to update yarn.lock: yarn install
 On live server: yarn install --frozen-lockfile
 On deploy, create a production build: yarn encore production
+
+removed: "@symfony/webpack-encore": "^4.1.2",
 
