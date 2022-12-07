@@ -144,7 +144,8 @@ class InterviewType extends AbstractType
             'label' => 'Total Score:',
             'required' => false,
             //'disabled' => true,
-            'attr' => array('class' => 'form-control interview-totalRank', 'readonly'=>true),
+            //'attr' => array('class' => 'form-control interview-totalRank', 'readonly'=>true),
+            'attr' => array('class' => 'form-control interview-totalRank'),
         ));
 
         $builder->add('comment',null,array(
