@@ -1735,16 +1735,16 @@ class ResAppUtil {
     //compare original and final users => get removed users => for each removed user, remove the role
     public function processRemovedUsersByResidencySetting( $residencyTrack, $newUsers, $origUsers, $roleName ) {
         //if( count($newUsers) > 0 && count($origUsers) > 0 ) {
-            $this->printUsers($origUsers,"orig");
-            $this->printUsers($newUsers,"new");
+            //$this->printUsers($origUsers,"orig");
+            //$this->printUsers($newUsers,"new");
 
             //get diff
             $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
             //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
             //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
 
-            echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
-            $this->printUsers($diffUsers,"diff");
+            //echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
+            //$this->printUsers($diffUsers,"diff");
 
             $this->removeRoleFromUsers($diffUsers,$residencyTrack,$roleName);
         //}

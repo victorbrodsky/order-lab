@@ -1238,8 +1238,6 @@ class User extends UserBase {
     public function createCleanUsername($username): ?string
     {
         if( $username ) {
-            //$username = trim((string)$username);
-            //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
         $usernameArr = explode("_@_",$username);

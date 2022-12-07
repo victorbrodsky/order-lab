@@ -1232,13 +1232,14 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
        
-        $userId = trim((string)$request->get('userId') );
+        $userId = trim((string)$request->get('userId') ); //cwid
         //$userTypeText = trim((string)$request->get('userTypeText') );
+        //echo "userId=$userId<br>";
+        //exit('111');
 
         $output = "ok";
         
-        $em = $this->getDoctrine()->getManager();
-
+        //$em = $this->getDoctrine()->getManager();
         //$authUtil = new AuthUtil($this->container,$em);
         $authUtil = $this->container->get('authenticator_utility');
         

@@ -2258,6 +2258,7 @@ class ResAppController extends OrderAbstractController {
         //echo "status <br>";
 
         if( false == $this->isGranted("create", "Interview") ) {
+            //exit('111');
             return $this->redirect($this->generateUrl('resapp-nopermission'));
         }
 

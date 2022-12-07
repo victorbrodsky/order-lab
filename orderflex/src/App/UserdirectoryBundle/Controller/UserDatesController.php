@@ -344,8 +344,11 @@ class UserDatesController extends OrderAbstractController
                 $userKeyTypeAbbreviation = $userKeyType->getAbbreviation(); //ldap-user, ldap2-user, local-user
             }
 
+            $cwid = $user->getCleanUsername();
+
             $jsonArray[] = array(
                 'id'            => $user->getId(),
+                'cwid'          => $cwid,
                 'showLink'      => $showLink,
                 'editLink'      => $editLink,
                 'eventlogLink'  => $eventlogLink,

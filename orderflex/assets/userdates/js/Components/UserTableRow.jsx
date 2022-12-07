@@ -55,14 +55,53 @@ const UserTableRow = ({ data, setfunc }) => {
     //     return links;
     // }
 
-    function checkLdapStatus(userId) {
-        let checkLdap = Routing.generate('employees_check_ldap-usertype-userid');
-        console.log("checkLdapStatus userId="+userId);
-        axios.get(checkLdap, { userId: userId })
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
+    function checkLdapStatus(userId, userCwid) {
+        let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
+        console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
+
+        // axios.get(checkLdap, {
+        //     params: {
+        //         userId: userId
+        //     }
+        // })
+        // .then(res => {
+        //     console.log(res);
+        //     console.log(res.data);
+        // });
+
+        var checkButton = $('#'+"ldap-status-"+userId);
+        var l = Ladda.create(checkButton.get(0));
+        l.start();
+
+        //axios: params for get, data for post
+        axios({
+            method: 'get',
+            url: checkLdapUrl,
+            params: {
+                userId: userCwid,
+            }
+        })
+        .then((response) => {
+            console.log("response.data=["+response.data+"]");
+            l.stop();
+            if( response.data == "ok" ) {
+                console.log("Active");
+                checkButton.replaceWith("<div class='text-success'>Active in Active Directory</div>");
+            }
+            if( response.data == "notok" ) {
+                console.log("Inactive");
+                checkButton.replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
+            }
+        }, (error) => {
+            //console.log(error);
+            var errorMsg = "Unexpected Error. " +
+                "Please make sure that your session is not timed out and you are still logged in. "+error;
+            //this.addErrorLine(errorMsg,'error');
+            alert(errorMsg);
+
+            l.stop();
+        });
+
     }
     
     return (
@@ -108,12 +147,14 @@ const UserTableRow = ({ data, setfunc }) => {
             <td className="rowlink-skip">
                 {data.status}
                 { (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
+                    <p>
                     <button
                         id={"ldap-status-"+data.id}
                         className="btn btn-sm btn-light"
                         title="Check Active Directory status"
-                        onClick={() => checkLdapStatus(data.id)}
+                        onClick={() => checkLdapStatus(data.id, data.cwid)}
                     >Check Status</button>
+                    </p>
                 }
             </td>
             <td className="rowlink-skip">

@@ -11,5 +11,14 @@ input.check-input {
     height: 20px;
 }
 
+.text-success {
+    color: green;
+}
+
+.text-danger {
+    color: red;
+}
+
+
 
 
