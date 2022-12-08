@@ -416,6 +416,24 @@ class UserDatesController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        //$datas = $request->get('datas');
+        $datas = json_decode($request->getContent(), true);
+        //dump($datas);
+
+        foreach($datas as $key=>$thisData) {
+            foreach($thisData as $data) {
+                //dump($data);
+                //exit("111 $key");
+                $userId = $data['userId'];
+                $startDate = $data['startDate'];
+                $endDate = $data['endDate'];
+                echo "userId=$userId, startDate=$startDate, endDate=$endDate <br>";
+                //break;
+
+                
+            }
+        }
+
         exit('Not implemented');
     }
 

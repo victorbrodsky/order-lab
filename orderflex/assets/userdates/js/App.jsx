@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from "react-dom/client";
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import UserTableRow from './Components/UserTableRow.jsx';
-import Loading from './Components/Loading.jsx'
+import UserTableRow from './components/UserTableRow.jsx';
+import Loading from './components/Loading.jsx'
 // import '../css/index.css';
 
 //const TOTAL_PAGES = 0; //0; //3;

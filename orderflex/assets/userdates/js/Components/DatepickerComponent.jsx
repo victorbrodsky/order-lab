@@ -1,10 +1,13 @@
 import React from 'react'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 //import { Form } from 'react-bootstrap';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 const DatepickerComponent = ({ data, dateRef, componentid }) => {
+
+    const dateCalendarBtnRef = useRef();
+    const dateGroupRef = useRef();
 
     useEffect(() => {
         //console.log( "useEffect" );
@@ -14,47 +17,51 @@ const DatepickerComponent = ({ data, dateRef, componentid }) => {
     }, []);
 
     function handleClickCalendarButton() {
+        //console.log( "react click calendar icon", dateRef.current );
+        //dateRef.current.click();
         //return;
-        console.log( "react click calendar icon" );
         //var inputField = $('#'+componentid).closest('.input-group').find('input.datepicker');
         var inputField = $(dateRef.current);
         console.log("inputField=",inputField);
         if( inputField.hasClass("datepicker-status-open") ) {
-            //console.log( "hide datepicker" );
+            console.log( "hide datepicker" );
             $(".datepicker-dropdown").remove();
             inputField.removeClass("datepicker-status-open");
         } else {
+            console.log( "show datepicker" );
             inputField.addClass("datepicker-status-open");
             //inputField.addClass('datepicker-dropdown').addClass('dropdown-menu'); // datepicker-orient-left datepicker-orient-bottom
         }
     }
 
-    if(1) {
+    if(0) {
         return(
-            <div className="input-group input-group-reg date allow-future-date">
+            <div className="input-group input-group-reg date">
                 <input
                     ref={dateRef}
                     type="text"
                     id={componentid}
-                    name={componentid}
-                    className="datepicker form-control allow-future-date"
+                    //name={componentid}
+                    className="datepicker111 form-control allow-future-date"
                 />
             </div>
         )
     } else {
         return(
-            <div className="input-group input-group-reg date allow-future-date">
+            <div ref={dateGroupRef} className="input-group input-group-reg date">
                 <input
                     ref={dateRef}
                     type="text"
                     id={componentid}
-                    name={componentid}
+                    //name={componentid}
                     className="datepicker form-control allow-future-date"
                 />
                  <span
-                 className="input-group-addon calendar-icon-button"
-                 id={"calendar-icon-button-"+componentid}
-                 onClick={handleClickCalendarButton}
+                     ref={dateCalendarBtnRef}
+                     className="input-group-addon calendar-icon-button"
+                     id={"calendar-icon-button-"+componentid}
+                     //onClick={handleClickCalendarButton}
+                     //onClick={() => handleClickCalendarButton()}
                  ><i className="glyphicon glyphicon-calendar"></i></span>
 
             </div>

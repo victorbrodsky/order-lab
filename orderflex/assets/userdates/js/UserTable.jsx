@@ -5,12 +5,12 @@ import React from 'react';
 //import ReactDOM from "react-dom/client";
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import UserTableRow from './Components/UserTableRow.jsx';
-import UserTable from './Components/UserTable.jsx';
-import Loading from './Components/Loading.jsx';
-import DeactivateButton from './Components/DeactivateButton.jsx';
-import MatchInfo from './Components/MatchInfo.jsx';
-import DatepickerComponent from './Components/DatepickerComponent.jsx';
+import UserTableRow from './components/UserTableRow.jsx';
+import UserTable from './components/UserTable.jsx';
+import Loading from './components/Loading.jsx';
+import DeactivateButton from './components/DeactivateButton.jsx';
+import MatchInfo from './components/MatchInfo.jsx';
+import DatepickerComponent from './components/DatepickerComponent.jsx';
 
 import '../css/index.css';
 import '../../../public/orderassets/AppUserdirectoryBundle/form/js/user-common.js';
@@ -32,7 +32,12 @@ const App = () => {
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalUsers, setTotalUsers] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
+    const [rowRefs, setRowRefs] = useState([]);
     const [deactivateElements, addDeactivateElement] = useState([]);
+    const [isShown, setIsShown] = useState(true);
+
+    const tableBodyRef = useRef();
+    var _counter = 0;
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -42,6 +47,60 @@ const App = () => {
             }
         })
     );
+
+    function updateRowRefs( rowRef, type ) {
+        //console.log("type:",type);
+        //console.log("rowRef=",rowRef); //tr#"table-row-"+data.id
+        //console.log("rowRef id=",rowRef.current.id);
+
+        //updateList(rowRefs.filter(item => item.name !== name));
+        //updateList(rowRefs.filter(item => item.current.id !== rowRef.current.id));
+
+        function filterRowRef(itemRef) {
+            //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+rowRef.current.id+"]");
+            if( itemRef.current.id === rowRef.current.id ) {
+                return false;
+            }
+            return true;
+        }
+
+        if( type === 'add' ) {
+            //console.log("add",rowRef.current.id);
+            rowRefs.push(rowRef);
+            setRowRefs( rowRefs );
+            _counter = _counter + 1;
+        }
+        if( type === 'remove' ) {
+            //console.log("remove",rowRef.current.id);
+            const newRowRefs = [...rowRefs];
+            //const removeId = rowRef.current.id;
+            //setRowRefs( newRowRefs.filter((item) => { return item.current.id !== rowRef.current.id }) )
+            setRowRefs( newRowRefs.filter(filterRowRef) );
+            //console.log("after rowRefs=",rowRefs);
+            _counter = _counter - 1;
+        }
+
+        console.log("after rowRefs",rowRefs);
+
+        // console.log("_counter="+_counter);
+        // if( _counter > 0 ) {
+        //     setIsShown(true)
+        // } else {
+        //     setIsShown(false)
+        // }
+    }
+
+    // function getData() {
+    //     return rowRefs;
+    // }
+
+    // useEffect(() => {
+    //     if( _counter > 0 ) {
+    //         setIsShown(true)
+    //     } else {
+    //         setIsShown(false)
+    //     }
+    // }, [_counter]);
 
     let apiUrl = Routing.generate('employees_users_api');
     let url = '';
@@ -194,7 +253,7 @@ const App = () => {
 
                 <MatchInfo message={matchMessage}/>
 
-                <DeactivateButton addDeactivateElement={addDeactivateElement}/>
+                {isShown && <DeactivateButton addDeactivateElement={addDeactivateElement} rowRefs={rowRefs}/>}
 
                 <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>
@@ -221,7 +280,7 @@ const App = () => {
                         <th>Action</th>
                     </tr>
                     </thead>
-                    <tbody data-link="row" className="rowlink">
+                    <tbody ref={tableBodyRef} data-link="row" className="rowlin">
 
                     {allUsers.length > 0 && allUsers.map((user, i) => {
                         return i === allUsers.length - 1 && !loading && (pageNum <= TOTAL_PAGES && TOTAL_PAGES) ?
@@ -230,13 +289,14 @@ const App = () => {
                                 <UserTableRow
                                     data={user}
                                     key={ user.id+'-'+i }
+                                    updateRowRefs={updateRowRefs}
                                     setfunc={setLastElement}
                                 />
                             ) : (
                             <UserTableRow
                                 data={user}
                                 key={ user.id+'-'+i }
-                                //setfunc={null}
+                                updateRowRefs={updateRowRefs}
                             />
                         );
                     })}
@@ -246,7 +306,7 @@ const App = () => {
                     </tbody>
                 </table>
 
-                {!loading && <DeactivateButton />}
+                {!loading && <DeactivateButton addDeactivateElement={addDeactivateElement} rowRefs={rowRefs}/>}
 
             </div>
         );

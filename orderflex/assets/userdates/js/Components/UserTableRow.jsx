@@ -9,67 +9,36 @@ import DatepickerComponent from './DatepickerComponent.jsx'
 //import Checkbox from './Checkbox.jsx'
 
 
-const UserTableRow = ({ data, setfunc }) => {
+const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
 
     //const [isDisabled, setIsDisabled] = useState(false);
 
+    const rowRef = useRef();
     const checkBoxRef = useRef();
     const checkBoxStatusRef = useRef();
     const startDateRef = useRef();
     const endDateRef = useRef();
 
-    // useEffect(() => {
-    //     initSingleDatepicker( $(startDateRef.current) );
-    //     initSingleDatepicker( $(endDateRef.current) );
-    // }, []);
-
     function handleCheckBox(event) {
-        console.log("handleCheckBox");
+        //console.log("handleCheckBox");
         //event.preventDefault();
+        event.stopPropagation();
         if( checkBoxRef.current.checked ) {
             //alert("checked");
             //event.preventDefault();
-            console.log("enable",startDateRef);
+            //console.log("enable",startDateRef);
             startDateRef.current.disabled = false;
             endDateRef.current.disabled = false;
+            updateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
         } else {
             //alert("unchecked");
             //event.preventDefault();
-            console.log("disable",startDateRef);
+            //console.log("disable",startDateRef);
             startDateRef.current.disabled = true;
             endDateRef.current.disabled = true;
+            updateRowRefs(rowRef,'remove');
         }
     }
-    function handleCheckBox2() {
-        console.log("disable checkbox");
-        //$(this).prop('disabled', true);
-
-        var datepickerStartDateElement = $("#datepicker-start-date-"+data.id);
-        var datepickerEndDateElement = $("#datepicker-end-date-"+data.id);
-        //console.log("datepickerStartDateElement",datepickerStartDateElement);
-
-        var checked = document.getElementById("checkbox-"+data.id);
-        if (checked.checked) {
-            datepickerStartDateElement.prop('disabled', false);
-            datepickerEndDateElement.prop('disabled', false);
-        } else {
-            datepickerStartDateElement.prop('disabled', true);
-            datepickerEndDateElement.prop('disabled', true);
-        }
-    }
-
-    // function getActionMenu() {
-    //     let links = '<li><a target="_blank" href={data.showLink}>View Profile</a></li>';
-    //     if( data.keytype == "ldap-user" || data.keytype == "ldap2-user" ) {
-    //         /*links = links + '<li><a target="_blank" href={data.showLink}>View Profile</a></li>';
-    //             '<li><a target="_blank" href={data.showLink}>View Profile</a></li>'*/
-    //             /*<li><a target="_blank" href={data.editLink}>Edit Profile</a></li>
-    //
-    //             <li><a target="_blank" href={data.eventlogLink}>Check Active Directory account status</a></li>
-    //             <li><a target="_blank" href={data.eventlogLink}>View event log</a></li>*/
-    //     }
-    //     return links;
-    // }
 
     function handleCheckLdapStatus(userId, userCwid) {
         let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
@@ -87,65 +56,16 @@ const UserTableRow = ({ data, setfunc }) => {
                 userId: userCwid,
             }
         })
-            .then((response) => {
-                console.log("response.data=["+response.data+"]");
-                l.stop();
-                if( response.data == "ok" ) {
-                    console.log("Active");
-                    $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Active in Active Directory</div>");
-                }
-                if( response.data == "notok" ) {
-                    console.log("Inactive");
-                    $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
-                }
-            }, (error) => {
-                //console.log(error);
-                var errorMsg = "Unexpected Error. " +
-                    "Please make sure that your session is not timed out and you are still logged in. "+error;
-                //this.addErrorLine(errorMsg,'error');
-                alert(errorMsg);
-
-                l.stop();
-            });
-
-    }
-
-    function handleCheckLdapStatus2(userId, userCwid) {
-        let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
-        console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
-
-        // axios.get(checkLdap, {
-        //     params: {
-        //         userId: userId
-        //     }
-        // })
-        // .then(res => {
-        //     console.log(res);
-        //     console.log(res.data);
-        // });
-
-        var checkButton = $('#'+"ldap-status-"+userId);
-        var l = Ladda.create(checkButton.get(0));
-        l.start();
-
-        //axios: params for get, data for post
-        axios({
-            method: 'get',
-            url: checkLdapUrl,
-            params: {
-                userId: userCwid,
-            }
-        })
         .then((response) => {
             console.log("response.data=["+response.data+"]");
             l.stop();
             if( response.data == "ok" ) {
                 console.log("Active");
-                checkButton.replaceWith("<div class='text-success'>Active in Active Directory</div>");
+                $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Active in Active Directory</div>");
             }
             if( response.data == "notok" ) {
                 console.log("Inactive");
-                checkButton.replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
+                $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
             }
         }, (error) => {
             //console.log(error);
@@ -156,10 +76,11 @@ const UserTableRow = ({ data, setfunc }) => {
 
             l.stop();
         });
+
     }
     
     return (
-        <tr ref={setfunc} className={"table-row-"+data.id}>
+        <tr ref={rowRef} id={"table-row-"+data.id}>
             <td className="user-display-none">
                  <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>
@@ -175,7 +96,7 @@ const UserTableRow = ({ data, setfunc }) => {
                 >
                 </input>
             </td>
-            <td>
+            <td ref={setfunc}>
                 {data.LastName}
             </td>
             <td>
