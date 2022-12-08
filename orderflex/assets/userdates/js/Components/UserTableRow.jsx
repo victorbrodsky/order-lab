@@ -105,7 +105,7 @@ const UserTableRow = ({ data, setfunc }) => {
     }
     
     return (
-        <tr ref={setfunc}>
+        <tr ref={setfunc} className={"table-row-"+data.id}>
             <td className="user-display-none">
                  <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>

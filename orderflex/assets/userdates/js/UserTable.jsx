@@ -32,7 +32,7 @@ const App = () => {
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalUsers, setTotalUsers] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
-    const [deactivateElements, setDeactivateElement] = useState([]);
+    const [deactivateElements, addDeactivateElement] = useState([]);
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -194,7 +194,7 @@ const App = () => {
 
                 <MatchInfo message={matchMessage}/>
 
-                <DeactivateButton />
+                <DeactivateButton addDeactivateElement={addDeactivateElement}/>
 
                 <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>

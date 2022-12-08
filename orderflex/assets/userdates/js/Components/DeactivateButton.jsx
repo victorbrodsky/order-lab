@@ -4,8 +4,13 @@ import '../../css/index.css';
 const DeactivateButton = () => {
     const url = Routing.generate('employees_update_users_date');
 
-    function disableAccounts() {
-        alert("To be implemented");
+    function disableAccounts({addDeactivateElement}) {
+        //alert("To be implemented");
+        var rows = $('.'+"table-row-"+data.id);
+        rows.each(function(e) {
+            console.log("row=",$(this));
+        });
+        
     }
 
     return (
