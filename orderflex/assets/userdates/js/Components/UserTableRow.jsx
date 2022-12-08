@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 //import Form from "react-bootstrap/Form";
 import '../../css/index.css';
@@ -11,12 +11,36 @@ import DatepickerComponent from './DatepickerComponent.jsx'
 
 const UserTableRow = ({ data, setfunc }) => {
 
-    useEffect(() => {
-        initSingleDatepicker( $('#'+"datepicker-start-date-"+data.id) );
-        initSingleDatepicker( $('#'+"datepicker-end-date-"+data.id) );
-    }, []);
+    //const [isDisabled, setIsDisabled] = useState(false);
 
-    function processDate() {
+    const checkBoxRef = useRef();
+    const checkBoxStatusRef = useRef();
+    const startDateRef = useRef();
+    const endDateRef = useRef();
+
+    // useEffect(() => {
+    //     initSingleDatepicker( $(startDateRef.current) );
+    //     initSingleDatepicker( $(endDateRef.current) );
+    // }, []);
+
+    function handleCheckBox(event) {
+        console.log("handleCheckBox");
+        //event.preventDefault();
+        if( checkBoxRef.current.checked ) {
+            //alert("checked");
+            //event.preventDefault();
+            console.log("enable",startDateRef);
+            startDateRef.current.disabled = false;
+            endDateRef.current.disabled = false;
+        } else {
+            //alert("unchecked");
+            //event.preventDefault();
+            console.log("disable",startDateRef);
+            startDateRef.current.disabled = true;
+            endDateRef.current.disabled = true;
+        }
+    }
+    function handleCheckBox2() {
         console.log("disable checkbox");
         //$(this).prop('disabled', true);
 
@@ -32,14 +56,6 @@ const UserTableRow = ({ data, setfunc }) => {
             datepickerStartDateElement.prop('disabled', true);
             datepickerEndDateElement.prop('disabled', true);
         }
-
-        //datepickerElement.datepicker("remove");
-        //datepickerElement.prop('disabled', false);
-
-        //calendarIconBtn.off();
-        //var calendarIconBtn = datepickerElement.find('.calendar-icon-button');
-        //console.log("calendarIconBtn",calendarIconBtn);
-        //calendarIconBtn.prop('disabled', true);
     }
 
     // function getActionMenu() {
@@ -55,7 +71,46 @@ const UserTableRow = ({ data, setfunc }) => {
     //     return links;
     // }
 
-    function checkLdapStatus(userId, userCwid) {
+    function handleCheckLdapStatus(userId, userCwid) {
+        let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
+        console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
+
+        //var checkButton = $('#'+"ldap-status-"+userId);
+        var l = Ladda.create(checkBoxStatusRef.current);
+        l.start();
+
+        //axios: params for get, data for post
+        axios({
+            method: 'get',
+            url: checkLdapUrl,
+            params: {
+                userId: userCwid,
+            }
+        })
+            .then((response) => {
+                console.log("response.data=["+response.data+"]");
+                l.stop();
+                if( response.data == "ok" ) {
+                    console.log("Active");
+                    $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Active in Active Directory</div>");
+                }
+                if( response.data == "notok" ) {
+                    console.log("Inactive");
+                    $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
+                }
+            }, (error) => {
+                //console.log(error);
+                var errorMsg = "Unexpected Error. " +
+                    "Please make sure that your session is not timed out and you are still logged in. "+error;
+                //this.addErrorLine(errorMsg,'error');
+                alert(errorMsg);
+
+                l.stop();
+            });
+
+    }
+
+    function handleCheckLdapStatus2(userId, userCwid) {
         let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
         console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
 
@@ -101,7 +156,6 @@ const UserTableRow = ({ data, setfunc }) => {
 
             l.stop();
         });
-
     }
     
     return (
@@ -111,12 +165,13 @@ const UserTableRow = ({ data, setfunc }) => {
             </td>
             <td className="rowlink-skip">
                 <input
+                    ref={checkBoxRef}
                     type="checkbox"
                     className="check-input"
                     id={"checkbox-"+data.id}
                     name={"checkbox-"+data.id}
                     value={"value-"+data.id}
-                    onChange={processDate}
+                    onChange={handleCheckBox}
                 >
                 </input>
             </td>
@@ -139,22 +194,20 @@ const UserTableRow = ({ data, setfunc }) => {
                 {data.Title}
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} componentid = {"datepicker-start-date-"+data.id}/>
+                <DatepickerComponent data={data} dateRef={startDateRef} componentid={"datepicker-start-date-"+data.id}/>
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} componentid = {"datepicker-end-date-"+data.id}/>
+                <DatepickerComponent data={data} dateRef={endDateRef} componentid={"datepicker-end-date-"+data.id}/>
             </td>
             <td className="rowlink-skip">
                 {data.status}
                 { (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
-                    <p>
-                    <button
-                        id={"ldap-status-"+data.id}
-                        className="btn btn-sm btn-light"
+                    <span
+                        className="glyphicon glyphicon-question-sign ml-1"
+                        ref={checkBoxStatusRef}
                         title="Check Active Directory status"
-                        onClick={() => checkLdapStatus(data.id, data.cwid)}
-                    >Check Status</button>
-                    </p>
+                        onClick={() => handleCheckLdapStatus(data.id, data.cwid)}
+                    ></span>
                 }
             </td>
             <td className="rowlink-skip">
@@ -178,6 +231,15 @@ const UserTableRow = ({ data, setfunc }) => {
 };
 
 
+// <p>
+//     <button
+//         ref={checkBoxStatusRef}
+//         id={"ldap-status-"+data.id}
+//         className="btn btn-sm btn-default"
+//         title="Check Active Directory status"
+//         onClick={() => handleCheckLdapStatus(data.id, data.cwid)}
+//     >Check Status</button>
+// </p>
 
 // <div className="input-group input-group-reg date allow-future-date">
 //     <input

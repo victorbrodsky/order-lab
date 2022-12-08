@@ -19,6 +19,9 @@ input.check-input {
     color: red;
 }
 
+.ml-1 {
+    margin-left: .25rem !important;
+}
 
 
 

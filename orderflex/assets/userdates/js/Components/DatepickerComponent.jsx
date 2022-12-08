@@ -4,66 +4,23 @@ import { useEffect } from 'react';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-const DatepickerComponent = ({ data, componentid }) => {
+const DatepickerComponent = ({ data, dateRef, componentid }) => {
 
     useEffect(() => {
         //console.log( "useEffect" );
-        //update datepicker
-        //initSingleDatepicker( $('.datepicker') );
-        initSingleDatepicker( $('#'+componentid) );
-        //initSingleDatepicker( $(this).find('.datepicker') );
-        //initSingleDatepicker( $(this).find('.datepicker') );
-
-        // $('#'+componentid).datepicker({
-        //     autoclose: true,
-        //     clearBtn: true,
-        //     //todayBtn: datepickertodayBtn,
-        //     todayHighlight: true,
-        //     startDate: false,
-        //     endDate: false,
-        //     orientation: "auto", //"auto top"
-        //     ////minDate: new Date(1902, 1, 1)   //null
-        //     format: "mm/dd/yyyy",
-        //     minViewMode: "days",
-        //     viewMode: null,
-        //     multidate: false,
-        // });
-
-        //var calendarIconBtn = $('.datepicker').find('.calendar-icon-button');
-        //var calendarIconBtn = $('#'+componentid).find('.calendar-icon-button');
-        // var calendarIconBtn = $('#'+"calendar-icon-button-"+componentid);
-        // console.log("calendarIconBtn:",calendarIconBtn);
-        // calendarIconBtn.on( "click", function(event) {
-        //     event.stopPropagation();
-        //     console.log( "click calendar icon" );
-        //     //var inputField = $('.datepicker').closest('.input-group').find('input.datepicker');
-        //     var inputField = $('#'+componentid);
-        //     console.log("react inputField:",inputField);
-        //     if( inputField.hasClass("datepicker-status-open") ) {
-        //         console.log( "hide datepicker" );
-        //         //$(".datepicker-dropdown").remove();
-        //         //inputField.removeClass("datepicker-status-open");
-        //         inputField.addClass("datepicker-status-open");
-        //     } else {
-        //         console.log( "show datepicker" );
-        //         inputField.addClass("datepicker-status-open");
-        //     }
-        // });
-        
-        $('#'+componentid).datepicker('update', data.StartDate);
-        $('#'+componentid).prop('disabled', true);
-
+        initSingleDatepicker( $(dateRef.current) );
+        $(dateRef.current).datepicker('update', data.StartDate);
+        dateRef.current.disabled = true;
     }, []);
 
-    function openCalendar() {
-        return;
+    function handleClickCalendarButton() {
+        //return;
         console.log( "react click calendar icon" );
-        var inputField = $('#'+componentid).closest('.input-group').find('input.datepicker');
+        //var inputField = $('#'+componentid).closest('.input-group').find('input.datepicker');
+        var inputField = $(dateRef.current);
         console.log("inputField=",inputField);
         if( inputField.hasClass("datepicker-status-open") ) {
             //console.log( "hide datepicker" );
-            //$('body').off('click');
-            //$('body').click();
             $(".datepicker-dropdown").remove();
             inputField.removeClass("datepicker-status-open");
         } else {
@@ -76,6 +33,7 @@ const DatepickerComponent = ({ data, componentid }) => {
         return(
             <div className="input-group input-group-reg date allow-future-date">
                 <input
+                    ref={dateRef}
                     type="text"
                     id={componentid}
                     name={componentid}
@@ -87,18 +45,18 @@ const DatepickerComponent = ({ data, componentid }) => {
         return(
             <div className="input-group input-group-reg date allow-future-date">
                 <input
+                    ref={dateRef}
                     type="text"
                     id={componentid}
                     name={componentid}
                     className="datepicker form-control allow-future-date"
                 />
-                {/*
                  <span
                  className="input-group-addon calendar-icon-button"
                  id={"calendar-icon-button-"+componentid}
-                 //onClick={clickCalendarButton}
+                 onClick={handleClickCalendarButton}
                  ><i className="glyphicon glyphicon-calendar"></i></span>
-                 */}
+
             </div>
         )
     }
@@ -120,3 +78,50 @@ export default DatepickerComponent;
 //     </div>
 // </div>
 
+//useEffect2(() => {
+//console.log( "useEffect" );
+//update datepicker
+//initSingleDatepicker( $('.datepicker') );
+//initSingleDatepicker( $('#'+componentid) );
+//initSingleDatepicker( $(this).find('.datepicker') );
+//initSingleDatepicker( $(this).find('.datepicker') );
+
+// $('#'+componentid).datepicker({
+//     autoclose: true,
+//     clearBtn: true,
+//     //todayBtn: datepickertodayBtn,
+//     todayHighlight: true,
+//     startDate: false,
+//     endDate: false,
+//     orientation: "auto", //"auto top"
+//     ////minDate: new Date(1902, 1, 1)   //null
+//     format: "mm/dd/yyyy",
+//     minViewMode: "days",
+//     viewMode: null,
+//     multidate: false,
+// });
+
+//var calendarIconBtn = $('.datepicker').find('.calendar-icon-button');
+//var calendarIconBtn = $('#'+componentid).find('.calendar-icon-button');
+// var calendarIconBtn = $('#'+"calendar-icon-button-"+componentid);
+// console.log("calendarIconBtn:",calendarIconBtn);
+// calendarIconBtn.on( "click", function(event) {
+//     event.stopPropagation();
+//     console.log( "click calendar icon" );
+//     //var inputField = $('.datepicker').closest('.input-group').find('input.datepicker');
+//     var inputField = $('#'+componentid);
+//     console.log("react inputField:",inputField);
+//     if( inputField.hasClass("datepicker-status-open") ) {
+//         console.log( "hide datepicker" );
+//         //$(".datepicker-dropdown").remove();
+//         //inputField.removeClass("datepicker-status-open");
+//         inputField.addClass("datepicker-status-open");
+//     } else {
+//         console.log( "show datepicker" );
+//         inputField.addClass("datepicker-status-open");
+//     }
+// });
+
+//$('#'+componentid).datepicker('update', data.StartDate);
+//$('#'+componentid).prop('disabled', true);
+//}, []);

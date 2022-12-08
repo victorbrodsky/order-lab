@@ -16,9 +16,7 @@ import App from './UserTable';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+    <App />
 );
 
 // const matchinginfo = ReactDOM.createRoot(document.getElementById("matching-info"));
