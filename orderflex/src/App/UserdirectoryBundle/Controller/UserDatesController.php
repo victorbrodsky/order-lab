@@ -44,18 +44,6 @@ class UserDatesController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        // [Checkmark column with title of “Deactivate”] |
-        // LastName |
-        // FirstName |
-        // Degree(s) |
-        // Email |
-        // Organizational Group(s) |
-        // Title(s) |
-        // Latest Employment Start Date |
-        // Latest Employment End Date |
-        // Account Status |
-        // Action
-
         $cycle = 'show';
         if( $request->get('_route') == 'employees_user_dates_edit' ) {
             $cycle = 'edit';
@@ -71,42 +59,14 @@ class UserDatesController extends OrderAbstractController
 
         if( $filterform->isSubmitted() && $filterform->isValid() ) {
             $users = $filterform["users"]->getData();
-            $useridsArr = array();
-            foreach( $users as $thisUser ) {
-                $useridsArr[] = $thisUser->getId();
-            }
-            $userids = implode("-",$useridsArr);
+            //$useridsArr = array();
+            //foreach( $users as $thisUser ) {
+            //    $useridsArr[] = $thisUser->getId();
+            //}
+            //$userids = implode("-",$useridsArr);
         }
 
         $users = array();
-
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $repository = $em->getRepository('AppUserdirectoryBundle:User');
-//        $dql =  $repository->createQueryBuilder("user");
-//        $dql->select('user');
-//        $dql->leftJoin("user.infos","infos");
-//        $dql->orderBy("infos.lastName","ASC");
-//        $query = $em->createQuery($dql);
-//
-//        //$users = $query->getResult();
-//
-//        $limit = 1;
-//
-//        $paginationParams = array(
-//            'defaultSortFieldName' => 'user.id',
-//            'defaultSortDirection' => 'DESC',
-//            'wrap-queries' => true
-//        );
-//
-//        $page = $request->query->get('page', 1);
-//        $paginator  = $this->container->get('knp_paginator');
-//        $users = $paginator->paginate(
-//            $query,
-//            $page,   /*page number*/
-//            $limit,                            /*limit per page*/
-//            $paginationParams
-//        );
 
         return array(
             'title' => 'Employment dates',
@@ -124,18 +84,6 @@ class UserDatesController extends OrderAbstractController
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
-
-        // [Checkmark column with title of “Deactivate”] |
-        // LastName |
-        // FirstName |
-        // Degree(s) |
-        // Email |
-        // Organizational Group(s) |
-        // Title(s) |
-        // Latest Employment Start Date |
-        // Latest Employment End Date |
-        // Account Status |
-        // Action
 
         $em = $this->getDoctrine()->getManager();
 
@@ -192,14 +140,6 @@ class UserDatesController extends OrderAbstractController
 
             $roles = $filterform["roles"]->getData();
             if( $roles && count($roles) > 0 ) {
-//                $rolesArr = array();
-//                foreach ($roles as $role) {
-//                    $rolesArr[] = "'".$role->getName()."'";
-//                }
-//                $rolesArr = implode(",",$rolesArr);
-//                $dql->andWhere('user.roles IN (:roles)');
-//                $queryParameters['roles'] = $rolesArr;
-
                 $rolesArr = array();
                 foreach ($roles as $role) {
                     $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
@@ -269,15 +209,6 @@ class UserDatesController extends OrderAbstractController
 
         $jsonArray = array();
         foreach($users as $user) {
-            //$jsonArray['LastName'] = $user->getLastName();
-            //$jsonArray['FirstName'] = $user->getFirstName();
-            //$jsonArray['Degree'] = $user->getFirstName();
-            //$jsonArray['Email'] = $user->getSingleEmail();
-            //$jsonArray['Institution'] = $user->getFirstName();
-            //$jsonArray['Title'] = $user->getFirstName();
-            //$jsonArray['StartDate'] = $user->getFirstName();
-            //$jsonArray['EndDate'] = $user->getFirstName();
-            //$jsonArray['Status'] = $user->getFirstName();
 
             $showLink = $this->container->get('router')->generate(
                 'employees_showuser',
@@ -298,8 +229,6 @@ class UserDatesController extends OrderAbstractController
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-            //<a href="{{ path(sitename~'_logger_user_all',{'id':user.id}) }}" target="_blank">Event Log</a>
-
             $eventlogLink = $this->container->get('router')->generate(
                 'employees_logger_user_all',
                 array(
@@ -309,12 +238,6 @@ class UserDatesController extends OrderAbstractController
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
 
-//            $degree = $user->getSingleDegree();
-//            if( !$degree ) {
-//                $degree = ""; //"N/A        ";
-//            }
-
-            //$instNameStr = "";
             $institutions = $user->getDeduplicatedInstitutions();
             $instNames = array();
             foreach( $institutions as $instRes ) {
@@ -326,14 +249,9 @@ class UserDatesController extends OrderAbstractController
 
             $degreeTitle = $user->getDegreesTitles();
 
-            //$degree = $degreeTitle['degree'];
             $titles = $degreeTitle['title'];
 
             $degree = $user->getSingleSalutation();
-
-            //if( !$degree ) {
-                //$degree = "N/A        ";
-            //}
 
             $startEndDate = $user->getEmploymentStartEndDates();
             $startDate = $startEndDate['startDate'];
@@ -372,18 +290,7 @@ class UserDatesController extends OrderAbstractController
                 'keytype'       => $userKeyTypeAbbreviation
 
             );
-            //$jsonArray['FirstName'] = $user->getFirstName();
-            //$jsonArray['Degree'] = $user->getFirstName();
-            //$jsonArray['Email'] = $user->getSingleEmail();
         }
-
-//        return new JsonResponse([
-//            [
-//                'title' => 'The Princess Bride',
-//                'count' => 0
-//            ]
-//            $jsonArray
-//        ]);
 
         $totalCount = $users->getTotalItemCount();
         //echo "totalCount=$totalCount <br>";
@@ -441,29 +348,6 @@ class UserDatesController extends OrderAbstractController
             //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
 
-//        $institution = $userSecUtil->getAutoAssignInstitution();
-//        if( !$pathology ) {
-//            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-//            if (!$wcmc) {
-//                //exit('No Institution: "WCM"');
-//                throw $this->createNotFoundException('No Institution: "WCM"');
-//            }
-//            $mapper = array(
-//                'prefix' => 'App',
-//                'bundleName' => 'UserdirectoryBundle',
-//                'className' => 'Institution'
-//            );
-//            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
-//                "Pathology and Laboratory Medicine",
-//                $wcmc,
-//                $mapper
-//            );
-//        }
-//        if( !$pathology ) {
-//            //exit('No Institution: "Pathology and Laboratory Medicine"');
-//            throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
-//        }
-
         $eventArr = array();
 
         foreach($datas as $key=>$thisData) {
@@ -507,17 +391,6 @@ class UserDatesController extends OrderAbstractController
                 if( $originalEndDate ) {
                     $originalEndDate = $originalEndDate->format('m/d/Y');
                 }
-
-                //$employmentStatuses = $user->getEmploymentStatus();
-                //echo "trainings=".count($trainings)."<br>";
-                //foreach($employmentStatuses as $employmentStatus) {
-                //echo "training=".$training."<br>";
-                //$employmentStatus = new EmploymentStatus($user);
-                //$employmentStatus->setEmploymentType($employmentType);
-
-                //if( $institution ) {
-                //    $latestEmploymentStatus->setInstitution($institution);
-                //}
                 
                 if( $startDateStr ) {
                     if( $originalStartDate != $startDateStr ) {
@@ -550,9 +423,7 @@ class UserDatesController extends OrderAbstractController
 
                     $event = "User profile of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
                     $changeStr = implode("; ", $changeArr);
-//                    if( $institution ) {
-//                        $changeStr = $changeStr . "; Institution" . $institution->getName();
-//                    }
+
                     $event = $event . $changeStr;
 
                     //Event Log
@@ -572,7 +443,6 @@ class UserDatesController extends OrderAbstractController
         );
 
         //exit('Not implemented');
-        //return $this->redirectToRoute($this->siteName . '_login');
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
