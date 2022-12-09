@@ -19,6 +19,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Form\UserDatesFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -416,25 +417,142 @@ class UserDatesController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        //$datas = $request->get('datas');
+        $em = $this->getDoctrine()->getManager();
+        $currentUser = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $results = 'ok';
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
         $datas = json_decode($request->getContent(), true);
         //dump($datas);
+
+        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        if( !$employmentType ) {
+            $results = 'Unable to find entity by name='."Full Time";
+            throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
+        }
+
+        $institution = $userSecUtil->getAutoAssignInstitution();
+//        if( !$pathology ) {
+//            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+//            if (!$wcmc) {
+//                //exit('No Institution: "WCM"');
+//                throw $this->createNotFoundException('No Institution: "WCM"');
+//            }
+//            $mapper = array(
+//                'prefix' => 'App',
+//                'bundleName' => 'UserdirectoryBundle',
+//                'className' => 'Institution'
+//            );
+//            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                "Pathology and Laboratory Medicine",
+//                $wcmc,
+//                $mapper
+//            );
+//        }
+//        if( !$pathology ) {
+//            //exit('No Institution: "Pathology and Laboratory Medicine"');
+//            throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
+//        }
+
+        $eventArr = array();
 
         foreach($datas as $key=>$thisData) {
             foreach($thisData as $data) {
                 //dump($data);
                 //exit("111 $key");
                 $userId = $data['userId'];
-                $startDate = $data['startDate'];
-                $endDate = $data['endDate'];
-                echo "userId=$userId, startDate=$startDate, endDate=$endDate <br>";
-                //break;
+                $startDateStr = $data['startDate'];
+                $endDateStr = $data['endDate'];
+                //echo "userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
 
+                if( !$userId ) {
+                    continue;
+                }
+
+                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+                if( !$user ) {
+                    continue;
+                }
+
+                $changeArr = array();
+
+                $originalStartDate = $user->getHireDate();
+                if( $originalStartDate ) {
+                    $originalStartDate = $originalStartDate->format('m/d/Y');
+                }
+                $originalEndDate = $user->getTerminationDate();
+                if( $originalEndDate ) {
+                    $originalEndDate = $originalEndDate->format('m/d/Y');
+                }
+
+                //$employmentStatuses = $user->getEmploymentStatus();
+                //echo "trainings=".count($trainings)."<br>";
+                //foreach($employmentStatuses as $employmentStatus) {
+                //echo "training=".$training."<br>";
+                $employmentStatus = new EmploymentStatus($user);
+                $employmentStatus->setEmploymentType($employmentType);
+
+                if( $institution ) {
+                    $employmentStatus->setInstitution($institution);
+                }
                 
+                if( $startDateStr ) {
+                    if( $originalStartDate != $startDateStr ) {
+                        $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
+                    }
+                    $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
+                    $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
+                    //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+                    $employmentStatus->setHireDate($startDate);
+                }
+                if( $endDateStr ) {
+                    if( $originalEndDate != $endDateStr ) {
+                        $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
+                    }
+                    $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
+                    $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
+                    //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+                    $employmentStatus->setTerminationDate($endDate);
+                }
+
+                if( count($changeArr) > 0 ) {
+                    $user->addEmploymentStatus($employmentStatus);
+                    $event = "User information of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
+                    $changeStr = implode("; ", $changeArr);
+                    if( $institution ) {
+                        $changeStr = $changeStr . "; Institution" . $institution->getName();
+                    }
+                    $event = $event . $changeStr;
+
+                    //Event Log
+                    //$userSecUtil->createUserEditEvent($sitename,$event,$currentUser,$user,$request,'User record updated');
+                } else {
+                    $event = "User information of ".$user." has not been changed by ".$currentUser." with bulk updates";
+                }
+
+                $eventArr[] = $event;
             }
         }
 
+        $eventStr = implode("<br>",$eventArr);
+        $this->addFlash(
+            'notice',
+            $eventStr
+        );
+
         exit('Not implemented');
+        //return $this->redirectToRoute($this->siteName . '_login');
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(200);
+        //$response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->setContent(json_encode($results));
+
+        return $response;
     }
 
 }

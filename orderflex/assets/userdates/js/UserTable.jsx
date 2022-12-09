@@ -80,7 +80,7 @@ const App = () => {
             _counter = _counter - 1;
         }
 
-        console.log("after rowRefs",rowRefs);
+        //console.log("after rowRefs",rowRefs);
 
         // console.log("_counter="+_counter);
         // if( _counter > 0 ) {

@@ -115,10 +115,10 @@ const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
                 {data.Title}
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} dateRef={startDateRef} componentid={"datepicker-start-date-"+data.id}/>
+                <DatepickerComponent data={data} name={"datepicker-start-date"} dateRef={startDateRef} componentid={"datepicker-start-date-"+data.id}/>
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} dateRef={endDateRef} componentid={"datepicker-end-date-"+data.id}/>
+                <DatepickerComponent data={data} name={"datepicker-end-date"} dateRef={endDateRef} componentid={"datepicker-end-date-"+data.id}/>
             </td>
             <td className="rowlink-skip">
                 {data.status}

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-const DatepickerComponent = ({ data, dateRef, componentid }) => {
+const DatepickerComponent = ({ data, name, dateRef, componentid }) => {
 
     const dateCalendarBtnRef = useRef();
     const dateGroupRef = useRef();
@@ -12,8 +12,15 @@ const DatepickerComponent = ({ data, dateRef, componentid }) => {
     useEffect(() => {
         //console.log( "useEffect" );
         initSingleDatepicker( $(dateRef.current) );
-        $(dateRef.current).datepicker('update', data.StartDate);
         dateRef.current.disabled = true;
+
+        if( name == 'datepicker-start-date' ) {
+            $(dateRef.current).datepicker('update', data.StartDate);
+        }
+        if( name == 'datepicker-end-date' ) {
+            $(dateRef.current).datepicker('update', data.EndDate);
+        }
+
     }, []);
 
     function handleClickCalendarButton() {
@@ -41,7 +48,7 @@ const DatepickerComponent = ({ data, dateRef, componentid }) => {
                     ref={dateRef}
                     type="text"
                     id={componentid}
-                    //name={componentid}
+                    name={name}
                     className="datepicker111 form-control allow-future-date"
                 />
             </div>
@@ -53,7 +60,7 @@ const DatepickerComponent = ({ data, dateRef, componentid }) => {
                     ref={dateRef}
                     type="text"
                     id={componentid}
-                    //name={componentid}
+                    name={name}
                     className="datepicker form-control allow-future-date"
                 />
                  <span
