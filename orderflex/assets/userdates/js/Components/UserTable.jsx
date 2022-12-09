@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import '../../css/index.css';
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 //import BootstrapDatePickerComponent from './BootstrapDatePickerComponent.jsx'
-import DatepickerComponent from './DatepickerComponent.jsx'
-import UserTableRow from './UserTableRow.jsx';
+import DatepickerComponent from './DatepickerComponent'
+import UserTableRow from './UserTableRow';
 
 
 const UserTable = ({ allUsers, setfunc }) => {

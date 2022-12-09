@@ -5,7 +5,7 @@ import axios from 'axios';
 import '../../css/index.css';
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 //import BootstrapDatePickerComponent from './BootstrapDatePickerComponent.jsx'
-import DatepickerComponent from './DatepickerComponent.jsx'
+import DatepickerComponent from './DatepickerComponent'
 //import Checkbox from './Checkbox.jsx'
 
 
