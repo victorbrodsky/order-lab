@@ -434,7 +434,7 @@ class UserDatesController extends OrderAbstractController
             throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
 
-        $institution = $userSecUtil->getAutoAssignInstitution();
+//        $institution = $userSecUtil->getAutoAssignInstitution();
 //        if( !$pathology ) {
 //            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
 //            if (!$wcmc) {
@@ -469,21 +469,31 @@ class UserDatesController extends OrderAbstractController
                 //echo "userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
 
                 if( !$userId ) {
+                    $eventArr[] = "User id does not exist";
                     continue;
                 }
 
                 $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
                 if( !$user ) {
+                    $eventArr[] = "User not found by user id ".$userId;
                     continue;
                 }
 
                 $changeArr = array();
 
-                $originalStartDate = $user->getHireDate();
+                //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
+                //get latest employement status
+                $latestEmploymentStatus = $user->getLatestEmploymentStatus();
+                if( !$latestEmploymentStatus ) {
+                    $eventArr[] = "Latest employment status not found for ".$user;
+                    continue;
+                }
+
+                $originalStartDate = $latestEmploymentStatus->getHireDate();
                 if( $originalStartDate ) {
                     $originalStartDate = $originalStartDate->format('m/d/Y');
                 }
-                $originalEndDate = $user->getTerminationDate();
+                $originalEndDate = $latestEmploymentStatus->getTerminationDate();
                 if( $originalEndDate ) {
                     $originalEndDate = $originalEndDate->format('m/d/Y');
                 }
@@ -492,12 +502,12 @@ class UserDatesController extends OrderAbstractController
                 //echo "trainings=".count($trainings)."<br>";
                 //foreach($employmentStatuses as $employmentStatus) {
                 //echo "training=".$training."<br>";
-                $employmentStatus = new EmploymentStatus($user);
-                $employmentStatus->setEmploymentType($employmentType);
+                //$employmentStatus = new EmploymentStatus($user);
+                //$employmentStatus->setEmploymentType($employmentType);
 
-                if( $institution ) {
-                    $employmentStatus->setInstitution($institution);
-                }
+                //if( $institution ) {
+                //    $latestEmploymentStatus->setInstitution($institution);
+                //}
                 
                 if( $startDateStr ) {
                     if( $originalStartDate != $startDateStr ) {
@@ -506,7 +516,7 @@ class UserDatesController extends OrderAbstractController
                     $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
                     $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
                     //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
-                    $employmentStatus->setHireDate($startDate);
+                    $latestEmploymentStatus->setHireDate($startDate);
                 }
                 if( $endDateStr ) {
                     if( $originalEndDate != $endDateStr ) {
@@ -515,16 +525,16 @@ class UserDatesController extends OrderAbstractController
                     $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
                     $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
                     //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
-                    $employmentStatus->setTerminationDate($endDate);
+                    $latestEmploymentStatus->setTerminationDate($endDate);
                 }
 
                 if( count($changeArr) > 0 ) {
-                    $user->addEmploymentStatus($employmentStatus);
+                    //$user->addEmploymentStatus($employmentStatus);
                     $event = "User information of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
                     $changeStr = implode("; ", $changeArr);
-                    if( $institution ) {
-                        $changeStr = $changeStr . "; Institution" . $institution->getName();
-                    }
+//                    if( $institution ) {
+//                        $changeStr = $changeStr . "; Institution" . $institution->getName();
+//                    }
                     $event = $event . $changeStr;
 
                     //Event Log

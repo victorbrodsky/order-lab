@@ -2508,11 +2508,12 @@ class User extends UserBase {
         $endDate = NULL;
 
         //"terminationDate" = "ASC" - the earliest date is shown first, the latest date is shown last
-        $latestEmploymentStatus = NULL;
-        $employmentStatuses = $this->getEmploymentStatus();
-        if( count($employmentStatuses) > 0 ) {
-            $latestEmploymentStatus = $employmentStatuses->first();
-        }
+//        $latestEmploymentStatus = NULL;
+//        $employmentStatuses = $this->getEmploymentStatus();
+//        if( count($employmentStatuses) > 0 ) {
+//            $latestEmploymentStatus = $employmentStatuses->first();
+//        }
+        $latestEmploymentStatus = $this->getLatestEmploymentStatus();
 
         if( $latestEmploymentStatus ) {
 
@@ -2528,6 +2529,16 @@ class User extends UserBase {
         $resArr['endDate'] = $endDate;
 
         return $resArr;
+    }
+
+    public function getLatestEmploymentStatus() {
+        //"terminationDate" = "ASC" - the earliest date is shown first, the latest date is shown last
+        $latestEmploymentStatus = NULL;
+        $employmentStatuses = $this->getEmploymentStatus();
+        if( count($employmentStatuses) > 0 ) {
+            $latestEmploymentStatus = $employmentStatuses->first();
+        }
+        return $latestEmploymentStatus;
     }
 
     public function getDegreesTitles() {
