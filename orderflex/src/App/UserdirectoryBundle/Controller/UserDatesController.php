@@ -528,6 +528,10 @@ class UserDatesController extends OrderAbstractController
                     $latestEmploymentStatus->setTerminationDate($endDate);
                 }
 
+                //lock user account
+                $user->setEnabled(false);
+                $changeArr[] = "User $user is locked by $currentUser";
+
                 if( count($changeArr) > 0 ) {
                     //$user->addEmploymentStatus($employmentStatus);
                     $event = "User information of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";

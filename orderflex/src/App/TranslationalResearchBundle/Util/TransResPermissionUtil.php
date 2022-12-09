@@ -793,12 +793,12 @@ class TransResPermissionUtil
                 return true;
             }
 
-            $category = $product->getCategory();
+            //$category = $product->getCategory();
             $workQueues = $product->getWorkQueues();
             //echo "workQueues count=".count($workQueues)."<br>";
 
             ///////////// check work queues ////////////////
-            if( count($workQueues) > 0 ) {
+            if( $workQueues && count($workQueues) > 0 ) {
                 foreach ($workQueues as $workQueue) {
                     $workQueueStr = "_" . $workQueue->getAbbreviation();
 
