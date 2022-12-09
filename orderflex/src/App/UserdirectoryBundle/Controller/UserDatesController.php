@@ -34,7 +34,8 @@ class UserDatesController extends OrderAbstractController
 {
 
     /**
-     * @Route("/employment-dates/edit", name="employees_user_dates_edit")
+     * @Route("/employment-dates/view", name="employees_user_dates_show", options={"expose"=true})
+     * @Route("/employment-dates/edit", name="employees_user_dates_edit", options={"expose"=true})
      * @Template("AppUserdirectoryBundle/UserDates/user_dates.html.twig")
      */
     public function userDatesAction( Request $request ) {
@@ -54,6 +55,11 @@ class UserDatesController extends OrderAbstractController
         // Latest Employment End Date |
         // Account Status |
         // Action
+
+        $cycle = 'show';
+        if( $request->get('_route') == 'employees_user_dates_edit' ) {
+            $cycle = 'edit';
+        }
 
         $params = array();
         $filterform = $this->createForm(UserDatesFilterType::class, null, array(
@@ -105,7 +111,8 @@ class UserDatesController extends OrderAbstractController
         return array(
             'title' => 'Employment dates',
             'entities' => $users,
-            'filterform' => $filterform->createView()
+            'filterform' => $filterform->createView(),
+            'cycle' => $cycle
         );
     }
 
@@ -430,8 +437,8 @@ class UserDatesController extends OrderAbstractController
 
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
         if( !$employmentType ) {
-            $results = 'Unable to find entity by name='."Full Time";
-            throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
+            $results = 'Unable to find EmploymentType entity by name='."Full Time";
+            //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
 
 //        $institution = $userSecUtil->getAutoAssignInstitution();
@@ -479,7 +486,10 @@ class UserDatesController extends OrderAbstractController
                     continue;
                 }
 
+                $event = null;
                 $changeArr = array();
+
+                $origianlEnableStatus = $user->isEnabled();
 
                 //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
                 //get latest employement status
@@ -529,12 +539,16 @@ class UserDatesController extends OrderAbstractController
                 }
 
                 //lock user account
-                $user->setEnabled(false);
-                $changeArr[] = "User $user is locked by $currentUser";
+                if( $origianlEnableStatus !== false ) {
+                    $user->setEnabled(false);
+                    $changeArr[] = "User $user is locked by $currentUser";
+                }
 
                 if( count($changeArr) > 0 ) {
                     //$user->addEmploymentStatus($employmentStatus);
-                    $event = "User information of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
+                    $em->flush();
+
+                    $event = "User profile of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
                     $changeStr = implode("; ", $changeArr);
 //                    if( $institution ) {
 //                        $changeStr = $changeStr . "; Institution" . $institution->getName();
@@ -542,12 +556,12 @@ class UserDatesController extends OrderAbstractController
                     $event = $event . $changeStr;
 
                     //Event Log
-                    //$userSecUtil->createUserEditEvent($sitename,$event,$currentUser,$user,$request,'User record updated');
+                    $userSecUtil->createUserEditEvent($sitename,$event,$currentUser,$user,$request,'User record updated');
                 } else {
-                    $event = "User information of ".$user." has not been changed by ".$currentUser." with bulk updates";
+                    $event = "User profile of ".$user." has not been changed by ".$currentUser." with bulk updates";
                 }
 
-                $eventArr[] = $event;
+                $eventArr[] = $event . "<br>";
             }
         }
 
@@ -557,7 +571,7 @@ class UserDatesController extends OrderAbstractController
             $eventStr
         );
 
-        exit('Not implemented');
+        //exit('Not implemented');
         //return $this->redirectToRoute($this->siteName . '_login');
 
         $response = new Response();

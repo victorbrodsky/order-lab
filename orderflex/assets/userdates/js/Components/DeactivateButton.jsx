@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import { useRef } from 'react';
+//import  { useNavigate } from 'react-router-dom'
 import '../../css/index.css';
 
 const DeactivateButton = ({rowRefs}) => {
     const buttonRef = useRef();
-    const url = Routing.generate('employees_update_users_date');
-
+    const updateUrl = Routing.generate('employees_update_users_date');
+    const redircetUrl = Routing.generate('employees_user_dates_show');
 
     function disableAccounts() {
         //alert("To be implemented");
@@ -31,13 +32,15 @@ const DeactivateButton = ({rowRefs}) => {
         };
 
         if( dataArr.length > 0 ) {
+            //const navigate = useNavigate();
             var l = Ladda.create(buttonRef.current);
+            l.start();
             console.log("dataArr",dataArr);
             //return;
 
             axios({
                 method: 'post',
-                url: url,
+                url: updateUrl,
                 data: {datas: dataArr}
             })
                 .then((response) => {
@@ -45,9 +48,10 @@ const DeactivateButton = ({rowRefs}) => {
                     l.stop();
                     if (response.data == "ok") {
                         console.log("Active");
-                    }
-                    if (response.data == "notok") {
-                        console.log("Inactive");
+                        //navigate('/directory/employment-dates/view', { replace: true });
+                        window.location.href = redircetUrl;
+                    } else {
+                        alert(response.data);
                     }
                 }, (error) => {
                     //console.log(error);
@@ -55,7 +59,6 @@ const DeactivateButton = ({rowRefs}) => {
                         "Please make sure that your session is not timed out and you are still logged in. " + error;
                     //this.addErrorLine(errorMsg,'error');
                     alert(errorMsg);
-
                     l.stop();
                 });
         }

@@ -9,9 +9,10 @@ import DatepickerComponent from './DatepickerComponent.jsx'
 //import Checkbox from './Checkbox.jsx'
 
 
-const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
+const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
 
     //const [isDisabled, setIsDisabled] = useState(false);
+    const [originalEndDate, setOriginalEndDate] = useState();
 
     const rowRef = useRef();
     const checkBoxRef = useRef();
@@ -30,6 +31,13 @@ const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
             startDateRef.current.disabled = false;
             endDateRef.current.disabled = false;
             updateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
+
+            var originalStartDate = startDateRef.value;
+            setOriginalEndDate(endDateRef.current.value);
+            if( !originalStartDate ) {
+                //endDateRef.current.value =
+                $(endDateRef.current).datepicker("update", new Date());
+            }
         } else {
             //alert("unchecked");
             //event.preventDefault();
@@ -37,6 +45,9 @@ const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
             startDateRef.current.disabled = true;
             endDateRef.current.disabled = true;
             updateRowRefs(rowRef,'remove');
+
+            //endDateRef.current.value = originalEndDate;
+            $(endDateRef.current).datepicker("update", originalEndDate);
         }
     }
 
@@ -84,18 +95,20 @@ const UserTableRow = ({ data, updateRowRefs, setfunc }) => {
             <td className="user-display-none">
                  <a target="_blank" href={data.showLink}>{data.id}</a>
             </td>
-            <td className="rowlink-skip">
-                <input
-                    ref={checkBoxRef}
-                    type="checkbox"
-                    className="check-input"
-                    id={"checkbox-"+data.id}
-                    name={"checkbox-"+data.id}
-                    value={"value-"+data.id}
-                    onChange={handleCheckBox}
-                >
-                </input>
-            </td>
+            {cycle == 'edit' &&
+                <td className="rowlink-skip">
+                    <input
+                        ref={checkBoxRef}
+                        type="checkbox"
+                        className="check-input"
+                        id={"checkbox-"+data.id}
+                        name={"checkbox-"+data.id}
+                        value={"value-"+data.id}
+                        onChange={handleCheckBox}
+                    >
+                    </input>
+                </td>
+            }
             <td ref={setfunc}>
                 {data.LastName}
             </td>

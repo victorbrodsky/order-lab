@@ -14,9 +14,12 @@ import App from './UserTable';
 //     document.getElementById('root')
 // );
 
+var _cycle = $('#user-dates-cycle').val();
+console.log("_cycle="+_cycle);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <App />
+    <App cycle={_cycle}/>
 );
 
 // const matchinginfo = ReactDOM.createRoot(document.getElementById("matching-info"));

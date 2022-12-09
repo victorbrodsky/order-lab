@@ -9,6 +9,7 @@ import UserTableRow from './components/UserTableRow.jsx';
 import UserTable from './components/UserTable.jsx';
 import Loading from './components/Loading.jsx';
 import DeactivateButton from './components/DeactivateButton.jsx';
+import EditButton from './components/EditButton.jsx';
 import MatchInfo from './components/MatchInfo.jsx';
 import DatepickerComponent from './components/DatepickerComponent.jsx';
 
@@ -23,7 +24,7 @@ import '../../../public/orderassets/AppUserdirectoryBundle/form/js/user-common.j
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
-const App = () => {
+const App = ({cycle}) => {
 
     const [loading, setLoading] = useState(true);
     const [allUsers, setAllUsers] = useState([]);
@@ -33,7 +34,7 @@ const App = () => {
     const [totalUsers, setTotalUsers] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
     const [rowRefs, setRowRefs] = useState([]);
-    const [deactivateElements, addDeactivateElement] = useState([]);
+    //const [deactivateElements, addDeactivateElement] = useState([]);
     const [isShown, setIsShown] = useState(true);
 
     const tableBodyRef = useRef();
@@ -253,7 +254,8 @@ const App = () => {
 
                 <MatchInfo message={matchMessage}/>
 
-                {isShown && <DeactivateButton addDeactivateElement={addDeactivateElement} rowRefs={rowRefs}/>}
+                {cycle == 'show' && <EditButton />}
+                {cycle == 'edit' && isShown && <DeactivateButton rowRefs={rowRefs}/>}
 
                 <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>
@@ -261,9 +263,9 @@ const App = () => {
                         <th className="user-display-none">
                             ID
                         </th>
-                        <th>
-                            Deactivate
-                        </th>
+                        { cycle == 'edit' &&
+                            <th>Deactivate </th>
+                        }
                         <th>
                             LastName
                         </th>
@@ -290,12 +292,14 @@ const App = () => {
                                     data={user}
                                     key={ user.id+'-'+i }
                                     updateRowRefs={updateRowRefs}
+                                    cycle={cycle}
                                     setfunc={setLastElement}
                                 />
                             ) : (
                             <UserTableRow
                                 data={user}
                                 key={ user.id+'-'+i }
+                                cycle={cycle}
                                 updateRowRefs={updateRowRefs}
                             />
                         );
@@ -306,7 +310,7 @@ const App = () => {
                     </tbody>
                 </table>
 
-                {!loading && <DeactivateButton addDeactivateElement={addDeactivateElement} rowRefs={rowRefs}/>}
+                {cycle == 'edit' && !loading && <DeactivateButton rowRefs={rowRefs}/>}
 
             </div>
         );
