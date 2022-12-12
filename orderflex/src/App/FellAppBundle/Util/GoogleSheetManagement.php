@@ -1167,9 +1167,18 @@ class GoogleSheetManagement {
                 //https://stackoverflow.com/questions/39340374/php-google-drive-api-http-response
                 //return $httpRequest->getResponseBody(); //testing
                 //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
+                //Letter in World Doc format (Google Docs) => error:
+                //getResponseBody={  "error": {   "errors": [    {     "domain": "global",     "reason": "fileNotDownloadable",
+                //     "message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
+                //     "locationType": "parameter",     "location": "alt"    }   ],   "code": 403,
+                //   "message": "Only files with binary content can be downloaded. Use Export with Docs Editors files."  } }  [] []
                 $logger->error("getResponseBody=".$httpRequest->getResponseBody());
 
-                $body = "Error downloading $type file (Name:$fileName, ID:$fileId): invalid response =".$httpRequest->getResponseHttpCode()."; downloadUrl=".$downloadUrl;
+                $body = "Error downloading $type file (Name:$fileName, ID:$fileId): invalid response =".
+                    $httpRequest->getResponseHttpCode().
+                    "; downloadUrl=".$downloadUrl.
+                    "; getResponseBody=".$httpRequest->getResponseBody()
+                ;
                 //return null;
             }
         } else {
