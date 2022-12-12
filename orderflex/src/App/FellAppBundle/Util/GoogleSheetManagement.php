@@ -1110,8 +1110,15 @@ class GoogleSheetManagement {
 
         $mimeType = $file->getMimeType();
         $logger->notice("mimeType=".$mimeType);
-        $fileType = $file->getFileType($mimeType);
-        $logger->notice("fileType=".$fileType);
+        //https://developers.google.com/drive/api/guides/ref-export-formats
+        //https://developers.google.com/drive/api/guides/mime-types
+        //Google Docs: mimeType=application/vnd.google-apps.document
+        //Word: application/msword
+        //Microsoft Word: mimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document
+        //PDF: mimeType=application/pdf
+        //Google Sheets: mimeType=application/vnd.google-apps.spreadsheet
+        //$fileType = $file->getFileType($mimeType);
+        //$logger->notice("fileType=".$fileType);
 
         if( $type && (  $type == 'Fellowship Application Spreadsheet' ||
                         $type == 'Fellowship Application Backup Spreadsheet' ||
@@ -1130,7 +1137,14 @@ class GoogleSheetManagement {
             //$downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=text/csv';
 
-        } else {
+        }
+        elseif( $mimeType == 'application/vnd.google-apps.document' ) {
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
+        }
+        elseif( $mimeType == 'application/msword' ) {
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
+        }
+        else {
             //$downloadUrl = $file->getDownloadUrl();
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl'; //working
 
