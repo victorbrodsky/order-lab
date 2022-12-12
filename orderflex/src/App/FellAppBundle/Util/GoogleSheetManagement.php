@@ -1607,7 +1607,8 @@ class GoogleSheetManagement {
             )
         );
 
-        dump($response);
+        $content = $response->getBody()->getContents();
+        dump($content);
 
         //$body = $response->getResponseBody();
         //dump($body);
