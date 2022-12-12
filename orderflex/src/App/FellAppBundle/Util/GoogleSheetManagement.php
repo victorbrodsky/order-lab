@@ -1108,6 +1108,11 @@ class GoogleSheetManagement {
         $fileId = $file->getId();
         $fileName = $file->getName();
 
+        $mimeType = $file->getMimeType();
+        $logger->notice("mimeType=".$mimeType);
+        $fileType = $file->getFileType($mimeType);
+        $logger->notice("fileType=".$fileType);
+
         if( $type && (  $type == 'Fellowship Application Spreadsheet' ||
                         $type == 'Fellowship Application Backup Spreadsheet' ||
                         $type == 'Fellowship Recommendation Letter Spreadsheet'
