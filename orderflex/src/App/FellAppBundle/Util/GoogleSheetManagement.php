@@ -1147,6 +1147,8 @@ class GoogleSheetManagement {
             //return $response;
             //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?source=downloadUrl';
+            $logger->notice("Skipped: application/vnd.google-apps.document");
+            return null;
         }
         elseif( $mimeType == 'application/msword' ) {
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
@@ -1172,12 +1174,12 @@ class GoogleSheetManagement {
         //testing
         //$downloadUrl = null;
 
-        echo "downloadUrl=".$downloadUrl."<br>";
-        $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-        $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-        echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
-        dump($httpRequest->getResponseBody());
-        exit('testing response body');
+//        echo "downloadUrl=".$downloadUrl."<br>";
+//        $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+//        $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+//        echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+//        dump($httpRequest->getResponseBody());
+//        exit('testing response body');
 
         if ($downloadUrl) {
             //Use downloadGeneralFile()?
