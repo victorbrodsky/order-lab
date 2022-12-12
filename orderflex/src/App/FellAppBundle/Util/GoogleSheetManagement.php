@@ -1250,6 +1250,8 @@ class GoogleSheetManagement {
             }
             $emailUtil = $this->container->get('user_mailer_utility');
             $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+        } else {
+            $logger->error("Skipped to send error email: ".$subject);
         }
 
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
