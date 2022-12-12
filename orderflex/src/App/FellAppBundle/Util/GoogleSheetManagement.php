@@ -1575,8 +1575,8 @@ class GoogleSheetManagement {
         return $response;
     }
     function downloadGeneralFileGoogleDoc($service, $file) {
-        $downloadUrl = $file->getDownloadUrl();
-        // getWebContentLink
+        //$downloadUrl = $file->getDownloadUrl();
+        $downloadUrl = $file->getWebContentLink();
         // getAppDataContents
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
