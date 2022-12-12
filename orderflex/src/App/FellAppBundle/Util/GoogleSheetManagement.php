@@ -1178,10 +1178,14 @@ class GoogleSheetManagement {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
             //echo "res code=".$httpRequest->getResponseHttpCode()."<br>";
+
+            dump($httpRequest->getResponseBody());
+            exit('testing response body');
+
             if( $httpRequest->getResponseHttpCode() == 200 ) {
 
-                dump($httpRequest->getResponseBody());
-                exit('testing response body');
+                //dump($httpRequest->getResponseBody());
+                //exit('testing response body');
 
                 //$logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
                 $logger->notice("getResponseBody=".$httpRequest->getResponseBody());
