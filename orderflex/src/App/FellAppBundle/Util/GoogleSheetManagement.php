@@ -1140,12 +1140,13 @@ class GoogleSheetManagement {
         }
         elseif( $mimeType == 'application/vnd.google-apps.document' ) {
             //"message": "The requested conversion is not supported."
-            $response = $this->downloadGeneralFileGoogleDoc($service,$file);
-            dump($response);
-            exit("testing...");
-            $logger->notice("downloadGeneralFileGoogleDoc response=".$response);
-            return $response;
-            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
+            //$response = $this->downloadGeneralFileGoogleDoc($service,$file);
+            //dump($response);
+            //exit("testing...");
+            //$logger->notice("downloadGeneralFileGoogleDoc response=".$response);
+            //return $response;
+            //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
         }
         elseif( $mimeType == 'application/msword' ) {
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
