@@ -1190,6 +1190,8 @@ class GoogleSheetManagement {
             //dump($httpRequest->getResponseBody());
             //exit('testing response body');
 
+            $logger->notice("getResponseHttpCode=".$httpRequest->getResponseHttpCode());
+
             if( $httpRequest->getResponseHttpCode() == 200 ) {
 
                 //dump($httpRequest->getResponseBody());
