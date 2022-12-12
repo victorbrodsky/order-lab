@@ -1141,6 +1141,8 @@ class GoogleSheetManagement {
         elseif( $mimeType == 'application/vnd.google-apps.document' ) {
             //"message": "The requested conversion is not supported."
             $response = $this->downloadGeneralFile($service,$file);
+            dump($response);
+            exit("testing...");
             $logger->notice("downloadGeneralFile response=".$response);
             return $response;
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
