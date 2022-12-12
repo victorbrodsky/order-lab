@@ -1575,6 +1575,28 @@ class GoogleSheetManagement {
         return $response;
     }
     function downloadGeneralFileGoogleDoc($service, $file) {
+        $downloadUrl = $file->getDownloadUrl();
+        if ($downloadUrl) {
+            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
+            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
+
+            $body = $httpRequest->getResponseBody();
+            dump($body);
+            exit("downloadGeneralFileGoogleDoc");
+
+            if ($httpRequest->getResponseHttpCode() == 200) {
+                return $httpRequest->getResponseBody();
+            } else {
+                // An error occurred.
+                return null;
+            }
+        } else {
+            // The file doesn't have any content stored on Drive.
+            return null;
+        }
+
+
+
         $fileId = $file->getId(); //'0BwwA4oUTeiV1UVNwOHItT0xfa2M';
         $response = $service->files->get(
             $fileId,
@@ -1586,6 +1608,10 @@ class GoogleSheetManagement {
         );
 
         dump($response);
+
+        $body = $response->getResponseBody();
+        dump($body);
+
         exit('downloadGeneralFileGoogleDoc testing');
 
         return $response;
