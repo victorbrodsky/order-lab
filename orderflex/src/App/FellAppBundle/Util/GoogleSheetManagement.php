@@ -1146,7 +1146,7 @@ class GoogleSheetManagement {
             //$logger->notice("downloadGeneralFileGoogleDoc response=".$response);
             //return $response;
             //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
-            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?source=downloadUrl';
         }
         elseif( $mimeType == 'application/msword' ) {
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
