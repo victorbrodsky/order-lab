@@ -1158,7 +1158,7 @@ class GoogleSheetManagement {
                 //exit('fd');
 
                 //$logger->notice("download file: response=".$httpRequest->getResponseHttpCode()."; file id=".$file->getId()."; type=".$type);
-                //$logger->notice("getResponseBody=".$httpRequest->getResponseBody());
+                $logger->notice("getResponseBody=".$httpRequest->getResponseBody());
                 return $httpRequest->getResponseBody();
             } else {
                 // An error occurred.
@@ -1167,6 +1167,7 @@ class GoogleSheetManagement {
                 //https://stackoverflow.com/questions/39340374/php-google-drive-api-http-response
                 //return $httpRequest->getResponseBody(); //testing
                 //exit("Error download file: invalid response =".$httpRequest->getResponseHttpCode());
+                $logger->error("getResponseBody=".$httpRequest->getResponseBody());
 
                 $body = "Error downloading $type file (Name:$fileName, ID:$fileId): invalid response =".$httpRequest->getResponseHttpCode()."; downloadUrl=".$downloadUrl;
                 //return null;
