@@ -1238,12 +1238,13 @@ class GoogleSheetManagement {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
-        $userSecUtil->sendEmailToSystemEmail($subject, $body);
-
-        //Send email to admins
         $sendEmail = true;
         $sendEmail = false; //testing
         if( $sendEmail ) {
+
+            $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+            //Send email to admins
             $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
             $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
             if (!$emails) {
