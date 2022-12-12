@@ -1192,14 +1192,18 @@ class GoogleSheetManagement {
         $userSecUtil->sendEmailToSystemEmail($subject, $body);
 
         //Send email to admins
-        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-        if (!$emails) {
-            $emails = $ccs;
-            $ccs = null;
+        $sendEmail = true;
+        $sendEmail = false; //testing
+        if( $sendEmail ) {
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+            if (!$emails) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
         }
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
         ////////////////// EOF ERROR //////////////////
