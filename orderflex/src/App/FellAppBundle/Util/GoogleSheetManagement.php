@@ -1601,8 +1601,8 @@ class GoogleSheetManagement {
         $response = $service->files->get(
             $fileId,
             array(
-                'alt' => 'media',
-                'mimeType' => 'application/vnd.google-apps.document'
+                //'alt' => 'media',
+                //'mimeType' => 'application/vnd.google-apps.document'
                 //'mimeType' => 'application/vnd.google-apps.unknown'
             )
         );
