@@ -1146,9 +1146,9 @@ class GoogleSheetManagement {
             //$logger->notice("downloadGeneralFileGoogleDoc response=".$response);
             //return $response;
             //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/vnd.google-apps.document';
-            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?source=downloadUrl';
-            $logger->notice("Skipped: application/vnd.google-apps.document");
-            return null;
+            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?source=downloadUrl&mimeType=application/vnd.google-apps.document';
+            //$logger->notice("Skipped: application/vnd.google-apps.document");
+            //return null;
         }
         elseif( $mimeType == 'application/msword' ) {
             $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
