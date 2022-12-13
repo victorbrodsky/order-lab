@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/index.css';
 
 //import App from './App';
-import App from './UserTable';
+import UserTable from './components/UserTable';
 //import MatchInfo from './MatchInfo';
 
 // ReactDOM.render(
@@ -21,12 +21,17 @@ console.log("_cycle="+_cycle);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
-        <Router>
-            <App cycle={_cycle}/>
-        </Router>
-    </React.StrictMode>
+    <UserTable cycle={_cycle}/>
 );
+
+
+// root.render(
+//     <React.StrictMode>
+//         <Router>
+//             <App cycle={_cycle}/>
+//         </Router>
+//     </React.StrictMode>
+// );
 
 // const matchinginfo = ReactDOM.createRoot(document.getElementById("matching-info"));
 // matchinginfo.render(
