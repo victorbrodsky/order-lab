@@ -69,28 +69,11 @@
 
 
 import React from 'react';
-//import ReactDOM from 'react-dom';
 import ReactDOM from "react-dom/client";
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/app.css';
-//import Home from './components/Home';
 import Charts from './components/Charts';
 
-
-
-// import '/public/orderassets/AppUserdirectoryBundle/select2/select2.js';
-//require ('/public/orderassets/AppUserdirectoryBundle/charts/plotly/plotly.min.js');
-//require ('/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js');
-
-
-// function plotlyGetChartsReact( thsiSitename ) {
-//     console.log("app.js: plotlyGetChartsReact");
-// }
-
-// ReactDOM.render(<Router><Home /></Router>, document.getElementById('root'));
-
-//ReactDOM.render(<Router><Charts /></Router>, document.getElementById('root'));
 
 const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
 const root = ReactDOM.createRoot(document.getElementById("root"));
