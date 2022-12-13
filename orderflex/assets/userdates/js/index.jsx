@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import '../css/index.css';
 
 //import App from './App';
-import UserTable from './components/UserTable';
+import UserTable from './assets/userdates/js/components/UserTable';
 //import MatchInfo from './MatchInfo';
 
 // ReactDOM.render(
