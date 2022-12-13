@@ -1232,7 +1232,7 @@ class GoogleSheetManagement {
 
         $res = array();
         foreach($files as $fileId) {
-            $file = $this->getFileById($fileId);
+            $file = $this->getFileById($fileId,$service);
             $res[] = $this->downloadFile($service,$file,null,false);
         }
 
@@ -1836,8 +1836,10 @@ class GoogleSheetManagement {
         return $response;
     }
 
-    function getFileById( $fileId ) {
-        $service = $this->getGoogleService();
+    function getFileById( $fileId, $service=null ) {
+        if( !$service ) {
+            $service = $this->getGoogleService();
+        }
         $file = $service->files->get($fileId);
         return $file;
     }
