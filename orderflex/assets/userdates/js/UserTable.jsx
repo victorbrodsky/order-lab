@@ -5,7 +5,7 @@ import React from 'react';
 //import ReactDOM from "react-dom/client";
 import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
-import UserTableRow from './components/UserTableRow.jsx';
+import UserTableRow from './components/UserTableRow';
 import UserTable from './components/UserTable';
 import Loading from './components/Loading';
 import DeactivateButton from './components/DeactivateButton';
