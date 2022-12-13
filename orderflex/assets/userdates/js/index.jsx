@@ -19,7 +19,9 @@ console.log("_cycle="+_cycle);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <App cycle={_cycle}/>
+    <React.StrictMode>
+        <App cycle={_cycle}/>
+    </React.StrictMode>
 );
 
 // const matchinginfo = ReactDOM.createRoot(document.getElementById("matching-info"));

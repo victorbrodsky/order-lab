@@ -1220,6 +1220,7 @@ class GoogleSheetManagement {
     }
 
     function testFileDownload() {
+        //Test files are located in FellowshipApplication/TestFiles
         $files = array(
             "17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu", //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
             "1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
