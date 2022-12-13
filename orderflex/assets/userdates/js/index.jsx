@@ -15,18 +15,18 @@ var _cycle = $('#user-dates-cycle').val();
 console.log("_cycle="+_cycle);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-    <UserTable cycle={_cycle}/>
-);
-
 
 // root.render(
-//     <React.StrictMode>
-//         <Router>
-//             <App cycle={_cycle}/>
-//         </Router>
-//     </React.StrictMode>
+//     <UserTable cycle={_cycle}/>
 // );
+
+root.render(
+    <React.StrictMode>
+        <Router>
+            <App cycle={_cycle}/>
+        </Router>
+    </React.StrictMode>
+);
 
 // const matchinginfo = ReactDOM.createRoot(document.getElementById("matching-info"));
 // matchinginfo.render(
