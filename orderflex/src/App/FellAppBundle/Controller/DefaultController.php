@@ -256,9 +256,9 @@ class DefaultController extends OrderAbstractController
 //        dump($content);
 //        exit('111');
 
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $fileContentsCount = $googlesheetmanagement->testFileDownload();
-        exit('fileContentsCount='.$fileContentsCount);
+        //$googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        //$fileContentsCount = $googlesheetmanagement->testFileDownload();
+        //exit('fileContentsCount='.$fileContentsCount);
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
