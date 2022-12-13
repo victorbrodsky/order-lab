@@ -24,7 +24,7 @@ import '../../../../public/orderassets/AppUserdirectoryBundle/form/js/user-commo
 
 //https://dev.to/hey_yogini/infinite-scrolling-in-react-with-intersection-observer-22fh
 
-const App = ({cycle}) => {
+const UserTable = ({cycle}) => {
 
     const [loading, setLoading] = useState(true);
     const [allUsers, setAllUsers] = useState([]);
@@ -359,5 +359,5 @@ const App = ({cycle}) => {
     //     </div>
     // );
 
-export default App;
+export default UserTable;
 
