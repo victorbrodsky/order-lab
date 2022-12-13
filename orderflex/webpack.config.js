@@ -19,7 +19,7 @@ Encore
     //.setPublicPath('/order/build')
     //.setManifestKeyPrefix('order/build/')
     .setPublicPath('/build')
-    .setManifestKeyPrefix('/build/')
+    .setManifestKeyPrefix('build/')
 
     /*
      * ENTRY CONFIG
