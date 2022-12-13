@@ -228,6 +228,34 @@ class DefaultController extends OrderAbstractController
 //        exit('111');
         /////////// EOF testing ///////////
 
+        //test rec letter import doc format
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $service = $googlesheetmanagement->getGoogleService();
+        $fileId = "17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu"; //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
+        $fileId = "1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U"; //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+        $fileId = "1fd-vjpmQKdVXDiAhEzcP-5fFDZEl2kKW67nrRrtfcWg"; //"17inHCzyZNyZ98E_ZngUjkUKWNp3D2J8Ri2TZWR5Oi1k"; //Google Docs
+        $fileId = "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o"; //"1beJAujYBEwPdi3RI7YAb4a8NcrBj5l0vhY6Zsa01Ohg"; //Google Sheets
+        $fileId = "1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM"; //Image
+
+        $file = $googlesheetmanagement->getFileById($fileId);
+        $mimeType = $file->getMimeType();
+        //echo "mimeType=$mimeType <br>";
+
+        //$content = $googlesheetmanagement->downloadGeneralFileGoogleDoc($service,$file,$fileId);
+        $content = $googlesheetmanagement->downloadFile($service,$file);
+        //$content = $googlesheetmanagement->downloadFileOrig($service,$file);
+
+//        header('Content-Type: ' . $mimeType);
+//        header('Expires: 0');
+//        header('Cache-Control: must-revalidate');
+//        header('Pragma: public');
+//        echo $content;
+//        exit();
+
+        dump($content);
+        exit('111');
+
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 

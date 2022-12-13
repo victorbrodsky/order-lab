@@ -65,6 +65,20 @@ class FellappTest extends WebTestBase
 //        );
 //    }
 
+    public function testFileDownloadAction() {
+        $this->logIn();
+
+        echo "[Fellapp,testFileDownloadAction]";
+        
+        $googlesheetmanagement = $this->testContainer->get('fellapp_googlesheetmanagement');
+        $fileContentsCount = $googlesheetmanagement->testFileDownload();
+
+        $this->assertGreaterThan(
+            0,
+            $fileContentsCount
+        );
+    }
+
     public function testEventLogAction() {
         $this->logIn();
 

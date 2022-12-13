@@ -1079,7 +1079,175 @@ class GoogleSheetManagement {
      * @param String $type Document type string.
      * @return String The file's content if successful, null otherwise.
      */
-    function downloadFile($service, $file, $type=null) {
+    function downloadFile($service, $file, $type=null, $sendEmail=true) {
+        $logger = $this->container->get('logger');
+        $mimeType = $file->getMimeType();
+        $logger->notice("downloadFile: mimeType=".$mimeType);
+        //echo "mimeType=$mimeType <br>";
+        $fileId = $file->getId();
+
+        if( $mimeType == 'application/vnd.google-apps.spreadsheet' ) {
+            //Google Sheets - works
+            //echo "Case: Google Sheets <br>";
+            $mimeType = 'text/csv'; //'application/vnd.google-apps.spreadsheet';
+        }
+        elseif( $mimeType == 'application/vnd.google-apps.document' ) {
+            //Google Docs - works
+            //echo "Case: Google Docs <br>";
+            $mimeType = 'application/pdf';
+        }
+        elseif( $mimeType == 'application/pdf' ) {
+            //PDF - works
+            //echo "Case: PDF <br>";
+            $mimeType = 'application/pdf';
+        }
+        elseif( $mimeType == 'application/msword' ) {
+            //Word - works with get file (downloadGeneralFile), not working with export
+            //echo "Case: Word <br>";
+            //$mimeType = 'application/pdf'; //testing
+            return $this->downloadGeneralFile($service,$file,$sendEmail);
+        }
+        else {
+            //echo "Case: ALl others <br>";
+            return $this->downloadGeneralFile($service,$file,$sendEmail);
+        }
+
+        $logger->notice("downloadFile: process by file export");
+        try {
+            $response = $service->files->export(
+                $fileId,
+                //'application/pdf',
+                $mimeType,
+                array(
+                    'alt' => 'media'
+                )
+            );
+            //$content = $response->getBody()->getContents();
+            //exit($response);
+
+            if(0) {
+                header('Content-Type: ' . $mimeType);
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                echo $response;
+                exit();
+            }
+//            //dump($response);
+//            exit('111');
+
+            return $response;
+        }  catch(Exception $e) {
+            //echo "Error Message: ".$e;
+            //exit("Error Message: ".$e);
+            $subject = "ERROR: downloadFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
+            $body = $subject . "; Error=" . $e;
+            $this->onDownloadFileError($subject,$body,$sendEmail);
+        }
+        return null;
+    }
+    function downloadGeneralFile($service,$file,$sendEmail=true) {
+        $logger = $this->container->get('logger');
+        $logger->notice("downloadGeneralFile process by file get");
+        try {
+            $fileId = $file->getId();
+            $response = $service->files->get(
+              $fileId,
+              array(
+                'alt' => 'media'
+              )
+            );
+
+            if(0) {
+                header('Content-Type: ' . $file->getMimeType());
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                echo $response;
+                exit();
+            }
+
+            return $response;
+        } catch(Exception $e) {
+            //echo "Error Message: " . $e;
+            $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
+            $body = $subject . "; Error=" . $e;
+            $this->onDownloadFileError($subject,$body,$sendEmail);
+        }
+        return null;
+    }
+
+    function onDownloadFileError( $subject, $body, $sendEmail=true ) {
+        $logger = $this->container->get('logger');
+
+        if( !$sendEmail ) {
+            $logger->error("Skipped to send error eventlog and email: ".$subject);
+        }
+
+        ////////////////// ERROR //////////////////
+        //$logger->error("Subject: ".$subject);
+        //$logger->error("Body: ".$body);
+
+        //Create error notification email
+        //$subject = "ERROR: can not download $type file for Fellowship Application";
+        //$body = "Error downloading $type file: invalid response=".$httpRequest->getResponseHttpCode().
+        //    "; downloadUrl=".$downloadUrl."; fileId=".$fileId;
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+
+        //$sendEmail = true;
+        //$sendEmail = false; //testing
+        if( $sendEmail ) {
+
+            $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+            //Send email to admins
+            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+            if (!$emails) {
+                $emails = $ccs;
+                $ccs = null;
+            }
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$body,$systemUser,null,null,'Error');
+        } else {
+            $logger->error("Skipped to send error eventlog and email: ".$subject);
+        }
+        ////////////////// EOF ERROR //////////////////
+    }
+
+    function testFileDownload() {
+        $files = array(
+            "17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu", //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
+            "1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+            "1fd-vjpmQKdVXDiAhEzcP-5fFDZEl2kKW67nrRrtfcWg", //"17inHCzyZNyZ98E_ZngUjkUKWNp3D2J8Ri2TZWR5Oi1k"; //Google Docs
+            "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o", //"1beJAujYBEwPdi3RI7YAb4a8NcrBj5l0vhY6Zsa01Ohg"; //Google Sheets
+            "1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image
+        );
+
+        $service = $this->getGoogleService();
+
+        $res = array();
+        foreach($files as $fileId) {
+            $file = $this->getFileById($fileId);
+            $res[] = $this->downloadFile($service,$file,null,false);
+        }
+
+        return count($res);
+    }
+
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Servie_Drive $service Drive API service instance.
+     * @param Google_Servie_Drive_DriveFile $file Drive File instance.
+     * @param String $type Document type string.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile_OLD($service, $file, $type=null) {
 
 //        $response = $this->downloadGeneralFile($service,$file);
 //        dump($response);
@@ -1262,6 +1430,7 @@ class GoogleSheetManagement {
         
         return null;
     }
+
     /**
      * Print a file's metadata.
      *
@@ -1512,7 +1681,7 @@ class GoogleSheetManagement {
      * @param File $file Drive File instance.
      * @return String The file's content if successful, null otherwise.
      */
-    function downloadGeneralFile($service, $file) {
+    function downloadGeneralFile_OLD($service, $file) {
 
         if(1) {
             //$downloadUrl = $file->getDownloadUrl();
@@ -1592,12 +1761,39 @@ class GoogleSheetManagement {
 
         return $response;
     }
-    function downloadGeneralFileGoogleDoc($service, $file) {
+    function downloadGeneralFileGoogleDoc($service, $file, $fileId) {
         //$downloadUrl = $file->getDownloadUrl();
         //$downloadUrl = $file->getWebContentLink();
-        $content = $file->getAppDataContents();
+        //$content = $file->getAppDataContents();
+        //dump($content);
+        //exit("downloadGeneralFileGoogleDoc content");
+
+        $mimeType = $file->getMimeType();
+
+
+        //https://developers.google.com/drive/api/guides/manage-downloads
+        $response = $service->files->export($fileId,
+            'application/pdf',
+            //'application/vnd.google-apps.document',
+            //'application/vnd.google-apps.spreadsheet',
+            array(
+                'alt' => 'media',
+                //'mimeType' => 'application/vnd.google-apps.spreadsheet'
+            )
+        );
+        dump($response);
+        exit('111');
+        $content = $response->getBody()->getContents();
         dump($content);
         exit("downloadGeneralFileGoogleDoc content");
+
+
+        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=text/csv';
+        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
+        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
+        $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl'; //working //Only files with binary content can be downloaded. Use Export with Docs Editors files.
+        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType='.$mimeType;
+
         if ($downloadUrl) {
             $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
             $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
@@ -1640,6 +1836,11 @@ class GoogleSheetManagement {
         return $response;
     }
 
+    function getFileById( $fileId ) {
+        $service = $this->getGoogleService();
+        $file = $service->files->get($fileId);
+        return $file;
+    }
 
 }
 
