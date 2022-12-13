@@ -929,6 +929,8 @@ class RecLetterUtil {
     //check if this reference already has a letter
     public function checkReferenceAlreadyHasLetter($fellapp,$reference,$testing=false) {
 
+        //return; //testing
+
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
