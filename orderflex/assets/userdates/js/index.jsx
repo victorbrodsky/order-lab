@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from "react-dom/client";
+import React from 'react'
+import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import '../css/index.css';
-import UserTable from './components/UserTable';
+import '../css/index.css'
+import UserTable from './components/UserTable'
 
 // ReactDOM.render(
 // <React.StrictMode>
