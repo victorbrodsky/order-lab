@@ -71,7 +71,7 @@ class UserDatesFilterType extends AbstractType
             'label' => false,
             'attr' => array(
                 'class' => 'form-control form-control-modif limit-font-size submit-on-enter-field',
-                'placeholder' => 'Free search (name, id, cwid, email)'
+                'placeholder' => 'Free search (name, id, active directory account, email)'
             ),
         ));
 
@@ -82,7 +82,7 @@ class UserDatesFilterType extends AbstractType
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
-            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'Start Date/Time')
+            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'Employment start date')
         ));
 
         $builder->add('enddate', DateTimeType::class, array(
@@ -91,7 +91,7 @@ class UserDatesFilterType extends AbstractType
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'html5' => false,
-            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'End Date/Time')
+            'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'Employment end date')
         ));
 
         $builder->add('roles', EntityType::class, array(
@@ -114,14 +114,19 @@ class UserDatesFilterType extends AbstractType
 
         //status: Activated, Deactivated, Locked
         $builder->add('status', ChoiceType::class, array(
+//            'choices'   => array(
+//                'Active Account (Employed)' => 'active',
+//                'Inactive Account (Not currently employed)' => 'inactive',
+//                'Inactive Account (Locked)' => 'locked'
+//            ),
             'choices'   => array(
-                'Active Account (Employed)' => 'active',
-                'Inactive Account (Not currently employed)' => 'inactive',
-                'Inactive Account (Locked)' => 'locked'
+                'Active institutional AD account' => 'active',
+                'Inactive institutional AD account' => 'inactive',
+                'Locked (no site access)' => 'locked'
             ),
             'label' => false,
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Status'),
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Account status'),
         ));
 
 
