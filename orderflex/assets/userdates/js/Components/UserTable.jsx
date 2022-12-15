@@ -144,7 +144,11 @@ const UserTable = ({cycle}) => {
         setTotalUsers(response.data.totalUsers);
         //console.log("totalPages="+TOTAL_PAGES+", totalUsers="+totalUsers);
 
-        let matchMessage = "Page " + pageNum + "/" + response.data.totalPages + "; Total matching users " + response.data.totalUsers;
+        //Showing page(s) 1 to 5 of 136 | 2716 matching users
+        let matchMessage = "Showing page(s) 1 to " + pageNum + " of " + response.data.totalPages + " | matching users " + response.data.totalUsers;
+        if( parseInt(pageNum) == 1 ) {
+            matchMessage = "Showing page 1 of " + response.data.totalPages + " | matching users " + response.data.totalUsers;
+        }
         setMatchMessage(matchMessage);
         //console.log("matchMessage="+matchMessage);
 
@@ -274,7 +278,7 @@ const UserTable = ({cycle}) => {
                         </th>
                         <th>Degree</th>
                         <th>Email</th>
-                        <th>Institution</th>
+                        <th>Organizational Group(s)</th>
                         <th>Title(s)</th>
                         <th>Latest Employment Start Date</th>
                         <th>Latest Employment End Date</th>

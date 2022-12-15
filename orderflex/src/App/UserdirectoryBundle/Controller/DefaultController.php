@@ -976,4 +976,29 @@ class DefaultController extends OrderAbstractController
         exit('res='.$res);
     }
 
+    /**
+     * @Route("/get-ad-users")
+     */
+    public function getADUsersAction()
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $authUtil = $this->container->get('authenticator_utility');
+
+        $ldapType=2;
+        $withWarning=true;
+        $username = 'oli2002';
+        $username = 'aab9027';
+        //$username = '*';
+
+        $res = $authUtil->getADUsers($username, $ldapType, $withWarning); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)
+
+        dump($res);
+
+        exit('111');
+    }
+
+
 }

@@ -138,6 +138,7 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
                 { (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
                     <span
                         className="glyphicon glyphicon-question-sign ml-1"
+                        style={{marginLeft: ".25rem"}}
                         ref={checkBoxStatusRef}
                         title="Check Active Directory status"
                         onClick={() => handleCheckLdapStatus(data.id, data.cwid)}
