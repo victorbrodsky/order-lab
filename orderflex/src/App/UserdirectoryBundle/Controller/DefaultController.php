@@ -987,11 +987,15 @@ class DefaultController extends OrderAbstractController
 
         $authUtil = $this->container->get('authenticator_utility');
 
-        $ldapType=2;
+        $ldapType=1;
         $withWarning=true;
         $username = 'oli2002';
         $username = 'aab9027';
         //$username = '*';
+
+        //$cwids = array('petrova_kseniya_621');
+        //$res = $authUtil->getADUsers($username, $ldapType, $withWarning, $cwids);
+        //('111');
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('AppUserdirectoryBundle:User');
@@ -1001,10 +1005,10 @@ class DefaultController extends OrderAbstractController
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dql->andWhere("LOWER(infos.email) LIKE '%nyp%'");
         $query = $em->createQuery($dql);
-        $query->setMaxResults(10000);
+        //$query->setMaxResults(5000);
         $users = $query->getResult();
         echo "usesr count=".count($users)."<br>";
 
@@ -1013,7 +1017,7 @@ class DefaultController extends OrderAbstractController
             $cwids[] = $user->getCleanUsername();
         }
 
-        $res = $authUtil->getADUsers($username, $ldapType, $withWarning, $cwids); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)
+        $res = $authUtil->getADUsersByCwids($cwids,$ldapType,$withWarning); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)
 
         dump($res);
 

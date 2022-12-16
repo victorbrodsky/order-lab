@@ -208,6 +208,7 @@ class UserDatesController extends OrderAbstractController
         //echo "page=".$page.", users=".count($users)."<br>";
         //exit('111');
 
+        $cwids = array();
         $jsonArray = array();
         foreach($users as $user) {
 
@@ -272,14 +273,15 @@ class UserDatesController extends OrderAbstractController
             }
 
             $cwid = $user->getCleanUsername();
+            $cwids[] = $cwid;
 
             //try AD for each
-            $adStatus = "AD Inactive";
-            $res = $authUtil->searchLdap($cwid,$ldapType=1,$withWarning=true);
-            if( $res ) {
-                $adStatus = "AD Active";
-            }
-            $status = $status . "; " . $adStatus;
+//            $adStatus = "AD Inactive";
+//            $res = $authUtil->searchLdap($cwid,$ldapType=1,$withWarning=true);
+//            if( $res ) {
+//                $adStatus = "AD Active";
+//            }
+//            $status = $status . "; " . $adStatus;
 
             $jsonArray[] = array(
                 'id'            => $user->getId(),
@@ -303,6 +305,26 @@ class UserDatesController extends OrderAbstractController
         //dump($jsonArray);
         //exit('111');
 
+        $ldapType=1;
+        $withWarning=true;
+        $ldapUsers = $authUtil->getADUsersByCwids($cwids,$ldapType,$withWarning); //cwid => dn
+
+        $newJsonArray = array();
+        foreach( $jsonArray as $thisUser ) {
+            $cwid = $thisUser['cwid'];
+            if( isset($ldapUsers[$cwid]) ) {
+                $thisUser['adStatus'] = true; //$ldapUsers[$cwid];
+                $thisUser['status'] = $thisUser['status'] . "; Active in AD";
+            } else {
+                $thisUser['adStatus'] = false;
+                $thisUser['status'] = $thisUser['status'] . "; Inactive in AD";
+            }
+            $newJsonArray[] = $thisUser;
+        }
+
+        //dump($newJsonArray);
+        //exit('111');
+
         $totalCount = $users->getTotalItemCount();
         //echo "totalCount=$totalCount <br>";
         $totalPages = ceil($totalCount/$limit);
@@ -317,7 +339,7 @@ class UserDatesController extends OrderAbstractController
         );
 
         $results = array(
-            'results' => $jsonArray,
+            'results' => $newJsonArray,
             'info'    => $info,
             'totalPages'   => $totalPages,
             'totalUsers' => $totalCount
