@@ -72,11 +72,11 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             l.stop();
             if( response.data == "ok" ) {
                 console.log("Active");
-                $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Active in Active Directory</div>");
+                $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Confirmed: Active in AD</div>");
             }
             if( response.data == "notok" ) {
                 console.log("Inactive");
-                $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Inactive in Active Directory</div>");
+                $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Confirmed: Inactive in AD</div>");
             }
         }, (error) => {
             //console.log(error);
