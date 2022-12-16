@@ -85,6 +85,7 @@ class UserDatesController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $authUtil = $this->container->get('authenticator_utility');
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository('AppUserdirectoryBundle:User');
@@ -272,6 +273,14 @@ class UserDatesController extends OrderAbstractController
 
             $cwid = $user->getCleanUsername();
 
+            //try AD for each
+            $adStatus = "AD Inactive";
+            $res = $authUtil->searchLdap($cwid,$ldapType=1,$withWarning=true);
+            if( $res ) {
+                $adStatus = "AD Active";
+            }
+            $status = $status . "; " . $adStatus;
+
             $jsonArray[] = array(
                 'id'            => $user->getId(),
                 'cwid'          => $cwid,
@@ -290,7 +299,9 @@ class UserDatesController extends OrderAbstractController
                 'keytype'       => $userKeyTypeAbbreviation
 
             );
-        }
+        }//foreach
+        //dump($jsonArray);
+        //exit('111');
 
         $totalCount = $users->getTotalItemCount();
         //echo "totalCount=$totalCount <br>";

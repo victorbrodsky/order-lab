@@ -1712,7 +1712,7 @@ class AuthUtil {
         return false;
     }
 
-    public function getADUsers( $username,$ldapType=1,$withWarning=true ) {
+    public function getADUsers( $username,$ldapType=1,$withWarning=true, $cwids ) {
         //echo "username=".$username."<br>";
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -1747,6 +1747,13 @@ class AuthUtil {
         //$filter = "(|(uid=adm9073))";
         $filter = "(|(company=NYP)(mail=adm9073@med.cornell.edu)(department='Star 3'))";
         $filter = "(|(mail=*))";
+
+        $cwidsArr = array();
+        foreach($cwids as $cwid) {
+            $cwidsArr[] = "(CN=$cwid)";
+        }
+        $filter = "(|".implode("",$cwidsArr).")";
+        echo "filter=".$filter."<br>";
 
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";

@@ -993,7 +993,27 @@ class DefaultController extends OrderAbstractController
         $username = 'aab9027';
         //$username = '*';
 
-        $res = $authUtil->getADUsers($username, $ldapType, $withWarning); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos","infos");
+
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        //$dql->andWhere("LOWER(infos.email) LIKE '%nyp%'");
+        $query = $em->createQuery($dql);
+        $query->setMaxResults(10000);
+        $users = $query->getResult();
+        echo "usesr count=".count($users)."<br>";
+
+        $cwids = array();
+        foreach($users as $user) {
+            $cwids[] = $user->getCleanUsername();
+        }
+
+        $res = $authUtil->getADUsers($username, $ldapType, $withWarning, $cwids); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)
 
         dump($res);
 
