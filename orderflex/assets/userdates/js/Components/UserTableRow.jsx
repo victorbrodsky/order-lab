@@ -133,6 +133,9 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             <td className="rowlink-skip">
                 <DatepickerComponent data={data} name={"datepicker-end-date"} dateRef={endDateRef} componentid={"datepicker-end-date-"+data.id}/>
             </td>
+            <td>
+                {data.locked}
+            </td>
             <td className="rowlink-skip">
                 {data.status}
                 { data.checkLdapStatus && (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&

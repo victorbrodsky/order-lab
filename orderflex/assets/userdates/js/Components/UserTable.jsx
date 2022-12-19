@@ -147,7 +147,7 @@ const UserTable = ({cycle}) => {
         //Showing page(s) 1 to 5 of 136 | 2716 matching users
         let matchMessage = "Showing page(s) 1 to " + pageNum + " of " + response.data.totalPages + " | matching users " + response.data.totalUsers;
         if( parseInt(pageNum) == 1 ) {
-            matchMessage = "Showing page 1 of " + response.data.totalPages + " | matching users " + response.data.totalUsers;
+            matchMessage = "Showing page 1 of " + response.data.totalPages + " | " + response.data.totalUsers + " matching users";
         }
         setMatchMessage(matchMessage);
         //console.log("matchMessage="+matchMessage);
@@ -282,7 +282,8 @@ const UserTable = ({cycle}) => {
                         <th>Title(s)</th>
                         <th>Latest Employment Start Date</th>
                         <th>Latest Employment End Date</th>
-                        <th>Account Status</th>
+                        <th>Site Access</th>
+                        <th>Active Directory Account Status</th>
                         <th>Action</th>
                     </tr>
                     </thead>

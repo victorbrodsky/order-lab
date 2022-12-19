@@ -39,7 +39,7 @@ Encore
     //.addEntry('userdates', './assets/userdates/js/app.jsx')
     //.addEntry('userdates', './assets/userdates/js/ScrollComponent.jsx')
     .addEntry('userdates', './assets/userdates/js/index.jsx')
-    //.addEntry('userdates-css', './assets/userdates/css/index.css')
+    .addEntry('userdates-css', './assets/userdates/css/index.css')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

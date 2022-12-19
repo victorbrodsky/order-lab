@@ -1674,6 +1674,8 @@ class AuthUtil {
         //print_r($searchRes);
         //exit('Search OK');
 
+        ldap_unbind($cnx);
+
         return $searchResArr;
 
     }

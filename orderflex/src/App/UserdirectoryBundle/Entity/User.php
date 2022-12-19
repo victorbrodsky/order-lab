@@ -2439,11 +2439,10 @@ class User extends UserBase {
     //return null if user is still employed
     //return str if user not longer working:
     //"No longer works at the [Institution] as of MM/DD/YYYY. (show the most recent "End of Employment Date")
-    public function getEmploymentTerminatedStr(): ?string
+    public function getEmploymentTerminatedStr( $withLockStatus=true )
     {
-        $res = null;
+        $res = "";
         $emplCount = 0;
-        $termCount = 0;
         $resArr = array();
 
         foreach( $this->getEmploymentStatus() as $employmentStatus ) {
@@ -2491,11 +2490,13 @@ class User extends UserBase {
             $res = implode("; ",$resArr);
         }
 
-        if( $this->isLocked() ) {
-            if( $res ) {
-                $res = $res . ".";
+        if( $withLockStatus ) {
+            if ($this->isLocked()) {
+                if ($res) {
+                    $res = $res . ".";
+                }
+                $res = $res . " Account is locked";
             }
-            $res = $res . " Account is locked";
         }
 
         return $res;

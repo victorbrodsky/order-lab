@@ -296,8 +296,13 @@ class UserDatesController extends OrderAbstractController
             $startDate = $startEndDate['startDate'];
             $endDate = $startEndDate['endDate'];
 
-            $status = "Active";
-            $terminationStr = $user->getEmploymentTerminatedStr();
+            $locked = 'Enabled';
+            if( $user->isLocked() ) {
+                $locked = 'Locked';
+            }
+
+            $status = "";
+            $terminationStr = $user->getEmploymentTerminatedStr(false);
             if( $terminationStr ) {
                 $status = $terminationStr; //"terminated";
             }
@@ -334,6 +339,7 @@ class UserDatesController extends OrderAbstractController
                 'Title'         => $titles,
                 'StartDate'     => $startDate,
                 'EndDate'       => $endDate,
+                'locked'        => $locked,
                 'status'        => $status,
                 'keytype'       => $userKeyTypeAbbreviation,
                 'checkLdapStatus' => false
@@ -352,10 +358,16 @@ class UserDatesController extends OrderAbstractController
             $cwid = $thisUser['cwid'];
             if( isset($ldapUsers[$cwid]) ) {
                 $thisUser['adStatus'] = true; //$ldapUsers[$cwid];
-                $thisUser['status'] = $thisUser['status'] . "; Active in AD";
+                if( $thisUser['status'] ) {
+                    $thisUser['status'] = $thisUser['status'] . ";";
+                }
+                $thisUser['status'] = $thisUser['status'] . " Active in AD";
             } else {
                 $thisUser['adStatus'] = false;
-                $thisUser['status'] = $thisUser['status'] . "; Inactive in AD";
+                if( $thisUser['status'] ) {
+                    $thisUser['status'] = $thisUser['status'] . ";";
+                }
+                $thisUser['status'] = $thisUser['status'] . " Inactive in AD";
             }
             $newJsonArray[] = $thisUser;
         }

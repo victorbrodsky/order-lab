@@ -990,7 +990,7 @@ class DefaultController extends OrderAbstractController
         $ldapType=1;
         $withWarning=true;
         $username = 'oli2002';
-        $username = 'aab9027';
+        $username = 'aabccc';
         //$username = '*';
 
         //$cwids = array('petrova_kseniya_621');
