@@ -135,7 +135,7 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             </td>
             <td className="rowlink-skip">
                 {data.status}
-                { (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
+                { data.checkLdapStatus && (data.keytype == "ldap-user" || data.keytype == "ldap2-user") &&
                     <span
                         className="glyphicon glyphicon-question-sign ml-1"
                         style={{marginLeft: ".25rem"}}

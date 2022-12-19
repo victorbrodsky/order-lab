@@ -171,9 +171,46 @@ class UserDatesController extends OrderAbstractController
 
             $status = $filterform["status"]->getData();
             if( $status ) {
+//                'Active institutional AD account' => 'adactive',
+//                'Inactive institutional AD account' => 'adinactive',
+//                'Locked (no site access)' => 'locked',
+//                'Active Account' => 'active',
+//                'Ended employment' => 'terminated',
+                if( $status == 'adactive' ) {
+                    //not implemented
+                }
+                if( $status == 'adinactive' ) {
+                    //not implemented
+                }
                 if( $status == 'locked' ) {
-                    //$enabled = false;
                     $dql->andWhere("user.enabled = false");
+                }
+                if( $status == 'active' ) {
+                    //enable, termination date is null or in future
+                    //Don't filter by usertype ldap-user or ldap2-user
+                    $statusStr =
+                        "(user.enabled = true"
+                        ." AND (employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > :todayDate)"
+                        .")"
+                    ;
+                    $dql->andWhere($statusStr);
+
+                    //$nowDate = new \DateTime();
+                    $nowDate = new \DateTime('today midnight');
+                    $nowDateStr = $nowDate->format('Y-m-d H:i:s');
+                    $queryParameters['todayDate'] = $nowDateStr;
+                }
+                if( $status == 'terminated' ) {
+                    //termination date is not null and in past
+                    $statusStr =
+                        "(employmentStatus.terminationDate IS NOT NULL AND employmentStatus.terminationDate < :todayDate)"
+                    ;
+                    $dql->andWhere($statusStr);
+
+                    //$nowDate = new \DateTime();
+                    $nowDate = new \DateTime('today midnight');
+                    $nowDateStr = $nowDate->format('Y-m-d H:i:s');
+                    $queryParameters['todayDate'] = $nowDateStr;
                 }
             }
 
@@ -298,7 +335,8 @@ class UserDatesController extends OrderAbstractController
                 'StartDate'     => $startDate,
                 'EndDate'       => $endDate,
                 'status'        => $status,
-                'keytype'       => $userKeyTypeAbbreviation
+                'keytype'       => $userKeyTypeAbbreviation,
+                'checkLdapStatus' => false
 
             );
         }//foreach
