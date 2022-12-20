@@ -34,3 +34,5 @@ On deploy, create a production build: yarn encore production
 
 removed: "@symfony/webpack-encore": "^4.1.2",
 
+
+
