@@ -12,7 +12,7 @@ const DatepickerComponent = ({ data, name, dateRef, componentid }) => {
     useEffect(() => {
         //console.log( "useEffect" );
         initSingleDatepicker( $(dateRef.current) );
-        dateRef.current.disabled = true;
+        //dateRef.current.disabled = true;
 
         if( name == 'datepicker-start-date' ) {
             $(dateRef.current).datepicker('update', data.StartDate);

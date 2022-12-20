@@ -127,6 +127,9 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             <td>
                 {data.Title}
             </td>
+            <td>
+                {data.LastLogin}
+            </td>
             <td className="rowlink-skip">
                 <DatepickerComponent data={data} name={"datepicker-start-date"} dateRef={startDateRef} componentid={"datepicker-start-date-"+data.id}/>
             </td>

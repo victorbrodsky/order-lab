@@ -325,6 +325,12 @@ class UserDatesController extends OrderAbstractController
 //            }
 //            $status = $status . "; " . $adStatus;
 
+            $lastLogin = $user->getLastLogin();
+            if( $lastLogin ) {
+                $lastLogin = $lastLogin->format('m/d/Y');
+            }
+
+
             $jsonArray[] = array(
                 'id'            => $user->getId(),
                 'cwid'          => $cwid,
@@ -337,6 +343,7 @@ class UserDatesController extends OrderAbstractController
                 'Email'         => $user->getSingleEmail(),
                 'Institution'   => $instNameStr,
                 'Title'         => $titles,
+                'LastLogin'     => $lastLogin,
                 'StartDate'     => $startDate,
                 'EndDate'       => $endDate,
                 'locked'        => $locked,
