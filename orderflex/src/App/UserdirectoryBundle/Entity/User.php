@@ -2439,8 +2439,7 @@ class User extends UserBase {
     //return null if user is still employed
     //return str if user not longer working:
     //"No longer works at the [Institution] as of MM/DD/YYYY. (show the most recent "End of Employment Date")
-    public function getEmploymentTerminatedStr( $withLockStatus=true )
-    {
+    public function getEmploymentTerminatedStr( $withLockStatus=true ) {
         $res = "";
         $emplCount = 0;
         $resArr = array();
