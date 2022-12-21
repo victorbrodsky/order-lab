@@ -4,7 +4,7 @@ import { useRef } from 'react';
 //import  { useNavigate } from 'react-router-dom'
 import '../../css/index.css';
 
-const DeactivateButton = ({deactivateRowRefs}) => {
+const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
     const buttonRef = useRef();
     const updateUrl = Routing.generate('employees_update_users_date');
     const redircetUrl = Routing.generate('employees_user_dates_show');
@@ -31,6 +31,22 @@ const DeactivateButton = ({deactivateRowRefs}) => {
             deactivateDataArr.push(thisData);
         };
 
+        var modifiedDataArr = [];
+        for( let i = 0; i < modifiedRowRefs.length; i++ ) {
+            console.log("modifiedRowRefs len="+modifiedRowRefs.length);
+            console.log("row=",modifiedRowRefs[i]);
+
+            var row = modifiedRowRefs[i].current;
+            var userId = row.id;
+            userId = userId.replace('table-row-', '');
+
+            var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
+            var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
+
+            var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
+            modifiedDataArr.push(thisData);
+        };
+
         if( deactivateDataArr.length > 0 ) {
             //const navigate = useNavigate();
             var l = Ladda.create(buttonRef.current);
@@ -41,7 +57,7 @@ const DeactivateButton = ({deactivateRowRefs}) => {
             axios({
                 method: 'post',
                 url: updateUrl,
-                data: {deactivateData: deactivateDataArr}
+                data: {deactivateData: deactivateDataArr, modifiedData: modifiedDataArr}
             })
                 .then((response) => {
                     console.log("response.data=[" + response.data + "]");

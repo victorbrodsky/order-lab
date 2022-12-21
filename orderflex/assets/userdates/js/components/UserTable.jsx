@@ -35,11 +35,14 @@ const UserTable = ({cycle}) => {
     const [matchMessage, setMatchMessage] = useState('Loading ...');
     const [deactivateRowRefs, setDeactivateRowRefs] = useState([]);
     const [modifiedRowRefs, setModifiedRowRefs] = useState([]);
+    //const [modifiedRowIds, setModifiedRowIds] = useState([]);
     //const [deactivateElements, addDeactivateElement] = useState([]);
     const [isShown, setIsShown] = useState(true);
 
     const tableBodyRef = useRef();
     var _counter = 0;
+
+    var modifiedRowIds = [];
 
     const observer = useRef(
         new IntersectionObserver((entries) => {
@@ -59,7 +62,7 @@ const UserTable = ({cycle}) => {
         //updateList(deactivateRowRef.filter(item => item.current.id !== deactivateRowRef.current.id));
 
         function filterDeactivateRowRef(itemRef) {
-            //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+deactivateRowRef.current.id+"]");
+            //console.log("filterDeactivateRowRef itemRef: ["+itemRef.current.id+"] ?= ["+deactivateRowRef.current.id+"]");
             if( itemRef.current.id === deactivateRowRef.current.id ) {
                 return false;
             }
@@ -74,7 +77,7 @@ const UserTable = ({cycle}) => {
         }
         if( type === 'remove' ) {
             //console.log("remove",rowRef.current.id);
-            const newDeactivateRowRefs = [...deactivateRowRef];
+            const newDeactivateRowRefs = [...deactivateRowRefs];
             //const removeId = rowRef.current.id;
             //setDeactivateRowRefs( newDeactivateRowRefs.filter((item) => { return item.current.id !== rowRef.current.id }) )
             setDeactivateRowRefs( newDeactivateRowRefs.filter(filterDeactivateRowRef) );
@@ -93,7 +96,11 @@ const UserTable = ({cycle}) => {
     }
 
     function updateModifiedRowRefs( modifiedRowRef, type ) {
-        //console.log("type:",type);
+        //console.log("updateModifiedRowRefs type:",type);
+
+        //modifiedRowRefs.push(modifiedRowRef);
+        //setModifiedRowRefs( modifiedRowRefs );
+
         function filterModifiedRowRef(itemRef) {
             //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+modifiedRowRef.current.id+"]");
             if( itemRef.current.id === modifiedRowRef.current.id ) {
@@ -101,19 +108,52 @@ const UserTable = ({cycle}) => {
             }
             return true;
         }
-
+        // function filterIfExistsRef(itemRef) {
+        //     //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+modifiedRowRef.current.id+"]");
+        //     if( itemRef.current.id === modifiedRowRef.current.id ) {
+        //         return true;
+        //     }
+        //     return false;
+        // }
+        function ifIdExist(itemRef) {
+            console.log("modifiedRowIds",modifiedRowIds);
+            var id = itemRef.current.id;
+            if( modifiedRowIds.includes(id) == true ) {
+                console.log("id exists",id);
+                return true;
+            }
+            console.log("id does not exist",id);
+            //setModifiedRowIds(id);
+            modifiedRowIds.push(id);
+            return false;
+        }
         if( type === 'add' ) {
             //console.log("add",rowRef.current.id);
-            modifiedRowRefs.push(modifiedRowRef);
-            setModifiedRowRefs( modifiedRowRefs );
-            _counter = _counter + 1;
+            if( modifiedRowRefs.length > 0 ) {
+                const newModifiedRowRefs = [...modifiedRowRefs];
+                if( ifIdExist(modifiedRowRef) == false ) {
+                    modifiedRowRefs.push(modifiedRowRef);
+                    setModifiedRowRefs(modifiedRowRefs);
+                }
+            } else {
+                modifiedRowRefs.push(modifiedRowRef);
+                setModifiedRowRefs(modifiedRowRefs);
+            }
+            //if( modifiedRowRefs.filter(filterModifiedRowRef) ) {
+            //    modifiedRowRefs.push(modifiedRowRef);
+            //    setModifiedRowRefs(modifiedRowRefs);
+            //}
+            //_counter = _counter + 1;
         }
         if( type === 'remove' ) {
             //console.log("remove",rowRef.current.id);
-            const newModifiedRowRefs = [...modifiedRowRef];
-            setModifiedRowRefs( newModifiedRowRefs.filter(filterModifiedRowRef) );
-            _counter = _counter - 1;
+            if( modifiedRowRefs.length > 0 ) {
+                const newModifiedRowRefs = [...modifiedRowRefs];
+                setModifiedRowRefs(newModifiedRowRefs.filter(filterModifiedRowRef));
+                //_counter = _counter - 1;
+            }
         }
+        console.log("after modifiedRowRefs",modifiedRowRefs);
     }
 
     // function getData() {
@@ -217,7 +257,7 @@ const UserTable = ({cycle}) => {
                 <MatchInfo message={matchMessage}/>
 
                 {cycle == 'show' && <EditButton />}
-                {cycle == 'edit' && isShown && <DeactivateButton deactivateRowRefs={deactivateRowRefs}/>}
+                {cycle == 'edit' && isShown && <DeactivateButton deactivateRowRefs={deactivateRowRefs} modifiedRowRefs={modifiedRowRefs}/>}
 
                 <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>
@@ -276,7 +316,7 @@ const UserTable = ({cycle}) => {
                     </tbody>
                 </table>
 
-                {cycle == 'edit' && !loading && <DeactivateButton deactivateRowRefs={deactivateRowRefs}/>}
+                {cycle == 'edit' && !loading && <DeactivateButton deactivateRowRefs={deactivateRowRefs} modifiedRowRefs={modifiedRowRefs}/>}
 
             </div>
         );

@@ -1,11 +1,12 @@
 import React from 'react'
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 //import { Form } from 'react-bootstrap';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateModifiedRowRefs }) => {
 
+    const [originalDate, setOriginalDate] = useState();
     const dateCalendarBtnRef = useRef();
     const dateGroupRef = useRef();
 
@@ -24,9 +25,39 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
             $(dateRef.current).datepicker('update', data.EndDate);
         }
 
+        setOriginalDate(dateRef.current.value);
+
     }, []);
 
     //TODO: date onchange
+    //var i = 0; //bug: fired 6 times
+    function handleDateChange(event) {
+        //console.log("handleDateChange");
+        //event.preventDefault();
+        event.stopPropagation();
+
+        var currentDate = dateRef.current.value;
+        var type = 'add';
+        if( currentDate == originalDate ) {
+            type = 'remove';
+        }
+        updateModifiedRowRefs(dateRef,type);
+    }
+    $(dateRef.current).datepicker().on('changeDate', function (event) {
+        //console.log(i+": changeDate",$(dateRef.current));
+        //$('#date-daily').change();
+        event.stopPropagation();
+        handleDateChange(event);
+    });
+    // $(dateRef.current).datepicker().on('hide', function(event) {
+    //     console.log("hide",$(dateRef.current));
+    //     handleDateChange(event);
+    // });
+    // $("#"+componentid).on("changeDate", function(e) {
+    //     //e.preventDefault();
+    //     e.stopPropagation();
+    //     console.log("changeDate",$(dateRef.current));
+    // });
 
     function handleClickCalendarButton() {
         //console.log( "react click calendar icon", dateRef.current );
@@ -67,6 +98,7 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
                     id={componentid}
                     name={name}
                     className="datepicker form-control allow-future-date"
+                    //onChange={handleDateChange}
                 />
                  <span
                      ref={dateCalendarBtnRef}

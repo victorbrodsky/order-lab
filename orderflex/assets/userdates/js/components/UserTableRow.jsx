@@ -28,11 +28,11 @@ const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, se
             //alert("checked");
             //event.preventDefault();
             //console.log("enable",startDateRef);
-            startDateRef.current.disabled = false;
-            endDateRef.current.disabled = false;
+            //startDateRef.current.disabled = false;
+            //endDateRef.current.disabled = false;
             updateDeactivateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
 
-            var originalStartDate = startDateRef.value;
+            var originalStartDate = startDateRef.current.value;
             setOriginalEndDate(endDateRef.current.value);
             if( !originalStartDate ) {
                 //endDateRef.current.value =
@@ -42,8 +42,8 @@ const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, se
             //alert("unchecked");
             //event.preventDefault();
             //console.log("disable",startDateRef);
-            startDateRef.current.disabled = true;
-            endDateRef.current.disabled = true;
+            //startDateRef.current.disabled = true;
+            //endDateRef.current.disabled = true;
             updateDeactivateRowRefs(rowRef,'remove');
 
             //endDateRef.current.value = originalEndDate;
