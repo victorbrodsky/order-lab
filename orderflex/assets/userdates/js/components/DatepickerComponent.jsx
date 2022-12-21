@@ -37,11 +37,13 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
         event.stopPropagation();
 
         var currentDate = dateRef.current.value;
+        //console.log("currentDate=",currentDate,"originalDate",originalDate);
         var type = 'add';
         if( currentDate == originalDate ) {
             type = 'remove';
         }
-        updateModifiedRowRefs(dateRef,type);
+        console.log("currentDate=",currentDate,"originalDate",originalDate,"type",type);
+        updateModifiedRowRefs(dateRef.current,type);
     }
     $(dateRef.current).datepicker().on('changeDate', function (event) {
         //console.log(i+": changeDate",$(dateRef.current));

@@ -14,44 +14,51 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
         //var rows = $('.'+"table-row-"+data.id);
         //var rows = $(tableBodyRef).find();
 
-        var deactivateDataArr = [];
+        // var deactivateDataArr = [];
+        //
+        // for( let i = 0; i < deactivateRowRefs.length; i++ ) {
+        //     console.log("deactivateRowRefs len="+deactivateRowRefs.length);
+        //     console.log("row=",deactivateRowRefs[i]);
+        //
+        //     var row = deactivateRowRefs[i].current;
+        //     var userId = row.id;
+        //     userId = userId.replace('table-row-', '');
+        //
+        //     var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
+        //     var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
+        //
+        //     var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
+        //     deactivateDataArr.push(thisData);
+        // };
+        //
+        // var modifiedDataArr = [];
+        // for( let i = 0; i < modifiedRowRefs.length; i++ ) {
+        //     console.log("modifiedRowRefs len="+modifiedRowRefs.length);
+        //     console.log("row=",modifiedRowRefs[i]);
+        //
+        //     var row = modifiedRowRefs[i].current;
+        //     var userId = row.id;
+        //     userId = userId.replace('table-row-', '');
+        //
+        //     var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
+        //     var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
+        //
+        //     var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
+        //     modifiedDataArr.push(thisData);
+        // };
 
-        for( let i = 0; i < deactivateRowRefs.length; i++ ) {
-            console.log("deactivateRowRefs len="+deactivateRowRefs.length);
-            console.log("row=",deactivateRowRefs[i]);
+        console.log("modifiedRowRefs len="+modifiedRowRefs.length);
+        console.log("modifiedRowRefs"+modifiedRowRefs);
 
-            var row = deactivateRowRefs[i].current;
-            var userId = row.id;
-            userId = userId.replace('table-row-', '');
+        var deactivateDataArr = processRefData(deactivateRowRefs);
+        var modifiedDataArr = processRefData(modifiedRowRefs);
 
-            var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
-            var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
-
-            var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
-            deactivateDataArr.push(thisData);
-        };
-
-        var modifiedDataArr = [];
-        for( let i = 0; i < modifiedRowRefs.length; i++ ) {
-            console.log("modifiedRowRefs len="+modifiedRowRefs.length);
-            console.log("row=",modifiedRowRefs[i]);
-
-            var row = modifiedRowRefs[i].current;
-            var userId = row.id;
-            userId = userId.replace('table-row-', '');
-
-            var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
-            var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
-
-            var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
-            modifiedDataArr.push(thisData);
-        };
-
-        if( deactivateDataArr.length > 0 ) {
+        if( deactivateDataArr.length > 0 || modifiedDataArr.length > 0 ) {
             //const navigate = useNavigate();
             var l = Ladda.create(buttonRef.current);
             l.start();
             console.log("deactivateDataArr",deactivateDataArr);
+            console.log("modifiedDataArr",modifiedDataArr);
             //return;
 
             axios({
@@ -77,7 +84,29 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
                     alert(errorMsg);
                     l.stop();
                 });
+        } else {
+            alert("No changes detected");
         }
+    }
+
+    function processRefData( inputRefs ) {
+        var outputDataArr = [];
+        for( let i = 0; i < inputRefs.length; i++ ) {
+            //console.log("inputRefs len="+inputRefs.length);
+
+            var row = inputRefs[i].current;
+            console.log("row=",inputRefs[i].current);
+
+            var userId = row.id;
+            userId = userId.replace('table-row-', '');
+
+            var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
+            var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
+
+            var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
+            outputDataArr.push(thisData);
+        };
+        return outputDataArr;
     }
 
     return (

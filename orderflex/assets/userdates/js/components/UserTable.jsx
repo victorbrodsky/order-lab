@@ -85,7 +85,7 @@ const UserTable = ({cycle}) => {
             _counter = _counter - 1;
         }
 
-        //console.log("after deactivateRowRefs",deactivateRowRefs);
+        console.log("after deactivateRowRefs",deactivateRowRefs);
 
         // console.log("_counter="+_counter);
         // if( _counter > 0 ) {
@@ -115,35 +115,32 @@ const UserTable = ({cycle}) => {
         //     }
         //     return false;
         // }
-        function ifIdExist(itemRef) {
-            console.log("modifiedRowIds",modifiedRowIds);
-            var id = itemRef.current.id;
-            if( modifiedRowIds.includes(id) == true ) {
-                console.log("id exists",id);
-                return true;
-            }
-            console.log("id does not exist",id);
-            //setModifiedRowIds(id);
-            modifiedRowIds.push(id);
-            return false;
-        }
+        // function ifIdExist(itemRef) {
+        //     console.log("modifiedRowIds",modifiedRowIds);
+        //     var id = itemRef.current.id;
+        //     if( modifiedRowIds.includes(id) == true ) {
+        //         console.log("id exists",id);
+        //         return true;
+        //     }
+        //     console.log("id does not exist",id);
+        //     //setModifiedRowIds(id);
+        //     modifiedRowIds.push(id);
+        //     return false;
+        // }
         if( type === 'add' ) {
             //console.log("add",rowRef.current.id);
-            if( modifiedRowRefs.length > 0 ) {
-                const newModifiedRowRefs = [...modifiedRowRefs];
-                if( ifIdExist(modifiedRowRef) == false ) {
-                    modifiedRowRefs.push(modifiedRowRef);
-                    setModifiedRowRefs(modifiedRowRefs);
-                }
-            } else {
-                modifiedRowRefs.push(modifiedRowRef);
-                setModifiedRowRefs(modifiedRowRefs);
-            }
-            //if( modifiedRowRefs.filter(filterModifiedRowRef) ) {
-            //    modifiedRowRefs.push(modifiedRowRef);
-            //    setModifiedRowRefs(modifiedRowRefs);
-            //}
-            //_counter = _counter + 1;
+            // if( modifiedRowRefs.length > 0 ) {
+            //     const newModifiedRowRefs = [...modifiedRowRefs];
+            //     if( ifIdExist(modifiedRowRef) == false ) {
+            //         modifiedRowRefs.push(modifiedRowRef);
+            //         setModifiedRowRefs(modifiedRowRefs);
+            //     }
+            // } else {
+            //     modifiedRowRefs.push(modifiedRowRef);
+            //     setModifiedRowRefs(modifiedRowRefs);
+            // }
+            modifiedRowRefs.push(modifiedRowRef);
+            setModifiedRowRefs(modifiedRowRefs);
         }
         if( type === 'remove' ) {
             //console.log("remove",rowRef.current.id);
