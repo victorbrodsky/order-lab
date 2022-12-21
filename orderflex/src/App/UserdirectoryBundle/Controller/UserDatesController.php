@@ -443,16 +443,16 @@ class UserDatesController extends OrderAbstractController
             //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
 
-        //$testing = false;
-        $testing = true;
+        $testing = false;
+        //$testing = true;
 
         $eventArr = $this->processData($deactivateData,true,$request,$testing);
         //dump($eventArr);
         //exit('111');
         $eventStr = implode("<br>",$eventArr);
 
-        $eventArr = $this->processData($modifiedData,false,$request,$testing);
-        $eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
+        //$eventArr = $this->processData($modifiedData,false,$request,$testing);
+        //$eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
 
         $this->addFlash(
             'notice',

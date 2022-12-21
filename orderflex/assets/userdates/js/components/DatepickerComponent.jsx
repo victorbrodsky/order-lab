@@ -45,12 +45,15 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
         console.log("currentDate=",currentDate,"originalDate",originalDate,"type",type);
         updateModifiedRowRefs(dateRef.current,type);
     }
-    $(dateRef.current).datepicker().on('changeDate', function (event) {
-        //console.log(i+": changeDate",$(dateRef.current));
-        //$('#date-daily').change();
-        event.stopPropagation();
-        handleDateChange(event);
-    });
+    if(0) {
+        //TODO: not ready
+        $(dateRef.current).datepicker().on('changeDate', function (event) {
+            //console.log(i+": changeDate",$(dateRef.current));
+            //$('#date-daily').change();
+            event.stopPropagation();
+            handleDateChange(event);
+        });
+    }
     // $(dateRef.current).datepicker().on('hide', function(event) {
     //     console.log("hide",$(dateRef.current));
     //     handleDateChange(event);
