@@ -4,7 +4,7 @@ import { useRef } from 'react';
 //import  { useNavigate } from 'react-router-dom'
 import '../../css/index.css';
 
-const DeactivateButton = ({rowRefs}) => {
+const DeactivateButton = ({deactivateRowRefs}) => {
     const buttonRef = useRef();
     const updateUrl = Routing.generate('employees_update_users_date');
     const redircetUrl = Routing.generate('employees_user_dates_show');
@@ -14,13 +14,13 @@ const DeactivateButton = ({rowRefs}) => {
         //var rows = $('.'+"table-row-"+data.id);
         //var rows = $(tableBodyRef).find();
 
-        var dataArr = [];
+        var deactivateDataArr = [];
 
-        for( let i = 0; i < rowRefs.length; i++ ) {
-            console.log("rowRefs len="+rowRefs.length);
-            console.log("row=",rowRefs[i]);
+        for( let i = 0; i < deactivateRowRefs.length; i++ ) {
+            console.log("deactivateRowRefs len="+deactivateRowRefs.length);
+            console.log("row=",deactivateRowRefs[i]);
 
-            var row = rowRefs[i].current;
+            var row = deactivateRowRefs[i].current;
             var userId = row.id;
             userId = userId.replace('table-row-', '');
 
@@ -28,20 +28,20 @@ const DeactivateButton = ({rowRefs}) => {
             var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
 
             var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
-            dataArr.push(thisData);
+            deactivateDataArr.push(thisData);
         };
 
-        if( dataArr.length > 0 ) {
+        if( deactivateDataArr.length > 0 ) {
             //const navigate = useNavigate();
             var l = Ladda.create(buttonRef.current);
             l.start();
-            console.log("dataArr",dataArr);
+            console.log("deactivateDataArr",deactivateDataArr);
             //return;
 
             axios({
                 method: 'post',
                 url: updateUrl,
-                data: {datas: dataArr}
+                data: {deactivateData: deactivateDataArr}
             })
                 .then((response) => {
                     console.log("response.data=[" + response.data + "]");

@@ -9,7 +9,7 @@ import DatepickerComponent from './DatepickerComponent'
 //import Checkbox from './Checkbox.jsx'
 
 
-const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
+const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, setfunc, cycle }) => {
 
     //const [isDisabled, setIsDisabled] = useState(false);
     const [originalEndDate, setOriginalEndDate] = useState();
@@ -30,7 +30,7 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             //console.log("enable",startDateRef);
             startDateRef.current.disabled = false;
             endDateRef.current.disabled = false;
-            updateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
+            updateDeactivateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
 
             var originalStartDate = startDateRef.value;
             setOriginalEndDate(endDateRef.current.value);
@@ -44,7 +44,7 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
             //console.log("disable",startDateRef);
             startDateRef.current.disabled = true;
             endDateRef.current.disabled = true;
-            updateRowRefs(rowRef,'remove');
+            updateDeactivateRowRefs(rowRef,'remove');
 
             //endDateRef.current.value = originalEndDate;
             $(endDateRef.current).datepicker("update", originalEndDate);
@@ -131,10 +131,24 @@ const UserTableRow = ({ data, updateRowRefs, setfunc, cycle }) => {
                 {data.LastLogin}
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} name={"datepicker-start-date"} dateRef={startDateRef} componentid={"datepicker-start-date-"+data.id}/>
+                <DatepickerComponent 
+                    data={data} 
+                    cycle={cycle} 
+                    name={"datepicker-start-date"} 
+                    dateRef={startDateRef} 
+                    componentid={"datepicker-start-date-"+data.id}
+                    updateModifiedRowRefs={updateModifiedRowRefs}
+                />
             </td>
             <td className="rowlink-skip">
-                <DatepickerComponent data={data} name={"datepicker-end-date"} dateRef={endDateRef} componentid={"datepicker-end-date-"+data.id}/>
+                <DatepickerComponent 
+                    data={data} 
+                    cycle={cycle} 
+                    name={"datepicker-end-date"} 
+                    dateRef={endDateRef} 
+                    componentid={"datepicker-end-date-"+data.id}
+                    updateModifiedRowRefs={updateModifiedRowRefs}
+                />
             </td>
             <td>
                 {data.locked}

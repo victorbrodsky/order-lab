@@ -430,7 +430,11 @@ class UserDatesController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         $datas = json_decode($request->getContent(), true);
-        //dump($datas);
+        dump($datas);
+
+        $deactivateData = $datas['deactivateData'];
+        //dump($deactivateData);
+        //exit('111');
 
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
         if( !$employmentType ) {
@@ -438,95 +442,101 @@ class UserDatesController extends OrderAbstractController
             //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
 
-        $eventArr = array();
+//        $eventArr = array();
+//        foreach($datas as $key=>$thisData) {
+//            foreach($thisData as $data) {
+//                //dump($data);
+//                //exit("111 $key");
+//                $userId = $data['userId'];
+//                $startDateStr = $data['startDate'];
+//                $endDateStr = $data['endDate'];
+//                //echo "userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
+//
+//                if( !$userId ) {
+//                    $eventArr[] = "User id does not exist";
+//                    continue;
+//                }
+//
+//                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+//                if( !$user ) {
+//                    $eventArr[] = "User not found by user id ".$userId;
+//                    continue;
+//                }
+//
+//                $event = null;
+//                $changeArr = array();
+//
+//                $origianlEnableStatus = $user->isEnabled();
+//
+//                //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
+//                //get latest employement status
+//                $latestEmploymentStatus = $user->getLatestEmploymentStatus();
+//                if( !$latestEmploymentStatus ) {
+//                    $eventArr[] = "Latest employment status not found for ".$user;
+//                    continue;
+//                }
+//
+//                $originalStartDate = $latestEmploymentStatus->getHireDate();
+//                if( $originalStartDate ) {
+//                    $originalStartDate = $originalStartDate->format('m/d/Y');
+//                }
+//                $originalEndDate = $latestEmploymentStatus->getTerminationDate();
+//                if( $originalEndDate ) {
+//                    $originalEndDate = $originalEndDate->format('m/d/Y');
+//                }
+//
+//                if( $startDateStr ) {
+//                    if( $originalStartDate != $startDateStr ) {
+//                        $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
+//                    }
+//                    $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
+//                    $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
+//                    //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+//                    $latestEmploymentStatus->setHireDate($startDate);
+//                }
+//                if( $endDateStr ) {
+//                    if( $originalEndDate != $endDateStr ) {
+//                        $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
+//                    }
+//                    $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
+//                    $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
+//                    //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+//                    $latestEmploymentStatus->setTerminationDate($endDate);
+//                }
+//
+//                //lock user account
+//                if( $origianlEnableStatus !== false ) {
+//                    $user->setEnabled(false);
+//                    $changeArr[] = "User $user is locked by $currentUser";
+//                }
+//
+//                if( count($changeArr) > 0 ) {
+//                    //$user->addEmploymentStatus($employmentStatus);
+//                    $em->flush();
+//
+//                    $event = "User profile of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
+//                    $changeStr = implode("; ", $changeArr);
+//
+//                    $event = $event . $changeStr;
+//
+//                    //Event Log
+//                    $userSecUtil->createUserEditEvent($sitename,$event,$currentUser,$user,$request,'User record updated');
+//                } else {
+//                    $event = "User profile of ".$user." has not been changed by ".$currentUser." with bulk updates";
+//                }
+//
+//                $eventArr[] = $event . "<br>";
+//            }
+//        }
 
-        foreach($datas as $key=>$thisData) {
-            foreach($thisData as $data) {
-                //dump($data);
-                //exit("111 $key");
-                $userId = $data['userId'];
-                $startDateStr = $data['startDate'];
-                $endDateStr = $data['endDate'];
-                //echo "userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
-
-                if( !$userId ) {
-                    $eventArr[] = "User id does not exist";
-                    continue;
-                }
-
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-                if( !$user ) {
-                    $eventArr[] = "User not found by user id ".$userId;
-                    continue;
-                }
-
-                $event = null;
-                $changeArr = array();
-
-                $origianlEnableStatus = $user->isEnabled();
-
-                //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
-                //get latest employement status
-                $latestEmploymentStatus = $user->getLatestEmploymentStatus();
-                if( !$latestEmploymentStatus ) {
-                    $eventArr[] = "Latest employment status not found for ".$user;
-                    continue;
-                }
-
-                $originalStartDate = $latestEmploymentStatus->getHireDate();
-                if( $originalStartDate ) {
-                    $originalStartDate = $originalStartDate->format('m/d/Y');
-                }
-                $originalEndDate = $latestEmploymentStatus->getTerminationDate();
-                if( $originalEndDate ) {
-                    $originalEndDate = $originalEndDate->format('m/d/Y');
-                }
-                
-                if( $startDateStr ) {
-                    if( $originalStartDate != $startDateStr ) {
-                        $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
-                    }
-                    $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
-                    $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
-                    //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
-                    $latestEmploymentStatus->setHireDate($startDate);
-                }
-                if( $endDateStr ) {
-                    if( $originalEndDate != $endDateStr ) {
-                        $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
-                    }
-                    $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
-                    $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
-                    //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
-                    $latestEmploymentStatus->setTerminationDate($endDate);
-                }
-
-                //lock user account
-                if( $origianlEnableStatus !== false ) {
-                    $user->setEnabled(false);
-                    $changeArr[] = "User $user is locked by $currentUser";
-                }
-
-                if( count($changeArr) > 0 ) {
-                    //$user->addEmploymentStatus($employmentStatus);
-                    $em->flush();
-
-                    $event = "User profile of ".$user." has been changed by ".$currentUser." with bulk updates:"."<br>";
-                    $changeStr = implode("; ", $changeArr);
-
-                    $event = $event . $changeStr;
-
-                    //Event Log
-                    $userSecUtil->createUserEditEvent($sitename,$event,$currentUser,$user,$request,'User record updated');
-                } else {
-                    $event = "User profile of ".$user." has not been changed by ".$currentUser." with bulk updates";
-                }
-
-                $eventArr[] = $event . "<br>";
-            }
-        }
+        //$testing = false;
+        $testing = true;
+        $eventArr = $this->processDeactivateData($deactivateData,$request,$testing);
+        //dump($eventArr);
+        //exit('111');
 
         $eventStr = implode("<br>",$eventArr);
+
         $this->addFlash(
             'notice',
             $eventStr
@@ -541,6 +551,107 @@ class UserDatesController extends OrderAbstractController
         $response->setContent(json_encode($results));
 
         return $response;
+    }
+
+    public function processDeactivateData($deactivateData,$request,$testing=false) {
+        $em = $this->getDoctrine()->getManager();
+        $currentUser = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //dump($deactivateData);
+        //echo "data len=".count($deactivateData)."<br>";
+
+        $eventArr = array();
+
+        foreach($deactivateData as $data) {
+            //dump($data);
+            $userId = $data['userId'];
+            $startDateStr = $data['startDate'];
+            $endDateStr = $data['endDate'];
+            //echo "userId=$userId, startDateStr=$startDateStr, endDateStr=$endDateStr <br>";
+            //exit("111");
+
+            if( !$userId ) {
+                $eventArr[] = "User id does not exist";
+                continue;
+            }
+
+            $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            if( !$user ) {
+                $eventArr[] = "User not found by user id ".$userId;
+                continue;
+            }
+
+            $event = null;
+            $changeArr = array();
+
+            $origianlEnableStatus = $user->isEnabled();
+
+            //Save the start and end dates into the existing array field in the user profile (we have one already - please don’t create a new one)
+            //get latest employement status
+            $latestEmploymentStatus = $user->getLatestEmploymentStatus();
+            if( !$latestEmploymentStatus ) {
+                $eventArr[] = "Latest employment status not found for ".$user;
+                continue;
+            }
+
+            $originalStartDate = $latestEmploymentStatus->getHireDate();
+            if( $originalStartDate ) {
+                $originalStartDate = $originalStartDate->format('m/d/Y');
+            }
+            $originalEndDate = $latestEmploymentStatus->getTerminationDate();
+            if( $originalEndDate ) {
+                $originalEndDate = $originalEndDate->format('m/d/Y');
+            }
+
+            if( $startDateStr ) {
+                if( $originalStartDate != $startDateStr ) {
+                    $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
+                }
+                $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
+                $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
+                //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+                $latestEmploymentStatus->setHireDate($startDate);
+            }
+            if( $endDateStr ) {
+                if( $originalEndDate != $endDateStr ) {
+                    $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
+                }
+                $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
+                $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
+                //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+                $latestEmploymentStatus->setTerminationDate($endDate);
+            }
+
+            //lock user account
+            if( $origianlEnableStatus !== false ) {
+                $user->setEnabled(false);
+                $changeArr[] = "User $user is locked by $currentUser";
+            }
+
+            if( !$testing ) {
+                if (count($changeArr) > 0) {
+                    //$user->addEmploymentStatus($employmentStatus);
+                    $em->flush();
+
+                    $event = "User profile of " . $user . " has been changed by " . $currentUser . " with bulk updates:" . "<br>";
+                    $changeStr = implode("; ", $changeArr);
+
+                    $event = $event . $changeStr;
+
+                    //Event Log
+                    $userSecUtil->createUserEditEvent($sitename, $event, $currentUser, $user, $request, 'User record updated');
+                } else {
+                    $event = "User profile of " . $user . " has not been changed by " . $currentUser . " with bulk updates";
+                }
+            }
+
+            $eventArr[] = $event . "<br>";
+        }
+
+        return $eventArr;
     }
 
 }

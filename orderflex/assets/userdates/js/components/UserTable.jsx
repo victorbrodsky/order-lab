@@ -33,7 +33,8 @@ const UserTable = ({cycle}) => {
     const [TOTAL_PAGES, setTotalPages] = useState(1);
     const [totalUsers, setTotalUsers] = useState(null);
     const [matchMessage, setMatchMessage] = useState('Loading ...');
-    const [rowRefs, setRowRefs] = useState([]);
+    const [deactivateRowRefs, setDeactivateRowRefs] = useState([]);
+    const [modifiedRowRefs, setModifiedRowRefs] = useState([]);
     //const [deactivateElements, addDeactivateElement] = useState([]);
     const [isShown, setIsShown] = useState(true);
 
@@ -49,17 +50,17 @@ const UserTable = ({cycle}) => {
         })
     );
 
-    function updateRowRefs( rowRef, type ) {
+    function updateDeactivateRowRefs( deactivateRowRef, type ) {
         //console.log("type:",type);
-        //console.log("rowRef=",rowRef); //tr#"table-row-"+data.id
-        //console.log("rowRef id=",rowRef.current.id);
+        //console.log("deactivateRowRef=",deactivateRowRef); //tr#"table-row-"+data.id
+        //console.log("deactivateRowRef id=",deactivateRowRef.current.id);
 
-        //updateList(rowRefs.filter(item => item.name !== name));
-        //updateList(rowRefs.filter(item => item.current.id !== rowRef.current.id));
+        //updateList(deactivateRowRef.filter(item => item.name !== name));
+        //updateList(deactivateRowRef.filter(item => item.current.id !== deactivateRowRef.current.id));
 
-        function filterRowRef(itemRef) {
-            //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+rowRef.current.id+"]");
-            if( itemRef.current.id === rowRef.current.id ) {
+        function filterDeactivateRowRef(itemRef) {
+            //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+deactivateRowRef.current.id+"]");
+            if( itemRef.current.id === deactivateRowRef.current.id ) {
                 return false;
             }
             return true;
@@ -67,21 +68,21 @@ const UserTable = ({cycle}) => {
 
         if( type === 'add' ) {
             //console.log("add",rowRef.current.id);
-            rowRefs.push(rowRef);
-            setRowRefs( rowRefs );
+            deactivateRowRefs.push(deactivateRowRef);
+            setDeactivateRowRefs( deactivateRowRefs );
             _counter = _counter + 1;
         }
         if( type === 'remove' ) {
             //console.log("remove",rowRef.current.id);
-            const newRowRefs = [...rowRefs];
+            const newDeactivateRowRefs = [...deactivateRowRef];
             //const removeId = rowRef.current.id;
-            //setRowRefs( newRowRefs.filter((item) => { return item.current.id !== rowRef.current.id }) )
-            setRowRefs( newRowRefs.filter(filterRowRef) );
-            //console.log("after rowRefs=",rowRefs);
+            //setDeactivateRowRefs( newDeactivateRowRefs.filter((item) => { return item.current.id !== rowRef.current.id }) )
+            setDeactivateRowRefs( newDeactivateRowRefs.filter(filterDeactivateRowRef) );
+            //console.log("after deactivateRowRefs=",deactivateRowRefs);
             _counter = _counter - 1;
         }
 
-        //console.log("after rowRefs",rowRefs);
+        //console.log("after deactivateRowRefs",deactivateRowRefs);
 
         // console.log("_counter="+_counter);
         // if( _counter > 0 ) {
@@ -91,8 +92,32 @@ const UserTable = ({cycle}) => {
         // }
     }
 
+    function updateModifiedRowRefs( modifiedRowRef, type ) {
+        //console.log("type:",type);
+        function filterModifiedRowRef(itemRef) {
+            //console.log("itemRef: ["+itemRef.current.id+"] ?= ["+modifiedRowRef.current.id+"]");
+            if( itemRef.current.id === modifiedRowRef.current.id ) {
+                return false;
+            }
+            return true;
+        }
+
+        if( type === 'add' ) {
+            //console.log("add",rowRef.current.id);
+            modifiedRowRefs.push(modifiedRowRef);
+            setModifiedRowRefs( modifiedRowRefs );
+            _counter = _counter + 1;
+        }
+        if( type === 'remove' ) {
+            //console.log("remove",rowRef.current.id);
+            const newModifiedRowRefs = [...modifiedRowRef];
+            setModifiedRowRefs( newModifiedRowRefs.filter(filterModifiedRowRef) );
+            _counter = _counter - 1;
+        }
+    }
+
     // function getData() {
-    //     return rowRefs;
+    //     return deactivateRowRefs;
     // }
 
     // useEffect(() => {
@@ -192,7 +217,7 @@ const UserTable = ({cycle}) => {
                 <MatchInfo message={matchMessage}/>
 
                 {cycle == 'show' && <EditButton />}
-                {cycle == 'edit' && isShown && <DeactivateButton rowRefs={rowRefs}/>}
+                {cycle == 'edit' && isShown && <DeactivateButton deactivateRowRefs={deactivateRowRefs}/>}
 
                 <table className="records_list table table-hover table-condensed table-striped text-left">
                     <thead>
@@ -230,7 +255,8 @@ const UserTable = ({cycle}) => {
                                 <UserTableRow
                                     data={user}
                                     key={ user.id+'-'+i }
-                                    updateRowRefs={updateRowRefs}
+                                    updateDeactivateRowRefs={updateDeactivateRowRefs}
+                                    updateModifiedRowRefs={updateModifiedRowRefs}
                                     cycle={cycle}
                                     setfunc={setLastElement}
                                 />
@@ -239,7 +265,8 @@ const UserTable = ({cycle}) => {
                                 data={user}
                                 key={ user.id+'-'+i }
                                 cycle={cycle}
-                                updateRowRefs={updateRowRefs}
+                                updateDeactivateRowRefs={updateDeactivateRowRefs}
+                                updateModifiedRowRefs={updateModifiedRowRefs}
                             />
                         );
                     })}
@@ -249,7 +276,7 @@ const UserTable = ({cycle}) => {
                     </tbody>
                 </table>
 
-                {cycle == 'edit' && !loading && <DeactivateButton rowRefs={rowRefs}/>}
+                {cycle == 'edit' && !loading && <DeactivateButton deactivateRowRefs={deactivateRowRefs}/>}
 
             </div>
         );

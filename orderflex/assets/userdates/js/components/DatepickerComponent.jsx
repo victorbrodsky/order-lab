@@ -4,15 +4,18 @@ import { useEffect, useRef } from 'react';
 //import Form from "react-bootstrap/Form";
 //import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-const DatepickerComponent = ({ data, name, dateRef, componentid }) => {
+const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateModifiedRowRefs }) => {
 
     const dateCalendarBtnRef = useRef();
     const dateGroupRef = useRef();
 
     useEffect(() => {
-        //console.log( "useEffect" );
+        //console.log( "useEffect, cycle="+cycle );
         initSingleDatepicker( $(dateRef.current) );
-        //dateRef.current.disabled = true;
+
+        if( cycle != 'edit' ) {
+            dateRef.current.disabled = true;
+        }
 
         if( name == 'datepicker-start-date' ) {
             $(dateRef.current).datepicker('update', data.StartDate);
@@ -22,6 +25,8 @@ const DatepickerComponent = ({ data, name, dateRef, componentid }) => {
         }
 
     }, []);
+
+    //TODO: date onchange
 
     function handleClickCalendarButton() {
         //console.log( "react click calendar icon", dateRef.current );
