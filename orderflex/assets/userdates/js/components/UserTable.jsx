@@ -96,7 +96,7 @@ const UserTable = ({cycle}) => {
     }
 
     function updateModifiedRowRefs( modifiedRowRef, type ) {
-        //console.log("updateModifiedRowRefs type:",type);
+        console.log("updateModifiedRowRefs type:",type);
 
         //modifiedRowRefs.push(modifiedRowRef);
         //setModifiedRowRefs( modifiedRowRefs );

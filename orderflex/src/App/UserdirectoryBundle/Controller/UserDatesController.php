@@ -435,6 +435,7 @@ class UserDatesController extends OrderAbstractController
         $deactivateData = $datas['deactivateData'];
         $modifiedData = $datas['modifiedData'];
         //dump($deactivateData);
+        //dump($modifiedData);
         //exit('111');
 
         $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
@@ -451,8 +452,8 @@ class UserDatesController extends OrderAbstractController
         //exit('111');
         $eventStr = implode("<br>",$eventArr);
 
-        //$eventArr = $this->processData($modifiedData,false,$request,$testing);
-        //$eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
+        $eventArr = $this->processData($modifiedData,false,$request,$testing);
+        $eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
 
         $this->addFlash(
             'notice',
@@ -500,13 +501,13 @@ class UserDatesController extends OrderAbstractController
             $processedUserIdArr[] = $userId;
 
             if( !$userId ) {
-                $eventArr[] = "User id does not exist";
+                $eventArr[] = "Ignore logical error: user id is empty";
                 continue;
             }
 
             $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
             if( !$user ) {
-                $eventArr[] = "User not found by user id ".$userId;
+                $eventArr[] = "Ignore: user not found by user id ".$userId;
                 continue;
             }
 
@@ -519,7 +520,7 @@ class UserDatesController extends OrderAbstractController
             //get latest employement status
             $latestEmploymentStatus = $user->getLatestEmploymentStatus();
             if( !$latestEmploymentStatus ) {
-                $eventArr[] = "Latest employment status not found for ".$user;
+                $eventArr[] = "Ignore: latest employment status not found for ".$user;
                 continue;
             }
 

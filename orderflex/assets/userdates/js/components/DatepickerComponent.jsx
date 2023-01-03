@@ -43,10 +43,11 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
             type = 'remove';
         }
         console.log("currentDate=",currentDate,"originalDate",originalDate,"type",type);
-        updateModifiedRowRefs(dateRef.current,type);
+        updateModifiedRowRefs(dateRef,type);
     }
-    if(0) {
-        //TODO: not ready
+
+    //TODO: not ready. On change date save changes to
+    if(1) {
         $(dateRef.current).datepicker().on('changeDate', function (event) {
             //console.log(i+": changeDate",$(dateRef.current));
             //$('#date-daily').change();

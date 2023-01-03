@@ -50,8 +50,8 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
         console.log("modifiedRowRefs len="+modifiedRowRefs.length);
         console.log("modifiedRowRefs"+modifiedRowRefs);
 
-        var deactivateDataArr = processRefData(deactivateRowRefs);
-        var modifiedDataArr = processRefData(modifiedRowRefs);
+        var deactivateDataArr = processDeactivateRowRefData(deactivateRowRefs); //testing
+        var modifiedDataArr = processModifiedRowRefData(modifiedRowRefs);
 
         if( deactivateDataArr.length > 0 || modifiedDataArr.length > 0 ) {
             //const navigate = useNavigate();
@@ -89,19 +89,40 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
         }
     }
 
-    function processRefData( inputRefs ) {
+    function processDeactivateRowRefData( inputRefs ) {
         var outputDataArr = [];
         for( let i = 0; i < inputRefs.length; i++ ) {
             //console.log("inputRefs len="+inputRefs.length);
 
             var row = inputRefs[i].current;
-            console.log("row=",inputRefs[i].current);
+            console.log("row=",row);
 
             var userId = row.id;
             userId = userId.replace('table-row-', '');
 
             var startDate = $(row).find("#"+"datepicker-start-date-"+userId).val();
             var endDate = $(row).find("#"+"datepicker-end-date-"+userId).val();
+
+            var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
+            outputDataArr.push(thisData);
+        };
+        return outputDataArr;
+    }
+
+    function processModifiedRowRefData( inputRefs ) {
+        var outputDataArr = [];
+        for( let i = 0; i < inputRefs.length; i++ ) {
+            //console.log("inputRefs len="+inputRefs.length);
+
+            var dateRef = inputRefs[i].current;
+            console.log("dateRef=",dateRef);
+
+            var userId = dateRef.id;
+            userId = userId.replace('datepicker-start-date-', '');
+            userId = userId.replace('datepicker-end-date-', '');
+
+            var startDate = $(dateRef).val();
+            var endDate = $(dateRef).val();
 
             var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
             outputDataArr.push(thisData);
