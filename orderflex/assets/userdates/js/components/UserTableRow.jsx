@@ -32,10 +32,16 @@ const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, se
             //endDateRef.current.disabled = false;
             updateDeactivateRowRefs(rowRef,'add');//"table-row-"+data.id,'add');
 
-            var originalStartDate = startDateRef.current.value;
+            //Typo here? why update end date if start date is empty?
+            //var originalStartDate = startDateRef.current.value;
+            //setOriginalEndDate(endDateRef.current.value);
+            //if( !originalStartDate ) {
+            //    $(endDateRef.current).datepicker("update", new Date());
+            //}
+
+            //var originalEndDate = endDateRef.current.value;
             setOriginalEndDate(endDateRef.current.value);
-            if( !originalStartDate ) {
-                //endDateRef.current.value =
+            if( !endDateRef.current.value ) {
                 $(endDateRef.current).datepicker("update", new Date());
             }
         } else {
