@@ -42,7 +42,7 @@ const DatepickerComponent = ({ data, cycle, name, dateRef, componentid, updateMo
         if( currentDate == originalDate ) {
             type = 'remove';
         }
-        console.log("currentDate=",currentDate,"originalDate",originalDate,"type",type);
+        //console.log("currentDate=",currentDate,"originalDate",originalDate,"type",type);
         updateModifiedRowRefs(dateRef,type);
     }
 

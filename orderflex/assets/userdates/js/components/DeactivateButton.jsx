@@ -47,8 +47,8 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
         //     modifiedDataArr.push(thisData);
         // };
 
-        console.log("modifiedRowRefs len="+modifiedRowRefs.length);
-        console.log("modifiedRowRefs"+modifiedRowRefs);
+        //console.log("modifiedRowRefs len="+modifiedRowRefs.length);
+        //console.log("modifiedRowRefs"+modifiedRowRefs);
 
         var deactivateDataArr = processDeactivateRowRefData(deactivateRowRefs); //testing
         var modifiedDataArr = processModifiedRowRefData(modifiedRowRefs);
@@ -57,8 +57,8 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
             //const navigate = useNavigate();
             var l = Ladda.create(buttonRef.current);
             l.start();
-            console.log("deactivateDataArr",deactivateDataArr);
-            console.log("modifiedDataArr",modifiedDataArr);
+            //console.log("deactivateDataArr",deactivateDataArr);
+            //console.log("modifiedDataArr",modifiedDataArr);
             //return;
 
             axios({
@@ -67,10 +67,10 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
                 data: {deactivateData: deactivateDataArr, modifiedData: modifiedDataArr}
             })
                 .then((response) => {
-                    console.log("response.data=[" + response.data + "]");
+                    //console.log("response.data=[" + response.data + "]");
                     l.stop();
                     if (response.data == "ok") {
-                        console.log("Active");
+                        //console.log("Active");
                         //navigate('/directory/employment-dates/view', { replace: true });
                         window.location.href = redircetUrl;
                     } else {
@@ -95,7 +95,7 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
             //console.log("inputRefs len="+inputRefs.length);
 
             var row = inputRefs[i].current;
-            console.log("row=",row);
+            //console.log("row=",row);
 
             var userId = row.id;
             userId = userId.replace('table-row-', '');
@@ -115,14 +115,14 @@ const DeactivateButton = ({deactivateRowRefs, modifiedRowRefs}) => {
             //console.log("inputRefs len="+inputRefs.length);
 
             var dateRef = inputRefs[i].current;
-            console.log("dateRef=",dateRef);
+            //console.log("dateRef=",dateRef);
 
             var userId = dateRef.id;
             userId = userId.replace('datepicker-start-date-', '');
             userId = userId.replace('datepicker-end-date-', '');
 
-            var startDate = $(dateRef).val();
-            var endDate = $(dateRef).val();
+            var startDate = $("#"+"datepicker-start-date-"+userId).val();
+            var endDate = $("#"+"datepicker-end-date-"+userId).val();
 
             var thisData = {'userId': userId, 'startDate': startDate, 'endDate': endDate};
             outputDataArr.push(thisData);

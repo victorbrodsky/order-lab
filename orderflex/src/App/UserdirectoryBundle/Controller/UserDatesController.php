@@ -494,7 +494,7 @@ class UserDatesController extends OrderAbstractController
             //exit("111");
 
             if( in_array($userId,$processedUserIdArr)  ) {
-                $eventArr[] = "Skip repeated user with id=".$userId;
+                //$eventArr[] = "Skip repeated user with id=".$userId;
                 continue;
             }
 
@@ -527,30 +527,48 @@ class UserDatesController extends OrderAbstractController
             $originalStartDate = $latestEmploymentStatus->getHireDate();
             if( $originalStartDate ) {
                 $originalStartDate = $originalStartDate->format('m/d/Y');
+            } else {
+                $originalStartDate = "None";
             }
             $originalEndDate = $latestEmploymentStatus->getTerminationDate();
             if( $originalEndDate ) {
                 $originalEndDate = $originalEndDate->format('m/d/Y');
+            } else {
+                $originalEndDate = "None";
             }
 
-            if( $startDateStr ) {
+            //if( $startDateStr ) {
                 if( $originalStartDate != $startDateStr ) {
-                    $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr." 00:00");
-                    $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate,$user);
-                    //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+                    if( $startDateStr ) {
+                        $startDate = \DateTime::createFromFormat('m/d/Y H:i', $startDateStr . " 00:00");
+                        $startDate = $userServiceUtil->convertFromUserTimezonetoUTC($startDate, $user);
+                        //echo "startDate=".$startDate->format('m/d/Y H:i')."<br>";
+                    } else {
+                        $startDate = null;
+                        $startDateStr = "None";
+                    }
                     $latestEmploymentStatus->setHireDate($startDate);
-                    $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
+                    if( $originalStartDate != $startDateStr ) {
+                        $changeArr[] = "Start date changed from $originalStartDate to $startDateStr";
+                    }
                 }
-            }
-            if( $endDateStr ) {
+            //}
+            //if( $endDateStr ) {
                 if( $originalEndDate != $endDateStr ) {
-                    $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr." 00:00");
-                    $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate,$user);
-                    //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+                    if( $endDateStr ) {
+                        $endDate = \DateTime::createFromFormat('m/d/Y H:i', $endDateStr . " 00:00");
+                        $endDate = $userServiceUtil->convertFromUserTimezonetoUTC($endDate, $user);
+                        //echo "endDate=".$endDate->format('m/d/Y H:i')."<br>";
+                    } else {
+                        $endDate = null;
+                        $endDateStr = "None";
+                    }
                     $latestEmploymentStatus->setTerminationDate($endDate);
-                    $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
+                    if( $originalEndDate != $endDateStr ) {
+                        $changeArr[] = "End date changed from $originalEndDate to $endDateStr";
+                    }
                 }
-            }
+            //}
 
             //lock user account
             if( $withLocking ) {
@@ -586,6 +604,7 @@ class UserDatesController extends OrderAbstractController
         return $eventArr;
     }
 
+    //NOT USED
     public function processModifiedData($modifiedData,$request,$testing=false) {
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();

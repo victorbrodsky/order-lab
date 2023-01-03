@@ -85,7 +85,7 @@ const UserTable = ({cycle}) => {
             _counter = _counter - 1;
         }
 
-        console.log("after deactivateRowRefs",deactivateRowRefs);
+        //console.log("after deactivateRowRefs",deactivateRowRefs);
 
         // console.log("_counter="+_counter);
         // if( _counter > 0 ) {
@@ -96,7 +96,7 @@ const UserTable = ({cycle}) => {
     }
 
     function updateModifiedRowRefs( modifiedRowRef, type ) {
-        console.log("updateModifiedRowRefs type:",type);
+        //console.log("updateModifiedRowRefs type:",type);
 
         //modifiedRowRefs.push(modifiedRowRef);
         //setModifiedRowRefs( modifiedRowRefs );
@@ -150,7 +150,7 @@ const UserTable = ({cycle}) => {
                 //_counter = _counter - 1;
             }
         }
-        console.log("after modifiedRowRefs",modifiedRowRefs);
+        //console.log("after modifiedRowRefs",modifiedRowRefs);
     }
 
     // function getData() {

@@ -53,7 +53,7 @@ const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, se
 
     function handleCheckLdapStatus(userId, userCwid) {
         let checkLdapUrl = Routing.generate('employees_check_ldap-usertype-userid');
-        console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
+        //console.log("checkLdapStatus userId="+userId+", userCwid="+userCwid);
 
         //var checkButton = $('#'+"ldap-status-"+userId);
         var l = Ladda.create(checkBoxStatusRef.current);
@@ -68,14 +68,14 @@ const UserTableRow = ({ data, updateDeactivateRowRefs, updateModifiedRowRefs, se
             }
         })
         .then((response) => {
-            console.log("response.data=["+response.data+"]");
+            //console.log("response.data=["+response.data+"]");
             l.stop();
             if( response.data == "ok" ) {
-                console.log("Active");
+                //console.log("Active");
                 $(checkBoxStatusRef.current).replaceWith("<div class='text-success'>Confirmed: Active in AD</div>");
             }
             if( response.data == "notok" ) {
-                console.log("Inactive");
+                //console.log("Inactive");
                 $(checkBoxStatusRef.current).replaceWith("<div class='text-danger'>Confirmed: Inactive in AD</div>");
             }
         }, (error) => {
