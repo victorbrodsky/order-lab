@@ -120,8 +120,10 @@ class UserDatesFilterType extends AbstractType
 //                'Inactive Account (Locked)' => 'locked'
 //            ),
             'choices'   => array(
-                //'Active institutional AD account' => 'adactive',
-                //'Inactive institutional AD account' => 'adinactive',
+                'Inactive institutional AD account while site access is not locked' => 'adinactive-not-locked',
+                'Locked (no site access) while institutional AD account is active' => 'adactive-locked',
+                'Active institutional AD account' => 'adactive',
+                'Inactive institutional AD account' => 'adinactive',
                 'Locked (no site access)' => 'locked',
                 'Active Account' => 'active',
                 'Ended employment' => 'terminated',

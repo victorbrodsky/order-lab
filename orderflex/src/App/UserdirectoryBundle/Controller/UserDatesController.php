@@ -44,6 +44,10 @@ class UserDatesController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        //check if lastAdCheck is more than 1 day => check activeAD
+        $authUtil = $this->container->get('authenticator_utility');
+        $authUtil->checkUsersAD();
+
         $cycle = 'show';
         if( $request->get('_route') == 'employees_user_dates_edit' ) {
             $cycle = 'edit';
@@ -171,13 +175,22 @@ class UserDatesController extends OrderAbstractController
 
             $status = $filterform["status"]->getData();
             if( $status ) {
+//                'Inactive institutional AD account while site access is not locked' => 'adinactive-not-locked',
+//                'Locked (no site access) while institutional AD account is active' => 'adactive-locked',
 //                'Active institutional AD account' => 'adactive',
 //                'Inactive institutional AD account' => 'adinactive',
 //                'Locked (no site access)' => 'locked',
 //                'Active Account' => 'active',
 //                'Ended employment' => 'terminated',
+                if( $status == 'adinactive-not-locked' ) {
+                    //not implemented
+                }
+                if( $status == 'adactive-locked' ) {
+                    //not implemented
+                }
                 if( $status == 'adactive' ) {
                     //not implemented
+                    //use activeAD
                 }
                 if( $status == 'adinactive' ) {
                     //not implemented

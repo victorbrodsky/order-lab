@@ -1869,4 +1869,120 @@ class AuthUtil {
         return $retEntry;
     }
 
+    public function checkUsersAD( $ldapType=1, $withWarning=true ) {
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos","infos");
+
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+
+        $dql->orderBy("infos.lastName","ASC");
+        $query = $this->em->createQuery($dql);
+
+        $users = $query->getResult();
+
+        //////////// connect to LDAP/AD ////////////
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $postfix = $this->getPostfix($ldapType);
+
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        //$ldapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
+        //echo "ldapBindDN=".$ldapBindDN."<br>";
+
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
+        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
+
+        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
+            //ok
+        } else {
+            //no search
+            return NULL;
+        }
+
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
+        $cnx = $this->connectToLdap($LDAPHost);
+
+        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
+        if (!$res) {
+            $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
+            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+            //testing: allow to login without LDAP admin bind
+            $adminLdapBindRequired = true;
+            //$adminLdapBindRequired = false;
+            if ($adminLdapBindRequired) {
+                ldap_error($cnx);
+                ldap_unbind($cnx);
+                //exit("error ldap_bind");
+                return NULL;
+            }
+        } else {
+            $this->logger->notice("checkUsersAD: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+        }
+
+        $LDAPFieldsToFind = ["cn"];
+        $sizelimit = 0;
+        //////////// EOF connect to LDAP/AD ////////////
+
+        $lastAdCheckDateTime = new \DateTime();
+
+        foreach($users as $user) {
+            $this->logger->notice("checkUsersAD: check user $user");
+            $user->setLastAdCheck($lastAdCheckDateTime);
+            
+            $cwid = $user->getCleanUsername();
+
+            if( str_contains($cwid,'(') || str_contains($cwid,')') ) {
+                continue; //bad cwid
+            }
+
+            $filter="(cn=".$cwid.")";
+            //echo "filter=$filter <br>";
+
+            $ldapBindDNArr = explode(";",$ldapBindDN);
+            //echo "count=".count($ldapBindDNArr)."<br>";
+
+            foreach( $ldapBindDNArr as $ldapBindDN) {
+                $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+                //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+                if( $withWarning ) {
+                    $sr = ldap_search(
+                        $cnx,               //ldap
+                        $ldapBindDN,        //base
+                        $filter,            //filter
+                        $LDAPFieldsToFind,  //attributes
+                        0,                  //attributes_only
+                        $sizelimit          //sizelimit
+                    );
+                } else {
+                    $sr = @ldap_search(
+                        $cnx,               //ldap
+                        $ldapBindDN,        //base
+                        $filter,            //filter
+                        $LDAPFieldsToFind,  //attributes
+                        0,                  //attributes_only
+                        $sizelimit          //sizelimit
+                    );
+                }
+
+                if( $sr ) {
+                    //user found in AD
+                    $this->logger->notice("checkUsersAD: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                    $user->setActiveAD(true);
+                    echo "AD: user=$user <br>";
+                    break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
+                } else {
+                    echo "NOT IN AD: user=$user <br>";
+                    $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                    $user->setActiveAD(false);
+                }
+            }//foreach
+        }//foreach
+        exit('exit checkUsersAD');
+    }
+
 } 

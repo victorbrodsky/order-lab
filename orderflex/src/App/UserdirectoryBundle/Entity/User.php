@@ -320,7 +320,16 @@ class User extends UserBase {
      */
     private $lastLoggedUrl;
 
+    /**
+     * @ORM\Column(name="activeAD", type="boolean", nullable=true)
+     */
+    private $activeAD;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="lastAdCheck", type="datetime", nullable=true)
+     */
+    private $lastAdCheck;
 
 
     function __construct( $addobjects=true )
@@ -375,6 +384,8 @@ class User extends UserBase {
         //parent::__construct();
     }
 
+
+
     /**
      * @param string $dn
      */
@@ -389,6 +400,7 @@ class User extends UserBase {
     public function getDn(): ?string
     {
         return $this->dn;
+
     }
 
     public function setIdNull(): void
@@ -1117,6 +1129,40 @@ class User extends UserBase {
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getActiveAD() {
+        return $this->activeAD;
+    }
+
+    /**
+     * @param mixed $activeAD
+     */
+    public function setActiveAD($activeAD) {
+        $this->activeAD = $activeAD;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastAdCheck()
+    {
+        return $this->lastAdCheck;
+    }
+
+    /**
+     * @param mixed $lastAdCheck
+     */
+    public function setLastAdCheck($lastAdCheck)
+    {
+        if( $lastAdCheck ) {
+            $lastAdCheck = new \DateTime();
+        }
+        $this->lastAdCheck = $lastAdCheck;
+    }
+
 
 //    /**
 //     * @return \DateTime
