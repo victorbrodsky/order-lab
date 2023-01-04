@@ -276,8 +276,8 @@ const UserTable = ({cycle}) => {
                         <th>Organizational Group(s)</th>
                         <th>Title(s)</th>
                         <th>Last successful log in</th>
-                        <th>Latest Employment Start Date</th>
-                        <th>Latest Employment End Date</th>
+                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment Start Date</th>
+                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment End Date</th>
                         <th>Site Access</th>
                         <th>Active Directory Account Status</th>
                         <th>Action</th>
