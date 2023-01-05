@@ -183,17 +183,16 @@ class UserDatesController extends OrderAbstractController
 //                'Active Account' => 'active',
 //                'Ended employment' => 'terminated',
                 if( $status == 'adinactive-not-locked' ) {
-                    //not implemented
+                    $dql->andWhere("(user.activeAD = false AND user.enabled = true)");
                 }
                 if( $status == 'adactive-locked' ) {
-                    //not implemented
+                    $dql->andWhere("(user.activeAD = true AND user.enabled = false)");
                 }
                 if( $status == 'adactive' ) {
-                    //not implemented
-                    //use activeAD
+                    $dql->andWhere("user.activeAD = true");
                 }
                 if( $status == 'adinactive' ) {
-                    //not implemented
+                    $dql->andWhere("user.activeAD = false");
                 }
                 if( $status == 'locked' ) {
                     $dql->andWhere("user.enabled = false");

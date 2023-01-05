@@ -1034,7 +1034,9 @@ class DefaultController extends OrderAbstractController
         }
 
         $authUtil = $this->container->get('authenticator_utility');
-        $authUtil->checkUsersAD();
+        $adCount = $authUtil->checkUsersAD(1,true,0);
+        
+        exit("User count in AD: $adCount");
     }
 
 }

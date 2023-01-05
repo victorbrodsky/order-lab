@@ -908,9 +908,9 @@ class AuthUtil {
         ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
         $res = null;
-        $ldapBindDNArr = explode(";",$ldapBindDN);
+        $ldapBindDNArr = explode(";",$origLdapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             //$ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
@@ -987,10 +987,10 @@ class AuthUtil {
         $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
 
         $res = null;
-        $ldapBindDNArr = explode(";",$ldapBindDN);
+        $ldapBindDNArr = explode(";",$origLdapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
@@ -1110,7 +1110,7 @@ class AuthUtil {
         //$dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
 
 //        $dcArr = explode(".",$ldapDc);
 //        foreach( $dcArr as $dc ) {
@@ -1152,7 +1152,7 @@ class AuthUtil {
         //test
         //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
         //$LDAPUserPasswordAdmin = "zflexpass";
-        //$ldapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
+        //$origLdapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
 
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
@@ -1178,14 +1178,14 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
-        //$ldapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
-        //echo "ldapBindDN=".$ldapBindDN."<br>";
+        //$origLdapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
+        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
         //echo "filter=".$filter."<br>";
 
-        //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+        //$sr = ldap_search($cnx, $origLdapBindDN, $filter, $LDAPFieldsToFind);
 
         $sr = null;
-        $ldapBindDNArr = explode(";",$ldapBindDN);
+        $ldapBindDNArr = explode(";",$origLdapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
@@ -1483,7 +1483,7 @@ class AuthUtil {
 
         $postfix = $this->getPostfix($ldapType);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
 
         //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
         $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
@@ -1525,7 +1525,7 @@ class AuthUtil {
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
-        echo "ldapBindDN=[".$ldapBindDN."]<br>";
+        echo "origLdapBindDN=[".$origLdapBindDN."]<br>";
 
         $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
@@ -1533,7 +1533,7 @@ class AuthUtil {
         $displayNameArr = array();
         $infoArr = array();
         $sr = null;
-        $ldapBindDNArr = explode(";",$ldapBindDN);
+        $ldapBindDNArr = explode(";",$origLdapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
@@ -1721,9 +1721,9 @@ class AuthUtil {
 
         $postfix = $this->getPostfix($ldapType);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
-        //$ldapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
-        //echo "ldapBindDN=".$ldapBindDN."<br>";
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        //$origLdapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
+        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
 
         $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
@@ -1779,7 +1779,7 @@ class AuthUtil {
                 return NULL;
             }
         } else {
-            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
         }
 
         //$LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
@@ -1787,19 +1787,19 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("cn", "samaccountname");
         $LDAPFieldsToFind = ["cn"];
 
-        //$ldapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
-        //echo "ldapBindDN=".$ldapBindDN."<br>";
+        //$origLdapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
+        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
         //echo "filter=".$filter."<br>";
 
         //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
         $ldadUsers = array();
         $sr = null;
-        $ldapBindDNArr = explode(";",$ldapBindDN);
+        $ldapBindDNArr = explode(";",$origLdapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
 
         foreach( $ldapBindDNArr as $ldapBindDN) {
-            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+            //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             if( $withWarning ) {
                 $sr = ldap_search(
@@ -1822,7 +1822,7 @@ class AuthUtil {
             }
 
             if( $sr ) {
-                $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                //$this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
                 //dump($info);
                 //exit('111');
@@ -1869,8 +1869,9 @@ class AuthUtil {
         return $retEntry;
     }
 
-    public function checkUsersAD( $ldapType=1, $withWarning=true ) {
+    public function checkUsersAD( $ldapType=1, $withWarning=true, $limit=0 ) {
 
+        $this->logger->notice("checkUsersAD: check user status in AD; limit=$limit");
         set_time_limit(1200);
 
         $ldapKeyType1Id = null;
@@ -1888,7 +1889,7 @@ class AuthUtil {
         //$yesterday = new \DateTime('yesterday');
         $yesterday = date('Y-m-d H:i:s',strtotime("-1 days")); //2021-10-28 14:56:34
         //$yesterday = date('Y-m-d H:i:s',strtotime("-1 min"));
-        echo "yesterday=$yesterday <br>";
+        //echo "yesterday=$yesterday <br>";
 
         $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
@@ -1930,10 +1931,12 @@ class AuthUtil {
             $query->setParameters($params);
         }
 
-        $query->setMaxResults(100);
+        if( $limit ) {
+            $query->setMaxResults($limit);
+        }
 
         $users = $query->getResult();
-        echo "users ".count($users)."<br>";
+        //echo "users ".count($users)."<br>";
         //exit('111');
 
         //////////// connect to LDAP/AD ////////////
@@ -1941,9 +1944,9 @@ class AuthUtil {
 
         $postfix = $this->getPostfix($ldapType);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
-        //$ldapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
-        echo "ldapBindDN=".$ldapBindDN."<br>";
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        //$origLdapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
+        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
 
         $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
@@ -1973,7 +1976,7 @@ class AuthUtil {
                 return NULL;
             }
         } else {
-            $this->logger->notice("checkUsersAD: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            //$this->logger->notice("checkUsersAD: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
         }
 
         $LDAPFieldsToFind = ["cn"];
@@ -1984,7 +1987,7 @@ class AuthUtil {
         //$yesterday = new \DateTime('yesterday');
 
         foreach($users as $user) {
-            $this->logger->notice("checkUsersAD: check user $user");
+            //$this->logger->notice("checkUsersAD: check user $user");
 
 //            $lastCheck = $user->getLastAdCheck();
 //            if( $lastCheck ) {
@@ -1996,8 +1999,7 @@ class AuthUtil {
 
             $user->setLastAdCheck($lastAdCheckDateTime);
             $user->setActiveAD(false);
-            $flagFound = false;
-            
+
             $cwid = $user->getCleanUsername();
             //$cwid = 'oli2002111';
             //$cwid = 'oli2002';
@@ -2011,16 +2013,12 @@ class AuthUtil {
             //$filter = "(|(CN=$cwid)(sAMAccountName=$cwid))";
             //echo "filter=$filter <br>";
 
-            $ldapBindDNArr = explode(";",$ldapBindDN);
+            $ldapBindDNArr = explode(";",$origLdapBindDN);
             //echo "count=".count($ldapBindDNArr)."<br>";
 
             foreach( $ldapBindDNArr as $ldapBindDN) {
 
-                if( $flagFound ) {
-                    break;
-                }
-
-                $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
+                //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
                 //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
                 if( $withWarning ) {
                     $sr = ldap_search(
@@ -2050,32 +2048,35 @@ class AuthUtil {
                     //dump($info);
                     $count = $info['count'];
                     //exit('111 $count='.$count);
-                    echo 'count='.$count;
+                    //echo 'count='.$count;
 
                     if( $count == 1 ) {
                         $user->setActiveAD(true);
-                        echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
+                        //echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
+                        //echo "AD: user=$user (".$ldapBindDN.")<br>";
                         $adCount++;
-                        //break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
-                        $flagFound = true;
+                        break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
                     } else {
-                        echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
+                        //echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
+                        //echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
                     }
                 } else {
                     $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                    //echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
                     //$user->setActiveAD(false);
                 }
 
             }//foreach $ldapBindDNArr
 
-            //$this->em->flush($user);
+            $this->em->flush($user);
 
         }//foreach $users
 
         //disconnect
         ldap_unbind($cnx);
 
-        exit('exit checkUsersAD. $adCount='.$adCount);
+        //exit('exit checkUsersAD. $adCount='.$adCount);
+        return $adCount;
     }
 
 } 

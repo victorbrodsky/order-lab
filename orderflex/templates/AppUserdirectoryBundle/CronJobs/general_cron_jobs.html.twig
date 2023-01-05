@@ -218,6 +218,36 @@
         </table>
     </div>
 
+    {#useradstatus - update users AD status#}
+    <div class="well">
+        <p>
+            <a  general-data-confirm="Are you sure? This action will generate useradstatus cron job (update users AD status)."
+                href="{{ path('user_generate_useradstatus_cron') }}">
+                Create useradstatus cron job (update users AD status)</a>
+        </p>
+        <table class="table table-bordered table-hover table-condensed text-left well">
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody data-link="row" class="rowlink">
+            <tr>
+                <td>useradstatus cron (update users AD status)</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:useradstatus",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:useradstatus'}) }}">Remove</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     {#user_populate_cron_status_test_jobs#}
     <div class="well">
         <p>

@@ -9029,8 +9029,30 @@ class AdminController extends OrderAbstractController
             'All cron Jobs are generated (Email, Fellowship Import, Unpaid Invoices).'
         );
 
-        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
         //exit("Form Node Tree generated: ".$count);
+    }
+
+    /**
+     * @Route("/list/generate-useradstatus-cron/", name="user_generate_useradstatus_cron", methods={"GET"})
+     */
+    public function generateUserADStatusCronAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $res = $userServiceUtil->createUserADStatusCron('6h');
+
+        $this->addFlash(
+            'notice',
+            $res //'User AD status cron job is generated.'
+        );
+
+        //return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
     }
 
     /**
@@ -9054,7 +9076,8 @@ class AdminController extends OrderAbstractController
             'Status cron job to check the Maintenance state: '.$res
         );
 
-        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
         //exit("Form Node Tree generated: ".$count);
     }
 
@@ -9077,7 +9100,8 @@ class AdminController extends OrderAbstractController
             $res
         );
 
-        return $this->redirect($this->generateUrl('employees_siteparameters'));
+        //return $this->redirect($this->generateUrl('employees_siteparameters'));
+        return $this->redirect($this->generateUrl('employees_general_cron_jobs'));
         //exit("Form Node Tree generated: ".$count);
     }
 

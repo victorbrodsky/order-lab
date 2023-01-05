@@ -2365,6 +2365,55 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    public function createUserADStatusCron( $frequency = '6h' ) {
+
+        if( $this->isWindows() ) {
+            //Windows
+            return "Windows is not supported";
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating useradstatus cron job for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        $commandName = "cron:useradstatus";
+        $cronJobName = $commandName." --env=prod";
+
+        $phpPath = $this->getPhpPath();
+        $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+
+        $statusCronJob = "";
+        if( str_contains($frequency, 'm') ) {
+            $frequency = str_replace('m','',$frequency);
+            $statusCronJob = "*/$frequency * * * *" . " " . $statusCronJobCommand;
+        }
+        if( str_contains($frequency, 'h') ) {
+            $frequency = str_replace('h','',$frequency);
+            $statusCronJob = "0 */$frequency * * *" . " " . $statusCronJobCommand;
+        }
+        //$statusFrequency = 30;
+        //$statusFrequency = 5; //testing
+        //$statusCronJob = "*/$statusFrequency * * * *" . " " . $statusCronJobCommand;
+
+        if( !$statusCronJob ) {
+            $res = "Cron useradstatus is not created: invalid parameter $frequency";
+            $logger->notice($res);
+            return $res;
+        }
+
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
+            //$this->addCronJobLinux($statusCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+
+        return $res;
+    }
+
     //NOT USED
     public function createFilesBackupCronLinux() {
         if( $this->isWindows() ) {

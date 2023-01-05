@@ -180,8 +180,12 @@ services:
             - { name: 'console.command', command: 'cron:util-command' }
 
     App\UserdirectoryBundle\Command\ExternalUrlMonitorCronCommand:
-            tags:
-                - { name: 'console.command', command: 'cron:externalurlmonitor' }
+        tags:
+            - { name: 'console.command', command: 'cron:externalurlmonitor' }
+
+    App\UserdirectoryBundle\Command\UserADCronCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:useradstatus' }
 
 
     App\FellAppBundle\Command\GenerateReportRunCommand:
@@ -189,8 +193,8 @@ services:
             - { name: 'console.command', command: 'fellapp:generatereportrun' }
 
     App\FellAppBundle\Command\GenerateTestReportRunCommand:
-            tags:
-                - { name: 'console.command', command: 'fellapp:generate-test-reportrun' }
+        tags:
+            - { name: 'console.command', command: 'fellapp:generate-test-reportrun' }
 
     App\FellAppBundle\Command\CronCommand:
         tags:
