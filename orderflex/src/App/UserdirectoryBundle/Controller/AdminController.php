@@ -9180,6 +9180,26 @@ class AdminController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
+        $redirectPath = 'employees_data_backup_management';
+        if(
+            str_contains($cronJobName, 'useradstatus') ||
+            str_contains($cronJobName, 'status') ||
+            str_contains($cronJobName, 'statustest') ||
+            str_contains($cronJobName, 'swift') ||
+            str_contains($cronJobName, 'importfellapp') ||
+            str_contains($cronJobName, 'verifyimport') ||
+            str_contains($cronJobName, 'invoice-reminder-emails') ||
+            str_contains($cronJobName, 'expiration-reminder-emails')
+        ) {
+            $redirectPath = 'employees_general_cron_jobs';
+        }
+        if(
+            str_contains($cronJobName, 'externalurlmonitor') ||
+            str_contains($cronJobName, 'webmonitor')
+        ) {
+            $redirectPath = 'employees_health_monitor';
+        }
+
         $userServiceUtil = $this->container->get('user_service_utility');
 
         if( $userServiceUtil->isWindows() ){
@@ -9187,7 +9207,7 @@ class AdminController extends OrderAbstractController
                 'warning',
                 "Windows is not supported"
             );
-            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+            return $this->redirect($this->generateUrl($redirectPath));
         }
 
         //$commandName = "cron:".$cronJobName;
@@ -9201,7 +9221,7 @@ class AdminController extends OrderAbstractController
             'Cron job '.$cronJobName.' has been removed.'
         );
 
-        return $this->redirect($this->generateUrl('employees_data_backup_management'));
+        return $this->redirect($this->generateUrl($redirectPath));
     }
     /**
      * @Route("/list/update-cron-job/{cronJobName}/{configFieldName}", name="user_update_cron_job", methods={"GET"})

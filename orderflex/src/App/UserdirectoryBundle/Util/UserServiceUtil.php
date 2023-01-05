@@ -2403,7 +2403,7 @@ Pathology and Laboratory Medicine",
         }
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
-            //$this->addCronJobLinux($statusCronJob);
+            $this->addCronJobLinux($statusCronJob);
             $res = "Created $cronJobName cron job";
         } else {
             $res = "$cronJobName already exists";
