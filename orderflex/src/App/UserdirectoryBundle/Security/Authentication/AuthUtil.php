@@ -1870,6 +1870,26 @@ class AuthUtil {
     }
 
     public function checkUsersAD( $ldapType=1, $withWarning=true ) {
+
+        set_time_limit(1200);
+
+        $ldapKeyType1Id = null;
+        $ldapKeyType2Id = null;
+
+        $ldapKeyType1 = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneBy(array('abbreviation'=>'ldap-user'));
+        if( $ldapKeyType1 ) {
+            $ldapKeyType1Id = $ldapKeyType1->getId();
+        }
+        $ldapKeyType2 = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneBy(array('abbreviation'=>'ldap2-user'));
+        if( $ldapKeyType2 ) {
+            $ldapKeyType2Id = $ldapKeyType2->getId();
+        }
+
+        //$yesterday = new \DateTime('yesterday');
+        $yesterday = date('Y-m-d H:i:s',strtotime("-1 days")); //2021-10-28 14:56:34
+        //$yesterday = date('Y-m-d H:i:s',strtotime("-1 min"));
+        echo "yesterday=$yesterday <br>";
+
         $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
@@ -1879,10 +1899,42 @@ class AuthUtil {
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
         $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
 
+        $params = array();
+        $keytypeStr = "";
+        if( $ldapKeyType1Id ) {
+            $keytypeStr = "user.keytype = :keytype1";
+            $params['keytype1'] = $ldapKeyType1Id;
+        }
+        if( $ldapKeyType2Id ) {
+            if( $keytypeStr ) {
+                $keytypeStr = $keytypeStr . " OR " . "user.keytype = :keytype2";
+            } else {
+                $keytypeStr = "user.keytype = :keytype2";
+            }
+            $params['keytype2'] = $ldapKeyType2Id;
+        }
+
+        if( $keytypeStr ) {
+            $dql->andWhere($keytypeStr);
+        }
+
+        //get only users with lastAdCheck < $yesterday
+        $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
+        $params['yesterday'] = $yesterday;
+
         $dql->orderBy("infos.lastName","ASC");
+
         $query = $this->em->createQuery($dql);
 
+        if( count($params) > 0 ) {
+            $query->setParameters($params);
+        }
+
+        $query->setMaxResults(100);
+
         $users = $query->getResult();
+        echo "users ".count($users)."<br>";
+        //exit('111');
 
         //////////// connect to LDAP/AD ////////////
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1891,7 +1943,7 @@ class AuthUtil {
 
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
         //$ldapBindDN = "ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net";
-        //echo "ldapBindDN=".$ldapBindDN."<br>";
+        echo "ldapBindDN=".$ldapBindDN."<br>";
 
         $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
@@ -1925,28 +1977,49 @@ class AuthUtil {
         }
 
         $LDAPFieldsToFind = ["cn"];
-        $sizelimit = 0;
         //////////// EOF connect to LDAP/AD ////////////
 
+        $adCount = 0;
         $lastAdCheckDateTime = new \DateTime();
+        //$yesterday = new \DateTime('yesterday');
 
         foreach($users as $user) {
             $this->logger->notice("checkUsersAD: check user $user");
+
+//            $lastCheck = $user->getLastAdCheck();
+//            if( $lastCheck ) {
+//                if( $lastCheck > $yesterday ) {
+//                    echo "Skip: lastCheck > yesterday";
+//                    continue;
+//                }
+//            }
+
             $user->setLastAdCheck($lastAdCheckDateTime);
+            $user->setActiveAD(false);
+            $flagFound = false;
             
             $cwid = $user->getCleanUsername();
+            //$cwid = 'oli2002111';
+            //$cwid = 'oli2002';
 
             if( str_contains($cwid,'(') || str_contains($cwid,')') ) {
                 continue; //bad cwid
             }
 
             $filter="(cn=".$cwid.")";
+            //$filter="cn=".$cwid."";
+            //$filter = "(|(CN=$cwid)(sAMAccountName=$cwid))";
             //echo "filter=$filter <br>";
 
             $ldapBindDNArr = explode(";",$ldapBindDN);
             //echo "count=".count($ldapBindDNArr)."<br>";
 
             foreach( $ldapBindDNArr as $ldapBindDN) {
+
+                if( $flagFound ) {
+                    break;
+                }
+
                 $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
                 //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
                 if( $withWarning ) {
@@ -1956,7 +2029,7 @@ class AuthUtil {
                         $filter,            //filter
                         $LDAPFieldsToFind,  //attributes
                         0,                  //attributes_only
-                        $sizelimit          //sizelimit
+                        0                   //sizelimit
                     );
                 } else {
                     $sr = @ldap_search(
@@ -1965,24 +2038,44 @@ class AuthUtil {
                         $filter,            //filter
                         $LDAPFieldsToFind,  //attributes
                         0,                  //attributes_only
-                        $sizelimit          //sizelimit
+                        0                   //sizelimit
                     );
                 }
 
                 if( $sr ) {
-                    //user found in AD
-                    $this->logger->notice("checkUsersAD: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                    $user->setActiveAD(true);
-                    echo "AD: user=$user <br>";
-                    break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
+                    //searched ldap_search AD ok
+                    //$this->logger->notice("checkUsersAD: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+
+                    $info = ldap_get_entries($cnx, $sr);
+                    //dump($info);
+                    $count = $info['count'];
+                    //exit('111 $count='.$count);
+                    echo 'count='.$count;
+
+                    if( $count == 1 ) {
+                        $user->setActiveAD(true);
+                        echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
+                        $adCount++;
+                        //break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
+                        $flagFound = true;
+                    } else {
+                        echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
+                    }
                 } else {
-                    echo "NOT IN AD: user=$user <br>";
                     $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                    $user->setActiveAD(false);
+                    //$user->setActiveAD(false);
                 }
-            }//foreach
-        }//foreach
-        exit('exit checkUsersAD');
+
+            }//foreach $ldapBindDNArr
+
+            //$this->em->flush($user);
+
+        }//foreach $users
+
+        //disconnect
+        ldap_unbind($cnx);
+
+        exit('exit checkUsersAD. $adCount='.$adCount);
     }
 
 } 

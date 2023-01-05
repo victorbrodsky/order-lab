@@ -1024,5 +1024,17 @@ class DefaultController extends OrderAbstractController
         exit('111');
     }
 
+    /**
+     * @Route("/check-ad-users")
+     */
+    public function checkUsersADAction()
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $authUtil = $this->container->get('authenticator_utility');
+        $authUtil->checkUsersAD();
+    }
 
 }
