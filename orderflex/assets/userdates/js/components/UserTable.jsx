@@ -246,6 +246,10 @@ const UserTable = ({cycle}) => {
         };
     }, [lastElement]);
 
+    function sortFunction(col,direction) {
+        console.log("Sort by "+col+", direction="+direction);
+    }
+
     if(1) {
 
         return (
@@ -267,6 +271,14 @@ const UserTable = ({cycle}) => {
                         }
                         <th>
                             LastName
+                            <span className="order">
+                                <span className="dropdown">
+                                    <span className="caret" onClick={()=>sortFunction('lastName','down')}></span>
+                                </span>
+                                <span className="dropup">
+                                    <span className="caret" onClick={()=>sortFunction('lastName','up')}></span>
+                                </span>
+                            </span>
                         </th>
                         <th>
                             FirstName

@@ -533,7 +533,7 @@ class AuthUtil {
         //Case 1: "Local User"
         if( $identifierKeytype == 'local-user' ) {
             $token->setUser($subjectUser);
-            $this->logger->warning('Trying authenticating the local user with username=' . $identifierUsername);
+            $this->logger->notice('Trying authenticating the local user with username=' . $identifierUsername);
             $user = $this->LocalAuthentication($token);
 
             return $user;
@@ -543,7 +543,7 @@ class AuthUtil {
         if( $identifierKeytype == 'ldap-user' || $identifierKeytype == 'ldap2-user' ) {
             //Case 2: "NYP CWID"
             $token->setUser($subjectUser);
-            $this->logger->warning('Trying authenticating the LDAP user with username=' . $identifierUsername);
+            $this->logger->notice('Trying authenticating the LDAP user with username=' . $identifierUsername);
             $user = $this->LdapAuthentication($token);
 
             if( !$user ) {
