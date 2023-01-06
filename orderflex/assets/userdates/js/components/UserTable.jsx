@@ -246,6 +246,9 @@ const UserTable = ({cycle}) => {
         };
     }, [lastElement]);
 
+    //TODO: sorting - make table col headers as the links with the sorting string attached "&sort=infos.email&direction=asc"
+    //then change direction to "desc": &sort=user.id&direction=asc
+    //test: http://127.0.0.1/order/index_dev.php/directory/employment-dates/view?sort=user.id&direction=desc
     function sortFunction(col,direction) {
         console.log("Sort by "+col+", direction="+direction);
     }
