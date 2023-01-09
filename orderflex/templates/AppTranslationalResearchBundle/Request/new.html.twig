@@ -175,7 +175,23 @@
     {% endif %}
 
 {% if routeName == "translationalresearch_new_standalone_request" and form.project is not defined %}
-    <p>There are no approved projects are available at this time.</p>
+    {#<p>There are no approved projects are available at this time.</p>#}
+    {% set availableExpiredProjects = transres_util.getAvailableProjects(true,false,true,false) %}
+    {% if availableExpiredProjects|length > 0 %}
+        <p>
+            Your account is currently not associated with any active projects, so you may not be able to submit new work requests.
+        </p>
+        {% for availableExpiredProject in availableExpiredProjects %}
+            <p>
+            The project {{ availableExpiredProject.getOid(false) }} titled "{{ availableExpiredProject.getTitle()|u.truncate(50,'...') }}"
+            that your account is associated with expired on {{ availableExpiredProject.getImplicitExpirationDate()|date('Y-m-d') }}.
+            Please contact the administrator by email at {{ transres_util.getTransResAdminEmails()|join(',') }}
+            or by phone if you believe there is an issue that needs to be resolved.
+            </p>
+        {% endfor %}
+    {% else %}
+        <p>Your account is currently not associated with any active projects, so you may not be able to submit new work requests.</p>
+    {% endif %}
 {% else %}
 
     {% set sitename = translationalresearch_sitename %}
