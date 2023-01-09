@@ -4036,7 +4036,7 @@ class TransResUtil
     }
 
     //get list of projects: 1) state final_approved, 2) irbExpirationDate, 3) logged in user is requester, 4) reviewer
-    public function getAvailableProjects( $finalApproved=true, $notExpired=true, $requester=true, $reviewer=true ) {
+    public function getAvailableProjects( $finalApproved=true, $notExpired=true, $requester=true, $reviewer=true, $orderBy="project.id", $orderDir="DESC" ) {
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -4073,7 +4073,8 @@ class TransResUtil
         $dql->leftJoin('project.billingContact','billingContact');
         $dql->leftJoin('project.contacts','contacts');
 
-        $dql->orderBy("project.id","DESC");
+        //$dql->orderBy("project.id","DESC");
+        $dql->orderBy($orderBy,$orderDir);
 
         $dqlParameters = array();
 
