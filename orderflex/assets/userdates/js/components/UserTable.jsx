@@ -175,6 +175,9 @@ const UserTable = ({cycle}) => {
     //console.log("url2="+url+'&page='+pageNum, ", pageNum="+pageNum);
 
     let queryString = window.location.search;
+    if( queryString ) {
+        queryString = queryString.replace('?','');
+    }
     //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
@@ -182,7 +185,7 @@ const UserTable = ({cycle}) => {
         setLoading(true);
         //let url = apiUrl+'/?page='+pageNum
         if( queryString ) {
-            queryString = queryString.replace('?','');
+            //queryString = queryString.replace('?','');
             url = apiUrl+'/?page='+pageNum+'&'+queryString
         }
         else {
@@ -253,6 +256,46 @@ const UserTable = ({cycle}) => {
         console.log("Sort by "+col+", direction="+direction);
     }
 
+    let mainUrl = Routing.generate('employees_user_dates_show');
+    if( cycle == 'edit') {
+        mainUrl = Routing.generate('employees_user_dates_edit');
+    }
+
+    function getSortHref(mainUrl,queryString,sortPar) {
+        //let sortDirection = 'desc';
+
+        // let queryString = window.location.search;
+        // if( queryString ) {
+        //     queryString = queryString.replace('?','');
+        // }
+
+        let sortHref = '';
+        let queryStringNew = '';
+        if( queryString.includes('sort') ) {
+            if( queryString.includes('direction=desc') ) {
+                queryStringNew = queryString.replace('desc','asc');
+                console.log('queryString replace desc'+queryStringNew);
+            }
+            if( queryString.includes('direction=asc') ) {
+                queryStringNew = queryString.replace('asc','desc');
+                console.log('queryString replace asc'+queryStringNew);
+            }
+            //replace sort=infos.firstName&direction by new sortPar: => sort=infos.email&direction
+            console.log('queryStringNew='+queryStringNew);
+            sortHref = mainUrl+'?'+queryStringNew;
+        } else {
+            sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
+        }
+
+        if( !queryString.includes(sortPar) ) {
+            //TODO: remove old sort: sort=infos.firstName&direction=desc&
+            sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
+        }
+
+        console.log('sortHref='+sortHref);
+        return sortHref;
+    }
+
     if(1) {
 
         return (
@@ -284,13 +327,25 @@ const UserTable = ({cycle}) => {
                             </span>
                         </th>
                         <th>
-                            FirstName
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'infos.firstName')}
+                                title="First Name"
+                            >First Name</a>
                         </th>
                         <th>Degree</th>
-                        <th>Email</th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'infos.email')}
+                                title="Email"
+                            >Email</a>
+                        </th>
                         <th>Organizational Group(s)</th>
                         <th>Title(s)</th>
-                        <th>Last successful log in</th>
+                        <th>
+                            Last successful log in
+                        </th>
                         <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment Start Date</th>
                         <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment End Date</th>
                         <th>Site Access</th>
