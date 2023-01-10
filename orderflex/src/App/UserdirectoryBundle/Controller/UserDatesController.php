@@ -97,6 +97,11 @@ class UserDatesController extends OrderAbstractController
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");
 
+        $dql->leftJoin("user.trainings", "trainings");
+        $dql->leftJoin("trainings.degree", "trainingsdegree");
+        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("administrativeTitles.institution", "institution");
+
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
         $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");

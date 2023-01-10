@@ -273,13 +273,13 @@ const UserTable = ({cycle}) => {
         let queryStringNew = '';
         if( queryString.includes('sort=') ) {
 
-            //remove old sort from queryString
+            //Change sorting column: remove old sort from queryString
             if( !queryString.includes(sortPar) ) {
                 //Remove old sort from queryString:
                 //...&sort=infos.firstName&direction=asc&page=1
-                queryStringNew = removeOldSort(queryString,'sort=','&direction=',sortPar);
+                queryStringNew = replaceOldSortWithNewSort(queryString,'sort=','&direction=',sortPar);
                 //...&sort=infos.email&direction=asc&page=1
-                console.log('Replace in queryStringNew='+queryStringNew+"; sortPar="+sortPar);
+                //console.log('Replace in queryStringNew='+queryStringNew+"; sortPar="+sortPar);
 
                 //Reset default direction to desc
                 if( queryStringNew.includes('direction=asc') ) {
@@ -294,15 +294,15 @@ const UserTable = ({cycle}) => {
 
             if( queryString.includes('direction=desc') ) {
                 queryStringNew = queryString.replace('desc','asc');
-                console.log('queryString replace desc'+queryStringNew);
+                //console.log('queryString replace desc'+queryStringNew);
             }
             if( queryString.includes('direction=asc') ) {
                 queryStringNew = queryString.replace('asc','desc');
-                console.log('queryString replace asc'+queryStringNew);
+                //console.log('queryString replace asc'+queryStringNew);
             }
 
             //replace sort=infos.firstName&direction by new sortPar: => sort=infos.email&direction
-            console.log('queryStringNew='+queryStringNew);
+            //console.log('queryStringNew='+queryStringNew);
             sortHref = mainUrl+'?'+queryStringNew;
         } else {
             sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
@@ -310,29 +310,13 @@ const UserTable = ({cycle}) => {
 
         sortHref = sortHref.replace('?&','?');
 
-        // if( queryString.includes('sort=') && !queryString.includes(sortPar) ) {
-        //     //TODO: remove old sort from queryString:
-        //     //...&sort=infos.firstName&direction=asc&page=1
-        //     queryStringNew = removeOldSort(queryString,'sort=','&direction=',sortPar);
-        //     //...&sort=infos.email&direction=asc&page=1
-        //     console.log('Replace in queryStringNew='+queryStringNew+"; sortPar="+sortPar);
-        //
-        //     if( queryStringNew.includes('direction=asc') ) {
-        //         queryStringNew = queryStringNew.replace('asc','desc');
-        //         //console.log('queryString replace asc'+queryStringNew);
-        //     }
-        //
-        //     sortHref = mainUrl+'?'+queryStringNew; //+'&'+'sort='+sortPar+'&direction=desc&page=1';
-        // }
-
-        console.log('sortHref='+sortHref);
+        //console.log('sortHref='+sortHref);
         return sortHref;
     }
 
-    function removeOldSort(queryString,startStr,endStr,sortPar) {
+    function replaceOldSortWithNewSort(queryString,startStr,endStr,newSort) {
         //return queryString.replace(/(startStr).*(endStr)/, sortPar);
-        var str = queryString.replace(queryString.substring(queryString.indexOf(startStr)+startStr.length, queryString.lastIndexOf(endStr)), sortPar);
-        return str;
+        return queryString.replace(queryString.substring(queryString.indexOf(startStr)+startStr.length, queryString.lastIndexOf(endStr)), newSort);
     }
 
     if(1) {
@@ -355,15 +339,11 @@ const UserTable = ({cycle}) => {
                         <th>Deactivate </th>
                         }
                         <th>
-                            LastName
-                            <span className="order">
-                                <span className="dropdown">
-                                    <span className="caret" onClick={()=>sortFunction('lastName','down')}></span>
-                                </span>
-                                <span className="dropup">
-                                    <span className="caret" onClick={()=>sortFunction('lastName','up')}></span>
-                                </span>
-                            </span>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'infos.lastName')}
+                                title="Last Name"
+                            >Last Name</a>
                         </th>
                         <th>
                             <a
@@ -372,7 +352,13 @@ const UserTable = ({cycle}) => {
                                 title="First Name"
                             >First Name</a>
                         </th>
-                        <th>Degree</th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'infos.salutation')}
+                                title="Degree"
+                            >Degree</a>
+                        </th>
                         <th>
                             <a
                                 className="sortable"
@@ -380,15 +366,55 @@ const UserTable = ({cycle}) => {
                                 title="Email"
                             >Email</a>
                         </th>
-                        <th>Organizational Group(s)</th>
-                        <th>Title(s)</th>
                         <th>
-                            Last successful log in
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'institution.name')}
+                                title="Organizational Group(s) based on the administrative title"
+                            >Organizational Group(s)</a>
                         </th>
-                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment Start Date</th>
-                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>Latest Employment End Date</th>
-                        <th>Site Access</th>
-                        <th>Active Directory Account Status</th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'trainingsdegree.name')}
+                                title="Title(s) based on the training degree"
+                            >Title(s)</a>
+                        </th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'user.lastLogin')}
+                                title="Last successful log in"
+                            >Last successful log in</a>
+                        </th>
+                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'employmentStatus.hireDate')}
+                                title="Latest Employment Start Date"
+                            >Latest Employment Start Date</a>
+                        </th>
+                        <th style={{width: "14.5rem", minWidth: "14.5rem"}}>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'employmentStatus.terminationDate')}
+                                title="Latest Employment End Date"
+                            >Latest Employment End Date</a>
+                        </th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'user.enabled')}
+                                title="Site Access"
+                            >Site Access</a>
+                        </th>
+                        <th>
+                            <a
+                                className="sortable"
+                                href={getSortHref(mainUrl,queryString,'user.activeAD')}
+                                title="Active Directory Account Status"
+                            >Active Directory Account Status</a>
+                        </th>
                         <th>Action</th>
                     </tr>
                     </thead>
