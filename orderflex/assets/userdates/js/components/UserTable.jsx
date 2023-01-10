@@ -178,7 +178,7 @@ const UserTable = ({cycle}) => {
     if( queryString ) {
         queryString = queryString.replace('?','');
     }
-    //console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
+    console.log("queryString="+queryString); //?filter%5Bsearch%5D=aaa&filter%5Bsubmit%5D=&filter%5Bstartdate%5D=&filter%5Benddate%5D=&filter%5Bstatus%5D=
 
     const callUser = async () => {
         //console.log("callUser!!!");
@@ -191,7 +191,7 @@ const UserTable = ({cycle}) => {
         else {
             url = apiUrl+'/?page='+pageNum
         }
-        //console.log("url2=["+url+"]");
+        console.log("url2=["+url+"]");
 
         let response = await axios.get(
             //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
@@ -305,7 +305,8 @@ const UserTable = ({cycle}) => {
             //console.log('queryStringNew='+queryStringNew);
             sortHref = mainUrl+'?'+queryStringNew;
         } else {
-            sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
+            //sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
+            sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc';
         }
 
         sortHref = sortHref.replace('?&','?');

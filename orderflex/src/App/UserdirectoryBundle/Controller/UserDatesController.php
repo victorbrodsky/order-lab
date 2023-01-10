@@ -235,7 +235,8 @@ class UserDatesController extends OrderAbstractController
         }
         //exit('111');
 
-        $dql->orderBy("infos.lastName","ASC");
+        //$dql->orderBy("infos.lastName","ASC");
+
         $query = $em->createQuery($dql);
 
         $query->setParameters($queryParameters);
@@ -246,12 +247,13 @@ class UserDatesController extends OrderAbstractController
         $limit = 20; //20;
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'user.id',
+            'defaultSortFieldName' => 'infos.lastName',
             'defaultSortDirection' => 'DESC',
             'wrap-queries' => true
         );
 
         $page = $request->query->get('page', 1);
+
         $paginator  = $this->container->get('knp_paginator');
         $users = $paginator->paginate(
             $query,
