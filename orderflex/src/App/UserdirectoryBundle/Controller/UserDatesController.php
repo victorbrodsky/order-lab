@@ -236,6 +236,14 @@ class UserDatesController extends OrderAbstractController
         //exit('111');
 
         //$dql->orderBy("infos.lastName","ASC");
+        $sort = $request->query->get('sort', null);
+        $sortDirection = $request->query->get('direction', 'desc');
+        if( $sort == 'user.activeAD' ) {
+            //https://stackoverflow.com/questions/28852390/how-can-i-order-null-values-first-on-a-doctrine-2-collection-using-annotations
+            $dql->addSelect('CASE WHEN user.activeAD IS NOT NULL THEN TRUE ELSE FALSE END AS HIDDEN myActiveADIsNull');
+            $dql->orderBy("myActiveADIsNull",$sortDirection);
+            $dql->addOrderBy("user.activeAD",$sortDirection);
+        }
 
         $query = $em->createQuery($dql);
 
@@ -375,27 +383,29 @@ class UserDatesController extends OrderAbstractController
         //dump($jsonArray);
         //exit('111');
 
-        $ldapType=1;
-        $withWarning=true;
-        $ldapUsers = $authUtil->getADUsersByCwids($cwids,$ldapType,$withWarning); //cwid => dn
+        if(0) {
+            $ldapType = 1;
+            $withWarning = true;
+            $ldapUsers = $authUtil->getADUsersByCwids($cwids, $ldapType, $withWarning); //cwid => dn
 
-        $newJsonArray = array();
-        foreach( $jsonArray as $thisUser ) {
-            $cwid = $thisUser['cwid'];
-            if( isset($ldapUsers[$cwid]) ) {
-                $thisUser['adStatus'] = true; //$ldapUsers[$cwid];
-                if( $thisUser['status'] ) {
-                    $thisUser['status'] = $thisUser['status'] . ";";
+            $newJsonArray = array();
+            foreach ($jsonArray as $thisUser) {
+                $cwid = $thisUser['cwid'];
+                if (isset($ldapUsers[$cwid])) {
+                    $thisUser['adStatus'] = true; //$ldapUsers[$cwid];
+                    if ($thisUser['status']) {
+                        $thisUser['status'] = $thisUser['status'] . ";";
+                    }
+                    $thisUser['status'] = $thisUser['status'] . " Active in AD";
+                } else {
+                    $thisUser['adStatus'] = false;
+                    if ($thisUser['status']) {
+                        $thisUser['status'] = $thisUser['status'] . ";";
+                    }
+                    $thisUser['status'] = $thisUser['status'] . " Inactive in AD";
                 }
-                $thisUser['status'] = $thisUser['status'] . " Active in AD";
-            } else {
-                $thisUser['adStatus'] = false;
-                if( $thisUser['status'] ) {
-                    $thisUser['status'] = $thisUser['status'] . ";";
-                }
-                $thisUser['status'] = $thisUser['status'] . " Inactive in AD";
+                $newJsonArray[] = $thisUser;
             }
-            $newJsonArray[] = $thisUser;
         }
 
         //dump($newJsonArray);
@@ -415,7 +425,7 @@ class UserDatesController extends OrderAbstractController
         );
 
         $results = array(
-            'results' => $newJsonArray,
+            'results' => $jsonArray,
             'info'    => $info,
             'totalPages'   => $totalPages,
             'totalUsers' => $totalCount

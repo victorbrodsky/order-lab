@@ -379,6 +379,8 @@ class User extends UserBase {
         $this->setLocked(false);
         $this->setEnabled(true);
 
+        $this->setActiveAD(false);
+
         $this->setCreateDate(new \DateTime());
 
         //parent::__construct();
@@ -2542,6 +2544,21 @@ class User extends UserBase {
                 }
                 $res = $res . " Account is locked";
             }
+        }
+
+        //get AD status
+        if( $res ) {
+            $res = $res . ";";
+        }
+        if( $this->getActiveAD() === true ) {
+            $res = $res . " Active in AD";
+        }
+        if( $this->getActiveAD() === false ) {
+            $res = $res . " Inactive in AD";
+        }
+        if( $this->getActiveAD() === null ) {
+            //$res = $res . " AD status unknown";
+            $res = $res . " Inactive in AD";
         }
 
         return $res;
