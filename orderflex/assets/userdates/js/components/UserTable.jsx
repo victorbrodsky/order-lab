@@ -271,7 +271,27 @@ const UserTable = ({cycle}) => {
 
         let sortHref = '';
         let queryStringNew = '';
-        if( queryString.includes('sort') ) {
+        if( queryString.includes('sort=') ) {
+
+            //remove old sort from queryString
+            if( !queryString.includes(sortPar) ) {
+                //Remove old sort from queryString:
+                //...&sort=infos.firstName&direction=asc&page=1
+                queryStringNew = removeOldSort(queryString,'sort=','&direction=',sortPar);
+                //...&sort=infos.email&direction=asc&page=1
+                console.log('Replace in queryStringNew='+queryStringNew+"; sortPar="+sortPar);
+
+                //Reset default direction to desc
+                if( queryStringNew.includes('direction=asc') ) {
+                    queryStringNew = queryStringNew.replace('asc','desc');
+                    //console.log('queryString replace asc'+queryStringNew);
+                }
+
+                sortHref = mainUrl+'?'+queryStringNew; //+'&'+'sort='+sortPar+'&direction=desc&page=1';
+                sortHref = sortHref.replace('?&','?');
+                return sortHref;
+            }
+
             if( queryString.includes('direction=desc') ) {
                 queryStringNew = queryString.replace('desc','asc');
                 console.log('queryString replace desc'+queryStringNew);
@@ -280,6 +300,7 @@ const UserTable = ({cycle}) => {
                 queryStringNew = queryString.replace('asc','desc');
                 console.log('queryString replace asc'+queryStringNew);
             }
+
             //replace sort=infos.firstName&direction by new sortPar: => sort=infos.email&direction
             console.log('queryStringNew='+queryStringNew);
             sortHref = mainUrl+'?'+queryStringNew;
@@ -287,13 +308,31 @@ const UserTable = ({cycle}) => {
             sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
         }
 
-        if( !queryString.includes(sortPar) ) {
-            //TODO: remove old sort: sort=infos.firstName&direction=desc&
-            sortHref = mainUrl+'?'+queryString+'&'+'sort='+sortPar+'&direction=desc&page=1';
-        }
+        sortHref = sortHref.replace('?&','?');
+
+        // if( queryString.includes('sort=') && !queryString.includes(sortPar) ) {
+        //     //TODO: remove old sort from queryString:
+        //     //...&sort=infos.firstName&direction=asc&page=1
+        //     queryStringNew = removeOldSort(queryString,'sort=','&direction=',sortPar);
+        //     //...&sort=infos.email&direction=asc&page=1
+        //     console.log('Replace in queryStringNew='+queryStringNew+"; sortPar="+sortPar);
+        //
+        //     if( queryStringNew.includes('direction=asc') ) {
+        //         queryStringNew = queryStringNew.replace('asc','desc');
+        //         //console.log('queryString replace asc'+queryStringNew);
+        //     }
+        //
+        //     sortHref = mainUrl+'?'+queryStringNew; //+'&'+'sort='+sortPar+'&direction=desc&page=1';
+        // }
 
         console.log('sortHref='+sortHref);
         return sortHref;
+    }
+
+    function removeOldSort(queryString,startStr,endStr,sortPar) {
+        //return queryString.replace(/(startStr).*(endStr)/, sortPar);
+        var str = queryString.replace(queryString.substring(queryString.indexOf(startStr)+startStr.length, queryString.lastIndexOf(endStr)), sortPar);
+        return str;
     }
 
     if(1) {
