@@ -498,12 +498,12 @@ class UserDatesController extends OrderAbstractController
         $testing = false;
         //$testing = true;
 
-        $eventArr = $this->processData($deactivateData,true,$request,$testing);
+        $eventArr = $this->processData($deactivateData,$request,true,$testing);
         //dump($eventArr);
         //exit('111');
         $eventStr = implode("<br>",$eventArr);
 
-        $eventArr = $this->processData($modifiedData,false,$request,$testing);
+        $eventArr = $this->processData($modifiedData,$request,false,$testing);
         $eventStr = $eventStr . "<br><br>" . implode("<br>",$eventArr);
 
         $this->addFlash(
@@ -522,7 +522,7 @@ class UserDatesController extends OrderAbstractController
         return $response;
     }
 
-    public function processData($inputData,$withLocking=false,$request,$testing=false) {
+    public function processData($inputData,$request,$withLocking=false,$testing=false) {
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->getUser();
         $sitename = $this->getParameter('employees.sitename');
