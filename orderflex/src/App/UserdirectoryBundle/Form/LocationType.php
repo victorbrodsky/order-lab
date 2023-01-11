@@ -270,7 +270,7 @@ class LocationType extends AbstractType
                             return $er->createQueryBuilder('list')
                                 ->leftJoin("list.employmentStatus", "employmentStatus")
                                 ->leftJoin("employmentStatus.employmentType", "employmentType")
-                                ->where("list.id != :userid AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                                ->where("list.id != :userid AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                                 ->leftJoin("list.infos", "infos")
                                 ->orderBy("infos.displayName","ASC")
                                 ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );

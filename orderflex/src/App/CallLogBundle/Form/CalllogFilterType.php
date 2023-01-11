@@ -160,7 +160,8 @@ class CalllogFilterType extends AbstractType
                     ->leftJoin("u.infos", "infos")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    //->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
                     ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                     ->orderBy("infos.displayName","ASC");
@@ -300,7 +301,8 @@ class CalllogFilterType extends AbstractType
                     ->leftJoin("u.infos", "infos")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    //->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
                     ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                     ->orderBy("infos.displayName","ASC");
@@ -380,7 +382,8 @@ class CalllogFilterType extends AbstractType
                     ->leftJoin("u.infos", "infos")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    //->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
                     ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                     ->orderBy("infos.displayName","ASC");
@@ -397,7 +400,8 @@ class CalllogFilterType extends AbstractType
                     ->leftJoin("u.infos", "infos")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    //->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("(employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->andWhere("(u.testingAccount = false OR u.testingAccount IS NULL)")
                     ->andWhere("(u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system')")
                     ->orderBy("infos.displayName","ASC");

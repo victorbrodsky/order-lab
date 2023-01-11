@@ -654,7 +654,7 @@ class UserController extends OrderAbstractController
                 $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
 
                 //filter out Pathology Fellowship Applicants
-                $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+                $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)";
 
                 //filter out users with excludeFromSearch set to true
                 //if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {

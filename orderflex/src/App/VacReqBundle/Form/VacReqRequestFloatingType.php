@@ -128,7 +128,7 @@ class VacReqRequestFloatingType extends AbstractType
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
-                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->andWhere("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
                         ->orderBy("infos.lastName","ASC");
                 },
             ));
@@ -151,7 +151,7 @@ class VacReqRequestFloatingType extends AbstractType
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
-                        ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->andWhere("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
                         ->orderBy("infos.lastName","ASC");
                 },
             ));

@@ -42,7 +42,7 @@ class ResidencyTrackListType extends AbstractType
                     ->leftJoin("user.preferences", "preferences")
                     ->leftJoin("user.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                     ->orderBy("user.username", "ASC");
             }
@@ -61,7 +61,7 @@ class ResidencyTrackListType extends AbstractType
                         ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                         ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
                 }
@@ -79,7 +79,7 @@ class ResidencyTrackListType extends AbstractType
                         ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                         ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
                 }
