@@ -357,7 +357,7 @@ const UserTable = ({cycle}) => {
                             <a
                                 className="sortable"
                                 href={getSortHref(mainUrl,queryString,'infos.salutation')}
-                                title="Degree"
+                                title="Degree based on salutation"
                             >Degree</a>
                         </th>
                         <th>
@@ -371,7 +371,7 @@ const UserTable = ({cycle}) => {
                             <a
                                 className="sortable"
                                 href={getSortHref(mainUrl,queryString,'institution.name')}
-                                title="Organizational Group(s) based on the administrative title"
+                                title="Organizational Group(s) based on the administrative, appointment, medical title's institution"
                             >Organizational Group(s)</a>
                         </th>
                         <th>

@@ -99,8 +99,15 @@ class UserDatesController extends OrderAbstractController
 
         $dql->leftJoin("user.trainings", "trainings");
         $dql->leftJoin("trainings.degree", "trainingsdegree");
+
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("administrativeTitles.institution", "institution");
+
+        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("appointmentTitles.institution", "appointmentInstitution");
+
+        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+        $dql->leftJoin("medicalTitles.institution", "medicalInstitution");
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
@@ -243,6 +250,13 @@ class UserDatesController extends OrderAbstractController
             $dql->addSelect('CASE WHEN user.activeAD IS NOT NULL THEN TRUE ELSE FALSE END AS HIDDEN myActiveADIsNull');
             $dql->orderBy("myActiveADIsNull",$sortDirection);
             $dql->addOrderBy("user.activeAD",$sortDirection);
+        }
+        if( $sort == 'institution.name' ) {
+            //https://stackoverflow.com/questions/28852390/how-can-i-order-null-values-first-on-a-doctrine-2-collection-using-annotations
+            //$dql->addSelect('CASE WHEN user.activeAD IS NOT NULL THEN TRUE ELSE FALSE END AS HIDDEN myActiveADIsNull');
+            $dql->orderBy("institution.name",$sortDirection);
+            $dql->addOrderBy("appointmentInstitution.name",$sortDirection);
+            $dql->addOrderBy("medicalInstitution.name",$sortDirection);
         }
 
         $query = $em->createQuery($dql);
