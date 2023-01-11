@@ -1772,24 +1772,6 @@ class User extends UserBase {
         //echo "showStatus=$showStatus <br>";
         $statusStr = "";
         if( $showStatus ) {
-//            $terminatedStr = $this->getEmploymentTerminatedStr();
-//            //echo "terminatedStr=$terminatedStr <br>";
-//            if( $terminatedStr ) {
-//                $addInfo = "No longer works";
-//            }
-//
-//            $adStatus = $this->getAdStatusStr();
-//            if( $adStatus ) {
-//                if( $addInfo ) {
-//                    $addInfo = $addInfo . "; ";
-//                }
-//                $addInfo = $addInfo . $adStatus;
-//            }
-//
-//            if( $addInfo ) {
-//                $addInfo = " (" . $addInfo . ")";
-//            }
-
             $statusStr = $this->getFullStatusStr();
         }
 
@@ -1823,30 +1805,7 @@ class User extends UserBase {
         if( !$displayName ) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
 
-            //Add (No longer works)
-            //echo "showStatus=$showStatus <br>";
-//            $addInfo = "";
-//            if( $showStatus ) {
-//                $terminatedStr = $this->getEmploymentTerminatedStr();
-//                //echo "terminatedStr=$terminatedStr <br>";
-//                if( $terminatedStr ) {
-//                    $addInfo = "No longer works";
-//                }
-//            }
-//
-//            $adStatus = $this->getAdStatusStr();
-//            if( $adStatus ) {
-//                if( $addInfo ) {
-//                    $addInfo = $addInfo . "; ";
-//                }
-//                $addInfo = $addInfo . $adStatus;
-//            }
-//
-//            if( $addInfo ) {
-//                $addInfo = " (" . $addInfo . ")";
-//            }
-
-
+            //Add status (No longer works, Active in AD)
             if( $showStatus ) {
                 $addInfo = $this->getFullStatusStr();
                 $displayName = $displayName . $addInfo;
