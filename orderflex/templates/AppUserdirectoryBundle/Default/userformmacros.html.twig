@@ -861,8 +861,14 @@
             <div class="right">
                 <div class="right-text">
 
+                    <h4>
+                        {{ user.getAdStatusStr() }}
+                    </h4>
+
                     {% if termStr %}
-                        <h4>{{ termStr }}</h4>
+                        <h4>
+                            {{ termStr }}
+                        </h4>
                     {% endif %}
 
                     {#preffered phone and email#}

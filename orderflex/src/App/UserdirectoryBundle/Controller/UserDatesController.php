@@ -348,6 +348,14 @@ class UserDatesController extends OrderAbstractController
                 $status = $terminationStr; //"terminated";
             }
 
+            $adStatus = $user->getAdStatusStr();
+            if( $adStatus ) {
+                if( $status ) {
+                    $status = $status . "; ";
+                }
+                $status = $status . $adStatus;
+            }
+
             //get usernametype => local or ldap
             $userKeyTypeAbbreviation = "";
             $userKeyType = $user->getKeyType();

@@ -3027,9 +3027,23 @@ class UserController extends OrderAbstractController
 //        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
 
         $pageTitle = 'Edit Employee Profile for ' . $entity->getUsernameOptimal();
-        $termStr = $entity->getEmploymentTerminatedStr();
-        if( $termStr ) {
-            $pageTitle = $pageTitle . " (" . $termStr . ")";
+        
+//        $addInfo = "";
+//        $termStr = $entity->getEmploymentTerminatedStr();
+//        if( $termStr ) {
+//            $addInfo = $addInfo . $termStr;
+//        }
+//        $adStatus = $entity->getAdStatusStr();
+//        if( $adStatus ) {
+//            if( $addInfo ) {
+//                $addInfo = $addInfo . "; ";
+//            }
+//            $addInfo = $addInfo . $adStatus;
+//        }
+
+        $addInfo = $entity->getFullStatusStr(false);
+        if( $addInfo ) {
+            $pageTitle = $pageTitle . $addInfo;
         }
 
         return array(

@@ -1770,13 +1770,27 @@ class User extends UserBase {
 
         //Add (No longer works)
         //echo "showStatus=$showStatus <br>";
-        $noLongerWorks = "";
+        $statusStr = "";
         if( $showStatus ) {
-            $terminatedStr = $this->getEmploymentTerminatedStr();
-            //echo "terminatedStr=$terminatedStr <br>";
-            if( $terminatedStr ) {
-                $noLongerWorks = " (No longer works)";
-            }
+//            $terminatedStr = $this->getEmploymentTerminatedStr();
+//            //echo "terminatedStr=$terminatedStr <br>";
+//            if( $terminatedStr ) {
+//                $addInfo = "No longer works";
+//            }
+//
+//            $adStatus = $this->getAdStatusStr();
+//            if( $adStatus ) {
+//                if( $addInfo ) {
+//                    $addInfo = $addInfo . "; ";
+//                }
+//                $addInfo = $addInfo . $adStatus;
+//            }
+//
+//            if( $addInfo ) {
+//                $addInfo = " (" . $addInfo . ")";
+//            }
+
+            $statusStr = $this->getFullStatusStr();
         }
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
@@ -1787,19 +1801,20 @@ class User extends UserBase {
         }
 
         if( $displayName && $primaryUseridKeytypeStr ) {
-            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr().$noLongerWorks;
+            return $displayName . " - " . $this->getPrimaryUseridKeytypeStr().$statusStr;
         }
 
         if( $primaryUseridKeytypeStr && !$displayName ){
-            return $primaryUseridKeytypeStr."".$noLongerWorks;
+            return $primaryUseridKeytypeStr."".$statusStr;
         }
 
         if( $displayName && !$primaryUseridKeytypeStr ){
-            return $displayName."".$noLongerWorks;
+            return $displayName."".$statusStr;
         }
     }
 
     //Get displayname or first + last name
+    //Used in vacreq personAwayInfo
     public function getDisplayOrFirstLastname( $showStatus=false ): ?string
     {
 
@@ -1807,24 +1822,42 @@ class User extends UserBase {
 
         if( !$displayName ) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
-        }
 
-        if( !$displayName ){
-            $displayName = $this->getUserNameStr();
-        }
+            //Add (No longer works)
+            //echo "showStatus=$showStatus <br>";
+//            $addInfo = "";
+//            if( $showStatus ) {
+//                $terminatedStr = $this->getEmploymentTerminatedStr();
+//                //echo "terminatedStr=$terminatedStr <br>";
+//                if( $terminatedStr ) {
+//                    $addInfo = "No longer works";
+//                }
+//            }
+//
+//            $adStatus = $this->getAdStatusStr();
+//            if( $adStatus ) {
+//                if( $addInfo ) {
+//                    $addInfo = $addInfo . "; ";
+//                }
+//                $addInfo = $addInfo . $adStatus;
+//            }
+//
+//            if( $addInfo ) {
+//                $addInfo = " (" . $addInfo . ")";
+//            }
 
-        //Add (No longer works)
-        //echo "showStatus=$showStatus <br>";
-        $noLongerWorks = "";
-        if( $showStatus ) {
-            $terminatedStr = $this->getEmploymentTerminatedStr();
-            //echo "terminatedStr=$terminatedStr <br>";
-            if( $terminatedStr ) {
-                $noLongerWorks = " (No longer works)";
+
+            if( $showStatus ) {
+                $addInfo = $this->getFullStatusStr();
+                $displayName = $displayName . $addInfo;
             }
         }
 
-        return $displayName."".$noLongerWorks;
+        if( !$displayName ){
+            $displayName = $this->getUserNameStr($showStatus);
+        }
+
+        return $displayName;
     }
 
 
@@ -2546,22 +2579,68 @@ class User extends UserBase {
             }
         }
 
-        //get AD status
-        if( $res ) {
-            $res = $res . ";";
-        }
-        if( $this->getActiveAD() === true ) {
-            $res = $res . " Active in AD";
-        }
-        if( $this->getActiveAD() === false ) {
-            $res = $res . " Inactive in AD";
-        }
-        if( $this->getActiveAD() === null ) {
-            //$res = $res . " AD status unknown";
-            $res = $res . " Inactive in AD";
-        }
+//        //get AD status
+//        if( $res ) {
+//            $res = $res . ";";
+//        }
+//        if( $this->getActiveAD() === true ) {
+//            $res = $res . " Active in AD";
+//        }
+//        if( $this->getActiveAD() === false ) {
+//            $res = $res . " Inactive in AD";
+//        }
+//        if( $this->getActiveAD() === null ) {
+//            //$res = $res . " AD status unknown";
+//            $res = $res . " Inactive in AD";
+//        }
 
         return $res;
+    }
+
+    public function getAdStatusStr() {
+        $res = "";
+        //get AD status
+//        if( $res ) {
+//            $res = $res . ";";
+//        }
+        if( $this->getActiveAD() === true ) {
+            $res = "Active in AD";
+        }
+        if( $this->getActiveAD() === false ) {
+            $res = "Inactive in AD";
+        }
+        if( $this->getActiveAD() === null ) {
+            $res = "Inactive in AD";
+        }
+        return $res;
+    }
+
+    public function getFullStatusStr( $short=true, $withBrackets=true ) {
+        $addInfo = "";
+
+        $terminatedStr = $this->getEmploymentTerminatedStr();
+        //echo "terminatedStr=$terminatedStr <br>";
+        if( $terminatedStr ) {
+            if( $short ) {
+                $addInfo = "No longer works";
+            } else {
+                $addInfo = $terminatedStr;
+            }
+        }
+
+        $adStatus = $this->getAdStatusStr();
+        if( $adStatus ) {
+            if( $addInfo ) {
+                $addInfo = $addInfo . "; ";
+            }
+            $addInfo = $addInfo . $adStatus;
+        }
+
+        if( $withBrackets && $addInfo ) {
+            $addInfo = " (" . $addInfo . ")";
+        }
+
+        return $addInfo;
     }
 
     public function getEmploymentStartEndDates()
