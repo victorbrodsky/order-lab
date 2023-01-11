@@ -2574,6 +2574,7 @@ class User extends UserBase {
         return $res;
     }
 
+
     public function getFullStatusStr( $short=true, $withBrackets=true, $withLockStatus=true ) {
         $addInfo = "";
 
