@@ -342,19 +342,19 @@ class UserDatesController extends OrderAbstractController
                 $locked = 'Locked';
             }
 
-            $status = "";
-            $terminationStr = $user->getEmploymentTerminatedStr(false);
-            if( $terminationStr ) {
-                $status = $terminationStr; //"terminated";
-            }
-
-            $adStatus = $user->getAdStatusStr();
-            if( $adStatus ) {
-                if( $status ) {
-                    $status = $status . "; ";
-                }
-                $status = $status . $adStatus;
-            }
+//            $status = "";
+//            $terminationStr = $user->getEmploymentTerminatedStr(false);
+//            if( $terminationStr ) {
+//                $status = $terminationStr; //"terminated";
+//            }
+//            $adStatus = $user->getAdStatusStr();
+//            if( $adStatus ) {
+//                if( $status ) {
+//                    $status = $status . "; ";
+//                }
+//                $status = $status . $adStatus;
+//            }
+            $status = $user->getFullStatusStr(false,false,false); //$short=true, $withBrackets=true, $withLockStatus=true
 
             //get usernametype => local or ldap
             $userKeyTypeAbbreviation = "";

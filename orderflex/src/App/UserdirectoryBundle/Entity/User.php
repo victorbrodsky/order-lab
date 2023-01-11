@@ -2574,10 +2574,10 @@ class User extends UserBase {
         return $res;
     }
 
-    public function getFullStatusStr( $short=true, $withBrackets=true ) {
+    public function getFullStatusStr( $short=true, $withBrackets=true, $withLockStatus=true ) {
         $addInfo = "";
 
-        $terminatedStr = $this->getEmploymentTerminatedStr();
+        $terminatedStr = $this->getEmploymentTerminatedStr($withLockStatus);
         //echo "terminatedStr=$terminatedStr <br>";
         if( $terminatedStr ) {
             if( $short ) {
