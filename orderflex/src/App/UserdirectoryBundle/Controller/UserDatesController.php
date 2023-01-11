@@ -111,7 +111,13 @@ class UserDatesController extends OrderAbstractController
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+
+        //$dql->where("(employmentType.name != 'Pathology Fellowship Applicant' AND employmentType.name != 'Pathology Residency Applicant') OR employmentType.id IS NULL");
+        //$dql->andWhere("(user.createdby != 'resapp_migration' OR user.createdby != 'csv-eras')");
+
+        $whereStr = "(employmentType.name != 'Pathology Fellowship Applicant' AND employmentType.name != 'Pathology Residency Applicant')";
+        $whereStr = $whereStr . " OR  employmentType.id IS NULL";
+        $dql->where($whereStr);
 
         $params = array();
         $filterform = $this->createForm(UserDatesFilterType::class, null, array(
