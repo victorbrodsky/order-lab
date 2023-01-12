@@ -70,6 +70,7 @@
 
                     {{ formmacros.field(form.noteForVacationDays) }}
 
+
                     {{ formmacros.field(form.noteForCarryOverDays) }}
 
                     <hr>
@@ -78,7 +79,20 @@
                     {{ formmacros.field(form.floatingDayNote) }}
                     {{ formmacros.checkbox(form.floatingRestrictDateRange) }}
 
-                    {{ formmacros.field(form.holidayDatesUrl) }}
+                    {#{{ formmacros.field(form.holidayDatesUrl) }}#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            {{ form_label(form.holidayDatesUrl) }}
+                        </div>
+                        <div class="col-xs-5" align="right">
+                            {{ form_widget(form.holidayDatesUrl) }}
+                        </div>
+                        <div class="col-xs-1" align="left">
+                            <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Import Now</button>
+                        </div>
+                    </div>
+                    </p>
 
             </div> <!-- panel-body -->
           </div> <!-- panel-collapse -->
