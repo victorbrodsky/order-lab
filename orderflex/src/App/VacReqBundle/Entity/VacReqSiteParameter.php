@@ -122,6 +122,19 @@ class VacReqSiteParameter
      */
     private $floatingRestrictDateRange;
 
+    //URL for US Holiday dates in iCal format:
+    /**
+     * URL for US Holiday dates in iCal format
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $holidayDatesUrl;
+
+    //new field titled “Instance maintained for the following institution”:
+    // [Select2 with organizational groups pulled from the Platform List Manager List]”.
+    // Set this value to “Weill Cornell Medicine”
+
+
 
 
     public function __construct() {
@@ -320,6 +333,24 @@ class VacReqSiteParameter
     {
         $this->floatingRestrictDateRange = $floatingRestrictDateRange;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHolidayDatesUrl()
+    {
+        return $this->holidayDatesUrl;
+    }
+
+    /**
+     * @param mixed $holidayDatesUrl
+     */
+    public function setHolidayDatesUrl($holidayDatesUrl)
+    {
+        $this->holidayDatesUrl = $holidayDatesUrl;
+    }
+
+
 
 
     
