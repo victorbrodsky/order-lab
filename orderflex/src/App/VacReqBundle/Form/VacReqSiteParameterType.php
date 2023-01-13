@@ -105,7 +105,7 @@ class VacReqSiteParameterType extends AbstractType
         $builder->add('holidayDatesUrl', null, array(
             'label' => 'URL for US Holiday dates in iCal format:',
             'required' => false,
-            'attr' => array('class' => 'textarea form-control')
+            'attr' => array('class' => 'textarea form-control holidayDatesUrl')
         ));
         
         

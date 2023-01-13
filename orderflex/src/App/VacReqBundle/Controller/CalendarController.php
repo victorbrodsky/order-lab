@@ -113,4 +113,23 @@ class CalendarController extends OrderAbstractController
         );
     }
 
+
+    /**
+     * @Route("/vacreq-import-holiday-dates/", name="vacreq_import_holiday_dates", methods={"GET"}, options={"expose"=true})
+     */
+    public function importHolidayDatesAction(Request $request)
+    {
+
+        if ( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $response = new Response();
+
+        
+
+        $response->setContent("OK");
+        return $response;
+    }
+
 }

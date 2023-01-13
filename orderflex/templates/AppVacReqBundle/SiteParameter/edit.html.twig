@@ -89,7 +89,7 @@
                             {{ form_widget(form.holidayDatesUrl) }}
                         </div>
                         <div class="col-xs-1" align="left">
-                            <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Import Now</button>
+                            <button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Import Now</button>
                         </div>
                     </div>
                     </p>
@@ -109,5 +109,10 @@
     {% endif %}
 
 
+{% endblock %}
+
+
+{% block additionaljs %}
+    <script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>
 {% endblock %}
 
