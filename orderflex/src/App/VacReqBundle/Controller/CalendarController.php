@@ -157,6 +157,10 @@ class CalendarController extends OrderAbstractController
         dump($icsEvents);
         exit();
 
+        //parse the downloaded file and add the retrieved US holiday titles and dates
+        // for the next 20 years from the downloaded file to the Platform List Manager
+        // into a new Platform list manager list titled “Holidays”
+
         $response->setContent("OK");
         return $response;
     }
