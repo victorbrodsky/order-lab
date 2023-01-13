@@ -22,6 +22,9 @@ use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\VacReqBundle\Util\iCalEasyReader;
+use App\VacReqBundle\Util\iCalendar;
+use App\VacReqBundle\Util\ics;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -126,7 +129,33 @@ class CalendarController extends OrderAbstractController
 
         $response = new Response();
 
-        
+        $holidayDatesUrl = $request->get('holidayDatesUrl');
+        echo "holidayDatesUrl=$holidayDatesUrl <br>";
+
+        if(0) {
+            //https://www.phpclasses.org/browse/file/63450.html
+            $ical = new iCalEasyReader();
+            $lines = $ical->load(file_get_contents($holidayDatesUrl));
+            //var_dump( $lines );
+            dump($lines);
+            exit();
+        }
+
+        if(0) {
+            $ical = new iCalendar();
+            $ical->parse($holidayDatesUrl);
+            $ical_data = $ical->get_all_data();
+            //var_dump( $lines );
+            dump($ical_data);
+            exit();
+        }
+
+        //https://www.apptha.com/blog/import-google-calendar-events-in-php/
+        /* Getting events from isc file */
+        $obj = new ics();
+        $icsEvents = $obj->getIcsEventsAsArray( $holidayDatesUrl );
+        dump($icsEvents);
+        exit();
 
         $response->setContent("OK");
         return $response;
