@@ -154,7 +154,34 @@ class CalendarController extends OrderAbstractController
         /* Getting events from isc file */
         $obj = new ics();
         $icsEvents = $obj->getIcsEventsAsArray( $holidayDatesUrl );
-        //dump($icsEvents);
+        dump($icsEvents);
+
+        //Header
+//        "BEGIN" => "VCALENDAR"
+//        "PRODID" => "-//Google Inc//Google Calendar 70.9054//EN"
+//        "VERSION" => "2.0"
+//        "CALSCALE" => "GREGORIAN"
+//        "METHOD" => "PUBLISH"
+//        "X-WR-CALNAME" => "Holidays in United States"
+//        "X-WR-TIMEZONE" => "UTC"
+//        "X-WR-CALDESC" => "Holidays and Observances in United States"
+
+        //Event
+//        "BEGIN" => "VEVENT"
+//        "DTSTART;VALUE=DATE" => "20241111"
+//        "DTEND;VALUE=DATE" => "20241112"
+//        "DTSTAMP" => "20230117T161120Z"
+//        "UID" => "20241111_8ab7b5tg01ghdu8ufobkduimfk@google.com"
+//        "CLASS" => "PUBLIC"
+//        "CREATED" => "20220922T154625Z"
+//        "DESCRIPTION" => "Public holiday"
+//        "LAST-MODIFIED" => "20220922T154625Z"
+//        "SEQUENCE" => "0"
+//        "STATUS" => "CONFIRMED"
+//        "SUMMARY" => "Veterans Day"
+//        "TRANSP" => "TRANSPARENT"
+//        "END" => "VEVENT
+
 
         $count = 0;
 
