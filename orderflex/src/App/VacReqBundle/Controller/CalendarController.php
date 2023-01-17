@@ -22,9 +22,7 @@ use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use App\VacReqBundle\Util\iCalEasyReader;
-use App\VacReqBundle\Util\iCalendar;
-use App\VacReqBundle\Util\ics;
+use App\VacReqBundle\Util\ICalendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -131,29 +129,22 @@ class CalendarController extends OrderAbstractController
 
         $holidayDatesUrl = $request->get('holidayDatesUrl');
         echo "holidayDatesUrl=$holidayDatesUrl <br>";
-
-        if(0) {
-            //https://www.phpclasses.org/browse/file/63450.html
-            $ical = new iCalEasyReader();
-            $lines = $ical->load(file_get_contents($holidayDatesUrl));
-            //var_dump( $lines );
-            dump($lines);
-            exit();
-        }
-
-        if(0) {
-            $ical = new iCalendar();
-            $ical->parse($holidayDatesUrl);
-            $ical_data = $ical->get_all_data();
-            //var_dump( $lines );
-            dump($ical_data);
-            exit();
-        }
-
+        
         //https://www.apptha.com/blog/import-google-calendar-events-in-php/
         /* Getting events from isc file */
-        $obj = new ics();
-        $icsEvents = $obj->getIcsEventsAsArray( $holidayDatesUrl );
+        $obj = new ICalendar();
+
+        try{
+            $icsEvents = $obj->getIcsEventsAsArray( $holidayDatesUrl );
+        }
+
+        catch(\Exception $e) {
+            //echo "Error:".$e->getMessage();
+            //exit();
+            $response->setContent($e->getMessage());
+            return $response;
+        }
+
         dump($icsEvents);
 
         //Header
@@ -182,6 +173,12 @@ class CalendarController extends OrderAbstractController
 //        "TRANSP" => "TRANSPARENT"
 //        "END" => "VEVENT
 
+        //add the retrieved US holiday titles and dates for the next 20 years from the downloaded file
+        // to the Platform List Manager into a new Platform list manager list titled “Holidays”
+        // Title: [holiday title],
+        // New “Date” Attribute for each item in this list: [date],
+        // a New “Country” attribute for each item in this list, set to [US] by default for imported values) and
+        // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
 
         $count = 0;
 
@@ -203,7 +200,7 @@ class CalendarController extends OrderAbstractController
 
             $count++;
 
-            $class = isset($event['CLASS']) ? trim($event['CLASS']) : NULL; //PUBLIC
+            //$class = isset($event['CLASS']) ? trim($event['CLASS']) : NULL; //PUBLIC
             $summary = isset($event['SUMMARY']) ? trim($event['SUMMARY']) : NULL; //Thanksgiving Day
             $date = isset($event['DTSTART;VALUE=DATE']) ? trim($event['DTSTART;VALUE=DATE']) : NULL; //20221124
 

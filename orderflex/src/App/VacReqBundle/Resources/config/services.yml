@@ -45,6 +45,9 @@ services:
         class: App\VacReqBundle\Util\VacReqImportData
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    vacreq_calendar_util:
+        class: App\VacReqBundle\Util\VacReqCalendarUtil
+
     App\VacReqBundle\EventListener\CalendarSubscriber:
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 #        tags:

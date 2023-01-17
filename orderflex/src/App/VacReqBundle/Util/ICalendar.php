@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: ch3
+ * User: oli2002
  * Date: 1/13/2023
  * Time: 2:48 PM
  */
@@ -9,7 +9,7 @@
 namespace App\VacReqBundle\Util;
 
 
-class ics {
+class ICalendar {
     /* Function is to get all the contents from ics and explode all the datas according to the events and its sections */
     function getIcsEventsAsArray($file) {
         $icalString = file_get_contents ( $file );

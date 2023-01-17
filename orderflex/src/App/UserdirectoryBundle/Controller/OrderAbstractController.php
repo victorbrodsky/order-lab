@@ -41,6 +41,7 @@ use App\UserdirectoryBundle\Util\UserServiceUtil;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UtilBundles\FOSCommentBundle\Util\FosCommentListenerUtil;
 use App\UtilBundles\FOSCommentBundle\Util\UserCommentUtil;
+use App\VacReqBundle\Util\VacReqCalendarUtil;
 use App\VacReqBundle\Util\VacReqImportData;
 use App\VacReqBundle\Util\VacReqUtil;
 use Doctrine\Persistence\ManagerRegistry;
@@ -112,6 +113,7 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['vacreq_util'] = '?'.VacReqUtil::class;
         $subscribedServices['vacreq_import_data'] = '?'.VacReqImportData::class;
+        $subscribedServices['vacreq_calendar_util'] = '?'.VacReqCalendarUtil::class;
 
         $subscribedServices['scanorder_utility'] = '?'.OrderUtil::class;
         $subscribedServices['search_utility'] = '?'.SearchUtil::class;
