@@ -154,8 +154,36 @@ class CalendarController extends OrderAbstractController
         /* Getting events from isc file */
         $obj = new ics();
         $icsEvents = $obj->getIcsEventsAsArray( $holidayDatesUrl );
-        dump($icsEvents);
-        exit();
+        //dump($icsEvents);
+
+        $count = 0;
+
+        foreach($icsEvents as $event) {
+            //echo $event;
+            if( isset($event['BEGIN']) ) {
+                if( trim($event['BEGIN']) == 'VCALENDAR' ) {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            $valueBegin = trim($event['BEGIN']);
+            //echo "valueBegin=[$valueBegin] <br>";
+            if( $valueBegin != 'VEVENT' ) {
+               continue;
+            }
+
+            $count++;
+
+            $class = isset($event['CLASS']) ? trim($event['CLASS']) : NULL; //PUBLIC
+            $summary = isset($event['SUMMARY']) ? trim($event['SUMMARY']) : NULL; //Thanksgiving Day
+            $date = isset($event['DTSTART;VALUE=DATE']) ? trim($event['DTSTART;VALUE=DATE']) : NULL; //20221124
+
+            echo $count . ": " . $date . ", " . $summary . "<br>";
+        }
+
+        exit("count=".$count);
 
         //parse the downloaded file and add the retrieved US holiday titles and dates
         // for the next 20 years from the downloaded file to the Platform List Manager
