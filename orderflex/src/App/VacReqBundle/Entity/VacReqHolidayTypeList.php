@@ -28,17 +28,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="vacreq_holidayTypeList")
+ * @ORM\Table(name="vacreq_holidayList")
  */
-class VacReqHolidayTypeList extends ListAbstract {
+class VacReqHolidayList extends ListAbstract {
 
     /**
-     * @ORM\OneToMany(targetEntity="VacReqHolidayTypeList", mappedBy="original", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="VacReqHolidayList", mappedBy="original", cascade={"persist"})
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="VacReqHolidayTypeList", inversedBy="synonyms", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="VacReqHolidayList", inversedBy="synonyms", cascade={"persist"})
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
