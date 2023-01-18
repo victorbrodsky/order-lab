@@ -57,7 +57,14 @@ class VacReqCalendarUtil
         foreach( range($startYear, $endYear) as $year ) {
             //echo $year;
             $holidays = Yasumi::create($country, $year);
-            $res[$year] = $holidays;
+            //dump($holidays);
+            //exit('111');
+            //$res[$year] = $holidays;
+            //$holidays = $allHolidays['holidays'];
+            foreach($holidays as $holiday) {
+                echo $holiday.": ".$holiday->getName()."<br>";
+            }
+            exit();
         }
         return $res;
     }

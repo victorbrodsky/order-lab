@@ -814,14 +814,14 @@ class DefaultController extends OrderAbstractController
         $year = 2025;
 
         // Use the factory to create a new holiday provider instance
-        $holidays = Yasumi::create($country, $year);
-        dump($holidays);
+        //$holidays = Yasumi::create($country, $year);
+        //dump($holidays);
 
         $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
-        $holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
-        dump($holidays);
+        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
+        //dump($holidays);
 
-        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2001,2043);
+        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2022,2043);
         dump($holidays);
 
         exit('EOF holidayCalendarAction');
