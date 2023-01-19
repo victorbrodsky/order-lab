@@ -217,4 +217,24 @@ class CalendarController extends OrderAbstractController
         return $response;
     }
 
+
+    /**
+     * @Route("/holiday-dates/", name="vacreq_holiday_dates", methods={"GET"})
+     * @Template("AppVacReqBundle/Holidays/holiday-dates.html.twig")
+     */
+    public function holidayDatesAction(Request $request) {
+
+        if(
+            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+
+
+        return array(
+            //'vacreqfilter' => $filterform->createView(),
+            //'groupId' => $groupId
+        );
+    }
 }

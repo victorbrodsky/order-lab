@@ -288,6 +288,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/", name="chartdatasources-list", methods={"GET"})
      * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies-list", methods={"GET"})
      * @Route("/list/chartvisualizations/", name="chartvisualizations-list", methods={"GET"})
+     * @Route("/list/vacreqholidays/", name="vacreqholidays-list", methods={"GET"})
+     * @Route("/list/vacreqobservedholidays/", name="vacreqobservedholidays-list", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/index.html.twig")
      */
@@ -962,6 +964,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/", name="chartdatasources_create", methods={"POST"})
      * @Route("/list/chartupdatefrequencies/", name="chartupdatefrequencies_create", methods={"POST"})
      * @Route("/list/chartvisualizations/", name="chartvisualizations_create", methods={"POST"})
+     * @Route("/list/vacreqholidays/", name="vacreqholidays_create", methods={"POST"})
+     * @Route("/list/vacreqobservedholidays/", name="vacreqobservedholidays_create", methods={"POST"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1314,6 +1318,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/new", name="chartdatasources_new", methods={"GET"})
      * @Route("/list/chartupdatefrequencies/new", name="chartupdatefrequencies_new", methods={"GET"})
      * @Route("/list/chartvisualizations/new", name="chartvisualizations_new", methods={"GET"})
+     * @Route("/list/vacreqholidays/new", name="vacreqholidays_new", methods={"GET"})
+     * @Route("/list/vacreqobservedholidays/new", name="vacreqobservedholidays_new", methods={"GET"})
      *
      *
      * @Template("AppUserdirectoryBundle/ListForm/new.html.twig")
@@ -1613,6 +1619,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/{id}", name="chartdatasources_show", methods={"GET"})
      * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_show", methods={"GET"})
      * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_show", methods={"GET"})
+     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_show", methods={"GET"})
+     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_show", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/show.html.twig")
      */
@@ -1905,6 +1913,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/{id}/edit", name="chartdatasources_edit", methods={"GET"})
      * @Route("/list/chartupdatefrequencies/{id}/edit", name="chartupdatefrequencies_edit", methods={"GET"})
      * @Route("/list/chartvisualizations/{id}/edit", name="chartvisualizations_edit", methods={"GET"})
+     * @Route("/list/vacreqholidays/{id}/edit", name="vacreqholidays_edit", methods={"GET"})
+     * @Route("/list/vacreqobservedholidays/{id}/edit", name="vacreqobservedholidays_edit", methods={"GET"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -2248,6 +2258,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/{id}", name="chartdatasources_update", methods={"PUT"})
      * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_update", methods={"PUT"})
      * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_update", methods={"PUT"})
+     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_update", methods={"PUT"})
+     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_update", methods={"PUT"})
      *
      * @Template("AppUserdirectoryBundle/ListForm/edit.html.twig")
      */
@@ -3072,6 +3084,18 @@ class ListController extends OrderAbstractController
                 $displayName = "Vacation Request Approval Type List";
                 $bundleName = "VacReqBundle";
                 break;
+
+            case "vacreqholidays":
+                $className = "VacReqHolidayList";
+                $displayName = "Vacation Request Holidays List";
+                $bundleName = "VacReqBundle";
+                break;
+            case "vacreqobservedholidays":
+                $className = "VacReqObservedHolidayList";
+                $displayName = "Vacation Request Observed Holidays List";
+                $bundleName = "VacReqBundle";
+                break;
+
             case "healthcareproviderspecialty":
                 $className = "HealthcareProviderSpecialtiesList";
                 $displayName = "Healthcare Provider Specialties";
@@ -4020,6 +4044,8 @@ class ListController extends OrderAbstractController
      * @Route("/list/chartdatasources/{id}", name="chartdatasources_delete", methods={"DELETE"})
      * @Route("/list/chartupdatefrequencies/{id}", name="chartupdatefrequencies_delete", methods={"DELETE"})
      * @Route("/list/chartvisualizations/{id}", name="chartvisualizations_delete", methods={"DELETE"})
+     * @Route("/list/vacreqholidays/{id}", name="vacreqholidays_delete", methods={"DELETE"})
+     * @Route("/list/vacreqobservedholidays/{id}", name="vacreqobservedholidays_delete", methods={"DELETE"})
      *
      */
     public function deleteAction(Request $request, $id)

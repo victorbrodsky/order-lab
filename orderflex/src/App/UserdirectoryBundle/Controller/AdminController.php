@@ -7819,6 +7819,8 @@ class AdminController extends OrderAbstractController
             "vacreqfloatingtexts" => array('VacReqFloatingTextList','vacreqfloatingtexts-list','Vacation Request Floating Text List'),
             "vacreqfloatingtypes" => array('VacReqFloatingTypeList','vacreqfloatingtypes-list','Vacation Request Floating Type List'),
             "vacreqapprovaltypes" => array('VacReqApprovalTypeList','vacreqapprovaltypes-list','Vacation Request Approval Type List'),
+            "vacreqholidays" => array('VacReqHolidayList','vacreqholidays-list','Vacation Request Holidays List'),
+            "vacreqobservedholidays" => array('VacReqObservedHolidayList','vacreqobservedholidays-list','Vacation Request Observed Holidays List'),
         );
 
         if( $withcustom ) {
