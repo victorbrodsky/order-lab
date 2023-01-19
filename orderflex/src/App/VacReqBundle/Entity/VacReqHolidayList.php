@@ -23,11 +23,10 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-//We can use only one "Observed Holidays" list
+//This list store -/+ 20 years holidays
 
 /**
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="vacreq_holidayList")
  */
 class VacReqHolidayList extends ListAbstract {
