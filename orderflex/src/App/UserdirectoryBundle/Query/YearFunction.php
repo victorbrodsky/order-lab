@@ -30,9 +30,9 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\Parser;
 
-//http://stackoverflow.com/questions/19096429/error-when-use-custom-dql-function-with-doctrine-and-symfony2
 //https://stackoverflow.com/questions/25820045/year-function-is-not-working-in-symfony-2
 
+#NOT USED
 class YearFunction extends FunctionNode {
 
     private $arg;

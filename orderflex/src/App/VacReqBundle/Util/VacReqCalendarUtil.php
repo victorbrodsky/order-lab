@@ -109,6 +109,8 @@ class VacReqCalendarUtil
             //2022-05-25 => $year = 2022
             list($year, $month, $day) = explode('-', $date);
             //same year
+            //Using YEAR from  beberlei/DoctrineExtensions
+            //Might use to_char (https://stackoverflow.com/questions/50890053/doctrine2-year-month-day-or-date-format-for-postgresql)
             $dql->andWhere("YEAR(holidays.holidayDate) = :holidayYear");
             //diff month and date
             $dql->andWhere("holidays.holidayDate != :holidayDate");
