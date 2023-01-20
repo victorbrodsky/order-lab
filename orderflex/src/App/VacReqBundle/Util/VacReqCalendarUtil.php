@@ -54,6 +54,7 @@ class VacReqCalendarUtil
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
         $res = array();
+        $count = 0;
         foreach( range($startYear, $endYear) as $year ) {
             //echo $year;
             $holidays = Yasumi::create($country, $year);
@@ -62,11 +63,45 @@ class VacReqCalendarUtil
             //$res[$year] = $holidays;
             //$holidays = $allHolidays['holidays'];
             foreach($holidays as $holiday) {
-                echo $holiday.": ".$holiday->getName()."<br>";
+                $res[] = $holiday.": ".$holiday->getName();
+
+                //Store in VacReqHolidayList
+                $thisHoliday = $this->findHolidayDay($holiday->getName(), $holiday);
+                if( $thisHoliday ) {
+                    //update
+                }
+
+                
+
+                $count++;
             }
-            exit();
+            //exit();
         }
+
+        //$res = implode("<br>",$res);
+
+        $res = "Updated $country holidays from $startYear to $endYear. Total updated holiday days is $count.";
+
         return $res;
+    }
+
+    public function findHolidayDay( $name, $date ) {
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder('holidays');
+
+        $dql->where("holidays.holidayName = :holidayName");
+        $dql->andWhere("holidays.holidayDate = :holidayDate");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameter('holidayName', $name);
+        $query->setParameter('holidayDate', $date);
+
+        //echo "dql=".$dql."<br>";
+
+        $holiday = $query->getResult();
+
+        return $holiday;
     }
 
 

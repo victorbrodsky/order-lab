@@ -796,35 +796,35 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    /**
-     * http://127.0.0.1/order/index_dev.php/time-away-request/holiday-calendar
-     *
-     * @Route("/holiday-calendar", name="vacreq_holiday_calendar")
-     */
-    public function holidayCalendarAction( Request $request )
-    {
-        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
-
-        //exit('holidayCalendarAction Not allowed.');
-
-        $country = 'USA';
-        $year = (int) date('Y');
-        $year = 2025;
-
-        // Use the factory to create a new holiday provider instance
-        //$holidays = Yasumi::create($country, $year);
-        //dump($holidays);
-
-        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
-        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
-        //dump($holidays);
-
-        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2022,2043);
-        dump($holidays);
-
-        exit('EOF holidayCalendarAction');
-    }
+//    /**
+//     * http://127.0.0.1/order/index_dev.php/time-away-request/holiday-calendar
+//     *
+//     * @Route("/holiday-calendar", name="vacreq_holiday_calendar")
+//     */
+//    public function holidayCalendarAction( Request $request )
+//    {
+//        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+//
+//        //exit('holidayCalendarAction Not allowed.');
+//
+//        $country = 'USA';
+//        $year = (int) date('Y');
+//        $year = 2025;
+//
+//        // Use the factory to create a new holiday provider instance
+//        //$holidays = Yasumi::create($country, $year);
+//        //dump($holidays);
+//
+//        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+//        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
+//        //dump($holidays);
+//
+//        $holidays = $vacreqCalendarUtil->processHolidaysRangeYears($country,2022,2043);
+//        dump($holidays);
+//
+//        exit('EOF holidayCalendarAction');
+//    }
 
 }

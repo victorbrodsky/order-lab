@@ -11,7 +11,22 @@
 {% block content %}
     <h4 class="text-info" align="center">
         Holiday Dates
+        {#<button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Update Now</button>#}
+        <a class="btn btn-default" href="{{ path('vacreq_update_holiday_dates') }}">Update</a>
     </h4>
+
+    {#<p>#}
+        {#<button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Import Now</button>#}
+    {#</p>#}
+
+
 
 
 {% endblock %}
+
+
+
+
+{#{% block additionaljs %}#}
+    {#<script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>#}
+{#{% endblock %}#}

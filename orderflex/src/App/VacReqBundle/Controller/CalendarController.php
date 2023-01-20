@@ -115,7 +115,10 @@ class CalendarController extends OrderAbstractController
     }
 
 
+    
     /**
+     * NOT USED
+     *
      * @Route("/vacreq-import-holiday-dates/", name="vacreq_import_holiday_dates", methods={"GET"}, options={"expose"=true})
      */
     public function importHolidayDatesAction(Request $request)
@@ -216,8 +219,7 @@ class CalendarController extends OrderAbstractController
         $response->setContent("OK");
         return $response;
     }
-
-
+    
     /**
      * @Route("/holiday-dates/", name="vacreq_holiday_dates", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/holiday-dates.html.twig")
@@ -236,5 +238,43 @@ class CalendarController extends OrderAbstractController
             //'vacreqfilter' => $filterform->createView(),
             //'groupId' => $groupId
         );
+    }
+
+    /**
+     * @Route("/update-holiday-dates/", name="vacreq_update_holiday_dates", methods={"GET"})
+     * @Template("AppVacReqBundle/Holidays/holiday-dates.html.twig")
+     */
+    public function updateHolidayDatesAction(Request $request) {
+
+        if(
+            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $country = 'USA';
+        $year = (int) date('Y');
+        $startYear = $year - 20;
+        $endYear = $year + 20;
+        //$year = 2025;
+
+        // Use the factory to create a new holiday provider instance
+        //$holidays = Yasumi::create($country, $year);
+        //dump($holidays);
+
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+        //$holidays = $vacreqCalendarUtil->getHolidaysPerYear($country,2023);
+        //dump($holidays);
+
+        $res = $vacreqCalendarUtil->processHolidaysRangeYears($country,$startYear,$endYear);
+        //dump($holidays);
+
+        //Flash
+        $this->addFlash(
+            'notice',
+            $res
+        );
+
+        return $this->redirect( $this->generateUrl('vacreq_holiday_dates') );
     }
 }
