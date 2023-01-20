@@ -63,8 +63,8 @@ class VacReqObservedHolidayList extends ListAbstract {
     //"Observed By" - showing all organizational groups in a Select2 drop down menu
     /**
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
-     * @ORM\JoinTable(name="vacreq_holiday_institution",
-     *      joinColumns={@ORM\JoinColumn(name="holiday_id", referencedColumnName="id")},
+     * @ORM\JoinTable(name="vacreq_observedholiday_institution",
+     *      joinColumns={@ORM\JoinColumn(name="observedholiday_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
      **/

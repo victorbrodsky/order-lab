@@ -63,39 +63,88 @@ class VacReqCalendarUtil
             //$res[$year] = $holidays;
             //$holidays = $allHolidays['holidays'];
             foreach($holidays as $holiday) {
+                //echo $holiday.": ".$holiday->getName()."<br>";
                 $res[] = $holiday.": ".$holiday->getName();
 
-                //Store in VacReqHolidayList
-                $thisHoliday = $this->findHolidayDay($holiday->getName(), $holiday);
+                //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
+                $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-title-year-country");
                 if( $thisHoliday ) {
-                    //update
+
+                    continue;
                 }
 
-                
+                //Update if (b) holiday date AND country are the same, but the holiday title is different.
+                $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-date-country");
+                if( $thisHoliday ) {
+
+                    continue;
+                }
+
+                //Store in VacReqHolidayList
 
                 $count++;
             }
             //exit();
         }
 
-        //$res = implode("<br>",$res);
+        echo implode("<br>",$res);
 
         $res = "Updated $country holidays from $startYear to $endYear. Total updated holiday days is $count.";
 
         return $res;
     }
 
-    public function findHolidayDay( $name, $date ) {
+    public function findHolidayDay( $name, $date, $country, $sameStr=NULL ) {
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $dql = $repository->createQueryBuilder('holidays');
 
-        $dql->where("holidays.holidayName = :holidayName");
-        $dql->andWhere("holidays.holidayDate = :holidayDate");
+        $dql->leftJoin("holidays.country", "country");
 
-        $query = $this->em->createQuery($dql);
+        //(a) holiday title AND year AND country are the same, but the month OR date are different
+        if( $sameStr == "same-title-year-country" ) {
+            echo "a) same-title-year-country <br>";
+            $dql->andWhere("holidays.holidayName = :holidayName");
+            $dql->andWhere("country.abbreviation = :country");
 
-        $query->setParameter('holidayName', $name);
-        $query->setParameter('holidayDate', $date);
+            //2022-05-25 => $year = 2022
+            list($year, $month, $day) = explode('-', $date);
+            //same year
+            $dql->andWhere("YEAR(holidays.holidayDate) = :holidayYear");
+            //diff month and date
+            $dql->andWhere("holidays.holidayDate != :holidayDate");
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameter('holidayName', $name);
+            $query->setParameter('holidayYear', $year);
+            $query->setParameter('holidayDate', $date);
+            $query->setParameter('country', $country);
+        }
+
+        //(b) holiday date AND country are the same, but the holiday title is different
+        elseif( $sameStr == "same-date-country" ) {
+            echo "b) same-date-country <br>";
+            $dql->andWhere("country.abbreviation = :country");
+            $dql->andWhere("holidays.holidayDate = :holidayDate");
+            $dql->andWhere("holidays.holidayName != :holidayName");
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameter('holidayName', $name);
+            $query->setParameter('holidayDate', $date);
+            $query->setParameter('country', $country);
+        }
+        else {
+            $dql->andWhere("holidays.holidayName = :holidayName");
+            $dql->andWhere("country.abbreviation = :country");
+            $dql->andWhere("holidays.holidayDate = :holidayDate");
+
+            $query = $this->em->createQuery($dql);
+
+            $query->setParameter('holidayName', $name);
+            $query->setParameter('holidayDate', $date);
+            $query->setParameter('country', $country);
+        }
 
         //echo "dql=".$dql."<br>";
 
@@ -103,6 +152,8 @@ class VacReqCalendarUtil
 
         return $holiday;
     }
+
+
 
 
 }

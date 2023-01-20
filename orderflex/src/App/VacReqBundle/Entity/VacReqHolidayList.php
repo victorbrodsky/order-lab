@@ -49,7 +49,7 @@ class VacReqHolidayList extends ListAbstract {
     private $holidayName;
 
     /**
-     * Holiday Date
+     * Holiday Date (2022-05-25)
      * @ORM\Column(type="date", nullable=true)
      */
     private $holidayDate;
