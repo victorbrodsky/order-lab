@@ -69,14 +69,14 @@ class VacReqCalendarUtil
                 //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
                 $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-title-year-country");
                 if( $thisHoliday ) {
-
+                    echo "thisHoliday exists: same-title-year-country <br>";
                     continue;
                 }
 
                 //Update if (b) holiday date AND country are the same, but the holiday title is different.
                 $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-date-country");
                 if( $thisHoliday ) {
-
+                    echo "thisHoliday exists: same-date-country <br>";
                     continue;
                 }
 
@@ -102,7 +102,7 @@ class VacReqCalendarUtil
 
         //(a) holiday title AND year AND country are the same, but the month OR date are different
         if( $sameStr == "same-title-year-country" ) {
-            echo "a) same-title-year-country <br>";
+            //echo "a) same-title-year-country <br>";
             $dql->andWhere("holidays.holidayName = :holidayName");
             $dql->andWhere("country.abbreviation = :country");
 
@@ -125,7 +125,7 @@ class VacReqCalendarUtil
 
         //(b) holiday date AND country are the same, but the holiday title is different
         elseif( $sameStr == "same-date-country" ) {
-            echo "b) same-date-country <br>";
+            //echo "b) same-date-country <br>";
             $dql->andWhere("country.abbreviation = :country");
             $dql->andWhere("holidays.holidayDate = :holidayDate");
             $dql->andWhere("holidays.holidayName != :holidayName");

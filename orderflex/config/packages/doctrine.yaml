@@ -145,7 +145,6 @@ doctrine:
                         CAST: App\UserdirectoryBundle\Query\CastFunction
                         #GROUP_CONCAT: App\UserdirectoryBundle\Query\GroupConcat
                      datetime_functions:
-                        #YEAR: App\UserdirectoryBundle\Query\YearFunction
                         #date: DoctrineExtensions\Query\Mysql\Date
                         YEAR: DoctrineExtensions\Query\Postgresql\Year
             external:
