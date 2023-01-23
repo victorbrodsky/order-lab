@@ -79,6 +79,8 @@
                 </div>
                 </p>
 
+                {{ formmacros.field(form.institutions) }}
+
                 {% if cycle == "show" %}
                     <p>
                         <a class="btn btn-primary" href="{{ path('vacreq_siteparameters_edit_specific_site_parameters') }}">Edit</a>

@@ -134,6 +134,13 @@ class VacReqHolidayList extends ListAbstract {
         $this->institutions->removeElement($institution);
     }
 
+    public function setInstitutions($institutions)
+    {
+        foreach($institutions as $institution) {
+            $this->addInstitution($institution);
+        }
+    }
+
     /**
      * @return mixed
      */

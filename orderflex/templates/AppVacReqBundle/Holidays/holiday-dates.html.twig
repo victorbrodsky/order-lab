@@ -19,7 +19,17 @@
         {#<button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Import Now</button>#}
     {#</p>#}
 
+    {% for holiday in holidays %}
+        {{ holiday.getName() }}:
+        {{ holiday.getHolidayDate()|date('Y-m-d') }} -
+        {{ holiday.getHolidayName() }} -
+        Observed by:
+        {% for institution in holiday.getInstitutions() %}
+            {{ institution.getName() }};
+        {% endfor %}
 
+        <br>
+    {% endfor %}
 
 
 {% endblock %}

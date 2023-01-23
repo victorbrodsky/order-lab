@@ -107,6 +107,24 @@ class VacReqSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'textarea form-control holidayDatesUrl')
         ));
+
+        $builder->add('institutions', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Institution',
+            'choice_label' => 'name',
+            'label'=>'Instance maintained for the following institutions (Holiday\'s default institutions):',
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
         
         
         if( $this->params['cycle'] != 'show' ) {

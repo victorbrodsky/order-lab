@@ -232,9 +232,13 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
 
+        $holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
+        echo "holidays count=".count($holidays)."<br>";
 
         return array(
+            'holidays' => $holidays
             //'vacreqfilter' => $filterform->createView(),
             //'groupId' => $groupId
         );

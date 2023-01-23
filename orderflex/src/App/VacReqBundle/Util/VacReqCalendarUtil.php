@@ -54,6 +54,9 @@ class VacReqCalendarUtil
     // a New “Country” attribute for each item in this list, set to [US] by default for imported values) and
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
+        $testing = false;
+        $testing = true;
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
         $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByAbbreviation($country);
@@ -61,10 +64,19 @@ class VacReqCalendarUtil
             throw new \Exception( 'Countries is not found by abbreviation=' . $country );
         }
 
-        $defaultInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($country);
+        //$defaultInstitutions = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($country);
+        $defaultInstitutions = $userSecUtil->getSiteSettingParameter('institutions','vacreq');
+        //echo '$defaultInstitutions count='.count($defaultInstitutions)."<br>";
+        //foreach($defaultInstitutions as $defaultInstitution) {
+        //    echo 'defaultInstitutions='.$defaultInstitution."<br>";
+        //}
+        if( !$defaultInstitutions || count($defaultInstitutions) == 0 ) {
+            throw new \Exception( 'Default instance maintained for the following institutions not found in vacreq site settings' );
+        }
 
         $res = array();
-        $count = 0;
+        $countAdded = 0;
+        $countUpdated = 0;
         foreach( range($startYear, $endYear) as $year ) {
             //echo $year;
             $holidays = Yasumi::create($country, $year);
@@ -76,13 +88,16 @@ class VacReqCalendarUtil
                 //echo $holiday.": ".$holiday->getName()."<br>";
                 //dump($holiday);
                 //exit();
-                $res[] = $holiday.": ".$holiday->getName();
+                //$res[] = $holiday.": ".$holiday->getName();
 
                 //$holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
                 //echo "holidayDate=".$holidayDate->format("Y-m-d");
                 //exit();
 
-                if( $holiday && $holiday->getName() ) {
+                $holidayName = $holiday->getName();
+                //$holiday = '2021-01-01';
+
+                if( $holiday && $holidayName ) {
                     //ok
                 } else {
                     //Skip
@@ -90,7 +105,7 @@ class VacReqCalendarUtil
                 }
 
                 //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
-                $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-title-year-country");
+                $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-title-year-country");
                 if( $thisHoliday ) {
                     echo "thisHoliday exists: same-title-year-country <br>";
                     exit();
@@ -99,37 +114,77 @@ class VacReqCalendarUtil
                     //echo "holidayDate=".$holidayDate->format("Y-m-d");
                     //exit();
                     $thisHoliday->setHolidayDate($holidayDate);
-                    $this->em->flush();
+
+                    $res[] = "Updated date (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                    $countUpdated++;
+
+                    if( !$testing ) {
+                        $this->em->flush();
+                    }
+
                     continue;
                 }
 
                 //Update if (b) holiday date AND country are the same, but the holiday title is different.
-                $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-date-country");
+                $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-date-country");
                 if( $thisHoliday ) {
                     echo "thisHoliday exists: same-date-country <br>";
                     exit();
                     //Update title
-                    $thisHoliday->setHolidayName($holiday->getName());
-                    $this->em->flush();
+                    $thisHoliday->setHolidayName($holidayName);
+
+                    $res[] = "Updated name (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                    $countUpdated++;
+
+                    if( !$testing ) {
+                        $this->em->flush();
+                    }
+
                     continue;
                 }
 
+                $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"");
+                //echo "thisHoliday count=".count($thisHoliday)."<br>";
+                if( $thisHoliday ) {
+                    $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                    continue;
+                }
+
+
                 //Store in VacReqHolidayList
+                //exit('creating new VacReqHolidayList');
                 $holidayEntity = new VacReqHolidayList($user);
-                $holidayEntity->setHolidayName($holiday->getName());
+
+                //set default values
+                $nameStr = $holiday.": ".$holidayName;
+                $holidayEntity = $userSecUtil->setDefaultList($holidayEntity,0,$user,$nameStr);
+                $holidayEntity->setType('user-added');
+
+                $holidayEntity->setHolidayName($holidayName);
                 $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
                 $holidayEntity->setHolidayDate($holidayDate);
                 $holidayEntity->setCountry($countryEntity);
-                $holidayEntity->addInstitution($defaultInstitution);
+                $holidayEntity->setInstitutions($defaultInstitutions);
 
-                $count++;
+                $res[] = "Added: ".$holiday.": ".$holidayName;
+
+                if( !$testing ) {
+                    $this->em->persist($holidayEntity);
+                    $this->em->flush();
+                }
+
+                $countAdded++;
             }
             //exit();
         }
 
-        echo implode("<br>",$res);
+        //echo implode("<br>",$res);
 
-        $res = "Updated $country holidays from $startYear to $endYear. Total updated holiday days is $count.";
+        $res = "Updated $country holidays from $startYear to $endYear.".
+            " Total added holiday days is $countAdded.".
+            " Total updated holiday days is $countUpdated.<br>".
+            implode("<br>",$res)
+        ;
 
         return $res;
     }
@@ -190,9 +245,13 @@ class VacReqCalendarUtil
 
         //echo "dql=".$dql."<br>";
 
-        $holiday = $query->getResult();
+        $holidays = $query->getResult();
 
-        return $holiday;
+        if( $holidays && count($holidays) > 0 ) {
+            return $holidays[0];
+        }
+
+        return NULL;
     }
 
 
