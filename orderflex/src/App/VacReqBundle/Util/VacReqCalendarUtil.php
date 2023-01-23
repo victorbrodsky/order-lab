@@ -9,6 +9,7 @@
 namespace App\VacReqBundle\Util;
 
 
+use App\VacReqBundle\Entity\VacReqHolidayList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,6 +54,15 @@ class VacReqCalendarUtil
     // a New “Country” attribute for each item in this list, set to [US] by default for imported values) and
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
+        $user = $this->security->getUser();
+
+        $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByAbbreviation($country);
+        if( !$countryEntity ) {
+            throw new \Exception( 'Countries is not found by abbreviation=' . $country );
+        }
+
+        $defaultInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($country);
+
         $res = array();
         $count = 0;
         foreach( range($startYear, $endYear) as $year ) {
@@ -64,12 +74,32 @@ class VacReqCalendarUtil
             //$holidays = $allHolidays['holidays'];
             foreach($holidays as $holiday) {
                 //echo $holiday.": ".$holiday->getName()."<br>";
+                //dump($holiday);
+                //exit();
                 $res[] = $holiday.": ".$holiday->getName();
+
+                //$holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
+                //echo "holidayDate=".$holidayDate->format("Y-m-d");
+                //exit();
+
+                if( $holiday && $holiday->getName() ) {
+                    //ok
+                } else {
+                    //Skip
+                    continue;
+                }
 
                 //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
                 $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-title-year-country");
                 if( $thisHoliday ) {
                     echo "thisHoliday exists: same-title-year-country <br>";
+                    exit();
+                    //Update date
+                    $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
+                    //echo "holidayDate=".$holidayDate->format("Y-m-d");
+                    //exit();
+                    $thisHoliday->setHolidayDate($holidayDate);
+                    $this->em->flush();
                     continue;
                 }
 
@@ -77,10 +107,20 @@ class VacReqCalendarUtil
                 $thisHoliday = $this->findHolidayDay($holiday->getName(),$holiday,$country,"same-date-country");
                 if( $thisHoliday ) {
                     echo "thisHoliday exists: same-date-country <br>";
+                    exit();
+                    //Update title
+                    $thisHoliday->setHolidayName($holiday->getName());
+                    $this->em->flush();
                     continue;
                 }
 
                 //Store in VacReqHolidayList
+                $holidayEntity = new VacReqHolidayList($user);
+                $holidayEntity->setHolidayName($holiday->getName());
+                $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
+                $holidayEntity->setHolidayDate($holidayDate);
+                $holidayEntity->setCountry($countryEntity);
+                $holidayEntity->addInstitution($defaultInstitution);
 
                 $count++;
             }

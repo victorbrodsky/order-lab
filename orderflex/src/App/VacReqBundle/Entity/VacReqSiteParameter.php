@@ -133,11 +133,19 @@ class VacReqSiteParameter
     //new field titled “Instance maintained for the following institution”:
     // [Select2 with organizational groups pulled from the Platform List Manager List]”.
     // Set this value to “Weill Cornell Medicine”
-
+    /**
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
+     * @ORM\JoinTable(name="vacreq_siteparameter_institution",
+     *      joinColumns={@ORM\JoinColumn(name="siteparameter_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $institutions;
 
 
 
     public function __construct() {
+        $this->institutions = new ArrayCollection();
     }
 
 
@@ -350,7 +358,28 @@ class VacReqSiteParameter
         $this->holidayDatesUrl = $holidayDatesUrl;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInstitutions()
+    {
+        return $this->institutions;
+    }
 
+    /**
+     * @param mixed $institution
+     */
+    public function addInstitution($institution)
+    {
+        if( !$this->institutions->contains($institution) ) {
+            $this->institutions->add($institution);
+        }
+    }
+
+    public function removeInstitution($institution)
+    {
+        $this->institutions->removeElement($institution);
+    }
 
 
     

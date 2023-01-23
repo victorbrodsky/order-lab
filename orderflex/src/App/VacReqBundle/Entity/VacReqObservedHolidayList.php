@@ -68,13 +68,13 @@ class VacReqObservedHolidayList extends ListAbstract {
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      *      )
      **/
-    private $institution;
+    private $institutions;
 
 
 
     function __construct($author=null) {
         parent::__construct($author);
-        $this->institution = new ArrayCollection();
+        $this->institutions = new ArrayCollection();
     }
 
 
@@ -113,9 +113,9 @@ class VacReqObservedHolidayList extends ListAbstract {
     /**
      * @return mixed
      */
-    public function getInstitution()
+    public function getInstitutions()
     {
-        return $this->institution;
+        return $this->institutions;
     }
 
     /**
@@ -123,14 +123,14 @@ class VacReqObservedHolidayList extends ListAbstract {
      */
     public function addInstitution($institution)
     {
-        if( !$this->institution->contains($institution) ) {
-            $this->institution->add($institution);
+        if( !$this->institutions->contains($institution) ) {
+            $this->institutions->add($institution);
         }
     }
 
     public function removeInstitution($institution)
     {
-        $this->institution->removeElement($institution);
+        $this->institutions->removeElement($institution);
     }
 
     /**
