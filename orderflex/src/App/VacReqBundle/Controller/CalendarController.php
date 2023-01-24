@@ -22,6 +22,7 @@ use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\VacReqBundle\Form\VacReqHolidayFilterType;
 use App\VacReqBundle\Util\ICalendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
@@ -234,14 +235,115 @@ class CalendarController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
-        echo "holidays count=".count($holidays)."<br>";
+        //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
+        //echo "holidays count=".count($holidays)."<br>";
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder("holiday");
+
+        //process filter
+        $params = array();
+        $filterRes = $this->processFilter( $dql, $request, $params );
+        $filterform = $filterRes['form'];
+        $dqlParameters = $filterRes['dqlParameters'];
+        $filtered = $filterRes['filtered'];
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'holiday.holidayDate', //createDate
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
+        );
+
+        $paginator  = $this->container->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            $paginationParams
+        );
+
+        $dql->select('holiday');
+
+        $title = 'Holiday Dates';
+
+        $routeName = $request->get('_route');
 
         return array(
-            'holidays' => $holidays
+            'filterform' => $filterform->createView(),
+            'pagination' => $pagination,
+            'title' => $title,
+            'routename' => $routeName,
+            //'pageTitle' => $pageTitle,
+            //'holidays' => $holidays
             //'vacreqfilter' => $filterform->createView(),
             //'groupId' => $groupId
         );
+    }
+    public function processFilter( $dql, $request, $params ) {
+        //$currentUser = $this->getUser();
+        //$vacreqUtil = $this->container->get('vacreq_util');
+
+        $dqlParameters = array();
+        $filterRes = array();
+        $filtered = false;
+
+        $em = $this->getDoctrine()->getManager();
+        $params['em'] = $em;
+
+        //get request type
+        $params['years'] = date("Y");
+        $requestParams = $request->query->all();
+        $requestTypeId = null;
+        if( array_key_exists("filter", $requestParams) ) {
+            if( array_key_exists("years", $requestParams["filter"]) ) {
+                $requestTypeId = $requestParams["filter"]["years"];
+            }
+        }
+
+//        //tooltip for Academic Year:
+//        //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
+//        $previousYear = date("Y") - 1;
+//        $currentYear = date("Y");
+//        $yearRange = $previousYear."-".$currentYear;
+//        $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
+//        $params['academicYearTooltip'] = $academicYearTooltip;
+
+        //create filter form
+        $filterform = $this->createForm(VacReqHolidayFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+
+        $filterform->handleRequest($request);
+
+        //echo "<pre>";
+        //print_r($filterform['startdate']);
+        //echo "</pre>";
+
+        if( $filterform->has('years') ) {
+            $years = $filterform['years']->getData();
+        } else {
+            $years = null;
+        }
+
+        if( $years ) {
+            //$instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
+            //$dql->andWhere(implode(" AND ", $instWhereArr)); //OR
+        }
+
+        $filterRes['form'] = $filterform;
+        $filterRes['dqlParameters'] = $dqlParameters;
+        $filterRes['filtered'] = $filtered;
+
+        return $filterRes;
     }
 
     /**

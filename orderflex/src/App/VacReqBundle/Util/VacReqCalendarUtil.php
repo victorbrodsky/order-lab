@@ -152,7 +152,7 @@ class VacReqCalendarUtil
 
 
                 //Store in VacReqHolidayList
-                //exit('creating new VacReqHolidayList');
+                exit('creating new VacReqHolidayList');
                 $holidayEntity = new VacReqHolidayList($user);
 
                 //set default values
@@ -254,6 +254,16 @@ class VacReqCalendarUtil
         return NULL;
     }
 
+    public function getHolidayListByYear( $year, $country ) {
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder('holidays');
+
+        $dql->leftJoin("holidays.country", "country");
+
+        
+
+        return NULL;
+    }
 
 
 
