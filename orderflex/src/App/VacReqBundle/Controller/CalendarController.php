@@ -233,6 +233,23 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $filterParams = $request->query->all();
+        if( count($filterParams) == 0 ) {
+            $thisYear = date("Y");
+            $nextYear = (int)$thisYear + 1;
+            //$endYear = date("Y+1");
+            //$defaultYears = array('2021','2022');
+            $defaultYears = "$thisYear,$nextYear";
+            return $this->redirect( $this->generateUrl('vacreq_holiday_dates',
+                array(
+                    'filter[years]' => $defaultYears, //$currentYear,
+                    //'filter[years]' => +2020%2C+2021
+                    //'filter[endYear]' => $endYear,
+                )
+            ));
+        }
+
+
         $em = $this->getDoctrine()->getManager();
 
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
@@ -258,7 +275,7 @@ class CalendarController extends OrderAbstractController
 
         $paginationParams = array(
             'defaultSortFieldName' => 'holiday.holidayDate', //createDate
-            'defaultSortDirection' => 'DESC',
+            'defaultSortDirection' => 'ASC',
             'wrap-queries'=>true //use "doctrine/orm": "v2.4.8". ~2.5 causes error: Cannot select distinct identifiers from query with LIMIT and ORDER BY on a column from a fetch joined to-many association. Use walker.
         );
 
@@ -299,14 +316,15 @@ class CalendarController extends OrderAbstractController
         $params['em'] = $em;
 
         //get request type
-        $params['years'] = date("Y");
-        $requestParams = $request->query->all();
-        $requestTypeId = null;
-        if( array_key_exists("filter", $requestParams) ) {
-            if( array_key_exists("years", $requestParams["filter"]) ) {
-                $requestTypeId = $requestParams["filter"]["years"];
-            }
-        }
+//        $params['startYear'] = date("Y");
+//        $params['endYear'] = date("Y")+1;
+//        $requestParams = $request->query->all();
+//        $requestTypeId = null;
+//        if( array_key_exists("filter", $requestParams) ) {
+//            if( array_key_exists("years", $requestParams["filter"]) ) {
+//                $requestTypeId = $requestParams["filter"]["years"];
+//            }
+//        }
 
 //        //tooltip for Academic Year:
 //        //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
@@ -337,6 +355,15 @@ class CalendarController extends OrderAbstractController
         if( $years ) {
             //$instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
             //$dql->andWhere(implode(" AND ", $instWhereArr)); //OR
+            //$dql->andWhere("holiday.holidayDate IN (" . implode(",", $years) . ")");
+            $yearsArr = explode(",",$years);
+            $yearWhereArr = array();
+            //TODO: datetime: $year set to 00-00-00
+            foreach($yearsArr as $year) {
+                $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
+            }
+            $yearWhereStr = implode(" OR ",$yearWhereArr);
+            $dql->andWhere($yearWhereStr);
         }
 
         $filterRes['form'] = $filterform;

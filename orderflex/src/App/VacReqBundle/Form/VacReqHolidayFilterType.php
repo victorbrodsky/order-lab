@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -44,14 +45,30 @@ class VacReqHolidayFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('years', DateType::class, array(
-            'label' => false, //'Start Date/Time:',
+        $builder->add('years', TextType::class, array(
+            'label' => false, //'Start Date',
             'required' => false,
-            'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy',
-            'html5' => false,
-            'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Holiday Year', 'title'=>'Holiday Year', 'data-toggle'=>'tooltip')
+            //'data' => $startDates, //$this->params['defaultStartDates'],
+            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
         ));
+
+//        $builder->add('years', DateType::class, array(
+//            'label' => false, //'Start Date/Time:',
+//            'required' => false,
+//            //'widget' => 'single_text',
+//            //'format' => 'MM/dd/yyyy',
+//            //'html5' => false,
+//            'attr' => array('class' => 'datepicker-only-year datepicker-multidate form-control', 'placeholder' => 'Years', 'title'=>'Years', 'data-toggle'=>'tooltip')
+//        ));
+
+//        $builder->add('endYear', DateType::class, array(
+//            'label' => false, //'Start Date/Time:',
+//            'required' => false,
+//            'widget' => 'single_text',
+//            'format' => 'MM/dd/yyyy',
+//            'html5' => false,
+//            'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'End Year', 'title'=>'End Year', 'data-toggle'=>'tooltip')
+//        ));
 
     }
 
