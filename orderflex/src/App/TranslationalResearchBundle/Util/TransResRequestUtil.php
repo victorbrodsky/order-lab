@@ -4650,6 +4650,8 @@ class TransResRequestUtil
         $dueTotal = 0;
         $subsidyTotal = 0;
         $productServices = 0;
+        $totalProductRequested = 0;
+        $totalProductCompleted = 0;
 
         foreach( $ids as $requestId ) {
 
@@ -4689,7 +4691,7 @@ class TransResRequestUtil
 
             $data[4] = $this->getProgressStateLabelByName($transResRequest->getProgressState());
 
-            $data[5] = $this->getBillingStateLabelByName($transResRequest->getProgressState());
+            $data[5] = $this->getBillingStateLabelByName($transResRequest->getBillingState());
 
             $productInfoArr = $this->getTransResRequestProductInfoArr($transResRequest);
 //                'totalProducts' => $totalProducts,
@@ -4755,11 +4757,11 @@ class TransResRequestUtil
 
             //'Subsidy',  //13 //new
             $invoiceSubsidy = $invoicesInfos['subsidy'];
-            if( $invoiceSubsidy === null ) {
-                $invoiceSubsidy = 0;
-            }
+            //if( $invoiceSubsidy === null ) {
+            //    $invoiceSubsidy = 0;
+            //}
             $data[13] = $invoiceSubsidy;
-            $subsidyTotal = $subsidyTotal + 0;
+            $subsidyTotal = $subsidyTotal + $invoiceSubsidy;
 
 //            'Products/Services',                //12 - M
 //                'totalProducts' => $totalProducts,
@@ -4839,6 +4841,9 @@ class TransResRequestUtil
                     $thisProductSpoutRow = WriterEntityFactory::createRowFromArray($thisProductData, $regularStyle);
                     $writer->addRow($thisProductSpoutRow);
 
+                    $totalProductRequested = $totalProductRequested + $productInfo["productRequested"];
+                    $totalProductCompleted = $totalProductCompleted + $productInfo["productCompleted"];
+
                 }
 
             } else {
@@ -4874,8 +4879,8 @@ class TransResRequestUtil
         $data[12] = $dueTotal;
         $data[13] = $subsidyTotal;
         $data[14] = $productServices;
-        $data[15] = NULL;
-        $data[16] = NULL;
+        $data[15] = $totalProductRequested;
+        $data[16] = $totalProductCompleted;
         $data[17] = NULL;
         $data[18] = NULL;
         //$writer->addRowWithStyle($data,$footerStyle);
