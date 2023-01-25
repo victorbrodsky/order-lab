@@ -114,7 +114,10 @@ class DefaultController extends OrderAbstractController
         //$tokenStorage->setToken(null); //testing
         //$sitename = 'vacreq';
         //return $this->redirect($this->generateUrl($sitename . '_logout'));
-        
+
+        //$salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+        //exit('$salt='.$salt);
+
         return array('sitename'=>$this->getParameter('vacreq.sitename'));
     }
 

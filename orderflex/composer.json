@@ -19,7 +19,6 @@
         "knplabs/knp-snappy-bundle": "^1.7",
         "knplabs/knp-time-bundle": "^1.17",
         "oneup/uploader-bundle": "^3.1",
-        "paragonie/random_compat": "^2",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "^1.22",
         "sensio/framework-extra-bundle": "^6.2",
@@ -96,7 +95,6 @@
         }
     },
     "replace": {
-        "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
         "symfony/polyfill-php81": "*",
