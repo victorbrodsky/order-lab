@@ -1085,6 +1085,7 @@ class GoogleSheetManagement {
         $logger->notice("downloadFile: mimeType=".$mimeType);
         //echo "mimeType=$mimeType <br>";
         $fileId = $file->getId();
+        //echo "fileId=[$fileId], mimeType=[$mimeType] <br>";
 
         if( $mimeType == 'application/vnd.google-apps.spreadsheet' ) {
             //Google Sheets - works
@@ -1099,7 +1100,8 @@ class GoogleSheetManagement {
         elseif( $mimeType == 'application/pdf' ) {
             //PDF - works
             //echo "Case: PDF <br>";
-            $mimeType = 'application/pdf';
+            $mimeType = 'application/pdf'; //not working anymore?
+            return $this->downloadGeneralFile($service,$file,$sendEmail); //working for pdf
         }
         elseif( $mimeType == 'application/msword' ) {
             //Word - works with get file (downloadGeneralFile), not working with export
@@ -1158,15 +1160,6 @@ class GoogleSheetManagement {
               )
             );
 
-            if(0) {
-                header('Content-Type: ' . $file->getMimeType());
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                echo $response;
-                exit();
-            }
-
             return $response;
         } catch(Exception $e) {
             //echo "Error Message: " . $e;
@@ -1223,19 +1216,45 @@ class GoogleSheetManagement {
         //Test files are located in FellowshipApplication/TestFiles
         $files = array(
             "17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu", //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
-            "1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+
+            //"1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+            "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o", //PDF
+
             "1fd-vjpmQKdVXDiAhEzcP-5fFDZEl2kKW67nrRrtfcWg", //"17inHCzyZNyZ98E_ZngUjkUKWNp3D2J8Ri2TZWR5Oi1k"; //Google Docs
             "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o", //"1beJAujYBEwPdi3RI7YAb4a8NcrBj5l0vhY6Zsa01Ohg"; //Google Sheets
-            "1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image
+
+            //"1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image 1b_tL1MDsS6fCysBcP6X7MjhdS9jryiYf
+            "1pg88L0cf8Lgv1bsLaAdJGqAZewYgHzVJ" //Image
         );
+
+//        $files1 = array(
+//            //"17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu", //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
+//
+//            //"1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+//            //"1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o", //PDF
+//
+//            //"1fd-vjpmQKdVXDiAhEzcP-5fFDZEl2kKW67nrRrtfcWg", //"17inHCzyZNyZ98E_ZngUjkUKWNp3D2J8Ri2TZWR5Oi1k"; //Google Docs
+//            //"1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o", //"1beJAujYBEwPdi3RI7YAb4a8NcrBj5l0vhY6Zsa01Ohg"; //Google Sheets
+//            //"1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image 1b_tL1MDsS6fCysBcP6X7MjhdS9jryiYf
+//            "1pg88L0cf8Lgv1bsLaAdJGqAZewYgHzVJ" //Image
+//        );
 
         $service = $this->getGoogleService();
 
         $res = array();
         foreach($files as $fileId) {
             $file = $this->getFileById($fileId,$service);
+            //dump($file);
+            //exit('111');
             if( $file ) {
-                $res[] = $this->downloadFile($service, $file, null, false);
+                //dump($file);
+                //exit('222');
+                $resFile = $this->downloadFile($service, $file, null, false);
+                //dump($resFile);
+                //exit('111');
+                if( $resFile ) {
+                    $res[] = $resFile;
+                }
             }
         }
 
