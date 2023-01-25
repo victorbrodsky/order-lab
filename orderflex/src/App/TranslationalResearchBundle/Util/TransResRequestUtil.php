@@ -4621,13 +4621,13 @@ class TransResRequestUtil
                 'Completion Status',                        //4 - E
                 'Billing Status',                           //5 - F
 
-                'Work Request Value (billed)',              //6 //new
-                'Invoice Total (Total amount of the most recent invoice Paid + Due + Positive Subsidy)', //7 - G
+                'Value (Billed value of work request)',     //6 //new
+                'Total (Total amount of the most recent invoice: Paid + Due + Positive Subsidy)', //7 - G
                 'Invoices',                                 //8 - H
                 'Invoice Status',                           //9 - I
-                'Invoice Charge (Total amount of the most recent invoice charge to the customer)', //10
-                'Invoice Paid',                             //11 - K
-                'Invoice Due',                              //12 - L
+                'Charge', //10
+                'Paid',                             //11 - K
+                'Due',                              //12 - L
                 'Subsidy',                                  //13 //new
 
                 'Products/Services Category',               //14 - M
