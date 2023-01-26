@@ -79,6 +79,7 @@ class VacReqHolidayList extends ListAbstract {
     }
 
 
+    
     /**
      * @return mixed
      */

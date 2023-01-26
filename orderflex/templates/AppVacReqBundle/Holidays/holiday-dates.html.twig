@@ -105,7 +105,7 @@
                 </td>
 
                 <td>
-                    {{ entity.getHolidayDate()|date('m/d/Y') }}
+                    {{ entity.getHolidayDate()|date('m/d/Y',false) }}
                 </td>
 
                 <td>
@@ -134,12 +134,16 @@
 
                             <li>
                                 {#{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}#}
-                                <a href="" target="_blank">Edit</a>
+                                <a href="{{ path('vacreqholidays_edit', { 'id': entity.id }) }}" target="_blank">Edit</a>
+                                {#<a href="" target="_blank">Edit</a>#}
                             </li>
 
                             {#<li>#}
                                 {#<a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>#}
                             {#</li>#}
+                            {#/order/index_dev.php/directory/admin/change-list-element-type/disabled/1/vacreqholidays#}
+                            {#platform_list_manager_element_change_type#}
+                            {#/change-list-element-type/{type}/{entityId}/{pathbase}/{postpath}#}
 
                         </ul>
                     </div>
@@ -150,6 +154,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {#vacreqholidays_new#}
+    <a href="{{ path('vacreqholidays_new') }}" target="_blank">Create a new holiday</a>
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
