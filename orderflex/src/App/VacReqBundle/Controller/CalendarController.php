@@ -476,6 +476,8 @@ class CalendarController extends OrderAbstractController
         $checkedHolidays = $request->get('checkedHolidays');
         //echo "checkedHolidays=".count($checkedHolidays)."<br>";
 
+        //TODO: process unchecked
+        //TODO: confirmed success holidays
         if( !$checkedHolidays ) {
             $response->setContent("Nothing to do: Holidays are not selected");
             return $response;
