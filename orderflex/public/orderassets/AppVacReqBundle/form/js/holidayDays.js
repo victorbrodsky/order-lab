@@ -33,3 +33,42 @@ function importHolidayDates(btn) {
         console.log('Error : ' + errorThrown);
     });
 }
+
+function saveObservedHolidays(btn) {
+    console.log("saveObservedHolidays");
+
+    var l = Ladda.create($(btn).get(0));
+    l.start();
+
+    //get checked ids
+    var checkedHolidays = [];
+    var inputElements = document.getElementsByClassName('observed-holidays-checkbox');
+    for(var i=0; inputElements[i]; ++i){
+        if(inputElements[i].checked){
+            checkedHolidays.push(inputElements[i].value);
+        }
+    }
+    console.log("checkedHolidays:",checkedHolidays);
+
+    var url = Routing.generate('vacreq_save_observed_holidays_ajax');
+
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        dataType: 'json',
+        type: "GET",
+        data: {checkedHolidays: checkedHolidays },
+        async: asyncflag
+    }).success(function(response) {
+        console.log(response);
+        if( response == "OK" ) {
+            console.log("response OK");
+        } else {
+            console.log("response not OK");
+        }
+    }).done(function() {
+        l.stop();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+    });
+}

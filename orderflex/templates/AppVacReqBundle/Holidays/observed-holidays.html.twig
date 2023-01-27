@@ -54,18 +54,19 @@
             {#</th>#}
         </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
+        {#data-link="row1" class="rowlink1" causes checkbox click on second time only#}
+        <tbody id="table-body-holidays">
 
         {% for entity in pagination %}
 
             <tr>
 
-                <td>
-                    <input type="checkbox" id="observed-{{ entity.id }}" name="observed-{{ entity.id }}" value="">
+                <td class="rowlink-skip">
+                    <input type="checkbox" class="observed-holidays-checkbox" id="observed-{{ entity.id }}" name="observed-{{ entity.id }}" value="{{ entity.id }}">
                 </td>
 
                 <td data-toggle="tooltip" data-container="body">
-                    <a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    <a href="{{ path('vacreqholidays_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
                 </td>
 
                 <td>
@@ -78,7 +79,7 @@
 
                 <td>
                     {% for institution in entity.getInstitutions() %}
-                        {{ institution.getOptimalName() }};
+                        {{ institution.getOptimalName() }}{% if not loop.last %};{% endif %}
                     {% endfor %}
                 </td>
 
@@ -120,7 +121,7 @@
     </table>
 
     {#<a href="{{ path('vacreqholidays_new') }}" target="_blank">Save</a>#}
-    <input type="submit" class="btn" value="Save">
+    <input type="submit" class="btn" value="Save" onclick="saveObservedHolidays(this);">
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
@@ -143,10 +144,7 @@
 
 {% block additionaljs %}
 
-    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/interview-modal.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/rank-modal.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/status-notification-modal.js') }}"></script>#}
-    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/send-notification-emails.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>
 
     <script language="Javascript">
 
@@ -165,6 +163,32 @@
                 clearBtn: true
             });
         });
+
+//        function saveObservedHolidays() {
+//            console.log("saveObservedHolidays");
+//            //get checked ids
+//            var checkedHolidays = [];
+//            var inputElements = document.getElementsByClassName('observed-holidays-checkbox');
+//            for(var i=0; inputElements[i]; ++i){
+//                if(inputElements[i].checked){
+//                    checkedHolidays.push(inputElements[i].value);
+//                }
+//            }
+//            console.log("checkedHolidays:",checkedHolidays);
+//
+//            var url = Routing.generate('vacreq_save_observed_holidays_ajax');
+//
+//            $.ajax({
+//                url: url,
+//                timeout: _ajaxTimeout,
+//                dataType: 'json',
+//                async: thisAsyncflag,
+//                data: {checkedHolidays: checkedHolidays},
+//            }).done(function(data) {
+//                resData = data;
+//            });
+//        }
+
 
     </script>
 

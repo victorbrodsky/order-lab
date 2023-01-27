@@ -460,5 +460,50 @@ class CalendarController extends OrderAbstractController
         return $this->redirect( $this->generateUrl('vacreq_holiday_dates') );
     }
 
+    /**
+     * @Route("/save-observed-holidays-ajax/", name="vacreq_save_observed_holidays_ajax", methods={"GET"}, options={"expose"=true})
+     */
+    public function saveObservedHolidaysAjaxAction(Request $request)
+    {
+
+        if ( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $response = new Response();
+
+        $checkedHolidays = $request->get('checkedHolidays');
+        //echo "checkedHolidays=".count($checkedHolidays)."<br>";
+
+        dump($checkedHolidays);
+
+        $count = 0;
+
+        foreach($checkedHolidays as $checkedHolidayId) {
+            //echo $count . ": checkedHoliday=" . $checkedHoliday . "<br>";
+            $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($checkedHolidayId);
+            $name = $holiday->getName();
+            $holidayName = $holiday->getHolidayName();
+            $holidayDate = $holiday->getHolidayDate();
+            $holidayDateStr = "N/A";
+            if( $holidayDate ) {
+                $holidayDateStr = $holidayDate->format('d-m-Y');
+            }
+            $country = $holiday->getCountry();
+            $institutions = $holiday->getInstitutions();
+            echo $count . ": $name, $holidayName, $holidayDateStr, $country, ".$holiday->getInstitutionsStr()." <br>";
+        }
+
+        exit("count=".$count);
+
+        //parse the downloaded file and add the retrieved US holiday titles and dates
+        // for the next 20 years from the downloaded file to the Platform List Manager
+        // into a new Platform list manager list titled “Holidays”
+
+        $response->setContent("OK");
+        return $response;
+    }
+
 
 }

@@ -142,6 +142,21 @@ class VacReqHolidayList extends ListAbstract {
         }
     }
 
+    public function getInstitutionsStr()
+    {
+        //return $this->getInstitutions().toString();
+        $res = "";
+        $numItems = count($this->getInstitutions());
+        $i = 0;
+        foreach($this->getInstitutions() as $inst) {
+            $res = $res . $inst->getName();
+            if(++$i !== $numItems) {
+                $res = $res . ", ";
+            }
+        }
+        return $res;
+    }
+
     /**
      * @return mixed
      */
