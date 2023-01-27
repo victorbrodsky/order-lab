@@ -72,6 +72,13 @@ class VacReqHolidayList extends ListAbstract {
     private $institutions;
 
 
+    /**
+     * Observed, used, active holiday
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $observed;
+
+
 
     function __construct($author=null) {
         parent::__construct($author);
@@ -172,6 +179,24 @@ class VacReqHolidayList extends ListAbstract {
     {
         $this->holidayName = $holidayName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObserved()
+    {
+        return $this->observed;
+    }
+
+    /**
+     * @param mixed $observed
+     */
+    public function setObserved($observed)
+    {
+        $this->observed = $observed;
+    }
+
+    
 
 
 

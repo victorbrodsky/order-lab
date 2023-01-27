@@ -55,7 +55,7 @@ class VacReqCalendarUtil
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
         $testing = false;
-        $testing = true;
+        //$testing = true;
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
@@ -96,19 +96,23 @@ class VacReqCalendarUtil
 
                 $holidayName = $holiday->getName();
                 //$holiday = '2021-01-01';
+                //2022-05-25 => $year = 2022
+                list($year, $month, $day) = explode('-', $holiday);
+                $uniqueNameStr = $year."-".$holidayName; //year-holidayName
+                //exit("uniqueNameStr=$uniqueNameStr");
 
                 if( $holiday && $holidayName ) {
                     //ok
                 } else {
-                    //Skip
+                    //Skip if name or date empty
                     continue;
                 }
 
                 //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
                 $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-title-year-country");
                 if( $thisHoliday ) {
-                    echo "thisHoliday exists: same-title-year-country <br>";
-                    exit();
+                    //echo "thisHoliday exists: same-title-year-country <br>";
+                    //exit();
                     //Update date
                     $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
                     //echo "holidayDate=".$holidayDate->format("Y-m-d");
@@ -128,8 +132,8 @@ class VacReqCalendarUtil
                 //Update if (b) holiday date AND country are the same, but the holiday title is different.
                 $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-date-country");
                 if( $thisHoliday ) {
-                    echo "thisHoliday exists: same-date-country <br>";
-                    exit();
+                    //echo "thisHoliday exists: same-date-country <br>";
+                    //exit();
                     //Update title
                     $thisHoliday->setHolidayName($holidayName);
 
@@ -147,17 +151,28 @@ class VacReqCalendarUtil
                 //echo "thisHoliday count=".count($thisHoliday)."<br>";
                 if( $thisHoliday ) {
                     $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+
+                    if(0) {
+                        //fix: update title to format: name-year
+                        //exit("update uniqueNameStr=$uniqueNameStr");
+                        $thisHoliday->setName($uniqueNameStr);
+                        if( !$testing ) {
+                            $this->em->flush();
+                        }
+                    }
+
                     continue;
                 }
 
 
                 //Store in VacReqHolidayList
-                exit('creating new VacReqHolidayList');
+                //exit('creating new VacReqHolidayList');
                 $holidayEntity = new VacReqHolidayList($user);
 
                 //set default values
-                $nameStr = $holiday.": ".$holidayName;
-                $holidayEntity = $userSecUtil->setDefaultList($holidayEntity,0,$user,$nameStr);
+                //$nameStr = $holiday.": ".$holidayName;
+
+                $holidayEntity = $userSecUtil->setDefaultList($holidayEntity,0,$user,$uniqueNameStr);
                 $holidayEntity->setType('user-added');
 
                 $holidayEntity->setHolidayName($holidayName);

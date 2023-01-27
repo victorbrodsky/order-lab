@@ -59,10 +59,21 @@
 
         {% for entity in pagination %}
 
+            {% set checked = "" %}
+            {% if entity.getObserved() %}
+                {% set checked = "checked" %}
+            {% endif %}
+
             <tr>
 
                 <td class="rowlink-skip">
-                    <input type="checkbox" class="observed-holidays-checkbox" id="observed-{{ entity.id }}" name="observed-{{ entity.id }}" value="{{ entity.id }}">
+                    <input type="checkbox"
+                           class="observed-holidays-checkbox"
+                           id="observed-{{ entity.id }}"
+                           name="observed-{{ entity.id }}"
+                           value="{{ entity.id }}"
+                           {{ checked }}
+                    >
                 </td>
 
                 <td data-toggle="tooltip" data-container="body">
@@ -121,11 +132,20 @@
     </table>
 
     {#<a href="{{ path('vacreqholidays_new') }}" target="_blank">Save</a>#}
-    <input type="submit" class="btn" value="Save" onclick="saveObservedHolidays(this);">
+    <input type="submit" class="btn btn-primary" value="Save" onclick="saveObservedHolidays(this);">
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}
     </div>
+
+    <p>
+    <div class="alert alert-success" role="alert" style="display: none;">
+        Success
+    </div>
+    <div class="alert alert-danger" role="alert" style="display: none;">
+        Error
+    </div>
+    </p>
 
 
 {% endblock %}

@@ -37,6 +37,13 @@ function importHolidayDates(btn) {
 function saveObservedHolidays(btn) {
     console.log("saveObservedHolidays");
 
+    $('.alert-success').hide();
+    $('.alert-success').html("");
+    $('.alert-danger').hide();
+    $('.alert-danger').html("");
+
+    //$('.alert-success').show();
+
     var l = Ladda.create($(btn).get(0));
     l.start();
 
@@ -55,7 +62,7 @@ function saveObservedHolidays(btn) {
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        dataType: 'json',
+        //dataType: 'json',
         type: "GET",
         data: {checkedHolidays: checkedHolidays },
         async: asyncflag
@@ -63,12 +70,19 @@ function saveObservedHolidays(btn) {
         console.log(response);
         if( response == "OK" ) {
             console.log("response OK");
+            $('.alert-success').show();
+            $('.alert-success').html("Successfully saved");
         } else {
-            console.log("response not OK");
+            $('.alert-danger').show();
+            $('.alert-danger').html(response);
+            console.log("response not OK: "+response);
         }
     }).done(function() {
         l.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
+        l.stop();
+        $('.alert-danger').show();
+        $('.alert-danger').html(errorThrown);
         console.log('Error : ' + errorThrown);
     });
 }

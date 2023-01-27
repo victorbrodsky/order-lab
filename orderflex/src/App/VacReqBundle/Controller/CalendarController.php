@@ -476,14 +476,25 @@ class CalendarController extends OrderAbstractController
         $checkedHolidays = $request->get('checkedHolidays');
         //echo "checkedHolidays=".count($checkedHolidays)."<br>";
 
-        dump($checkedHolidays);
+        if( !$checkedHolidays ) {
+            $response->setContent("Nothing to do: Holidays are not selected");
+            return $response;
+        }
 
+        //dump($checkedHolidays);
+
+        $errorArr = array();
         $count = 0;
 
         foreach($checkedHolidays as $checkedHolidayId) {
             //echo $count . ": checkedHoliday=" . $checkedHoliday . "<br>";
             $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($checkedHolidayId);
-            $name = $holiday->getName();
+            if( !$holiday ) {
+                $errorArr[] = "VacReqHolidayList not found by ID $checkedHolidayId";
+                continue;
+            }
+
+            $name = $holiday->getName(); //name + date
             $holidayName = $holiday->getHolidayName();
             $holidayDate = $holiday->getHolidayDate();
             $holidayDateStr = "N/A";
@@ -492,16 +503,35 @@ class CalendarController extends OrderAbstractController
             }
             $country = $holiday->getCountry();
             $institutions = $holiday->getInstitutions();
-            echo $count . ": $name, $holidayName, $holidayDateStr, $country, ".$holiday->getInstitutionsStr()." <br>";
+            //echo $count . ": $name, $holidayName, $holidayDateStr, $country, ".$holiday->getInstitutionsStr()." <br>";
+
+            //add "active" flag to holiday list
+            $holiday->setObserved(true);
+            //$errorArr[] = "Saved $holiday";
+            $em->flush();
+
+            //$count++;
+
+            //save the checked holiday names only (NOT dates) in a new list
+            // in Platform List Manager titled “Observed holidays” in step E above.
+//            $observedHoliday = $em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->find($name);
+//            if( $observedHoliday ) {
+//                //update
+//                $observedHoliday->setHolidayName($holidayName);
+//                //$observedHoliday->setHolidayDate($holidayDate);
+//            }
+
         }
 
-        exit("count=".$count);
+        //exit("count=".$count);
 
-        //parse the downloaded file and add the retrieved US holiday titles and dates
-        // for the next 20 years from the downloaded file to the Platform List Manager
-        // into a new Platform list manager list titled “Holidays”
+        if( count($errorArr) ) {
+            $res = "NOTOK: ".implode("; ",$errorArr);
+        } else {
+            $res = "OK";
+        }
 
-        $response->setContent("OK");
+        $response->setContent($res);
         return $response;
     }
 

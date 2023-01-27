@@ -114,10 +114,7 @@
 
                 <td>
                     {% for institution in entity.getInstitutions() %}
-                        {{ institution.getOptimalName() }}
-                        {% if not loop.last %}
-                            ;
-                        {% endif %}
+                        {{ institution.getOptimalName() }}{% if not loop.last %};{% endif %}
                     {% endfor %}
                 </td>
 
