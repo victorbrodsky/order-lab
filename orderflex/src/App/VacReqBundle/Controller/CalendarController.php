@@ -475,10 +475,16 @@ class CalendarController extends OrderAbstractController
 
         $checkedHolidays = $request->get('checkedHolidays');
         //echo "checkedHolidays=".count($checkedHolidays)."<br>";
+        if( !$checkedHolidays ) {
+            $checkedHolidays = array();
+        }
 
         $unCheckedHolidays = $request->get('unCheckedHolidays');
         //echo "unCheckedHolidays=".count($unCheckedHolidays)."<br>";
         //exit(1);
+        if( !$unCheckedHolidays ) {
+            $unCheckedHolidays = array();
+        }
 
         //TODO: process unchecked
         //TODO: confirmed success holidays
@@ -501,23 +507,25 @@ class CalendarController extends OrderAbstractController
                 continue;
             }
 
-            $name = $holiday->getName(); //name + date
-            $holidayName = $holiday->getHolidayName();
+            //$name = $holiday->getName(); //name + date
+            //$holidayName = $holiday->getHolidayName();
             $holidayDate = $holiday->getHolidayDate();
             $holidayDateStr = "N/A";
             if( $holidayDate ) {
                 $holidayDateStr = $holidayDate->format('d-m-Y');
             }
-            $country = $holiday->getCountry();
-            $institutions = $holiday->getInstitutions();
+            //$country = $holiday->getCountry();
+            //$institutions = $holiday->getInstitutions();
             //echo $count . ": $name, $holidayName, $holidayDateStr, $country, ".$holiday->getInstitutionsStr()." <br>";
 
-            //add "active" flag to holiday list
-            $holiday->setObserved(true);
-            //$errorArr[] = "Saved $holiday";
-            $em->flush();
+            $originalObserved = $holiday->getObserved();
 
-            $noteArr[] = $holiday->getHolidayName()." (".$holidayDateStr.")"." is set to active";
+            if( $originalObserved != true ) {
+                $holiday->setObserved(true);
+                //$errorArr[] = "Saved $holiday";
+                $em->flush();
+                $noteArr[] = $holiday->getHolidayName() . " (" . $holidayDateStr . ")" . " is set to Active";
+            }
 
             //$count++;
 
@@ -538,31 +546,43 @@ class CalendarController extends OrderAbstractController
                 $errorArr[] = "VacReqHolidayList not found by unchecked ID $unCheckedHolidayId";
                 continue;
             }
-            $holiday->setObserved(false);
-            //$errorArr[] = "Saved $holiday";
-            $em->flush();
 
-            $holidayDate = $holiday->getHolidayDate();
-            $holidayDateStr = "N/A";
-            if( $holidayDate ) {
-                $holidayDateStr = $holidayDate->format('d-m-Y');
+            $originalObserved = $holiday->getObserved();
+
+            if( $originalObserved != false ) {
+                $holiday->setObserved(false);
+                //$errorArr[] = "Saved $holiday";
+                $em->flush();
+
+                $holidayDate = $holiday->getHolidayDate();
+                $holidayDateStr = "N/A";
+                if ($holidayDate) {
+                    $holidayDateStr = $holidayDate->format('d-m-Y');
+                }
+
+                $noteArr[] = $holiday->getHolidayName() . " (" . $holidayDateStr . ")" . " is set to Inactive";
             }
-
-            $noteArr[] = $holiday->getHolidayName()." (".$holidayDateStr.")"." is set to inactive";
         }
 
         //exit("count=".$count);
+        //$errorArr[] = "Test error";
 
         $res = array();
         if( count($errorArr) ) {
-            $res['flag'] = "NOTOK: ".implode("; ",$errorArr);
-            $res['note'] = "Error: ".implode("; ",$errorArr);
+            $res['flag'] = "NOTOK";
+            $res['note'] = "Error: ".implode("<br>",$errorArr);
         } else {
+            $note = implode("<br>",$noteArr);
+            if( $note ) {
+                $note = "Successfully saved<br>".$note;
+            } else {
+                $note = "No changes has been made";
+            }
             $res['flag'] = "OK";
-            $res['note'] = "Successfully Saved<br>".implode("; ",$errorArr);
+            $res['note'] = $note;
         }
 
-        $response->setContent($res);
+        $response->setContent(json_encode($res));
         return $response;
     }
 

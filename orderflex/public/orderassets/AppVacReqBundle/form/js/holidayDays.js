@@ -66,20 +66,21 @@ function saveObservedHolidays(btn) {
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
-        //dataType: 'json',
+        dataType: 'json',
         type: "GET",
         data: {checkedHolidays: checkedHolidays, unCheckedHolidays: unCheckedHolidays },
         async: asyncflag
     }).success(function(response) {
         console.log(response);
-        if( response.flag == "OK" ) {
-            console.log("response OK");
+        console.log("flag=["+response['flag']+"]");
+        if( response['flag'] == "OK" ) {
+            console.log("response OK: "+response['note']);
             $('.alert-success').show();
-            $('.alert-success').html(response.note);
+            $('.alert-success').html(response['note']);
         } else {
             $('.alert-danger').show();
-            $('.alert-danger').html(response.note);
-            console.log("response not OK: "+response.note);
+            $('.alert-danger').html(response['note']);
+            console.log("response not OK: "+response['note']);
         }
     }).done(function() {
         l.stop();
