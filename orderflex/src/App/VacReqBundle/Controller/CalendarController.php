@@ -476,23 +476,28 @@ class CalendarController extends OrderAbstractController
         $checkedHolidays = $request->get('checkedHolidays');
         //echo "checkedHolidays=".count($checkedHolidays)."<br>";
 
+        $unCheckedHolidays = $request->get('unCheckedHolidays');
+        //echo "unCheckedHolidays=".count($unCheckedHolidays)."<br>";
+        //exit(1);
+
         //TODO: process unchecked
         //TODO: confirmed success holidays
-        if( !$checkedHolidays ) {
-            $response->setContent("Nothing to do: Holidays are not selected");
-            return $response;
-        }
+        //if( !$checkedHolidays ) {
+        //    $response->setContent("Nothing to do: Holidays are not selected");
+        //    return $response;
+        //}
 
         //dump($checkedHolidays);
 
         $errorArr = array();
-        $count = 0;
+        $noteArr = array();
+        //$count = 0;
 
         foreach($checkedHolidays as $checkedHolidayId) {
             //echo $count . ": checkedHoliday=" . $checkedHoliday . "<br>";
             $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($checkedHolidayId);
             if( !$holiday ) {
-                $errorArr[] = "VacReqHolidayList not found by ID $checkedHolidayId";
+                $errorArr[] = "VacReqHolidayList not found by checked ID $checkedHolidayId";
                 continue;
             }
 
@@ -512,6 +517,8 @@ class CalendarController extends OrderAbstractController
             //$errorArr[] = "Saved $holiday";
             $em->flush();
 
+            $noteArr[] = $holiday->getHolidayName()." (".$holidayDateStr.")"." is set to active";
+
             //$count++;
 
             //save the checked holiday names only (NOT dates) in a new list
@@ -525,12 +532,34 @@ class CalendarController extends OrderAbstractController
 
         }
 
+        foreach($unCheckedHolidays as $unCheckedHolidayId) {
+            $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($unCheckedHolidayId);
+            if( !$holiday ) {
+                $errorArr[] = "VacReqHolidayList not found by unchecked ID $unCheckedHolidayId";
+                continue;
+            }
+            $holiday->setObserved(false);
+            //$errorArr[] = "Saved $holiday";
+            $em->flush();
+
+            $holidayDate = $holiday->getHolidayDate();
+            $holidayDateStr = "N/A";
+            if( $holidayDate ) {
+                $holidayDateStr = $holidayDate->format('d-m-Y');
+            }
+
+            $noteArr[] = $holiday->getHolidayName()." (".$holidayDateStr.")"." is set to inactive";
+        }
+
         //exit("count=".$count);
 
+        $res = array();
         if( count($errorArr) ) {
-            $res = "NOTOK: ".implode("; ",$errorArr);
+            $res['flag'] = "NOTOK: ".implode("; ",$errorArr);
+            $res['note'] = "Error: ".implode("; ",$errorArr);
         } else {
-            $res = "OK";
+            $res['flag'] = "OK";
+            $res['note'] = "Successfully Saved<br>".implode("; ",$errorArr);
         }
 
         $response->setContent($res);

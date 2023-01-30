@@ -49,13 +49,17 @@ function saveObservedHolidays(btn) {
 
     //get checked ids
     var checkedHolidays = [];
+    var unCheckedHolidays = [];
     var inputElements = document.getElementsByClassName('observed-holidays-checkbox');
     for(var i=0; inputElements[i]; ++i){
         if(inputElements[i].checked){
             checkedHolidays.push(inputElements[i].value);
+        } else {
+            unCheckedHolidays.push(inputElements[i].value);
         }
     }
     console.log("checkedHolidays:",checkedHolidays);
+    console.log("unCheckedHolidays:",unCheckedHolidays);
 
     var url = Routing.generate('vacreq_save_observed_holidays_ajax');
 
@@ -64,18 +68,18 @@ function saveObservedHolidays(btn) {
         timeout: _ajaxTimeout,
         //dataType: 'json',
         type: "GET",
-        data: {checkedHolidays: checkedHolidays },
+        data: {checkedHolidays: checkedHolidays, unCheckedHolidays: unCheckedHolidays },
         async: asyncflag
     }).success(function(response) {
         console.log(response);
-        if( response == "OK" ) {
+        if( response.flag == "OK" ) {
             console.log("response OK");
             $('.alert-success').show();
-            $('.alert-success').html("Successfully saved");
+            $('.alert-success').html(response.note);
         } else {
             $('.alert-danger').show();
-            $('.alert-danger').html(response);
-            console.log("response not OK: "+response);
+            $('.alert-danger').html(response.note);
+            console.log("response not OK: "+response.note);
         }
     }).done(function() {
         l.stop();
