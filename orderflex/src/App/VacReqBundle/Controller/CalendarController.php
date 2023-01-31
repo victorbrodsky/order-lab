@@ -432,6 +432,9 @@ class CalendarController extends OrderAbstractController
         }
 
         $filterParams = $request->query->all();
+        dump($filterParams);
+        exit('111');
+        //pass years on form submit
         if( count($filterParams) == 0 ) {
             $thisYear = date("Y");
             $defaultYears = $thisYear;
@@ -484,6 +487,14 @@ class CalendarController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // ... do your form processing, like saving the Task and Tag entities
             //exit('submitted');
+
+            //process holidays
+            foreach($holidays as $holiday) {
+                echo $holiday->getId().": $holiday <br>";
+            }
+            exit('submitted');
+
+            //$em->flush();
 
             //Flash
             $this->addFlash(
