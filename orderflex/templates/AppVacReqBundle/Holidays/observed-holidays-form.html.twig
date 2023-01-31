@@ -1,0 +1,248 @@
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <form action="{{ path(routename) }}" method="get" class="well form-search">
+
+        <p>
+        <div class="row">
+
+            <div class="col-xs-2">
+                {{ form_row(filterform.years, {'attr': {'placeholder': 'Years'}}) }}
+            </div>
+
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
+
+        </div>
+        </p>
+
+        {{ form_rest(filterform) }}
+
+    </form>
+
+    {{ form_start(form) }}
+        <table class="records_list table table-hover table-condensed text-left table-bordered">
+            <thead>
+            <tr>
+                <th>Observed Holiday</th>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Institutions</th>
+                <th>Country</th>
+            </tr>
+            </thead>
+                {#data-link="row1" class="rowlink1" causes checkbox click on second time only#}
+                <tbody id="table-body-holidays">
+                    {% for holiday in form.holidays.children %}
+                        <tr>
+                            <td>{{ form_widget(holiday.observed) }}</td>
+                            <td>{{ holiday.vars.data.id }}</td>
+                            <td>{{ holiday.vars.data.holidayDate|date('m/d/Y',false) }}</td>
+                            <td>{{ holiday.vars.data.holidayName }}</td>
+                            <td>{{ form_widget(holiday.institutions) }}</td>
+                            <td>{{ holiday.vars.data.country }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+        </table>
+
+        {{ form_widget(form.save) }}
+    {{ form_end(form) }}
+
+    {% if 0 %}
+    <table class="records_list table table-hover table-condensed text-left table-bordered">
+        <thead>
+        <tr>
+            <th>Observed Holiday</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'ID', 'holiday.id') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Date', 'holiday.holidayDate') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Name', 'holiday.holidayName') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>
+
+            <th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>
+
+            {#<th style="border-left: 2px solid gray;">#}
+                {#Actions#}
+            {#</th>#}
+        </tr>
+        </thead>
+        {#data-link="row1" class="rowlink1" causes checkbox click on second time only#}
+        <tbody id="table-body-holidays">
+
+        {% for entity in pagination %}
+
+            {% set checked = "" %}
+            {% if entity.getObserved() %}
+                {% set checked = "checked" %}
+            {% endif %}
+
+            <tr>
+
+                <td class="rowlink-skip">
+                    <input type="checkbox"
+                           class="observed-holidays-checkbox"
+                           id="observed-{{ entity.id }}"
+                           name="observed-{{ entity.id }}"
+                           value="{{ entity.id }}"
+                           {{ checked }}
+                    >
+                </td>
+
+                <td data-toggle="tooltip" data-container="body">
+                    <a href="{{ path('vacreqholidays_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                </td>
+
+                <td>
+                    {{ entity.getHolidayDate()|date('m/d/Y',false) }}
+                </td>
+
+                <td>
+                    {{ entity.getHolidayName() }}
+                </td>
+
+                <td>
+                    {% for institution in entity.getInstitutions() %}
+                        {{ institution.getOptimalName() }}{% if not loop.last %};{% endif %}
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{ entity.country }}
+                </td>
+
+
+                {#Action#}
+                {#<td class="rowlink-skip" style="border-left: 2px solid gray;">#}
+                    {#<div class="btn-group">#}
+                        {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                            {#Action <span class="caret"></span>#}
+                        {#</button>#}
+
+                        {#<ul class="dropdown-menu dropdown-menu-right">#}
+
+                            {#<li>#}
+                                {#{{ path(vacreq_sitename~'_showuser', { 'id': entity.user.id }) }}#}
+                                {#<a href="{{ path('vacreqholidays_edit', { 'id': entity.id }) }}" target="_blank">Edit</a>#}
+                                {#<a href="" target="_blank">Edit</a>#}
+                            {#</li>#}
+
+                            {#<li>#}
+                                {#<a href="{{ path(vacreq_sitename~'_floating_show', { 'id': entity.id }) }}" target="_blank">View/Edit</a>#}
+                            {#</li>#}
+                            {#/order/index_dev.php/directory/admin/change-list-element-type/disabled/1/vacreqholidays#}
+                            {#platform_list_manager_element_change_type#}
+                            {#/change-list-element-type/{type}/{entityId}/{pathbase}/{postpath}#}
+
+                        {#</ul>#}
+                    {#</div>#}
+                {#</td>#}
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {#<a href="{{ path('vacreqholidays_new') }}" target="_blank">Save</a>#}
+    {#<input type="submit" class="btn btn-primary" value="Save" onclick="saveObservedHolidays(this);">#}
+
+    {#<div class="navigation">#}
+        {#{{ knp_pagination_render(pagination) }}#}
+    {#</div>#}
+
+    <p>
+    <div class="alert alert-success" role="alert" style="display: none;">
+        Success
+    </div>
+    <div class="alert alert-danger" role="alert" style="display: none;">
+        Error
+    </div>
+    </p>
+
+
+{% endblock %}
+
+
+
+
+{#{% block additionaljs %}#}
+    {#<script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>#}
+{#{% endblock %}#}
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fontawesome/css/all.min.css') }}" />#}
+{#{% endblock %}#}
+
+
+{% block additionaljs %}
+
+    <script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip({html: true});
+
+            var target = ".datepicker-only-year";
+            var datefilter = $(target).datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto', //'auto top'
+                multidate: true,
+                clearBtn: true
+            });
+        });
+
+//        function saveObservedHolidays() {
+//            console.log("saveObservedHolidays");
+//            //get checked ids
+//            var checkedHolidays = [];
+//            var inputElements = document.getElementsByClassName('observed-holidays-checkbox');
+//            for(var i=0; inputElements[i]; ++i){
+//                if(inputElements[i].checked){
+//                    checkedHolidays.push(inputElements[i].value);
+//                }
+//            }
+//            console.log("checkedHolidays:",checkedHolidays);
+//
+//            var url = Routing.generate('vacreq_save_observed_holidays_ajax');
+//
+//            $.ajax({
+//                url: url,
+//                timeout: _ajaxTimeout,
+//                dataType: 'json',
+//                async: thisAsyncflag,
+//                data: {checkedHolidays: checkedHolidays},
+//            }).done(function(data) {
+//                resData = data;
+//            });
+//        }
+
+
+    </script>
+
+{% endblock %}
+
