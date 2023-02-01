@@ -19,7 +19,9 @@ namespace App\VacReqBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,6 +39,13 @@ class VacReqHolidayType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
+
+        echo "years=".$this->params['years']."<br>";
+
+        $builder->add('years', HiddenType::class, [
+            'data' => $this->params['years'],
+            'mapped' => false
+        ]);
 
         $builder->add('holidays', CollectionType::class, [
             'entry_type' => VacReqSingleHolidayType::class,
