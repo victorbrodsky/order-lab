@@ -4130,7 +4130,7 @@ Pathology and Laboratory Medicine",
         $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
 
         //filter out Pathology Fellowship Applicants
-        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)";
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
 
         if( $criteriastr ) {
             $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
@@ -4209,7 +4209,7 @@ Pathology and Laboratory Medicine",
         $totalcriteriastr = "u.keytype IS NOT NULL AND u.primaryPublicUserId != 'system'";
 
         //filter out Pathology Fellowship Applicants
-        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)";
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
 
         if( $criteriastr ) {
             $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";

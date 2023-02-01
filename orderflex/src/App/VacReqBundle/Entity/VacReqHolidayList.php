@@ -197,7 +197,22 @@ class VacReqHolidayList extends ListAbstract {
     }
 
     
+    public function getString() {
+        $dateStr = "N/A";
+        if( $this->getHolidayDate() ) {
+            $dateStr = $this->getHolidayDate()->format('d-m-Y');
+        }
 
+        $observedStr = "N/A";
+        if( $this->getObserved() === true ) {
+            $observedStr = "Yes";
+        }
+        if( $this->getObserved() === false ) {
+            $observedStr = "No";
+        }
+
+        return $this->getId() . " " . $this->getName() . ": date=" . $dateStr . ", name=" . $this->getHolidayName() . ", active=" . $observedStr;
+    }
 
 
 }

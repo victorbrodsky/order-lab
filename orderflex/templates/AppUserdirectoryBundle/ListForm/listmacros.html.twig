@@ -1338,6 +1338,20 @@
         {{ formmacros.field(form.noteForCarryOverDays) }}
     {% endif %}
 
+    {#VacReqHolidayList#}
+    {% if form.holidayDate is defined %}
+        {{ formmacros.field(form.holidayDate) }}
+    {% endif %}
+    {% if form.holidayName is defined %}
+        {{ formmacros.field(form.holidayName) }}
+    {% endif %}
+    {% if form.country is defined %}
+        {{ formmacros.field(form.country) }}
+    {% endif %}
+    {% if form.observed is defined %}
+        {{ formmacros.field(form.observed) }}
+    {% endif %}
+
 
 {% endmacro %}
 

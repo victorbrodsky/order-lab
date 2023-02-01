@@ -24,6 +24,7 @@ use App\TranslationalResearchBundle\Form\VisualInfoType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use App\VacReqBundle\Entity\VacReqApprovalTypeList;
+use App\VacReqBundle\Entity\VacReqHolidayList;
 use Doctrine\ORM\EntityRepository;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
@@ -680,7 +681,7 @@ class GenericListType extends AbstractType
                         ->leftJoin("list.infos", "infos")
                         ->leftJoin("list.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         ->orderBy("infos.displayName","ASC");
                 },
             ));
@@ -1519,6 +1520,45 @@ class GenericListType extends AbstractType
             ));
         }//VacReqApprovalTypeList
 
+        if( $this->params['entity'] instanceof VacReqHolidayList ) {
+            if (method_exists($this->params['entity'], 'getHolidayDate')) {
+//            $builder->add('holidayDate',null,array(
+//                'label' => "Holiday Date:",
+//                'required' => false,
+//                'attr' => array('class'=>'form-control'),
+//            ));
+                $builder->add('holidayDate', null, array(
+                    'label' => "Holiday Date:",
+                    'required' => false,
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
+                    'html5' => false,
+                    'attr' => array('class' => 'datepicker form-control allow-future-date'),
+                ));
+            }
+            if (method_exists($this->params['entity'], 'getHolidayName')) {
+                $builder->add('holidayName', null, array(
+                    'label' => "Holiday Name:",
+                    'required' => false,
+                    'attr' => array('class' => 'form-control'),
+                ));
+            }
+            if (method_exists($this->params['entity'], 'getCountry')) {
+                $builder->add('country', null, array(
+                    'label' => "Country:",
+                    'required' => false,
+                    'attr' => array('class' => 'form-control'),
+                ));
+            }
+            if (method_exists($this->params['entity'], 'getObserved')) {
+                $builder->add('observed', null, array(
+                    'label' => "Observed:",
+                    'required' => false,
+                    'attr' => array('class' => 'form-control'),
+                ));
+            }
+        }
+
     }
 
     public function commonChartFields($builder) {
@@ -1532,7 +1572,7 @@ class GenericListType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
@@ -1624,7 +1664,7 @@ class GenericListType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
@@ -1663,7 +1703,7 @@ class GenericListType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
             },

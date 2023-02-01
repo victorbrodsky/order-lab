@@ -6053,8 +6053,14 @@ class TransResUtil
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+
+                    //->where("((employmentType.name != 'Pathology Fellowship Applicant' AND employmentType.name != 'Pathology Residency Applicant') OR employmentType.id IS NULL)")
+                    //->where("employmentType.name != 'Pathology Residency Applicant' OR employmentType.name != 'Pathology Residency Applicant' OR employmentType.id IS NULL")
+                    //->where("employmentType.name NOT LIKE 'Pathology%Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+
                     ->andWhere("employmentStatus.terminationDate IS NULL")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
@@ -6065,7 +6071,8 @@ class TransResUtil
             return $er->createQueryBuilder('list')
                 ->leftJoin("list.employmentStatus", "employmentStatus")
                 ->leftJoin("employmentStatus.employmentType", "employmentType")
-                ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                //->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
                 //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                 ->leftJoin("list.infos", "infos")
                 ->orderBy("infos.displayName","ASC");

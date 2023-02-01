@@ -115,8 +115,8 @@ class UserDatesController extends OrderAbstractController
         //$dql->where("(employmentType.name != 'Pathology Fellowship Applicant' AND employmentType.name != 'Pathology Residency Applicant') OR employmentType.id IS NULL");
         //$dql->andWhere("(user.createdby != 'resapp_migration' OR user.createdby != 'csv-eras')");
 
-        //$whereStr = "(employmentType.name != 'Pathology Fellowship Applicant' AND employmentType.name != 'Pathology Residency Applicant')";
-        $whereStr = "(employmentType.name NOT LIKE 'Pathology % Applicant')";
+        $whereStr = "(employmentType.name != 'Pathology Fellowship Applicant')";
+        //$whereStr = "(employmentType.name NOT LIKE 'Pathology % Applicant')";
         $whereStr = $whereStr . " OR  employmentType.id IS NULL";
         $dql->where($whereStr);
 

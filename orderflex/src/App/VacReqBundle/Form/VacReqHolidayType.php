@@ -57,10 +57,12 @@ class VacReqHolidayType extends AbstractType
             'allow_delete' => false,
         ]);
 
-        $builder->add('save', SubmitType::class, [
-            'label' => 'Save',
-            'attr' => ['class' => 'btn btn-primary'],
-        ]);
+        //if( $this->params['saveBtn'] ) {
+            $builder->add('save', SubmitType::class, [
+                'label' => 'Save',
+                'attr' => ['class' => 'btn btn-primary'],
+            ]);
+        //}
 
     }
 
@@ -69,6 +71,7 @@ class VacReqHolidayType extends AbstractType
         $resolver->setDefaults(array(
             'form_custom_value' => null,
             //'csrf_protection' => false,
+            //'allow_extra_fields' => true
         ));
     }
 

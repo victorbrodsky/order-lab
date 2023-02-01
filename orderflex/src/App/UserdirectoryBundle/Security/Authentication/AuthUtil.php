@@ -1898,8 +1898,8 @@ class AuthUtil {
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-        $dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        //$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
 
         $params = array();
         $keytypeStr = "";

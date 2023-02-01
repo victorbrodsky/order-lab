@@ -274,7 +274,7 @@ class FloatingDayController extends OrderAbstractController
         //filter out system user
         $dqlFilterUser->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'");
         //filter out Pathology Fellowship Applicants
-        $dqlFilterUser->andWhere("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
+        $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
         $queryFilterUser = $em->createQuery($dqlFilterUser);

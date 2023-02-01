@@ -75,7 +75,7 @@ class InvoiceType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                         ->leftJoin("list.infos", "infos")
                         ->orderBy("infos.displayName", "ASC");
@@ -93,7 +93,7 @@ class InvoiceType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName", "ASC");
@@ -111,7 +111,7 @@ class InvoiceType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName", "ASC");
@@ -131,7 +131,7 @@ class InvoiceType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->leftJoin("list.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                         ->leftJoin("list.infos", "infos")
                         ->orderBy("infos.displayName", "ASC");

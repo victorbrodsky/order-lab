@@ -477,107 +477,32 @@ class CalendarController extends OrderAbstractController
         //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
         //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
         $params = array(
-            'years'=>$years
+            'years' => $years,
+            //'saveBtn' => true
         );
         $form = $this->createForm(VacReqHolidayType::class,
             ['holidays' => $holidays],
             array(
-                'method' => 'POST',
-                'form_custom_value' => $params
-            )
-        );
-
-        //$form->handleRequest($request);
-        ///////////////// EOF form /////////////////////
-
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            // ... do your form processing, like saving the Task and Tag entities
-//            //exit('submitted');
-//
-//            $years = $form['years']->getData();
-//            echo '$years='.$years."<br>";
-//            echo "holidays count=".count($holidays)."<br>";
-//
-//            //process holidays
-//            foreach($holidays as $holiday) {
-//                echo $holiday->getId().": $holiday <br>";
-//            }
-//            exit('submitted');
-//
-//            //$em->flush();
-//
-//            //Flash
-//            $this->addFlash(
-//                'notice',
-//                "Successfully saved"
-//            );
-//
-//            return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
-//        }
-
-        $title = 'Observed Holidays';
-
-        $routeName = $request->get('_route');
-
-        return array(
-            'form' => $form->createView(),
-            'filterform' => $filterform->createView(),
-            'holidays' => $holidays,
-            'title' => $title,
-            'routename' => $routeName,
-        );
-    }
-
-    /**
-     * @Route("/observed-holidays/", name="vacreq_observed_holidays_submit", methods={"POST"})
-     * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
-     */
-    public function observedHolidaysFormSubmitAction(Request $request) {
-
-        if(
-            false == $this->isGranted('ROLE_VACREQ_ADMIN')
-        ) {
-            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
-        }
-
-        echo 'POST <br>';
-
-        //$em = $this->getDoctrine()->getManager();
-
-        ///////////////// form /////////////////////
-        //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
-        //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
-        $holidays = array();
-        $params = array(
-            'years'=>null //$years
-        );
-        $form = $this->createForm(VacReqHolidayType::class,
-            ['holidays' => $holidays],
-            array(
-                'method' => 'POST',
+                'method' => 'GET',
                 'form_custom_value' => $params
             )
         );
 
         $form->handleRequest($request);
-        ///////////////// EOF form /////////////////////
+        /////////////// EOF form /////////////////////
 
-        if( !$form->isSubmitted() ) {
-            exit('form is not submitted');
-        }
-        if( !$form->isValid() ) {
-            exit('form is not valid');
-        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            // ... do your form processing, like saving the Task and Tag entities
+            //exit('submitted');
 
-        if( $form->isSubmitted() && $form->isValid() ) {
             $years = $form['years']->getData();
             echo '$years='.$years."<br>";
+            //echo "holidays count=".count($holidays)."<br>";
 
-            $em = $this->getDoctrine()->getManager();
-            $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
-            $dql = $repository->createQueryBuilder("holiday");
+            //$repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+            //$dql = $repository->createQueryBuilder("holiday");
 
-            $dqlParameters = array();
+            //$dqlParameters = array();
 
             if( $years ) {
                 $yearsArr = explode(",",$years);
@@ -599,13 +524,10 @@ class CalendarController extends OrderAbstractController
             $holidays = $query->getResult();
             echo "holidays count=".count($holidays)."<br>";
 
-            echo "holidays count=".count($holidays)."<br>";
-
-            exit('submitted');
-
             //process holidays
             foreach($holidays as $holiday) {
-                echo $holiday->getId().": $holiday <br>";
+                //echo $holiday->getId().": $holiday <br>";
+                echo $holiday->getString()."<br>";
             }
             exit('submitted');
 
@@ -620,20 +542,129 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
         }
 
-        return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
+        $title = 'Observed Holidays';
 
-//        $title = 'Observed Holidays';
-//
-//        $routeName = $request->get('_route');
-//
-//        return array(
-//            'form' => $form->createView(),
-//            //'filterform' => $filterform->createView(),
-//            'holidays' => $holidays,
-//            'title' => $title,
-//            'routename' => $routeName,
-//        );
+        $routeName = $request->get('_route');
+
+        return array(
+            'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
+            'holidays' => $holidays,
+            'title' => $title,
+            'routename' => $routeName,
+        );
     }
+
+//    /**
+//     * @Route("/observed-holidays/", name="vacreq_observed_holidays_submit", methods={"POST"})
+//     * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
+//     */
+//    public function observedHolidaysFormSubmitAction(Request $request) {
+//
+//        if(
+//            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+//        ) {
+//            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+//        }
+//
+//        echo 'POST <br>';
+//
+//        //$em = $this->getDoctrine()->getManager();
+//
+//        ///////////////// form /////////////////////
+//        //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
+//        //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
+//        $holidays = array();
+//        $params = array(
+//            'years' => null, //$years
+//            'saveBtn' => true
+//        );
+//        $form = $this->createForm(VacReqHolidayType::class,
+//            ['holidays' => $holidays],
+//            array(
+//                'method' => 'POST',
+//                'form_custom_value' => $params
+//            )
+//        );
+//
+//        $form->handleRequest($request);
+//        ///////////////// EOF form /////////////////////
+//
+//        if( !$form->isSubmitted() ) {
+//            exit('form is not submitted');
+//        }
+//        if( !$form->isValid() ) {
+//            $errorstring = (string) $form->getErrors(true, false);
+//            echo "error=".$errorstring."<br>";
+//            exit('form is not valid');
+//        }
+//
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//            $years = $form['years']->getData();
+//            //$years = '2023';
+//            echo '$years='.$years."<br>";
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+//            $dql = $repository->createQueryBuilder("holiday");
+//
+//            $dqlParameters = array();
+//
+//            if( $years ) {
+//                $yearsArr = explode(",",$years);
+//                $yearWhereArr = array();
+//                foreach($yearsArr as $year) {
+//                    $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
+//                }
+//                $yearWhereStr = implode(" OR ",$yearWhereArr);
+//                $dql->andWhere($yearWhereStr);
+//            }
+//
+//            $query = $em->createQuery($dql);
+//            //echo "query=".$query->getSql()."<br>";
+//
+//            if( count($dqlParameters) > 0 ) {
+//                $query->setParameters( $dqlParameters );
+//            }
+//
+//            $holidays = $query->getResult();
+//            echo "holidays count=".count($holidays)."<br>";
+//
+//            echo "holidays count=".count($holidays)."<br>";
+//
+//            //exit('submitted');
+//
+//            //process holidays
+//            foreach($holidays as $holiday) {
+//                echo $holiday->getString()."<br>";
+//            }
+//            exit('submitted');
+//
+//            //$em->flush();
+//
+//            //Flash
+//            $this->addFlash(
+//                'notice',
+//                "Successfully saved"
+//            );
+//
+//            return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
+//        }
+//
+//        return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
+//
+////        $title = 'Observed Holidays';
+////
+////        $routeName = $request->get('_route');
+////
+////        return array(
+////            'form' => $form->createView(),
+////            //'filterform' => $filterform->createView(),
+////            'holidays' => $holidays,
+////            'title' => $title,
+////            'routename' => $routeName,
+////        );
+//    }
 
     /**
      * @Route("/update-holiday-dates/", name="vacreq_update_holiday_dates", methods={"GET"})

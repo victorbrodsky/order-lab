@@ -385,6 +385,7 @@ class ListController extends OrderAbstractController
         if( method_exists($entityClass,'getInstitutions') ) {
             $dql->leftJoin("ent.institutions", "institutions");
             $dql->addGroupBy('institutions');
+            $useWalker = true;
         }
 
         if( method_exists($entityClass,'getCollaborationType') ) {
