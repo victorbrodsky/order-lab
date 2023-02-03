@@ -211,17 +211,16 @@ class VacReqHolidayList extends ListAbstract {
             $observedStr = "No";
         }
 
-        $inst = "N/A";
-
-
-        return $this->getId() . " " . $this->getName() .
-        ": date=" . $dateStr . ", name=" .
+        return "ID#".$this->getId() . ", " . $this->getName() .
+        ": Date=" . $dateStr . "; Name=" .
         $this->getHolidayName() .
-        ", inst=" . $this->getInstitutionsStr().
-        ", active=" . $observedStr;
+        "; Institution(s)=" . $this->getInstitutionsStr().
+        "; Active=" . $observedStr;
     }
 
-    
-
+    public function getEntityHash() {
+        $hash = hash("sha1",$this->getString());
+        return $hash;
+    }
 
 }

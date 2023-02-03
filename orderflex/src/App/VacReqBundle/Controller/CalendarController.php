@@ -333,7 +333,7 @@ class CalendarController extends OrderAbstractController
             $years = $filterYears;
         }
 
-        echo "years=$years <br>";
+        //echo "years=$years <br>";
         if( $years ) {
             $yearsArr = explode(",",$years);
             $yearWhereArr = array();
@@ -440,6 +440,8 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $user = $this->getUser();
+
         $filterQueryParams = $request->query->all();
         //dump($filterQueryParams);
         //exit('111');
@@ -492,6 +494,12 @@ class CalendarController extends OrderAbstractController
         $holidays = $query->getResult();
         //echo "holidays count=".count($holidays)."<br>";
 
+        //TODO: get original serialized $holidays
+        $originalHolidays = array();
+        foreach($holidays as $holiday) {
+            $originalHolidays[$holiday->getId()] = $holiday->getEntityHash();
+        }
+
         ///////////////// form /////////////////////
         //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
         //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
@@ -515,20 +523,36 @@ class CalendarController extends OrderAbstractController
             //exit('submitted');
 
             //echo "holidays count=".count($holidays)."<br>";
+            $res = array();
 
             //process holidays
+            $processedHolidays = array();
             foreach($holidays as $holiday) {
                 //echo $holiday->getId().": $holiday <br>";
                 echo $holiday->getString()."<br>";
+                //TODO: get changes by original serialized $holidays
+                if( $originalHolidays[$holiday->getId()] != $holiday->getEntityHash() ) {
+                    $res[] = "Updated " . $holiday->getString();
+                    $processedHolidays[] = $holiday;
+                }
             }
             //exit('submitted');
 
-            $em->flush();
+            $resStr = "No changes";
+            if( count($res) > 0 ) {
+                $em->flush();
+                $resStr = "Successfully updated:<br>".implode("<br>",$res);
+
+                //Event Log
+                $eventType = 'Holidays Updated';
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $resStr, $user, $processedHolidays, $request, $eventType);
+            }
 
             //Flash
             $this->addFlash(
                 'notice',
-                "Successfully saved"
+                $resStr
             );
 
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );

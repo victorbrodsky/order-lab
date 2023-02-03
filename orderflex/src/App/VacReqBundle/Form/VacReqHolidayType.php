@@ -40,7 +40,7 @@ class VacReqHolidayType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        echo "years=".$this->params['years']."<br>";
+        //echo "years=".$this->params['years']."<br>";
 
         $builder->add('years', HiddenType::class, [
             'data' => $this->params['years'],
