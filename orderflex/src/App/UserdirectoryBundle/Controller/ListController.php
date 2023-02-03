@@ -567,6 +567,7 @@ class ListController extends OrderAbstractController
             //,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
         );
         //echo "list count=".count($entities)."<br>";
+        //echo "getTotalItemCount=".$entities->getTotalItemCount()."<br>";
         //exit();
 
         ///////////// check if show "create a new entity" link //////////////

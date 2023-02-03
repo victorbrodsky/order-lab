@@ -440,6 +440,10 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $vacreqUtil = $this->container->get('vacreq_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
         $filterQueryParams = $request->query->all();
@@ -457,8 +461,6 @@ class CalendarController extends OrderAbstractController
                 )
             ));
         }
-
-        $em = $this->getDoctrine()->getManager();
 
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
@@ -503,10 +505,34 @@ class CalendarController extends OrderAbstractController
         ///////////////// form /////////////////////
         //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
         //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
+
         $params = array(
+            'em' => $em,
             'years' => $years,
             //'saveBtn' => true
         );
+
+        //$organizationalInstitutions = $vacreqUtil->getAllGroupsByUser($user);
+        $organizationalInstitutions = array();
+        $defaultInstitutions = $userSecUtil->getSiteSettingParameter('institutions','vacreq');
+        $defaultInstitutionsArray = array();
+        if( count($defaultInstitutions) > 0 ) {
+            $defaultInstitutionsArray = $defaultInstitutions->toArray();
+        }
+        $organizationalInstitutions = array_merge($organizationalInstitutions,$defaultInstitutionsArray);
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
+        $vacreqInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        $organizationalInstitutions = array_merge($organizationalInstitutions,$vacreqInstitutions);
+        //echo "orgInst=".count($organizationalInstitutions)."<br>";
+        //foreach($organizationalInstitutions as $organizationalInstitution) {
+        //    echo $organizationalInstitution->getId().": ".$organizationalInstitution."<br>";
+        //}
+        $params['organizationalInstitutions'] = $organizationalInstitutions; //$userServiceUtil->flipArrayLabelValue($organizationalInstitutions);   //flipped
+
         $form = $this->createForm(VacReqHolidayType::class,
             ['holidays' => $holidays],
             array(
@@ -539,13 +565,14 @@ class CalendarController extends OrderAbstractController
             //exit('submitted');
 
             $resStr = "No changes";
-            if( count($res) > 0 ) {
+            $updatedHolidays = count($res);
+            if( $updatedHolidays > 0 ) {
                 $em->flush();
-                $resStr = "Successfully updated:<br>".implode("<br>",$res);
+                $resStr = "Successfully updated ".$updatedHolidays." holiday(s)".":<br>".implode("<br>",$res);
 
                 //Event Log
                 $eventType = 'Holidays Updated';
-                $userSecUtil = $this->container->get('user_security_utility');
+                //$userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $resStr, $user, $processedHolidays, $request, $eventType);
             }
 

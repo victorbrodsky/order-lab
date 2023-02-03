@@ -161,6 +161,18 @@ class VacReqCalendarUtil
                         }
                     }
 
+                    if(0) {
+                        if( count($thisHoliday->getInstitutions()) == 0 ) {
+                            $thisHoliday->setInstitutions($defaultInstitutions);
+                            $res[] = "Add institutions to holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                            $countUpdated++;
+
+                            if( !$testing ) {
+                                $this->em->flush();
+                            }
+                        }
+                    }
+
                     continue;
                 }
 
