@@ -305,7 +305,7 @@ class CalendarController extends OrderAbstractController
             //'groupId' => $groupId
         );
     }
-    public function processFilter( $dql, $request, $params ) {
+    public function processFilter( $dql, $request, $params, $filterYears=null ) {
         $dqlParameters = array();
         $filterRes = array();
         //$filtered = false;
@@ -320,6 +320,8 @@ class CalendarController extends OrderAbstractController
         ));
 
         $filterform->handleRequest($request);
+        //dump($filterform);
+        //exit('222');
 
         if( $filterform->has('years') ) {
             $years = $filterform['years']->getData();
@@ -327,6 +329,11 @@ class CalendarController extends OrderAbstractController
             $years = null;
         }
 
+        if( $filterYears ) {
+            $years = $filterYears;
+        }
+
+        echo "years=$years <br>";
         if( $years ) {
             $yearsArr = explode(",",$years);
             $yearWhereArr = array();
@@ -433,11 +440,12 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $filterParams = $request->query->all();
-        //dump($filterParams);
+        $filterQueryParams = $request->query->all();
+        //dump($filterQueryParams);
         //exit('111');
+
         //pass years on form submit
-        if( count($filterParams) == 0 ) {
+        if( count($filterQueryParams) == 0 ) {
             $thisYear = date("Y");
             $defaultYears = $thisYear;
             return $this->redirect( $this->generateUrl(
@@ -457,8 +465,23 @@ class CalendarController extends OrderAbstractController
         $dql = $repository->createQueryBuilder("holiday");
 
         //process filter
+        $filterYears = null;
+        if( isset($filterQueryParams['holiday']) ) {
+            if( isset($filterQueryParams['holiday']['years']) ) {
+                $filterYears = $filterQueryParams['holiday']['years'];
+                $filterYears = str_replace(' ','',$filterYears);
+            }
+        }
+        echo "filterYears=$filterYears <br>";
+        //exit('111');
+
         $filterParams = array();
-        $filterRes = $this->processFilter( $dql, $request, $filterParams ); //form
+
+//        if( $filterYears ) {
+//            $filterParams['years'] = $filterYears;
+//        }
+
+        $filterRes = $this->processFilter( $dql, $request, $filterParams, $filterYears ); //form
         $filterform = $filterRes['form'];
         $dqlParameters = $filterRes['dqlParameters'];
         $years = $filterRes['years'];
@@ -495,33 +518,36 @@ class CalendarController extends OrderAbstractController
             // ... do your form processing, like saving the Task and Tag entities
             //exit('submitted');
 
-            $years = $form['years']->getData();
-            echo '$years='.$years."<br>";
-            //echo "holidays count=".count($holidays)."<br>";
+            if(0) {
+                $years = $form['years']->getData();
+                //echo '$years='.$years."<br>";
+                //echo "holidays count=".count($holidays)."<br>";
 
-            //$repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
-            //$dql = $repository->createQueryBuilder("holiday");
+                $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+                $dql = $repository->createQueryBuilder("holiday");
 
-            //$dqlParameters = array();
+                $dqlParameters = array();
 
-            if( $years ) {
-                $yearsArr = explode(",",$years);
-                $yearWhereArr = array();
-                foreach($yearsArr as $year) {
-                    $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
+                if ($years) {
+                    $yearsArr = explode(",", $years);
+                    $yearWhereArr = array();
+                    foreach ($yearsArr as $year) {
+                        $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
+                    }
+                    $yearWhereStr = implode(" OR ", $yearWhereArr);
+                    $dql->andWhere($yearWhereStr);
                 }
-                $yearWhereStr = implode(" OR ",$yearWhereArr);
-                $dql->andWhere($yearWhereStr);
+
+                $query = $em->createQuery($dql);
+                //echo "query=".$query->getSql()."<br>";
+
+                if (count($dqlParameters) > 0) {
+                    $query->setParameters($dqlParameters);
+                }
+
+                $holidays = $query->getResult();
             }
 
-            $query = $em->createQuery($dql);
-            //echo "query=".$query->getSql()."<br>";
-
-            if( count($dqlParameters) > 0 ) {
-                $query->setParameters( $dqlParameters );
-            }
-
-            $holidays = $query->getResult();
             echo "holidays count=".count($holidays)."<br>";
 
             //process holidays
