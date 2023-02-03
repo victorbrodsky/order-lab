@@ -211,8 +211,17 @@ class VacReqHolidayList extends ListAbstract {
             $observedStr = "No";
         }
 
-        return $this->getId() . " " . $this->getName() . ": date=" . $dateStr . ", name=" . $this->getHolidayName() . ", active=" . $observedStr;
+        $inst = "N/A";
+
+
+        return $this->getId() . " " . $this->getName() .
+        ": date=" . $dateStr . ", name=" .
+        $this->getHolidayName() .
+        ", inst=" . $this->getInstitutionsStr().
+        ", active=" . $observedStr;
     }
+
+    
 
 
 }

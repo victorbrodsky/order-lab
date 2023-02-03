@@ -464,7 +464,7 @@ class CalendarController extends OrderAbstractController
         $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $dql = $repository->createQueryBuilder("holiday");
 
-        //process filter
+        //process and get years from url modified by filter
         $filterYears = null;
         if( isset($filterQueryParams['holiday']) ) {
             if( isset($filterQueryParams['holiday']['years']) ) {
@@ -472,14 +472,10 @@ class CalendarController extends OrderAbstractController
                 $filterYears = str_replace(' ','',$filterYears);
             }
         }
-        echo "filterYears=$filterYears <br>";
+        //echo "filterYears=$filterYears <br>";
         //exit('111');
 
         $filterParams = array();
-
-//        if( $filterYears ) {
-//            $filterParams['years'] = $filterYears;
-//        }
 
         $filterRes = $this->processFilter( $dql, $request, $filterParams, $filterYears ); //form
         $filterform = $filterRes['form'];
@@ -494,7 +490,7 @@ class CalendarController extends OrderAbstractController
         }
 
         $holidays = $query->getResult();
-        echo "holidays count=".count($holidays)."<br>";
+        //echo "holidays count=".count($holidays)."<br>";
 
         ///////////////// form /////////////////////
         //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
@@ -518,46 +514,16 @@ class CalendarController extends OrderAbstractController
             // ... do your form processing, like saving the Task and Tag entities
             //exit('submitted');
 
-            if(0) {
-                $years = $form['years']->getData();
-                //echo '$years='.$years."<br>";
-                //echo "holidays count=".count($holidays)."<br>";
-
-                $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
-                $dql = $repository->createQueryBuilder("holiday");
-
-                $dqlParameters = array();
-
-                if ($years) {
-                    $yearsArr = explode(",", $years);
-                    $yearWhereArr = array();
-                    foreach ($yearsArr as $year) {
-                        $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
-                    }
-                    $yearWhereStr = implode(" OR ", $yearWhereArr);
-                    $dql->andWhere($yearWhereStr);
-                }
-
-                $query = $em->createQuery($dql);
-                //echo "query=".$query->getSql()."<br>";
-
-                if (count($dqlParameters) > 0) {
-                    $query->setParameters($dqlParameters);
-                }
-
-                $holidays = $query->getResult();
-            }
-
-            echo "holidays count=".count($holidays)."<br>";
+            //echo "holidays count=".count($holidays)."<br>";
 
             //process holidays
             foreach($holidays as $holiday) {
                 //echo $holiday->getId().": $holiday <br>";
                 echo $holiday->getString()."<br>";
             }
-            exit('submitted');
+            //exit('submitted');
 
-            //$em->flush();
+            $em->flush();
 
             //Flash
             $this->addFlash(
