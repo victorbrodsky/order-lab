@@ -132,6 +132,7 @@ class UserSecurityUtil {
         //showToInstitutions: false - if empty or check institutions if not empty
         $hideInstitution = false;
         $showToInstitutions = $preferences->getShowToInstitutions();
+        //echo "showToInstitutions count=".count($showToInstitutions)."<br>";
         if( count($showToInstitutions) > 0 ) {
             $hideInstitution = true;
 
@@ -139,6 +140,7 @@ class UserSecurityUtil {
             $type = null; //all types: AdministrativeTitle, AppointmentTitle, MedicalTitle
             $status = 1;  //1-verified
             $currentUserInstitutions = $currentUser->getInstitutions($type,$status);
+            //echo "currentUserInstitutions count=".count($currentUserInstitutions)."<br>";
             foreach( $currentUserInstitutions as $currentUserInstitution ) {
                 //echo "currentUserInstitution=".$currentUserInstitution."<br>";
                 if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserInstitution) ) {
@@ -149,10 +151,12 @@ class UserSecurityUtil {
 
             //check if $currentUser has one of the Institutional PHI Scope
             $securityUtil = $this->container->get('user_security_utility');
-            $userSiteSettings = $securityUtil->getUserPerSiteSettings($subjectUser);
+            //$userSiteSettings = $securityUtil->getUserPerSiteSettings($subjectUser);
+            $userSiteSettings = $securityUtil->getUserPerSiteSettings($currentUser);
             $currentUserPermittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+            //echo "currentUserPermittedInstitutions count=".count($currentUserPermittedInstitutions)."<br>";
             foreach( $currentUserPermittedInstitutions as $currentUserPermittedInstitution ) {
-                //echo "currentUserInstitution=".$currentUserInstitution."<br>";
+                //echo "currentUserPermittedInstitution=".$currentUserPermittedInstitution."<br>";
                 if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserPermittedInstitution) ) {
                     $hideInstitution = false;
                     break;
@@ -210,7 +214,6 @@ class UserSecurityUtil {
         } else {
             return true; //visible
         }
-
     }
 
 
