@@ -190,15 +190,17 @@ class UserSecurityUtil {
         //exit();
 
         if( $hide ) {
-            exit('hide');
+            //exit('hide');
             //return false;
         }
         if( $hideInstitution ) {
-            exit('hideInstitution');
+            //exit('hideInstitution is true => not visible');
             //return false;
+        } else {
+            //exit('hideInstitution is false => is visble');
         }
         if( $hideRole ) {
-            exit('hideRole');
+            //exit('hideRole');
             //return false;
         }
 
