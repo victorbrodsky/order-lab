@@ -2704,7 +2704,7 @@ class UserController extends OrderAbstractController
         $user = $this->getUser();
         $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
-            exit('2 show User Optimized no permission: isUserVisible is false');
+            //exit('2 show User Optimized no permission: isUserVisible is false');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
