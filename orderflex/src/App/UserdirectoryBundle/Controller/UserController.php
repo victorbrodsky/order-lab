@@ -2687,7 +2687,7 @@ class UserController extends OrderAbstractController
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
         if( false === $this->isGranted('ROLE_USER') ) {
-            exit('1 show User Optimized no permission: no role ROLE_USER');
+            //exit('1 show User Optimized no permission: no role ROLE_USER');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
