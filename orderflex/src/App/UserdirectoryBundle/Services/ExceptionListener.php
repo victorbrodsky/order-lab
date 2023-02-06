@@ -29,7 +29,7 @@ namespace App\UserdirectoryBundle\Services;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class ExceptionListener {
 

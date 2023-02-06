@@ -26,7 +26,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 //service: transres_formnode_util
 

@@ -1,5 +1,5 @@
 security:
-    enable_authenticator_manager: true
+    #enable_authenticator_manager: true #Since symfony/security-bundle 6.2: The "enable_authenticator_manager" option at "security" is deprecated.
 
     # affirmative (default) - This grants access as soon as there is one voter granting access;
     # unanimous - This only grants access once all voters grant access. affirmative, consensus or unanimous

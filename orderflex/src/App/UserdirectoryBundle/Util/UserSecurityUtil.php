@@ -48,7 +48,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 

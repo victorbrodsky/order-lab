@@ -2715,7 +2715,7 @@ class UserController extends OrderAbstractController
                 $siteEmail = array_unique($adminEmails);
             }
             $event = "User $entity is not visible by $user.";
-            $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+            $emailUtil->sendEmail($siteEmail, 'Warning: user not visible', $event);
             ///// EOF send email /////
 
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2921,7 +2921,7 @@ class UserController extends OrderAbstractController
                     $siteEmail = array_unique($adminEmails);
                 }
                 $event = "User $entity is not visible by $user.";
-                $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+                $emailUtil->sendEmail($siteEmail, 'Warning: user not visible', $event);
                 ///// EOF send email /////
 
                 return false;
@@ -3033,7 +3033,7 @@ class UserController extends OrderAbstractController
                 $siteEmail = array_unique($adminEmails);
             }
             $event = "User $entity is not visible by $user.";
-            $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+            $emailUtil->sendEmail($siteEmail, 'Warning: user not visible', $event);
             ///// EOF send email /////
 
             return false;

@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class DashboardUtil

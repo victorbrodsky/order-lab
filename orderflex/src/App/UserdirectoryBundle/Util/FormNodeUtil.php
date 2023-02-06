@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Entity\FormNode;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 //use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 

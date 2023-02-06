@@ -32,7 +32,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 //use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 

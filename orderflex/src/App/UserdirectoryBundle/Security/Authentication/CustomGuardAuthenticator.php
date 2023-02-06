@@ -50,7 +50,8 @@ use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Core\Security;
+//use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 

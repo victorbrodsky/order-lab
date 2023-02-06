@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class RecLetterUtil {
 

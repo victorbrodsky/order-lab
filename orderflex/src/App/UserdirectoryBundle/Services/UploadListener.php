@@ -34,7 +34,7 @@ use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\Event\PreUploadEvent;
 
 use App\UserdirectoryBundle\Entity\Document;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class UploadListener {

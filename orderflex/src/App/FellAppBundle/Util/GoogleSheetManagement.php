@@ -45,7 +45,7 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use App\FellAppBundle\Util\CustomDefaultServiceRequest;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class GoogleSheetManagement {
 

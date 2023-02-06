@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 //use App\TranslationalResearchBundle\Entity\InvoiceItem;
 //use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 //use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 /**

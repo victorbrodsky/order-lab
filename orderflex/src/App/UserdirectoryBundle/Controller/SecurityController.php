@@ -18,11 +18,11 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
-use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
+//use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Security\Authentication\CustomUsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-//use Symfony\Component\Security\Core\Security;
+//use Symfony\Bundle\SecurityBundle\Security;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

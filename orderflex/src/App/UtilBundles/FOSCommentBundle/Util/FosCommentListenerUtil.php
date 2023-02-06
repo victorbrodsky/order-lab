@@ -27,7 +27,7 @@ namespace App\UtilBundles\FOSCommentBundle\Util;
 use App\UtilBundles\FOSCommentBundle\Model\CommentInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 //Derived from FosCommentListener

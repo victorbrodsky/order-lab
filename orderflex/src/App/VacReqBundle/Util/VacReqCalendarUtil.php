@@ -11,7 +11,7 @@ namespace App\VacReqBundle\Util;
 
 use App\VacReqBundle\Entity\VacReqHolidayList;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Yasumi\Yasumi;
 

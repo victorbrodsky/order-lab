@@ -47,7 +47,7 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 

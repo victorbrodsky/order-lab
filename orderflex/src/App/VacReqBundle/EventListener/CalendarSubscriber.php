@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 //Based on tattali/calendar-bundle

@@ -51,7 +51,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 use Twilio\Rest\Client;

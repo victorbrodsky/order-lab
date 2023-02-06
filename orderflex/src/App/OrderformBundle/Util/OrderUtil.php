@@ -39,7 +39,7 @@ use App\OrderformBundle\Entity\DataQualityMrnAcc;
 
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 class OrderUtil {
