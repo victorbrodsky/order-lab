@@ -2705,6 +2705,19 @@ class UserController extends OrderAbstractController
         $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
             //exit('2 show User Optimized no permission: isUserVisible is false');
+
+            ///// send email /////
+            $userSecUtil = $this->container->get('user_security_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if( !$siteEmail ) {
+                $adminEmails = $userSecUtil->getUserEmailsByRole($sitename, "Platform Administrator");
+                $siteEmail = array_unique($adminEmails);
+            }
+            $event = "User $entity is not visible by $user.";
+            $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+            ///// EOF send email /////
+
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -2898,6 +2911,19 @@ class UserController extends OrderAbstractController
             $user = $this->getUser();
             $secUtil = $this->container->get('user_security_utility');
             if( !$secUtil->isUserVisible($entity,$user) ) {
+
+                ///// send email /////
+                $userSecUtil = $this->container->get('user_security_utility');
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                if( !$siteEmail ) {
+                    $adminEmails = $userSecUtil->getUserEmailsByRole($sitename, "Platform Administrator");
+                    $siteEmail = array_unique($adminEmails);
+                }
+                $event = "User $entity is not visible by $user.";
+                $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+                ///// EOF send email /////
+
                 return false;
             }
         }
@@ -2997,6 +3023,19 @@ class UserController extends OrderAbstractController
         $user = $this->getUser();
         $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
+
+            ///// send email /////
+            $userSecUtil = $this->container->get('user_security_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if( !$siteEmail ) {
+                $adminEmails = $userSecUtil->getUserEmailsByRole($sitename, "Platform Administrator");
+                $siteEmail = array_unique($adminEmails);
+            }
+            $event = "User $entity is not visible by $user.";
+            $emailUtil->sendEmail($siteEmail, 'New user record added', $event);
+            ///// EOF send email /////
+
             return false;
         }
 

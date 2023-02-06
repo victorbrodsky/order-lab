@@ -544,7 +544,7 @@ class DefaultController extends OrderAbstractController
      */
     public function someTestingAction() {
 
-        //exit("disabled");
+        exit("disabled");
 
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -715,7 +715,7 @@ class DefaultController extends OrderAbstractController
 //    }
 
     public function loginFabiangTest( $thisUser, $password ) {
-
+        exit('disabled');
         echo "username=[$thisUser], password=[$password] <br>";
 
         $host = 'a.wcmc-ad.net';
@@ -792,7 +792,7 @@ class DefaultController extends OrderAbstractController
 
 
     public function loginTest_php( $thisUser, $password ) {
-
+        exit('disabled');
         //$thisUser = $_SERVER['REMOTE_USER'];
         //$thisUser = "nyptestuser1";
         $thisServer = 'a.wcmc-ad.net';
@@ -872,7 +872,7 @@ class DefaultController extends OrderAbstractController
      * @Route("/email-testing/", name="employees_email_testing")
      */
     public function emailTestingAction() {
-
+        exit('disabled');
 //        $inputEmails = "e1,e2";
 //        $inputEmails = "e1";
 //        $inputEmailArr = explode(',',$inputEmails);
@@ -936,7 +936,7 @@ class DefaultController extends OrderAbstractController
     public function sendEmail(MailerInterface $mailer): Response
     {
         //dump($mailer);
-        //exit('111');
+        exit('111');
 
         $email = (new Email())
             //->from('oli2002@med.cornell.edu')
@@ -966,7 +966,7 @@ class DefaultController extends OrderAbstractController
     public function someTestAction(MailerInterface $mailer): Response
     {
         //dump($mailer);
-        //exit('111');
+        exit('someTestAction disabled');
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $commandName = 'webmonitor.py'; //"independentmonitor";
@@ -984,6 +984,8 @@ class DefaultController extends OrderAbstractController
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+
+        exit("getADUsersAction disabled");
 
         $authUtil = $this->container->get('authenticator_utility');
 
@@ -1033,10 +1035,96 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        exit("checkUsersADAction disabled");
+
         $authUtil = $this->container->get('authenticator_utility');
         $adCount = $authUtil->checkUsersAD(1,true,0);
         
         exit("User count in AD: $adCount");
+    }
+
+
+    /**
+     * @Route("/users-show-to-inst")
+     */
+    public function showUsersWithShowToInstitutionAction()
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //s2id_oleg_userdirectorybundle_user_preferences_showToInstitutions
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos","infos");
+
+        $dql->leftJoin("user.preferences", "preferences");
+        $dql->leftJoin("preferences.showToInstitutions", "showToInstitutions");
+
+        $dql->where("showToInstitutions IS NOT NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setMaxResults(5000);
+        $users = $query->getResult();
+        echo "users with show only to inst count=".count($users)."<br>";
+
+        foreach($users as $user) {
+            //echo $user."<br>";
+            $userPref = $user->getPreferences();
+            if( $userPref ) {
+                //echo "userPrefs count=".count($userPrefs)."<br>";
+                $showInstStr = "";
+                foreach ($userPref->getShowToInstitutions() as $showInst) {
+                    $showInstStr = $showInstStr . ", " . $showInst;
+                }
+                echo $user . " " . $showInstStr . "<br>";
+            }
+        }
+
+        exit('111');
+    }
+    /**
+     * @Route("/show-users-without-phi")
+     */
+    public function showUSersNoPhiScopeAction()
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //s2id_oleg_userdirectorybundle_user_perSiteSettings_permittedInstitutionalPHIScope
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos","infos");
+
+        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
+        $dql->leftJoin("perSiteSettings.permittedInstitutionalPHIScope", "permittedInstitutionalPHIScope");
+
+        $dql->where("permittedInstitutionalPHIScope IS NULL");
+
+        $query = $em->createQuery($dql);
+        //$query->setMaxResults(5000);
+        $users = $query->getResult();
+        echo "users without PHI scope count=".count($users)."<br>";
+
+        foreach($users as $user) {
+            //echo $user."<br>";
+            $userSetting = $user->getPerSiteSettings();
+            if( $userSetting ) {
+                //echo "userPrefs count=".count($userPrefs)."<br>";
+                $phiInstStr = "";
+                foreach ($userSetting->getPermittedInstitutionalPHIScope() as $phiInst) {
+                    $phiInstStr = $phiInstStr . ", " . $phiInst;
+                }
+                echo $user . " " . $phiInstStr . "<br>";
+            }
+        }
+
+        exit('111');
     }
 
 }
