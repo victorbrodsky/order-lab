@@ -2639,7 +2639,7 @@ class UserController extends OrderAbstractController
     {
 //        $user = $this->getUser();
 //        echo "single email=".$user->getSingleEmail()."<br>";
-//        exit('111');
+//        exit('showUserOptimizedAction id='.$id);
 
         return $this->showUserOptimized( $request, $id, $this->getParameter('employees.sitename') );
 
@@ -2687,6 +2687,7 @@ class UserController extends OrderAbstractController
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
         if( false === $this->isGranted('ROLE_USER') ) {
+            exit('1 show User Optimized no permission: no role ROLE_USER');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -2703,7 +2704,7 @@ class UserController extends OrderAbstractController
         $user = $this->getUser();
         $secUtil = $this->container->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
-            //exit('1 show User Optimized no permission');
+            exit('2 show User Optimized no permission: isUserVisible is false');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
