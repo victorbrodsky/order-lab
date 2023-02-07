@@ -51,7 +51,7 @@
                         <tr>
                             <td>{{ form_widget(holiday.observed) }}</td>
                             <td>{{ holiday.vars.data.id }}</td>
-                            <td>{{ holiday.vars.data.holidayDate|date('m/d/Y',false) }}</td>
+                            <td>{{ holiday.vars.data.holidayDate|date('D, M d Y',false) }}</td>
                             <td>{{ holiday.vars.data.holidayName }}</td>
                             <td>{{ form_widget(holiday.institutions) }}</td>
                             <td>{{ holiday.vars.data.country }}</td>
@@ -114,7 +114,7 @@
                 </td>
 
                 <td>
-                    {{ entity.getHolidayDate()|date('m/d/Y',false) }}
+                    {{ entity.getHolidayDate()|date('D, M d Y',false) }}
                 </td>
 
                 <td>

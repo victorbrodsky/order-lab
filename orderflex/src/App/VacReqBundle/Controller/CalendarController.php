@@ -344,6 +344,8 @@ class CalendarController extends OrderAbstractController
             $dql->andWhere($yearWhereStr);
         }
 
+        $dql->addOrderBy("holiday.holidayDate","ASC");
+
         $filterRes['form'] = $filterform;
         $filterRes['dqlParameters'] = $dqlParameters;
         $filterRes['years'] = $years;
@@ -879,27 +881,64 @@ class CalendarController extends OrderAbstractController
      */
     public function getHolidaysAjaxAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         $response = new Response();
-        $res = 0;
+        //$holidays = 0;
 
-        if( $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+        if(
             !$this->isGranted('ROLE_VACREQ_SUBMITTER') &&
             !$this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
             !$this->isGranted('ROLE_VACREQ_APPROVER') &&
             !$this->isGranted('ROLE_VACREQ_SUPERVISOR')
         ) {
             //return $this->redirect( $this->generateUrl('vacreq_nopermission') );
-            $res = "Access denied";
+            $res = array(
+                'note' => "Access denied",
+                'holidays' => 0
+            );
             $response->setContent(json_encode($res));
             return $response;
         }
 
+        //$em = $this->getDoctrine()->getManager();
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-        echo "startDate=".$startDate.", endDate=".$endDate."<br>";
-        
 
+        //$startDate = "2023-02-19";
+        //$endDate = "2023-02-21";
+        //$endDate = "2023-06-19";
+
+        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate);
+
+        $holidaysDays = count($holidays);
+
+        $note = "";
+        $holidayStrArr = array();
+
+        foreach($holidays as $holiday) {
+            $holidayDate = $holiday->getHolidayDate();
+            $holidayDateStr = "N/A";
+            if( $holidayDate ) {
+                $holidayDateStr = $holiday->getHolidayDate()->format('m/d/Y');
+            }
+            $holidayStrArr[] = $holiday->getHolidayName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+        }
+
+
+        if( count($holidayStrArr) > 0 ) {
+            $note = "Listed date range includes the following observed holiday(s): " .
+                //" [Holiday Title] on [Holiday Date]." .
+                implode(", ",$holidayStrArr) . ".".
+                " Please confirm the total count of days away does not include holidays.";
+        }
+
+        $res = array(
+            'note' => $note,
+            'holidays' => $holidaysDays
+        );
 
         $response->setContent(json_encode($res));
         return $response;

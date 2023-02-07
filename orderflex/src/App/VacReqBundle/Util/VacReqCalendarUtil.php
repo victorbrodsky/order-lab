@@ -281,17 +281,42 @@ class VacReqCalendarUtil
         return NULL;
     }
 
-    public function getHolidayListByYear( $year, $country ) {
+//    public function getHolidayListByYear( $year, $country ) {
+//        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+//        $dql = $repository->createQueryBuilder('holidays');
+//
+//        $dql->leftJoin("holidays.country", "country");
+//
+//
+//
+//        return NULL;
+//    }
+
+    public function getHolidaysInRange( $startDate, $endDate ) {
+
+        if( !$startDate || !$startDate ) {
+            return null;
+        }
+
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $dql = $repository->createQueryBuilder('holidays');
 
-        $dql->leftJoin("holidays.country", "country");
+        $dql->where('holidays.observed = true');
+        $dql->andWhere("holidays.holidayDate >= :startDate AND holidays.holidayDate <= :endDate");
 
-        
+        $query = $this->em->createQuery($dql);
 
-        return NULL;
+        //$startDateStr = $startDate->format('Y-m-d');
+        //$endDateStr = $endDate->format('Y-m-d');
+
+        $query->setParameter('startDate', $startDate);
+        $query->setParameter('endDate', $endDate);
+
+        $holidays = $query->getResult();
+
+        //$count = count($holidays);
+
+        return $holidays;
     }
-
-
 
 }

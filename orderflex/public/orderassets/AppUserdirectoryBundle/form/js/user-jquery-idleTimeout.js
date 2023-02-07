@@ -75,7 +75,7 @@ $(document).ready(function() {
 
         var delayInMilliseconds = 2000; //1 second
         setTimeout(function(){
-            console.debug("initIdleTimeout after "+delayInMilliseconds+" milliseconds");
+            //console.debug("initIdleTimeout after "+delayInMilliseconds+" milliseconds");
             initIdleTimeout();
         }, delayInMilliseconds);
     }
@@ -105,7 +105,7 @@ idleTimeoutClass.prototype.init = function () {
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     
     if( _maxIdleTime ) {
-        console.log("_maxIdleTime is set = " + _maxIdleTime);
+        //console.log("_maxIdleTime is set = " + _maxIdleTime);
         _idleAfter = _maxIdleTime;
         return;
     }
@@ -164,13 +164,13 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //thisUrl = thisUrl.toString().replaceAll("/","_");
     thisUrl = thisUrl.replace(/\//g,"_");
 
-    console.log(
-        "checkIdleTimeout (in sec)" +
-        ", _idleAfter="+_idleAfter+
-        ", sessionKeepAliveTimer="+sessionKeepAliveTimer+
-        ", idleCheckHeartbeat="+idleCheckHeartbeat+
-        ", thisUrl="+thisUrl
-    );
+    // console.log(
+    //     "checkIdleTimeout (in sec)" +
+    //     ", _idleAfter="+_idleAfter+
+    //     ", sessionKeepAliveTimer="+sessionKeepAliveTimer+
+    //     ", idleCheckHeartbeat="+idleCheckHeartbeat+
+    //     ", thisUrl="+thisUrl
+    // );
 
     var sessionKeepAliveUrl = Routing.generate('setserveractive',{url: thisUrl}); //window.location.href
 

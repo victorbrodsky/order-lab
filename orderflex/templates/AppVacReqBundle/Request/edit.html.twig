@@ -681,6 +681,33 @@
 
         function vacreqDateListener() {
 
+//            $('.vacreq-startDate,.vacreq-endDate').on("focusout", function(e) {
+//                console.log('Listener1 ! value='+$(this).val());
+//                //var holder = $(this).closest('.panel-body');
+//                //start or end dates is empty => clear/hide warning and set days to zero
+//                //holder.find('.warning-holidays').html('').hide();
+//                //holder.find('.vacreq-numberOfDays').val(null);
+//
+//                var holder = $(this).closest('.panel-body');
+//                var startDate = holder.find('.vacreq-startDate').val();
+//                var endDate = holder.find('.vacreq-endDate').val();
+//                console.log('Listener1: startDate=('+startDate+')' + ', endDate=('+endDate+')');
+//            });
+//
+//            //clearDate
+//            $('.vacreq-startDate,.vacreq-endDate').datepicker().on("hide", function(e) {
+//                console.log('Listener2 !');
+//            });
+
+//            $('.datepicker').datepicker().on('clearDate', function(e) {
+//                // `e` here contains the extra attributes
+//                console.log('Listener2 !');
+//            });
+
+//            $('.vacreq-startDate,.vacreq-endDate').datepicker().on("changeDate", function(e) {
+//                console.log('Listener2 !');
+//            });
+
             //$('.vacreq-startDate,.vacreq-endDate').datepicker().on("changeDate", function(e) {
             $('.vacreq-startDate,.vacreq-endDate').on("change", function(e) {
                 //vacreqUpdateDaysAndFirstday(this);
@@ -689,7 +716,7 @@
 
                 var startDate = holder.find('.vacreq-startDate').val();
                 var endDate = holder.find('.vacreq-endDate').val();
-                //console.log('startDate=('+startDate+')' + ', endDate=('+endDate+')');
+                console.log('vacreqDateListener: startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
                 startDate = new Date(startDate);
                 endDate = new Date(endDate);
@@ -706,11 +733,9 @@
                         return;
                     }
 
-                    var calculateBtn = holder.find('.calculate-btn');
-
                     //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                     //var difstartDate=fDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
-                    var diffWorkingDays = calculateWorkingDays(startDate,endDate,calculateBtn);
+                    var diffWorkingDays = calculateWorkingDays(startDate,endDate,holder);
                     //console.log('diffWorkingDays='+diffWorkingDays);
 
                     if( diffWorkingDays > 0 ) {
@@ -724,10 +749,13 @@
                         setVacReqDates(holder,diffWorkingDays,nextWorkingDay)
                     }
 
+                } else {
+                    //start or end dates is empty => clear/hide warning and set days to zero
+                    holder.find('.warning-holidays').html('').hide();
+                    holder.find('.vacreq-numberOfDays').val(null);
                 }//if
 
                 vacreqSetDayWeekTooltip($(this));
-
             });
 
         }
@@ -775,8 +803,7 @@
                     return null;
                 }
 
-                var calculateBtn = holder.find('.calculate-btn');
-                diffWorkingDays = calculateWorkingDays(startDate,endDate,calculateBtn);
+                diffWorkingDays = calculateWorkingDays(startDate,endDate,holder);
 
                 if( diffWorkingDays > 0 ) {
                     //numberOfDays
@@ -784,6 +811,10 @@
                 } else {
                     holder.find('.vacreq-numberOfDays').val(null);
                 }
+            } else {
+                //start or end dates is empty => clear/hide warning and set days to zero
+                holder.find('.warning-holidays').html('').hide();
+                holder.find('.vacreq-numberOfDays').val(null);
             }
 
             return diffWorkingDays;
@@ -826,16 +857,11 @@
         }
 
         //TODO: Calculate working days minus holiday days based on VacReqHolidayList
-        function calculateWorkingDays( startDate, endDate, calculateBtn )  {
+        function calculateWorkingDays( startDate, endDate, holder )  {
+            //console.log('calculateWorkingDays: startDate='+startDate+', endDate='+endDate);
 
-            console.log('calculateWorkingDays: startDate='+startDate+', endDate='+endDate);
-            //console.log('calculateWorkingDays2: startDate=',startDate,', endDate=',endDate);
-
-            //Convert to a simple string YYYY-MM-DD
-            //startDate = formatDateToStringYMD(startDate);
-            //endDate = formatDateToStringYMD(endDate);
-            //console.log('calculateWorkingDays2: startDate=['+startDate+'], endDate=['+endDate+']');
-            //return;
+            holder.find('.warning-holidays').html('').hide();
+            holder.find('.vacreq-numberOfDays').val(null);
 
             if( !startDate || startDate == 'Invalid Date' ) {
                 console.log("startDate null");
@@ -846,11 +872,14 @@
                 return null;
             }
 
+            var calculateBtn = holder.find('.calculate-btn');
             var calculateBtnHtml = calculateBtn[0];
             var lbtn = Ladda.create(calculateBtnHtml);
             lbtn.start();
 
+            //console.log('before calculateSimpleWorkingDays: startDate=['+startDate+'], endDate=['+endDate+']');
             var days = calculateSimpleWorkingDays(startDate,endDate);
+            //console.log('after calculateSimpleWorkingDays: startDate=['+startDate+'], endDate=['+endDate+']');
 
             //update #vacreq-defaultInformUsers
             var url = Routing.generate('vacreq_get_observed_holidays_daterange_ajax');
@@ -859,16 +888,25 @@
             //Convert to a simple string YYYY-MM-DD
             var startDateStr = formatDateToStringYMD(startDate);
             var endDateStr = formatDateToStringYMD(endDate);
-            console.log('calculateWorkingDays3: startDate=['+startDateStr+'], endDate=['+endDateStr+']');
-            return;
+            //console.log('calculateWorkingDays3: startDate=['+startDateStr+'], endDate=['+endDateStr+']');
 
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
                 async: false, //code paused until completion
+                dataType: 'json',
                 data: {startDate: startDateStr, endDate: endDateStr},
             }).done(function(data) {
                 console.log('data=',data);
+                var holidays = data['holidays'];
+                console.log('holidays=',holidays);
+                if( holidays ) {
+                    days = days - holidays;
+                }
+                console.log('notes=',data['note']);
+                if( data['note'] ) {
+                    holder.find('.warning-holidays').html(data['note']).show();
+                }
             });
 
             lbtn.stop();
@@ -876,7 +914,9 @@
             return days;
         }
         // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
-        function calculateSimpleWorkingDays( startDate, endDate )  {
+        function calculateSimpleWorkingDays( startDateOrig, endDateOrig )  {
+            const startDate = new Date(startDateOrig);
+            const endDate = new Date(endDateOrig);
             //return 0;//testing
             var days = 0;
             for( var i = startDate; i <= endDate; i.setDate(i.getDate() + 1) ) {
@@ -1258,7 +1298,7 @@
             //$("select.vacreq-person-away").select2('val',null);
             var userid = $('#authuser_id').val();
             if( userid && userid.length > 0 ) {
-                console.log('vacreqSetPersonAway set user userid='+userid);
+                //console.log('vacreqSetPersonAway set user userid='+userid);
                 $("select.vacreq-person-away").select2('val',userid);
             }
         }
