@@ -874,4 +874,35 @@ class CalendarController extends OrderAbstractController
     }
 
 
+    /**
+     * @Route("/get-observed-holidays-daterange-ajax/", name="vacreq_get_observed_holidays_daterange_ajax", methods={"GET"}, options={"expose"=true})
+     */
+    public function getHolidaysAjaxAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $response = new Response();
+        $res = 0;
+
+        if( $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+            !$this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            !$this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            !$this->isGranted('ROLE_VACREQ_APPROVER') &&
+            !$this->isGranted('ROLE_VACREQ_SUPERVISOR')
+        ) {
+            //return $this->redirect( $this->generateUrl('vacreq_nopermission') );
+            $res = "Access denied";
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
+        echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+        
+
+
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
 }

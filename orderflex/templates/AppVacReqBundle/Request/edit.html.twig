@@ -706,9 +706,11 @@
                         return;
                     }
 
+                    var calculateBtn = holder.find('.calculate-btn');
+
                     //var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
                     //var difstartDate=fDays = 1 + Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
-                    var diffWorkingDays = calculateWorkingDays(startDate,endDate);
+                    var diffWorkingDays = calculateWorkingDays(startDate,endDate,calculateBtn);
                     //console.log('diffWorkingDays='+diffWorkingDays);
 
                     if( diffWorkingDays > 0 ) {
@@ -773,7 +775,8 @@
                     return null;
                 }
 
-                diffWorkingDays = calculateWorkingDays(startDate,endDate);
+                var calculateBtn = holder.find('.calculate-btn');
+                diffWorkingDays = calculateWorkingDays(startDate,endDate,calculateBtn);
 
                 if( diffWorkingDays > 0 ) {
                     //numberOfDays
@@ -811,7 +814,7 @@
         }
 
         // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
-        function calculateWorkingDays( startDate, endDate )  {
+        function calculateWorkingDays_ORIG( startDate, endDate )  {
             //return 0;//testing
             var days = 0;
             for( var i = startDate; i <= endDate; i.setDate(i.getDate() + 1) ) {
@@ -822,7 +825,86 @@
             return days;
         }
 
+        //TODO: Calculate working days minus holiday days based on VacReqHolidayList
+        function calculateWorkingDays( startDate, endDate, calculateBtn )  {
 
+            console.log('calculateWorkingDays: startDate='+startDate+', endDate='+endDate);
+            //console.log('calculateWorkingDays2: startDate=',startDate,', endDate=',endDate);
+
+            //Convert to a simple string YYYY-MM-DD
+            //startDate = formatDateToStringYMD(startDate);
+            //endDate = formatDateToStringYMD(endDate);
+            //console.log('calculateWorkingDays2: startDate=['+startDate+'], endDate=['+endDate+']');
+            //return;
+
+            if( !startDate || startDate == 'Invalid Date' ) {
+                console.log("startDate null");
+                return null;
+            }
+            if( !endDate || endDate == 'Invalid Date' ) {
+                console.log("endDate null");
+                return null;
+            }
+
+            var calculateBtnHtml = calculateBtn[0];
+            var lbtn = Ladda.create(calculateBtnHtml);
+            lbtn.start();
+
+            var days = calculateSimpleWorkingDays(startDate,endDate);
+
+            //update #vacreq-defaultInformUsers
+            var url = Routing.generate('vacreq_get_observed_holidays_daterange_ajax');
+            //console.log('url='+url);
+
+            //Convert to a simple string YYYY-MM-DD
+            var startDateStr = formatDateToStringYMD(startDate);
+            var endDateStr = formatDateToStringYMD(endDate);
+            console.log('calculateWorkingDays3: startDate=['+startDateStr+'], endDate=['+endDateStr+']');
+            return;
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                async: false, //code paused until completion
+                data: {startDate: startDateStr, endDate: endDateStr},
+            }).done(function(data) {
+                console.log('data=',data);
+            });
+
+            lbtn.stop();
+
+            return days;
+        }
+        // Count days from d0 to d1 inclusive, excluding Fridays and Saturdays
+        function calculateSimpleWorkingDays( startDate, endDate )  {
+            //return 0;//testing
+            var days = 0;
+            for( var i = startDate; i <= endDate; i.setDate(i.getDate() + 1) ) {
+                if( i.getDay() != 6 && i.getDay() != 0 ) {
+                    days = days + 1;
+                }
+            }
+            return days;
+        }
+
+        function formatDateToStringYMD(date) {
+            var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        function formatDateToStringYMD_2(date) {
+            const offset = date.getTimezoneOffset();
+            date = new Date(date.getTime() - (offset*60*1000));
+            return date.toISOString().split('T')[0];
+        }
 
         function getNextWorkingDay( endDate )  {
             //return endDate;//testing

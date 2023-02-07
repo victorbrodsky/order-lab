@@ -186,7 +186,10 @@
             <div class = "input-group">
                 {#<input type = "text" class = "form-control">#}
                 {{ form_widget(field) }}
-                <span class = "input-group-addon btn" onclick="setVacReqNumberOfDays(this)">
+                <span class = "input-group-addon btn calculate-btn"
+                      onclick="setVacReqNumberOfDays(this)"
+                      data-spinner-color="blue"
+                >
                     Calculate
                 </span>
             </div>

@@ -1522,4 +1522,6 @@ sudo mount -t cifs -o username='***',password='***',uid=48,forceuid,gid=48,force
 
 http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?Reference-Letter-ID=5f93be4eb3298513847304ce32f12ec26131a9ec&Identification=wcmpath&Applicant-First-Name=AppName&Applicant-Last-Name=AppFamilyName&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2024&Fellowship-End-Date=06/30/2025&Reference-First-Name=John&Reference-Last-Name=Doe&Reference-Degree=MD&Reference-Title=Staff%20Breast%20Pathologist%20and%20Associate%20Director%20of%20Pathology&Reference-Institution=MyInst&Reference-Phone=123-4456&Reference-EMail=cinava@yahoo.com&Reference-Street1=111%20Wisconsin%20Avenue&Reference-Street2=Department%20of%20Pathology&Reference-City=Bethesda&Reference-State=Maryland&Reference-Zip=12345&Reference-Country=United%20States
 
+Updated composer 6 February 2023:
+symfony to 6.2.6
 "oneup/uploader-bundle": "^3.1", => "oneup/uploader-bundle": "^4.0",
