@@ -309,20 +309,34 @@ class VacReqCalendarUtil
         $parameters['endDate'] = $endDate;
 
         //get holidays where $institutionId is under $institutions
+        $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
+        //$default = false;
         //$institutionId = 0;
+        //$institutionId = 1; //WCM
+        //$institutionId = 104; //NYP
+        //$institutionId = 2035; //Brooklyn Methodist
+        //$institutionId = 646; //Vascular
         if( $institutionId ) {
             $dql->leftJoin("holidays.institutions", "institutions");
-            $dql->andWhere("institutions.id IS NOT NULL AND institutions.id = :institutions");
-            $parameters['institutions'] = $institutionId;
+
+            //$dql->andWhere("institutions.id IS NOT NULL AND institutions.id = :institutions");
+            //$parameters['institutions'] = $institutionId;
+
+            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+            //$parentNode, $field, $default=true
+            $instStr =
+                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+                selectNodesUnderParentNode($institution,"institutions",$default);
+
+            //echo "instStr=[$instStr]<br>";
+
+            $dql->andWhere($instStr);
         }
 
         $query = $this->em->createQuery($dql);
 
         //$startDateStr = $startDate->format('Y-m-d');
         //$endDateStr = $endDate->format('Y-m-d');
-
-        //$query->setParameter('startDate', $startDate);
-        //$query->setParameter('endDate', $endDate);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
@@ -331,6 +345,11 @@ class VacReqCalendarUtil
         $holidays = $query->getResult();
 
         //$count = count($holidays);
+        //foreach($holidays as $holiday) {
+        //    echo $holiday->getString()."<br>";
+        //}
+
+        //exit('exit count='.$count);
 
         return $holidays;
     }
