@@ -132,7 +132,7 @@ class VacReqSiteParameter
 
     //new field titled “Instance maintained for the following institution”:
     // [Select2 with organizational groups pulled from the Platform List Manager List]”.
-    // Set this value to “Weill Cornell Medicine”
+    // Set this value to 'Weill Cornell Medicine', 'Brooklyn Methodist', 'NYP Lower Manhattan Hospital Laboratory'
     /**
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
      * @ORM\JoinTable(name="vacreq_siteparameter_institution",

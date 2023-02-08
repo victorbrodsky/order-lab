@@ -80,19 +80,22 @@
                     {{ formmacros.checkbox(form.floatingRestrictDateRange) }}
 
                     {#{{ formmacros.field(form.holidayDatesUrl) }}#}
-                    <p>
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            {{ form_label(form.holidayDatesUrl) }}
+                    {% if form.holidayDatesUrl is defined %}
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                {{ form_label(form.holidayDatesUrl) }}
+                            </div>
+                            <div class="col-xs-5" align="right">
+                                {{ form_widget(form.holidayDatesUrl) }}
+                            </div>
+                            <div class="col-xs-1" align="left">
+                                <button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Import Now</button>
+                            </div>
                         </div>
-                        <div class="col-xs-5" align="right">
-                            {{ form_widget(form.holidayDatesUrl) }}
-                        </div>
-                        <div class="col-xs-1" align="left">
-                            <button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Import Now</button>
-                        </div>
-                    </div>
-                    </p>
+                        </p>
+                    {% endif %}
+
                     {{ formmacros.field(form.institutions) }}
 
             </div> <!-- panel-body -->

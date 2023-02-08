@@ -150,7 +150,6 @@ class VacReqCalendarUtil
                 $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"");
                 //echo "thisHoliday count=".count($thisHoliday)."<br>";
                 if( $thisHoliday ) {
-                    $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
 
                     if(0) {
                         //fix: update title to format: name-year
@@ -159,10 +158,11 @@ class VacReqCalendarUtil
                         if( !$testing ) {
                             $this->em->flush();
                         }
+                        continue;
                     }
 
                     if(0) {
-                        if( count($thisHoliday->getInstitutions()) == 0 ) {
+                        if( 1 || count($thisHoliday->getInstitutions()) == 0 ) {
                             $thisHoliday->setInstitutions($defaultInstitutions);
                             $res[] = "Add institutions to holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
                             $countUpdated++;
@@ -171,7 +171,10 @@ class VacReqCalendarUtil
                                 $this->em->flush();
                             }
                         }
+                        continue;
                     }
+
+                    $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
 
                     continue;
                 }
