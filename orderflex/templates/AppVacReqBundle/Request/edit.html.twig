@@ -563,6 +563,8 @@
 
                 vacreqDateListener();
 
+                vacreqOrgGroupListener();
+
                 vacreqAvailabilityListener();
 
                 //init datepicker manually, because the holder 'input-group' does not have class 'date', but js is looking for .input-group.date
@@ -677,6 +679,13 @@
                 //console.log("destroy tooltip="+thisDate);
                 datepickerElem.tooltip('destroy');
             }
+        }
+
+        function vacreqOrgGroupListener() {
+            $('.vacreq-institution').on("change", function(e) {
+                console.log('vacreqOrgGroupListener');
+                $('.calculate-btn').click();
+            });
         }
 
         function vacreqDateListener() {
@@ -872,6 +881,14 @@
                 return null;
             }
 
+            //vacreq-institution
+            var userInstitution = $('#vacreq-request-form').find('.vacreq-institution').select2('data');
+            console.log("userInstitution=",userInstitution);
+            var institutionId = 0;
+            if( userInstitution ) { //&& userInstitution.length > 0
+                institutionId = userInstitution.id;
+            }
+
             var calculateBtn = holder.find('.calculate-btn');
             var calculateBtnHtml = calculateBtn[0];
             var lbtn = Ladda.create(calculateBtnHtml);
@@ -888,14 +905,14 @@
             //Convert to a simple string YYYY-MM-DD
             var startDateStr = formatDateToStringYMD(startDate);
             var endDateStr = formatDateToStringYMD(endDate);
-            //console.log('calculateWorkingDays3: startDate=['+startDateStr+'], endDate=['+endDateStr+']');
+            console.log('calculateWorkingDays3: startDate=['+startDateStr+'], endDate=['+endDateStr+'], institutionId='+institutionId);
 
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
                 async: false, //code paused until completion
                 dataType: 'json',
-                data: {startDate: startDateStr, endDate: endDateStr},
+                data: {startDate: startDateStr, endDate: endDateStr, institutionId: institutionId},
             }).done(function(data) {
                 console.log('data=',data);
                 var holidays = data['holidays'];
@@ -1207,6 +1224,8 @@
                 console.log('vacreqSetDefaultInformUsersListener');
                 vacreqSetPersonAway();
                 vacreqSetDefaultInformUsers();
+                //recalculate holidays with selected institution
+                //$('.calculate-btn').click();
             });
         }
         function vacreqSetDefaultInformUsers() {

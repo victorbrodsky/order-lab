@@ -904,14 +904,15 @@ class CalendarController extends OrderAbstractController
 
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
+        $institutionId = $request->get('institutionId');
 
         //$startDate = "2023-02-19";
         //$endDate = "2023-02-21";
         //$endDate = "2023-06-19";
 
-        //echo "startDate=".$startDate.", endDate=".$endDate."<br>";
+        //echo "startDate=".$startDate.", endDate=".$endDate.", institutionId=".$institutionId."<br>";
 
-        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate);
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId);
 
         $holidaysDays = count($holidays);
 

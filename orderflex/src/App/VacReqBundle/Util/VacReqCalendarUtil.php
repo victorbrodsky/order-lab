@@ -292,25 +292,41 @@ class VacReqCalendarUtil
 //        return NULL;
 //    }
 
-    public function getHolidaysInRange( $startDate, $endDate ) {
+    public function getHolidaysInRange( $startDate, $endDate, $institutionId ) {
 
         if( !$startDate || !$startDate ) {
             return null;
         }
+
+        $parameters = array();
 
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $dql = $repository->createQueryBuilder('holidays');
 
         $dql->where('holidays.observed = true');
         $dql->andWhere("holidays.holidayDate >= :startDate AND holidays.holidayDate <= :endDate");
+        $parameters['startDate'] = $startDate;
+        $parameters['endDate'] = $endDate;
+
+        //get holidays where $institutionId is under $institutions
+        //$institutionId = 0;
+        if( $institutionId ) {
+            $dql->leftJoin("holidays.institutions", "institutions");
+            $dql->andWhere("institutions.id IS NOT NULL AND institutions.id = :institutions");
+            $parameters['institutions'] = $institutionId;
+        }
 
         $query = $this->em->createQuery($dql);
 
         //$startDateStr = $startDate->format('Y-m-d');
         //$endDateStr = $endDate->format('Y-m-d');
 
-        $query->setParameter('startDate', $startDate);
-        $query->setParameter('endDate', $endDate);
+        //$query->setParameter('startDate', $startDate);
+        //$query->setParameter('endDate', $endDate);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
 
         $holidays = $query->getResult();
 
