@@ -924,6 +924,7 @@
                 if( data['note'] ) {
                     holder.find('.warning-holidays').html(data['note']).show();
                 }
+                lbtn.stop();
             });
 
             lbtn.stop();
@@ -956,11 +957,6 @@
                 day = '0' + day;
 
             return [year, month, day].join('-');
-        }
-        function formatDateToStringYMD_2(date) {
-            const offset = date.getTimezoneOffset();
-            date = new Date(date.getTime() - (offset*60*1000));
-            return date.toISOString().split('T')[0];
         }
 
         function getNextWorkingDay( endDate )  {
