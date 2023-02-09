@@ -174,7 +174,7 @@ class VacReqCalendarUtil
                         continue;
                     }
 
-                    if(1) {
+                    if(0) {
                         //remove all inst. Without inst this holiday will apply to all org groups.
                         $thisHoliday->clearInstitutions($defaultInstitutions);
                         $res[] = "All institutions removed from holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
