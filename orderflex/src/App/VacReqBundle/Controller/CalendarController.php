@@ -884,6 +884,17 @@ class CalendarController extends OrderAbstractController
         $response = new Response();
         //$holidays = 0;
 
+        ////// disable holidays //////
+        if(1) {
+            $res = array(
+                'note' => "",
+                'holidays' => 0
+            );
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+        ////// EOF disable holidays //////
+
         if(
             !$this->isGranted('ROLE_VACREQ_SUBMITTER') &&
             !$this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&

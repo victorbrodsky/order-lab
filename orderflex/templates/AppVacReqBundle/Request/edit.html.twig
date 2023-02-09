@@ -898,6 +898,10 @@
             var days = calculateSimpleWorkingDays(startDate,endDate);
             //console.log('after calculateSimpleWorkingDays: startDate=['+startDate+'], endDate=['+endDate+']');
 
+            ////// disable holidays //////
+            //return days; //comment this out for holidays calculation
+            ////// EOF disable holidays //////
+
             //update #vacreq-defaultInformUsers
             var url = Routing.generate('vacreq_get_observed_holidays_daterange_ajax');
             //console.log('url='+url);
