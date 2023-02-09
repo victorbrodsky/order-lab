@@ -198,6 +198,15 @@ class ApproverController extends OrderAbstractController
         //Create proxyapprover and other new roles for existing org group
         $vacreqUtil->checkAndCreateVacReqRoles($organizationalGroupInstitution, $request);
 
+
+        $parentOrganizationalGroupInstitution = "N/A";
+        if( $organizationalGroupInstitution ) {
+            $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getRootName($organizationalGroupInstitution);
+            if( !$parentOrganizationalGroupInstitution ) {
+                $parentOrganizationalGroupInstitution = "Root";
+            }
+        }
+
         //$onlyWorking = true;
         $onlyWorking = false;
 
@@ -254,6 +263,7 @@ class ApproverController extends OrderAbstractController
             'proxySubmitters' => $proxySubmitters,
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitution."",
+            'parentOrganizationalGroupName' => $parentOrganizationalGroupInstitution."",
             'settings' => $settings,
         );
     }
