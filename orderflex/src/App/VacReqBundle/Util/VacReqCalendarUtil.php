@@ -331,6 +331,10 @@ class VacReqCalendarUtil
                 $this->em->getRepository('AppUserdirectoryBundle:Institution')->
                 selectNodesUnderParentNode($institution,"institutions",$default);
 
+            //If holiday does not have institution => don't select this holiday
+            //$instStr = "(institutions IS NOT NULL AND ".$instStr.")";
+            $dql->andWhere("institutions IS NOT NULL");
+
             //echo "instStr=[$instStr]<br>";
 
             $dql->andWhere($instStr);
@@ -352,7 +356,7 @@ class VacReqCalendarUtil
         //    echo $holiday->getString()."<br>";
         //}
 
-        //exit('exit count='.$count);
+        //exit('exit count='.count($holidays));
 
         return $holidays;
     }

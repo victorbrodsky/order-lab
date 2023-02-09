@@ -885,7 +885,7 @@ class CalendarController extends OrderAbstractController
         //$holidays = 0;
 
         ////// disable holidays //////
-        if(1) {
+        if(0) {
             $res = array(
                 'note' => "",
                 'holidays' => 0
