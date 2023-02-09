@@ -164,6 +164,10 @@ class VacReqHolidayList extends ListAbstract {
         return $res;
     }
 
+    public function clearInstitutions() {
+        $this->institutions->clear();
+    }
+
     /**
      * @return mixed
      */

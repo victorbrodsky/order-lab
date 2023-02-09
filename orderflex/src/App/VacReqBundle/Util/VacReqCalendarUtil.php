@@ -163,13 +163,25 @@ class VacReqCalendarUtil
 
                     if(0) {
                         if( 1 || count($thisHoliday->getInstitutions()) == 0 ) {
-                            $thisHoliday->setInstitutions($defaultInstitutions);
+                            $thisHoliday->clearInstitutions();
                             $res[] = "Add institutions to holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
                             $countUpdated++;
 
                             if( !$testing ) {
                                 $this->em->flush();
                             }
+                        }
+                        continue;
+                    }
+
+                    if(1) {
+                        //remove all inst. Without inst this holiday will apply to all org groups.
+                        $thisHoliday->clearInstitutions($defaultInstitutions);
+                        $res[] = "All institutions removed from holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                        $countUpdated++;
+
+                        if( !$testing ) {
+                            $this->em->flush();
                         }
                         continue;
                     }
@@ -332,8 +344,8 @@ class VacReqCalendarUtil
                 selectNodesUnderParentNode($institution,"institutions",$default);
 
             //If holiday does not have institution => don't select this holiday
-            //$instStr = "(institutions IS NOT NULL AND ".$instStr.")";
-            $dql->andWhere("institutions IS NOT NULL");
+            $instStr = "(institutions IS NULL) OR (institutions IS NOT NULL AND ".$instStr.")";
+            //$dql->andWhere("institutions IS NOT NULL");
 
             //echo "instStr=[$instStr]<br>";
 
