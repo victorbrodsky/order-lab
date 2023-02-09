@@ -163,7 +163,7 @@ class VacReqCalendarUtil
 
                     if(1) {
                         if( count($thisHoliday->getInstitutions()) == 0 ) {
-                            $thisHoliday->clearInstitutions();
+                            $thisHoliday->setInstitutions($defaultInstitutions);
                             $res[] = "Add institutions to holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
                             $countUpdated++;
 
@@ -176,8 +176,8 @@ class VacReqCalendarUtil
 
                     if(0) {
                         //remove all inst. Without inst this holiday will apply to all org groups.
-                        $thisHoliday->clearInstitutions($defaultInstitutions);
-                        $res[] = "All institutions removed from holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
+                        $thisHoliday->clearInstitutions();
+                        $res[] = "Removed all institutions from holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
                         $countUpdated++;
 
                         if( !$testing ) {
