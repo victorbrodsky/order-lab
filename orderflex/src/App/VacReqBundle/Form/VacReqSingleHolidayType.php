@@ -80,7 +80,7 @@ class VacReqSingleHolidayType extends AbstractType
 
         $builder->add('institutions', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:Institution',
-            'choice_label' => 'name',
+            'choice_label' => 'getNameAndId', //'name',
             'label' => false,
             'required' => false,
             'multiple' => true,

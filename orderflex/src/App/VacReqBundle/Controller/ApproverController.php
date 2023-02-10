@@ -200,7 +200,7 @@ class ApproverController extends OrderAbstractController
 
 
         $parentOrganizationalGroupInstitution = "N/A";
-        $parentOrganizationalGroupId = null;
+        //$parentOrganizationalGroupId = null;
         if( $organizationalGroupInstitution ) {
             $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getRootName($organizationalGroupInstitution);
             if( !$parentOrganizationalGroupInstitution ) {
@@ -276,7 +276,7 @@ class ApproverController extends OrderAbstractController
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitutionName, //$organizationalGroupInstitution."",
             'parentOrganizationalGroupName' => $parentOrganizationalGroupInstitution."",
-            'parentOrganizationalGroupId' => $parentOrganizationalGroupId,
+            //'parentOrganizationalGroupId' => $parentOrganizationalGroupId,
             'settings' => $settings,
         );
     }
