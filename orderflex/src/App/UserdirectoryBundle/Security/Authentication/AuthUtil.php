@@ -1969,7 +1969,7 @@ class AuthUtil {
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
-            //$adminLdapBindRequired = false;
+            $adminLdapBindRequired = false;
             if ($adminLdapBindRequired) {
                 ldap_error($cnx);
                 ldap_unbind($cnx);
