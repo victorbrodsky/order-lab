@@ -199,16 +199,16 @@ class ApproverController extends OrderAbstractController
         $vacreqUtil->checkAndCreateVacReqRoles($organizationalGroupInstitution, $request);
 
 
-        $parentOrganizationalGroupInstitution = "N/A";
+        $rootInstitution = "N/A";
         //$parentOrganizationalGroupId = null;
         if( $organizationalGroupInstitution ) {
-            $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getRootName($organizationalGroupInstitution);
-            if( !$parentOrganizationalGroupInstitution ) {
-                $parentOrganizationalGroupInstitution = "Root";
+            $rootInstitution = $organizationalGroupInstitution->getRootName($organizationalGroupInstitution);
+            if( !$rootInstitution ) {
+                $rootInstitution = "Root";
             } else {
                 if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
-                    //$parentOrganizationalGroupId = ", ID# ".$parentOrganizationalGroupInstitution->getId();
-                    $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getNameAndId();
+                    //$rootInstitution = $rootInstitution . ", ID# " . $rootInstitution->getId();
+                    $rootInstitution = $rootInstitution->getNameAndId();
                 }
             }
         }
@@ -275,7 +275,7 @@ class ApproverController extends OrderAbstractController
             'proxySubmitters' => $proxySubmitters,
             'organizationalGroupId' => $institutionId,
             'organizationalGroupName' => $organizationalGroupInstitutionName, //$organizationalGroupInstitution."",
-            'parentOrganizationalGroupName' => $parentOrganizationalGroupInstitution."",
+            'rootInstitution' => $rootInstitution."",
             //'parentOrganizationalGroupId' => $parentOrganizationalGroupId,
             'settings' => $settings,
         );

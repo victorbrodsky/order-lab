@@ -161,7 +161,7 @@ class VacReqCalendarUtil
                         continue;
                     }
 
-                    if(1) {
+                    if(0) {
                         if( count($thisHoliday->getInstitutions()) == 0 ) {
                             $thisHoliday->setInstitutions($defaultInstitutions);
                             $res[] = "Add institutions to holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
