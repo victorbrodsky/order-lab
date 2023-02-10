@@ -974,7 +974,7 @@ class AuthUtil {
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
-        $this->logger->notice("Simple Ldap. $username, $password");
+        //$this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
         //set_time_limit(3); //testing
@@ -996,8 +996,8 @@ class AuthUtil {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
             //$this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
-            $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
-            //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
+            //$res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
+            $res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
                 break;
