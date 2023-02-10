@@ -999,7 +999,7 @@ class AuthUtil {
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
-            //$res = 1; //testing! allow authenticate
+            $res = 1; //testing! allow authenticate
 
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
