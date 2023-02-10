@@ -889,8 +889,8 @@ class AuthUtil {
     //PHP ldap_sasl_bind is not documented. It's better to use LdapSaslCustom.cpp
     public function ldapBindUnix( $username, $password, $ldapType=1 ) {
 
-        //$this->logger->warning("Unix system detected. ldap_sasl_bind is not supported.");
-        //return NULL;
+        $this->logger->warning("Unix system detected. ldap_sasl_bind is not supported.");
+        return NULL;
 
 
         $userSecUtil = $this->container->get('user_security_utility');
