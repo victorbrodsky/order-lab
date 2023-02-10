@@ -799,7 +799,7 @@ class AuthUtil {
     //return 1 if bind successful
     //return NULL if failed
     public function ldapBind( $username, $password, $ldapType=1 ) {
-        return 1;
+        //return 1;
         //step 1
         if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
@@ -974,7 +974,7 @@ class AuthUtil {
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
-        //$this->logger->notice("Simple Ldap");
+        $this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
         //set_time_limit(3); //testing
