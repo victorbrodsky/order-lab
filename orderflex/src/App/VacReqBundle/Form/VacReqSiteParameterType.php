@@ -110,7 +110,7 @@ class VacReqSiteParameterType extends AbstractType
 
         $builder->add('institutions', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:Institution',
-            'choice_label' => 'name',
+            'choice_label' => 'getNameAndId', //name
             'label'=>'Instance maintained for the following institutions (Holiday\'s default institutions):',
             'required'=> false,
             'multiple' => true,

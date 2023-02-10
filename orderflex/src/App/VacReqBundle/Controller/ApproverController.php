@@ -200,10 +200,16 @@ class ApproverController extends OrderAbstractController
 
 
         $parentOrganizationalGroupInstitution = "N/A";
+        $parentOrganizationalGroupId = null;
         if( $organizationalGroupInstitution ) {
             $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getRootName($organizationalGroupInstitution);
             if( !$parentOrganizationalGroupInstitution ) {
                 $parentOrganizationalGroupInstitution = "Root";
+            } else {
+                if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+                    //$parentOrganizationalGroupId = ", ID# ".$parentOrganizationalGroupInstitution->getId();
+                    $parentOrganizationalGroupInstitution = $organizationalGroupInstitution->getNameAndId();
+                }
             }
         }
 
@@ -255,6 +261,12 @@ class ApproverController extends OrderAbstractController
 
         $settings = $vacreqUtil->getSettingsByInstitution($institutionId);
 
+        $organizationalGroupInstitutionName = $organizationalGroupInstitution."";
+        if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+            $organizationalGroupInstitutionName = $organizationalGroupInstitution->getNameAndId(); //$organizationalGroupInstitutionName . " ID# " . $organizationalGroupInstitution->getId();
+        }
+
+
         return array(
             'approvalGroupType' => $approvalGroupTypeStr,
             'panelClass' => $panelClass,
@@ -262,8 +274,9 @@ class ApproverController extends OrderAbstractController
             'submitters' => $submitters,
             'proxySubmitters' => $proxySubmitters,
             'organizationalGroupId' => $institutionId,
-            'organizationalGroupName' => $organizationalGroupInstitution."",
+            'organizationalGroupName' => $organizationalGroupInstitutionName, //$organizationalGroupInstitution."",
             'parentOrganizationalGroupName' => $parentOrganizationalGroupInstitution."",
+            'parentOrganizationalGroupId' => $parentOrganizationalGroupId,
             'settings' => $settings,
         );
     }
