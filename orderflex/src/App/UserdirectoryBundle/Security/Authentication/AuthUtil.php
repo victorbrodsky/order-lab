@@ -999,7 +999,7 @@ class AuthUtil {
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
-            //$res = 1; //testing! allow authenticate
+            $res = 1; //testing! allow authenticate
 
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
@@ -1160,7 +1160,8 @@ class AuthUtil {
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
-            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . "[".$LDAPUserAdmin."]"."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
+            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username="."[".$LDAPUserAdmin."]");
+                //."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
