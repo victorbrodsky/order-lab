@@ -171,7 +171,7 @@ class AuthUtil {
 
         //if user exists in ldap, try bind this user and password
         $ldapRes = $this->ldapBind($usernameClean,$password,$ldapType);
-        if( $ldapRes == NULL ) {
+        if( 1 || $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
             $this->logger->error("Ldap Authentication: can not bind user by usernameClean=[".$usernameClean."];");
@@ -1969,7 +1969,7 @@ class AuthUtil {
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             //testing: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
-            $adminLdapBindRequired = false;
+            //$adminLdapBindRequired = false; //testing. For live, use $adminLdapBindRequired = true
             if ($adminLdapBindRequired) {
                 ldap_error($cnx);
                 ldap_unbind($cnx);
