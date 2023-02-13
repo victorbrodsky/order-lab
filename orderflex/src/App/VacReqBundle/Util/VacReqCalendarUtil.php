@@ -56,7 +56,7 @@ class VacReqCalendarUtil
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
