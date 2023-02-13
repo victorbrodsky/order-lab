@@ -47,6 +47,7 @@ class VacReqCalendarUtil
         return $res;
     }
 
+    //Source of Truth for holidays
     //add the retrieved US holiday titles and dates for the next 20 years from the downloaded file
     // to the Platform List Manager into a new Platform list manager list titled “Holidays”
     // Title: [holiday title],
@@ -55,7 +56,8 @@ class VacReqCalendarUtil
     // a new “Observed By” field empty for now but showing all organizational groups in a Select2 drop down menu.
     public function processHolidaysRangeYears( $country, $startYear, $endYear ) {
         $testing = false;
-        //$testing = true;
+        $testing = true;
+
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
@@ -108,43 +110,48 @@ class VacReqCalendarUtil
                     continue;
                 }
 
+                //$update = true;
+                $update = false;
+
                 //Update if (a) holiday title AND year AND country are the same, but the month OR date are different
-                $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-title-year-country");
-                if( $thisHoliday ) {
-                    //echo "thisHoliday exists: same-title-year-country <br>";
-                    //exit();
-                    //Update date
-                    $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
-                    //echo "holidayDate=".$holidayDate->format("Y-m-d");
-                    //exit();
-                    $thisHoliday->setHolidayDate($holidayDate);
+                if( $update ) {
+                    $thisHoliday = $this->findHolidayDay($holidayName, $holiday, $country, "same-title-year-country");
+                    if ($thisHoliday) {
+                        //echo "thisHoliday exists: same-title-year-country <br>";
+                        //exit();
+                        //Update date
+                        $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday . "");
+                        //echo "holidayDate=".$holidayDate->format("Y-m-d");
+                        //exit();
+                        $thisHoliday->setHolidayDate($holidayDate);
 
-                    $res[] = "Updated date (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
-                    $countUpdated++;
+                        $res[] = "Updated date (ID " . $thisHoliday->getId() . "): " . $holiday . ": " . $holidayName;
+                        $countUpdated++;
 
-                    if( !$testing ) {
-                        $this->em->flush();
+                        if (!$testing) {
+                            $this->em->flush();
+                        }
+
+                        continue;
                     }
 
-                    continue;
-                }
+                    //Update if (b) holiday date AND country are the same, but the holiday title is different.
+                    $thisHoliday = $this->findHolidayDay($holidayName, $holiday, $country, "same-date-country");
+                    if ($thisHoliday) {
+                        //echo "thisHoliday exists: same-date-country <br>";
+                        //exit();
+                        //Update title
+                        $thisHoliday->setHolidayName($holidayName);
 
-                //Update if (b) holiday date AND country are the same, but the holiday title is different.
-                $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"same-date-country");
-                if( $thisHoliday ) {
-                    //echo "thisHoliday exists: same-date-country <br>";
-                    //exit();
-                    //Update title
-                    $thisHoliday->setHolidayName($holidayName);
+                        $res[] = "Updated name (ID " . $thisHoliday->getId() . "): " . $holiday . ": " . $holidayName;
+                        $countUpdated++;
 
-                    $res[] = "Updated name (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
-                    $countUpdated++;
+                        if (!$testing) {
+                            $this->em->flush();
+                        }
 
-                    if( !$testing ) {
-                        $this->em->flush();
+                        continue;
                     }
-
-                    continue;
                 }
 
                 $thisHoliday = $this->findHolidayDay($holidayName,$holiday,$country,"");
@@ -184,6 +191,17 @@ class VacReqCalendarUtil
                             $this->em->flush();
                         }
                         continue;
+                    }
+
+                    $addHoliday = $this->addSpecialHolidayDay($holiday,$countryEntity,$defaultInstitutions,$testing);
+                    if( $addHoliday ) {
+                        $addHolidayDate = $addHoliday->getHolidayDate();
+                        $addHolidayDateStr = "N/A";
+                        if( $addHolidayDate ) {
+                            $addHolidayDateStr = $addHolidayDate->format('Y-m-d');
+                        }
+                        $res[] = "Add additional holiday (ID ".$addHoliday->getId()."): ".": ".$addHoliday->getName().", $addHolidayDateStr";
+                        $countUpdated++;
                     }
 
                     $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
@@ -229,6 +247,75 @@ class VacReqCalendarUtil
         ;
 
         return $res;
+    }
+
+    //Add special holiday: Thanksgiving Day => Day After Thanksgiving
+    public function addSpecialHolidayDay( $holiday, $countryEntity, $defaultInstitutions, $testing ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->security->getUser();
+
+        $holidayName = $holiday->getName();
+
+        if( $holiday && $holidayName ) {
+            //ok
+        } else {
+            //Skip if name or date empty
+            return null;
+        }
+
+        if( $holidayName == 'Thanksgiving Day' ) {
+
+            $holidayName = 'Day After Thanksgiving';
+
+            $holidayDate = \DateTime::createFromFormat('Y-m-d', $holiday."");
+            $holidayDate->modify('+1 day');
+
+            //add only if not weekend
+            if( $this->isWeekend($holidayDate) ) {
+                //exit('weekend='.$holidayDate->format('D, M d Y'));
+                return null;
+            } else {
+                //exit('not weekend='.$holidayDate->format('D, M d Y'));
+            }
+
+            $countryStr = $countryEntity->getName();
+            $thisHoliday = $this->findHolidayDay($holidayName, $holidayDate, $countryStr, "");
+            if( $thisHoliday ) {
+                return null;
+            }
+
+            list($year, $month, $day) = explode('-', $holiday);
+            $uniqueNameStr = $year."-".$holidayName; //year-holidayName
+            //exit("uniqueNameStr=$uniqueNameStr");
+
+            //Store in VacReqHolidayList
+            //exit('creating new VacReqHolidayList');
+            $holidayEntity = new VacReqHolidayList($user);
+
+            //set default values
+            //$nameStr = $holiday.": ".$holidayName;
+
+            $holidayEntity = $userSecUtil->setDefaultList($holidayEntity,0,$user,$uniqueNameStr);
+            $holidayEntity->setType('user-added');
+
+            $holidayEntity->setHolidayName($holidayName);
+
+            $holidayEntity->setHolidayDate($holidayDate);
+            $holidayEntity->setCountry($countryEntity);
+            $holidayEntity->setInstitutions($defaultInstitutions);
+
+            if( !$testing ) {
+                $this->em->persist($holidayEntity);
+                $this->em->flush();
+            }
+
+            return $holidayEntity;
+        }
+
+        return null;
+    }
+    function isWeekend($datetime) {
+        return $datetime->format('N') >= 6;
     }
 
     public function findHolidayDay( $name, $date, $country, $sameStr=NULL ) {
