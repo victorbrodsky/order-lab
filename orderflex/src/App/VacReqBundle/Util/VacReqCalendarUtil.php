@@ -100,6 +100,8 @@ class VacReqCalendarUtil
                 //$holiday = '2021-01-01';
                 //2022-05-25 => $year = 2022
                 list($year, $month, $day) = explode('-', $holiday);
+
+                //unique name year-holidayname (country should be included too)
                 $uniqueNameStr = $year."-".$holidayName; //year-holidayName
                 //exit("uniqueNameStr=$uniqueNameStr");
 
@@ -193,15 +195,20 @@ class VacReqCalendarUtil
                         continue;
                     }
 
-                    $addHoliday = $this->addSpecialHolidayDay($holiday,$countryEntity,$defaultInstitutions,$testing);
-                    if( $addHoliday ) {
-                        $addHolidayDate = $addHoliday->getHolidayDate();
-                        $addHolidayDateStr = "N/A";
-                        if( $addHolidayDate ) {
-                            $addHolidayDateStr = $addHolidayDate->format('Y-m-d');
+                    if(1) {
+                        /////// add special holiday ////////
+                        $addedHoliday = $this->addSpecialHolidayDay($holiday, $countryEntity, $defaultInstitutions, $testing);
+                        if ($addedHoliday) {
+                            $addedHolidayDate = $addedHoliday->getHolidayDate();
+                            $addedHolidayDateStr = "N/A";
+                            if ($addedHolidayDate) {
+                                $addedHolidayDateStr = $addedHolidayDate->format('Y-m-d');
+                            }
+                            $res[] = "Add additional holiday (ID " . $addedHoliday->getId() . "): " . ": " . $addedHoliday->getName() . ", $addedHolidayDateStr";
+                            $countUpdated++;
                         }
-                        $res[] = "Add additional holiday (ID ".$addHoliday->getId()."): ".": ".$addHoliday->getName().", $addHolidayDateStr";
-                        $countUpdated++;
+                        /////// EOF add special holiday ////////
+                        continue;
                     }
 
                     $res[] = "Skip existing holiday (ID ".$thisHoliday->getId()."): ".$holiday.": ".$holidayName;
@@ -233,10 +240,23 @@ class VacReqCalendarUtil
                     $this->em->flush();
                 }
 
+                /////// add special holiday ////////
+                $addedHoliday = $this->addSpecialHolidayDay($holiday,$countryEntity,$defaultInstitutions,$testing);
+                if( $addedHoliday ) {
+                    $addedHolidayDate = $addedHoliday->getHolidayDate();
+                    $addedHolidayDateStr = "N/A";
+                    if( $addedHolidayDate ) {
+                        $addedHolidayDateStr = $addedHolidayDate->format('Y-m-d');
+                    }
+                    $res[] = "Add additional holiday (ID ".$addedHoliday->getId()."): ".": ".$addedHoliday->getName().", $addedHolidayDateStr";
+                    $countUpdated++;
+                }
+                /////// EOF add special holiday ////////
+
                 $countAdded++;
             }
             //exit();
-        }
+        }//foreach year
 
         //echo implode("<br>",$res);
 
@@ -278,15 +298,33 @@ class VacReqCalendarUtil
                 //exit('not weekend='.$holidayDate->format('D, M d Y'));
             }
 
-            $countryStr = $countryEntity->getName();
-            $thisHoliday = $this->findHolidayDay($holidayName, $holidayDate, $countryStr, "");
+            $countryStr = $countryEntity->getAbbreviation();
+            $holidayDateStr = $holidayDate->format('Y-m-d');
+            //echo "If exists by $holidayName, $holidayDateStr, $countryStr <br>";
+            $thisHoliday = $this->findHolidayDay($holidayName,$holidayDateStr,$countryStr,"");
+            //echo "thisHoliday=$thisHoliday <br>";
+
             if( $thisHoliday ) {
+                $countryStr = $countryStr." (ID#".$countryEntity->getId().")";
+                //echo "Already exists by combination: $holidayName, $holidayDateStr, $countryStr <br>";
+                //exit('111');
                 return null;
             }
 
             list($year, $month, $day) = explode('-', $holiday);
             $uniqueNameStr = $year."-".$holidayName; //year-holidayName
             //exit("uniqueNameStr=$uniqueNameStr");
+
+            $thisHoliday = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList')->findOneByName($uniqueNameStr);
+            if( $thisHoliday ) {
+                //echo "Already exists by $uniqueNameStr <br>";
+                //exit('111');
+                return null;
+            }
+
+            //if( $year == '2023' ) {
+            //    exit('111: ' . $holidayName . ", date=" . $holidayDate->format('d-m-Y') . ", country=" . $countryStr);
+            //}
 
             //Store in VacReqHolidayList
             //exit('creating new VacReqHolidayList');
@@ -330,7 +368,7 @@ class VacReqCalendarUtil
             $dql->andWhere("holidays.holidayName = :holidayName");
             $dql->andWhere("country.abbreviation = :country");
 
-            //2022-05-25 => $year = 2022
+            //'Y-m-d' 2022-05-25 => $year = 2022
             list($year, $month, $day) = explode('-', $date);
             //same year
             //Using YEAR from  beberlei/DoctrineExtensions
@@ -346,7 +384,6 @@ class VacReqCalendarUtil
             $query->setParameter('holidayDate', $date);
             $query->setParameter('country', $country);
         }
-
         //(b) holiday date AND country are the same, but the holiday title is different
         elseif( $sameStr == "same-date-country" ) {
             //echo "b) same-date-country <br>";
@@ -370,6 +407,8 @@ class VacReqCalendarUtil
             $query->setParameter('holidayName', $name);
             $query->setParameter('holidayDate', $date);
             $query->setParameter('country', $country);
+
+            //echo "findHolidayDay parameters: $name, $date, $country <br>";
         }
 
         //echo "dql=".$dql."<br>";
