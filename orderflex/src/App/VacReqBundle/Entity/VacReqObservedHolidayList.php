@@ -70,6 +70,12 @@ class VacReqObservedHolidayList extends ListAbstract {
      **/
     private $institutions;
 
+    /**
+     * Observed, used, active holiday
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $observed;
+
 
 
     function __construct($author=null) {
@@ -128,6 +134,13 @@ class VacReqObservedHolidayList extends ListAbstract {
         }
     }
 
+    public function setInstitutions($institutions)
+    {
+        foreach($institutions as $institution) {
+            $this->addInstitution($institution);
+        }
+    }
+
     public function removeInstitution($institution)
     {
         $this->institutions->removeElement($institution);
@@ -149,6 +162,14 @@ class VacReqObservedHolidayList extends ListAbstract {
         $this->holidayName = $holidayName;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getObserved()
+    {
+        return $this->observed;
+    }
 
+    
 
 }

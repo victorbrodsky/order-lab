@@ -10,7 +10,7 @@
 
 {% block content %}
     <h4 class="text-info" align="center">
-        {{ title }}
+        {{ title }} {{ holidayUrl|raw }}
     </h4>
 
     <form action="{{ path(routename) }}" method="get" class="well form-search">

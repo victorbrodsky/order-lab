@@ -18,6 +18,7 @@
 namespace App\VacReqBundle\Controller;
 
 
+use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -428,11 +429,216 @@ class CalendarController extends OrderAbstractController
         );
     }
 
+
+
+
     /**
      * @Route("/observed-holidays/", name="vacreq_observed_holidays", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
      */
     public function observedHolidaysFormAction(Request $request) {
+
+        //exit('GET');
+
+        if(
+            false == $this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $vacreqUtil = $this->container->get('vacreq_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $filterQueryParams = $request->query->all();
+        //dump($filterQueryParams);
+        //exit('111');
+
+        //pass years on form submit
+        if( count($filterQueryParams) == 0 ) {
+            $thisYear = date("Y");
+            $defaultYears = $thisYear;
+            return $this->redirect( $this->generateUrl(
+                'vacreq_observed_holidays',
+                array(
+                    'filter[years]' => $defaultYears, //$currentYear,
+                )
+            ));
+        }
+
+        //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
+        //echo "holidays count=".count($holidays)."<br>";
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder("holiday");
+
+        //process and get years from url modified by filter
+        $filterYears = null;
+        if( isset($filterQueryParams['holiday']) ) {
+            if( isset($filterQueryParams['holiday']['years']) ) {
+                $filterYears = $filterQueryParams['holiday']['years'];
+                $filterYears = str_replace(' ','',$filterYears);
+            }
+        }
+        //echo "filterYears=$filterYears <br>";
+        //exit('111');
+
+        $filterParams = array();
+
+        $filterRes = $this->processFilter( $dql, $request, $filterParams, $filterYears ); //form
+        $filterform = $filterRes['form'];
+        $dqlParameters = $filterRes['dqlParameters'];
+        $years = $filterRes['years'];
+
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        $holidays = $query->getResult();
+        //echo "holidays count=".count($holidays)."<br>";
+
+        //TODO: get original serialized $holidays
+        $observedHolidays = array();
+        $originalHolidays = array();
+        foreach($holidays as $holiday) {
+            $originalHolidays[$holiday->getId()] = $holiday->getEntityHash();
+
+            ///////// create VacReqObservedHolidayList /////////
+            //TODO: create new VacReqObservedHolidayList:
+            //copy holidayName => name, holidayName
+            //copy country => country
+            //copy institutions => institutions
+            //copy observed => observed
+
+            $holidayName = $holiday->getHolidayName();
+            if( !$holidayName ) {
+                continue;
+            }
+
+            $observedHoliday = new VacReqObservedHolidayList($user);
+            $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
+            $observedHoliday->setType('user-added');
+
+            $observedHoliday->setHolidayName($holidayName);
+            //$observedHoliday->setHolidayDate($holidayDate);
+            $observedHoliday->setCountry($holiday->getCountry());
+            $observedHoliday->setInstitutions($holiday->getInstitutions());
+            $observedHolidays[] = $observedHoliday;
+            ///////// EOF create VacReqObservedHolidayList /////////
+        }
+
+        ///////////////// form /////////////////////
+        //https://stackoverflow.com/questions/60675354/symfony-form-with-multiple-entity-objects
+        //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
+
+        $params = array(
+            'em' => $em,
+            'years' => $years,
+            //'saveBtn' => true
+        );
+
+        //$organizationalInstitutions = $vacreqUtil->getAllGroupsByUser($user);
+        $organizationalInstitutions = array();
+        $defaultInstitutions = $userSecUtil->getSiteSettingParameter('institutions','vacreq');
+        $defaultInstitutionsArray = array();
+        if( count($defaultInstitutions) > 0 ) {
+            $defaultInstitutionsArray = $defaultInstitutions->toArray();
+        }
+        $organizationalInstitutions = array_merge($organizationalInstitutions,$defaultInstitutionsArray);
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
+        $vacreqInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+        $organizationalInstitutions = array_merge($organizationalInstitutions,$vacreqInstitutions);
+        //echo "orgInst=".count($organizationalInstitutions)."<br>";
+        //foreach($organizationalInstitutions as $organizationalInstitution) {
+        //    echo $organizationalInstitution->getId().": ".$organizationalInstitution."<br>";
+        //}
+        $params['organizationalInstitutions'] = $organizationalInstitutions; //$userServiceUtil->flipArrayLabelValue($organizationalInstitutions);   //flipped
+
+        $form = $this->createForm(VacReqHolidayType::class,
+            //['holidays' => $holidays],
+            ['holidays' => $observedHolidays],
+            array(
+                'method' => 'GET',
+                'form_custom_value' => $params
+            )
+        );
+
+        $form->handleRequest($request);
+        /////////////// EOF form /////////////////////
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // ... do your form processing, like saving the Task and Tag entities
+            //exit('submitted');
+
+            //echo "holidays count=".count($holidays)."<br>";
+            $res = array();
+
+            //process holidays
+            $processedHolidays = array();
+            foreach($holidays as $holiday) {
+                //echo $holiday->getId().": $holiday <br>";
+                echo $holiday->getString()."<br>";
+                if( $originalHolidays[$holiday->getId()] != $holiday->getEntityHash() ) {
+                    $res[] = "Updated " . $holiday->getString();
+                    $processedHolidays[] = $holiday;
+                }
+            }
+            exit('submitted');
+
+            $resStr = "No changes";
+            $updatedHolidays = count($res);
+            if( $updatedHolidays > 0 ) {
+                $em->flush();
+                $resStr = "Successfully updated ".$updatedHolidays." holiday(s)".":<br>".implode("<br>",$res);
+
+                //Event Log
+                $eventType = 'Holidays Updated';
+                //$userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $resStr, $user, $processedHolidays, $request, $eventType);
+            }
+
+            //Flash
+            $this->addFlash(
+                'notice',
+                $resStr
+            );
+
+            return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
+        }
+
+        $title = 'Observed Holidays';
+
+        $routeName = $request->get('_route');
+
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
+        if( $holidaysUrl ) {
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
+            'holidays' => $holidays,
+            'title' => $title,
+            'routename' => $routeName,
+            'holidayUrl' => $holidaysUrl
+        );
+    }
+
+    /**
+     * @Route("/observed-holidays-singlelist/", name="vacreq_observed_holidays_singlelist", methods={"GET"})
+     * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
+     */
+    public function observedHolidaysFormAction_SingleList(Request $request) {
 
         //exit('GET');
 
@@ -558,13 +764,19 @@ class CalendarController extends OrderAbstractController
             foreach($holidays as $holiday) {
                 //echo $holiday->getId().": $holiday <br>";
                 echo $holiday->getString()."<br>";
-                //TODO: get changes by original serialized $holidays
+                
+                //TODO: create new VacReqObservedHolidayList:
+                //copy holidayName => name, holidayName
+                //copy country => country
+                //copy institutions => institutions
+                //copy observed => observed
+                
                 if( $originalHolidays[$holiday->getId()] != $holiday->getEntityHash() ) {
                     $res[] = "Updated " . $holiday->getString();
                     $processedHolidays[] = $holiday;
                 }
             }
-            //exit('submitted');
+            exit('submitted');
 
             $resStr = "No changes";
             $updatedHolidays = count($res);
@@ -591,12 +803,18 @@ class CalendarController extends OrderAbstractController
 
         $routeName = $request->get('_route');
 
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
+        if( $holidaysUrl ) {
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+        }
+
         return array(
             'form' => $form->createView(),
             'filterform' => $filterform->createView(),
             'holidays' => $holidays,
             'title' => $title,
             'routename' => $routeName,
+            'holidayUrl' => $holidaysUrl
         );
     }
 

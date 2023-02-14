@@ -18,6 +18,7 @@
 namespace App\VacReqBundle\Form;
 
 use App\VacReqBundle\Entity\VacReqHolidayList;
+use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -123,9 +124,8 @@ class VacReqSingleHolidayType extends AbstractType
     {
         $resolver->setDefaults(array(
             'form_custom_value' => null,
-            //'csrf_protection' => false,
-            //'allow_extra_fields' => true,
-            'data_class' => VacReqHolidayList::class,
+            //'data_class' => VacReqHolidayList::class,
+            'data_class' => VacReqObservedHolidayList::class,
         ));
     }
 
