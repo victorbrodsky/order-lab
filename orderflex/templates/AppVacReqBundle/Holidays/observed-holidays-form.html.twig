@@ -38,7 +38,7 @@
             <thead>
             <tr>
                 <th>Observed Holiday</th>
-                <th>ID</th>
+                {#<th>ID</th>#}
                 <th>Date</th>
                 <th>Name</th>
                 <th>Institutions</th>
@@ -50,8 +50,11 @@
                     {% for holiday in form.holidays.children %}
                         <tr>
                             <td>{{ form_widget(holiday.observed) }}</td>
-                            <td>{{ holiday.vars.data.id }}</td>
-                            <td>{{ holiday.vars.data.holidayDate|date('D, M d Y',false) }}</td>
+                            {#<td>{{ holiday.vars.data.id }}</td>#}
+                            <td>
+                                {#{{ holiday.vars.data.holidayDate|date('D, M d Y',false) }}#}
+                                {{ vacreq_calendar_util.getHolidayDate(holiday.vars.value)|date('M d',false) }}
+                            </td>
                             <td>{{ holiday.vars.data.holidayName }}</td>
                             <td>{{ form_widget(holiday.institutions) }}</td>
                             <td>{{ holiday.vars.data.country }}</td>

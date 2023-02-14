@@ -10,6 +10,7 @@ namespace App\VacReqBundle\Util;
 
 
 use App\VacReqBundle\Entity\VacReqHolidayList;
+use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -497,6 +498,87 @@ class VacReqCalendarUtil
         //exit('exit count='.count($holidays));
 
         return $holidays;
+    }
+
+    public function getOrCreateObservedHoliday( $holiday ) {
+
+        $holidayName = $holiday->getHolidayName();
+        if( !$holidayName ) {
+            return null;
+        }
+
+        //find already exited by $holidayName
+        $observedHoliday = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findOneByName($holidayName);
+        if( $observedHoliday ) {
+            return $observedHoliday;
+        }
+
+        //create new VacReqObservedHolidayList:
+        //copy holidayName => name, holidayName
+        //copy country => country
+        //copy institutions => institutions
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->security->getUser();
+
+        $observedHoliday = new VacReqObservedHolidayList($user);
+        $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
+        $observedHoliday->setType('user-added');
+
+        $observedHoliday->setHolidayName($holidayName);
+        //$observedHoliday->setHolidayDate($holiday->getHolidayDate());
+        $observedHoliday->setCountry($holiday->getCountry());
+        $observedHoliday->setInstitutions($holiday->getInstitutions());
+
+        return $observedHoliday;
+    }
+
+    public function getHolidayDate($observedHoliday) {
+        $year = new \DateTime();
+        $year = $year->format('Y');
+        //echo "date=".$year->format('d-m-Y')."<br>";
+        $holidayName = $observedHoliday->getName();
+
+        //$observedHoliday = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList')->findOneByHolidayName($holidayName);
+
+        $parameters = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder('holidays');
+
+        $dql->where('holidays.holidayName = :holidayName');
+        $parameters['holidayName'] = $holidayName;
+
+        //$dql->andWhere("holidays.holidayDate >= :startDate AND holidays.holidayDate <= :endDate");
+        //$parameters['startDate'] = $startDate;
+        //$parameters['endDate'] = $endDate;
+
+        $dql->andWhere("YEAR(holidays.holidayDate) = :holidayYear");
+        $parameters['holidayYear'] = $year;
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $holidays = $query->getResult();
+
+        if( count($holidays) > 0 ) {
+            $holiday = $holidays[0];
+            //echo "date=".$holiday->getHolidayDate()->format('d-m-Y')."<br>";
+
+            //return null;
+            return $holiday->getHolidayDate();
+        }
+
+        return null;
+    }
+
+    public function cleanString($string) {
+        $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
 
 }

@@ -146,6 +146,21 @@ class VacReqObservedHolidayList extends ListAbstract {
         $this->institutions->removeElement($institution);
     }
 
+    public function getInstitutionsStr()
+    {
+        //return $this->getInstitutions().toString();
+        $res = "";
+        $numItems = count($this->getInstitutions());
+        $i = 0;
+        foreach($this->getInstitutions() as $inst) {
+            $res = $res . $inst->getName();
+            if(++$i !== $numItems) {
+                $res = $res . ", ";
+            }
+        }
+        return $res;
+    }
+
     /**
      * @return mixed
      */
@@ -170,6 +185,59 @@ class VacReqObservedHolidayList extends ListAbstract {
         return $this->observed;
     }
 
-    
+    /**
+     * @param mixed $observed
+     */
+    public function setObserved($observed)
+    {
+        $this->observed = $observed;
+    }
+
+    public function getString() {
+        $dateStr = "N/A";
+        if( $this->getHolidayDate() ) {
+            $dateStr = $this->getHolidayDate()->format('d-m-Y');
+        }
+
+        $observedStr = "N/A";
+        if( $this->getObserved() === true ) {
+            $observedStr = "Yes";
+        }
+        if( $this->getObserved() === false ) {
+            $observedStr = "No";
+        }
+
+        return "ID#".$this->getId() . " (" . $this->getName() . ")" .
+        ": Date=" . $dateStr .
+        "; Name=" . $this->getHolidayName() .
+        "; Institution(s)=" . $this->getInstitutionsStr().
+        "; Active=" . $observedStr;
+    }
+
+    public function getShortString() {
+        $dateStr = "N/A";
+        if( $this->getHolidayDate() ) {
+            $dateStr = $this->getHolidayDate()->format('M d');
+        }
+
+        $observedStr = "N/A";
+        if( $this->getObserved() === true ) {
+            $observedStr = "Yes";
+        }
+        if( $this->getObserved() === false ) {
+            $observedStr = "No";
+        }
+
+        return "ID#".$this->getId() . " (" . $this->getName() . ")" .
+        ": Date=" . $dateStr .
+        "; Name=" . $this->getHolidayName() .
+        "; Institution(s)=" . $this->getInstitutionsStr().
+        "; Active=" . $observedStr;
+    }
+
+    public function getEntityHash() {
+        $hash = hash("sha1",$this->getString());
+        return $hash;
+    }
 
 }

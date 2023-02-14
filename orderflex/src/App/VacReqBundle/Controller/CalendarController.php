@@ -345,6 +345,10 @@ class CalendarController extends OrderAbstractController
             $dql->andWhere($yearWhereStr);
         }
 
+        $dql->andWhere("holiday.type = :typedef OR holiday.type = :typeadd");
+        $dqlParameters['typedef'] = 'default';
+        $dqlParameters['typeadd'] = 'user-added';
+
         $dql->addOrderBy("holiday.holidayDate","ASC");
 
         $filterRes['form'] = $filterform;
@@ -449,6 +453,7 @@ class CalendarController extends OrderAbstractController
         $vacreqUtil = $this->container->get('vacreq_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -504,9 +509,9 @@ class CalendarController extends OrderAbstractController
 
         //TODO: get original serialized $holidays
         $observedHolidays = array();
-        $originalHolidays = array();
+        //$originalHolidays = array();
         foreach($holidays as $holiday) {
-            $originalHolidays[$holiday->getId()] = $holiday->getEntityHash();
+            //$originalHolidays[$holiday->getId()] = $holiday->getEntityHash();
 
             ///////// create VacReqObservedHolidayList /////////
             //TODO: create new VacReqObservedHolidayList:
@@ -515,21 +520,33 @@ class CalendarController extends OrderAbstractController
             //copy institutions => institutions
             //copy observed => observed
 
-            $holidayName = $holiday->getHolidayName();
-            if( !$holidayName ) {
+//            $holidayName = $holiday->getHolidayName();
+//            if( !$holidayName ) {
+//                continue;
+//            }
+//
+//            $observedHoliday = new VacReqObservedHolidayList($user);
+//            $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
+//            $observedHoliday->setType('user-added');
+//
+//            $observedHoliday->setHolidayName($holidayName);
+//            //$observedHoliday->setHolidayDate($holidayDate);
+//            $observedHoliday->setCountry($holiday->getCountry());
+//            $observedHoliday->setInstitutions($holiday->getInstitutions());
+
+            $observedHoliday = $vacreqCalendarUtil->getOrCreateObservedHoliday($holiday);
+            if( !$observedHoliday ) {
                 continue;
             }
 
-            $observedHoliday = new VacReqObservedHolidayList($user);
-            $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
-            $observedHoliday->setType('user-added');
-
-            $observedHoliday->setHolidayName($holidayName);
-            //$observedHoliday->setHolidayDate($holidayDate);
-            $observedHoliday->setCountry($holiday->getCountry());
-            $observedHoliday->setInstitutions($holiday->getInstitutions());
             $observedHolidays[] = $observedHoliday;
             ///////// EOF create VacReqObservedHolidayList /////////
+        }
+
+        $originalHolidays = array();
+        foreach($observedHolidays as $observedHoliday) {
+            $key = $vacreqCalendarUtil->cleanString($observedHoliday->getName());
+            $originalHolidays[$key] = $observedHoliday->getEntityHash();
         }
 
         ///////////////// form /////////////////////
@@ -583,16 +600,18 @@ class CalendarController extends OrderAbstractController
             $res = array();
 
             //process holidays
-            $processedHolidays = array();
-            foreach($holidays as $holiday) {
+            //$processedHolidays = array();
+            foreach($observedHolidays as $holiday) {
                 //echo $holiday->getId().": $holiday <br>";
                 echo $holiday->getString()."<br>";
-                if( $originalHolidays[$holiday->getId()] != $holiday->getEntityHash() ) {
-                    $res[] = "Updated " . $holiday->getString();
+                $key = $vacreqCalendarUtil->cleanString($holiday->getName());
+                if( $originalHolidays[$key] != $holiday->getEntityHash() ) {
+                    $res[] = "Updated " . $holiday->getShortString();
                     $processedHolidays[] = $holiday;
                 }
             }
-            exit('submitted');
+            //dump($processedHolidays);
+            //exit('submitted');
 
             $resStr = "No changes";
             $updatedHolidays = count($res);
