@@ -13,27 +13,25 @@
         {{ title }} {{ holidayUrl|raw }}
     </h4>
 
-    {% if filterform %}
-        <form action="{{ path(routename) }}" method="get" class="well form-search">
+    <form action="{{ path(routename) }}" method="get" class="well form-search">
 
-            <p>
-            <div class="row">
+        <p>
+        <div class="row">
 
-                <div class="col-xs-2">
-                    {{ form_row(filterform.years, {'attr': {'placeholder': 'Years'}}) }}
-                </div>
-
-                <div class="col-xs-1">
-                    <button type="submit" class="btn btn-sm btn-default">Filter</button>
-                </div>
-
+            <div class="col-xs-2">
+                {{ form_row(filterform.years, {'attr': {'placeholder': 'Years'}}) }}
             </div>
-            </p>
 
-            {{ form_rest(filterform) }}
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
 
-        </form>
-    {% endif %}
+        </div>
+        </p>
+
+        {{ form_rest(filterform) }}
+
+    </form>
 
     {{ form_start(form) }}
         <table class="records_list table table-hover table-condensed text-left table-bordered">

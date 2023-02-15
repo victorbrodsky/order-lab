@@ -358,6 +358,42 @@ class CalendarController extends OrderAbstractController
         return $filterRes;
     }
 
+    //get list of Holidays from list 1 - source of truth (VacReqHolidayList)
+    public function getSourceTruthListHolidays( $years ) {
+        //echo "years=$years <br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder("holiday");
+
+        if( $years ) {
+            $yearsArr = explode(",",$years);
+            $yearWhereArr = array();
+            foreach($yearsArr as $year) {
+                $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";
+            }
+            $yearWhereStr = implode(" OR ",$yearWhereArr);
+            $dql->andWhere($yearWhereStr);
+        }
+
+        $dql->andWhere("holiday.type = :typedef OR holiday.type = :typeadd");
+        $dqlParameters['typedef'] = 'default';
+        $dqlParameters['typeadd'] = 'user-added';
+
+        $dql->addOrderBy("holiday.holidayDate","ASC");
+
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+
+        if (count($dqlParameters) > 0) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $holidays = $query->getResult();
+
+        return $holidays;
+    }
+
     /**
      * @Route("/observed-holidays-list/", name="vacreq_observed_holidays_list", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays.html.twig")
@@ -457,96 +493,80 @@ class CalendarController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $filterQueryParams = $request->query->all();
-        //dump($filterQueryParams);
-        //exit('111');
-
-        //pass years on form submit
-        if( count($filterQueryParams) == 0 ) {
-            $thisYear = date("Y");
-            $defaultYears = $thisYear;
-            return $this->redirect( $this->generateUrl(
-                'vacreq_observed_holidays',
-                array(
-                    'filter[years]' => $defaultYears, //$currentYear,
-                )
-            ));
-        }
-
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
-        $dql = $repository->createQueryBuilder("holiday");
+        //////////// Filter and get list of Holidays //////////////
+        if( 0 ) { //disable filter. Show only one year set
 
-        //process and get years from url modified by filter
-        $filterYears = null;
-        if( isset($filterQueryParams['holiday']) ) {
-            if( isset($filterQueryParams['holiday']['years']) ) {
-                $filterYears = $filterQueryParams['holiday']['years'];
-                $filterYears = str_replace(' ','',$filterYears);
+            $filterQueryParams = $request->query->all();
+            //dump($filterQueryParams);
+            //exit('111');
+
+            //pass years on form submit
+            if( 0 && count($filterQueryParams) == 0 ) {
+                $thisYear = date("Y");
+                $defaultYears = $thisYear;
+                return $this->redirect( $this->generateUrl(
+                    'vacreq_observed_holidays',
+                    array(
+                        'filter[years]' => $defaultYears, //$currentYear,
+                    )
+                ));
             }
+
+            $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+            $dql = $repository->createQueryBuilder("holiday");
+
+            //process and get years from url modified by filter
+            $filterYears = null;
+            if (isset($filterQueryParams['holiday'])) {
+                if (isset($filterQueryParams['holiday']['years'])) {
+                    $filterYears = $filterQueryParams['holiday']['years'];
+                    $filterYears = str_replace(' ', '', $filterYears);
+                }
+            }
+
+            //$filterYears = date('Y');
+            //echo "filterYears=$filterYears <br>";
+            //exit('111');
+
+            $filterParams = array();
+            $filterRes = $this->processFilter($dql, $request, $filterParams, $filterYears); //observed-holidays form
+            //$filterform = $filterRes['form'];
+            $dqlParameters = $filterRes['dqlParameters'];
+            $years = $filterRes['years'];
+
+            $query = $em->createQuery($dql);
+            //echo "query=".$query->getSql()."<br>";
+
+            if (count($dqlParameters) > 0) {
+                $query->setParameters($dqlParameters);
+            }
+
+            $holidays = $query->getResult();
         }
-        //echo "filterYears=$filterYears <br>";
-        //exit('111');
+        //////////// EOF Filter and get list of Holidays //////////////
 
-        $filterParams = array();
+        //get Holidays
+        $thisYear = date("Y");
+        $holidays = $this->getSourceTruthListHolidays($thisYear);
 
-        $filterRes = $this->processFilter( $dql, $request, $filterParams, $filterYears ); //form
-        $filterform = $filterRes['form'];
-        $dqlParameters = $filterRes['dqlParameters'];
-        $years = $filterRes['years'];
-
-        $query = $em->createQuery($dql);
-        //echo "query=".$query->getSql()."<br>";
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
-        }
-
-        $holidays = $query->getResult();
         //echo "holidays count=".count($holidays)."<br>";
 
-        //TODO: get original serialized $holidays
         $observedHolidays = array();
-        //$originalHolidays = array();
         foreach($holidays as $holiday) {
-            //$originalHolidays[$holiday->getId()] = $holiday->getEntityHash();
-
-            ///////// create VacReqObservedHolidayList /////////
-            //TODO: create new VacReqObservedHolidayList:
-            //copy holidayName => name, holidayName
-            //copy country => country
-            //copy institutions => institutions
-            //copy observed => observed
-
-//            $holidayName = $holiday->getHolidayName();
-//            if( !$holidayName ) {
-//                continue;
-//            }
-//
-//            $observedHoliday = new VacReqObservedHolidayList($user);
-//            $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
-//            $observedHoliday->setType('user-added');
-//
-//            $observedHoliday->setHolidayName($holidayName);
-//            //$observedHoliday->setHolidayDate($holidayDate);
-//            $observedHoliday->setCountry($holiday->getCountry());
-//            $observedHoliday->setInstitutions($holiday->getInstitutions());
-
             $observedHoliday = $vacreqCalendarUtil->getOrCreateObservedHoliday($holiday);
             if( !$observedHoliday ) {
                 continue;
             }
-
             $observedHolidays[] = $observedHoliday;
-            ///////// EOF create VacReqObservedHolidayList /////////
         }
 
-        $originalHolidays = array();
+        $originalObservedHolidays = array();
         foreach($observedHolidays as $observedHoliday) {
             $key = $vacreqCalendarUtil->cleanString($observedHoliday->getName());
-            $originalHolidays[$key] = $observedHoliday->getEntityHash();
+            $originalObservedHolidays[$key] = $observedHoliday->getEntityHash();
         }
 
         ///////////////// form /////////////////////
@@ -554,8 +574,8 @@ class CalendarController extends OrderAbstractController
         //$form = $this->createForm(VacReqHolidayType::class, ['holidays' => $holidays]);
 
         $params = array(
-            'em' => $em,
-            'years' => $years,
+            //'em' => $em,
+            //'years' => $years,
             //'saveBtn' => true
         );
 
@@ -601,16 +621,16 @@ class CalendarController extends OrderAbstractController
 
             //process holidays
             //$processedHolidays = array();
-            foreach($observedHolidays as $holiday) {
-                //echo $holiday->getId().": $holiday <br>";
-                //echo $holiday->getString()."<br>";
+            foreach($observedHolidays as $observedHoliday) {
+                //echo $observedHoliday->getId().": $observedHoliday <br>";
+                //echo $observedHoliday->getString()."<br>";
 
                 //TODO: if institution updated => update institution on corresponding VacReqHolidayList
 
-                $key = $vacreqCalendarUtil->cleanString($holiday->getName());
-                if( $originalHolidays[$key] != $holiday->getEntityHash() ) {
-                    $res[] = $holiday->getShortString();
-                    $processedHolidays[] = $holiday;
+                $key = $vacreqCalendarUtil->cleanString($observedHoliday->getName());
+                if( $originalObservedHolidays[$key] != $observedHoliday->getEntityHash() ) {
+                    $res[] = $observedHoliday->getShortString();
+                    $processedHolidays[] = $observedHoliday;
                 }
             }
             //dump($processedHolidays);
@@ -637,7 +657,7 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
         }
 
-        $title = 'Observed Holidays';
+        $title = ' Observed Holidays';
 
         $routeName = $request->get('_route');
 
@@ -648,17 +668,20 @@ class CalendarController extends OrderAbstractController
 
         return array(
             'form' => $form->createView(),
-            'filterform' => $filterform->createView(),
+            'filterform' => null, //$filterform->createView(),
             'holidays' => $holidays,
             'title' => $title,
             'routename' => $routeName,
-            'holidayUrl' => $holidaysUrl
+            'holidayUrl' => $holidaysUrl,
+            $thisYear
         );
     }
 
     /**
+     * NOT USED
+     *
      * @Route("/observed-holidays-singlelist/", name="vacreq_observed_holidays_singlelist", methods={"GET"})
-     * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
+     * @Template("AppVacReqBundle/Holidays/observed-holidays-form-singlelist.html.twig")
      */
     public function observedHolidaysFormAction_SingleList(Request $request) {
 
@@ -1117,6 +1140,8 @@ class CalendarController extends OrderAbstractController
 
 
     /**
+     * Calculate holiday days from date range
+     *
      * @Route("/get-observed-holidays-daterange-ajax/", name="vacreq_get_observed_holidays_daterange_ajax", methods={"GET"}, options={"expose"=true})
      */
     public function getHolidaysAjaxAction(Request $request)
@@ -1163,6 +1188,8 @@ class CalendarController extends OrderAbstractController
 
         //echo "startDate=".$startDate.", endDate=".$endDate.", institutionId=".$institutionId."<br>";
 
+        //TODO: don't count weekends
+
         $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId);
 
         $holidaysDays = count($holidays);
@@ -1176,7 +1203,7 @@ class CalendarController extends OrderAbstractController
             if( $holidayDate ) {
                 $holidayDateStr = $holiday->getHolidayDate()->format('m/d/Y');
             }
-            $holidayStrArr[] = $holiday->getHolidayName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+            $holidayStrArr[] = $holiday->getNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
         }
 
 

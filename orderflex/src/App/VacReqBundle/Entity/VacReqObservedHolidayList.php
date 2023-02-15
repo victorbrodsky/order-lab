@@ -230,7 +230,7 @@ class VacReqObservedHolidayList extends ListAbstract {
             $observedStr = "No";
         }
 
-        return $this->getNameOrShortName() . ", " . $this->getInstitutionsStr() . ", Observed: $observedStr";
+        return $this->getNameOrShortName() . ", " . $this->getInstitutionsStr() . "; Observed: $observedStr";
     }
 
     public function getEntityHash() {

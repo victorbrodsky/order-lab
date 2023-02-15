@@ -434,7 +434,67 @@ class VacReqCalendarUtil
 //        return NULL;
 //    }
 
+    //get holidays in range:
+    //1) find holidays in range in list 1 (VacReqHolidayList)
+    //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
+    //3) exclude holidays on the weekends
     public function getHolidaysInRange( $startDate, $endDate, $institutionId ) {
+
+        if( !$startDate || !$startDate ) {
+            return null;
+        }
+
+        //1) find holidays in range in list 1 (VacReqHolidayList)
+        //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
+        $dql = $this->em->createQueryBuilder();
+        $dql->select('h')
+            ->from('AppVacReqBundle:VacReqHolidayList','h')
+            ->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
+            ->andWhere('h.holidayName = o.holidayName')
+            ->andWhere("o.observed = true")
+            ->andWhere("h.holidayDate >= :startDate AND h.holidayDate <= :endDate")
+        ;
+
+        if( $institutionId ) {
+            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+            $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
+            $instStr =
+                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+                selectNodesUnderParentNode($institution,"institutions",$default);
+
+            $dql->leftJoin("o.institutions", "institutions")
+                ->andWhere($instStr);
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $parameters = array();
+        $parameters['startDate'] = $startDate;
+        $parameters['endDate'] = $endDate;
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $holidays = $query->getResult();
+        exit('exit count='.count($holidays));
+
+        //3) exclude holidays on the weekends
+        $weekDayHolidays = array();
+        foreach($holidays as $holiday) {
+            echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
+            $holidayDate = $holiday->getHolidayDate();
+            if( $this->isWeekend($holidayDate) == false ) {
+                $weekDayHolidays[] = $holiday;
+            }
+        }
+
+        exit('exit count='.count($weekDayHolidays));
+
+        return $weekDayHolidays;
+    }
+
+    public function getList1HolidaysInRange( $startDate, $endDate, $institutionId ) {
 
         if( !$startDate || !$startDate ) {
             return null;

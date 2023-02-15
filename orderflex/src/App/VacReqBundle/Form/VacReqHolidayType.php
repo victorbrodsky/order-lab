@@ -42,10 +42,12 @@ class VacReqHolidayType extends AbstractType
 
         //echo "years=".$this->params['years']."<br>";
 
-        $builder->add('years', HiddenType::class, [
-            'data' => $this->params['years'],
-            'mapped' => false
-        ]);
+        if( isset($this->params['years']) ) {
+            $builder->add('years', HiddenType::class, [
+                'data' => $this->params['years'],
+                'mapped' => false
+            ]);
+        }
 
         $builder->add('holidays', CollectionType::class, [
             'entry_type' => VacReqSingleHolidayType::class,

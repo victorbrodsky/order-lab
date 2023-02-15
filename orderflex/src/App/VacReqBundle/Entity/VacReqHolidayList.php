@@ -222,6 +222,13 @@ class VacReqHolidayList extends ListAbstract {
         "; Active=" . $observedStr;
     }
 
+    public function getNameOrShortName() {
+        if( $this->getShortname() ) {
+            return $this->getShortname();
+        }
+        return $this->getName();
+    }
+
     public function getEntityHash() {
         $hash = hash("sha1",$this->getString());
         return $hash;
