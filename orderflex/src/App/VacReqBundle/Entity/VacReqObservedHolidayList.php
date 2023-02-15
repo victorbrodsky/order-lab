@@ -214,12 +214,14 @@ class VacReqObservedHolidayList extends ListAbstract {
         "; Active=" . $observedStr;
     }
 
-    public function getShortString() {
-        $dateStr = "N/A";
-        if( $this->getHolidayDate() ) {
-            $dateStr = $this->getHolidayDate()->format('M d');
+    public function getNameOrShortName() {
+        if( $this->getShortname() ) {
+            return $this->getShortname();
         }
+        return $this->getName();
+    }
 
+    public function getShortString() {
         $observedStr = "N/A";
         if( $this->getObserved() === true ) {
             $observedStr = "Yes";
@@ -228,11 +230,7 @@ class VacReqObservedHolidayList extends ListAbstract {
             $observedStr = "No";
         }
 
-        return "ID#".$this->getId() . " (" . $this->getName() . ")" .
-        ": Date=" . $dateStr .
-        "; Name=" . $this->getHolidayName() .
-        "; Institution(s)=" . $this->getInstitutionsStr().
-        "; Active=" . $observedStr;
+        return $this->getNameOrShortName() . ", " . $this->getInstitutionsStr() . ", Observed: $observedStr";
     }
 
     public function getEntityHash() {

@@ -526,9 +526,17 @@ class VacReqCalendarUtil
         $observedHoliday->setType('user-added');
 
         $observedHoliday->setHolidayName($holidayName);
+
+        //exception
+        if( $holidayName == 'Washington’s Birthday' ) {
+            $observedHoliday->setShortname("Presidents' Day");
+        }
+
         //$observedHoliday->setHolidayDate($holiday->getHolidayDate());
         $observedHoliday->setCountry($holiday->getCountry());
         $observedHoliday->setInstitutions($holiday->getInstitutions());
+
+        $this->em->persist($observedHoliday);
 
         return $observedHoliday;
     }

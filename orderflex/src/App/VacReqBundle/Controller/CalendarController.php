@@ -603,10 +603,13 @@ class CalendarController extends OrderAbstractController
             //$processedHolidays = array();
             foreach($observedHolidays as $holiday) {
                 //echo $holiday->getId().": $holiday <br>";
-                echo $holiday->getString()."<br>";
+                //echo $holiday->getString()."<br>";
+
+                //TODO: if institution updated => update institution on corresponding VacReqHolidayList
+
                 $key = $vacreqCalendarUtil->cleanString($holiday->getName());
                 if( $originalHolidays[$key] != $holiday->getEntityHash() ) {
-                    $res[] = "Updated " . $holiday->getShortString();
+                    $res[] = $holiday->getShortString();
                     $processedHolidays[] = $holiday;
                 }
             }
