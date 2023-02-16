@@ -450,7 +450,7 @@ class VacReqCalendarUtil
         $dql->select('h')
             ->from('AppVacReqBundle:VacReqHolidayList','h')
             ->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
-            ->andWhere('h.holidayName = o.holidayName')
+            ->where("h.holidayName = o.holidayName")
             ->andWhere("o.observed = true")
             ->andWhere("h.holidayDate >= :startDate AND h.holidayDate <= :endDate")
         ;
@@ -477,19 +477,19 @@ class VacReqCalendarUtil
         }
 
         $holidays = $query->getResult();
-        exit('exit count='.count($holidays));
+        //exit('exit count='.count($holidays));
 
         //3) exclude holidays on the weekends
         $weekDayHolidays = array();
         foreach($holidays as $holiday) {
-            echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
+            //echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
             $holidayDate = $holiday->getHolidayDate();
             if( $this->isWeekend($holidayDate) == false ) {
                 $weekDayHolidays[] = $holiday;
             }
         }
 
-        exit('exit count='.count($weekDayHolidays));
+        //exit('exit count='.count($weekDayHolidays));
 
         return $weekDayHolidays;
     }

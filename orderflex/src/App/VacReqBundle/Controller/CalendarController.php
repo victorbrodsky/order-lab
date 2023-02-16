@@ -1188,8 +1188,7 @@ class CalendarController extends OrderAbstractController
 
         //echo "startDate=".$startDate.", endDate=".$endDate.", institutionId=".$institutionId."<br>";
 
-        //TODO: don't count weekends
-
+        //count holidays without weekends
         $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId);
 
         $holidaysDays = count($holidays);
@@ -1201,17 +1200,19 @@ class CalendarController extends OrderAbstractController
             $holidayDate = $holiday->getHolidayDate();
             $holidayDateStr = "N/A";
             if( $holidayDate ) {
-                $holidayDateStr = $holiday->getHolidayDate()->format('m/d/Y');
+                $holidayDateStr = $holiday->getHolidayDate()->format('D, M d Y'); //format('m/d/Y');
             }
-            $holidayStrArr[] = $holiday->getNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+            $holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
         }
 
 
         if( count($holidayStrArr) > 0 ) {
-            $note = "Listed date range includes the following observed holiday(s): " .
+            $note =
+                "Please confirm the total count of days away does not include holidays<br>".
+                "Listed date range includes ".count($holidays)." observed holiday(s):<br>" .
                 //" [Holiday Title] on [Holiday Date]." .
-                implode(", ",$holidayStrArr) . ".".
-                " Please confirm the total count of days away does not include holidays.";
+                implode(", ",$holidayStrArr)
+                ;
         }
 
         $res = array(
