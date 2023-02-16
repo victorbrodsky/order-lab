@@ -204,7 +204,7 @@ class VacReqHolidayList extends ListAbstract {
     public function getString() {
         $dateStr = "N/A";
         if( $this->getHolidayDate() ) {
-            $dateStr = $this->getHolidayDate()->format('d-m-Y');
+            $dateStr = $this->getHolidayDate()->format('D, M d Y'); //format('d-m-Y');
         }
 
         $observedStr = "N/A";

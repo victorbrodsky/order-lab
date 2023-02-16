@@ -1,0 +1,103 @@
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {#{{ holidayUrl|raw }}#}
+    </h4>
+
+    <form action="{{ path(routename) }}" method="get" class="well form-search">
+
+        <p>
+        <div class="row">
+
+            <div class="col-xs-2">
+                {{ form_row(filterform.years, {'attr': {'placeholder': 'Years'}}) }}
+            </div>
+
+            <div class="col-xs-1">
+                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+            </div>
+
+        </div>
+        </p>
+
+        {{ form_rest(filterform) }}
+
+    </form>
+
+    <table class="records_list table table-hover table-condensed text-left table-bordered">
+        <thead>
+        <tr>
+            {#<th>{{ knp_pagination_sortable(pagination, 'Date', 'holiday.holidayDate') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(pagination, 'Name', 'holiday.holidayName') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>#}
+            {#<th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>#}
+
+            <th>'Date'</th>
+            <th>'Name'</th>
+            <th>'Institutions'</th>
+            <th>'Country'</th>
+
+        </tr>
+        </thead>
+        {#data-link="row1" class="rowlink1" causes checkbox click on second time only#}
+        <tbody id="table-body-holidays">
+
+        {% for entity in holidays %}
+
+            {% set checked = "" %}
+            {% if entity.getObserved() %}
+                {% set checked = "checked" %}
+            {% endif %}
+
+            <tr>
+
+                <td>
+                    {{ entity.getHolidayDate()|date('D, M d Y',false) }}
+                </td>
+
+                <td>
+                    {{ entity.getHolidayName() }}
+                </td>
+
+                <td>
+                    {% for institution in entity.getInstitutions() %}
+                        {{ institution.getOptimalName() }}{% if not loop.last %};{% endif %}
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {{ entity.country }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p>
+    <div class="alert alert-success" role="alert" style="display: none;">
+        Success
+    </div>
+    <div class="alert alert-danger" role="alert" style="display: none;">
+        Error
+    </div>
+    </p>
+
+
+{% endblock %}
+
+
+
+
+

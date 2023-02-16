@@ -440,18 +440,44 @@ class VacReqCalendarUtil
     //3) exclude holidays on the weekends
     public function getHolidaysInRange( $startDate, $endDate, $institutionId ) {
 
+        //echo "inst: $institutionId, $startDate $endDate <br>";
+
         if( !$startDate || !$startDate ) {
             return null;
         }
 
+        $weekDayHolidays = array();
+
+        //1) find holidays in range in list 1 (VacReqHolidayList)
+        $holidays = $this->getTrueListHolidaysInRange($startDate,$endDate);
+        //echo 'getList1HolidaysInRange count='.count($holidays)."<br>";
+
+        //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
+        foreach($holidays as $holiday) {
+            $holidayName = $holiday->getHolidayName();
+            $observedHoliday = $this->findSimilarObservedHolidays($holidayName,$institutionId);
+            if( $observedHoliday ) {
+                //3) exclude holidays on the weekends
+                $holidayDate = $holiday->getHolidayDate();
+                if( $this->isWeekend($holidayDate) == false ) {
+                    $weekDayHolidays[] = $holiday;
+                }
+            }
+        }
+
+        return $weekDayHolidays;
+
+
+
+        //TODO: fix previous year or next year not included
         //1) find holidays in range in list 1 (VacReqHolidayList)
         //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
         $dql = $this->em->createQueryBuilder();
         $dql->select('h')
             ->from('AppVacReqBundle:VacReqHolidayList','h')
-            ->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
-            ->where("h.holidayName = o.holidayName")
-            ->andWhere("o.observed = true")
+            //->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
+            //->where("h.holidayName = o.holidayName") //compare similar
+            //->andWhere("o.observed = true")
             ->andWhere("h.holidayDate >= :startDate AND h.holidayDate <= :endDate")
         ;
 
@@ -482,7 +508,7 @@ class VacReqCalendarUtil
         //3) exclude holidays on the weekends
         $weekDayHolidays = array();
         foreach($holidays as $holiday) {
-            //echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
+            echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
             $holidayDate = $holiday->getHolidayDate();
             if( $this->isWeekend($holidayDate) == false ) {
                 $weekDayHolidays[] = $holiday;
@@ -494,7 +520,103 @@ class VacReqCalendarUtil
         return $weekDayHolidays;
     }
 
-    public function getList1HolidaysInRange( $startDate, $endDate, $institutionId ) {
+    public function getTrueListHolidaysInRange( $startDate, $endDate ) {
+        if( !$startDate || !$startDate ) {
+            return null;
+        }
+
+        $parameters = array();
+
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder('holidays');
+
+        $dql->andWhere("holidays.holidayDate >= :startDate AND holidays.holidayDate <= :endDate");
+        $parameters['startDate'] = $startDate;
+        $parameters['endDate'] = $endDate;
+
+        $dql->orderBy("holidays.holidayDate","ASC");
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $holidays = $query->getResult();
+
+        //$count = count($holidays);
+        //foreach($holidays as $holiday) {
+        //    echo $holiday->getString()."<br>";
+        //}
+
+        //exit('exit count='.count($holidays));
+
+        return $holidays;
+    }
+
+    //find ObservedHoliday by similar holidayName: return true for 'Christmas observed' and 'Christmas'
+    public function findSimilarObservedHolidays($holidayName,$institutionId)
+    {
+        //echo "holidayName=$holidayName => ";
+
+        $observedHolidays = $this->getObservedHolidaysByInstitution($institutionId);
+
+        foreach($observedHolidays as $observedHoliday) {
+            $observedHolidayName = $observedHoliday->getHolidayName();
+            if( $observedHolidayName == $holidayName ) {
+                //echo " found! <br>";
+                return true;
+            }
+
+            if( $this->findCommonString($observedHolidayName,$holidayName) ) {
+                //echo " found! <br>";
+                return true;
+            }
+        }
+
+        echo " not found <br>";
+        return false;
+    }
+    function findCommonString($str1,$str2,$case_sensitive = false)
+    {
+        $ary1 = explode(' ',$str1);
+        $ary2 = explode(' ',$str2);
+
+        if ($case_sensitive)
+        {
+            $ary1 = array_map('strtolower',$ary1);
+            $ary2 = array_map('strtolower',$ary2);
+        }
+
+        return implode(' ',array_intersect($ary1,$ary2));
+    }
+
+    public function getObservedHolidaysByInstitution($institutionId) {
+        $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
+        $dql = $repository->createQueryBuilder('observedHolidays');
+        $dql->where('observedHolidays.observed = true');
+
+        //get holidays where $institutionId is under $institutions
+        $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
+        if( $institutionId ) {
+            $dql->leftJoin("observedHolidays.institutions", "institutions");
+
+            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+            //$parentNode, $field, $default=true
+            $instStr =
+                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+                selectNodesUnderParentNode($institution,"institutions",$default);
+            $dql->andWhere($instStr);
+        }
+
+        $query = $this->em->createQuery($dql);
+
+        $observedHolidays = $query->getResult();
+
+        return $observedHolidays;
+    }
+
+    public function getList1HolidaysInRange_ORIG( $startDate, $endDate, $institutionId ) {
 
         if( !$startDate || !$startDate ) {
             return null;

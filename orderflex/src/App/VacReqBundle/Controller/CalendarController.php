@@ -657,7 +657,88 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
         }
 
-        $title = ' Observed Holidays';
+        $title = 'Manage Observed Holidays';
+
+        $routeName = $request->get('_route');
+
+        $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
+        if( $holidaysUrl ) {
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+        }
+        
+        return array(
+            'form' => $form->createView(),
+            'filterform' => null, //$filterform->createView(),
+            'holidays' => $holidays,
+            'title' => $title,
+            'routename' => $routeName,
+            'holidayUrl' => $holidaysUrl,
+            $thisYear
+        );
+    }
+
+    /**
+     * @Route("/show-observed-holidays/", name="vacreq_show_observed_holidays", methods={"GET"})
+     * @Template("AppVacReqBundle/Holidays/observed-holidays-years.html.twig")
+     */
+    public function showAdjacentObservedHolidaysAction(Request $request)
+    {
+        //exit('showAdjacentObservedHolidaysAction');
+        if(
+            false == $this->isGranted('ROLE_VACREQ_ROLE')
+        ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $filterParams = $request->query->all();
+        if( count($filterParams) == 0 ) {
+            $thisYear = date("Y");
+            $previousYear = (int)$thisYear - 1;
+            $nextYear = (int)$thisYear + 1;
+            $defaultYears = "$previousYear,$thisYear,$nextYear";
+            return $this->redirect( $this->generateUrl(
+                'vacreq_show_observed_holidays',
+                array(
+                    'filter[years]' => $defaultYears, //$currentYear,
+                )
+            ));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+
+        //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
+        //echo "holidays count=".count($holidays)."<br>";
+
+        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        $dql = $repository->createQueryBuilder("holiday");
+
+        //process filter
+        $params = array();
+        $filterRes = $this->processFilter( $dql, $request, $params );
+        $filterform = $filterRes['form'];
+        $dqlParameters = $filterRes['dqlParameters'];
+        //$filtered = $filterRes['filtered'];
+
+        $query = $em->createQuery($dql);
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters( $dqlParameters );
+        }
+
+        $holidays = $query->getResult();
+
+        //$startDate = '2021-12-31';
+        $startDate = '2022-01-01';
+        $endDate = '2024-12-31';
+
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange( $startDate, $endDate, 0 );
+
+        //$dql->select('holiday');
+
+        $title = 'Holiday days used in calculation';
 
         $routeName = $request->get('_route');
 
@@ -667,13 +748,12 @@ class CalendarController extends OrderAbstractController
         }
 
         return array(
-            'form' => $form->createView(),
-            'filterform' => null, //$filterform->createView(),
+            'filterform' => $filterform->createView(),
+            //'pagination' => $pagination,
             'holidays' => $holidays,
             'title' => $title,
             'routename' => $routeName,
-            'holidayUrl' => $holidaysUrl,
-            $thisYear
+            'holidaysUrl' => $holidaysUrl
         );
     }
 
@@ -1194,7 +1274,8 @@ class CalendarController extends OrderAbstractController
         $holidaysDays = count($holidays);
 
         $note = "";
-        $holidayStrArr = array();
+        //$holidayStrArr = array();
+        $holidayStr = "";
 
         foreach($holidays as $holiday) {
             $holidayDate = $holiday->getHolidayDate();
@@ -1202,16 +1283,22 @@ class CalendarController extends OrderAbstractController
             if( $holidayDate ) {
                 $holidayDateStr = $holiday->getHolidayDate()->format('D, M d Y'); //format('m/d/Y');
             }
-            $holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+            //$holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+            $holidayStr = $holidayStr . "<br>- " . $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr;
         }
 
 
-        if( count($holidayStrArr) > 0 ) {
+        if( count($holidays) > 0 ) {
+            $postfix = '';
+            if( count($holidays) > 1 ) {
+                $postfix = 's';
+            }
             $note =
-                "Please confirm the total count of days away does not include holidays<br>".
-                "Listed date range includes ".count($holidays)." observed holiday(s):<br>" .
+                "Please confirm the total count of days away does not include holidays.".
+                " Listed date range includes ".count($holidays)." observed holiday" . $postfix . ":" .
                 //" [Holiday Title] on [Holiday Date]." .
-                implode(", ",$holidayStrArr)
+                //implode("<br>",$holidayStrArr)
+                $holidayStr
                 ;
         }
 

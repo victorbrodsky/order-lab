@@ -1174,6 +1174,16 @@ class Invoice {
 
         return $total;
     }
+
+    public function getWorkRequestSubmitter() {
+        $transresRequest = $this->getTransresRequest();
+        if( $transresRequest ) {
+            $submitter = $transresRequest->getSubmitter();
+            if( $submitter ) {
+                return $submitter.""; //->getUsernameShortest();
+            }
+        }
+    }
     
     public function __toString() {
         return "".$this->getId();

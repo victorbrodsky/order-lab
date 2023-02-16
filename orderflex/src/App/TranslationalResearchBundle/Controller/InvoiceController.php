@@ -80,8 +80,10 @@ class InvoiceController extends OrderAbstractController
 
         $dql->leftJoin('invoice.submitter', 'submitter');
         $dql->leftJoin('invoice.salesperson', 'salesperson');
-        $dql->leftJoin('salesperson.infos', 'salespersonInfos');
+        //$dql->leftJoin('salesperson.infos', 'salespersonInfos');
         $dql->leftJoin('invoice.transresRequest', 'transresRequest');
+        $dql->leftJoin('transresRequest.submitter', 'requestSubmitter');
+        $dql->leftJoin('requestSubmitter.infos', 'requestSubmitterInfos');
         $dql->leftJoin('invoice.principalInvestigator', 'principalInvestigator');
         $dql->leftJoin('invoice.billingContact', 'billingContact');
 
