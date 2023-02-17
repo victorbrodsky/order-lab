@@ -357,6 +357,32 @@ class CalendarController extends OrderAbstractController
 
         return $filterRes;
     }
+    public function processYearFilter( $request, $params=null ) {
+        //$dqlParameters = array();
+        //$filterRes = array();
+        //$filtered = false;
+
+        //$em = $this->getDoctrine()->getManager();
+        //$params['em'] = $em;
+
+        //create filter form
+        $filterform = $this->createForm(VacReqHolidayFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+
+        $filterform->handleRequest($request);
+        //dump($filterform);
+        //exit('222');
+
+        if( $filterform->has('years') ) {
+            $years = $filterform['years']->getData();
+        } else {
+            $years = null;
+        }
+
+        return $years;
+    }
 
     //get list of Holidays from list 1 - source of truth (VacReqHolidayList)
     public function getSourceTruthListHolidays( $years ) {
@@ -473,7 +499,7 @@ class CalendarController extends OrderAbstractController
 
 
     /**
-     * @Route("/observed-holidays/", name="vacreq_observed_holidays", methods={"GET"})
+     * @Route("/manage-observed-holidays/", name="vacreq_observed_holidays", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
      */
     public function observedHolidaysFormAction(Request $request) {
@@ -697,7 +723,7 @@ class CalendarController extends OrderAbstractController
     }
 
     /**
-     * @Route("/show-observed-holidays/", name="vacreq_show_observed_holidays", methods={"GET"})
+     * @Route("/observed-holidays/", name="vacreq_show_observed_holidays", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays-years.html.twig")
      */
     public function showAdjacentObservedHolidaysAction(Request $request)
@@ -712,9 +738,10 @@ class CalendarController extends OrderAbstractController
         $filterParams = $request->query->all();
         if( count($filterParams) == 0 ) {
             $thisYear = date("Y");
-            $previousYear = (int)$thisYear - 1;
+            //$previousYear = (int)$thisYear - 1;
             $nextYear = (int)$thisYear + 1;
-            $defaultYears = "$previousYear,$thisYear,$nextYear";
+            //$defaultYears = "$previousYear,$thisYear,$nextYear";
+            $defaultYears = "$thisYear,$nextYear";
             return $this->redirect( $this->generateUrl(
                 'vacreq_show_observed_holidays',
                 array(
@@ -730,6 +757,7 @@ class CalendarController extends OrderAbstractController
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
 
+        ////////// get holidays /////////////
         $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $dql = $repository->createQueryBuilder("holiday");
 
@@ -748,10 +776,23 @@ class CalendarController extends OrderAbstractController
         }
 
         $holidays = $query->getResult();
+        ////////// EOF get holidays /////////////
 
         //$startDate = '2021-12-31';
-        $startDate = '2022-01-01';
-        $endDate = '2024-12-31';
+        //$startDate = '2022-01-01';
+        //$endDate = '2024-12-31';
+        $years = $this->processYearFilter($request);
+        //echo "years=".$years."<br>";
+
+        //process years: get startDate and endDate
+        $years = str_replace(" ","",$years);
+        $yearsArr = explode(",",$years);
+        //dump($yearsArr);
+        $minYear = min($yearsArr);
+        $maxYear = max($yearsArr);
+        $startDate = "$minYear-01-01";
+        $endDate = "$maxYear-12-31";
+        //exit("min=$minYear, max=$maxYear");
 
         $holidays = $vacreqCalendarUtil->getHolidaysInRange( $startDate, $endDate, 0 );
 

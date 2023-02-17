@@ -534,6 +534,10 @@ class VacReqCalendarUtil
         $parameters['startDate'] = $startDate;
         $parameters['endDate'] = $endDate;
 
+        $dql->andWhere("holidays.type = :typedef OR holidays.type = :typeadd");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
+
         $dql->orderBy("holidays.holidayDate","ASC");
 
         $query = $this->em->createQuery($dql);
@@ -560,25 +564,39 @@ class VacReqCalendarUtil
         //echo "holidayName=$holidayName => ";
 
         $observedHolidays = $this->getObservedHolidaysByInstitution($institutionId);
+        //dump($observedHolidays);
+        //exit('222');
+
+        //remove 'Day'
+        $holidayName = str_replace('Day','',$holidayName);
 
         foreach($observedHolidays as $observedHoliday) {
             $observedHolidayName = $observedHoliday->getHolidayName();
+            $observedHolidayName = str_replace('Day','',$observedHolidayName);
+
+            //echo "[$observedHolidayName] ?= [$holidayName] <br>";
+
             if( $observedHolidayName == $holidayName ) {
-                //echo " found! <br>";
+                //echo " found exact! <br>";
                 return true;
             }
-
+            
             if( $this->findCommonString($observedHolidayName,$holidayName) ) {
-                //echo " found! <br>";
+                //echo " found similar! <br>";
                 return true;
             }
         }
 
-        echo " not found <br>";
+        //echo " not found <br>";
         return false;
     }
     function findCommonString($str1,$str2,$case_sensitive = false)
     {
+//        if( $str1 == $str2 ) {
+//            return true;
+//        }
+//        return false;
+
         $ary1 = explode(' ',$str1);
         $ary2 = explode(' ',$str2);
 

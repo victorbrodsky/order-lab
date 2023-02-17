@@ -42,10 +42,10 @@
             {#<th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>#}
             {#<th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>#}
 
-            <th>'Date'</th>
-            <th>'Name'</th>
-            <th>'Institutions'</th>
-            <th>'Country'</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Institutions</th>
+            <th>Country</th>
 
         </tr>
         </thead>
@@ -98,6 +98,33 @@
 {% endblock %}
 
 
+{% block additionaljs %}
 
+    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/interview-modal.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/rank-modal.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/status-notification-modal.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/send-notification-emails.js') }}"></script>#}
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+
+            $('[data-toggle="tooltip"]').tooltip({html: true});
+
+            var target = ".datepicker-only-year";
+            var datefilter = $(target).datepicker( {
+                autoclose: true,
+                format: " yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                orientation: 'auto', //'auto top'
+                multidate: true,
+                clearBtn: true
+            });
+        });
+
+    </script>
+
+{% endblock %}
 
 
