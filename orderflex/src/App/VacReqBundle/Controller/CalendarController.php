@@ -550,21 +550,41 @@ class CalendarController extends OrderAbstractController
 
         //get Holidays
         $thisYear = date("Y");
+        //$thisYear = $thisYear - 1;
         $holidays = $this->getSourceTruthListHolidays($thisYear);
 
         //echo "holidays count=".count($holidays)."<br>";
 
+        $allObservedHolidays = array();
         $observedHolidays = array();
+        $newCreatedObservedHoliday = array();
         foreach($holidays as $holiday) {
-            $observedHoliday = $vacreqCalendarUtil->getOrCreateObservedHoliday($holiday);
+            //$observedHoliday = $vacreqCalendarUtil->getOrCreateObservedHoliday($holiday);
+            $observedHoliday = $vacreqCalendarUtil->findObservedHoliday($holiday);
+            if( !$observedHoliday ) {
+                $observedHoliday = $vacreqCalendarUtil->createObservedHoliday($holiday);
+                $newCreatedObservedHoliday[] = $observedHoliday."";
+            }
             if( !$observedHoliday ) {
                 continue;
             }
-            $observedHolidays[] = $observedHoliday;
+            $allObservedHolidays[$observedHoliday->getHolidayName()] = $observedHoliday;
         }
 
+        //Show in flash
+        if( count($newCreatedObservedHoliday) > 0 ) {
+            $newCreatedObservedHoliday = array_unique($newCreatedObservedHoliday);
+            $this->addFlash(
+                'notice',
+                "Created Observed Holidays:<br>" . implode("<br>", $newCreatedObservedHoliday)
+            );
+        }
+        //dump($allObservedHolidays);
+        //exit('111');
+
         $originalObservedHolidays = array();
-        foreach($observedHolidays as $observedHoliday) {
+        foreach($allObservedHolidays as $holidayName => $observedHoliday) {
+            $observedHolidays[] = $observedHoliday;
             $key = $vacreqCalendarUtil->cleanString($observedHoliday->getName());
             $originalObservedHolidays[$key] = $observedHoliday->getEntityHash();
         }
@@ -639,7 +659,7 @@ class CalendarController extends OrderAbstractController
             $resStr = "No changes";
             $updatedHolidays = count($res);
             if( $updatedHolidays > 0 ) {
-                $em->flush();
+                $em->flush(); //testing
                 $resStr = "Successfully updated ".$updatedHolidays." holiday(s)".":<br>".implode("<br>",$res);
 
                 //Event Log
@@ -657,7 +677,7 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
         }
 
-        $title = 'Manage Observed Holidays';
+        $title = 'Manage Observed Holidays' . "(" . $thisYear .")";
 
         $routeName = $request->get('_route');
 
@@ -673,7 +693,6 @@ class CalendarController extends OrderAbstractController
             'title' => $title,
             'routename' => $routeName,
             'holidayUrl' => $holidaysUrl,
-            $thisYear
         );
     }
 
@@ -738,7 +757,7 @@ class CalendarController extends OrderAbstractController
 
         //$dql->select('holiday');
 
-        $title = 'Holiday days used in calculation';
+        $title = 'Observed Holiday days used in off-site days calculation';
 
         $routeName = $request->get('_route');
 

@@ -830,4 +830,33 @@ class DefaultController extends OrderAbstractController
 //        exit('EOF holidayCalendarAction');
 //    }
 
+
+    /**
+     * http://127.0.0.1/order/index_dev.php/time-away-request/remove-all-observed-holidays
+     *
+     * @Route("/remove-all-observed-holidays", name="vacreq_remove-all-observed-holidays")
+     */
+    public function removeAllObservedHolidaysAction( Request $request )
+    {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        exit('removeAllObservedHolidaysAction Not allowed.');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $holidays = $em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findAll();
+        echo "observed holidays=".count($holidays)."<br>";
+
+        foreach($holidays as $holiday) {
+            $em->remove($holiday);
+            $em->flush();
+            echo "Deleted ".$holiday."<br>";
+
+        }
+
+        exit('EOF removeAllObservedHolidaysAction');
+    }
+
 }

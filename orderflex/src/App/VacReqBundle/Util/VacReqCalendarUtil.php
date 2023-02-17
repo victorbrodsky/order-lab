@@ -684,15 +684,91 @@ class VacReqCalendarUtil
 
     public function getOrCreateObservedHoliday( $holiday ) {
 
+        $observedHoliday = $this->findObservedHoliday($holiday);
+        if( !$observedHoliday ) {
+            $observedHoliday = $this->createObservedHoliday($holiday);
+        }
+
+        return $observedHoliday;
+
+//        $holidayName = $holiday->getHolidayName();
+//        if( !$holidayName ) {
+//            return null;
+//        }
+//
+//        //remove observed
+//        if( str_contains($holidayName,'observed') ) {
+//            //echo "observed in $holidayName<br>";
+//            $holidayName = str_replace('observed','',$holidayName);
+//            $holidayName = trim($holidayName);
+//        }
+//
+//        //find already exited by $holidayName
+//        $observedHoliday = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findOneByName($holidayName);
+//        if( $observedHoliday ) {
+//            return $observedHoliday;
+//        }
+//
+//        //create new VacReqObservedHolidayList:
+//        //copy holidayName => name, holidayName
+//        //copy country => country
+//        //copy institutions => institutions
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $user = $this->security->getUser();
+//
+//        $observedHoliday = new VacReqObservedHolidayList($user);
+//        $observedHoliday = $userSecUtil->setDefaultList($observedHoliday,0,$user,$holidayName);
+//        $observedHoliday->setType('user-added');
+//
+//        $observedHoliday->setHolidayName($holidayName);
+//
+//        //exception
+//        if( $holidayName == 'Washington’s Birthday' ) {
+//            $observedHoliday->setShortname("Presidents' Day");
+//        }
+//
+//        //$observedHoliday->setHolidayDate($holiday->getHolidayDate());
+//        $observedHoliday->setCountry($holiday->getCountry());
+//        $observedHoliday->setInstitutions($holiday->getInstitutions());
+//
+//        $this->em->persist($observedHoliday); //testing
+//
+//        return $observedHoliday;
+    }
+    public function findObservedHoliday( $holiday ) {
         $holidayName = $holiday->getHolidayName();
         if( !$holidayName ) {
             return null;
+        }
+
+        //remove 'observed' string
+        if( str_contains($holidayName,'observed') ) {
+            //echo "observed in $holidayName<br>";
+            $holidayName = str_replace('observed','',$holidayName);
+            $holidayName = trim($holidayName);
         }
 
         //find already exited by $holidayName
         $observedHoliday = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findOneByName($holidayName);
         if( $observedHoliday ) {
             return $observedHoliday;
+        }
+        
+        return null;
+    }
+    public function createObservedHoliday( $holiday ) {
+        $holidayName = $holiday->getHolidayName();
+
+        if( !$holidayName ) {
+            return null;
+        }
+
+        //remove 'observed' string
+        if( str_contains($holidayName,'observed') ) {
+            //echo "observed in $holidayName<br>";
+            $holidayName = str_replace('observed','',$holidayName);
+            $holidayName = trim($holidayName);
         }
 
         //create new VacReqObservedHolidayList:
@@ -718,7 +794,8 @@ class VacReqCalendarUtil
         $observedHoliday->setCountry($holiday->getCountry());
         $observedHoliday->setInstitutions($holiday->getInstitutions());
 
-        $this->em->persist($observedHoliday);
+        $this->em->persist($observedHoliday); //testing
+        $this->em->flush();
 
         return $observedHoliday;
     }

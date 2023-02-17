@@ -212,6 +212,23 @@
                         {% endif %}
                     {% endif %}
 
+
+                    {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
+                    is_granted('ROLE_VACREQ_PROXYSUBMITTER') or
+                    is_granted('ROLE_VACREQ_APPROVER') or
+                    is_granted('ROLE_VACREQ_SUPERVISOR') or
+                    is_granted('ROLE_VACREQ_OBSERVER')
+                    %}
+                        {#<li id="nav-bar-awaycalendar" class="divider-vertical">#}
+                            {#<a href="{{ path('vacreq_awaycalendar') }}">#}
+                                {#Away Calendar#}
+                            {#</a>#}
+                        {#</li>#}
+                        <li id="nav-bar-observedholidays" class="divider-vertical">
+                            <a href="{{ path(vacreq_sitename~'_show_observed_holidays') }}">Observed Holidays</a>
+                        </li>
+                    {% endif %}
+
                 </ul>
 
             {% endif %}
@@ -249,8 +266,8 @@
 
                             <li class="divider"></li>
                             <li><a href="{{ path(vacreq_sitename~'_holiday_dates') }}">Holiday Dates</a></li>
-                            <li><a href="{{ path(vacreq_sitename~'_observed_holidays') }}">Observed Holidays</a></li>
-                            <li><a href="{{ path(vacreq_sitename~'_show_observed_holidays') }}">Show Observed Holidays years</a></li>
+                            <li><a href="{{ path(vacreq_sitename~'_observed_holidays') }}">Manage Observed Holidays</a></li>
+                            {#<li><a href="{{ path(vacreq_sitename~'_show_observed_holidays') }}">Show Observed Holidays years</a></li>#}
                         </ul>
                     </li>
 
