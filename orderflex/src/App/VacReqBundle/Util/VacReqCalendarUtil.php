@@ -452,10 +452,14 @@ class VacReqCalendarUtil
         $holidays = $this->getTrueListHolidaysInRange($startDate,$endDate);
         //echo 'getList1HolidaysInRange count='.count($holidays)."<br>";
 
+        //get observed holidays by observed=true and $institutionId
+        $observedHolidays = $this->getObservedHolidaysByInstitution($institutionId);
+
         //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
         foreach($holidays as $holiday) {
             $holidayName = $holiday->getHolidayName();
-            $observedHoliday = $this->findSimilarObservedHolidays($holidayName,$institutionId);
+            //$observedHoliday = $this->findSimilarObservedHolidays($holidayName,$institutionId);
+            $observedHoliday = $this->findSimilarObservedHolidays($holidayName,$observedHolidays);
             if( $observedHoliday ) {
                 //3) exclude holidays on the weekends
                 $holidayDate = $holiday->getHolidayDate();
@@ -559,16 +563,17 @@ class VacReqCalendarUtil
     }
 
     //find ObservedHoliday by similar holidayName: return true for 'Christmas observed' and 'Christmas'
-    public function findSimilarObservedHolidays($holidayName,$institutionId)
+    public function findSimilarObservedHolidays($holidayName,$observedHolidays)
     {
         //echo "holidayName=$holidayName => ";
 
-        $observedHolidays = $this->getObservedHolidaysByInstitution($institutionId);
+        //$observedHolidays = $this->getObservedHolidaysByInstitution($institutionId);
         //dump($observedHolidays);
         //exit('222');
 
         //remove 'Day'
         $holidayName = str_replace('Day','',$holidayName);
+        //echo "holidayName=$holidayName => ";
 
         foreach($observedHolidays as $observedHoliday) {
             $observedHolidayName = $observedHoliday->getHolidayName();
@@ -576,12 +581,12 @@ class VacReqCalendarUtil
 
             //echo "[$observedHolidayName] ?= [$holidayName] <br>";
 
-            if( $observedHolidayName == $holidayName ) {
+            if( $holidayName == $observedHolidayName ) {
                 //echo " found exact! <br>";
                 return true;
             }
             
-            if( $this->findCommonString($observedHolidayName,$holidayName) ) {
+            if( $this->findCommonString($holidayName,$observedHolidayName) ) {
                 //echo " found similar! <br>";
                 return true;
             }
@@ -590,6 +595,10 @@ class VacReqCalendarUtil
         //echo " not found <br>";
         return false;
     }
+    //Found common string with minimum two common words
+    //Case2: "Christmas" =? "Christmas observed" => true
+    //Case1: "Washington’s Birthday" =? "Dr. Martin Luther King Jr’s Birthday" => false
+    //Case1: "New Year’s Day" =? "New Year’s Day observed" => true
     function findCommonString($str1,$str2,$case_sensitive = false)
     {
 //        if( $str1 == $str2 ) {
@@ -606,6 +615,17 @@ class VacReqCalendarUtil
             $ary2 = array_map('strtolower',$ary2);
         }
 
+        //Case1: if str1 or str2 is more than 2 words => require 2 minimum words
+        if( count($ary1) >= 2 ||  count($ary2) >= 2 ) {
+            $resArr = array_intersect($ary1,$ary2);
+            if( count($resArr) >= 2 ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //Case2: 1 or 2 words
         return implode(' ',array_intersect($ary1,$ary2));
     }
 
@@ -630,6 +650,12 @@ class VacReqCalendarUtil
         $query = $this->em->createQuery($dql);
 
         $observedHolidays = $query->getResult();
+
+        //echo "holidays=".count($observedHolidays)."<br>";
+        //foreach($observedHolidays as $observedHoliday) {
+        //    echo "".$observedHoliday."<br>";
+        //}
+        //exit('111');
 
         return $observedHolidays;
     }
