@@ -632,7 +632,12 @@ class VacReqCalendarUtil
     public function getObservedHolidaysByInstitution($institutionId) {
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
         $dql = $repository->createQueryBuilder('observedHolidays');
+
         $dql->where('observedHolidays.observed = true');
+
+        $dql->andWhere("observedHolidays.type = :typedef OR observedHolidays.type = :typeadd");
+        $parameters['typedef'] = 'default';
+        $parameters['typeadd'] = 'user-added';
 
         //get holidays where $institutionId is under $institutions
         $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
@@ -648,6 +653,10 @@ class VacReqCalendarUtil
         }
 
         $query = $this->em->createQuery($dql);
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
 
         $observedHolidays = $query->getResult();
 
