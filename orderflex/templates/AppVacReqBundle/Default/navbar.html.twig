@@ -177,7 +177,12 @@
                     {% endif %}
 
                     {% set floatingDayName = user_security_utility.getSiteSettingParameter('floatingDayName',vacreq_sitename) %}
-                    {% if floatingDayName %}
+                    {% if not floatingDayName %}
+                        {% set floatingDayName = "Floating Day" %}
+                    {% endif %}
+
+                    {% set enableFloatingDay = user_security_utility.getSiteSettingParameter('enableFloatingDay',vacreq_sitename) %}
+                    {% if floatingDayName and enableFloatingDay %}
                         {% if   is_granted('ROLE_VACREQ_SUBMITTER') or
                                 is_granted('ROLE_VACREQ_PROXYSUBMITTER') or
                                 is_granted('ROLE_VACREQ_ADMIN') or

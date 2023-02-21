@@ -720,7 +720,6 @@ class FloatingDayController extends OrderAbstractController
      * @Template("AppVacReqBundle/FloatingDay/floating-day.html.twig")
      */
     public function FloatingDayAction(Request $request) {
-
         if(
             false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
             false == $this->isGranted('ROLE_VACREQ_SUBMITTER') &&
@@ -740,6 +739,16 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
+        $enableFloatingDay = $userSecUtil->getSiteSettingParameter('enableFloatingDay','vacreq');
+        if( !$enableFloatingDay ) {
+            //Flash
+            $this->addFlash(
+                'notice',
+                'Enable Floating Day Request page is disabled for this year'
+            );
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
         $entity = new VacReqRequestFloating($user);
         
         $params = array();
@@ -753,6 +762,9 @@ class FloatingDayController extends OrderAbstractController
 
         //$title = "Floating Day (The page and functionality are under construction!)";
         $title = $userSecUtil->getSiteSettingParameter('floatingDayName','vacreq');
+        if( !$title ) {
+            $title = "Floating Day";
+        }
         //$title = $title . " - The page and functionality are under construction!";
 
         $cycle = 'new';

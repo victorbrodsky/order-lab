@@ -101,6 +101,11 @@ class VacReqSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
+        $builder->add('enableFloatingDay', CheckboxType::class, array(
+            'label' => 'Enable Floating Day Requests (show/hide new floating day page link):',
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
 
 //        $builder->add('holidayDatesUrl', null, array(
 //            'label' => 'URL for US Holiday dates in iCal format:',

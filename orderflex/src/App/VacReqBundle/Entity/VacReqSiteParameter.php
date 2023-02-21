@@ -122,6 +122,13 @@ class VacReqSiteParameter
      */
     private $floatingRestrictDateRange;
 
+    /**
+     * Enable Floating Day Requests: [Yes/No]
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableFloatingDay;
+
     //URL for US Holiday dates in iCal format:
     /**
      * URL for US Holiday dates in iCal format
@@ -341,6 +348,23 @@ class VacReqSiteParameter
     {
         $this->floatingRestrictDateRange = $floatingRestrictDateRange;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableFloatingDay()
+    {
+        return $this->enableFloatingDay;
+    }
+
+    /**
+     * @param mixed $enableFloatingDay
+     */
+    public function setEnableFloatingDay($enableFloatingDay)
+    {
+        $this->enableFloatingDay = $enableFloatingDay;
+    }
+    
 
     /**
      * @return mixed

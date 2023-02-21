@@ -1321,6 +1321,7 @@ class UserServiceUtil {
             "floatingDayName" => "Floating Day",
             "floatingDayNote" => $floatingDayNote,
             "floatingRestrictDateRange" => true,
+            "enableFloatingDay" => true,
         );
 
         $params = new VacReqSiteParameter();
