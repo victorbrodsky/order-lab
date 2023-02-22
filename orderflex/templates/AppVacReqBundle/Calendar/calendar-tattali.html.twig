@@ -68,25 +68,13 @@
 
 
 {% block additionalcss %}
-    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">#}
-    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">#}
-    {#<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">#}
-
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/core/main.min.css') }}" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/daygrid/main.min.css') }}" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/timegrid/main.min.css') }}" />
-
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppVacReqBundle/form/css/away-calendar.css') }}" />
-
 {% endblock %}
 
 {% block additionaljs %}
-
-    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>#}
-    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>#}
-    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>#}
-    {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>#}
-
     <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/core/main.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/interaction/main.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppVacReqBundle/fullcalendar/packages/daygrid/main.min.js') }}"></script>

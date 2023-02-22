@@ -632,6 +632,7 @@ class VacReqCalendarUtil
     public function getObservedHolidaysByInstitution($institutionId) {
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
         $dql = $repository->createQueryBuilder('observedHolidays');
+        $dql->select('observedHolidays');
 
         $dql->where('observedHolidays.observed = true');
 

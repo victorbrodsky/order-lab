@@ -44,6 +44,8 @@ class CalendarController extends OrderAbstractController
      * Template("AppVacReqBundle/Calendar/calendar.html.twig")
      * show the names of people who are away that day (one name per "event"/line).
      *
+     * Calendar is populated by App\VacReqBundle\EventListener\CalendarSubscriber
+     *
      * @Route("/away-calendar/", name="vacreq_awaycalendar", methods={"GET"})
      * @Template("AppVacReqBundle/Calendar/calendar-tattali.html.twig")
      */
@@ -67,33 +69,6 @@ class CalendarController extends OrderAbstractController
         $params = array();
         $params['em'] = $em;
         $params['supervisor'] = $this->isGranted('ROLE_VACREQ_SUPERVISOR');
-
-        ///// NOT USED /////
-//        if(0) {
-//            //get submitter groups: VacReqRequest, create
-//            $groupParams = array();
-//
-//            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
-//            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
-//            if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
-//                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-//            }
-//
-//            //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-//            if ($this->isGranted('ROLE_VACREQ_SUPERVISOR')) {
-//                $subjectUser = $user;
-//            } else {
-//                $groupParams['asSupervisor'] = true;
-//                $subjectUser = $vacreqUtil->getClosestSupervisor($user);
-//            }
-//            //echo "subjectUser=".$subjectUser."<br>";
-//            if (!$subjectUser) {
-//                $subjectUser = $user;
-//            }
-//
-//            $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
-//        }
-        ///// EOF NOT USED /////
 
         $organizationalInstitutions = $vacreqUtil->getAllGroupsByUser($user);
 //        foreach($organizationalInstitutions as $id=>$organizationalInstitution) {
@@ -802,6 +777,7 @@ class CalendarController extends OrderAbstractController
         //exit("min=$minYear, max=$maxYear");
 
         $holidays = $vacreqCalendarUtil->getHolidaysInRange( $startDate, $endDate, 0 );
+        //exit('holidays='.count($holidays));
 
         //$dql->select('holiday');
 
@@ -821,7 +797,9 @@ class CalendarController extends OrderAbstractController
             foreach ($organizationalInstitutions as $organizationalInstitution) {
                 $count++;
                 //echo $organizationalInstitution . "<br>";
-                $organizationalInstitutionStr = $organizationalInstitutionStr . $organizationalInstitution->getNodeNameWithRoot();
+                //$orgName = $organizationalInstitution."";
+                $orgName = $organizationalInstitution->getNodeNameWithRoot();
+                $organizationalInstitutionStr = $organizationalInstitutionStr . $orgName;
                 if( $count != count($organizationalInstitutions) ) {
                     $organizationalInstitutionStr = $organizationalInstitutionStr . ", ";
                 }

@@ -3168,7 +3168,6 @@ class VacReqUtil
 
     //get all groups for this user children groups
     public function getAllGroupsByUser( $user ) {
-
         $groupParams = array();
 
         //1) get user groups

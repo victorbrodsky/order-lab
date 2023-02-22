@@ -56,9 +56,14 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $filter = array('groupId'=>$groupId);
 
-        $this->setCalendar( $calendarEvent, "requestBusiness", $startDate, $endDate, $filter );
-        $this->setCalendar( $calendarEvent, "requestVacation", $startDate, $endDate, $filter );
-        $this->setFloatingCalendar( $calendarEvent, $startDate, $endDate, $filter );
+        if(0) {
+            $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
+            $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
+            $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
+        }
+
+        //set Calendar for observed holidays
+        $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {
@@ -427,4 +432,74 @@ class CalendarSubscriber implements EventSubscriberInterface
         }//foreach
 
     }
+
+    public function setObservedHolidaysCalendar( $calendarEvent, $startDate, $endDate, $filter ) {
+
+        //echo "ID";
+        $dateformat = 'M d Y';
+
+        //$vacreqUtil = $this->container->get('vacreq_util');
+        //$requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
+
+        if( isset($filter['groupId']) ) {
+            $groupId = $filter['groupId'];
+        } else {
+            $groupId = NULL;
+        }
+        $groupId = 0;
+        //exit('$groupId='.$groupId);
+
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+        $startDateStr = $startDate->format('Y-m-d');
+        $endDateStr = $endDate->format('Y-m-d');
+        //exit("groupId=$groupId, $startDateStr, $endDateStr");
+
+        $holidays = $vacreqCalendarUtil->getTrueListHolidaysInRange($startDate,$endDate);
+        echo "holidays=".count($holidays)."<br>";
+        //exit('111');
+
+        //Error: App\VacReqBundle\Entity\VacReqObservedHolidayList has no field or association named observed
+        $groupId = 0;
+        $observedHolidays = $vacreqCalendarUtil->getObservedHolidaysByInstitution($groupId);
+        echo "observedHolidays=".count($observedHolidays)."<br>";
+        exit('111');
+
+        //$startDate, $endDate, $institutionId
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDateStr,$endDateStr,$groupId);
+        echo "holidays=".count($holidays)."<br>";
+        exit('111');
+
+        //floating day color
+        //$backgroundColor = "#8c0000"; //"#77d39b";
+        $backgroundColorCalendar = "#fcf8e3";
+        $textColor = '#2F4F4F';
+        $calendarDayName = "Observed Holiday";
+
+        foreach( $holidays as $holiday ) {
+
+            $startDate = $holiday->getHolidayDate()->format('Y-m-d');
+
+            $title = $calendarDayName . $holiday->getName() .", ". $startDate;
+
+            $eventEntity = new Event($title, $startDate, $endDate);
+
+            //optional calendar event settings
+            $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event
+            //$eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
+            //$eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
+
+            $eventEntity->setOptions([
+                'backgroundColor' => $backgroundColorCalendar,
+                'textColor' => $textColor, //'#d1e6e6', //'#2F4F4F',
+                'classNames' => 'calendar-custom-class',
+                //'tooltip' => "tttttt"
+                //'overlap' => true
+            ]);
+
+            //finally, add the event to the CalendarEvent for displaying on the calendar
+            $calendarEvent->addEvent($eventEntity);
+        }//foreach
+
+    }
+
 }
