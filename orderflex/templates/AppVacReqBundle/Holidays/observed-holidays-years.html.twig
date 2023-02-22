@@ -11,8 +11,9 @@
 {% block content %}
     <h4 class="text-info" align="center">
         {{ title }}
-        {#{{ holidayUrl|raw }}#}
+        {{ holidaysUrl|raw }}
     </h4>
+    <p>{{ orgGroupTitle|raw }}</p>
 
     <form action="{{ path(routename) }}" method="get" class="well form-search">
 

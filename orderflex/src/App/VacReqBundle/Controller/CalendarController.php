@@ -729,7 +729,12 @@ class CalendarController extends OrderAbstractController
     public function showAdjacentObservedHolidaysAction(Request $request)
     {
         //exit('showAdjacentObservedHolidaysAction');
-        if(
+        if( false == $this->isGranted('ROLE_VACREQ_OBSERVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            false == $this->isGranted('ROLE_VACREQ_ADMIN') &&
             false == $this->isGranted('ROLE_VACREQ_ROLE')
         ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -753,6 +758,8 @@ class CalendarController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $user = $this->getUser();
 
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
@@ -763,19 +770,19 @@ class CalendarController extends OrderAbstractController
 
         //process filter
         $params = array();
-        $filterRes = $this->processFilter( $dql, $request, $params );
+        $filterRes = $this->processFilter($dql, $request, $params);
         $filterform = $filterRes['form'];
-        $dqlParameters = $filterRes['dqlParameters'];
+        //$dqlParameters = $filterRes['dqlParameters'];
         //$filtered = $filterRes['filtered'];
 
-        $query = $em->createQuery($dql);
+        //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
-        }
+        //if (count($dqlParameters) > 0) {
+        //    $query->setParameters($dqlParameters);
+        //}
 
-        $holidays = $query->getResult();
+        //$holidays = $query->getResult();
         ////////// EOF get holidays /////////////
 
         //$startDate = '2021-12-31';
@@ -800,11 +807,39 @@ class CalendarController extends OrderAbstractController
 
         $title = 'Observed Holiday days used in off-site days calculation';
 
+        /////////// get user's org groups ///////////
+        $orgGroupTitle = "";
+        if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
+            $groupParams = array('asObject'=>true);
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+            if ($this->isGranted('ROLE_VACREQ_ADMIN') == false) {
+                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
+            $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user, $groupParams);
+            $organizationalInstitutionStr = "";
+            $count = 0;
+            foreach ($organizationalInstitutions as $organizationalInstitution) {
+                $count++;
+                //echo $organizationalInstitution . "<br>";
+                $organizationalInstitutionStr = $organizationalInstitutionStr . $organizationalInstitution->getNodeNameWithRoot();
+                if( $count != count($organizationalInstitutions) ) {
+                    $organizationalInstitutionStr = $organizationalInstitutionStr . ", ";
+                }
+            }
+            if( $count == 1 ) {
+                $orgGroupTitle = "Your organisational group: ";
+            } else {
+                $orgGroupTitle = "Your organisational groups: ";
+            }
+            $orgGroupTitle = $orgGroupTitle . $organizationalInstitutionStr;
+        }
+        /////////// EOF get user's org groups ///////////
+
         $routeName = $request->get('_route');
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {
-            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">official holidays</a>'.')';
         }
 
         return array(
@@ -813,7 +848,8 @@ class CalendarController extends OrderAbstractController
             'holidays' => $holidays,
             'title' => $title,
             'routename' => $routeName,
-            'holidaysUrl' => $holidaysUrl
+            'holidaysUrl' => $holidaysUrl,
+            'orgGroupTitle' => $orgGroupTitle
         );
     }
 
