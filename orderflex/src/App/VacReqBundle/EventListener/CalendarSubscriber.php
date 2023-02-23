@@ -56,7 +56,7 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $filter = array('groupId'=>$groupId);
 
-        if(0) {
+        if(1) {
             $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
             $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
             $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
@@ -433,8 +433,16 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     }
 
-    public function setObservedHolidaysCalendar( $calendarEvent, $startDate, $endDate, $filter ) {
+//    public function setObservedHolidaysCalendar_test( $calendarEvent, $startDate, $endDate, $filter )
+//    {
+//        $calendarEvent->addEvent(new Event(
+//            'Event 1',
+//            new \DateTime('Tuesday this week'),
+//            new \DateTime('Wednesdays this week')
+//        ));
+//    }
 
+    public function setObservedHolidaysCalendar( $calendarEvent, $startDate, $endDate, $filter ) {
         //echo "ID";
         $dateformat = 'M d Y';
 
@@ -454,34 +462,41 @@ class CalendarSubscriber implements EventSubscriberInterface
         $endDateStr = $endDate->format('Y-m-d');
         //exit("groupId=$groupId, $startDateStr, $endDateStr");
 
-        $holidays = $vacreqCalendarUtil->getTrueListHolidaysInRange($startDate,$endDate);
-        echo "holidays=".count($holidays)."<br>";
-        //exit('111');
+        if(0) {
+            $holidays = $vacreqCalendarUtil->getTrueListHolidaysInRange($startDate, $endDate);
+            echo "holidays=" . count($holidays) . "<br>";
+            //exit('111');
 
-        //Error: App\VacReqBundle\Entity\VacReqObservedHolidayList has no field or association named observed
-        $groupId = 0;
-        $observedHolidays = $vacreqCalendarUtil->getObservedHolidaysByInstitution($groupId);
-        echo "observedHolidays=".count($observedHolidays)."<br>";
-        exit('111');
+            //Error: App\VacReqBundle\Entity\VacReqObservedHolidayList has no field or association named observed
+            $groupId = 0;
+            $observedHolidays = $vacreqCalendarUtil->getObservedHolidaysByInstitution($groupId);
+            echo "observedHolidays=" . count($observedHolidays) . "<br>";
+            exit('111');
+        }
 
         //$startDate, $endDate, $institutionId
         $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDateStr,$endDateStr,$groupId);
-        echo "holidays=".count($holidays)."<br>";
-        exit('111');
+        //echo "holidays=".count($holidays)."<br>";
+        //exit('111');
 
         //floating day color
         //$backgroundColor = "#8c0000"; //"#77d39b";
-        $backgroundColorCalendar = "#fcf8e3";
-        $textColor = '#2F4F4F';
+        $backgroundColorCalendar = "green"; //"#fcf8e3";
+        $textColor = 'white'; //'#2F4F4F';
         $calendarDayName = "Observed Holiday";
 
         foreach( $holidays as $holiday ) {
 
-            $startDate = $holiday->getHolidayDate()->format('Y-m-d');
+            $holidayStartDate = $holiday->getHolidayDate();
+            if( !$holidayStartDate ) {
+                continue;
+            }
 
-            $title = $calendarDayName . $holiday->getName() .", ". $startDate;
+            $holidayStartDateStr = $holidayStartDate->format($dateformat);
 
-            $eventEntity = new Event($title, $startDate, $endDate);
+            $title = $calendarDayName . $holiday->getName() .", ". $holidayStartDateStr;
+
+            $eventEntity = new Event($title, $holidayStartDate, $holidayStartDate);
 
             //optional calendar event settings
             $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event

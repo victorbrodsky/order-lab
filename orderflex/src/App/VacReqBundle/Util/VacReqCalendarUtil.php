@@ -473,55 +473,55 @@ class VacReqCalendarUtil
 
 
 
-        //TODO: fix previous year or next year not included
-        //1) find holidays in range in list 1 (VacReqHolidayList)
-        //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
-        $dql = $this->em->createQueryBuilder();
-        $dql->select('h')
-            ->from('AppVacReqBundle:VacReqHolidayList','h')
-            //->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
-            //->where("h.holidayName = o.holidayName") //compare similar
-            //->andWhere("o.observed = true")
-            ->andWhere("h.holidayDate >= :startDate AND h.holidayDate <= :endDate")
-        ;
-
-        if( $institutionId ) {
-            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
-            $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
-            $instStr =
-                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
-                selectNodesUnderParentNode($institution,"institutions",$default);
-
-            $dql->leftJoin("o.institutions", "institutions")
-                ->andWhere($instStr);
-        }
-
-        $query = $this->em->createQuery($dql);
-
-        $parameters = array();
-        $parameters['startDate'] = $startDate;
-        $parameters['endDate'] = $endDate;
-
-        if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
-        }
-
-        $holidays = $query->getResult();
-        //exit('exit count='.count($holidays));
-
-        //3) exclude holidays on the weekends
-        $weekDayHolidays = array();
-        foreach($holidays as $holiday) {
-            echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
-            $holidayDate = $holiday->getHolidayDate();
-            if( $this->isWeekend($holidayDate) == false ) {
-                $weekDayHolidays[] = $holiday;
-            }
-        }
-
-        //exit('exit count='.count($weekDayHolidays));
-
-        return $weekDayHolidays;
+//        //TODO: fix previous year or next year not included
+//        //1) find holidays in range in list 1 (VacReqHolidayList)
+//        //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
+//        $dql = $this->em->createQueryBuilder();
+//        $dql->select('h')
+//            ->from('AppVacReqBundle:VacReqHolidayList','h')
+//            //->from('AppVacReqBundle:VacReqObservedHolidayList', 'o')
+//            //->where("h.holidayName = o.holidayName") //compare similar
+//            //->andWhere("o.observed = true")
+//            ->andWhere("h.holidayDate >= :startDate AND h.holidayDate <= :endDate")
+//        ;
+//
+//        if( $institutionId ) {
+//            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+//            $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
+//            $instStr =
+//                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+//                selectNodesUnderParentNode($institution,"institutions",$default);
+//
+//            $dql->leftJoin("o.institutions", "institutions")
+//                ->andWhere($instStr);
+//        }
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        $parameters = array();
+//        $parameters['startDate'] = $startDate;
+//        $parameters['endDate'] = $endDate;
+//
+//        if( count($parameters) > 0 ) {
+//            $query->setParameters($parameters);
+//        }
+//
+//        $holidays = $query->getResult();
+//        //exit('exit count='.count($holidays));
+//
+//        //3) exclude holidays on the weekends
+//        $weekDayHolidays = array();
+//        foreach($holidays as $holiday) {
+//            echo $holiday->getNameOrShortName().": ".$holiday->getString()."<br>";
+//            $holidayDate = $holiday->getHolidayDate();
+//            if( $this->isWeekend($holidayDate) == false ) {
+//                $weekDayHolidays[] = $holiday;
+//            }
+//        }
+//
+//        //exit('exit count='.count($weekDayHolidays));
+//
+//        return $weekDayHolidays;
     }
 
     public function getTrueListHolidaysInRange( $startDate, $endDate ) {
@@ -630,20 +630,25 @@ class VacReqCalendarUtil
     }
 
     public function getObservedHolidaysByInstitution($institutionId) {
+        //$repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
-        $dql = $repository->createQueryBuilder('observedHolidays');
-        $dql->select('observedHolidays');
 
-        $dql->where('observedHolidays.observed = true');
+        $dql = $repository->createQueryBuilder('list');
+        $dql->select('list');
 
-        $dql->andWhere("observedHolidays.type = :typedef OR observedHolidays.type = :typeadd");
+        $dql->where('list.observed = TRUE');
+
+        //$dql->andWhere("list.observed = true AND (list.type = :typedef OR list.type = :typeadd)");
+
+        $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+
         $parameters['typedef'] = 'default';
         $parameters['typeadd'] = 'user-added';
 
         //get holidays where $institutionId is under $institutions
         $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
         if( $institutionId ) {
-            $dql->leftJoin("observedHolidays.institutions", "institutions");
+            $dql->leftJoin("list.institutions", "institutions");
 
             $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
             //$parentNode, $field, $default=true
