@@ -630,15 +630,12 @@ class VacReqCalendarUtil
     }
 
     public function getObservedHolidaysByInstitution($institutionId) {
-        //$repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
 
         $dql = $repository->createQueryBuilder('list');
         $dql->select('list');
 
         $dql->where('list.observed = TRUE');
-
-        //$dql->andWhere("list.observed = true AND (list.type = :typedef OR list.type = :typeadd)");
 
         $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
 

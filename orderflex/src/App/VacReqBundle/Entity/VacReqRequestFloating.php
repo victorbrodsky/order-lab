@@ -642,7 +642,11 @@ class VacReqRequestFloating
         return false;
     }
 
-
+    public function getInformUsers()
+    {
+        //Add informUsers field or use this method which is called by VacReqUtil->getAllInformUsers
+        return array();
+    }
     
     public function __toString()
     {

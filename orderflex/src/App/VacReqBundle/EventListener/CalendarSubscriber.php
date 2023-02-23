@@ -28,11 +28,15 @@ class CalendarSubscriber implements EventSubscriberInterface
     protected $em;
     protected $container;
     protected $security;
+    protected $fast;
 
     public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
+
+        $this->fast = false;
+        //$this->fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec (?)
     }
 
     public static function getSubscribedEvents() : array
@@ -45,6 +49,7 @@ class CalendarSubscriber implements EventSubscriberInterface
     public function onCalendarSetData(CalendarEvent $calendarEvent) {
         $startDate = $calendarEvent->getStart();
         $endDate = $calendarEvent->getEnd();
+        //echo "endDate=".$endDate->format('Y-m-d H:i:s')."<br>";
 
         // The original request so you can get filters from the calendar
         // Use the filter in your query for example
@@ -56,11 +61,10 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         $filter = array('groupId'=>$groupId);
 
-        if(1) {
-            $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
-            $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
-            $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
-        }
+        $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
+        $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
+
+        $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
 
         //set Calendar for observed holidays
         $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
@@ -167,8 +171,9 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
 
             //isGranted by action might be heavy method
-            $fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
-            if( $fast ) {
+            //$fast = false;
+            //$fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
+            if( $this->fast ) {
                 //$url = null;
                 $url = $this->container->get('router')->generate(
                     'vacreq_showuser',
@@ -180,14 +185,15 @@ class CalendarSubscriber implements EventSubscriberInterface
             } else {
                 if(
                     //$this->container->get('security.authorization_checker')->isGranted("read", $requestFull)
-                    $this->security->isGranted("read", $requestFull)
+                    false == $this->security->isGranted("read", $requestFull)
                 ) {
+                    //echo "can read <br>";
                     $url = $this->container->get('router')->generate(
                         'vacreq_show',
                         array(
                             'id' => $requestFull->getId()
                         )
-                    //UrlGeneratorInterface::ABSOLUTE_URL
+                        //UrlGeneratorInterface::ABSOLUTE_URL
                     );
                 } else {
                     $url = $this->container->get('router')->generate(
@@ -195,7 +201,7 @@ class CalendarSubscriber implements EventSubscriberInterface
                         array(
                             'id' => $requestFull->getUser()->getId()
                         )
-                    //UrlGeneratorInterface::ABSOLUTE_URL
+                        //UrlGeneratorInterface::ABSOLUTE_URL
                     );
                 }
             }
@@ -225,6 +231,11 @@ class CalendarSubscriber implements EventSubscriberInterface
 
             //$title = "EventID=".$request->getId();
             //echo $title;
+
+            //endDate is format: 2023-02-28 00:00:00, and the last day in calendar is 27 February
+            //Fix, set endDate to beginning of the next day to show the end day correctly
+            //echo "endDate=".$endDate->format('Y-m-d H:i:s')."<br>";
+            $endDate->modify('+1 day');
 
             $eventEntity = new Event($title, $startDate, $endDate);
 
@@ -338,8 +349,8 @@ class CalendarSubscriber implements EventSubscriberInterface
             }
 
             //isGranted by action might be heavy method
-            $fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
-            if( $fast ) {
+            //$fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
+            if( $this->fast ) {
                 //$url = null;
                 $url = $this->container->get('router')->generate(
                     'vacreq_showuser',
@@ -348,7 +359,8 @@ class CalendarSubscriber implements EventSubscriberInterface
                     )
                 );
             } else {
-                if( $this->security->isGranted("read", $floatingRequest) ) {
+                if( false == $this->security->isGranted("read", $floatingRequest) )
+                {
                     $url = $this->container->get('router')->generate(
                         'vacreq_floating_show',
                         array(
