@@ -199,7 +199,7 @@ class CalendarController extends OrderAbstractController
     }
     
     /**
-     * @Route("/holiday-dates/", name="vacreq_holiday_dates", methods={"GET"})
+     * @Route("/manage-holiday-dates/", name="vacreq_manage_holiday_dates", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/holiday-dates.html.twig")
      */
     public function holidayDatesAction(Request $request) {
@@ -217,7 +217,7 @@ class CalendarController extends OrderAbstractController
             //$endYear = date("Y+1");
             //$defaultYears = array('2021','2022');
             $defaultYears = "$thisYear,$nextYear";
-            return $this->redirect( $this->generateUrl('vacreq_holiday_dates',
+            return $this->redirect( $this->generateUrl('vacreq_manage_holiday_dates',
                 array(
                     'filter[years]' => $defaultYears, //$currentYear,
                     //'filter[years]' => +2020%2C+2021
@@ -474,7 +474,7 @@ class CalendarController extends OrderAbstractController
 
 
     /**
-     * @Route("/manage-observed-holidays/", name="vacreq_observed_holidays", methods={"GET"})
+     * @Route("/manage-observed-holidays/", name="vacreq_manage_observed_holidays", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays-form.html.twig")
      */
     public function observedHolidaysFormAction(Request $request) {
@@ -509,7 +509,7 @@ class CalendarController extends OrderAbstractController
                 $thisYear = date("Y");
                 $defaultYears = $thisYear;
                 return $this->redirect( $this->generateUrl(
-                    'vacreq_observed_holidays',
+                    'vacreq_manage_observed_holidays',
                     array(
                         'filter[years]' => $defaultYears, //$currentYear,
                     )
@@ -675,7 +675,7 @@ class CalendarController extends OrderAbstractController
                 $resStr
             );
 
-            return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
+            return $this->redirect( $this->generateUrl('vacreq_manage_observed_holidays') );
         }
 
         $title = 'Manage observed holidays';
@@ -1164,7 +1164,7 @@ class CalendarController extends OrderAbstractController
             $res
         );
 
-        return $this->redirect( $this->generateUrl('vacreq_holiday_dates') );
+        return $this->redirect( $this->generateUrl('vacreq_manage_holiday_dates') );
     }
 
     /**

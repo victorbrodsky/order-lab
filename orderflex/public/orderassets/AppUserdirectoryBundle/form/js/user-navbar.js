@@ -508,6 +508,17 @@ function setVacReqNavBar() {
         id = 'floatingdayrequest';
     }
 
+    if( full.indexOf("/time-away-request/observed-holidays") !== -1 ) {
+        id = 'observedholidays';
+    }
+
+    if( full.indexOf("/manage-holiday-dates") !== -1 ) {
+        id = 'admin';
+    }
+    if( full.indexOf("/manage-observed-holidays") !== -1 ) {
+        id = 'admin';
+    }
+
     id = commonNavBar(full,id);
 
     if( full.indexOf("/time-away-request/re-identify") !== -1 ) {

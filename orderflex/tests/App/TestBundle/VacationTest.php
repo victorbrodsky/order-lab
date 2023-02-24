@@ -398,4 +398,41 @@ class VacationTest extends WebTestBase
         }
     }
 
+    public function testObservedHolidays() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/time-away-request/observed-holidays');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Dates of observed holidays")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Organizational Groups")')->count()
+        );
+    }
+    public function testManageHolidays() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/time-away-request/manage-holiday-dates');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Holiday Dates")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Organizational Groups")')->count()
+        );
+    }
+    public function testManageObservedHolidays() {
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/time-away-request/manage-observed-holidays');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Manage observed holidays")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Organizational Groups")')->count()
+        );
+    }
+
 }
