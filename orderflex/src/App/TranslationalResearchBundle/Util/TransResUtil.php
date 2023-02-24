@@ -4841,7 +4841,11 @@ class TransResUtil
             $text = str_replace("[[INVOICE DUE DATE AND DAYS AGO]]", $dueDateStr, $text);
 
             //[[INVOICE AMOUNT DUE]]
-            $text = str_replace("[[INVOICE AMOUNT DUE]]", $invoice->getDue(), $text);
+            $invoiceDue = $invoice->getDue();
+            if( !$invoiceDue ) {
+                $invoiceDue = "N/A";
+            }
+            $text = str_replace("[[INVOICE AMOUNT DUE]]", $invoiceDue, $text);
 
             if( strpos((string)$text, '[[INVOICE SHOW URL]]') !== false ) {
                 $transresRequestUtil = $this->container->get('transres_request_util');
