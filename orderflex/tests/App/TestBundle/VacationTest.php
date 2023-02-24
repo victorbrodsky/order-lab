@@ -400,6 +400,8 @@ class VacationTest extends WebTestBase
 
     public function testObservedHolidays() {
         $this->logIn();
+
+        $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/time-away-request/observed-holidays');
 
         $content = $this->client->getResponse()->getContent();
@@ -416,7 +418,10 @@ class VacationTest extends WebTestBase
     }
     public function testManageHolidays() {
         $this->logIn();
+
+        $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/time-away-request/manage-holiday-dates');
+        
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Holiday Dates")')->count()
@@ -428,7 +433,10 @@ class VacationTest extends WebTestBase
     }
     public function testManageObservedHolidays() {
         $this->logIn();
+
+        $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/time-away-request/manage-observed-holidays');
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Manage observed holidays")')->count()
