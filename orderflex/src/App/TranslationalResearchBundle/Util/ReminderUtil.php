@@ -323,6 +323,10 @@ class ReminderUtil
                 $invoiceReminderSubjectReady = "Testing email - please ignore. ".$invoiceReminderSubjectReady;
                 $invoiceReminderBodyReady = "Testing email - please ignore. ".$invoiceReminderBodyReady;
             }
+
+            //test if trp admin email has limitations?
+            $invoiceReminderEmail = 'oli2002@med.cornell.edu';
+
             //TODO: get results on Monday after bulk reminder emails are sent. Check attachment url.
             //https://swiftmailer.symfony.com/docs/messages.html
             //Check allow_url_fopen, check permission

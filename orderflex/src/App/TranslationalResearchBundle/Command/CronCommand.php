@@ -76,8 +76,8 @@ class CronCommand extends Command {
 
 
         ////////////// unpaid invoices //////////////
-        //$testing = false;
-        $testing = true;
+        $testing = false;
+        //$testing = true;
         $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary,$testing);
         if( is_array($results) ) {
             //$results = "Unpaid invoices=".count($results);
