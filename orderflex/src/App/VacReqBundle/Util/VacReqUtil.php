@@ -3406,14 +3406,17 @@ class VacReqUtil
                     //find approvers with the same institution
                     $approverStr = $this->getApproversBySubmitterRole($role);
                     if( $approverStr ) {
-                        $orgName = $institution . " (for review by " . $approverStr . ")";
                         if( $this->security->isGranted('ROLE_PLATFORM_ADMIN') || $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-                            $orgName = "ID#".$institution->getId()." ".$institution . " (for review by " . $approverStr . ")";
+                            //$orgName = "ID#".$institution->getId()." ".$institution . " (for review by " . $approverStr . ")";
+                            $orgName = $institution . " ID#" . $institution->getId() . " (for review by " . $approverStr . ")";
+                        } else {
+                            $orgName = $institution . " (for review by " . $approverStr . ")";
                         }
                     } else {
                         $orgName = $institution;
                         if( $this->security->isGranted('ROLE_PLATFORM_ADMIN') || $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-                            $orgName = "ID#".$institution->getId()." ".$institution;
+                            //$orgName = "ID#".$institution->getId()." ".$institution;
+                            $orgName = $institution . " ID#".$institution->getId();
                         }
                     }
                     //echo "orgName=".$orgName."<br>";
