@@ -401,6 +401,10 @@ class VacationTest extends WebTestBase
     public function testObservedHolidays() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/time-away-request/observed-holidays');
+
+        $content = $this->client->getResponse()->getContent();
+        exit("content=$content");
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Dates of observed holidays")')->count()
