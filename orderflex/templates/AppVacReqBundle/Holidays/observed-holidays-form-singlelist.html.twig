@@ -23,7 +23,7 @@
             </div>
 
             <div class="col-xs-1">
-                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                <button type="submit" class="btn btn-sm btn-default">Display</button>
             </div>
 
         </div>
@@ -41,7 +41,7 @@
                 {#<th>ID</th>#}
                 <th>Date</th>
                 <th>Name</th>
-                <th>Institutions</th>
+                <th>Organizational Groups</th>
                 <th>Country</th>
             </tr>
             </thead>
@@ -81,7 +81,7 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'holiday.holidayName') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Organizational Groups', 'holiday.institutions') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>
 

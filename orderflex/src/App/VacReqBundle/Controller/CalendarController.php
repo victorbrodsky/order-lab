@@ -678,13 +678,13 @@ class CalendarController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq_observed_holidays') );
         }
 
-        $title = 'Manage Observed Holidays' . "(" . $thisYear .")";
+        $title = 'Manage observed holidays';
 
         $routeName = $request->get('_route');
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {
-            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Institutional holiday calendar</a>'.')';
         }
         
         return array(
@@ -694,6 +694,7 @@ class CalendarController extends OrderAbstractController
             'title' => $title,
             'routename' => $routeName,
             'holidayUrl' => $holidaysUrl,
+            'thisYear' => $thisYear
         );
     }
 
@@ -781,7 +782,7 @@ class CalendarController extends OrderAbstractController
 
         //$dql->select('holiday');
 
-        $title = 'Observed Holiday days used in off-site days calculation';
+        $title = 'Dates of observed holidays';
 
         /////////// get user's org groups ///////////
         $orgGroupTitle = "";
@@ -817,7 +818,7 @@ class CalendarController extends OrderAbstractController
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {
-            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">official holidays</a>'.')';
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Institutional holiday calendar</a>'.')';
         }
 
         return array(
@@ -1004,7 +1005,7 @@ class CalendarController extends OrderAbstractController
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {
-            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Official holidays</a>'.')';
+            $holidaysUrl = '('.'<a target="_blank" href="'.$holidaysUrl.'">Institutional holiday calendar</a>'.')';
         }
 
         return array(

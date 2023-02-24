@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="col-xs-1">
-                    <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                    <button type="submit" class="btn btn-sm btn-default">Display</button>
                 </div>
 
             </div>
@@ -39,12 +39,14 @@
         <table class="records_list table table-hover table-condensed text-left table-bordered">
             <thead>
             <tr>
-                <th>Observed Holiday</th>
+                <th>Observed Holiday?</th>
                 {#<th>ID</th>#}
-                <th title="Actual holiday date, however it might be replaced by the observed date if the actual date is a weekend">Date</th>
-                <th>Name</th>
-                <th>Institutions</th>
-                <th>Country</th>
+                <th>Holiday Name</th>
+                <th title="Actual holiday date, however it might be replaced by the observed date if the actual date is a weekend">
+                    Date in {{ thisYear }} (for reference)
+                </th>
+                <th>Organizational Groups</th>
+                {#<th>Country</th>#}
             </tr>
             </thead>
                 {#data-link="row1" class="rowlink1" causes checkbox click on second time only#}
@@ -53,13 +55,13 @@
                         <tr>
                             <td>{{ form_widget(holiday.observed) }}</td>
                             {#<td>{{ holiday.vars.data.id }}</td>#}
+                            <td>{{ holiday.vars.data.getNameOrShortName() }}</td>
                             <td>
                                 {#{{ holiday.vars.data.holidayDate|date('D, M d Y',false) }}#}
                                 {{ vacreq_calendar_util.getHolidayDate(holiday.vars.value)|date('M d',false) }}
                             </td>
-                            <td>{{ holiday.vars.data.getNameOrShortName() }}</td>
                             <td>{{ form_widget(holiday.institutions) }}</td>
-                            <td>{{ holiday.vars.data.country }}</td>
+                            {#<td>{{ holiday.vars.data.country }}</td>#}
                         </tr>
                     {% endfor %}
 
@@ -83,7 +85,7 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'holiday.holidayName') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Organizational Groups', 'holiday.institutions') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>
 

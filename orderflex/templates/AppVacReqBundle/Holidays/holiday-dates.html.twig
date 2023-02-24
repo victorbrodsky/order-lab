@@ -12,7 +12,6 @@
     <h4 class="text-info" align="center">
         {{ title }}
         {#<button type="button" class="btn btn-default btn-sm" onClick="importHolidayDates(this)" >Update Now</button>#}
-        <a class="btn btn-default" href="{{ path('vacreq_update_holiday_dates') }}">Update</a>
     </h4>
 
     {#<p>#}
@@ -65,7 +64,7 @@
             {#</div>#}
 
             <div class="col-xs-1">
-                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                <button type="submit" class="btn btn-sm btn-default">Display</button>
             </div>
 
         </div>
@@ -85,7 +84,7 @@
 
             <th>{{ knp_pagination_sortable(pagination, 'Name', 'holiday.holidayName') }}</th>
 
-            <th>{{ knp_pagination_sortable(pagination, 'Institutions', 'holiday.institutions') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Organizational Groups', 'holiday.institutions') }}</th>
 
             <th>{{ knp_pagination_sortable(pagination, 'Country', 'holiday.country') }}</th>
 
@@ -155,8 +154,12 @@
         </tbody>
     </table>
 
+    <p>
+        <a class="btn btn-default" href="{{ path('vacreq_update_holiday_dates') }}">Populate the holiday date list with known holidays for the previous 20 and the next 20 years</a>
+    </p>
+
     {#vacreqholidays_new#}
-    <a href="{{ path('vacreqholidays_new') }}" target="_blank">Create a new holiday</a>
+    <a href="{{ path('vacreqholidays_new') }}" target="_blank">Add a new holiday date and name manually</a>
 
     <div class="navigation">
         {{ knp_pagination_render(pagination) }}

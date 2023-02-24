@@ -495,7 +495,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         //$backgroundColor = "#8c0000"; //"#77d39b";
         $backgroundColorCalendar = "green"; //"#fcf8e3";
         $textColor = 'white'; //'#2F4F4F';
-        $calendarDayName = "Observed Holiday";
+        //$calendarDayName = "Observed Holiday";
 
         foreach( $holidays as $holiday ) {
 
@@ -504,9 +504,10 @@ class CalendarSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $holidayStartDateStr = $holidayStartDate->format($dateformat);
+            //$holidayStartDateStr = $holidayStartDate->format($dateformat);
 
-            $title = $calendarDayName . $holiday->getName() .", ". $holidayStartDateStr;
+            //New Year’s Day observed (holiday)
+            $title = $holiday->getHolidayName() . " (holiday)"; //", ". $holidayStartDateStr;
 
             $eventEntity = new Event($title, $holidayStartDate, $holidayStartDate);
 

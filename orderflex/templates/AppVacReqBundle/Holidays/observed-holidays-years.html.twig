@@ -25,7 +25,7 @@
             </div>
 
             <div class="col-xs-1">
-                <button type="submit" class="btn btn-sm btn-default">Filter</button>
+                <button type="submit" class="btn btn-sm btn-default">Display</button>
             </div>
 
         </div>
@@ -45,8 +45,8 @@
 
             <th>Date</th>
             <th>Name</th>
-            <th>Institutions</th>
-            <th>Country</th>
+            <th>Organizational Groups</th>
+            {#<th>Country</th>#}
 
         </tr>
         </thead>
@@ -76,9 +76,9 @@
                     {% endfor %}
                 </td>
 
-                <td>
-                    {{ entity.country }}
-                </td>
+                {#<td>#}
+                    {#{{ entity.country }}#}
+                {#</td>#}
 
             </tr>
 
