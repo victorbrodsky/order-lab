@@ -76,7 +76,9 @@ class CronCommand extends Command {
 
 
         ////////////// unpaid invoices //////////////
-        $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary);
+        //$testing = false;
+        $testing = true;
+        $results = $transresReminderUtil->sendReminderUnpaidInvoices($showSummary,$testing);
         if( is_array($results) ) {
             //$results = "Unpaid invoices=".count($results);
             //echo "#########array#########";
@@ -89,9 +91,11 @@ class CronCommand extends Command {
             }
             $results = "Unpaid invoices=".$invoiceCounter;
         }
-        
-        //$output->writeln($results); //testing
-        //return true; //testing
+
+        if( $testing ) {
+            $output->writeln($results); //testing
+            return Command::SUCCESS; //testing
+        }
         ////////////// EOF unpaid invoices //////////////
 
         ////////////// delayed projects //////////////

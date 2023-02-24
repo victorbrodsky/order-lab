@@ -176,8 +176,8 @@ class DefaultController extends OrderAbstractController
         //dump($res);
         //exit('111');
 
-        //$transresReminderUtil = $this->container->get('transres_reminder_util');
-        //$res = $transresReminderUtil->sendReminderUnpaidInvoices(false,true);
+        $transresReminderUtil = $this->container->get('transres_reminder_util');
+        $res = $transresReminderUtil->sendReminderUnpaidInvoices(false,$testing=true);
 //        if(0) {
 //            $emailUtil = $this->container->get('user_mailer_utility');
 //            $email = "oli2002@med.cornell.edu";

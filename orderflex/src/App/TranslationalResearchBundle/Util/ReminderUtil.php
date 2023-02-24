@@ -249,7 +249,9 @@ class ReminderUtil
             $logger->notice("Sending reminder email for Invoice ".$invoice->getOid());
 
             //set last reminder date
-            $invoice->setInvoiceLastReminderSentDate(new \DateTime());
+            if( !$testing ) {
+                $invoice->setInvoiceLastReminderSentDate(new \DateTime());
+            }
 
             //set reminder counter
             $invoiceReminderCounter = $invoice->getInvoiceReminderCount();
@@ -258,7 +260,9 @@ class ReminderUtil
             }
             $invoiceReminderCounter = intval($invoiceReminderCounter);
             $invoiceReminderCounter++;
-            $invoice->setInvoiceReminderCount($invoiceReminderCounter);
+            if( !$testing ) {
+                $invoice->setInvoiceReminderCount($invoiceReminderCounter);
+            }
 
             //save to DB (disable for testing)
             if( !$testing ) {
