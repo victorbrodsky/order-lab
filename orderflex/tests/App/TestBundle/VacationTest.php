@@ -404,8 +404,8 @@ class VacationTest extends WebTestBase
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/time-away-request/observed-holidays');
 
-        $content = $this->client->getResponse()->getContent();
-        exit("content=$content");
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
 
         $this->assertGreaterThan(
             0,
@@ -421,7 +421,7 @@ class VacationTest extends WebTestBase
 
         $this->client->followRedirects();
         $crawler = $this->client->request('GET', '/time-away-request/manage-holiday-dates');
-        
+
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Holiday Dates")')->count()
