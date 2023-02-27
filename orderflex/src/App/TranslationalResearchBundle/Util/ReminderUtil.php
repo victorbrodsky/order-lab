@@ -59,6 +59,9 @@ class ReminderUtil
             if( $results ) {
                 $resultArr[] = $results;
             }
+            if( $testing ) {
+                break; //try to do it only once in testing mode
+            }
         }
 
         if( $showSummary ) {
@@ -303,6 +306,11 @@ class ReminderUtil
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
                 //TODO: live server => $attachmentPath is empty
                 $logger->notice("invoicePDF exists: invoicePDF=".$invoicePDF."; attachmentPath=".$attachmentPath);
+                if( $testing ) {
+                    if( !$attachmentPath ) {
+                        $logger->error("Attachment is NULL: invoice OID=".$invoice->getOid().", attachmentPath=".$attachmentPath);
+                    }
+                }
             }
             $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF.
                 "; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
@@ -325,7 +333,7 @@ class ReminderUtil
             }
 
             //test if trp admin email has limitations?
-            $invoiceReminderEmail = 'oli2002@med.cornell.edu';
+            //$invoiceReminderEmail = 'oli2002@med.cornell.edu';
 
             //TODO: get results on Monday after bulk reminder emails are sent. Check attachment url.
             //https://swiftmailer.symfony.com/docs/messages.html

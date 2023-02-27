@@ -220,6 +220,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:invoice-reminder-emails' }
 
+    App\TranslationalResearchBundle\Command\CronTestCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:test-attachment-emails' }
+
     App\TranslationalResearchBundle\Command\ExpirationCronCommand:
         tags:
             - { name: 'console.command', command: 'cron:expiration-reminder-emails' }

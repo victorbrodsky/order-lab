@@ -1520,10 +1520,10 @@ class TransResUtil
             if( $defaultReviewer->getState() == "admin_review" ) {
                 $reviewProjectType = $defaultReviewer->getReviewProjectType();
                 if( $reviewProjectType ) {
-                    $reviewProjectType = "Admin Reviewer for $reviewProjectType project";
+                    $reviewProjectType = "Admin Reviewer for $reviewProjectType projects";
                     //$info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
                 } else {
-                    $reviewProjectType = "Admin Reviewer for all project";
+                    $reviewProjectType = "Admin Reviewer for all projects";
                 }
                 $info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
             }
