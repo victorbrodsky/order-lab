@@ -489,6 +489,7 @@ class ProjectFormNodeController extends ProjectController
             'entityName' => $className,
             'entityId' => $project->getId(),
             'sitename' => $this->getParameter('translationalresearch.sitename'),
+            'approvedProjectBudgetInfo' => ""
         );
     }
 

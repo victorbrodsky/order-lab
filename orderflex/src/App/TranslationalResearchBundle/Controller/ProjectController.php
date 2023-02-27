@@ -1825,13 +1825,40 @@ class ProjectController extends OrderAbstractController
         //only for users listed as PIs or Billing contacts or
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
+//        $approvedProjectBudgetInfo = "";
+//        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+//            $approvedProjectBudget = $project->getApprovedProjectBudget();
+//            if( $approvedProjectBudget ) {
+//                //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
+//                $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+//                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //edit page
+//            }
+//        }
         $approvedProjectBudgetInfo = "";
         if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+
+            $projectBudgetInfo = array();
+
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
                 //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+                //$approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //show page
+                $projectBudgetInfo[] = "Approved Budget: $approvedProjectBudget";
+            }
+            $remainingProjectBudget = $project->getRemainingBudget();
+            if( $remainingProjectBudget ) {
+                $remainingProjectBudget = $transresUtil->dollarSignValue($remainingProjectBudget);
+                $projectBudgetInfo[] = "Remaining Budget: $remainingProjectBudget"; //show page
+            }
+            $totalProjectBudget = $project->getTotal();
+            if( $totalProjectBudget ) {
+                $totalProjectBudget = $transresUtil->dollarSignValue($totalProjectBudget);
+                $projectBudgetInfo[] = "Total Value: $totalProjectBudget"; //show page
+            }
+
+            if( count($projectBudgetInfo) > 0 ) {
+                $approvedProjectBudgetInfo = implode(", ",$projectBudgetInfo);
             }
         }
 
@@ -1840,7 +1867,8 @@ class ProjectController extends OrderAbstractController
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit ".$project->getProjectInfoName().$approvedProjectBudgetInfo, //edit
+            'title' => "Edit ".$project->getProjectInfoName(), //.$approvedProjectBudgetInfo, //edit
+            'approvedProjectBudgetInfo' => $approvedProjectBudgetInfo,
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -1901,11 +1929,29 @@ class ProjectController extends OrderAbstractController
         //ONLY for projects with status = Final Approved or Closed
         $approvedProjectBudgetInfo = "";
         if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+
+            $projectBudgetInfo = array();
+
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
                 //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+                //$approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //show page
+                $projectBudgetInfo[] = "Approved Budget: $approvedProjectBudget";
+            }
+            $remainingProjectBudget = $project->getRemainingBudget();
+            if( $remainingProjectBudget ) {
+                $remainingProjectBudget = $transresUtil->dollarSignValue($remainingProjectBudget);
+                $projectBudgetInfo[] = "Remaining Budget: $remainingProjectBudget"; //show page
+            }
+            $totalProjectBudget = $project->getTotal();
+            if( $totalProjectBudget ) {
+                $totalProjectBudget = $transresUtil->dollarSignValue($totalProjectBudget);
+                $projectBudgetInfo[] = "Total Value: $totalProjectBudget"; //show page
+            }
+
+            if( count($projectBudgetInfo) > 0 ) {
+                $approvedProjectBudgetInfo = implode(", ",$projectBudgetInfo);
             }
         }
 
@@ -1913,9 +1959,10 @@ class ProjectController extends OrderAbstractController
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $project->getProjectInfoName().$approvedProjectBudgetInfo, //show: "Project request ".$project->getOid(),
+            'title' => $project->getProjectInfoName(),// .$approvedProjectBudgetInfo, //show: "Project request ".$project->getOid(),
             //'delete_form' => $deleteForm->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
+            'approvedProjectBudgetInfo' => $approvedProjectBudgetInfo
             //'review_forms' => $reviewFormViews
         );
     }
@@ -1957,7 +2004,7 @@ class ProjectController extends OrderAbstractController
             if( $approvedProjectBudget ) {
                 //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)";
+                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //show simple
             }
         }
 

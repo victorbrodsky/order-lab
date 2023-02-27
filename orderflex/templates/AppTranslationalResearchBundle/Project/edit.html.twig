@@ -40,6 +40,13 @@
         {{ title }}
     </h4>
 
+    {% if approvedProjectBudgetInfo is not defined %}
+        {% set approvedProjectBudgetInfo = "" %}
+    {% endif %}
+    <p>
+        {{ approvedProjectBudgetInfo }}
+    </p>
+
     <p>
         <i>
             Please make sure to update your Project Request prior leaving this page.

@@ -25,6 +25,13 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+
+    {% if approvedProjectBudgetInfo is not defined %}
+        {% set approvedProjectBudgetInfo = "" %}
+    {% endif %}
+    <p>
+        {{ approvedProjectBudgetInfo }}
+    </p>
     <br>
 
     {% if project.state == "final_approved" %}
