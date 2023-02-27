@@ -642,7 +642,8 @@ class Document {
         return $fileSize;
     }
 
-    //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error: Unable to open file for reading => use 'realpath' in email util
+    //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error:
+    // Unable to open file for reading => use 'realpath' in email util
     //Accepted path: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents\filename.pdf
     public function getAttachmentEmailPath()
     {
