@@ -103,8 +103,8 @@ class AuthUtil {
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
         //return $user; //testing
-        echo "Local DB user =".$user."<br>";
-        exit();
+        //echo "Local DB user =".$user."<br>";
+        //exit();
 
         if( $user ) {
             $this->logger->notice("Local Authentication: local user found by username=".$token->getUsername());
