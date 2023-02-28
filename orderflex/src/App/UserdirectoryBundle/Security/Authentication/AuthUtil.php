@@ -114,7 +114,7 @@ class AuthUtil {
 
             //check password
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
-            //$encodeRes = 1; //testing! allow authenticate with wrong password
+            $encodeRes = 1; //testing! allow authenticate with wrong password
 
             if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
@@ -979,7 +979,7 @@ class AuthUtil {
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
-        $res = 1; //testing! allow authenticate
+        //$res = 1; //testing! allow authenticate
 
         //exit("simpleLdap");
         //set_time_limit(3); //testing
