@@ -90,12 +90,15 @@ class AuthUtil {
 
         if( !$token->getCredentials() ) {
             //empty password
+            $this->logger->notice("LocalAuthentication: no credentials in the token => exit without authentication.");
             return NULL;
         }
 
         //get clean username
         //$userSecUtil = $this->container->get('user_security_utility');
         //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
+
+        $this->logger->notice("LocalAuthentication: get user by uesrname=".$token->getUsername());
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
