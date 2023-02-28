@@ -114,6 +114,7 @@ class AuthUtil {
 
             //check password
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
+            $encodeRes = 1; //testing! allow authenticate with wrong password
 
             if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
@@ -999,7 +1000,7 @@ class AuthUtil {
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
-            $res = 1; //testing! allow authenticate
+            //$res = 1; //testing! allow authenticate
 
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
