@@ -230,7 +230,8 @@ function addErrorAlert(text) {
     var alert = '<div class="alert alert-danger user-error-alert" role="alert">'+
         text +
         '</div>';
-    $('#user-errors').append(alert);
+    $('.user-errors').append(alert);
+    //$('#user-errors').append(alert);
 }
 
 function removeAllErrorAlerts() {
@@ -372,7 +373,8 @@ function validateMrntypeIdentifier() {
                     var msg = 'The supplied MRN "'+keytypemrnText+': '+identifier+'" was not found.'+
                               ' <input class="ignore-checkbox" type="checkbox" name="ignore" value="ignore"> Ignore this warning';
                     var alert = '<div id="'+alertid+'" class="alert alert-warning with-ignore" role="alert">'+msg+'</div>';
-                    $('#user-errors').append(alert);
+                    //$('#user-errors').append(alert);
+                    $('.user-errors').append(alert);
                 }
                 $('#Credentials').collapse('show');
                 $('#identifiers').collapse('show');

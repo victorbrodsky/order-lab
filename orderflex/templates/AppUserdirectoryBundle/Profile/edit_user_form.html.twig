@@ -36,6 +36,18 @@
 
 {% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 
+    {% if cycle != "show_user" and cycle != "create_user" %}
+        <p>
+            <div id="user-errors" class="user-errors"></div>
+        </p>
+        <p>
+        <div>
+            <button class="btn btn-warning" name="btnSubmit" type="button" onclick="validateUser(this,{{entity.id}})">Update</button>
+            <a class="btn btn-info" href="{{ path(sitename~'_showuser',{id:entity.id}) }}" type='button'>Cancel</a>
+        </div>
+        </p>
+    {% endif %}
+
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
@@ -1459,10 +1471,8 @@
         {#{{ form(form) }}#}
 
         <p>
-            <div id="user-errors"></div>
+            <div id="user-errors" class="user-errors"></div>
         </p>
-
-
         {% if cycle != "show_user" and cycle != "create_user" %}
             <p>
                 <div>

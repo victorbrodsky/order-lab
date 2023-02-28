@@ -168,7 +168,7 @@ class AccessRequestController extends OrderAbstractController
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
-            //exit('no roleUser=' . $this->roleUser);
+            exit('no roleUser=' . $this->roleUser);
             $user->addRole($this->roleUnapproved);
         }
 
@@ -249,7 +249,7 @@ class AccessRequestController extends OrderAbstractController
     // 4) user has approved accreq, but user has ROLE_UNAPPROVED
     public function accessRequestCreateNew($request,$id,$sitename,$roles) {
 
-        //echo "create new accreq <br>";
+        //echo "create new accreq <br>";exit('111');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -738,7 +738,8 @@ class AccessRequestController extends OrderAbstractController
     {
         $session = $request->getSession();
         if( $session->get('sitename') == $sitename ) {
-            return $this->redirect($this->generateUrl($sitename . '_logout'));
+            //return $this->redirect($this->generateUrl($sitename . '_logout'));
+            return $this->redirect($this->generateUrl($sitename . '_login'));
         } else {
             return $this->redirect( $this->generateUrl("main_common_home") );
         }

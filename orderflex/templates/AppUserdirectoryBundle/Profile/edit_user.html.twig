@@ -133,7 +133,7 @@
         {{ usermacros.avatarForm(entity,cycle) }}
     {% endif %}
 
-    <br>
+    {#<br>#}
 
     {% if block('addcontent') is defined %}
         {% include 'AppUserdirectoryBundle/Profile/edit_user_form.html.twig' with {addcontent: block('addcontent')} %}

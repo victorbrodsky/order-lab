@@ -45,6 +45,18 @@ class VacReqSecurityController extends SecurityController
     }
 
 
+//    /**
+//     * @Route("/logout", name="vacreq_logout")
+//     * @Template()
+//     */
+//    public function logoutAction( Request $request ) {
+//        exit('vacreq: logoutAction');
+//        return parent::logoutAction($request);
+//        //$this->container->get('security.token_storage')->setToken(null);
+//        //$this->tokenStorage->setToken(null);
+//        //return $this->redirect($this->generateUrl($sitename.'_login'));
+//    }
+
     /**
      * @Route("/setloginvisit/", name="vacreq_setloginvisit", methods={"GET"})
      *

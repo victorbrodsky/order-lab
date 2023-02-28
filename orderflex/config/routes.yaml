@@ -168,6 +168,7 @@ vacreq_login_check:
     path: /time-away-request/login_check
 vacreq_logout:
     path: /time-away-request/logout
+    #path:   /directory/logout
 
 calllog_login_check:
     path:   /call-log-book/login_check

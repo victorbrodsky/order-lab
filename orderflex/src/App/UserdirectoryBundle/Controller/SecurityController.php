@@ -271,6 +271,56 @@ class SecurityController extends OrderAbstractController
 //    }
 
 
+//    /**
+//     * NOT USED
+//     * 127.0.0.1/order/index_dev.php/directory/logout
+//     *
+//     * @Route("/logout", name="employees_logout")
+//     * @Template()
+//     */
+//    public function logoutAction( Request $request )
+//    {
+//        //exit('idlelogoutAction');
+//        $routename = $request->get('_route');
+//
+//        //default
+//        $sitename = $this->getParameter('employees.sitename');
+//
+//        if( $routename == "employees_idlelogout" ) {
+//            $sitename = $this->getParameter('employees.sitename');
+//        }
+//        if( $routename == "fellapp_idlelogout" ) {
+//            $sitename = $this->getParameter('fellapp.sitename');
+//        }
+//        if( $routename == "resapp_idlelogout" ) {
+//            $sitename = $this->getParameter('resapp.sitename');
+//        }
+//        if( $routename == "deidentifier_idlelogout" ) {
+//            $sitename = $this->getParameter('deidentifier.sitename');
+//        }
+//        if( $routename == "scan_idlelogout" ) {
+//            $sitename = $this->getParameter('scan.sitename');
+//        }
+//        if( $routename == "vacreq_idlelogout" ) {
+//            $sitename = $this->getParameter('vacreq.sitename');
+//        }
+//        if( $routename == "calllog_idlelogout" ) {
+//            $sitename = $this->getParameter('calllog.sitename');
+//        }
+//        if( $routename == "crn_idlelogout" ) {
+//            $sitename = $this->getParameter('crn.sitename');
+//        }
+//        if( $routename == "translationalresearch_idlelogout" ) {
+//            $sitename = $this->getParameter('translationalresearch.sitename');
+//        }
+//        if( $routename == "dashboard_idlelogout" ) {
+//            $sitename = $this->getParameter('dashboard.sitename');
+//        }
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        return $userSecUtil->userLogout( $request, $sitename );
+//    }
+
 
     /**
      * 127.0.0.1/order/index_dev.php/directory/idle-log-out
