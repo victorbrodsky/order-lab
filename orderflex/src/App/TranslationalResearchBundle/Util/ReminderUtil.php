@@ -303,7 +303,8 @@ class ReminderUtil
             //$logger->notice("Invoice OID=".$invoice->getOid()."; invoicePDF=".$invoicePDF);
             if ($invoicePDF) {
 
-                //It's working when run from the web
+                //It's working when run from the web.
+                //On cron getAttachmentEmailPath returns NULL because it uses getcwd()=/usr/share/httpd and as the result is NULL
                 $attachmentPath = $invoicePDF->getAttachmentEmailPath(); //test is implemented
                 //Result: attachmentPath=C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded\transres\InvoicePDF\Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf
 
