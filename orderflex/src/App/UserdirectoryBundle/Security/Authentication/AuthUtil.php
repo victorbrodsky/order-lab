@@ -140,7 +140,7 @@ class AuthUtil {
 
         $user = $pacsvendorUtil->pacsvendorAuthenticateToken( $token, $this->container, $this->em );
 
-        return $user; //testing! allow auth external
+        //return $user; //testing! allow auth external
 
         if( $user ) {
             //echo "pacsvendor user found=".$user->getUsername()."<br>";
@@ -978,6 +978,8 @@ class AuthUtil {
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
+
+        $res = 1; //testing! allow authenticate
 
         //exit("simpleLdap");
         //set_time_limit(3); //testing
