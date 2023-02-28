@@ -324,6 +324,7 @@ class ReminderUtil
             }
             $logger->notice('test email: invoice='.$invoice->getOid()."; invoicePDF=".$invoicePDF.
                 "; attachmentPath=".$attachmentPath."; getcwd=".getcwd());
+            //Cronjob: getcwd=/usr/share/httpd
 
             //replace [[...]]
             $transresRequest = $invoice->getTransresRequest();
@@ -341,9 +342,6 @@ class ReminderUtil
                 $invoiceReminderSubjectReady = "Testing email - please ignore. ".$invoiceReminderSubjectReady;
                 $invoiceReminderBodyReady = "Testing email - please ignore. ".$invoiceReminderBodyReady;
             }
-
-            //test if trp admin email has limitations?
-            //$invoiceReminderEmail = 'oli2002@med.cornell.edu';
 
             //TODO: get results on Monday after bulk reminder emails are sent. Check attachment url.
             //https://swiftmailer.symfony.com/docs/messages.html

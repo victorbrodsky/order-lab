@@ -73,8 +73,9 @@ class CronTestCommand extends Command {
 //        ////////////// EOF expiration projects //////////////
 
 
-        $fullPath = getcwd();
-        $logger->notice("test-attachment-emails: fullPath=".$fullPath);
+        //$fullPath = getcwd();
+        //$logger->notice("test-attachment-emails: fullPath=".$fullPath);
+        //Result on cronjob: getcwd=/usr/share/httpd
         
         ////////////// unpaid invoices //////////////
         //$testing = false;
