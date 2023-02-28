@@ -117,7 +117,7 @@ class AuthUtil {
 
             //check password
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
-            $encodeRes = 1; //testing! allow authenticate with wrong password
+            //$encodeRes = 1; //testing!!! allow authenticate with wrong password
 
             if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
@@ -143,7 +143,7 @@ class AuthUtil {
 
         $user = $pacsvendorUtil->pacsvendorAuthenticateToken( $token, $this->container, $this->em );
 
-        //return $user; //testing! allow auth external
+        //return $user; //testing!!! allow auth external
 
         if( $user ) {
             //echo "pacsvendor user found=".$user->getUsername()."<br>";
@@ -467,7 +467,7 @@ class AuthUtil {
 //            return NULL;
 //        }
 
-        //testing!!!
+        //testing
         //if( $usernameClean == "oli2002" ) {
             //exit("attempt generate new admin user");
         //}
@@ -982,8 +982,6 @@ class AuthUtil {
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
-        //$res = 1; //testing! allow authenticate
-
         //exit("simpleLdap");
         //set_time_limit(3); //testing
         //putenv('LDAPTLS_REQCERT=never'); // /etc/openldap/ldap.conf
@@ -1007,7 +1005,7 @@ class AuthUtil {
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
-            //$res = 1; //testing! allow authenticate
+            //$res = 1; //testing!!! allow authenticate
 
             if( $res ) {
                 $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
