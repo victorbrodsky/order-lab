@@ -36,19 +36,16 @@ class EmailUtil {
     protected $em;
     protected $container;
     protected $mailer;
-    //protected $security;
 
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container,
         MailerInterface $mailer
-        //Security $security=null
     )
     {
         $this->em = $em;
         $this->container = $container;
         $this->mailer = $mailer;
-        //$this->security = $security;
     }
 
     //php bin/console swiftmailer:spool:send --env=prod
