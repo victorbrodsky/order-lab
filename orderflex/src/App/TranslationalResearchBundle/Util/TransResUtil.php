@@ -1467,6 +1467,11 @@ class TransResUtil
     public function getDefaultReviewerInfo( $state, $specialty, $asObjects=false ) {
         $infos = array();
 
+        $specialtyName = '';
+        if( $specialty ) {
+            $specialtyName = $specialty->getName();
+        }
+
         //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
         $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
             array(
@@ -1518,12 +1523,14 @@ class TransResUtil
                 }
             }
             if( $defaultReviewer->getState() == "admin_review" ) {
-                $reviewProjectType = $defaultReviewer->getReviewProjectType();
+                $reviewProjectType = $defaultReviewer->getReviewProjectType(); //Funded, Non-Funded
                 if( $reviewProjectType ) {
-                    $reviewProjectType = "Admin Reviewer for $reviewProjectType projects";
+                    //Admin Reviewer for non-funded AP/CP projects. Admin Reviewer for funded AP/CP projects.
+                    $reviewProjectType = "Admin Reviewer for $reviewProjectType $specialtyName projects";
                     //$info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
                 } else {
-                    $reviewProjectType = "Admin Reviewer for all projects";
+                    //Admin Reviewer for all AP/CP projects
+                    $reviewProjectType = "Admin Reviewer for all $specialtyName projects";
                 }
                 $info .= " (<font color=\"#8063FF\">".$reviewProjectType."</font>)";
             }
@@ -1917,8 +1924,14 @@ class TransResUtil
             //irb_review_resubmit => IRB Review Resubmit
             $label = str_replace("_"," ",$transitionName);
             $label = str_replace("missinginfo","missing information",$label);
-            $returnLabel = ucwords($label);
+
+            //$returnLabel = ucwords($label);
+            $returnLabel = $label; //testing lowercase
         }
+
+        //testing: convert to lowercase
+        $returnLabel = strtolower($returnLabel);
+        $returnLabel = ucfirst($returnLabel); //converts the first character of a string to uppercase
 
         //if not the actual reviewer show name "(as Mister John)"
         //if( $transitionName != "committee_finalreview_approved" ) {

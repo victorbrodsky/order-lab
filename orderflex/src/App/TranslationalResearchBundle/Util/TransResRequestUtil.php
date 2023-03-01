@@ -892,7 +892,9 @@ class TransResRequestUtil
                 if( $asHrefArray ) {
                     $classTransition = $this->getHtmlClassTransition($transitionName);
 
-                    $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
+                    //$generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
+                    //Are you sure you want to change the status of this work request to Completed?
+                    $generalDataConfirmation = "general-data-confirm='Are you sure you want to change the status of this work request to $label?'";
 
                     //don't show confirmation modal
 //                if( strpos((string)$transitionName, "missinginfo") !== false ) {
