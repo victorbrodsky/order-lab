@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\FellAppBundle\Controller\FellAppApplicantController;
 use Symfony\Component\Mailer\Mailer;
@@ -35,11 +36,19 @@ class EmailUtil {
     protected $em;
     protected $container;
     protected $mailer;
+    //protected $security;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, MailerInterface $mailer ) {
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        MailerInterface $mailer
+        //Security $security=null
+    )
+    {
         $this->em = $em;
         $this->container = $container;
         $this->mailer = $mailer;
+        //$this->security = $security;
     }
 
     //php bin/console swiftmailer:spool:send --env=prod
@@ -190,12 +199,25 @@ class EmailUtil {
         $mailerDeliveryAddresses = trim((string)$userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         //$mailerDeliveryAddresses = "cinava@yahoo.com,cinava@yahoo.com,oli2002@med.cornell.edu, ,,";
         if( $mailerDeliveryAddresses ) {
-
             $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
             //echo "mailerDeliveryAddresses2=[".json_encode($mailerDeliveryAddresses)."]<br>";
             //$message->to($mailerDeliveryAddresses);
             $message = $this->addEmailByType($message,$mailerDeliveryAddresses,'to');
 
+            //Don't add email copy for logged in user, because I might want to impersonate to test someone else,
+            //then email will be sent to this user
+//            //Only on tester server when redirect exists
+//            if ($environment == "test") {
+//                //If redirect exists and logged in user is a regular user (not platform admin), then add the current logged in user email to sendTo email
+//                if( $this->security ) {
+//                    $user = $this->security->getUser();
+//                    $userEmail = $user->getSingleEmail();
+//                    $userEmail = $this->checkEmails($userEmail); //make sure email is in array format (user might have comma separated emails)
+//                    if ($userEmail) {
+//                        $message = $this->addEmailByType($message, $userEmail, 'to');
+//                    }
+//                }
+//            }
         } else {
 
             //to
