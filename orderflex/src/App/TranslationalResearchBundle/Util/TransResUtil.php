@@ -678,11 +678,11 @@ class TransResUtil
 //    }
 
     //check if user:
-    //listed as PIs or Billing contacts or
+    //listed as project requesters (principalInvestigators and principalIrbInvestigator, Co-Investigators, pathologists, Contacts, Billing contacts)
     //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
     //ONLY for projects with status = Final Approved or Closed
-    public function isAdminPiBillingAndApprovedClosed( $project ) {
-
+    //rename isAdminPiBillingAndApprovedClosed( $project ) to isAdminOrRequester
+    public function isAdminOrRequester( $project ) {
         //hide the remaining budget for non-funded
         if( $project->getFunded() ) {
             return false;
@@ -692,7 +692,7 @@ class TransResUtil
         //ONLY for projects with status = Final Approved or Closed
         if(
             $project->getState() == "final_approved"
-            //|| $project->getState() == "closed"
+            || $project->getState() == "closed"
         ) {
             //Continue: show remaining budget only for "final_approved" projects
         } else {
@@ -706,15 +706,38 @@ class TransResUtil
             return true;
         }
 
-        //only for users listed as PIs or Billing contacts or
-        $user = $this->security->getUser();
+        //isProjectRequester
+        if( $this->isProjectRequester($project) === true ) {
+            return true;
+        }
 
-        if( $project->getPrincipalInvestigators()->contains($user) ) {
-            return true;
-        }
-        if( $project->getBillingContacts()->contains($user) ) {
-            return true;
-        }
+//        //only for users listed as PIs or Billing contacts or
+//        $user = $this->security->getUser();
+//
+//        //principalInvestigators and principalIrbInvestigator
+//        if( $project->getAllPrincipalInvestigators()->contains($user) ) {
+//            return true;
+//        }
+//
+//        //BillingContacts
+//        if( $project->getBillingContacts()->contains($user) ) {
+//            return true;
+//        }
+//
+//        //Contacts
+//        if( $project->getContacts()->contains($user) ) {
+//            return true;
+//        }
+//
+//        //Co-investigators
+//        if( $project->getCoInvestigators()->contains($user) ) {
+//            return true;
+//        }
+//
+//        //pathologists
+//        if( $project->getPathologists()->contains($user) ) {
+//            return true;
+//        }
 
         return false;
     }
@@ -723,7 +746,7 @@ class TransResUtil
         //echo "projects=".count($projects)."<br>";
         $showRemainingBudget = false;
         foreach( $projects as $project ) {
-            if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
+            if( $this->isAdminOrRequester($project) ) {
                 $showRemainingBudget = true;
                 break;
             }
@@ -738,7 +761,7 @@ class TransResUtil
             return NULL;
         }
 
-        if( $this->isAdminPiBillingAndApprovedClosed($project) ) {
+        if( $this->isAdminOrRequester($project) ) {
             //echo "show remaining budget <br>";
             $remainingBudget = $project->getRemainingBudget();
             //echo "remainingBudget=[$remainingBudget] <br>";

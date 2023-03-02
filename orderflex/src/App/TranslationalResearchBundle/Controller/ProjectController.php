@@ -1835,7 +1835,7 @@ class ProjectController extends OrderAbstractController
 //            }
 //        }
         $approvedProjectBudgetInfo = "";
-        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+        if( $transresUtil->isAdminOrRequester($project) ) {
 
             $projectBudgetInfo = array();
 
@@ -1928,7 +1928,7 @@ class ProjectController extends OrderAbstractController
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
         $approvedProjectBudgetInfo = "";
-        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+        if( $transresUtil->isAdminOrRequester($project) ) {
 
             $projectBudgetInfo = array();
 
@@ -1999,7 +1999,7 @@ class ProjectController extends OrderAbstractController
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
         $approvedProjectBudgetInfo = "";
-        if( $transresUtil->isAdminPiBillingAndApprovedClosed($project) ) {
+        if( $transresUtil->isAdminOrRequester($project) ) {
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
                 //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);

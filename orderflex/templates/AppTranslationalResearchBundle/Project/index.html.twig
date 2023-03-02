@@ -359,7 +359,7 @@
             ONLY for projects with status = Final Approved or Closed
             #}
             {% set approvedBudgetInfo = "" %}
-            {% set appendApprovedBudget = transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+            {% set appendApprovedBudget = transres_util.isAdminOrRequester(project) %}
             {% if appendApprovedBudget %}
                 {% set thisApprovedProjectBudget = project.getApprovedProjectBudget() %}
                 {% if thisApprovedProjectBudget %}
@@ -479,7 +479,8 @@
                 {% if showRemainingBudget %}
                     <td>
                         {% if remainingBudget %}
-                            {% if transres_util.isAdminPiBillingAndApprovedClosed(project) %}
+                            {#{% if transres_util.isAdminPiBillingAndApprovedClosed(project) %}#}
+                            {% if appendApprovedBudget %}
                                 {{ transres.dollarSignValue(remainingBudget) }}
                             {% endif %}
                         {% endif %}
