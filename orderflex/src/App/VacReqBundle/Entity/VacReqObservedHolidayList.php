@@ -233,6 +233,13 @@ class VacReqObservedHolidayList extends ListAbstract {
         return $this->getNameOrShortName() . ", " . $this->getInstitutionsStr() . "; Observed: $observedStr";
     }
 
+    public function getHolidayNameOrShortName() {
+        if( $this->getShortname() ) {
+            return $this->getShortname();
+        }
+        return $this->getHolidayName();
+    }
+
     public function getEntityHash() {
         $hash = hash("sha1",$this->getString());
         return $hash;

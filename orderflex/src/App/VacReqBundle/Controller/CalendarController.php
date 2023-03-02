@@ -1344,7 +1344,8 @@ class CalendarController extends OrderAbstractController
         //echo "startDate=".$startDate.", endDate=".$endDate.", institutionId=".$institutionId."<br>";
 
         //count holidays without weekends
-        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId);
+        $custom = true;
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
 
         $holidaysDays = count($holidays);
 
@@ -1353,13 +1354,25 @@ class CalendarController extends OrderAbstractController
         $holidayStr = "";
 
         foreach($holidays as $holiday) {
-            $holidayDate = $holiday->getHolidayDate();
-            $holidayDateStr = "N/A";
-            if( $holidayDate ) {
-                $holidayDateStr = $holiday->getHolidayDate()->format('D, M d Y'); //format('m/d/Y');
+            if( $custom ) {
+                $holidayDate = $holiday['date'];
+                $holidayName = $holiday['name'];
+
+                $holidayDateStr = "N/A";
+                if( $holidayDate ) {
+                    $holidayDateStr = $holidayDate->format('D, M d Y'); //format('m/d/Y');
+                }
+
+                $holidayStr = $holidayStr . "<br>- " . $holidayName . " on " . $holidayDateStr;
+            } else {
+                $holidayDate = $holiday->getHolidayDate();
+                $holidayDateStr = "N/A";
+                if( $holidayDate ) {
+                    $holidayDateStr = $holiday->getHolidayDate()->format('D, M d Y'); //format('m/d/Y');
+                }
+                //$holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+                $holidayStr = $holidayStr . "<br>- " . $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr;
             }
-            //$holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
-            $holidayStr = $holidayStr . "<br>- " . $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr;
         }
 
 

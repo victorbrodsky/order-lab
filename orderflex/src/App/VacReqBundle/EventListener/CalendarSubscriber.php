@@ -487,7 +487,8 @@ class CalendarSubscriber implements EventSubscriberInterface
         }
 
         //$startDate, $endDate, $institutionId
-        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDateStr,$endDateStr,$groupId);
+        $custom = true;
+        $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDateStr,$endDateStr,$groupId,true);
         //echo "holidays=".count($holidays)."<br>";
         //exit('111');
 
@@ -499,15 +500,23 @@ class CalendarSubscriber implements EventSubscriberInterface
 
         foreach( $holidays as $holiday ) {
 
-            $holidayStartDate = $holiday->getHolidayDate();
-            if( !$holidayStartDate ) {
-                continue;
+            if( $custom ) {
+                $title = $holiday['name'] . " (holiday)";
+                $holidayStartDate = $holiday['date'];
+                if( !$holidayStartDate ) {
+                    continue;
+                }
+            } else {
+                $holidayStartDate = $holiday->getHolidayDate();
+                if( !$holidayStartDate ) {
+                    continue;
+                }
+
+                //$holidayStartDateStr = $holidayStartDate->format($dateformat);
+
+                //New Year’s Day observed (holiday)
+                $title = $holiday->getHolidayName() . " (holiday)"; //", ". $holidayStartDateStr;
             }
-
-            //$holidayStartDateStr = $holidayStartDate->format($dateformat);
-
-            //New Year’s Day observed (holiday)
-            $title = $holiday->getHolidayName() . " (holiday)"; //", ". $holidayStartDateStr;
 
             $eventEntity = new Event($title, $holidayStartDate, $holidayStartDate);
 
