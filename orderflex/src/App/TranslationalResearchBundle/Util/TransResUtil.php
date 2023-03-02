@@ -681,8 +681,8 @@ class TransResUtil
     //listed as project requesters (principalInvestigators and principalIrbInvestigator, Co-Investigators, pathologists, Contacts, Billing contacts)
     //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
     //ONLY for projects with status = Final Approved or Closed
-    //rename isAdminPiBillingAndApprovedClosed( $project ) to isAdminOrRequester
-    public function isAdminOrRequester( $project ) {
+    //rename isAdminPiBillingAndApprovedClosed( $project ) to isAdminPrimaryRevExecutiveOrRequester
+    public function isAdminPrimaryRevExecutiveOrRequester( $project ) {
         //hide the remaining budget for non-funded
         if( $project->getFunded() ) {
             return false;
@@ -746,7 +746,7 @@ class TransResUtil
         //echo "projects=".count($projects)."<br>";
         $showRemainingBudget = false;
         foreach( $projects as $project ) {
-            if( $this->isAdminOrRequester($project) ) {
+            if( $this->isAdminPrimaryRevExecutiveOrRequester($project) ) {
                 $showRemainingBudget = true;
                 break;
             }
@@ -761,7 +761,7 @@ class TransResUtil
             return NULL;
         }
 
-        if( $this->isAdminOrRequester($project) ) {
+        if( $this->isAdminPrimaryRevExecutiveOrRequester($project) ) {
             //echo "show remaining budget <br>";
             $remainingBudget = $project->getRemainingBudget();
             //echo "remainingBudget=[$remainingBudget] <br>";
