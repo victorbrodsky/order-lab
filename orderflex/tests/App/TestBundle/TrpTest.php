@@ -89,13 +89,13 @@ class TrpTest extends WebTestBase
 //        );
             $this->assertGreaterThan(
                 0,
-                $crawler->filter('html:contains("Approve Project Request")')->count() +
-                $crawler->filter('html:contains("Recommend Approval")')->count()
+                $crawler->filter('html:contains("Approve project request")')->count() +
+                $crawler->filter('html:contains("Recommend approval")')->count()
             );
             $this->assertGreaterThan(
                 0,
-                $crawler->filter('html:contains("Reject Project Request")')->count() +
-                $crawler->filter('html:contains("Recommend Rejection")')->count()
+                $crawler->filter('html:contains("Reject project request")')->count() +
+                $crawler->filter('html:contains("Recommend rejection")')->count()
             );
         }
     }
