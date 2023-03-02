@@ -1998,13 +1998,39 @@ class ProjectController extends OrderAbstractController
         //only for users listed as PIs or Billing contacts or
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
         //ONLY for projects with status = Final Approved or Closed
+//        $approvedProjectBudgetInfo = "";
+//        if( $transresUtil->isAdminPrimaryRevExecutiveOrRequester($project) ) {
+//            $approvedProjectBudget = $project->getApprovedProjectBudget();
+//            if( $approvedProjectBudget ) {
+//                //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
+//                $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
+//                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //show simple
+//            }
+//        }
+
         $approvedProjectBudgetInfo = "";
         if( $transresUtil->isAdminPrimaryRevExecutiveOrRequester($project) ) {
+
+            $projectBudgetInfo = array();
+
             $approvedProjectBudget = $project->getApprovedProjectBudget();
             if( $approvedProjectBudget ) {
-                //$approvedProjectBudget = $project->toMoney($approvedProjectBudget);
                 $approvedProjectBudget = $transresUtil->dollarSignValue($approvedProjectBudget);
-                $approvedProjectBudgetInfo = " (Approved Budget: $approvedProjectBudget)"; //show simple
+                $projectBudgetInfo[] = "Approved Budget: $approvedProjectBudget";
+            }
+            $remainingProjectBudget = $project->getRemainingBudget();
+            if( $remainingProjectBudget ) {
+                $remainingProjectBudget = $transresUtil->dollarSignValue($remainingProjectBudget);
+                $projectBudgetInfo[] = "Remaining Budget: $remainingProjectBudget"; //show page
+            }
+            $totalProjectBudget = $project->getTotal();
+            if( $totalProjectBudget ) {
+                $totalProjectBudget = $transresUtil->dollarSignValue($totalProjectBudget);
+                $projectBudgetInfo[] = "Total Value: $totalProjectBudget"; //show page
+            }
+
+            if( count($projectBudgetInfo) > 0 ) {
+                $approvedProjectBudgetInfo = " (".implode(", ",$projectBudgetInfo).")";
             }
         }
 
