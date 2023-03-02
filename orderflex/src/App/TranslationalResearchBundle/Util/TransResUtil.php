@@ -680,7 +680,7 @@ class TransResUtil
     //check if user:
     //listed as project requesters (principalInvestigators and principalIrbInvestigator, Co-Investigators, pathologists, Contacts, Billing contacts)
     //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin) and
-    //ONLY for projects with status = Final Approved or Closed
+    //ONLY for Non-Funded projects with status = Final Approved or Closed
     //rename isAdminPiBillingAndApprovedClosed( $project ) to isAdminPrimaryRevExecutiveOrRequester
     public function isAdminPrimaryRevExecutiveOrRequester( $project ) {
         //hide the remaining budget for non-funded
@@ -701,43 +701,15 @@ class TransResUtil
         }
 
         //Site Admin/Executive Committee/Platform Admin/Deputy Platform Admin)
-        //TRP Admin/Executive Committee/Deputy/Platform Admin should always see it regardless of the project status
         if( $this->isAdminOrPrimaryReviewerOrExecutive($project) ) {
             return true;
         }
 
-        //isProjectRequester
+        //isProjectRequester: principalInvestigators and principalIrbInvestigator,
+        // Co-Investigators, pathologists, Contacts, Billing contacts
         if( $this->isProjectRequester($project) === true ) {
             return true;
         }
-
-//        //only for users listed as PIs or Billing contacts or
-//        $user = $this->security->getUser();
-//
-//        //principalInvestigators and principalIrbInvestigator
-//        if( $project->getAllPrincipalInvestigators()->contains($user) ) {
-//            return true;
-//        }
-//
-//        //BillingContacts
-//        if( $project->getBillingContacts()->contains($user) ) {
-//            return true;
-//        }
-//
-//        //Contacts
-//        if( $project->getContacts()->contains($user) ) {
-//            return true;
-//        }
-//
-//        //Co-investigators
-//        if( $project->getCoInvestigators()->contains($user) ) {
-//            return true;
-//        }
-//
-//        //pathologists
-//        if( $project->getPathologists()->contains($user) ) {
-//            return true;
-//        }
 
         return false;
     }
@@ -1952,7 +1924,8 @@ class TransResUtil
             $returnLabel = $label; //testing lowercase
         }
 
-        //testing: convert to lowercase
+        //convert to lowercase with the first letter as a capital:
+        //Are you sure you want to Approve Project Request -> Are you sure you want to approve project request
         $returnLabel = strtolower($returnLabel);
         $returnLabel = ucfirst($returnLabel); //converts the first character of a string to uppercase
 
