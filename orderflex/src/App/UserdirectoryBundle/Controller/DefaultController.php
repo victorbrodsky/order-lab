@@ -1090,6 +1090,8 @@ class DefaultController extends OrderAbstractController
      */
     public function showUSersNoPhiScopeAction()
     {
+        exit('not allowed');
+
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
