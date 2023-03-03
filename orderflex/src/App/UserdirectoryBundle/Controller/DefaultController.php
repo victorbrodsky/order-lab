@@ -1106,10 +1106,15 @@ class DefaultController extends OrderAbstractController
 
         $dql->where("permittedInstitutionalPHIScope IS NULL");
 
+        $dql->leftJoin("user.keytype", "keytype");
+        $dql->andWhere("keytype.abbreviation = 'ldap-user'");
+
         $query = $em->createQuery($dql);
         //$query->setMaxResults(5000);
         $users = $query->getResult();
         echo "users without PHI scope count=".count($users)."<br>";
+
+        $count = 0;
 
         foreach($users as $user) {
             //echo $user."<br>";
@@ -1122,9 +1127,12 @@ class DefaultController extends OrderAbstractController
                 }
                 echo $user . " " . $phiInstStr . "<br>";
             }
+            $count++;
         }
 
-        exit('111');
+        echo "user count=".$count."<br>";
+
+        exit('exit: show-users-without-phi');
     }
 
 }
