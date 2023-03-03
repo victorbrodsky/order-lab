@@ -265,6 +265,13 @@ class RequestController extends OrderAbstractController
             //echo "sourceYear=".$entity->getSourceYear()."<br>";
             //exit('1');
 
+            //testing
+            //add note for holidays
+            //Add a sentence into the email notification to the approver upon away request submission
+            // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
+            $message = $vacreqCalendarUtil->getHolidaysNote($entity);
+            exit("getHolidaysNote: ".$message);
+
             $testing = false;
             //$testing = true;
             if( !$testing ) {
