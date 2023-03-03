@@ -64,6 +64,7 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->container->get('vacreq_util');
         $userSecUtil = $this->container->get('user_security_utility');
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
 
         $user = $this->getUser();
         $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
@@ -303,9 +304,16 @@ class RequestController extends OrderAbstractController
                 $message .= "You have successfully submitted the request #".$entity->getId()." for ".$entity->getCarryOverDays();
                 $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().".";
             } else {
+                //vacation/business request
                 $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";
             }
             $message .= $break.$break.$entity->printRequest($this->container)."".$break;
+
+            //add note for holidays
+            //Add a sentence into the email notification to the approver upon away request submission
+            // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
+            $message = $message . $break . $vacreqCalendarUtil->getHolidaysNote($entity) . $break;
+
 
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";

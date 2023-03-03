@@ -815,4 +815,87 @@ class VacReqCalendarUtil
         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
 
+    //get note for holidays
+    //Add a sentence into the email notification to the approver upon away request submission
+    // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
+    //In that case, please add a sentence that says either:
+    // (if at least one holiday date was included)
+    // "The date range for this away request includes the following holiday(s): [Holiday name] ([Weekday], MM/DD/YYYY).
+    // The automatically calculated quantity of business days away was [X],
+    // and was manually changed by the submitter to [Y]." or (if no holiday dates were included)
+    // "The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y]."
+    public function getHolidaysNote( $vacreqRequest )
+    {
+        $requestType = $vacreqRequest->getRequestType();
+        if ($requestType && $requestType->getAbbreviation() == "carryover") {
+            return null;
+        }
+
+        $institution = $vacreqRequest->getInstitution();
+        $institutionId = null;
+        if( $institution ) {
+            $institutionId = $institution->getId();
+        }
+
+        $vacreqUtil = $this->container->get('vacreq_util');
+
+        $note = '';
+
+        $custom = true; //use custom holiday object with 'name' and 'date'
+
+        //business request
+        if( $vacreqRequest->hasBusinessRequest() ) {
+            $requestNumberOfDays = $this->getRequestBusiness()->getNumberOfDays();
+            $startDate = $this->getRequestBusiness()->getStartDate();
+            $endDate = $this->getRequestBusiness()->getEndDate();
+
+            //count number of vacation days from $startDate and $endDate
+            $countedNumberOfDays = $vacreqUtil->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
+
+            //if vacation days has been changed by submitter
+            if( $countedNumberOfDays != $requestNumberOfDays ) {
+                $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
+                if( count($holidays) > 0 ) {
+                    $holidaysStr = $this->getHolidaysStr($holidays, $custom);
+                    $note = $note . $holidaysStr;
+                }
+            }
+        }
+
+        //vacation request
+        if( $vacreqRequest->hasVacationRequest() ) {
+            $startDate = $this->getRequestVacation()->getStartDate();
+            $endDate = $this->getRequestVacation()->getEndDate();
+        }
+
+        return $note;
+    }
+
+    public function getHolidaysStr( $holidays, $custom=false ) {
+        $holidayStr = "";
+
+        foreach($holidays as $holiday) {
+            if( $custom ) {
+                $holidayDate = $holiday['date'];
+                $holidayName = $holiday['name'];
+
+                $holidayDateStr = "N/A";
+                if( $holidayDate ) {
+                    $holidayDateStr = $holidayDate->format('D, M d Y'); //format('m/d/Y');
+                }
+
+                $holidayStr = $holidayStr . "<br>- " . $holidayName . " on " . $holidayDateStr;
+            } else {
+                $holidayDate = $holiday->getHolidayDate();
+                $holidayDateStr = "N/A";
+                if( $holidayDate ) {
+                    $holidayDateStr = $holiday->getHolidayDate()->format('D, M d Y'); //format('m/d/Y');
+                }
+                //$holidayStrArr[] = $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr; //[Holiday Title] on [Holiday Date]
+                $holidayStr = $holidayStr . "<br>- " . $holiday->getHolidayNameOrShortName() . " on " . $holidayDateStr;
+            }
+        }
+
+        return $holidayStr;
+    }
 }
