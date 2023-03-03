@@ -824,7 +824,7 @@ class VacReqCalendarUtil
     // The automatically calculated quantity of business days away was [X],
     // and was manually changed by the submitter to [Y]." or (if no holiday dates were included)
     // "The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y]."
-    public function getHolidaysNote( $vacreqRequest )
+    public function getDaysDifferenceNote( $vacreqRequest )
     {
         $requestType = $vacreqRequest->getRequestType();
         if ($requestType && $requestType->getAbbreviation() == "carryover") {
@@ -876,7 +876,7 @@ class VacReqCalendarUtil
 //                }
 //            }
 
-            $note = $this->getSingleHolidaysNote($vacreqRequest->getRequestBusiness(),'business',$institutionId);
+            $note = $this->getSingleDaysDifferenceNote($vacreqRequest->getRequestBusiness(),'business',$institutionId);
         }
 
         //vacation request
@@ -884,7 +884,7 @@ class VacReqCalendarUtil
             //$requestNumberOfDays = $vacreqRequest->getRequestVacation()->getNumberOfDays();
             //$startDate = $vacreqRequest->getRequestVacation()->getStartDate();
             //$endDate = $vacreqRequest->getRequestVacation()->getEndDate();
-            $note = $this->getSingleHolidaysNote($vacreqRequest->getRequestVacation(),'vacation',$institutionId);
+            $note = $this->getSingleDaysDifferenceNote($vacreqRequest->getRequestVacation(),'vacation',$institutionId);
         }
 
         return $note;
@@ -892,7 +892,7 @@ class VacReqCalendarUtil
     //$vacreqRequestSingle (object): $vacreqRequest->getRequestBusiness() or $vacreqRequest->getRequestVacation()-
     //$requestName (string): 'business' or 'vacation'
     //$institutionId (ID): institution (organisational group) ID
-    public function getSingleHolidaysNote( $vacreqRequestSingle, $requestName, $institutionId ) {
+    public function getSingleDaysDifferenceNote( $vacreqRequestSingle, $requestName, $institutionId ) {
         $vacreqUtil = $this->container->get('vacreq_util');
 
         $custom = true;
@@ -902,33 +902,37 @@ class VacReqCalendarUtil
         $requestNumberOfDays = $vacreqRequestSingle->getNumberOfDays();
         $startDate = $vacreqRequestSingle->getStartDate();
         $endDate = $vacreqRequestSingle->getEndDate();
-        echo "startDate=".$startDate->format('d-m-Y H:i:s') . ", endDate=".$endDate->format('d-m-Y H:i:s').$break;
+        //echo "startDate=".$startDate->format('d-m-Y H:i:s') . ", endDate=".$endDate->format('d-m-Y H:i:s').$break;
 
         //$startDate->modify('+1 day');
         $startDate->setTime(00, 00, 00);
         $endDate->setTime(23, 59, 59);
 
-        echo "startDate=".$startDate->format('d-m-Y H:i:s') . ", endDate=".$endDate->format('d-m-Y H:i:s');
+        //echo "startDate=".$startDate->format('d-m-Y H:i:s') . ", endDate=".$endDate->format('d-m-Y H:i:s');
 
         //count number of vacation days from $startDate and $endDate
         $countedNumberOfDays = $vacreqUtil->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
 
-        echo $break . $countedNumberOfDays . "?=" . $requestNumberOfDays . $break;
+        $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
+
+        $countedNumberOfDays = intval($countedNumberOfDays) - count($holidays);
+
+        //echo $break . $countedNumberOfDays . "?=" . $requestNumberOfDays . $break;
 
         //if vacation days has been changed by submitter
-        if( $countedNumberOfDays != $requestNumberOfDays ) {
+        if( intval($countedNumberOfDays) != intval($requestNumberOfDays) ) {
 
             $note = "The automatically calculated quantity of $requestName days away was $countedNumberOfDays,".
                 " and was manually changed by the submitter to $requestNumberOfDays.";
 
-            $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
             if( count($holidays) > 0 ) {
                 //1) note if days contains holidays
                 $holidaysStr = $this->getHolidaysStr($holidays, $custom);
-                //The date range for this away request includes the following holiday(s): [Holiday name] ([Weekday], MM/DD/YYYY). The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y].
+                //The date range for this away request includes the following holiday(s): [Holiday name] ([Weekday], MM/DD/YYYY).
+                // The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y].
                 $note = "The date range for this away request includes the following holiday(s): ".
-                    $holidaysStr . $note;
-                $note = $note . $break . $holidaysStr;
+                    $holidaysStr . $break . $note;
+                //$note = $note . $break . $holidaysStr;
 
             } else {
                 //2) general note because days have been changed
