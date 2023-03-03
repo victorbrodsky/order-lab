@@ -1095,7 +1095,20 @@ class DefaultController extends OrderAbstractController
         }
 
         //s2id_oleg_userdirectorybundle_user_perSiteSettings_permittedInstitutionalPHIScope
+
         $em = $this->getDoctrine()->getManager();
+
+        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('Institution not found by abbreviation WCM');
+        }
+        if( $wcmc->getLevel() !== 0 ) {
+            exit('Institution level is not 0');
+        }
+        if( $wcmc->getRoot() !== 1 ) {
+            exit('Institution root is not 1');
+        }
+
         $repository = $em->getRepository('AppUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
@@ -1126,9 +1139,27 @@ class DefaultController extends OrderAbstractController
                     $phiInstStr = $phiInstStr . ", " . $phiInst;
                 }
                 echo $user . " " . $phiInstStr . "<br>";
-            }
-            $count++;
+
+                //add getPerSiteSettings
+                $getPerSiteSettings = $user->getPerSiteSettings();
+                if( !$getPerSiteSettings ) {
+                    exit($user.' does not have perSiteSettings');
+                }
+
+                $getPerSiteSettings->addPermittedInstitutionalPHIScope($wcmc);
+
+                $batchSize = 20;
+                if( ($count % $batchSize) === 0 ) {
+                    $em->flush();
+                    //$em->clear(); // Detaches all objects from Doctrine!
+                }
+
+                $count++;
+                //exit('set phi for '.$user);
+             }
         }
+
+        $em->flush();
 
         echo "user count=".$count."<br>";
 
