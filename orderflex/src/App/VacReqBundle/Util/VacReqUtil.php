@@ -667,6 +667,13 @@ class VacReqUtil
         $message .= $submitter->getUsernameOptimal()." has submitted the ".$requestName." ID #".$entity->getId()." and it is ready for review.";
         $message .= $break.$break.$entity->printRequest($this->container)."";
 
+        // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+        $daysDifferenceNote = $vacreqCalendarUtil->getDaysDifferenceNote($entity);
+        if( $daysDifferenceNote ) {
+            $message = $message . $break . $daysDifferenceNote . $break;
+        }
+
         $reviewRequestUrl = $this->container->get('router')->generate(
             'vacreq_review',
             array(

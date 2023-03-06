@@ -324,8 +324,7 @@ class RequestController extends OrderAbstractController
             if( $daysDifferenceNote ) {
                 $message = $message . " " . $daysDifferenceNote . $break;
             }
-
-
+            
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
             $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
@@ -337,6 +336,10 @@ class RequestController extends OrderAbstractController
             $event = $requestName . " for ".$entity->getUser()." has been submitted.".
                 " Confirmation email has been sent to ".$approversNameStr;
             $event = $event . $break.$break. $entity->printRequest();
+
+            if( $daysDifferenceNote ) {
+                $event = $event . $break . $daysDifferenceNote;
+            }
 
             if( $testing === false ) {
                 $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'), $event, $user, $entity, $request, $eventType);
