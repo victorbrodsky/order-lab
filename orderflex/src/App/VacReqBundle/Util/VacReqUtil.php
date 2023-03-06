@@ -900,6 +900,13 @@ class VacReqUtil
 
             $message .= $entity->printRequest($this->container)."".$break.$break;
 
+            // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
+            $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+            $daysDifferenceNote = $vacreqCalendarUtil->getDaysDifferenceNote($entity);
+            if( $daysDifferenceNote ) {
+                $message = $message . " " . $daysDifferenceNote . $break.$break;
+            }
+
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
