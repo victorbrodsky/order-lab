@@ -846,44 +846,11 @@ class VacReqCalendarUtil
 
         //business request
         if( $vacreqRequest->hasBusinessRequest() ) {
-//            $requestNumberOfDays = $vacreqRequest->getRequestBusiness()->getNumberOfDays();
-//            $startDate = $vacreqRequest->getRequestBusiness()->getStartDate();
-//            $endDate = $vacreqRequest->getRequestBusiness()->getEndDate();
-//
-//            //count number of vacation days from $startDate and $endDate
-//            $countedNumberOfDays = $vacreqUtil->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
-//
-//            //if vacation days has been changed by submitter
-//            if( $countedNumberOfDays != $requestNumberOfDays ) {
-//
-//                $note = "The automatically calculated quantity of business days away was $countedNumberOfDays,".
-//                " and was manually changed by the submitter to $requestNumberOfDays.";
-//
-//                $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
-//                if( count($holidays) > 0 ) {
-//                    //1) note if days contains holidays
-//                    $holidaysStr = $this->getHolidaysStr($holidays, $custom);
-//                    //The date range for this away request includes the following holiday(s): [Holiday name] ([Weekday], MM/DD/YYYY). The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y].
-//                    $note = "The date range for this away request includes the following holiday(s): ".
-//                        $holidaysStr.
-//                        "[Holiday name] ([Weekday], MM/DD/YYYY). ". $note;
-//                    $note = $note . $break . $holidaysStr;
-//
-//                } else {
-//                    //2) general note because days have been changed
-//                    //The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y].
-//                    //$note = $note;
-//                }
-//            }
-
             $note = $this->getSingleDaysDifferenceNote($vacreqRequest->getRequestBusiness(),'business',$institutionId);
         }
 
         //vacation request
         if( $vacreqRequest->hasVacationRequest() ) {
-            //$requestNumberOfDays = $vacreqRequest->getRequestVacation()->getNumberOfDays();
-            //$startDate = $vacreqRequest->getRequestVacation()->getStartDate();
-            //$endDate = $vacreqRequest->getRequestVacation()->getEndDate();
             $note = $this->getSingleDaysDifferenceNote($vacreqRequest->getRequestVacation(),'vacation',$institutionId);
         }
 
@@ -922,22 +889,17 @@ class VacReqCalendarUtil
         //if vacation days has been changed by submitter
         if( intval($countedNumberOfDays) != intval($requestNumberOfDays) ) {
 
+            //1) general note because days have been changed
             $note = "The automatically calculated quantity of $requestName days away was $countedNumberOfDays,".
                 " and was manually changed by the submitter to $requestNumberOfDays.";
 
             if( count($holidays) > 0 ) {
-                //1) note if days contains holidays
+                //2) note if days contains holidays
                 $holidaysStr = $this->getHolidaysStr($holidays, $custom);
                 //The date range for this away request includes the following holiday(s): [Holiday name] ([Weekday], MM/DD/YYYY).
                 // The automatically calculated quantity of business days away was [X], and was manually changed by the submitter to [Y].
                 $note = "The date range for this away request includes the following holiday(s): ".
                     $holidaysStr . $break . $note;
-                //$note = $note . $break . $holidaysStr;
-
-            } else {
-                //2) general note because days have been changed
-                //The automatically calculated quantity of $requestName days away was [X], and was manually changed by the submitter to [Y].
-                //$note = $note;
             }
         }
 

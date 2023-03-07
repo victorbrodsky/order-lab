@@ -315,10 +315,7 @@ class RequestController extends OrderAbstractController
                 $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";
             }
             $message .= $break.$break.$entity->printRequest($this->container)."".$break;
-
-            //TODO: include days difference note to approvers
-            //add note for holidays
-            //Add a sentence into the email notification to the approver upon away request submission
+            
             // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
             $daysDifferenceNote = $vacreqCalendarUtil->getDaysDifferenceNote($entity);
             if( $daysDifferenceNote ) {
