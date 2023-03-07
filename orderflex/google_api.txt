@@ -1,0 +1,7 @@
+"google/apiclient": "^1.1",
+
+
+composer require google/apiclient:^2.12.1
+
+https://github.com/googleapis/google-api-php-client/blob/cabac122ddbe19298913ed2da4e086dad41e31dd/docs/start.md
+
