@@ -142,7 +142,14 @@ class GoogleSheetManagementV2 {
         $client->setScopes(array('https://www.googleapis.com/auth/drive'));
 
         //$client->setDeveloperKey($pkey);
-        $client->setAuthConfig($pkey);
+
+        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
+        //$homepage = file_get_contents($credentialsJsonFile);
+        //echo $homepage;
+
+        //echo "credentialsJsonFile=$credentialsJsonFile <br>";
+        $client->setAuthConfig($credentialsJsonFile);
 
         $service = new \Google_Service_Drive($client);
 

@@ -5,3 +5,21 @@ composer require google/apiclient:^2.12.1
 
 https://github.com/googleapis/google-api-php-client/blob/cabac122ddbe19298913ed2da4e086dad41e31dd/docs/start.md
 
+https://github.com/googleapis/google-api-php-client/blob/HEAD/docs/oauth-web.md#create-authorization-credentials
+Create authorization credentials
+1) https://console.cloud.google.com/apis/credentials?project=quickstart-1563302081946
+
+{
+"error": {
+"code": 403,
+"message": "The request is missing a valid API key.",
+"errors": [
+{
+"message": "The request is missing a valid API key.",
+"domain": "global",
+"reason": "forbidden"
+}
+],
+"status": "PERMISSION_DENIED"
+}
+}
