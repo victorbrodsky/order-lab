@@ -44,6 +44,9 @@ services:
         class: App\FellAppBundle\Util\GoogleSheetManagement
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    fellapp_googlesheetmanagement_v2:
+            class: App\FellAppBundle\Util\GoogleSheetManagementV2
+
     fellapp_rec_letter_util:
         class: App\FellAppBundle\Util\RecLetterUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
