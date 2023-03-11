@@ -973,7 +973,7 @@ class GoogleSheetManagement {
 //            'type' => 'service_account',
 //            'client_email' => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com', //'395545742105@developer.gserviceaccount.com',
 //            'client_id'   => '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5.apps.googleusercontent.com', //'395545742105.apps.googleusercontent.com',
-//            'private_key' => 'b444d50c0264f39580c1c4f63fef2d8f73b5e896'
+//            'private_key' => ''
 //        ));
 
         $client->setAuthConfig($credentialsJsonFile);

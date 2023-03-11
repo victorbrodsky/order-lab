@@ -340,6 +340,16 @@ add new remote: git remote add origin git@github.com:sammy/my-new-project.git
 git push originme
 or: git push -u -f originme main
 
+###### git branching ######
+git branch iss53
+git switch iss53
+-make changes in iss53 branch
+git add .
+git commit -m "make changes in iss53"
+git switch master
+git merge iss53
+###### EOF git branching ######
+
 Redirect:
 #.htaccess: Redirect only http://collage.med.cornell.edu/order/* to http://157.139.226.86/order/* keeping all url parameters
 ###Options +FollowSymLinks
