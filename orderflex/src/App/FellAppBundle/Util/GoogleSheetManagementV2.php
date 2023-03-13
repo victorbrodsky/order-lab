@@ -142,12 +142,16 @@ class GoogleSheetManagementV2 {
     {
         //$credentialsJsonFile = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
-        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
-        $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
         try {
             $client = new \Google\Client();
             $client->setAuthConfig($credentialsJsonFile);
-            $client->addScope(Drive::DRIVE);
+            //$client->addScope(Drive::DRIVE);
+            $client->addScope("https://www.googleapis.com/auth/drive");
+            $client->addScope("https://www.googleapis.com/auth/drive.file");
+            $client->addScope("https://www.googleapis.com/auth/drive.metadata");
+            $client->addScope("https://www.googleapis.com/auth/drive.appdata");
             //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
             //$client->setDeveloperKey('');
             //$driveService = new Drive($client);
@@ -165,7 +169,9 @@ class GoogleSheetManagementV2 {
                     //'spaces' => 'drive',
                     //'pageToken' => $pageToken,
                     //'incompleteSearch' => true,
-                    'fields' => 'nextPageToken, files(id, name)',
+                    //"mimeType" => "application/vnd.google-apps.spreadsheet",
+                    //'supportsAllDrives' => true,
+                    //'fields' => 'nextPageToken, files(id, name)',
                 ));
                 foreach ($response->files as $file) {
                     printf("Found file: %s (%s)\n", $file->name, $file->id);
@@ -226,10 +232,10 @@ class GoogleSheetManagementV2 {
     function printFile($service, $fileId) {
         try {
             $file = $service->files->get($fileId);
-
-            print "Title: " . $file->getTitle();
-            print "Description: " . $file->getDescription();
-            print "MIME type: " . $file->getMimeType();
+            //dump($file);
+            print "Title: " . $file->getName()."<br>";
+            print "Description: " . $file->getDescription()."<br>";
+            print "MIME type: " . $file->getMimeType()."<br>";
         } catch (Exception $e) {
             print "An error occurred: " . $e->getMessage();
         }
@@ -238,14 +244,20 @@ class GoogleSheetManagementV2 {
 
 
     public function getService() {
+        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
         $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
         $client = new \Google\Client();
         $client->setAuthConfig($credentialsJsonFile);
-        $client->addScope(Drive::DRIVE);
+        //$client->addScope(Drive::DRIVE);
+
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->addScope("https://www.googleapis.com/auth/drive.file");
+        $client->addScope("https://www.googleapis.com/auth/drive.metadata");
+        $client->addScope("https://www.googleapis.com/auth/drive.appdata");
 
         //Json and api key gives the same "File not found"
         //$client->setApplicationName("Fellowship Application 2");
-        //$client->setDeveloperKey("");
+        //$client->setDeveloperKey("AIzaSyBo6kgjY8yUrBVkwbPua5sRCAKQFtp61-k");
         //$client->addScope("https://www.googleapis.com/auth/drive");
         //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
 
