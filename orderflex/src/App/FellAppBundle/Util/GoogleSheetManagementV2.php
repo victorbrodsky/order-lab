@@ -246,6 +246,7 @@ class GoogleSheetManagementV2 {
     public function getService() {
         //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
         $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_5.json'; //oAuth
         $client = new \Google\Client();
         $client->setAuthConfig($credentialsJsonFile);
         //$client->addScope(Drive::DRIVE);
@@ -257,7 +258,7 @@ class GoogleSheetManagementV2 {
 
         //Json and api key gives the same "File not found"
         //$client->setApplicationName("Fellowship Application 2");
-        //$client->setDeveloperKey("AIzaSyBo6kgjY8yUrBVkwbPua5sRCAKQFtp61-k");
+        //$client->setDeveloperKey("");
         //$client->addScope("https://www.googleapis.com/auth/drive");
         //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
 
