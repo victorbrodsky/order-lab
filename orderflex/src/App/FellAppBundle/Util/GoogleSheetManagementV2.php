@@ -30,6 +30,7 @@ namespace App\FellAppBundle\Util;
 //2) composer.phar update
 
 use Doctrine\ORM\EntityManagerInterface;
+use Google\Service\Drive;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
@@ -48,6 +49,8 @@ use Google\Auth\Middleware\AuthTokenMiddleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
+//Auth (Create Google Cloud Project, enable APIs, config OAuth, create access credentials): https://developers.google.com/workspace/guides/get-started
+//Search files: https://developers.google.com/drive/api/guides/search-files
 
 class GoogleSheetManagementV2 {
 
@@ -131,6 +134,43 @@ class GoogleSheetManagementV2 {
         }
 
         return count($res);
+    }
+    public function searchFiles()
+    {
+        //$credentialsJsonFile = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
+        $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        try {
+            $client = new \Google\Client();
+            $client->setAuthConfig($credentialsJsonFile);
+            $client->addScope(Drive::DRIVE);
+            //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
+            //$client->setDeveloperKey('');
+            //$driveService = new Drive($client);
+            $driveService = new \Google\Service\Drive($client);
+            //$file = $this->getFileById("1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o",$driveService);
+            $files = array();
+            $pageToken = null;
+            do {
+                $response = $driveService->files->listFiles(array(
+                    //'q' => "mimeType='application/pdf'",
+                    //'q' => "mimeType='application/vnd.google-apps.spreadsheet'",
+                    'spaces' => 'drive',
+                    'pageToken' => $pageToken,
+                    'fields' => 'nextPageToken, files(id, name)',
+                ));
+                foreach ($response->files as $file) {
+                    printf("Found file: %s (%s)\n", $file->name, $file->id);
+                }
+                array_push($files, $response->files);
+
+                $pageToken = $response->pageToken;
+            } while ($pageToken != null);
+            return $files;
+        } catch(Exception $e) {
+            echo "Error Message: ".$e;
+        }
     }
 
     //1)  Import sheets from Google Drive
@@ -296,8 +336,10 @@ class GoogleSheetManagementV2 {
         $client->setAccessType('offline');
         $client->setIncludeGrantedScopes(true);
         $client->setScopes(array('https://www.googleapis.com/auth/drive'));
-        $client->setSubject("1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com");
+        //$client->setSubject("1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com");
         //$client->setDeveloperKey("");
+
+        //$scopes = [ Drive::DRIVE ];
 
         //https://console.cloud.google.com/iam-admin
         //Click: "Service Accounts"
