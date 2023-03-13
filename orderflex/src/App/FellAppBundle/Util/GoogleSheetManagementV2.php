@@ -51,6 +51,7 @@ use GuzzleHttp\HandlerStack;
 
 //Auth (Create Google Cloud Project, enable APIs, config OAuth, create access credentials): https://developers.google.com/workspace/guides/get-started
 //Search files: https://developers.google.com/drive/api/guides/search-files
+//https://developers.google.com/drive/api/v2/reference/files/get
 
 class GoogleSheetManagementV2 {
 
@@ -75,6 +76,8 @@ class GoogleSheetManagementV2 {
 //            'q' => "'".$folderId."' in parents"
 //        );
         //$files = $service->files->listFiles($optParams);
+
+        //$parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
 
         $optParams = array(
             'pageSize' => 10,
@@ -150,14 +153,18 @@ class GoogleSheetManagementV2 {
             //$driveService = new Drive($client);
             $driveService = new \Google\Service\Drive($client);
             //$file = $this->getFileById("1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o",$driveService);
+            //$folderId = "0B2FwyaXvFk1efmhvOVhLSlczSmNMdXJudV9Xb3NpLU9nbmhnZXhPRlJwN2sxd1RGTjZpckE";
+            //$fileName = '';
             $files = array();
             $pageToken = null;
             do {
                 $response = $driveService->files->listFiles(array(
                     //'q' => "mimeType='application/pdf'",
                     //'q' => "mimeType='application/vnd.google-apps.spreadsheet'",
-                    'spaces' => 'drive',
-                    'pageToken' => $pageToken,
+                    //'q' => "'".$folderId."' in parents",
+                    //'spaces' => 'drive',
+                    //'pageToken' => $pageToken,
+                    //'incompleteSearch' => true,
                     'fields' => 'nextPageToken, files(id, name)',
                 ));
                 foreach ($response->files as $file) {
@@ -172,6 +179,83 @@ class GoogleSheetManagementV2 {
             echo "Error Message: ".$e;
         }
     }
+    /**
+     * Retrieve a list of File resources.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @return Array List of Google_Service_Drive_DriveFile resources.
+     */
+    function retrieveAllFiles($service=null) {
+
+        if( !$service ) {
+            $service = $this->getService();
+        }
+
+        $result = array();
+        $pageToken = NULL;
+
+        do {
+            try {
+                $parameters = array(
+                    //'incompleteSearch' => true
+                    "spaces" => "drive",
+                    //'items' => array()
+                );
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+                $files = $service->files->listFiles($parameters);
+                dump($files);
+                exit('111');
+
+                $result = array_merge($result, $files->getItems());
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+        return $result;
+    }
+    /**
+     * Print a file's metadata.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param string $fileId ID of the file to print metadata for.
+     */
+    function printFile($service, $fileId) {
+        try {
+            $file = $service->files->get($fileId);
+
+            print "Title: " . $file->getTitle();
+            print "Description: " . $file->getDescription();
+            print "MIME type: " . $file->getMimeType();
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+    }
+
+
+
+    public function getService() {
+        $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        $client = new \Google\Client();
+        $client->setAuthConfig($credentialsJsonFile);
+        $client->addScope(Drive::DRIVE);
+
+        //Json and api key gives the same "File not found"
+        //$client->setApplicationName("Fellowship Application 2");
+        //$client->setDeveloperKey("");
+        //$client->addScope("https://www.googleapis.com/auth/drive");
+        //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
+
+        //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
+        //$client->setDeveloperKey('');
+        //$driveService = new Drive($client);
+        $service = new \Google\Service\Drive($client);
+        return $service;
+    }
+
 
     //1)  Import sheets from Google Drive
     //1a)   import all sheets from Google Drive folder
