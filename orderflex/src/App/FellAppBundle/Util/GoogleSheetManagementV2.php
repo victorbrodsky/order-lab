@@ -144,14 +144,22 @@ class GoogleSheetManagementV2 {
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
         $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        //$credentialsJsonFile = json_decode(file_get_contents($credentialsJsonFile), true);
         try {
             $client = new \Google\Client();
+            $client->setApplicationName('Fellowship Applications');
+            $client->setAccessType('offline');
+            $client->setIncludeGrantedScopes(true);
+            //$client->setScopes(array('https://www.googleapis.com/auth/drive'));
             $client->setAuthConfig($credentialsJsonFile);
-            //$client->addScope(Drive::DRIVE);
-            $client->addScope("https://www.googleapis.com/auth/drive");
-            $client->addScope("https://www.googleapis.com/auth/drive.file");
-            $client->addScope("https://www.googleapis.com/auth/drive.metadata");
-            $client->addScope("https://www.googleapis.com/auth/drive.appdata");
+            //$scopes = [ Drive::DRIVE ];
+            //$client->setScopes($scopes);
+            $client->addScope(Drive::DRIVE);
+            //$client->addScope("https://www.googleapis.com/auth/drive");
+            //$client->addScope("https://www.googleapis.com/auth/drive.file");
+            //$client->addScope("https://www.googleapis.com/auth/drive.metadata");
+            //$client->addScope("https://www.googleapis.com/auth/drive.appdata");
+            //$client->addScope("https://spreadsheets.google.com/feeds");
             //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
             //$client->setDeveloperKey('');
             //$driveService = new Drive($client);
@@ -162,10 +170,20 @@ class GoogleSheetManagementV2 {
             $files = array();
             $pageToken = null;
             do {
+                //$fileId = "1mzVYbtdN72PPEqJ0qlWwon6-ca9epH8iP86mjjpSjLw";
+                //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl';
+                //$request = new Google_Http_Request($downloadUrl, 'GET', null, null);
+                //$httpRequest = $driveService->getClient()->getAuth()->authenticatedRequest($request);
+
+                //$body = $httpRequest->getResponseBody();
+                //dump($body);
+                //exit("downloadGeneralFileGoogleDoc");
+
                 $response = $driveService->files->listFiles(array(
                     //'q' => "mimeType='application/pdf'",
                     //'q' => "mimeType='application/vnd.google-apps.spreadsheet'",
                     //'q' => "'".$folderId."' in parents",
+                    //'q' => "mimeType='application/vnd.google-apps.folder'",
                     //'spaces' => 'drive',
                     //'pageToken' => $pageToken,
                     //'incompleteSearch' => true,
@@ -255,6 +273,7 @@ class GoogleSheetManagementV2 {
         $client->addScope("https://www.googleapis.com/auth/drive.file");
         $client->addScope("https://www.googleapis.com/auth/drive.metadata");
         $client->addScope("https://www.googleapis.com/auth/drive.appdata");
+        $client->addScope("https://spreadsheets.google.com/feeds");
 
         //Json and api key gives the same "File not found"
         //$client->setApplicationName("Fellowship Application 2");
