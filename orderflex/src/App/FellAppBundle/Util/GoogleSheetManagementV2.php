@@ -140,17 +140,29 @@ class GoogleSheetManagementV2 {
     }
     public function searchFiles()
     {
+        //"Service Account 2" - p12 key is working
+        //"Service Account 2" - json -> result 1 file "Getting started" id "0B0PyCK-oDTOEc3RhcnRlcl9maWxl"
+        //https://stackoverflow.com/questions/27455510/google-service-drive-retrievelistofallfiles-only-returning-one-file
+        //Share folder to user from json file
+        //1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com is external to
+        // Weill Cornell Medical College Pathology Department, who owns the item.
+        // This organization encourages caution when sharing externally.
+
         //$credentialsJsonFile = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight-2.json';
+        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight-serviceaccount2.json'; //based on "Service Account 2"
         //$credentialsJsonFile = __DIR__ . '/../Util/quickstart.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/quickstart-FellowshipAuth.json';
-        $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway-2.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/quickstart-cinava.json';
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_cinava_oauth.json';
         //$credentialsJsonFile = json_decode(file_get_contents($credentialsJsonFile), true);
+
+        echo "credentialsJsonFile=$credentialsJsonFile <br>";
+
         try {
             $client = new \Google\Client();
             $client->setApplicationName('Fellowship Applications');
@@ -271,7 +283,8 @@ class GoogleSheetManagementV2 {
 
     public function getService() {
         //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
-        $credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight-serviceaccount2.json'; //based on "Service Account 2"
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_5.json'; //oAuth
         $client = new \Google\Client();
         $client->setAuthConfig($credentialsJsonFile);
