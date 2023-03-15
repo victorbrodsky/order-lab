@@ -53,6 +53,14 @@ use GuzzleHttp\HandlerStack;
 //Search files: https://developers.google.com/drive/api/guides/search-files
 //https://developers.google.com/drive/api/v2/reference/files/get
 
+//1) Go to https://console.cloud.google.com and create new or choose existing project (i.e. "FellowshipAuth")
+//2) Click to "IAM & Admin"
+//3) On the left side click "Service Accounts"
+//4) Under "Key" section click "ADD KEY" and create a new key in JSON format for google api v2
+//5) Set the field "Full Path to p12 key or service account credentials.json file for accessing the Google Drive API" to this JSON ket path
+//6) Share Google Drive folder with the user from the service ket. Otherwise, the file list will contain only 1 file "Getting started"
+//7) 
+
 class GoogleSheetManagementV2 {
 
     protected $em;
@@ -65,45 +73,87 @@ class GoogleSheetManagementV2 {
         $this->security = $security;
     }
 
-    function testFileDownload() {
+    public function getService() {
+        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
+        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight-serviceaccount2.json'; //based on "Service Account 2"
+        //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_5.json'; //oAuth
 
-        $service = $this->getGoogleService();
-
-//        $folderId = "1b_tL1MDsS6fCysBcP6X7MjhdS9jryiYf";
-//        $optParams = array(
-//            'pageSize' => 10,
-//            'fields' => "nextPageToken, files(contentHints/thumbnail,fileExtension,iconLink,id,name,size,thumbnailLink,webContentLink,webViewLink,mimeType,parents)",
-//            'q' => "'".$folderId."' in parents"
-//        );
-        //$files = $service->files->listFiles($optParams);
-
-        //$parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
-
-        $optParams = array(
-            'pageSize' => 10,
-            //'fields' => 'files(id,name,mimeType)',
-            //'q' => 'mimeType = "application/vnd.google-apps.spreadsheet" and "root" in parents',
-            'orderBy' => 'name'
-        );
-        $results = $service->files->listFiles($optParams);
-        $files = $results->getFiles();
-
-//        $response = $service->files->get(
-//            "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o",
-//            array(
-//                'alt' => 'media'
-//                //'mimeType' => 'application/json'
-//            )
-//        );
-//        dump($files);
-//        exit('111');
-
-        echo "files count=".count($files)."<br>";
-        dump($files);
-        foreach($files as $file) {
-            echo $file->getName()."<br>";
+        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$credentialsJsonFile ) {
+            $logger->warning('JSON service key is not defined in Site Parameters, in field p12KeyPathFellApp. Json file='.$credentialsJsonFile);
         }
-        exit('111');
+
+        $client = new \Google\Client();
+        $client->setAuthConfig($credentialsJsonFile);
+        //$client->addScope(Drive::DRIVE);
+
+        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->addScope("https://www.googleapis.com/auth/drive.file");
+        $client->addScope("https://www.googleapis.com/auth/drive.metadata");
+        $client->addScope("https://www.googleapis.com/auth/drive.appdata");
+        $client->addScope("https://spreadsheets.google.com/feeds");
+
+        //Json and api key gives the same "File not found"
+        //$client->setApplicationName("Fellowship Application 2");
+        //$client->setDeveloperKey("");
+        //$client->addScope("https://www.googleapis.com/auth/drive");
+        //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
+
+        //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
+        //$client->setDeveloperKey('');
+        //$driveService = new Drive($client);
+        $service = new \Google\Service\Drive($client);
+        return $service;
+    }
+
+    /**
+     * Retrieve a list of File resources.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @return Array List of Google_Service_Drive_DriveFile resources.
+     */
+    function retrieveAllFiles($service=null) {
+        if( !$service ) {
+            $service = $this->getService();
+        }
+
+        try {
+            $parameters = array(
+                //'incompleteSearch' => true
+                "spaces" => "drive",
+                //'items' => array()
+            );
+            $files = $service->files->listFiles($parameters);
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+        return $files;
+    }
+
+    /**
+     * Print a file's metadata.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param string $fileId ID of the file to print metadata for.
+     */
+    function printFile($service, $fileId) {
+        try {
+            $file = $service->files->get($fileId);
+            //dump($file);
+            print "Title: " . $file->getName()."<br>";
+            print "Description: " . $file->getDescription()."<br>";
+            print "MIME type: " . $file->getMimeType()."<br>";
+        } catch (Exception $e) {
+            print "An error occurred: " . $e->getMessage();
+        }
+    }
+
+
+    function testFiles( $service ) {
 
         //Test files are located in FellowshipApplication/TestFiles
         $files = array(
@@ -138,6 +188,116 @@ class GoogleSheetManagementV2 {
 
         return count($res);
     }
+
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Servie_Drive $service Drive API service instance.
+     * @param Google_Servie_Drive_DriveFile $file Drive File instance.
+     * @param String $type Document type string.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadFile($service, $file, $type=null, $sendEmail=true) {
+        $logger = $this->container->get('logger');
+        $mimeType = $file->getMimeType();
+        $logger->notice("downloadFile: mimeType=".$mimeType);
+        //echo "mimeType=$mimeType <br>";
+        $fileId = $file->getId();
+        //echo "fileId=[$fileId], mimeType=[$mimeType] <br>";
+
+        if( $mimeType == 'application/vnd.google-apps.spreadsheet' ) {
+            //Google Sheets - works
+            //echo "Case: Google Sheets <br>";
+            $mimeType = 'text/csv'; //'application/vnd.google-apps.spreadsheet';
+        }
+        elseif( $mimeType == 'application/vnd.google-apps.document' ) {
+            //Google Docs - works
+            //echo "Case: Google Docs <br>";
+            $mimeType = 'application/pdf';
+        }
+        elseif( $mimeType == 'application/pdf' ) {
+            //PDF - works
+            //echo "Case: PDF <br>";
+            $mimeType = 'application/pdf'; //not working anymore?
+            return $this->downloadGeneralFile($service,$file,$sendEmail); //working for pdf
+        }
+        elseif( $mimeType == 'application/msword' ) {
+            //Word - works with get file (downloadGeneralFile), not working with export
+            //echo "Case: Word <br>";
+            //$mimeType = 'application/pdf'; //testing
+            return $this->downloadGeneralFile($service,$file,$sendEmail);
+        }
+        else {
+            //echo "Case: ALl others <br>";
+            return $this->downloadGeneralFile($service,$file,$sendEmail);
+        }
+
+        $logger->notice("downloadFile: process by file export");
+        try {
+            $response = $service->files->export(
+                $fileId,
+                //'application/pdf',
+                $mimeType,
+                array(
+                    'alt' => 'media'
+                )
+            );
+            //$content = $response->getBody()->getContents();
+            //exit($response);
+
+            if(0) {
+                header('Content-Type: ' . $mimeType);
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                echo $response;
+                exit();
+            }
+//            //dump($response);
+//            exit('111');
+
+            return $response;
+        }  catch(Exception $e) {
+            echo "Error Message: ".$e;
+            //exit("Error Message: ".$e);
+            $subject = "ERROR: downloadFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
+            $body = $subject . "; Error=" . $e;
+            $this->onDownloadFileError($subject,$body,$sendEmail);
+        }
+        return null;
+    }
+
+    function downloadGeneralFile($service,$file,$sendEmail=true) {
+        $logger = $this->container->get('logger');
+        $logger->notice("downloadGeneralFile process by file get");
+        try {
+            $fileId = $file->getId();
+            $response = $service->files->get(
+                $fileId,
+                array(
+                    'alt' => 'media'
+                )
+            );
+
+            return $response;
+        } catch(Exception $e) {
+            //echo "Error Message: " . $e;
+            $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
+            $body = $subject . "; Error=" . $e;
+            $this->onDownloadFileError($subject,$body,$sendEmail);
+        }
+        return null;
+    }
+
+    function onDownloadFileError( $subject, $body, $sendEmail=true ) {
+        return null;
+    }
+
+
+
+
+
+
     public function searchFiles()
     {
         //"Service Account 2" - p12 key is working
@@ -223,91 +383,7 @@ class GoogleSheetManagementV2 {
             echo "Error Message: ".$e;
         }
     }
-    /**
-     * Retrieve a list of File resources.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @return Array List of Google_Service_Drive_DriveFile resources.
-     */
-    function retrieveAllFiles($service=null) {
 
-        if( !$service ) {
-            $service = $this->getService();
-        }
-
-        $result = array();
-        $pageToken = NULL;
-
-        do {
-            try {
-                $parameters = array(
-                    //'incompleteSearch' => true
-                    "spaces" => "drive",
-                    //'items' => array()
-                );
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-                $files = $service->files->listFiles($parameters);
-                dump($files);
-                exit('111');
-
-                $result = array_merge($result, $files->getItems());
-                $pageToken = $files->getNextPageToken();
-            } catch (Exception $e) {
-                print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-        return $result;
-    }
-    /**
-     * Print a file's metadata.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param string $fileId ID of the file to print metadata for.
-     */
-    function printFile($service, $fileId) {
-        try {
-            $file = $service->files->get($fileId);
-            //dump($file);
-            print "Title: " . $file->getName()."<br>";
-            print "Description: " . $file->getDescription()."<br>";
-            print "MIME type: " . $file->getMimeType()."<br>";
-        } catch (Exception $e) {
-            print "An error occurred: " . $e->getMessage();
-        }
-    }
-
-
-
-    public function getService() {
-        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
-        //$credentialsJsonFile = __DIR__ . '/../Util/ambient-highway.json';
-        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight-serviceaccount2.json'; //based on "Service Account 2"
-        //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_5.json'; //oAuth
-        $client = new \Google\Client();
-        $client->setAuthConfig($credentialsJsonFile);
-        //$client->addScope(Drive::DRIVE);
-
-        $client->addScope("https://www.googleapis.com/auth/drive");
-        $client->addScope("https://www.googleapis.com/auth/drive.file");
-        $client->addScope("https://www.googleapis.com/auth/drive.metadata");
-        $client->addScope("https://www.googleapis.com/auth/drive.appdata");
-        $client->addScope("https://spreadsheets.google.com/feeds");
-
-        //Json and api key gives the same "File not found"
-        //$client->setApplicationName("Fellowship Application 2");
-        //$client->setDeveloperKey("");
-        //$client->addScope("https://www.googleapis.com/auth/drive");
-        //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
-
-        //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
-        //$client->setDeveloperKey('');
-        //$driveService = new Drive($client);
-        $service = new \Google\Service\Drive($client);
-        return $service;
-    }
 
 
     //1)  Import sheets from Google Drive
@@ -415,27 +491,6 @@ class GoogleSheetManagementV2 {
         } while ($pageToken);
 
         return NULL;
-    }
-    function downloadGeneralFile($service,$file,$sendEmail=true) {
-        $logger = $this->container->get('logger');
-        $logger->notice("downloadGeneralFile process by file get");
-        try {
-            $fileId = $file->getId();
-            $response = $service->files->get(
-                $fileId,
-                array(
-                    'alt' => 'media'
-                )
-            );
-
-            return $response;
-        } catch(Exception $e) {
-            //echo "Error Message: " . $e;
-            $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
-            $body = $subject . "; Error=" . $e;
-            $this->onDownloadFileError($subject,$body,$sendEmail);
-        }
-        return null;
     }
 
 

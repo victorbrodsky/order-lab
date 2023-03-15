@@ -260,7 +260,7 @@ class DefaultController extends OrderAbstractController
         //$fileContentsCount = $googlesheetmanagement->testFileDownload();
         $googlesheetmanagementv2 = $this->container->get('fellapp_googlesheetmanagement_v2');
 
-        if(1) {
+        if(0) {
             //$fileContentsCount = $googlesheetmanagementv2->testFileDownload();
             //$fileContentsCount = $googlesheetmanagementv2->getConfigOnGoogleDrive();
             $files = $googlesheetmanagementv2->searchFiles();
@@ -268,14 +268,20 @@ class DefaultController extends OrderAbstractController
 
         if(0) {
             $service = $googlesheetmanagementv2->getService();
-            $fileId = "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o";
+            $files = $googlesheetmanagementv2->retrieveAllFiles($service);
+            dump($files);
+        }
+
+        if(1) {
+            $service = $googlesheetmanagementv2->getService();
+            //$fileId = "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o";
             //$fileId = "1mzVYbtdN72PPEqJ0qlWwon6-ca9epH8iP86mjjpSjLw";
             //$fileId = "0B0PyCK-oDTOEc3RhcnRlcl9maWxl";
             //$fileId = "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o";
-            $files = $googlesheetmanagementv2->printFile($service, $fileId);
+            $files = $googlesheetmanagementv2->testFiles($service);
+            dump($files); //5 files
         }
 
-        dump($files);
         exit('files');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
