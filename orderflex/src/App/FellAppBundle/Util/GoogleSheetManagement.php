@@ -35,6 +35,8 @@ namespace App\FellAppBundle\Util;
 // "Automatically delete downloaded applications that are older than [X] year(s)".
 
 use Doctrine\ORM\EntityManagerInterface;
+use Google\Client;
+use Google\Service\Drive;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Google\Spreadsheet\DefaultServiceRequest;
 use Google\Spreadsheet\ServiceRequestFactory;
@@ -773,8 +775,9 @@ class GoogleSheetManagement {
     }
 
     public function authenticationGoogle() {
-        return $this->authenticationP12Key();
+        //return $this->authenticationP12Key();
         //return $this->authenticationGoogleOAuth();
+        return $this->authGoogleServiceAccount();
     }
 
     //https://github.com/googleapis/google-api-php-client/blob/master/UPGRADING.md
@@ -930,6 +933,76 @@ class GoogleSheetManagement {
 
         return $res;
     }
+
+    public function authGoogleServiceAccount() {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$credentialsJsonFile ) {
+            $logger->warning('JSON service key is not defined in Site Parameters, in field p12KeyPathFellApp. Json file='.$credentialsJsonFile);
+        }
+
+        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        if( !$scopes ) {
+            $logger->warning('Google scope are not defined in Site Parameters, in field googleDriveApiUrlFellApp. Json file='.$credentialsJsonFile);
+        }
+
+        //space or comma separated
+        $scopesArr = array();
+        if( $scopes && str_contains($scopes,' ') ) {
+            $scopesArr = explode(' ', $scopes);
+        }
+        if( $scopes && str_contains($scopes,',') ) {
+            $scopesArr = explode(',', $scopes);
+        }
+
+        $client = new Client();
+        $client->setAuthConfig($credentialsJsonFile);
+        $client->addScope(Drive::DRIVE);
+
+        if( count($scopesArr) > 0 ) {
+            foreach( $scopesArr as $scope ) {
+                $client->addScope($scope);
+            }
+        } else {
+            if( $scopes ) {
+                $client->addScope($scopes);
+            }
+        }
+
+        //"error": "unauthorized_client",
+        //"error_description": "Client is unauthorized to retrieve access tokens using this method, or client not authorized for any of the scopes requested."
+//        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+//        if( $user_to_impersonate ) {
+//            $client->setSubject($user_to_impersonate);
+//        }
+
+        //$client->addScope("https://www.googleapis.com/auth/drive");
+        //$client->addScope("https://www.googleapis.com/auth/drive.file");
+        //$client->addScope("https://www.googleapis.com/auth/drive.metadata");
+        //$client->addScope("https://www.googleapis.com/auth/drive.appdata");
+        //$client->addScope("https://spreadsheets.google.com/feeds");
+
+        //Json and api key gives the same "File not found"
+        //$client->setApplicationName("Fellowship Application 2");
+        //$client->setDeveloperKey("");
+        //$client->addScope("https://www.googleapis.com/auth/drive");
+        //$client->setSubject("google-drive-service-account@ambient-highway-380513.iam.gserviceaccount.com");
+
+        //$client->setSubject("1040591934373-c7rvicvmf22s0slqfejftmpmc9n1dqah@developer.gserviceaccount.com");
+        //$client->setDeveloperKey('');
+        //$driveService = new Drive($client);
+        $service = new Drive($client);
+
+        $res = array(
+            'client' => $client,
+            'service' => $service
+        );
+
+        return $res;
+    }
+
     //https://stackoverflow.com/questions/34130068/fatal-error-class-google-auth-assertioncredentials-not-found
     public function getClient() {
 

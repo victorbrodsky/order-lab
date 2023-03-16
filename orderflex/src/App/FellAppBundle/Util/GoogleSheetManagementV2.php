@@ -97,6 +97,14 @@ class GoogleSheetManagementV2 {
         $client->addScope("https://www.googleapis.com/auth/drive.appdata");
         $client->addScope("https://spreadsheets.google.com/feeds");
 
+        //$user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        //if( !$user_to_impersonate ) {
+        //    throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        //}
+
+        //$user_to_impersonate = "olegivanov@pathologysystems.org";
+        //$client->setSubject($user_to_impersonate);
+
         //Json and api key gives the same "File not found"
         //$client->setApplicationName("Fellowship Application 2");
         //$client->setDeveloperKey("");
