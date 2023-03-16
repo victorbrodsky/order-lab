@@ -256,40 +256,35 @@ class DefaultController extends OrderAbstractController
 //        dump($content);
 //        exit('111');
 
-        $googlesheetmanagementv2 = $this->container->get('fellapp_googlesheetmanagement_v2');
-
-        if(0) {
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            //$configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            $configFileContent = $googlesheetmanagementv2->getConfigOnGoogleDrive();
-            $configFileContent = json_decode($configFileContent, true);
-            dump($configFileContent);
-            exit('111');
-        }
-
-        if(0) {
-            //$fileContentsCount = $googlesheetmanagementv2->testFileDownload();
-            //$fileContentsCount = $googlesheetmanagementv2->getConfigOnGoogleDrive();
-            $files = $googlesheetmanagementv2->searchFiles();
-        }
-
-        if(0) {
-            $service = $googlesheetmanagementv2->getService();
-            $files = $googlesheetmanagementv2->retrieveAllFiles($service);
-            dump($files);
-        }
-
-        if(0) {
-            $service = $googlesheetmanagementv2->getService();
-            //$fileId = "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o";
-            //$fileId = "1mzVYbtdN72PPEqJ0qlWwon6-ca9epH8iP86mjjpSjLw";
-            //$fileId = "0B0PyCK-oDTOEc3RhcnRlcl9maWxl";
-            //$fileId = "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o";
-            $files = $googlesheetmanagementv2->testFiles($service);
-            dump($files); //5 files
-        }
-
-        //exit('files');
+//        $googlesheetmanagementv2 = $this->container->get('fellapp_googlesheetmanagement_v2');
+//        if(0) {
+//            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//            //$configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+//            $configFileContent = $googlesheetmanagementv2->getConfigOnGoogleDrive();
+//            $configFileContent = json_decode($configFileContent, true);
+//            dump($configFileContent);
+//            exit('111');
+//        }
+//        if(0) {
+//            //$fileContentsCount = $googlesheetmanagementv2->testFileDownload();
+//            //$fileContentsCount = $googlesheetmanagementv2->getConfigOnGoogleDrive();
+//            $files = $googlesheetmanagementv2->searchFiles();
+//        }
+//        if(0) {
+//            $service = $googlesheetmanagementv2->getService();
+//            $files = $googlesheetmanagementv2->retrieveAllFiles($service);
+//            dump($files);
+//        }
+//        if(0) {
+//            $service = $googlesheetmanagementv2->getService();
+//            //$fileId = "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o";
+//            //$fileId = "1mzVYbtdN72PPEqJ0qlWwon6-ca9epH8iP86mjjpSjLw";
+//            //$fileId = "0B0PyCK-oDTOEc3RhcnRlcl9maWxl";
+//            //$fileId = "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o";
+//            $files = $googlesheetmanagementv2->testFiles($service);
+//            dump($files); //5 files
+//        }
+//        //exit('files');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

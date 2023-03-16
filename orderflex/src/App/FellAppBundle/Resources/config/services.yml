@@ -19,15 +19,12 @@ services:
 
     fellapp_authentication_handler:
         class: App\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
-#        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #fellowship application utilities
     fellapp_util:
             class: App\FellAppBundle\Util\FellAppUtil
-#            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
     fellapp_importpopulate_util:
         class: App\FellAppBundle\Util\FellAppImportPopulateUtil
-#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
 #        autowire: true
@@ -42,27 +39,23 @@ services:
 #        autoconfigure: true
 #        public: true
         class: App\FellAppBundle\Util\GoogleSheetManagement
-#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
-    fellapp_googlesheetmanagement_v2:
-            class: App\FellAppBundle\Util\GoogleSheetManagementV2
+#    fellapp_googlesheetmanagement_v2:
+#            class: App\FellAppBundle\Util\GoogleSheetManagementV2
 
     fellapp_rec_letter_util:
         class: App\FellAppBundle\Util\RecLetterUtil
-#        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     fellapp_role_voter:
         class: App\FellAppBundle\Security\Voter\FellAppRoleVoter
         public: false
-#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 
     fellapp_permission_voter:
         class: App\FellAppBundle\Security\Voter\FellAppPermissionVoter
         public: false
-#        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
         tags:
             - { name: security.voter }
 

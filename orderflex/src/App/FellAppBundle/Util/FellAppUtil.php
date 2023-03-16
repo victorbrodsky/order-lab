@@ -1457,10 +1457,8 @@ class FellAppUtil {
 
             $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
             if( !$fellapp ) {
-                //echo "fellapp not found by id $fellappId<br>";
                 continue;
             }
-            //echo "fellapp found by id $fellappId<br>";
 
             //check if author can have access to view this applicant
             //user who has the same fell type can view or edit

@@ -396,8 +396,7 @@ class GoogleSheetManagementV2 {
         //$systemUser = $userSecUtil->findSystemUser();
 
         //get Google service
-        $googlesheetmanagement2 = $this->container->get('fellapp_googlesheetmanagement_v2');
-        $service = $googlesheetmanagement2->getGoogleService();
+        $service = $this->getGoogleService();
 
         if( !$service ) {
             $event = "Google API service failed!";

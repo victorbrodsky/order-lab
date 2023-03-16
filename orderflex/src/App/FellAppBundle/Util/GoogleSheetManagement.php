@@ -1190,10 +1190,10 @@ class GoogleSheetManagement {
         try {
             $fileId = $file->getId();
             $response = $service->files->get(
-              $fileId,
-              array(
-                'alt' => 'media'
-              )
+                $fileId,
+                array(
+                    'alt' => 'media',
+                )
             );
             $content = $response->getBody()->getContents();
             return $content;
@@ -1216,8 +1216,8 @@ class GoogleSheetManagement {
                     'alt' => 'media'
                 )
             );
-
             return $response;
+
         } catch(Exception $e) {
             //echo "Error Message: " . $e;
             $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
@@ -1559,7 +1559,11 @@ class GoogleSheetManagement {
         if( 1 ) {
             $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
             //echo "configFile ID=".$configFile->getId()."<br>";
-            $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
+
+            //$contentConfigFile = $this->downloadGeneralFile($service, $configFile);
+            $contentConfigFile = $this->downloadFile($service, $configFile);
+            //dump($contentConfigFile);
+            //exit('111');
 
             //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
 //            //echo $content;
