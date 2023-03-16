@@ -256,13 +256,16 @@ class DefaultController extends OrderAbstractController
 //        dump($content);
 //        exit('111');
 
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-        $configFileContent = json_decode($configFileContent, true);
-        dump($configFileContent);
-        exit('111');
-        //$fileContentsCount = $googlesheetmanagement->testFileDownload();
         $googlesheetmanagementv2 = $this->container->get('fellapp_googlesheetmanagement_v2');
+
+        if(0) {
+            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+            //$configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+            $configFileContent = $googlesheetmanagementv2->getConfigOnGoogleDrive();
+            $configFileContent = json_decode($configFileContent, true);
+            dump($configFileContent);
+            exit('111');
+        }
 
         if(0) {
             //$fileContentsCount = $googlesheetmanagementv2->testFileDownload();
@@ -276,7 +279,7 @@ class DefaultController extends OrderAbstractController
             dump($files);
         }
 
-        if(1) {
+        if(0) {
             $service = $googlesheetmanagementv2->getService();
             //$fileId = "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o";
             //$fileId = "1mzVYbtdN72PPEqJ0qlWwon6-ca9epH8iP86mjjpSjLw";
@@ -286,7 +289,7 @@ class DefaultController extends OrderAbstractController
             dump($files); //5 files
         }
 
-        exit('files');
+        //exit('files');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

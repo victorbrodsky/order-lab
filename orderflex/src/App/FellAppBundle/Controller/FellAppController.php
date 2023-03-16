@@ -2557,56 +2557,6 @@ class FellAppController extends OrderAbstractController {
         //exit('import event'.$event);
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
-
-//        //$excelFile = $this->printFile($service, $excelId);
-//
-//        //$response = $this->downloadFile($service, $excelFile, 'excel');
-//
-//        //echo "response=".$response."<br>";
-//
-//        exit(1);
-//
-//
-////        $files = $service->files->listFiles();
-////        echo "count files=".count($files)."<br>";
-////        //echo "<pre>"; print_r($files);
-////        foreach( $files as $item ) {
-////            echo "title=".$item['title']."<br>";
-////        }
-//
-//        //https://drive.google.com/open?id=0B2FwyaXvFk1edWdMdTlFTUt1aVU
-//        $folderId = "0B2FwyaXvFk1edWdMdTlFTUt1aVU";
-//        //https://drive.google.com/open?id=0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E
-//        //$folderId = "0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E";
-//        //$files = $this->printFilesInFolder($service, $folderId);
-//
-//
-//        $photoId = "0B2FwyaXvFk1eRnJVS1N0MWhkc0E";
-//        $file = $this->printFile($service, $photoId);
-//        $response = $this->downloadFile($service, $file);
-//        echo "response=".$response."<br>";
-//
-//        exit('1');
-//
-//        // Exchange authorization code for access token
-//        //$accessToken = $client->authenticate($authCode);
-//        //$client->setAccessToken($accessToken);
-//
-//        $fileId = "1DN1BEbONKNmFpHU6xBo69YSLjXCnhRy0IbyXrwMzEzc";
-//
-//        $file = $this->printFile($service, $fileId);
-//
-//        echo "after file <br>";
-//
-//        $response = $this->downloadFile($service,$file);
-//
-//        print_r($response);
-//
-//        echo "response=".$response."<br>";
-//        //exit();
-//        return $response;
-//
-//        return $this->redirect( $this->generateUrl('fellapp_home') );
     }
 
 

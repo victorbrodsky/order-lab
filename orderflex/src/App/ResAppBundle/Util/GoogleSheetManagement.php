@@ -34,6 +34,8 @@ namespace App\ResAppBundle\Util;
 // "deletion of rows from the spreadsheet on Google Drive upon successful import"
 // "Automatically delete downloaded applications that are older than [X] year(s)".
 
+//composer.json: "google/apiclient": "^2.12.1" => Drive API v3
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Google\Spreadsheet\DefaultServiceRequest;

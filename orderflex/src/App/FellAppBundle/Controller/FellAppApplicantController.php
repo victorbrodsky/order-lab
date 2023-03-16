@@ -747,6 +747,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $entities = $fellappUtil->createInterviewApplicantList( $fellappIds );
+        echo "entities count=".count($entities)."<br>";
+        exit('111');
 
         return array(
             'entities' => $entities,

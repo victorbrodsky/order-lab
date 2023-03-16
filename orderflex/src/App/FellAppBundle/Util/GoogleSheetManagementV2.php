@@ -250,21 +250,8 @@ class GoogleSheetManagementV2 {
                     'alt' => 'media'
                 )
             );
-            //$content = $response->getBody()->getContents();
-            //exit($response);
-
-            if(0) {
-                header('Content-Type: ' . $mimeType);
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                echo $response;
-                exit();
-            }
-//            //dump($response);
-//            exit('111');
-
-            return $response;
+            $content = $response->getBody()->getContents();
+            return $content;
         }  catch(Exception $e) {
             echo "Error Message: ".$e;
             //exit("Error Message: ".$e);
@@ -286,8 +273,8 @@ class GoogleSheetManagementV2 {
                     'alt' => 'media'
                 )
             );
-
-            return $response;
+            $content = $response->getBody()->getContents();
+            return $content;
         } catch(Exception $e) {
             //echo "Error Message: " . $e;
             $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
@@ -441,10 +428,17 @@ class GoogleSheetManagementV2 {
         echo "folder ID=".$configFileFolderIdFellApp."<br>";
 
         $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-
         dump($configFile);
 
-        return $configFile;
+        $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
+        dump($contentConfigFile);
+
+        //use webContentLink
+
+        //$configFileContent = json_decode($contentConfigFile, true);
+        exit('111');
+
+        return $contentConfigFile;
     }
     /**
      * @param Google_Service_Drive $service Drive API service instance.
@@ -522,8 +516,8 @@ class GoogleSheetManagementV2 {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
-        if( !$pkey ) {
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        if( !$credentialsJsonFile ) {
             $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
         }
 
@@ -546,10 +540,9 @@ class GoogleSheetManagementV2 {
         //Click: "Service account 2"
         //Keys: Add Key => json
 
-
         //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
         //$credentialsJsonFile = __DIR__ . '/../Util/client_secret_4.json';
-        $credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
+        //$credentialsJsonFile = __DIR__ . '/../Util/turnkey-delight.json';
         //$homepage = file_get_contents($credentialsJsonFile);
         //echo $homepage;
 
