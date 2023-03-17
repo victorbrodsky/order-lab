@@ -1131,7 +1131,7 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
         $mimeType = $file->getMimeType();
         $logger->notice("downloadFile: mimeType=".$mimeType);
-        //echo "mimeType=$mimeType <br>";
+        echo "mimeType=$mimeType <br>";
         $fileId = $file->getId();
         //echo "fileId=[$fileId], mimeType=[$mimeType] <br>";
 
@@ -1184,6 +1184,9 @@ class GoogleSheetManagement {
         }
         return null;
     }
+
+    //it does not work to get content of the json file
+    //TODO: test it for different mimeType files
     function downloadGeneralFile($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
         $logger->notice("downloadGeneralFile process by file get");
@@ -1197,27 +1200,6 @@ class GoogleSheetManagement {
             );
             $content = $response->getBody()->getContents();
             return $content;
-        } catch(Exception $e) {
-            //echo "Error Message: " . $e;
-            $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
-            $body = $subject . "; Error=" . $e;
-            $this->onDownloadFileError($subject,$body,$sendEmail);
-        }
-        return null;
-    }
-    function downloadGeneralFile_V1($service,$file,$sendEmail=true) {
-        $logger = $this->container->get('logger');
-        $logger->notice("downloadGeneralFile process by file get");
-        try {
-            $fileId = $file->getId();
-            $response = $service->files->get(
-                $fileId,
-                array(
-                    'alt' => 'media'
-                )
-            );
-            return $response;
-
         } catch(Exception $e) {
             //echo "Error Message: " . $e;
             $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
@@ -1556,54 +1538,14 @@ class GoogleSheetManagement {
         //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
         //echo "folder ID=".$configFileFolderIdFellApp."<br>";
 
-        if( 1 ) {
-            $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-            //echo "configFile ID=".$configFile->getId()."<br>";
+        $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        //echo "configFile ID=".$configFile->getId()."<br>";
 
-            //$contentConfigFile = $this->downloadGeneralFile($service, $configFile);
-            $contentConfigFile = $this->downloadFile($service, $configFile);
-            //dump($contentConfigFile);
-            //exit('111');
+        //$contentConfigFile = $this->downloadGeneralFile($service, $configFile); #v1,2 #"message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
 
-            //$contentConfigFile = str_replace(",",", ",$contentConfigFile);
-//            //echo $content;
-//            echo "<pre>";
-//            print_r($contentConfigFile);
-//            echo "</pre>";
+        $contentConfigFile = $this->downloadFile($service, $configFile);    #v3
 
-            return $contentConfigFile;
-
-//            $response = new Response();
-//            $response->headers->set('Content-Type', 'application/json');
-//            $response->setContent(json_encode($content));
-            //echo $response;
-
-            //exit();
-
-            //return $configFile;
-            //exit('111');
-        } else {
-            //get all files in google folder
-            //ID=0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M
-            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false and name contains 'config.json'");
-            //$parameters = array('q' => "'".$configFileFolderIdFellApp."' in parents and trashed=false");
-            $parameters = array(
-                'q' => "'" . $configFileFolderIdFellApp . "' in parents and trashed=false and name='config.json'",
-                'fields' => 'nextPageToken, files(*)'
-            );
-            $files = $service->files->listFiles($parameters);
-
-            foreach ($files->getFiles() as $file) {
-                echo "file=" . $file->getId() . "<br>";
-                echo "File Title=" . $file->getName() . "<br>";
-                echo "File Size=" . $file->getSize() . "<br>";
-            }
-
-            return $file;
-        }
-
-
-        return NULL;
+        return $contentConfigFile;
     }
 
     /**
@@ -1705,34 +1647,6 @@ class GoogleSheetManagement {
         return NULL;
     }
 
-    /**
-     * Download a file's content.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param File $file Drive File instance.
-     * @return String The file's content if successful, null otherwise.
-     */
-    function downloadGeneralFileV1($service, $file) {
-        $downloadUrl = $file->getDownloadUrl();
-        //$downloadUrl = $file->getWebContentLink();
-
-        //$metadata = $service->get($file->getId());
-
-        //exit("downloadUrl=".$downloadUrl);
-        if ($downloadUrl) {
-            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-            if ($httpRequest->getResponseHttpCode() == 200) {
-                return $httpRequest->getResponseBody();
-            } else {
-                // An error occurred.
-                return null;
-            }
-        } else {
-            // The file doesn't have any content stored on Drive.
-            return null;
-        }
-    }
 //    /**
 //     * Download a file's content.
 //     *
@@ -1740,127 +1654,16 @@ class GoogleSheetManagement {
 //     * @param File $file Drive File instance.
 //     * @return String The file's content if successful, null otherwise.
 //     */
-//    function downloadGeneralFile_OLD($service, $file) {
-//
-//        if(1) {
-//            //$downloadUrl = $file->getDownloadUrl();
-//            //$downloadUrl = $file->getWebContentLink();
-//
-//            //https://developers.google.com/drive/api/v2/manage-downloads#php
-//            $fileId = $file->getId(); //'0BwwA4oUTeiV1UVNwOHItT0xfa2M';
-//            $response = $service->files->get(
-//                $fileId,
-//                array(
-//                    'alt' => 'media',
-//                    //'mimeType' => 'application/json'
-//                    //'mimeType' => 'application/vnd.google-apps.unknown'
-//                )
-//            );
-//
-//            //dump($response);
-//            //exit('111');
-//
-//            return $response;
-//        } else {
-//
-////        $content = $response->getBody()->getContents();
-////        dump($content);
-////        exit('111');
-////
-////        return $content;
-//
-//            //$downloadUrl = 'https://www.googleapis.com/drive/v3/files/'.$fileId.'/export?mimeType=text/csv';
-//
-//            //GET https://www.googleapis.com/drive/v2/files/fileId/export
-//            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/' . $file->getId() . "/export";
-//            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/' . $file->getId();
-//
-//            //GET https://www.googleapis.com/drive/v3/files/fileId
-//            //$downloadUrl = 'https://www.googleapis.com/drive/v3/files/' . $file->getId() . "/export?alt=media";
-//            //$downloadUrl = 'https://www.googleapis.com/drive/v3/files/' . $file->getId();
-//
-//            $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$file->getId().'?alt=media&source=downloadUrl';
-//
-//            //exit('$downloadUrl='.$downloadUrl);
-//
-//            //exit("downloadUrl=".$downloadUrl);
-//            if ($downloadUrl) {
-//                $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
-//                $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-//                if ($httpRequest->getResponseHttpCode() == 200) {
-//                    //dump($httpRequest);
-//                    //exit('111');
-//                    return $httpRequest->getResponseBody();
-//                } else {
-//                    // An error occurred.
-//                    return null;
-//                }
-//            } else {
-//                // The file doesn't have any content stored on Drive.
-//                return null;
-//            }
-//        }//else
-//
-//        return null;
-//    }
-//    function downloadTestGeneralFile($service, $file) {
-//        //https://developers.google.com/drive/api/v2/manage-downloads#php
-//        $fileId = $file->getId(); //'0BwwA4oUTeiV1UVNwOHItT0xfa2M';
-//        $response = $service->files->get(
-//            $fileId,
-//            array(
-//                //'alt' => 'media',
-//                //'mimeType' => 'application/json'
-//                'mimeType' => 'application/vnd.google-apps.unknown'
-//            )
-//        );
-//
-//        //dump($response);
-//        //exit('111');
-//
-//        return $response;
-//    }
-//    function downloadGeneralFileGoogleDoc($service, $file, $fileId) {
-//        //$downloadUrl = $file->getDownloadUrl();
+//    function downloadGeneralFileV1($service, $file) {
+//        $downloadUrl = $file->getDownloadUrl();
 //        //$downloadUrl = $file->getWebContentLink();
-//        //$content = $file->getAppDataContents();
-//        //dump($content);
-//        //exit("downloadGeneralFileGoogleDoc content");
 //
-//        $mimeType = $file->getMimeType();
+//        //$metadata = $service->get($file->getId());
 //
-//
-//        //https://developers.google.com/drive/api/guides/manage-downloads
-//        $response = $service->files->export($fileId,
-//            'application/pdf',
-//            //'application/vnd.google-apps.document',
-//            //'application/vnd.google-apps.spreadsheet',
-//            array(
-//                'alt' => 'media',
-//                //'mimeType' => 'application/vnd.google-apps.spreadsheet'
-//            )
-//        );
-//        dump($response);
-//        exit('111');
-//        $content = $response->getBody()->getContents();
-//        dump($content);
-//        exit("downloadGeneralFileGoogleDoc content");
-//
-//
-//        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=text/csv';
-//        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
-//        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType=application/msword';
-//        $downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'?alt=media&source=downloadUrl'; //working //Only files with binary content can be downloaded. Use Export with Docs Editors files.
-//        //$downloadUrl = 'https://www.googleapis.com/drive/v2/files/'.$fileId.'/export?mimeType='.$mimeType;
-//
+//        //exit("downloadUrl=".$downloadUrl);
 //        if ($downloadUrl) {
 //            $request = new \Google_Http_Request($downloadUrl, 'GET', null, null);
 //            $httpRequest = $service->getClient()->getAuth()->authenticatedRequest($request);
-//
-//            $body = $httpRequest->getResponseBody();
-//            dump($body);
-//            exit("downloadGeneralFileGoogleDoc");
-//
 //            if ($httpRequest->getResponseHttpCode() == 200) {
 //                return $httpRequest->getResponseBody();
 //            } else {
@@ -1871,28 +1674,6 @@ class GoogleSheetManagement {
 //            // The file doesn't have any content stored on Drive.
 //            return null;
 //        }
-//
-//
-//
-//        $fileId = $file->getId(); //'0BwwA4oUTeiV1UVNwOHItT0xfa2M';
-//        $response = $service->files->get(
-//            $fileId,
-//            array(
-//                //'alt' => 'media',
-//                //'mimeType' => 'application/vnd.google-apps.document'
-//                //'mimeType' => 'application/vnd.google-apps.unknown'
-//            )
-//        );
-//
-//        $content = $response->getContents();
-//        dump($content);
-//
-//        //$body = $response->getResponseBody();
-//        //dump($body);
-//
-//        exit('downloadGeneralFileGoogleDoc testing');
-//
-//        return $response;
 //    }
 
     function getFileById( $fileId, $service=null ) {

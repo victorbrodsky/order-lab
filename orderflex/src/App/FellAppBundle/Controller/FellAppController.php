@@ -588,8 +588,12 @@ class FellAppController extends OrderAbstractController {
             $acceptingApplication = "Not accepting applications now";
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
             $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            if ($configFileContent) {
+            //dump($configFileContent);
+            //exit('111');
+            if( $configFileContent ) {
                 $configFileContent = json_decode($configFileContent, true);
+                //dump($configFileContent);
+                //exit('111');
                 $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
                 if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
                     $acceptingApplication = "Now accepting applications";
