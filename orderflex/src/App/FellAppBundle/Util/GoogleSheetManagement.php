@@ -1187,7 +1187,7 @@ class GoogleSheetManagement {
 
     //it does not work to get content of the json file
     //TODO: test it for different mimeType files
-    function downloadGeneralFile($service,$file,$sendEmail=true) {
+    function downloadGeneralFile_ORIG($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
         $logger->notice("downloadGeneralFile process by file get");
         try {
@@ -1208,6 +1208,42 @@ class GoogleSheetManagement {
         }
         return null;
     }
+    /**
+     * Download a file's content.
+     *
+     * @param Google_Service_Drive $service Drive API service instance.
+     * @param File $file Drive File instance.
+     * @return String The file's content if successful, null otherwise.
+     */
+    function downloadGeneralFile($service, $file) {
+        try {
+            $mimeType = $file->getMimeType();
+            echo "downloadGeneralFile mimeType=$mimeType <br>";
+            $fileId = $file->getId();;
+
+            //https://developers.google.com/drive/api/guides/ref-export-formats
+
+            $response = $service->files->export(
+                $fileId,
+                //'application/vnd.google-apps.script+json',
+                'text/csv',
+                array(
+                    'alt' => 'media'
+                )
+            );
+
+            //original: {"acceptingSubmissions":true,"fellowshipTypes":
+            //exported: {""acceptingSubmissions"":true","fellowshipTypes:[{""id"":""Gastrointestinal Pathology""","text:""Gastrointestinal Pathology""}"
+
+            $content = $response->getBody()->getContents();
+            return $content;
+
+        }  catch(Exception $e) {
+            echo "Error Message: ".$e;
+        }
+
+    }
+
 
     function onDownloadFileError( $subject, $body, $sendEmail=true ) {
         $logger = $this->container->get('logger');
@@ -1541,9 +1577,8 @@ class GoogleSheetManagement {
         $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
         //echo "configFile ID=".$configFile->getId()."<br>";
 
-        //$contentConfigFile = $this->downloadGeneralFile($service, $configFile); #v1,2 #"message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
-
-        $contentConfigFile = $this->downloadFile($service, $configFile);    #v3
+        $contentConfigFile = $this->downloadGeneralFile($service, $configFile); #v1,2 #"message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
+        //$contentConfigFile = $this->downloadFile($service, $configFile);    #v3
 
         return $contentConfigFile;
     }
