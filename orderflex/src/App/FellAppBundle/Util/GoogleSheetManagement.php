@@ -1185,7 +1185,8 @@ class GoogleSheetManagement {
         return null;
     }
 
-    //it does not work to get content of the json file
+    //it does not work to get content of the json file:
+    //error "message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
     //TODO: test it for different mimeType files
     function downloadGeneralFile_ORIG($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
@@ -1227,6 +1228,8 @@ class GoogleSheetManagement {
                 $fileId,
                 //'application/vnd.google-apps.script+json',
                 'text/csv',
+                //'application/vnd.oasis.opendocument.text',
+                //'text/tab-separated-values',
                 array(
                     'alt' => 'media'
                 )
