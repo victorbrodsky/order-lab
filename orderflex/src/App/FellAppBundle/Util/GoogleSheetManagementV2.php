@@ -283,6 +283,46 @@ class GoogleSheetManagementV2 {
         }
         return null;
     }
+    function downloadFileTest($service,$file,$sendEmail=true) {
+        $mimeType = $file->getMimeType();
+        echo "mimeType=$mimeType <br>";
+
+        $mimeType = 'text/plain';
+        $mimeType = 'application/json';
+        $mimeType = 'text/csv';
+
+        try {
+            $fileId = $file->getId();
+
+            if(1) {
+                $response = $service->files->get(
+                    $fileId,
+                    array(
+                        'alt' => 'media'
+                    )
+                );
+            } else {
+                $response = $service->files->export(
+                    $fileId,
+                    //'application/pdf',
+                    //'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    $mimeType,
+                    array(
+                        'alt' => 'media'
+                    )
+                );
+            }
+
+            $content = $response->getBody()->getContents();
+            return $content;
+        } catch(Exception $e) {
+            //echo "Error Message: " . $e;
+            $subject = "ERROR: downloadGeneralFile can not download fileid=$fileId file, mimetype=".$file->getMimeType();
+            $body = $subject . "; Error=" . $e;
+            $this->onDownloadFileError($subject,$body,$sendEmail);
+        }
+        return null;
+    }
 
     function onDownloadFileError( $subject, $body, $sendEmail=true ) {
         return null;
@@ -384,7 +424,7 @@ class GoogleSheetManagementV2 {
     //1)  Import sheets from Google Drive
     //1a)   import all sheets from Google Drive folder
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    public function getConfigOnGoogleDrive() {
+    public function getConfigOnGoogleDrive( $configFileName='config.json' ) {
 
         if( $this->security->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
@@ -426,16 +466,18 @@ class GoogleSheetManagementV2 {
         //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
         echo "folder ID=".$configFileFolderIdFellApp."<br>";
 
-        $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
-        dump($configFile);
+        $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, $configFileName);
+        //dump($configFile);
 
-        $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
+        //$contentConfigFile = $this->downloadGeneralFile($service, $configFile); #v1,2 #"message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
+        //$contentConfigFile = $this->downloadFile($service, $configFile);    #v3
+        $contentConfigFile = $this->downloadFileTest($service, $configFile);    #v3
         dump($contentConfigFile);
 
         //use webContentLink
 
         //$configFileContent = json_decode($contentConfigFile, true);
-        exit('111');
+        //exit('111');
 
         return $contentConfigFile;
     }

@@ -95,7 +95,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fellapp_importpopulate_util'] = '?'.FellAppImportPopulateUtil::class;
         $subscribedServices['fellapp_reportgenerator'] = '?'.ReportGenerator::class;
         $subscribedServices['fellapp_googlesheetmanagement'] = '?'.GoogleSheetManagement::class;
-        //$subscribedServices['fellapp_googlesheetmanagement_v2'] = '?'.GoogleSheetManagementV2::class;
+        $subscribedServices['fellapp_googlesheetmanagement_v2'] = '?'.GoogleSheetManagementV2::class;
         $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
 
         $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;

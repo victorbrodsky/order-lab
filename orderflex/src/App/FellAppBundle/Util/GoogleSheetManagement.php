@@ -1188,7 +1188,7 @@ class GoogleSheetManagement {
     //it does not work to get content of the json file:
     //error "message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
     //TODO: test it for different mimeType files
-    function downloadGeneralFile_ORIG($service,$file,$sendEmail=true) {
+    function downloadGeneralFile($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
         $logger->notice("downloadGeneralFile process by file get");
         try {
@@ -1216,7 +1216,7 @@ class GoogleSheetManagement {
      * @param File $file Drive File instance.
      * @return String The file's content if successful, null otherwise.
      */
-    function downloadGeneralFile($service, $file) {
+    function downloadGeneralFileTest($service, $file) {
         try {
             $mimeType = $file->getMimeType();
             echo "downloadGeneralFile mimeType=$mimeType <br>";

@@ -40,8 +40,8 @@ services:
 #        public: true
         class: App\FellAppBundle\Util\GoogleSheetManagement
 
-#    fellapp_googlesheetmanagement_v2:
-#            class: App\FellAppBundle\Util\GoogleSheetManagementV2
+    fellapp_googlesheetmanagement_v2:
+            class: App\FellAppBundle\Util\GoogleSheetManagementV2
 
     fellapp_rec_letter_util:
         class: App\FellAppBundle\Util\RecLetterUtil

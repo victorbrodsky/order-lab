@@ -283,7 +283,7 @@ class GoogleFormConfigController extends OrderAbstractController
         //$newFileName = "config.json";
         $newRevision = null;
 
-        #$forceUpdate = true;
+        //$forceUpdate = true;
         $forceUpdate = false;
 
         //if live
