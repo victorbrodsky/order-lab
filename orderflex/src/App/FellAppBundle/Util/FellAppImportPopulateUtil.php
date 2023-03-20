@@ -943,9 +943,10 @@ class FellAppImportPopulateUtil {
             //$inputFileNameOrig = NULL;
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            //echo "extension=".$extension."<br>";
-            //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q' cannot read by PhpSpreadsheet?
-            $forceCreateCopy = true;
+            //echo "extension=[".$extension."]<br>";
+            //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q'
+            // cannot read by PhpSpreadsheet?
+            //$forceCreateCopy = true;
             $forceCreateCopy = false;
             if( $forceCreateCopy || $extension || strlen($extension) > 9 ) {
                 //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
@@ -989,6 +990,13 @@ class FellAppImportPopulateUtil {
                 //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
                 $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+
+                //Testing
+                //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                //$inputFileType = 'Csv';
+                //echo "inputFileType=$inputFileType <br>";
+                //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
                 $objPHPExcel = $objReader->load($inputFileName);
 
             }
@@ -1178,6 +1186,8 @@ class FellAppImportPopulateUtil {
             $email = $this->getValueByHeaderName('email', $rowData, $headers);
             $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
             $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+
+            //echo "document ID=".$document->getId().", filename=".$inputFileName.", firstName=$firstName, lastName=$lastName <br>";
 
             //testing
             //echo "googleFormId=$googleFormId <br>";
@@ -2363,10 +2373,29 @@ class FellAppImportPopulateUtil {
         if( !$url ) {
             return null;
         }
+
+        $logger = $this->container->get('logger');
+
         //https://drive.google.com/a/pathologysystems.org/file/d/0B2FwyaXvFk1eSDQ0MkJKSjhLN1U/view?usp=drivesdk
+        //Exception: Service error: Drive
         $urlArr = explode("/d/", $url);
+
+        //echo "url=".$url."<br>";
+        //echo "url count=".count($urlArr)."<br>";
+
+        if( count($urlArr) != 2 ) {
+            $logger->error("getFileIdByUrl: wrong url format ('/d/'), url=".$url);
+            return null;
+        }
+
         $urlSecond = $urlArr[1];
         $urlSecondArr = explode("/", $urlSecond);
+
+        if( count($urlSecondArr) != 2 ) {
+            $logger->error("getFileIdByUrl: wrong url format ('/'), url=".$url);
+            return null;
+        }
+
         $fileId = $urlSecondArr[0];
         return $fileId;
     }
