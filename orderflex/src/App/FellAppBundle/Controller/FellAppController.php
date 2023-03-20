@@ -588,26 +588,14 @@ class FellAppController extends OrderAbstractController {
             $acceptingApplication = "Not accepting applications now";
             $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
             $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            //{""acceptingSubmissions"":true","fellowshipTypes:[{""id"":""Gastrointestinal Pathology""","text:""Gastrointestinal Pathology""}"
             //dump($configFileContent);
             //exit('111');
             if( $configFileContent ) {
-                //$configFileContent = str_replace('"""','"',$configFileContent);
-                //$configFileContent = str_replace('""','"',$configFileContent);
-                //$configFileContent = str_replace('""','"',$configFileContent);
-                //$configFileContent = substr($configFileContent, 1, -1);
-                //dump($configFileContent);
-                //exit('111');
                 $configFileContent = json_decode($configFileContent, true);
-                //dump($configFileContent);
-                //exit('111');
                 $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
                 if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
                     $acceptingApplication = "Now accepting applications";
                 }
-                //echo "<pre>";
-                //print_r($configFileContent);
-                //echo "</pre>";
             }
             $acceptingApplication = "- ".$acceptingApplication;
         }

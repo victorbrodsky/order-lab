@@ -1131,7 +1131,7 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
         $mimeType = $file->getMimeType();
         $logger->notice("downloadFile: mimeType=".$mimeType);
-        echo "mimeType=$mimeType <br>";
+        //echo "mimeType=$mimeType <br>";
         $fileId = $file->getId();
         //echo "fileId=[$fileId], mimeType=[$mimeType] <br>";
 
@@ -1166,7 +1166,6 @@ class GoogleSheetManagement {
         try {
             $response = $service->files->export(
                 $fileId,
-                //'application/pdf',
                 $mimeType,
                 array(
                     'alt' => 'media'
@@ -1185,9 +1184,6 @@ class GoogleSheetManagement {
         return null;
     }
 
-    //it does not work to get content of the json file:
-    //error "message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
-    //TODO: test it for different mimeType files
     function downloadGeneralFile($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
         $logger->notice("downloadGeneralFile process by file get");
@@ -1209,44 +1205,6 @@ class GoogleSheetManagement {
         }
         return null;
     }
-    /**
-     * Download a file's content.
-     *
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param File $file Drive File instance.
-     * @return String The file's content if successful, null otherwise.
-     */
-    function downloadGeneralFileTest($service, $file) {
-        try {
-            $mimeType = $file->getMimeType();
-            echo "downloadGeneralFile mimeType=$mimeType <br>";
-            $fileId = $file->getId();;
-
-            //https://developers.google.com/drive/api/guides/ref-export-formats
-
-            $response = $service->files->export(
-                $fileId,
-                //'application/vnd.google-apps.script+json',
-                'text/csv',
-                //'application/vnd.oasis.opendocument.text',
-                //'text/tab-separated-values',
-                array(
-                    'alt' => 'media'
-                )
-            );
-
-            //original: {"acceptingSubmissions":true,"fellowshipTypes":
-            //exported: {""acceptingSubmissions"":true","fellowshipTypes:[{""id"":""Gastrointestinal Pathology""","text:""Gastrointestinal Pathology""}"
-
-            $content = $response->getBody()->getContents();
-            return $content;
-
-        }  catch(Exception $e) {
-            echo "Error Message: ".$e;
-        }
-
-    }
-
 
     function onDownloadFileError( $subject, $body, $sendEmail=true ) {
         $logger = $this->container->get('logger');
@@ -1302,7 +1260,9 @@ class GoogleSheetManagement {
             "1NwCFOUZ6oTyiehtSzPuxuddsnxbqgPeUCn516eEW05o", //"1beJAujYBEwPdi3RI7YAb4a8NcrBj5l0vhY6Zsa01Ohg"; //Google Sheets
 
             //"1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image 1b_tL1MDsS6fCysBcP6X7MjhdS9jryiYf
-            "1pg88L0cf8Lgv1bsLaAdJGqAZewYgHzVJ" //Image
+            "1pg88L0cf8Lgv1bsLaAdJGqAZewYgHzVJ", //Image
+
+            "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ" //JSON config file
         );
 
 //        $files1 = array(
@@ -1580,56 +1540,11 @@ class GoogleSheetManagement {
         $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
         //echo "configFile ID=".$configFile->getId()."<br>";
 
-        $contentConfigFile = $this->downloadGeneralFile($service, $configFile); #v1,2 #"message": "Only files with binary content can be downloaded. Use Export with Docs Editors files.",
-        //$contentConfigFile = $this->downloadFile($service, $configFile);    #v3
+        $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
 
         return $contentConfigFile;
     }
 
-    /**
-     * @param Google_Service_Drive $service Drive API service instance.
-     * @param String $folderId ID of the folder to print files from.
-     * @param String $fileName Name (Title) of the config file to find.
-     */
-    function findConfigFileInFolderV1($service, $folderId, $fileName) {
-        $pageToken = NULL;
-
-        do {
-            try {
-
-                if ($pageToken) {
-                    $parameters['pageToken'] = $pageToken;
-                }
-
-                //$parameters = array();
-                //$parameters = array('q' => "trashed=false and title='config.json'");
-                //$children = $service->children->listChildren($folderId, $parameters);
-                $parameters = array(
-                    'q' => "'".$folderId."' in parents and trashed=false and name='".$fileName."'",
-                    'fields' => 'nextPageToken, files(*)'
-                );
-
-                //TODO: Error calling GET https://www.googleapis.com/drive/v3/
-                //Error calling GET https://www.googleapis.com/drive/v3/files?q=%270B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M%27
-                //+in+parents+and+trashed%3Dfalse+and+title%3D%27config.json%27: (400) Invalid Value
-
-                $files = $service->files->listFiles($parameters);
-
-                foreach ($files->getFiles() as $file) {
-                    //echo "File ID=" . $file->getId()."<br>";
-                    //echo "File Title=" . $file->getName()."<br>";
-
-                    return $file;
-                }
-                $pageToken = $files->getNextPageToken();
-            } catch (Exception $e) {
-                print "An error occurred: " . $e->getMessage();
-                $pageToken = NULL;
-            }
-        } while ($pageToken);
-
-        return NULL;
-    }
     /**
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
@@ -1644,18 +1559,6 @@ class GoogleSheetManagement {
                 if ($pageToken) {
                     $parameters['pageToken'] = $pageToken;
                 }
-
-                //$parameters = array();
-                //$parameters = array('q' => "trashed=false and title='config.json'");
-                //$children = $service->children->listChildren($folderId, $parameters);
-                //$parameters = array('q' => "'".$folderId."' in parents and trashed=false and title='".$fileName."'");
-
-                //TODO: Error calling GET https://www.googleapis.com/drive/v3/
-                //Error calling GET https://www.googleapis.com/drive/v3/files?q=%270B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M%27
-                //+in+parents+and+trashed%3Dfalse+and+title%3D%27config.json%27: (400) Invalid Value
-
-                //q="mimeType='application/vnd.google-apps.spreadsheet' and parents in '{}'".format(folder_id)
-                //$parameters = array('q' => "'".$folderId."' in parents and title='".$fileName."'");
 
                 //https://stackoverflow.com/questions/36605461/downloading-a-file-with-google-drive-api-with-php
                 //The getItems() method in v2 will become getFiles() in v3 and the getTitle() will become getName()
