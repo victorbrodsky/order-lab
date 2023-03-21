@@ -257,17 +257,17 @@ class DefaultController extends OrderAbstractController
 //        exit('111');
 
         //$googlesheetmanagementv2 = $this->container->get('fellapp_googlesheetmanagement_v2');
-        if(1) {
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            //$fileName = 'test.json';
-            $fileName = 'config.json';
-            //$fileName = 'config_live.json';
-            //$configFileContent = $googlesheetmanagementv2->getConfigOnGoogleDrive($fileName);
-            $configFileContent = json_decode($configFileContent, true);
-            dump($configFileContent);
-            exit('111');
-        }
+//        if(1) {
+//            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//            $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+//            //$fileName = 'test.json';
+//            $fileName = 'config.json';
+//            //$fileName = 'config_live.json';
+//            //$configFileContent = $googlesheetmanagementv2->getConfigOnGoogleDrive($fileName);
+//            $configFileContent = json_decode($configFileContent, true);
+//            dump($configFileContent);
+//            exit('111');
+//        }
 //        if(0) {
 //            //$fileContentsCount = $googlesheetmanagementv2->testFileDownload();
 //            //$fileContentsCount = $googlesheetmanagementv2->getConfigOnGoogleDrive();
