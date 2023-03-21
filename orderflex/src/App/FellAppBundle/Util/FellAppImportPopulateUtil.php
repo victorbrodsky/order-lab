@@ -955,12 +955,9 @@ class FellAppImportPopulateUtil {
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-
                 //$objReader->setReadDataOnly(true);
                 //$objPHPExcel = $objReader->load($inputFileType);
-
                 //return false; //testing: skip
-
                 //$inputFileNameOrig = $inputFileName;
 
                 $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName,$forceCreateCopy);
@@ -990,35 +987,9 @@ class FellAppImportPopulateUtil {
                 //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
                 ////$inputFileType = 'Csv';
                 //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-
-                if(0) {
-                    $testAgainstFormats = [
-                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_CSV,
-                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_XLS,
-                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_XLSX,
-                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_HTML,
-                    ];
-                    $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName, $testAgainstFormats);
-                    //echo "inputFileType=$inputFileType <br>";
-                    $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-                    $objPHPExcel = $objReader->load($inputFileName);
-
-                    //$inputFileType = 'Xml';
-                    //$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-
-                    //$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-
-                    //$objPHPExcel = $reader->load($inputFileName);
-
-                    //Testing
-                    //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
-                    //$inputFileType = 'Csv';
-                    //echo "inputFileType=$inputFileType <br>";
-                    //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-                } else {
-                    $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
-                    $objPHPExcel = $objReader->load($inputFileName);
-                }
+                
+                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+                $objPHPExcel = $objReader->load($inputFileName);
             }
 
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
