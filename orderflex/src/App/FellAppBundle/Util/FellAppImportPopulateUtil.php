@@ -867,7 +867,8 @@ class FellAppImportPopulateUtil {
     function createTempSpreadsheetCopy($inputFileName, $forceCreateCopy=false) {
         $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
         //echo "extension=".$extension."<br>";
-        if( $forceCreateCopy || $extension || strlen($extension) > 7 ) {
+        //if( $forceCreateCopy || $extension || strlen($extension) > 7 ) {
+         //if( $forceCreateCopy || !$extension || ($extension && strlen($extension) > 9) ) {
             //copy('foo/test.php', 'bar/test.php');
 
             $inputFileNameNew = str_replace('.','_',$inputFileName);
@@ -877,7 +878,7 @@ class FellAppImportPopulateUtil {
             copy($inputFileName,$inputFileNameNew);
 
             return $inputFileNameNew;
-        }
+        //}
 
         return NULL;
     }
@@ -913,7 +914,7 @@ class FellAppImportPopulateUtil {
         //$inputFileName = $path . "/" . $inputFileName;
         //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
         $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
-        echo "inputFileName=".$inputFileName."<br>";
+        //echo "inputFileName=".$inputFileName."<br>";
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
             return false;
@@ -943,12 +944,12 @@ class FellAppImportPopulateUtil {
             //$inputFileNameOrig = NULL;
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            echo "extension=[".$extension."]<br>";
+            //echo "extension=[".$extension."]<br>";
             //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q'
             // cannot read by PhpSpreadsheet?
             //$forceCreateCopy = true;
             $forceCreateCopy = false;
-            if( $forceCreateCopy || $extension || strlen($extension) > 9 ) {
+            if( $forceCreateCopy || !$extension || ($extension && strlen($extension) > 9) ) {
                 //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
 
                 //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -968,6 +969,7 @@ class FellAppImportPopulateUtil {
                     $errorEvent = $errorSubject . ". Filename=" .
                         $inputFileName . ", extension=" . $extension .
                         ", documentId=" . $document->getId();
+                    //exit($errorEvent); //testing
                     $logger->error($errorEvent);
                     $this->sendEmailToSystemEmail($errorSubject, $errorEvent);
                     return false;
@@ -997,7 +999,7 @@ class FellAppImportPopulateUtil {
                         \PhpOffice\PhpSpreadsheet\IOFactory::READER_HTML,
                     ];
                     $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName, $testAgainstFormats);
-                    echo "inputFileType=$inputFileType <br>";
+                    //echo "inputFileType=$inputFileType <br>";
                     $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
                     $objPHPExcel = $objReader->load($inputFileName);
 
