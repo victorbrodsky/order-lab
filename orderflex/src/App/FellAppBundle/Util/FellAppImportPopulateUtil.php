@@ -913,7 +913,7 @@ class FellAppImportPopulateUtil {
         //$inputFileName = $path . "/" . $inputFileName;
         //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
         $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
-        //echo "inputFileName=".$inputFileName."<br>";
+        echo "inputFileName=".$inputFileName."<br>";
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);
             return false;
@@ -943,7 +943,7 @@ class FellAppImportPopulateUtil {
             //$inputFileNameOrig = NULL;
             //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
             $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
-            //echo "extension=[".$extension."]<br>";
+            echo "extension=[".$extension."]<br>";
             //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q'
             // cannot read by PhpSpreadsheet?
             //$forceCreateCopy = true;
@@ -989,16 +989,34 @@ class FellAppImportPopulateUtil {
                 ////$inputFileType = 'Csv';
                 //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
-                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+                if(0) {
+                    $testAgainstFormats = [
+                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_CSV,
+                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_XLS,
+                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_XLSX,
+                        \PhpOffice\PhpSpreadsheet\IOFactory::READER_HTML,
+                    ];
+                    $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName, $testAgainstFormats);
+                    echo "inputFileType=$inputFileType <br>";
+                    $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                    $objPHPExcel = $objReader->load($inputFileName);
 
-                //Testing
-                //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
-                //$inputFileType = 'Csv';
-                //echo "inputFileType=$inputFileType <br>";
-                //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                    //$inputFileType = 'Xml';
+                    //$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
-                $objPHPExcel = $objReader->load($inputFileName);
+                    //$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
 
+                    //$objPHPExcel = $reader->load($inputFileName);
+
+                    //Testing
+                    //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                    //$inputFileType = 'Csv';
+                    //echo "inputFileType=$inputFileType <br>";
+                    //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                } else {
+                    $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+                    $objPHPExcel = $objReader->load($inputFileName);
+                }
             }
 
             //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
