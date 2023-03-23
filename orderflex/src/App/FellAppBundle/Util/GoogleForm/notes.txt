@@ -15,3 +15,5 @@ All sites saved on google drive
 New site: Edit page "FELLOWSHIP APPLICATION" to show google script fellapp application "ApplicationWithUploadNew"
 
 Add GitHub to Google script
+
+Google Script App saved on google drive as a json file
