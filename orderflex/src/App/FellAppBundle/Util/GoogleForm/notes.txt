@@ -3,5 +3,10 @@ https://support.google.com/sites/answer/7035197#zippy=%2Cconvert-your-site%2Ccop
 
 https://sites.google.com/classicsitesmanager
 
+sites.google.com/a/pathologysystems.org/wcmc
+This site is also viewable at wcmc.pathologysystems.org (?)
+All sites saved on google drive
+
+New site: Edit page "FELLOWSHIP APPLICATION" to show google script fellapp application "ApplicationWithUploadNew"
 
 Add GitHub to Google script
