@@ -17,3 +17,18 @@ New site: Edit page "FELLOWSHIP APPLICATION" to show google script fellapp appli
 Add GitHub to Google script
 
 Google Script App saved on google drive as a json file
+
+
+################## JS ##################
+<div id="welcome-note">Please wait for this page to load ...</div>
+
+<script>
+
+var delayInMilliseconds = 10000; //1000; //1 second
+
+setTimeout(function() {
+  document.getElementById("welcome-note").remove();
+}, delayInMilliseconds);
+
+</script> 
+################## ##################
