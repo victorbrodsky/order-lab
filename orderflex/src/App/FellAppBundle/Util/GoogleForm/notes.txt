@@ -18,6 +18,9 @@ Add GitHub to Google script
 
 Google Script App saved on google drive as a json file
 
+Google auth:
+https://console.cloud.google.com/apis/credentials?project=quickstart-1563304352237
+
 
 ################## JS ##################
 <div id="welcome-note">Please wait for this page to load ...</div>
