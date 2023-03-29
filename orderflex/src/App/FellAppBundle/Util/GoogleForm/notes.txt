@@ -44,4 +44,30 @@ https://github.com/cinava/fellowship-rec-letter-submission
 https://sites.google.com/pathologysystems.org/recletter
 <iframe src="https://script.google.com/macros/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec" 
 height="2000" width="800" title="Iframe Example">
-</iframe> 
+</iframe>
+
+### Site Settings (user bundle) ###
+configFileFolderIdFellApp - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
+codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file
+confirmationEmailFellApp - Email address for confirmation of application submission
+applicationPageLinkFellApp (not used) - Link to the Application Page. Used for reference only
+clientEmailFellApp (not used) - used in old pk12 auth
+p12KeyPathFellApp - auth credential json file
+googleDriveApiUrlFellApp - scopes: used in old authenticationP12Key getClient2 and in current authGoogleServiceAccount
+userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
+templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
+folderIdFellApp - Application Google Drive Folder ID (where the response spreadsheets are saved)
+localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
+identificationUploadLetterFellApp - Fellowship identification string to download recommendation letters
+recLetterSaltFellApp - Recommendation Letter Salt
+
+
+### GoogleFormConfig and config.json (find by _configFolderId in gas, find by configFileFolderIdFellApp by php) ###
+acceptingSubmission - Accepting Submission
+fellappAdminEmail - Fellowship Form Admin Email
+adminEmail - Admin Email
+exceptionAccount - Exception Account for the Fellowship Application (in maintenance, the application is still shown to this google user for testing purposes)
+letterAcceptingSubmission - Accepting Submission of the Recommendation Letters
+
+
+

@@ -297,6 +297,10 @@ class RecLetterUtil {
         //&Reference-State=New%20York
         //&Reference-Zip=12345
         //&Reference-Country=USA
+
+        //Set url to the Google Script web url
+        //https://script.google.com/macros/s/AKfycbwVWsVacYNvIc4Lm_qb2nZvqPbAyiKAF4XebAEA-M3HWl8AIt9dKryWp-URF4ePVAnn/exec
+
         $uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
         $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
         $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;

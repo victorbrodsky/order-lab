@@ -984,10 +984,10 @@ class GoogleSheetManagement {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
-        if( !$user_to_impersonate ) {
-            throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
-        }
+        //$user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+        //if( !$user_to_impersonate ) {
+        //    throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
+        //}
 
         $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
         if( !$credentialsJsonFile ) {

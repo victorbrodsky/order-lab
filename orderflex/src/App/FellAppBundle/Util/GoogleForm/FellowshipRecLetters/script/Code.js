@@ -72,9 +72,9 @@ function doGet(request) {
     //Logger.log('urlParameters='+urlParameters);
     //Logger.log(urlParameters);
     
-    //_ReferenceLeterId = request.parameter['Reference-Letter-ID'];
-    _ReferenceLeterId = request.parameter['id'];
-    Logger.log('_ReferenceLeterId='+_ReferenceLeterId);
+    _ReferenceLeterId = request.parameter['Reference-Letter-ID'];
+    //_ReferenceLeterId = request.parameter['id'];
+    //Logger.log('_ReferenceLeterId='+_ReferenceLeterId);
     
     if( typeof _ReferenceLeterId === 'undefined' ) {
       template = HtmlService.createTemplateFromFile('Error.html'); 
@@ -117,7 +117,8 @@ function doGet(request) {
   //Logger.log('url='+ScriptApp.getService().getUrl());
   
   //return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME);
-  return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  //return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 
