@@ -22,7 +22,7 @@ var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 var _destinationFolder = '1jHjrjBDXKmHXKWfGjkTCjDDPQU3l-Luz'; //folder where the response spreadsheets (forms) are saved;
 //Unique folder name where uploaded files will be placed.
 var _dropbox = "FellowshipApplicantUploads"; //name of the upload folder. Must be unique on the Google Drive!
-var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+//var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
 var _colIndexNameMapArray = {}; 
 var _uniqueId = null;
@@ -30,9 +30,7 @@ var _uniqueId = null;
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
 var _adminemail = 'oli2002@med.cornell.edu'; //adminEmail
-var _useremail = 'eah2006@med.cornell.edu'; //fellappAdminEmail
-//var _useremail = 'cinava@yahoo.com';
-
+var _useremail = 'WCMPathPrgm@med.cornell.edu'; //fellappAdminEmail
 var _exceptionAccount = "olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
@@ -41,15 +39,12 @@ var _fullValidation = true;
 var _applicationFormNote = null;
 
 //Maintenance flag (uncomment for maintenance)
-var _AcceptingSubmissions = false; 
+//var _AcceptingSubmissions = false;
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
-var _useremail = 'cinava@yahoo.com';
+//var _useremail = 'cinava@yahoo.com';
 //EOF Maintenance flag
 
 //var _fileUrl;
-
-//default fellowship types
-var _Status = false;
 
 var _FellowshipTypes = [];   
 var _FellowshipVisaStatuses = [];
@@ -891,73 +886,29 @@ function Trim(string) {
   return string.replace(/\s/g, ""); 
 }
 
+function getConfigFileObject() {
+  //Use the unique config file name "config-fellapp.json" in GAS and in PHP
+  const files = DriveApp.getFilesByName('config-fellapp.json');
+
+  if( files.hasNext() ) {
+    const  file = files.next();
+    const configFile = file.getAs('application/json');
+    const configObject = JSON.parse(configFile.getDataAsString());
+    return configObject;
+  }
+
+  return null;
+}
 function getConfigParameters(parameterKey) {
-  //var sheetname = "test";
-  //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
-  //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-  
-  //Get a reference to the folder    
-  fldr = DriveApp.getFolderById(_configFolderId);
+  var configObject = getConfigFileObject();
 
-  //Get all files by that name. Put return into a variable
-  allFilesInFolder = fldr.getFilesByName("config.json");
-  //Logger.log('allFilesInFolder: ' + allFilesInFolder);
-  
-  if (allFilesInFolder.hasNext() === false) {
-    //If no file is found, the user gave a non-existent file name
-    return false;
-  };
-  
-  var configFile = null;
-  //cntFiles = 0;
-  //Even if it's only one file, must iterate a while loop in order to access the file.
-  //Google drive will allow multiple files of the same name.
-  while (allFilesInFolder.hasNext()) {
-    //thisFile = allFilesInFolder.next();
-    //cntFiles = cntFiles + 1;
-    //Logger.log('File Count: ' + cntFiles);
-
-    //docContent = thisFile.getAs('application/json');
-    //Logger.log('docContent : ' + docContent );
-    
-    
-    // define a File object variable and set the Media Tyep
-    var file = allFilesInFolder.next();
-    configFile = file.getAs('application/json')
-    
-    // log the contents of the file
-    //Logger.log("configFile:");
-    //Logger.log(configFile.getDataAsString());
-    
-    //return configFile;
-  };
-  
-  //return NULL;
-  
-  var configObject = JSON.parse(configFile.getDataAsString());
+  if( !configObject ) {
+    return null;
+  }
   
   var parameter = configObject[parameterKey];
-  //Logger.log("parameter:");
-  //Logger.log(parameter);
-  
+
   return parameter;
-  
-  _Status = configObject.status;
-  _FellowshipTypes = configObject.fellowshiptypes;
-  fellowshiptypeId = _FellowshipTypes[0].id;
-  fellowshiptypeName = _FellowshipTypes[0].text;
-  //Logger.log("_Status="+_Status);
-  //Logger.log("fellowshiptypeId="+fellowshiptypeId);
-  //Logger.log("fellowshiptypeName="+fellowshiptypeName); 
-  //Logger.log("fellowshipTypes:");
-  //Logger.log(fellowshipTypes);
-  
-  //_FellowshipTypes = fellowshipTypes;
-  
-  //_FellowshipVisaStatuses = configObject.fellowshipVisaStatuses;
-  
-  
-  return configFile;
 }
 
 

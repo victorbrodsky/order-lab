@@ -57,6 +57,9 @@ In order to access recommendation letter url's parameters,
 the url send by email in inviteSingleReferenceToSubmitLetter must be the web app url from deployment GAS
 Something similar to https://script.google.com/macros/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec
 
+### JSON config file ###
+Use the unique config file name "config-fellapp.json" in GAS and in PHP
+
 ### Site Settings (user bundle) ###
 configFileFolderIdFellApp - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
 codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file

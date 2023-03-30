@@ -145,13 +145,14 @@ class TestController extends OrderAbstractController
 //
 //        exit($content);
 
-        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$configFileFolderIdFellApp ) {
-            exit('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
-            return NULL;
-        }
+//        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$configFileFolderIdFellApp ) {
+//            exit('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+//            return NULL;
+//        }
+//        $file = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
 
-        $file = $googlesheetmanagement->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        $file = $googlesheetmanagement->findConfigFileByName($service, "config-fellapp.json");
         if( !$file ) {
             exit("Config file 'config.json' not found in $configFileFolderIdFellApp");
         }

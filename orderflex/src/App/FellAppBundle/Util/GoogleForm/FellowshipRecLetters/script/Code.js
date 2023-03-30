@@ -21,7 +21,7 @@ var _destinationFolderSSKey = "1jK4XJf_Jqn_UvjTvbgiu4jV9Kvp5G3nY"; //folder wher
 var _templateSSKey = '1SwKJ04BFSGByTkROYuNAdKo-dEs2rhVFKf36g3DhKhE';
 var _backupSSKey = '1nmBdCIatjBOXffoMsD-lSh6exSwczdMyJgtNmQBOhBs';
 var _dropbox = "RecommendationLetterUploads"; //folder name where the recommendation letter will be uploaded. Must be unique on the Google Drive!
-var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+//var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
 var _adminemail = 'oli2002@med.cornell.edu';
 var _useremail = 'WCMPathPrgm@med.cornell.edu';
@@ -504,70 +504,94 @@ function sortByKey(array, key) {
     });
 }
 
-function getConfigParameters(parameterKey) {
-  //var sheetname = "test";
-  //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
-  //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-  
-  //Get a reference to the folder    
-  fldr = DriveApp.getFolderById(_configFolderId);
+function getConfigFileObject() {
+  //Use the unique config file name "config-fellapp.json" in GAS and in PHP
+  const files = DriveApp.getFilesByName('config-fellapp.json');
 
-  //Get all files by that name. Put return into a variable
-  allFilesInFolder = fldr.getFilesByName("config.json");
-  //Logger.log('allFilesInFolder: ' + allFilesInFolder);
-  
-  if (allFilesInFolder.hasNext() === false) {
-    //If no file is found, the user gave a non-existent file name
-    return false;
-  };
-  
-  var configFile = null;
-  //cntFiles = 0;
-  //Even if it's only one file, must iterate a while loop in order to access the file.
-  //Google drive will allow multiple files of the same name.
-  while (allFilesInFolder.hasNext()) {
-    //thisFile = allFilesInFolder.next();
-    //cntFiles = cntFiles + 1;
-    //Logger.log('File Count: ' + cntFiles);
+  if( files.hasNext() ) {
+    const  file = files.next();
+    const configFile = file.getAs('application/json');
+    const configObject = JSON.parse(configFile.getDataAsString());
+    return configObject;
+  }
 
-    //docContent = thisFile.getAs('application/json');
-    //Logger.log('docContent : ' + docContent );
-    
-    
-    // define a File object variable and set the Media Tyep
-    var file = allFilesInFolder.next();
-    configFile = file.getAs('application/json')
-    
-    // log the contents of the file
-    //Logger.log("configFile:");
-    //Logger.log(configFile.getDataAsString());
-    
-    //return configFile;
-  };
-  
-  //return NULL;
-  
-  var configObject = JSON.parse(configFile.getDataAsString());
-  
-  var parameter = configObject[parameterKey];
-  //Logger.log("parameter:");
-  //Logger.log(parameter);
-  
-  return parameter;
-  
-  _Status = configObject.status;
-  _FellowshipTypes = configObject.fellowshiptypes;
-  fellowshiptypeId = _FellowshipTypes[0].id;
-  fellowshiptypeName = _FellowshipTypes[0].text;
-  //Logger.log("_Status="+_Status);
-  //Logger.log("fellowshiptypeId="+fellowshiptypeId);
-  //Logger.log("fellowshiptypeName="+fellowshiptypeName); 
-  //Logger.log("fellowshipTypes:");
-  //Logger.log(fellowshipTypes);
-  
-  //_FellowshipTypes = fellowshipTypes;
-  
-  
-  
-  return configFile;
+  return null;
 }
+function getConfigParameters(parameterKey) {
+  var configObject = getConfigFileObject();
+
+  if( !configObject ) {
+    return null;
+  }
+
+  var parameter = configObject[parameterKey];
+
+  return parameter;
+}
+// function getConfigParameters_ORIG(parameterKey) {
+//   //var sheetname = "test";
+//   //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
+//   //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+//
+//   //Get a reference to the folder
+//   var fldr = DriveApp.getFolderById(_configFolderId);
+//
+//   //Get all files by that name. Put return into a variable
+//   allFilesInFolder = fldr.getFilesByName("config.json");
+//   //Logger.log('allFilesInFolder: ' + allFilesInFolder);
+//
+//   if (allFilesInFolder.hasNext() === false) {
+//     //If no file is found, the user gave a non-existent file name
+//     return false;
+//   };
+//
+//   var configFile = null;
+//   //cntFiles = 0;
+//   //Even if it's only one file, must iterate a while loop in order to access the file.
+//   //Google drive will allow multiple files of the same name.
+//   while (allFilesInFolder.hasNext()) {
+//     //thisFile = allFilesInFolder.next();
+//     //cntFiles = cntFiles + 1;
+//     //Logger.log('File Count: ' + cntFiles);
+//
+//     //docContent = thisFile.getAs('application/json');
+//     //Logger.log('docContent : ' + docContent );
+//
+//
+//     // define a File object variable and set the Media Tyep
+//     var file = allFilesInFolder.next();
+//     configFile = file.getAs('application/json')
+//
+//     // log the contents of the file
+//     //Logger.log("configFile:");
+//     //Logger.log(configFile.getDataAsString());
+//
+//     //return configFile;
+//   };
+//
+//   //return NULL;
+//
+//   var configObject = JSON.parse(configFile.getDataAsString());
+//
+//   var parameter = configObject[parameterKey];
+//   //Logger.log("parameter:");
+//   //Logger.log(parameter);
+//
+//   return parameter;
+//
+//   _Status = configObject.status;
+//   _FellowshipTypes = configObject.fellowshiptypes;
+//   fellowshiptypeId = _FellowshipTypes[0].id;
+//   fellowshiptypeName = _FellowshipTypes[0].text;
+//   //Logger.log("_Status="+_Status);
+//   //Logger.log("fellowshiptypeId="+fellowshiptypeId);
+//   //Logger.log("fellowshiptypeName="+fellowshiptypeName);
+//   //Logger.log("fellowshipTypes:");
+//   //Logger.log(fellowshipTypes);
+//
+//   //_FellowshipTypes = fellowshipTypes;
+//
+//
+//
+//   return configFile;
+// }

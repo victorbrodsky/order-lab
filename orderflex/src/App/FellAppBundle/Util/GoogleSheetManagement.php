@@ -17,7 +17,7 @@
 
 /**
  * Created by PhpStorm.
- * User: ch3
+ * User: oli2002
  * Date: 3/21/2016
  * Time: 10:43 AM
  */
@@ -1529,15 +1529,17 @@ class GoogleSheetManagement {
             return NULL;
         }
 
-        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$configFileFolderIdFellApp ) {
-            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
-            return NULL;
-        }
-        //$folderIdFellApp = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-        //echo "folder ID=".$configFileFolderIdFellApp."<br>";
+        //TODO: use configFileFolderIdFellApp to store unique config file name
+//        $configFileFolderIdFellApp = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$configFileFolderIdFellApp ) {
+//            $logger->warning('Google Drive Folder ID with config file is not defined in Site Parameters. configFileFolderIdFellApp='.$configFileFolderIdFellApp);
+//            return NULL;
+//        }
 
-        $configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+        //$configFile = $this->findConfigFileInFolder($service, $configFileFolderIdFellApp, "config.json");
+
+        //Use the unique config file name "config-fellapp.json" in GAS and in PHP
+        $configFile = $this->findConfigFileByName($service, "config-fellapp.json");
         //echo "configFile ID=".$configFile->getId()."<br>";
 
         $contentConfigFile = $this->downloadGeneralFile($service, $configFile);
@@ -1545,7 +1547,52 @@ class GoogleSheetManagement {
         return $contentConfigFile;
     }
 
+    function findConfigFileByName($service, $fileName) {
+        $pageToken = NULL;
+
+        do {
+            try {
+
+                if ($pageToken) {
+                    $parameters['pageToken'] = $pageToken;
+                }
+
+                //https://stackoverflow.com/questions/36605461/downloading-a-file-with-google-drive-api-with-php
+                //The getItems() method in v2 will become getFiles() in v3 and the getTitle() will become getName()
+                $parameters = array(
+                    'q' => "trashed=false and name='".$fileName."'",
+                    'fields' => 'nextPageToken, files(*)'
+                );
+
+                $files = $service->files->listFiles($parameters); //Google_Service_Drive_FileList
+
+                //dump($files);
+                //exit('111');
+
+                if( count($files->getFiles()) > 1 ) {
+                    $errorMsg = "Multiple ".count($files->getFiles())." config json files '".$fileName.
+                        "' found in Google Drive. Please make sure only one config file with name '$fileName' exists";
+                    exit($errorMsg);
+                }
+
+                foreach( $files->getFiles() as $file ) {
+                    //echo "File ID=" . $file->getId()."<br>";
+                    //echo "File Title=" . $file->getName()."<br>";
+                    return $file;
+                }
+                $pageToken = $files->getNextPageToken();
+            } catch (Exception $e) {
+                print "An error occurred: " . $e->getMessage();
+                $pageToken = NULL;
+            }
+        } while ($pageToken);
+
+        return NULL;
+    }
+
     /**
+     * Find a file by file name and parent folder id
+     *
      * @param Google_Service_Drive $service Drive API service instance.
      * @param String $folderId ID of the folder to print files from.
      * @param String $fileName Name (Title) of the config file to find.
