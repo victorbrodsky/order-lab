@@ -7,7 +7,7 @@ sites.google.com/a/pathologysystems.org/wcmc
 https://sites.google.com/a/pathologysystems.org/wcmc/fellowship-application
 
 This site is also viewable at 
-wcmc.pathologysystems.org
+https://wcmc.pathologysystems.org
 https://wcmc.pathologysystems.org/fellowship-application
 
 All sites saved on google drive
@@ -45,6 +45,17 @@ https://sites.google.com/pathologysystems.org/recletter
 <iframe src="https://script.google.com/macros/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec" 
 height="2000" width="800" title="Iframe Example">
 </iframe>
+
+
+https://stackoverflow.com/questions/64705749/google-apps-script-cannot-get-url-parameter-from-page-on-new-google-site
+https://script.google.com/a/macros/pathologysystems.org/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec
+https://script.google.com/a/pathologysystems.org/macros/s/1JwVzCKlR3be-Y7lHw6BKD2X2XWspB6bOSmCKP3geCsiP31JoHea-tFkq/exec
+
+### Note for recommendation letter url to referee ###
+Add new parameter - fellapp-letter-url
+In order to access recommendation letter url's parameters,
+the url send by email in inviteSingleReferenceToSubmitLetter must be the web app url from deployment GAS
+Something similar to https://script.google.com/macros/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec
 
 ### Site Settings (user bundle) ###
 configFileFolderIdFellApp - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
