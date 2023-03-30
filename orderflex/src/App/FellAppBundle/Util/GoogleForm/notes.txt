@@ -21,19 +21,31 @@ Google Script App saved on google drive as a json file
 Google auth:
 https://console.cloud.google.com/apis/credentials?project=quickstart-1563304352237
 
+Google New Sites API is not available yet
+https://support.google.com/sites/thread/3363462?hl=en
+https://developers.google.com/sites
 
 ################## JS ##################
 <div id="welcome-note">Please wait for this page to load ...</div>
 
 <script>
 
-var delayInMilliseconds = 10000; //1000; //1 second
+var delayInMilliseconds = 12000; //1000; //1 second
 
 setTimeout(function() {
   document.getElementById("welcome-note").remove();
 }, delayInMilliseconds);
 
-</script> 
+</script>
+
+
+<iframe
+width="100%" height="5000"
+andbox="allow-scripts allow-popups allow-forms allow-same-origin allow-popups-to-escape-sandbox allow-downloads allow-modals"
+aria-label="Apps Script"
+src="https://script.google.com/macros/s/AKfycbzT040qN6Yv0Z7nK2d7ZDpLudFCPJDsIJwHd1L9DuldVBg_g21duVfjLvYuaA8DsvxW/exec"
+allowfullscreen="" frameborder="0">
+</iframe>
 ################## ##################
 
 Remote repository on github:
@@ -56,24 +68,35 @@ Add new parameter - fellapp-letter-url
 In order to access recommendation letter url's parameters,
 the url send by email in inviteSingleReferenceToSubmitLetter must be the web app url from deployment GAS
 Something similar to https://script.google.com/macros/s/AKfycbyM-ZAwmp6ncIwjk1q1gFD9stsJ-o7shc-beAgiwED_Pe-mBxTfJcm1-3SpFXITS97L/exec
+####################################
+
 
 ### JSON config file ###
 Use the unique config file name "config-fellapp.json" in GAS and in PHP
+####################################
+
 
 ### Site Settings (user bundle) ###
-configFileFolderIdFellApp - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
-codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file
+configFileFolderIdFellApp (will not used) - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
+ -codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file
 confirmationEmailFellApp - Email address for confirmation of application submission
-applicationPageLinkFellApp (not used) - Link to the Application Page. Used for reference only
-clientEmailFellApp (not used) - used in old pk12 auth
+ -applicationPageLinkFellApp (not used) - Link to the Application Page. Used for reference only
+ -clientEmailFellApp (not used) - used in old pk12 auth
 p12KeyPathFellApp - auth credential json file
 googleDriveApiUrlFellApp - scopes: used in old authenticationP12Key getClient2 and in current authGoogleServiceAccount
-userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
-templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
+ -userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
+ -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
 folderIdFellApp - Application Google Drive Folder ID (where the response spreadsheets are saved)
 localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
 identificationUploadLetterFellApp - Fellowship identification string to download recommendation letters
 recLetterSaltFellApp - Recommendation Letter Salt
+####################################
+
+
+### FellappSiteParameter ###
+fellappRecLetterUrl - the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
+
+####################################
 
 
 ### GoogleFormConfig and config.json (find by _configFolderId in gas, find by configFileFolderIdFellApp by php) ###
@@ -82,6 +105,9 @@ fellappAdminEmail - Fellowship Form Admin Email
 adminEmail - Admin Email
 exceptionAccount - Exception Account for the Fellowship Application (in maintenance, the application is still shown to this google user for testing purposes)
 letterAcceptingSubmission - Accepting Submission of the Recommendation Letters
+####################################
 
-
-
+TODO:
+1) configFileFolderIdFellApp - used in RecLetterUtil (importSheetsFromGoogleDriveFolder, importLetterFromGoogleDriveFolder)
+and TestController(googleDriveAction)
+replaced by folderIdRecLetter
