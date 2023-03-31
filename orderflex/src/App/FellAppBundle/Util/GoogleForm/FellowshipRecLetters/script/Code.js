@@ -52,6 +52,7 @@ function doGet(request) {
 
   _recTemplateFileId = getConfigParameters("recTemplateFileId");
   _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
+  Logger.log('doGet: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
 
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
@@ -221,6 +222,8 @@ function setNewBlobName(formObject,blob,fileType) {
 //instituteIdentification-RecLetterHash_TimeStamp
 function createUniqueId(formObject) {
 
+  Logger.log('start createUniqueId');
+
   if( _uniqueId ) {
      return _uniqueId;
   }
@@ -307,7 +310,7 @@ function processForm(formObject) {
   //set Unique ID based on email_lastname_firstname_timestamp
   //var uniqueId = email+lastName+"_"+firstName+"_"+"_"+timestamp;
   var uniqueId = createUniqueId(formObject);
-  Logger.log("processForm: after createUniqueId");
+  Logger.log("processForm: after createUniqueId, uniqueId="+uniqueId);
     
   var sheet = getSheetFromSingleTruthSource(uniqueId);
   Logger.log("processForm: after getSheetFromSingleTruthSource");
@@ -417,6 +420,9 @@ function validateFormFields(formObject) {
 //var _recBackupTemplateFileId = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 function getSheetFromSingleTruthSource(uniqueId) {
 
+    //doGet has _recSpreadsheetFolderId, but here _recSpreadsheetFolderId is null
+    Logger.log('start getSheetFromSingleTruthSource, uniqueId='+uniqueId+"; _recSpreadsheetFolderId="+_recSpreadsheetFolderId);
+
     var sheet = null;
 
     try {
@@ -467,7 +473,7 @@ function createUploadedFilesArr(formObject) {
   
   var blobArr = [];
     
-  var uniqueId = createUniqueId(formObject);    
+  //var uniqueId = createUniqueId(formObject);
    
   var blob = formObject.recommendationLetter;
   if( blob ) {
