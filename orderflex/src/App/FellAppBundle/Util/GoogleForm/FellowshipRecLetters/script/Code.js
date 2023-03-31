@@ -157,7 +157,6 @@ function uploadFile(form,blob) {
           
     //var folder, folders = DriveApp.getFoldersByName(_dropbox);
     var recUploadsFolder = DriveApp.getFolderById(_recUploadsFolderId);
-
     if( !recUploadsFolder ) {
       MailApp.sendEmail(
           _useremail+","+_adminemail,

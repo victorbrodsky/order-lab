@@ -315,7 +315,7 @@ class RecLetterUtil {
             return $res;
         }
 
-        $uploadFormLink = $fellappRecLetterUrl."/?";
+        $uploadFormLink = $fellappRecLetterUrl."?";
 
         $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
         $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
