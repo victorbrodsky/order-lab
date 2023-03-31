@@ -38,7 +38,7 @@ var _AcceptingSubmissions = true;
 //var _AcceptingSubmissions = false; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
 var _fullValidation = true;
-//var _useremail = 'cinava@yahoo.com';
+var _useremail = 'cinava@yahoo.com';
 
 function doGet(request) {   
 
@@ -301,13 +301,16 @@ function getColIndexByName(name) {
 function processForm(formObject) {
   //throw new Error("start processForm");
   Logger.log("start processForm");
-  validateFormFields(formObject);   
+  validateFormFields(formObject);
+  Logger.log("processForm: after validateFormFields");
   
   //set Unique ID based on email_lastname_firstname_timestamp
   //var uniqueId = email+lastName+"_"+firstName+"_"+"_"+timestamp;
   var uniqueId = createUniqueId(formObject);
+  Logger.log("processForm: after createUniqueId");
     
   var sheet = getSheetFromSingleTruthSource(uniqueId);
+  Logger.log("processForm: after getSheetFromSingleTruthSource");
   
   //create mapping array with header=index
   _colIndexNameMapArray = getColIndexNameMapArray(sheet);
@@ -416,14 +419,17 @@ function getSheetFromSingleTruthSource(uniqueId) {
 
     var sheet = null;
 
-    //var templateSheet = SpreadsheetApp.openById(_recTemplateFileId).getActiveSheet();
-    var recSpreadsheetFolder = DriveApp.getFolderById(_recSpreadsheetFolderId);
-    if( !recSpreadsheetFolder ) {
-      MailApp.sendEmail(
-          _useremail+","+_adminemail,
-          "Google Drive failed to find the Spreadsheet folder by id="+_recSpreadsheetFolderId,
-          "Google Drive failed to find the Spreadsheet folder by id="+_recSpreadsheetFolderId
-      );
+    try {
+      //var templateSheet = SpreadsheetApp.openById(_recTemplateFileId).getActiveSheet();
+      var recSpreadsheetFolder = DriveApp.getFolderById(_recSpreadsheetFolderId);
+    } catch(e) {
+        MailApp.sendEmail(
+            //_useremail + "," + _adminemail,
+            _useremail,
+            "Google Drive failed to find the Spreadsheet folder",
+            "Google Drive failed to find the Spreadsheet folder by id=" + _recSpreadsheetFolderId
+            + ". Error=" + e.message
+        );
     }
     
     try {
