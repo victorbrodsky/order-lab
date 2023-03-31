@@ -17,10 +17,15 @@ var _uniqueId = null;
 
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
-var _destinationFolderSSKey = "1jK4XJf_Jqn_UvjTvbgiu4jV9Kvp5G3nY"; //folder where the response spreadsheets (forms) are saved;
-var _templateSSKey = '1SwKJ04BFSGByTkROYuNAdKo-dEs2rhVFKf36g3DhKhE';
-var _backupSSKey = '1nmBdCIatjBOXffoMsD-lSh6exSwczdMyJgtNmQBOhBs';
-var _dropbox = "RecommendationLetterUploads"; //folder name where the recommendation letter will be uploaded. Must be unique on the Google Drive!
+//var _destinationFolderSSKey = "1jK4XJf_Jqn_UvjTvbgiu4jV9Kvp5G3nY"; //folder where the response spreadsheets (forms) are saved;
+var _recSpreadsheetFolderId = null; //folder ID where the response spreadsheets (forms) will be saved
+var _recUploadsFolderId = null; //folder ID where the recommendation letter will be uploaded
+
+//var _templateSSKey = '1SwKJ04BFSGByTkROYuNAdKo-dEs2rhVFKf36g3DhKhE';
+//var _backupSSKey = '1nmBdCIatjBOXffoMsD-lSh6exSwczdMyJgtNmQBOhBs';
+var _recTemplateFileId = null;
+var _recBackupTemplateFileId = null;
+//var _dropbox = "RecommendationLetterUploads"; //folder name where the recommendation letter will be uploaded. Must be unique on the Google Drive!
 //var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
 var _adminemail = 'oli2002@med.cornell.edu';
@@ -28,7 +33,6 @@ var _useremail = 'WCMPathPrgm@med.cornell.edu';
 var _exceptionAccount = "olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
-
 
 //Maintenance flag (uncomment for maintenance)
 //var _AcceptingSubmissions = false; 
@@ -42,6 +46,12 @@ function doGet(request) {
   _adminemail = getConfigParameters("adminEmail");
   _useremail = getConfigParameters("fellappAdminEmail");
   _exceptionAccount = getConfigParameters("letterExceptionAccount");
+
+  _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
+  _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
+
+  _recTemplateFileId = getConfigParameters("recTemplateFileId");
+  _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
 
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
@@ -145,17 +155,23 @@ function uploadFile(form,blob) {
     
   try {
           
-    var folder, folders = DriveApp.getFoldersByName(_dropbox);
-    
-    if (folders.hasNext()) {
-      folder = folders.next();
-    } else {
-      folder = DriveApp.createFolder(_dropbox);
-    }
-       
+    //var folder, folders = DriveApp.getFoldersByName(_dropbox);
+    var recUploadsFolder = DriveApp.getFolderById(_recUploadsFolderId);
 
-    //TODO: check file size   
-    
+    if( !recUploadsFolder ) {
+      MailApp.sendEmail(
+          _useremail+","+_adminemail,
+          "Google Drive failed to find the Upload folder by id="+_recUploadsFolderId,
+          "Google Drive failed to find the Upload folder by id="+_recUploadsFolderId
+      );
+    }
+
+    // if (folders.hasNext()) {
+    //   folder = folders.next();
+    // } else {
+    //   folder = DriveApp.createFolder(_dropbox);
+    // }
+
     //var lastname = document.getElementById('textbox_id').value
     //console.log('lastname='+lastname);
             
@@ -167,7 +183,7 @@ function uploadFile(form,blob) {
     //blob.setName(uniqueId+"_"+oldBlobName);
             
     //var blob = form.name;    
-    var file = folder.createFile(blob); 
+    var file = recUploadsFolder.createFile(blob);
                       
     file.setDescription("Uploaded by " + form.firstName + " " + form.lastName);
         
@@ -394,20 +410,27 @@ function validateFormFields(formObject) {
 //1) make a copy of the sheet from template
 //2) if fails get a backup sheet
 //Required: 
-//var _destinationFolderSSKey - folder where the response spreadsheets (forms) are saved;
-//var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
-//var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
+//var _recSpreadsheetFolderId - folder where the response spreadsheets (forms) are saved;
+//var _recTemplateFileId = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
+//var _recBackupTemplateFileId = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 function getSheetFromSingleTruthSource(uniqueId) {
 
     var sheet = null;
 
-    //var templateSheet = SpreadsheetApp.openById(_templateSSKey).getActiveSheet(); 
-    var destinationFolder = DriveApp.getFolderById(_destinationFolderSSKey); 
+    //var templateSheet = SpreadsheetApp.openById(_recTemplateFileId).getActiveSheet();
+    var recSpreadsheetFolder = DriveApp.getFolderById(_recSpreadsheetFolderId);
+    if( !recSpreadsheetFolder ) {
+      MailApp.sendEmail(
+          _useremail+","+_adminemail,
+          "Google Drive failed to find the Spreadsheet folder by id="+_recSpreadsheetFolderId,
+          "Google Drive failed to find the Spreadsheet folder by id="+_recSpreadsheetFolderId
+      );
+    }
     
     try {
-      //_templateSSKey= "testing!!!";
+      //_recTemplateFileId= "testing!!!";
       //1) make a copy from template
-      var copyFile = DriveApp.getFileById(_templateSSKey).makeCopy(uniqueId, destinationFolder);
+      var copyFile = DriveApp.getFileById(_recTemplateFileId).makeCopy(uniqueId, recSpreadsheetFolder);
       //Logger.log('copy speadsheet='+copyFile.getId());
       sheet = SpreadsheetApp.openById(copyFile.getId()).getActiveSheet(); 
       //sheet = copyFile.getActiveSheet(); 
@@ -418,8 +441,8 @@ function getSheetFromSingleTruthSource(uniqueId) {
       Logger.log('copy error catch='+e.message);
     
       //2) get backup
-      sheet = SpreadsheetApp.openById(_backupSSKey).getActiveSheet(); 
-      Logger.log('backup sheet='+_backupSSKey);
+      sheet = SpreadsheetApp.openById(_recBackupTemplateFileId).getActiveSheet();
+      Logger.log('backup sheet='+_recBackupTemplateFileId);
       
       //_useremail,_adminemail
       MailApp.sendEmail(
@@ -427,7 +450,7 @@ function getSheetFromSingleTruthSource(uniqueId) {
         "Google Drive failed to make a new copy from template", 
         "Google Drive failed to make a new copy from template for applicant=" + uniqueId + 
         ". Error=" + e.message +
-        ". The application has been wtitten to a backup sheet with ID=" + _backupSSKey
+        ". The application has been wtitten to a backup sheet with ID=" + _recBackupTemplateFileId
       );
       
     }
@@ -525,6 +548,14 @@ function getConfigParameters(parameterKey) {
   }
 
   var parameter = configObject[parameterKey];
+
+  if( !parameter ) {
+    MailApp.sendEmail(
+        _useremail+","+_adminemail,
+        "Config file does not have parameter "+parameterKey,
+        "Config file does not have parameter "+parameterKey
+    );
+  }
 
   return parameter;
 }

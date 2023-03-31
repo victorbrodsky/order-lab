@@ -82,18 +82,29 @@ class TestController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
         $service = $googlesheetmanagement->getGoogleService();
-        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$folderIdFellAppId ) {
-            exit('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
+
+//        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//        if( !$folderIdFellAppId ) {
+//            exit('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
+//        }
+        $recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        if( !$recSpreadsheetFolderId ) {
+            exit('Google Drive Folder ID is not defined in Site Parameters. recSpreadsheetFolderId='.$recSpreadsheetFolderId);
         }
 
         //find folder by name
-        $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
-        echo "letterSpreadsheetFolder=".$letterSpreadsheetFolder->getId()."<br>";
-        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(),$service);
+        //$letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
+        //echo "letterSpreadsheetFolder=".$letterSpreadsheetFolder->getId()."<br>";
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($recSpreadsheetFolderId,$service);
         echo "files count=".count($files)."<br>";
 
-        $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
+
+        $recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        if( !$recUploadsFolderId ) {
+            exit('Google Drive Folder ID is not defined in Site Parameters. recUploadsFolderId='.$recUploadsFolderId);
+        }
+
+        $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$recUploadsFolderId);
         $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
         echo "rec letter files count=".count($files)."<br>";
 
@@ -154,7 +165,7 @@ class TestController extends OrderAbstractController
 
         $file = $googlesheetmanagement->findConfigFileByName($service, "config-fellapp.json");
         if( !$file ) {
-            exit("Config file 'config.json' not found in $configFileFolderIdFellApp");
+            exit("Config file 'config-fellapp.json' not found by name");
         }
 
         //$contentConfigFile = $googlesheetmanagement->downloadGeneralFile($service, $file);

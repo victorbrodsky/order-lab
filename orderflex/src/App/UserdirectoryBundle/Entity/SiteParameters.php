@@ -589,6 +589,7 @@ class SiteParameters {
     private $folderIdFellApp;
 
     /**
+     * Deprecated, not used anymore in new version of google management
      * Config.json file folder ID
      *
      * @ORM\Column(type="text", nullable=true)

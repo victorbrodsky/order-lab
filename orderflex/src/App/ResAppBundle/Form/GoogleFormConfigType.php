@@ -183,6 +183,33 @@ class GoogleFormConfigType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+
+        //RecLetter
+        $builder->add('recSpreadsheetFolderId', null, array(
+            'label' => "Google folder ID for recommendation letters Spreadsheet:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('recUploadsFolderId', null, array(
+            'label' => "Google folder ID for recommendation letters upload:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('recTemplateFileId', null, array(
+            'label' => "Google file ID for the Spreadsheet Template for the recommendation letter:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('recBackupTemplateFileId', null, array(
+            'label' => "Google file ID for the Backup Spreadsheet Template for the recommendation letter:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

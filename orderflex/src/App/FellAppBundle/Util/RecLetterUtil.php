@@ -142,8 +142,8 @@ class RecLetterUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
 
-        //$forceSend = true;
-        $forceSend = false;
+        $forceSend = true;
+        //$forceSend = false;
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $forceSend == false && $environment != "live" ) {
             $msg = "Server is not live: invitation email will not be send to reference ".$reference->getFullName();
@@ -301,7 +301,22 @@ class RecLetterUtil {
         //Set url to the Google Script web url
         //https://script.google.com/macros/s/AKfycbwVWsVacYNvIc4Lm_qb2nZvqPbAyiKAF4XebAEA-M3HWl8AIt9dKryWp-URF4ePVAnn/exec
 
-        $uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
+        //$uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
+
+        $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter('fellappRecLetterUrl',$this->container->getParameter('fellapp.sitename'));
+        if( !$fellappRecLetterUrl ) {
+            $msg = "Can not send invitation email to the references.";
+            $msg = $msg . " The web app url from deployment GAS not found in the Fellowship Site Settings";
+            $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
+            $res = array(
+                "res" => false,
+                "msg" => $msg
+            );
+            return $res;
+        }
+
+        $uploadFormLink = $fellappRecLetterUrl."/?";
+
         $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
         $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
         $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
@@ -526,20 +541,32 @@ class RecLetterUtil {
 
         //echo "service ok <br>";
 
-        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$folderIdFellAppId ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
-        }
+//        if(0) { //old
+//            $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//            if (!$folderIdFellAppId) {
+//                $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp=' . $folderIdFellAppId);
+//            }
+//
+//            //find folder by name
+//            $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service, $folderIdFellAppId);
+//            //echo "letterSpreadsheetFolder: Title=".$letterSpreadsheetFolder->getTitle()."; ID=".$letterSpreadsheetFolder->getId()."<br>";
+//
+//            //exit("exit importSheetsFromGoogleDriveFolder");
+//
+//            //get all files in google folder
+//            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//            $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(), $service);
+//            //echo "files count=".count($files)."<br>";
+//        }
 
-        //find folder by name
-        $letterSpreadsheetFolder = $googlesheetmanagement->findOneRecLetterSpreadsheetFolder($service,$folderIdFellAppId);
-        //echo "letterSpreadsheetFolder: Title=".$letterSpreadsheetFolder->getTitle()."; ID=".$letterSpreadsheetFolder->getId()."<br>";
-        
-        //exit("exit importSheetsFromGoogleDriveFolder");
+        $recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        if( !$recSpreadsheetFolderId ) {
+            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. recSpreadsheetFolderId='.$recSpreadsheetFolderId);
+        }
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterSpreadsheetFolder->getId(),$service);
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($recSpreadsheetFolderId, $service);
         //echo "files count=".count($files)."<br>";
 
         //Download files to the server
@@ -632,21 +659,33 @@ class RecLetterUtil {
 
         //echo "service ok <br>";
 
-        $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
-        if( !$folderIdFellAppId ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
-        }
+//        if(0) {
+//            $folderIdFellAppId = $userSecUtil->getSiteSettingParameter('configFileFolderIdFellApp');
+//            if (!$folderIdFellAppId) {
+//                $logger->warning('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp=' . $folderIdFellAppId);
+//            }
+//
+//            //find folder by name
+//            $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service, $folderIdFellAppId);
+//            //echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
+//            //$logger->notice("Getting reference letters from folder ID=".$letterFolder->getId());
+//
+//            //get all files in google folder
+//            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//            $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(), $service);
+//            //echo "files count=".count($files)."<br>";
+//            //$logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
+//        }
 
-        //find folder by name
-        $letterFolder = $googlesheetmanagement->findOneRecLetterUploadFolder($service,$folderIdFellAppId);
-        //echo "letterFolder: Title=".$letterFolder->getTitle()."; ID=".$letterFolder->getId()."<br>";
-        //$logger->notice("Getting reference letters from folder ID=".$letterFolder->getId());
+        $recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        if( !$recUploadsFolderId ) {
+            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. recUploadsFolderId='.$recUploadsFolderId);
+        }
 
         //get all files in google folder
         $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $files = $googlesheetmanagement->retrieveFilesByFolderId($letterFolder->getId(),$service);
+        $files = $googlesheetmanagement->retrieveFilesByFolderId($recUploadsFolderId, $service);
         //echo "files count=".count($files)."<br>";
-        //$logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
 
         //Download files to the server
         $importedLetters = array();

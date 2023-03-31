@@ -178,7 +178,35 @@ class GoogleFormConfig {
      */
     private $signatureStatement;
 
+    //////////// Recommendation Letter script parameters /////////////////////
+    /**
+     * recSpreadsheetFolderId - Google folder ID for recommendation letters Spreadsheet
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recSpreadsheetFolderId;
 
+    /**
+     * recUploadsFolderId - Google folder ID for recommendation letters upload
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recUploadsFolderId;
+
+    /**
+     * recTemplateFileId - Google file ID for the Spreadsheet Template for the recommendation letter
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recTemplateFileId;
+
+    /**
+     * recBackupTemplateFileId - Google file ID for the Backup Spreadsheet Template for the recommendation letter
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recBackupTemplateFileId;
+    //////////// EOF Recommendation Letter script parameters /////////////////////
 
     public function __construct() {
         $this->fellowshipSubspecialties = new ArrayCollection();
@@ -506,6 +534,70 @@ class GoogleFormConfig {
     public function setSignatureStatement($signatureStatement)
     {
         $this->signatureStatement = $signatureStatement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecSpreadsheetFolderId()
+    {
+        return $this->recSpreadsheetFolderId;
+    }
+
+    /**
+     * @param mixed $recSpreadsheetFolderId
+     */
+    public function setRecSpreadsheetFolderId($recSpreadsheetFolderId)
+    {
+        $this->recSpreadsheetFolderId = $recSpreadsheetFolderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecUploadsFolderId()
+    {
+        return $this->recUploadsFolderId;
+    }
+
+    /**
+     * @param mixed $recUploadsFolderId
+     */
+    public function setRecUploadsFolderId($recUploadsFolderId)
+    {
+        $this->recUploadsFolderId = $recUploadsFolderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecTemplateFileId()
+    {
+        return $this->recTemplateFileId;
+    }
+
+    /**
+     * @param mixed $recTemplateFileId
+     */
+    public function setRecTemplateFileId($recTemplateFileId)
+    {
+        $this->recTemplateFileId = $recTemplateFileId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecBackupTemplateFileId()
+    {
+        return $this->recBackupTemplateFileId;
+    }
+
+    /**
+     * @param mixed $recBackupTemplateFileId
+     */
+    public function setRecBackupTemplateFileId($recBackupTemplateFileId)
+    {
+        $this->recBackupTemplateFileId = $recBackupTemplateFileId;
     }
 
 

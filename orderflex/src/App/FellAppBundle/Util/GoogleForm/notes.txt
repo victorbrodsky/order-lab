@@ -110,4 +110,10 @@ letterAcceptingSubmission - Accepting Submission of the Recommendation Letters
 TODO:
 1) configFileFolderIdFellApp - used in RecLetterUtil (importSheetsFromGoogleDriveFolder, importLetterFromGoogleDriveFolder)
 and TestController(googleDriveAction)
-replaced by folderIdRecLetter
+replaced by $folderIdRecSpreadsheet and $folderIdRecUploads
+
+2a) new $recSpreadsheetFolderId (in GoogleFormConfig) - Google folder ID for recommendation letters Spreadsheet
+2b) new $recUploadsFolderId (in GoogleFormConfig) - Google folder ID for recommendation letters upload
+
+3) new $fellappRecLetterUrl (GoogleFormConfig) - the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
+add to html edit

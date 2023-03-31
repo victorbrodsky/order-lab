@@ -135,6 +135,23 @@
         {{ formmacros.field(form.signatureStatement) }}
     {% endif %}
 
+    <div class="well">
+    <h3>Recommendation Letter Settings</h3>
+    {% if form.recSpreadsheetFolderId is defined %}
+        {{ formmacros.field(form.recSpreadsheetFolderId) }}
+    {% endif %}
+    {% if form.recUploadsFolderId is defined %}
+        {{ formmacros.field(form.recUploadsFolderId) }}
+    {% endif %}
+    {% if form.recTemplateFileId is defined %}
+        {{ formmacros.field(form.recTemplateFileId) }}
+    {% endif %}
+    {% if form.recBackupTemplateFileId is defined %}
+        {{ formmacros.field(form.recBackupTemplateFileId) }}
+    {% endif %}
+    </div>
+
+
     <br>
     <p>
         {% if cycle == "show" %}

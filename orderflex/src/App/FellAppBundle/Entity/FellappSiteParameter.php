@@ -76,7 +76,16 @@ class FellappSiteParameter {
      */
     private $fellappAcademicYearEnd;
     
+    /**
+     * the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $fellappRecLetterUrl;
     
+
+
+
     
     
     public function __construct() {
@@ -195,6 +204,22 @@ class FellappSiteParameter {
     public function setFellappAcademicYearEnd($fellappAcademicYearEnd)
     {
         $this->fellappAcademicYearEnd = $fellappAcademicYearEnd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFellappRecLetterUrl()
+    {
+        return $this->fellappRecLetterUrl;
+    }
+
+    /**
+     * @param mixed $fellappRecLetterUrl
+     */
+    public function setFellappRecLetterUrl($fellappRecLetterUrl)
+    {
+        $this->fellappRecLetterUrl = $fellappRecLetterUrl;
     }
 
     

@@ -66,6 +66,12 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control textarea')
         ));
 
+        $builder->add('fellappRecLetterUrl', null, array(
+            'label' => 'Web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter'.
+                ' (i.e. https://script.google.com/macros/s/fellapp_recletters_script_deployment_id/exec):',
+            'attr' => array('class' => 'form-control')
+        ));
+
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(
 //            'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',
