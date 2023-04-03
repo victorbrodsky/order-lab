@@ -642,6 +642,7 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
+//        //Not used anymore
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'configFileFolderIdFellApp' ) {
             $builder->add('configFileFolderIdFellApp', null, array(
                 'label' => 'Google Drive Folder ID where config file is located:',
