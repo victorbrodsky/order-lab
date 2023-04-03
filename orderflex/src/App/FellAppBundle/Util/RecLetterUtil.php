@@ -559,7 +559,8 @@ class RecLetterUtil {
 //            //echo "files count=".count($files)."<br>";
 //        }
 
-        $recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        //$recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        $recSpreadsheetFolderId = $googlesheetmanagement->getGoogleConfigParameter('recSpreadsheetFolderId');
         if( !$recSpreadsheetFolderId ) {
             $logger->warning('Google Drive Folder ID is not defined in Site Parameters. recSpreadsheetFolderId='.$recSpreadsheetFolderId);
         }
@@ -677,7 +678,8 @@ class RecLetterUtil {
 //            //$logger->notice("Found ".count($files)." reference letters from folder ID=".$letterFolder->getId());
 //        }
 
-        $recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        //$recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        $recUploadsFolderId = $googlesheetmanagement->getGoogleConfigParameter('recUploadsFolderId');
         if( !$recUploadsFolderId ) {
             $logger->warning('Google Drive Folder ID is not defined in Site Parameters. recUploadsFolderId='.$recUploadsFolderId);
         }

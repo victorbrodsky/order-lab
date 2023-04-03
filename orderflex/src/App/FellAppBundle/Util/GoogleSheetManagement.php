@@ -1675,5 +1675,39 @@ class GoogleSheetManagement {
         return $file;
     }
 
+    function getGoogleConfigParameter( $parameterName ) {
+        $configs = $this->em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
+
+        $config = null;
+
+        if( count($configs) == 0 ) {
+            return null;
+        }
+
+        if( count($configs) > 1 ) {
+            $logger = $this->container->get('logger');
+            $msg = 'Must have only one Google config object. Found '.count($configs).' object(s).';
+            $logger->error($msg);
+            exit($msg);
+            //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+        }
+
+        if( count($configs) > 0 ) {
+            $config = $configs[0];
+        }
+
+        if( $config == null ) {
+            return null;
+        }
+
+        if( $parameterName == null ) {
+            return $config;
+        }
+
+        $getSettingMethod = "get".$parameterName;
+
+        return $config->$getSettingMethod();
+    }
+
 }
 

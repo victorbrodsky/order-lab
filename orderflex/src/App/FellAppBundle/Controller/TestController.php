@@ -87,7 +87,8 @@ class TestController extends OrderAbstractController
 //        if( !$folderIdFellAppId ) {
 //            exit('Google Drive Folder ID is not defined in Site Parameters. configFileFolderIdFellApp='.$folderIdFellAppId);
 //        }
-        $recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        //$recSpreadsheetFolderId = $userSecUtil->getSiteSettingParameter('recSpreadsheetFolderId');
+        $recSpreadsheetFolderId = $googlesheetmanagement->getGoogleConfigParameter('recSpreadsheetFolderId');
         if( !$recSpreadsheetFolderId ) {
             exit('Google Drive Folder ID is not defined in Site Parameters. recSpreadsheetFolderId='.$recSpreadsheetFolderId);
         }
@@ -99,7 +100,8 @@ class TestController extends OrderAbstractController
         echo "files count=".count($files)."<br>";
 
 
-        $recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        //$recUploadsFolderId = $userSecUtil->getSiteSettingParameter('recUploadsFolderId');
+        $recUploadsFolderId = $googlesheetmanagement->getGoogleConfigParameter('recUploadsFolderId');
         if( !$recUploadsFolderId ) {
             exit('Google Drive Folder ID is not defined in Site Parameters. recUploadsFolderId='.$recUploadsFolderId);
         }

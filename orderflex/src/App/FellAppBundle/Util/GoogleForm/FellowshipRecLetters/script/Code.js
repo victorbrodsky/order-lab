@@ -12,6 +12,11 @@
 //7) Choose Code.gs and click Run
 //8) Review Permission => Allow
 
+//Test url:
+//https://script.google.com/a/macros/pathologysystems.org/s/AKfycbznfC7-ZJTs713_JvYjRsxpkJbXbYxFEPZqBpjuzqI/dev?Reference-Letter-ID=a64281915ee59c867f2a9780184604484c18a184&Identification=wcmpathdev&Applicant-First-Name=Test&Applicant-Last-Name=Test&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2025&Fellowship-End-Date=06/30/2026&Reference-First-Name=rec1&Reference-Last-Name=rec1&Reference-Degree=&Reference-Title=&Reference-Institution=&Reference-Phone=&Reference-EMail=cinava@yahoo.com
+//Head url:
+//https://script.google.com/a/macros/pathologysystems.org/s/AKfycbznfC7-ZJTs713_JvYjRsxpkJbXbYxFEPZqBpjuzqI/dev?Reference-Letter-ID=a64281915ee59c867f2a9780184604484c18a184&Identification=wcmpathdev&Applicant-First-Name=Test&Applicant-Last-Name=Test&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2025&Fellowship-End-Date=06/30/2026&Reference-First-Name=rec1&Reference-Last-Name=rec1&Reference-Degree=&Reference-Title=&Reference-Institution=&Reference-Phone=&Reference-EMail=cinava@yahoo.com
+
 var _colIndexNameMapArray = {};
 var _uniqueId = null;
 
@@ -132,11 +137,26 @@ function doGet(request) {
   return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+function initConfig() {
+  _AcceptingSubmissions = getConfigParameters("letterAcceptingSubmission");
+  _adminemail = getConfigParameters("adminEmail");
+  _useremail = getConfigParameters("fellappAdminEmail");
+  _exceptionAccount = getConfigParameters("letterExceptionAccount");
+
+  _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
+  _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
+
+  _recTemplateFileId = getConfigParameters("recTemplateFileId");
+  _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
+  //Logger.log('initConfig: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
+}
 
 function uploadFilesLetter(form) {  
-  Logger.log('uploadFilesLetter...');
+  //Logger.log('uploadFilesLetter...');
   
-  
+  //init global variables here from JSON config
+  //doGet does not set the script global variables
+  initConfig();
   
   //2 submit letter
   var blob = form.recommendationLetter;
@@ -222,7 +242,7 @@ function setNewBlobName(formObject,blob,fileType) {
 //instituteIdentification-RecLetterHash_TimeStamp
 function createUniqueId(formObject) {
 
-  Logger.log('start createUniqueId');
+  //Logger.log('start createUniqueId');
 
   if( _uniqueId ) {
      return _uniqueId;
@@ -235,7 +255,7 @@ function createUniqueId(formObject) {
   var instituteIdentification = Trim(formObject.instituteIdentification);
   
   if( !_formCreationTimeStamp || _formCreationTimeStamp == null || _formCreationTimeStamp == "" ) {
-     Logger.log('_formCreationTimeStamp is invalid, _formCreationTimeStamp='+_formCreationTimeStamp);
+     //Logger.log('_formCreationTimeStamp is invalid, _formCreationTimeStamp='+_formCreationTimeStamp);
      _formCreationTimeStamp = getCurrentTimestamp();
      CacheService.getPrivateCache().put('_formCreationTimeStamp', _formCreationTimeStamp,21600); //expirationInSeconds 21600 sec=>6 hours
   }
@@ -303,24 +323,24 @@ function getColIndexByName(name) {
 //use second row in spreadsheet to hold field labels (we need them to print report)
 function processForm(formObject) {
   //throw new Error("start processForm");
-  Logger.log("start processForm");
+  //Logger.log("start processForm");
   validateFormFields(formObject);
-  Logger.log("processForm: after validateFormFields");
+  //Logger.log("processForm: after validateFormFields");
   
   //set Unique ID based on email_lastname_firstname_timestamp
   //var uniqueId = email+lastName+"_"+firstName+"_"+"_"+timestamp;
   var uniqueId = createUniqueId(formObject);
-  Logger.log("processForm: after createUniqueId, uniqueId="+uniqueId);
+  //Logger.log("processForm: after createUniqueId, uniqueId="+uniqueId);
     
   var sheet = getSheetFromSingleTruthSource(uniqueId);
-  Logger.log("processForm: after getSheetFromSingleTruthSource");
+  //Logger.log("processForm: after getSheetFromSingleTruthSource");
   
   //create mapping array with header=index
   _colIndexNameMapArray = getColIndexNameMapArray(sheet);
   
   var lastRow = sheet.getLastRow();
   var maxColumn = sheet.getLastColumn();
-  Logger.log("maxColumn="+maxColumn);
+  //Logger.log("maxColumn="+maxColumn);
   
   var timestamp = _formCreationTimeStamp;
   
@@ -352,7 +372,7 @@ function processForm(formObject) {
     if( value != "" ) {    
         var rowHeader = 1;  //use first row in spreadsheet to hold names of the form (must be exact as in the form's field name)
         var col = getColIndexByName(fieldName);
-        Logger.log("fieldName="+fieldName+", col="+col);  
+        //Logger.log("fieldName="+fieldName+", col="+col);
         
         if( col > 0 ) {
           var cell = sheet.getRange(lastRow+1,col);
@@ -375,7 +395,7 @@ function processForm(formObject) {
   //var targetRange = sheet.getRange(lastRow+1, 1, 1, 4).setValues( [[timestamp,lastName,firstName,uploadedPhotoUrl]] );
       
   var email = Trim(formObject.email);
-  Logger.log('email='+email);
+  //Logger.log('email='+email);
   //formSendConfirmationEmail(email,uniqueId);  
   
   //create blob of attachments
@@ -384,7 +404,7 @@ function processForm(formObject) {
   //Logger.log('before htmlToPDFandEmail');
   htmlToPDFandEmail(htmlData,blobArr,email,uniqueId);
   
-  Logger.log('return uniqueId='+uniqueId);
+  //Logger.log('return uniqueId='+uniqueId);
   return uniqueId;
   
 }
@@ -421,7 +441,7 @@ function validateFormFields(formObject) {
 function getSheetFromSingleTruthSource(uniqueId) {
 
     //doGet has _recSpreadsheetFolderId, but here _recSpreadsheetFolderId is null
-    Logger.log('start getSheetFromSingleTruthSource, uniqueId='+uniqueId+"; _recSpreadsheetFolderId="+_recSpreadsheetFolderId);
+    //Logger.log('start getSheetFromSingleTruthSource, uniqueId='+uniqueId+"; _recSpreadsheetFolderId="+_recSpreadsheetFolderId);
 
     var sheet = null;
 
@@ -430,8 +450,8 @@ function getSheetFromSingleTruthSource(uniqueId) {
       var recSpreadsheetFolder = DriveApp.getFolderById(_recSpreadsheetFolderId);
     } catch(e) {
         MailApp.sendEmail(
-            //_useremail + "," + _adminemail,
-            _useremail,
+            _useremail + "," + _adminemail,
+            //_useremail, //testing
             "Google Drive failed to find the Spreadsheet folder",
             "Google Drive failed to find the Spreadsheet folder by id=" + _recSpreadsheetFolderId
             + ". Error=" + e.message
@@ -449,11 +469,11 @@ function getSheetFromSingleTruthSource(uniqueId) {
       
     } catch(e) {
     
-      Logger.log('copy error catch='+e.message);
+      //Logger.log('copy error catch='+e.message);
     
       //2) get backup
       sheet = SpreadsheetApp.openById(_recBackupTemplateFileId).getActiveSheet();
-      Logger.log('backup sheet='+_recBackupTemplateFileId);
+      //Logger.log('backup sheet='+_recBackupTemplateFileId);
       
       //_useremail,_adminemail
       MailApp.sendEmail(
