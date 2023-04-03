@@ -424,7 +424,7 @@ class GoogleSheetManagementV2 {
     //1)  Import sheets from Google Drive
     //1a)   import all sheets from Google Drive folder
     //1b)   add successefull downloaded sheets to DataFile DB object with status "active"
-    public function getConfigOnGoogleDrive( $configFileName='config.json' ) {
+    public function getConfigOnGoogleDrive( $configFileName='config-fellapp.json' ) {
 
         if( $this->security->isGranted('ROLE_FELLAPP_ADMIN') === false ) {
             //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
