@@ -15,7 +15,7 @@
 //Test url:
 //https://script.google.com/a/macros/pathologysystems.org/s/AKfycbznfC7-ZJTs713_JvYjRsxpkJbXbYxFEPZqBpjuzqI/dev?Reference-Letter-ID=a64281915ee59c867f2a9780184604484c18a184&Identification=wcmpathdev&Applicant-First-Name=Test&Applicant-Last-Name=Test&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2025&Fellowship-End-Date=06/30/2026&Reference-First-Name=rec1&Reference-Last-Name=rec1&Reference-Degree=&Reference-Title=&Reference-Institution=&Reference-Phone=&Reference-EMail=cinava@yahoo.com
 //Head url:
-//https://script.google.com/a/macros/pathologysystems.org/s/AKfycbznfC7-ZJTs713_JvYjRsxpkJbXbYxFEPZqBpjuzqI/dev?Reference-Letter-ID=a64281915ee59c867f2a9780184604484c18a184&Identification=wcmpathdev&Applicant-First-Name=Test&Applicant-Last-Name=Test&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2025&Fellowship-End-Date=06/30/2026&Reference-First-Name=rec1&Reference-Last-Name=rec1&Reference-Degree=&Reference-Title=&Reference-Institution=&Reference-Phone=&Reference-EMail=cinava@yahoo.com
+//https://script.google.com/macros/s/AKfycbznfC7-ZJTs713_JvYjRsxpkJbXbYxFEPZqBpjuzqI/exec?Reference-Letter-ID=a64281915ee59c867f2a9780184604484c18a184&Identification=wcmpathdev&Applicant-First-Name=Test&Applicant-Last-Name=Test&Applicant-E-Mail=cinava@yahoo.com&Fellowship-Type=Clinical%20Informatics&Fellowship-Start-Date=07/01/2025&Fellowship-End-Date=06/30/2026&Reference-First-Name=rec1&Reference-Last-Name=rec1&Reference-Degree=&Reference-Title=&Reference-Institution=&Reference-Phone=&Reference-EMail=cinava@yahoo.com
 
 var _colIndexNameMapArray = {};
 var _uniqueId = null;
@@ -43,7 +43,7 @@ var _AcceptingSubmissions = true;
 //var _AcceptingSubmissions = false; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
 var _fullValidation = true;
-var _useremail = 'cinava@yahoo.com';
+//var _useremail = 'cinava@yahoo.com';
 
 function doGet(request) {   
 
@@ -57,7 +57,7 @@ function doGet(request) {
 
   _recTemplateFileId = getConfigParameters("recTemplateFileId");
   _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
-  Logger.log('doGet: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
+  //Logger.log('doGet: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
 
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
