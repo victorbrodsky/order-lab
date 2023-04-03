@@ -135,6 +135,23 @@
         {{ formmacros.field(form.signatureStatement) }}
     {% endif %}
 
+
+    <div class="well">
+        <h3>Fellowship Applications Settings</h3>
+        {% if form.felSpreadsheetFolderId is defined %}
+            {{ formmacros.field(form.felSpreadsheetFolderId) }}
+        {% endif %}
+        {% if form.felUploadsFolderId is defined %}
+            {{ formmacros.field(form.felUploadsFolderId) }}
+        {% endif %}
+        {% if form.felTemplateFileId is defined %}
+            {{ formmacros.field(form.felTemplateFileId) }}
+        {% endif %}
+        {% if form.felBackupTemplateFileId is defined %}
+            {{ formmacros.field(form.felBackupTemplateFileId) }}
+        {% endif %}
+    </div>
+
     <div class="well">
     <h3>Recommendation Letter Settings</h3>
     {% if form.recSpreadsheetFolderId is defined %}
@@ -150,6 +167,8 @@
         {{ formmacros.field(form.recBackupTemplateFileId) }}
     {% endif %}
     </div>
+
+
 
 
     <br>

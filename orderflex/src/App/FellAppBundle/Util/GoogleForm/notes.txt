@@ -117,3 +117,9 @@ replaced by $folderIdRecSpreadsheet and $folderIdRecUploads
 
 3) new $fellappRecLetterUrl (GoogleFormConfig) - the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
 add to html edit
+
+4) felSpreadsheetFolderId, felUploadsFolderId, felTemplateFileId, felBackupTemplateFileId
+backupFileIdFellApp => felBackupTemplateFileId
+templateIdFellApp => felTemplateFileId (nothing to do)
+folderIdFellApp => felSpreadsheetFolderId (nothing to do)
+

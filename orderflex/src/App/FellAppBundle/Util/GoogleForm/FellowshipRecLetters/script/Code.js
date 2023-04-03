@@ -181,8 +181,8 @@ function uploadFile(form,blob) {
     if( !recUploadsFolder ) {
       MailApp.sendEmail(
           _useremail+","+_adminemail,
-          "Google Drive failed to find the Upload folder by id="+_recUploadsFolderId,
-          "Google Drive failed to find the Upload folder by id="+_recUploadsFolderId
+          "Google Drive failed to find the Recommendation Letter Upload folder by id="+_recUploadsFolderId,
+          "Google Drive failed to find the Recommendation Letter Upload folder by id="+_recUploadsFolderId
       );
     }
 

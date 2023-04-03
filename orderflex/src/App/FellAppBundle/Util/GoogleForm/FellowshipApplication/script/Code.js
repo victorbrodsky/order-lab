@@ -16,22 +16,29 @@
 
 
 
-var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
-var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
+//var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
+//var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
 //Destination forlder: ID of the folder where a newly created copy of template spreadsheet will be placed (Spreadsheets).
-var _destinationFolder = '1jHjrjBDXKmHXKWfGjkTCjDDPQU3l-Luz'; //folder where the response spreadsheets (forms) are saved;
+//var _destinationFolder = '1jHjrjBDXKmHXKWfGjkTCjDDPQU3l-Luz'; //folder where the response spreadsheets (forms) are saved;
 //Unique folder name where uploaded files will be placed.
-var _dropbox = "FellowshipApplicantUploads"; //name of the upload folder. Must be unique on the Google Drive!
+//var _dropbox = "FellowshipApplicantUploads"; //name of the upload folder. Must be unique on the Google Drive!
 //var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
+
+
+var _felSpreadsheetFolderId = null;
+var _felUploadsFolderId = null;
+var _felTemplateFileId = null;
+var _felBackupTemplateFileId = null;
+
 
 var _colIndexNameMapArray = {}; 
 var _uniqueId = null;
 
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
-var _adminemail = 'oli2002@med.cornell.edu'; //adminEmail
-var _useremail = 'WCMPathPrgm@med.cornell.edu'; //fellappAdminEmail
-var _exceptionAccount = "olegivanov@pathologysystems.org";
+var _adminemail = null; //'oli2002@med.cornell.edu'; //adminEmail
+var _useremail = null; //'WCMPathPrgm@med.cornell.edu'; //fellappAdminEmail
+var _exceptionAccount = null; //"olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
 var _fullValidation = true;
@@ -44,7 +51,6 @@ var _applicationFormNote = null;
 //var _useremail = 'cinava@yahoo.com';
 //EOF Maintenance flag
 
-//var _fileUrl;
 
 var _FellowshipTypes = [];   
 var _FellowshipVisaStatuses = [];
@@ -111,7 +117,8 @@ function doGet(request) {
   //Logger.log('url='+ScriptApp.getService().getUrl());
   
   //return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME);
-  return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  //return template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 function doGet_out(request) {  
@@ -126,6 +133,33 @@ function doGet_out(request) {
   //Logger.log('content='+content);  
   
   return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
+}
+
+
+function initConfig() {
+  if( _adminemail == null ) {
+    _adminemail = getConfigParameters("adminEmail");
+  }
+  if( _useremail == null ) {
+    _useremail = getConfigParameters("fellappAdminEmail");
+  }
+  if( _exceptionAccount == null ) {
+    _exceptionAccount = getConfigParameters("letterExceptionAccount");
+  }
+
+  if( _felSpreadsheetFolderId == null ) {
+    _felSpreadsheetFolderId = getConfigParameters("felSpreadsheetFolderId");
+  }
+  if( _felUploadsFolderId == null ) {
+    _felUploadsFolderId = getConfigParameters("felUploadsFolderId");
+  }
+
+  if( _felTemplateFileId == null ) {
+    _felTemplateFileId = getConfigParameters("felTemplateFileId");
+  }
+  if( _felBackupTemplateFileId == null ) {
+    _felBackupTemplateFileId = getConfigParameters("felBackupTemplateFileId");
+  }
 }
 
 
@@ -262,13 +296,11 @@ function getSheetFromSingleTruthSource(uniqueId) {
 
     var sheet = null;
 
-    //var templateSheet = SpreadsheetApp.openById(_templateSSKey).getActiveSheet(); 
-    var destinationFolder = DriveApp.getFolderById(_destinationFolder); 
+    var destinationFolder = DriveApp.getFolderById(_felSpreadsheetFolderId);
     
     try {
-      //_templateSSKey= "testing!!!";
       //1) make a copy from template
-      var copyFile = DriveApp.getFileById(_templateSSKey).makeCopy(uniqueId, destinationFolder);
+      var copyFile = DriveApp.getFileById(_felTemplateFileId).makeCopy(uniqueId, destinationFolder);
       //Logger.log('copy speadsheet='+copyFile.getId());
       sheet = SpreadsheetApp.openById(copyFile.getId()).getActiveSheet(); 
       //sheet = copyFile.getActiveSheet(); 
@@ -279,8 +311,8 @@ function getSheetFromSingleTruthSource(uniqueId) {
       Logger.log('copy error catch='+e.message);
     
       //2) get backup
-      sheet = SpreadsheetApp.openById(_backupSSKey).getActiveSheet(); 
-      Logger.log('backup sheet='+_backupSSKey);
+      sheet = SpreadsheetApp.openById(_felBackupTemplateFileId).getActiveSheet();
+      Logger.log('backup sheet='+_felBackupTemplateFileId);
       
       //_useremail,_adminemail
       MailApp.sendEmail(
@@ -288,7 +320,7 @@ function getSheetFromSingleTruthSource(uniqueId) {
         "Google Drive failed to make a new copy from template", 
         "Google Drive failed to make a new copy from template for applicant=" + uniqueId + 
         ". Error=" + e.message +
-        ". The application has been wtitten to a backup sheet with ID=" + _backupSSKey
+        ". The application has been wtitten to a backup sheet with ID=" + _felBackupTemplateFileId
       );
       
     }
@@ -706,8 +738,8 @@ function checkIfValueDigit( value ) {
 
 
 //Uploads
-function uploadFilesPhoto(form) {  
-  var blob = form.applicantPhoto;   
+function uploadFilesPhoto(form) {
+  var blob = form.applicantPhoto;
   blob = setNewBlobName(form,blob,"Photo"); 
   return uploadFile(form,blob);  
 }
@@ -751,34 +783,24 @@ function uploadFile(form,blob) {
     
   try {
           
-    var folder, folders = DriveApp.getFoldersByName(_dropbox);
-    
-    //TODO: check if the parent is the correct (now the parent is "Responses"). Otherwise the name should be unique.
-    if (folders.hasNext()) {
-      folder = folders.next();
-    } else {
-      folder = DriveApp.createFolder(_dropbox);
-    }
-       
+    //var folder, folders = DriveApp.getFoldersByName(_dropbox);
+    // //TODO: check if the parent is the correct (now the parent is "Responses"). Otherwise the name should be unique.
+    // if (folders.hasNext()) {
+    //   folder = folders.next();
+    // } else {
+    //   folder = DriveApp.createFolder(_dropbox);
+    // }
 
-    //TODO: check file size   
+    var felUploadsFolder = DriveApp.getFolderById(_felUploadsFolderId);
+    if( !felUploadsFolder ) {
+      MailApp.sendEmail(
+          _useremail+","+_adminemail,
+          "Google Drive failed to find the Fellowship Application Upload folder by id="+_felUploadsFolderId,
+          "Google Drive failed to find the Fellowship Application Upload folder by id="+_felUploadsFolderId
+      );
+    }
     
-    //var lastname = document.getElementById('textbox_id').value
-    //console.log('lastname='+lastname);
-            
-    //var oldBlobName = blob.getName();
-    //Logger.log('oldBlobName='+oldBlobName);   
-    //Logger.log('upload _formCreationTimeStamp='+_formCreationTimeStamp);
-    //var uniqueId = createUniqueId(form);
-    //Logger.log('uniqueId='+uniqueId);    
-    //blob.setName(uniqueId+"_"+oldBlobName);
-          
-    // Create an image file in Google Drive using the Maps service.
-    //var blobTest = Maps.newStaticMap().setCenter('76 9th Avenue, New York NY').getBlob();
-    //folder.createFile(blobTest);           
-    //var blob = form.name;    
-    
-    var file = folder.createFile(blob); 
+    var file = felUploadsFolder.createFile(blob);
                    
     file.setDescription("Uploaded by " + form.firstName + " " + form.lastName);   
                

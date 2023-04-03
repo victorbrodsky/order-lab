@@ -567,6 +567,7 @@ class SiteParameters {
     private $userImpersonateEmailFellApp;
 
     /**
+     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
      * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
      *
      * @ORM\Column(type="text", nullable=true)
@@ -574,6 +575,7 @@ class SiteParameters {
     private $templateIdFellApp;
 
     /**
+     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
      * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
      *
      * @ORM\Column(type="text", nullable=true)
@@ -581,6 +583,7 @@ class SiteParameters {
     private $backupFileIdFellApp;
 
     /**
+     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
      * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
      * where the response spreadsheets (response forms) are saved
      *

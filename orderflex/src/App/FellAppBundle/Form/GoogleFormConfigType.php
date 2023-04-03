@@ -208,6 +208,31 @@ class GoogleFormConfigType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        //Fellowship Applications files and folders
+        $builder->add('felSpreadsheetFolderId', null, array(
+            'label' => "Google folder ID for fellowship application Spreadsheet:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('felUploadsFolderId', null, array(
+            'label' => "Google folder ID for fellowship application upload:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('felTemplateFileId', null, array(
+            'label' => "Google file ID for the Spreadsheet Template for the fellowship application:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('felBackupTemplateFileId', null, array(
+            'label' => "Google file ID for the Backup Spreadsheet Template for the fellowship application:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

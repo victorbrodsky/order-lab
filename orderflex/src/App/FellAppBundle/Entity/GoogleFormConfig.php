@@ -209,7 +209,35 @@ class GoogleFormConfig {
     //////////// EOF Recommendation Letter script parameters /////////////////////
 
 
+    //////////// Fellowship Application script parameters /////////////////////
+    /**
+     * felSpreadsheetFolderId - Google folder ID for fellowship application Spreadsheet
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $felSpreadsheetFolderId;
 
+    /**
+     * felUploadsFolderId - Google folder ID for fellowship application upload
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $felUploadsFolderId;
+
+    /**
+     * felTemplateFileId - Google file ID for the Spreadsheet Template for the fellowship application
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $felTemplateFileId;
+
+    /**
+     * felBackupTemplateFileId - Google file ID for the Backup Spreadsheet Template for the fellowship application
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $felBackupTemplateFileId;
+    //////////// EOF Fellowship Application script parameters /////////////////////
 
 
     
@@ -604,6 +632,70 @@ class GoogleFormConfig {
     public function setRecBackupTemplateFileId($recBackupTemplateFileId)
     {
         $this->recBackupTemplateFileId = $recBackupTemplateFileId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFelSpreadsheetFolderId()
+    {
+        return $this->felSpreadsheetFolderId;
+    }
+
+    /**
+     * @param mixed $felSpreadsheetFolderId
+     */
+    public function setFelSpreadsheetFolderId($felSpreadsheetFolderId)
+    {
+        $this->felSpreadsheetFolderId = $felSpreadsheetFolderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFelUploadsFolderId()
+    {
+        return $this->felUploadsFolderId;
+    }
+
+    /**
+     * @param mixed $felUploadsFolderId
+     */
+    public function setFelUploadsFolderId($felUploadsFolderId)
+    {
+        $this->felUploadsFolderId = $felUploadsFolderId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFelTemplateFileId()
+    {
+        return $this->felTemplateFileId;
+    }
+
+    /**
+     * @param mixed $felTemplateFileId
+     */
+    public function setFelTemplateFileId($felTemplateFileId)
+    {
+        $this->felTemplateFileId = $felTemplateFileId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFelBackupTemplateFileId()
+    {
+        return $this->felBackupTemplateFileId;
+    }
+
+    /**
+     * @param mixed $felBackupTemplateFileId
+     */
+    public function setFelBackupTemplateFileId($felBackupTemplateFileId)
+    {
+        $this->felBackupTemplateFileId = $felBackupTemplateFileId;
     }
 
 

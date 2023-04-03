@@ -343,13 +343,17 @@ class FellAppImportPopulateUtil {
 
         //echo "service ok <br>";
 
-        $folderIdFellApp = $userSecUtil->getSiteSettingParameter('folderIdFellApp');
-        if( !$folderIdFellApp ) {
-            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$folderIdFellApp);
+//        $folderIdFellApp = $userSecUtil->getSiteSettingParameter('folderIdFellApp');
+//        if( !$folderIdFellApp ) {
+//            $logger->warning('Google Drive Folder ID is not defined in Site Parameters. sourceFolderIdFellApp='.$folderIdFellApp);
+//        }
+        $felSpreadsheetFolderId = $googlesheetmanagement->getGoogleConfigParameter('felSpreadsheetFolderId');
+        if( !$felSpreadsheetFolderId ) {
+            $logger->warning('Google Drive Folder ID is not defined in Google Form Config. felSpreadsheetFolderId='.$felSpreadsheetFolderId);
         }
 
         //get all files in google folder
-        $filesGoogleDrive = $this->processFilesInFolder($folderIdFellApp,$service,"Fellowship Application Spreadsheet",$testing,$limit);
+        $filesGoogleDrive = $this->processFilesInFolder($felSpreadsheetFolderId,$service,"Fellowship Application Spreadsheet",$testing,$limit);
 
         $logger->notice("Processed " . count($filesGoogleDrive) . " files with applicant data from Google Drive");
 
@@ -566,16 +570,17 @@ class FellAppImportPopulateUtil {
         //return 0;
 
         $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $service = $googlesheetmanagement->getGoogleService();
 
-        $backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+        //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+        $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter('felBackupTemplateFileId');
         if( !$backupFileIdFellApp ) {
-            $logger->error("Import is not proceed because the backupFileIdFellApp parameter is not set.");
+            $logger->error("Import is not proceed because the felBackupTemplateFileId parameter is not set.");
             return 0;
         }
 
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-        $service = $googlesheetmanagement->getGoogleService();
         if( !$service ) {
             $event = "Google API service failed!";
             $logger->error($event);
@@ -1869,7 +1874,8 @@ class FellAppImportPopulateUtil {
                     $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
                     if( $deleteImportedAplicationsFellApp ) {
 
-                        $backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+                        //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+                        $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter('felBackupTemplateFileId');
                         if( $backupFileIdFellApp ) {
                             $googleSheetManagement = $this->container->get('fellapp_googlesheetmanagement');
                             $rowId = $fellowshipApplication->getGoogleFormId();
