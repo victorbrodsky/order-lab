@@ -244,6 +244,11 @@ class GoogleFormConfigController extends OrderAbstractController
         //signatureStatement:
         $configJson['signatureStatement'] = $entity->getSignatureStatement();
 
+        $configJson['felSpreadsheetFolderId'] = $entity->getFelSpreadsheetFolderId();
+        $configJson['felUploadsFolderId'] = $entity->getFelUploadsFolderId();
+        $configJson['felTemplateFileId'] = $entity->getFelTemplateFileId();
+        $configJson['felBackupTemplateFileId'] = $entity->getFelBackupTemplateFileId();
+
         $configJson['recSpreadsheetFolderId'] = $entity->getRecSpreadsheetFolderId();
         $configJson['recUploadsFolderId'] = $entity->getRecUploadsFolderId();
         $configJson['recTemplateFileId'] = $entity->getRecTemplateFileId();

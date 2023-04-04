@@ -67,9 +67,11 @@ function doGet(request) {
   //Logger.log(_FellowshipTypes);
   //dssrrs.gsgs;
 
-  _adminemail = getConfigParameters("adminEmail");
-  _useremail = getConfigParameters("fellappAdminEmail");
-  _exceptionAccount = getConfigParameters("exceptionAccount");
+  //_adminemail = getConfigParameters("adminEmail");
+  //_useremail = getConfigParameters("fellappAdminEmail");
+  //_exceptionAccount = getConfigParameters("exceptionAccount");
+
+  initConfig();
 
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
@@ -137,6 +139,7 @@ function doGet_out(request) {
 
 
 function initConfig() {
+  Logger.log('initConfig starting');
   if( _adminemail == null ) {
     _adminemail = getConfigParameters("adminEmail");
   }
@@ -160,6 +163,7 @@ function initConfig() {
   if( _felBackupTemplateFileId == null ) {
     _felBackupTemplateFileId = getConfigParameters("felBackupTemplateFileId");
   }
+  Logger.log('initConfig: _felUploadsFolderId='+_felUploadsFolderId);
 }
 
 
@@ -744,7 +748,7 @@ function uploadFilesPhoto(form) {
   return uploadFile(form,blob);  
 }
 
-function uploadFilesCV(form) {  
+function uploadFilesCV(form) {
   var blob = form.curriculumVitae;
   blob = setNewBlobName(form,blob,"CV");
   return uploadFile(form,blob);  
@@ -814,6 +818,7 @@ function uploadFile(form,blob) {
 }
 
 function setNewBlobName(formObject,blob,fileType) {
+    //initConfig(); //make sure re-init
     var oldBlobName = blob.getName();
     var uniqueId = createUniqueId(formObject);
     //Logger.log('oldBlobName='+oldBlobName);
