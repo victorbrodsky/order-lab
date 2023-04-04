@@ -142,8 +142,8 @@ class RecLetterUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
 
-        //$forceSend = true;
         $forceSend = false;
+        //$forceSend = true;
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $forceSend == false && $environment != "live" ) {
             $msg = "Server is not live: invitation email will not be send to reference ".$reference->getFullName();

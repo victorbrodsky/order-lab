@@ -73,6 +73,10 @@ function doGet(request) {
 
   initConfig();
 
+  if( checkConfig() == false ) {
+    _AcceptingSubmissions = false;
+  }
+
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
   //PropertiesService.getScriptProperties().setProperty('_formCreationTimeStamp', getCurrentTimestamp());
@@ -85,7 +89,7 @@ function doGet(request) {
     if( curUser == _exceptionAccount ) { //"olegivanov@pathologysystems.org"
         _AcceptingSubmissions = true;
     }  
-  } 
+  }
       
   if( _AcceptingSubmissions ) {    
      var template = HtmlService.createTemplateFromFile('Form.html');
@@ -139,7 +143,7 @@ function doGet_out(request) {
 
 
 function initConfig() {
-  Logger.log('initConfig starting');
+  //Logger.log('initConfig starting');
   if( _adminemail == null ) {
     _adminemail = getConfigParameters("adminEmail");
   }
@@ -163,9 +167,36 @@ function initConfig() {
   if( _felBackupTemplateFileId == null ) {
     _felBackupTemplateFileId = getConfigParameters("felBackupTemplateFileId");
   }
-  Logger.log('initConfig: _felUploadsFolderId='+_felUploadsFolderId);
+  //Logger.log('initConfig: _felUploadsFolderId='+_felUploadsFolderId);
 }
 
+function checkConfig() {
+    //Logger.log('initConfig starting');
+    if( _adminemail == null ) {
+      return false;
+    }
+    if( _useremail == null ) {
+      return false;
+    }
+    if( _exceptionAccount == null ) {
+      return false;
+    }
+
+    if( _felSpreadsheetFolderId == null ) {
+      return false;
+    }
+    if( _felUploadsFolderId == null ) {
+      return false;
+    }
+
+    if( _felTemplateFileId == null ) {
+      return false;
+    }
+    if( _felBackupTemplateFileId == null ) {
+      return false;
+    }
+    return true;
+}
 
 function include(filename) {
   return HtmlService.createHtmlOutputFromFile(filename).getContent();
@@ -175,7 +206,10 @@ function include(filename) {
 //use first row in spreadsheet to hold names of the form (must be exact as in the form's field name)
 //use second row in spreadsheet to hold field labels (we need them to print report)
 function processForm(formObject) {
-  
+
+  initConfig(); //make sure re-init
+  //Logger.log("processForm _felSpreadsheetFolderId="+_felSpreadsheetFolderId+", _felTemplateFileId="+_felTemplateFileId+", _felBackupTemplateFileId="+_felBackupTemplateFileId);
+
   //var lastName = Trim(formObject.lastName);
   //var firstName = Trim(formObject.firstName);
   //var email = Trim(formObject.email);  
@@ -229,7 +263,7 @@ function processForm(formObject) {
     if( value != "" ) {    
         var rowHeader = 1;  //use first row in spreadsheet to hold names of the form (must be exact as in the form's field name)
         var col = getColIndexByName(fieldName);
-        Logger.log("fieldName="+fieldName+", col="+col);  
+        //Logger.log("fieldName="+fieldName+", col="+col);
         
         if( col > 0 ) {
           var cell = sheet.getRange(lastRow+1,col);
@@ -297,6 +331,7 @@ function processForm(formObject) {
 //1) make a copy of the sheet from template
 //2) if fails get a backup sheet
 function getSheetFromSingleTruthSource(uniqueId) {
+    //Logger.log("getSheetFromSingleTruthSource _felSpreadsheetFolderId="+_felSpreadsheetFolderId+", _felTemplateFileId="+_felTemplateFileId+", _felBackupTemplateFileId="+_felBackupTemplateFileId);
 
     var sheet = null;
 
@@ -783,7 +818,10 @@ function uploadFile(form,blob) {
     
   //Logger.log('upload blob='+blob);
   //Logger.log(blob);
-  //validateFormBeforeUpload(form);  
+  //validateFormBeforeUpload(form);
+
+  initConfig(); //make sure re-init
+  Logger.log('uploadFile: _felUploadsFolderId='+_felUploadsFolderId);
     
   try {
           
@@ -818,7 +856,6 @@ function uploadFile(form,blob) {
 }
 
 function setNewBlobName(formObject,blob,fileType) {
-    //initConfig(); //make sure re-init
     var oldBlobName = blob.getName();
     var uniqueId = createUniqueId(formObject);
     //Logger.log('oldBlobName='+oldBlobName);
@@ -934,6 +971,21 @@ function getConfigParameters(parameterKey) {
   }
   
   var parameter = configObject[parameterKey];
+
+  if( parameter == null ) {
+    if( _adminemail == null ) {
+      _adminemail = getConfigParameters("adminEmail");
+    }
+    if( _useremail == null ) {
+      _useremail = getConfigParameters("fellappAdminEmail");
+    }
+    //Logger.log("getConfigParameters: _useremail="+_useremail+", _adminemail="+_adminemail);
+    MailApp.sendEmail(
+        _useremail+","+_adminemail,
+        "Config file does not have parameter "+parameterKey,
+        "Config file does not have parameter "+parameterKey
+    );
+  }
 
   return parameter;
 }

@@ -123,3 +123,10 @@ backupFileIdFellApp => felBackupTemplateFileId
 templateIdFellApp => felTemplateFileId (nothing to do)
 folderIdFellApp => felSpreadsheetFolderId (nothing to do)
 
+
+<script>
+     const query = new URLSearchParams(window.location.search);
+     console.log("query="+query);
+     location.href = "https://script.google.com/macros/s/AKfycbzQeo29i4BVGbSHXnwAZ3DQsXs6jd9eCUhJ59Gj8dmRQ06QuRhArPVZ9ZGdXugAmF9X/exec?" + query.toString();
+</script>
+

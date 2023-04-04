@@ -48,16 +48,23 @@ var _fullValidation = true;
 function doGet(request) {   
 
   _AcceptingSubmissions = getConfigParameters("letterAcceptingSubmission");
-  _adminemail = getConfigParameters("adminEmail");
-  _useremail = getConfigParameters("fellappAdminEmail");
-  _exceptionAccount = getConfigParameters("letterExceptionAccount");
 
-  _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
-  _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
-
-  _recTemplateFileId = getConfigParameters("recTemplateFileId");
-  _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
+  // _adminemail = getConfigParameters("adminEmail");
+  // _useremail = getConfigParameters("fellappAdminEmail");
+  // _exceptionAccount = getConfigParameters("letterExceptionAccount");
+  //
+  // _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
+  // _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
+  //
+  // _recTemplateFileId = getConfigParameters("recTemplateFileId");
+  // _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
   //Logger.log('doGet: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
+
+  initConfig();
+
+  if( checkConfig() == false ) {
+    _AcceptingSubmissions = false;
+  }
 
   //PropertiesService.getScriptProperties().setProperty('_jstest', 'jstest!!!');
 
@@ -138,17 +145,54 @@ function doGet(request) {
 }
 
 function initConfig() {
-  _AcceptingSubmissions = getConfigParameters("letterAcceptingSubmission");
-  _adminemail = getConfigParameters("adminEmail");
-  _useremail = getConfigParameters("fellappAdminEmail");
-  _exceptionAccount = getConfigParameters("letterExceptionAccount");
-
-  _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
-  _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
-
-  _recTemplateFileId = getConfigParameters("recTemplateFileId");
-  _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
+  //_AcceptingSubmissions = getConfigParameters("letterAcceptingSubmission");
+  if( _adminemail == null ) {
+    _adminemail = getConfigParameters("adminEmail");
+  }
+  if( _useremail == null ) {
+    _useremail = getConfigParameters("fellappAdminEmail");
+  }
+  if( _exceptionAccount == null ) {
+    _exceptionAccount = getConfigParameters("letterExceptionAccount");
+  }
+  if( _recSpreadsheetFolderId == null ) {
+    _recSpreadsheetFolderId = getConfigParameters("recSpreadsheetFolderId");
+  }
+  if( _recUploadsFolderId == null ) {
+    _recUploadsFolderId = getConfigParameters("recUploadsFolderId");
+  }
+  if( _recTemplateFileId == null ) {
+    _recTemplateFileId = getConfigParameters("recTemplateFileId");
+  }
+  if( _recBackupTemplateFileId == null ) {
+    _recBackupTemplateFileId = getConfigParameters("recBackupTemplateFileId");
+  }
   //Logger.log('initConfig: _recSpreadsheetFolderId='+_recSpreadsheetFolderId);
+}
+
+function checkConfig() {
+  if( _adminemail == null ) {
+    return false;
+  }
+  if( _useremail == null ) {
+    return false;
+  }
+  if( _exceptionAccount == null ) {
+    return false;
+  }
+  if( _recSpreadsheetFolderId == null ) {
+    return false;
+  }
+  if( _recUploadsFolderId == null ) {
+    return false;
+  }
+  if( _recTemplateFileId == null ) {
+    return false;
+  }
+  if( _recBackupTemplateFileId == null ) {
+    return false;
+  }
+  return true;
 }
 
 function uploadFilesLetter(form) {  
@@ -581,6 +625,12 @@ function getConfigParameters(parameterKey) {
   var parameter = configObject[parameterKey];
 
   if( !parameter ) {
+    if( _adminemail == null ) {
+      _adminemail = getConfigParameters("adminEmail");
+    }
+    if( _useremail == null ) {
+      _useremail = getConfigParameters("fellappAdminEmail");
+    }
     MailApp.sendEmail(
         _useremail+","+_adminemail,
         "Config file does not have parameter "+parameterKey,
