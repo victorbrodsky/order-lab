@@ -5056,7 +5056,8 @@ class CallLogUtil
         $accessionParams = array();
         $accessionParams['accessiontype'] = $accessiontype;
         $accessionParams['accessionnumber'] = $accessionnumber;
-        $patientsDataStrict = $this->searchPatientByAccession($request, false, $accessionParams);
+        //$patientsDataStrict = $this->searchPatientByAccession($request, false, $accessionParams);
+        $patientsDataStrict = $this->searchPatientByAccession($request, $accessionParams, false);
         $patientsStrict = $patientsDataStrict['patients'];
 
         if (array_key_exists("accessionFound", $patientsDataStrict)) {
