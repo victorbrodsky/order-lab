@@ -33,16 +33,16 @@ var _recBackupTemplateFileId = null;
 //var _dropbox = "RecommendationLetterUploads"; //folder name where the recommendation letter will be uploaded. Must be unique on the Google Drive!
 //var _configFolderId = "0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
 
-var _adminemail = 'oli2002@med.cornell.edu';
-var _useremail = 'WCMPathPrgm@med.cornell.edu';
-var _exceptionAccount = "olegivanov@pathologysystems.org";
+var _adminemail = null; //'oli2002@med.cornell.edu';
+var _useremail = null; //'WCMPathPrgm@med.cornell.edu';
+var _exceptionAccount = null; //"olegivanov@pathologysystems.org";
 
 var _AcceptingSubmissions = true;
+var _fullValidation = true;
 
 //Maintenance flag (uncomment for maintenance)
 //var _AcceptingSubmissions = false; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
-var _fullValidation = true;
 //var _useremail = 'cinava@yahoo.com';
 
 function doGet(request) {   
@@ -550,11 +550,11 @@ function createUploadedFilesArr(formObject) {
 
 function htmlToPDFandEmail(htmlData,blobArr,email,uniqueId) {
   
-  Logger.log('htmlToPDFandEmail');      
+  //Logger.log('htmlToPDFandEmail');
   //Logger.log(htmlData);
     
   //////////// 1) send email to applicant ////////////
-  Logger.log('before sending confirmation email to reference');  
+  //Logger.log('before sending confirmation email to reference');
   var textHtml = "<p>Thank you for submitting the fellowship recommendation letter.</p>";
   MailApp.sendEmail(
     email, 
@@ -583,7 +583,7 @@ function htmlToPDFandEmail(htmlData,blobArr,email,uniqueId) {
   
   
   //////////// 2) send email to admin ////////////
-  Logger.log('before sending confirmation email to admin');  
+  //Logger.log('before sending confirmation email to admin');
   textHtml = "<p>The fellowship recommendation letter is submitted with unique ID " + uniqueId + ".</p>";
   MailApp.sendEmail(
     _useremail, 
@@ -592,7 +592,7 @@ function htmlToPDFandEmail(htmlData,blobArr,email,uniqueId) {
     {htmlBody: textHtml, attachments: blobArr, bcc: _adminemail });
   //////////// EOF 2) send email to admin ////////////
   
-  Logger.log('htmlToPDFandEmail finished');
+  //Logger.log('htmlToPDFandEmail finished');
 }
 
 function sortByKey(array, key) {
@@ -640,70 +640,4 @@ function getConfigParameters(parameterKey) {
 
   return parameter;
 }
-// function getConfigParameters_ORIG(parameterKey) {
-//   //var sheetname = "test";
-//   //var aUrl = "http://pipes.yahoo.com/pipes/pipe.run?_id=286bbb1d8d30f65b54173b3b752fa4d9&_render=json";
-//   //var aUrl = "https://drive.google.com/drive/u/0/folders/0B2FwyaXvFk1efmlPOEl6WWItcnBveVlDWWh6RTJxYzYyMlY2MjRSalRvUjdjdzMycmo5U3M";
-//
-//   //Get a reference to the folder
-//   var fldr = DriveApp.getFolderById(_configFolderId);
-//
-//   //Get all files by that name. Put return into a variable
-//   allFilesInFolder = fldr.getFilesByName("config.json");
-//   //Logger.log('allFilesInFolder: ' + allFilesInFolder);
-//
-//   if (allFilesInFolder.hasNext() === false) {
-//     //If no file is found, the user gave a non-existent file name
-//     return false;
-//   };
-//
-//   var configFile = null;
-//   //cntFiles = 0;
-//   //Even if it's only one file, must iterate a while loop in order to access the file.
-//   //Google drive will allow multiple files of the same name.
-//   while (allFilesInFolder.hasNext()) {
-//     //thisFile = allFilesInFolder.next();
-//     //cntFiles = cntFiles + 1;
-//     //Logger.log('File Count: ' + cntFiles);
-//
-//     //docContent = thisFile.getAs('application/json');
-//     //Logger.log('docContent : ' + docContent );
-//
-//
-//     // define a File object variable and set the Media Tyep
-//     var file = allFilesInFolder.next();
-//     configFile = file.getAs('application/json')
-//
-//     // log the contents of the file
-//     //Logger.log("configFile:");
-//     //Logger.log(configFile.getDataAsString());
-//
-//     //return configFile;
-//   };
-//
-//   //return NULL;
-//
-//   var configObject = JSON.parse(configFile.getDataAsString());
-//
-//   var parameter = configObject[parameterKey];
-//   //Logger.log("parameter:");
-//   //Logger.log(parameter);
-//
-//   return parameter;
-//
-//   _Status = configObject.status;
-//   _FellowshipTypes = configObject.fellowshiptypes;
-//   fellowshiptypeId = _FellowshipTypes[0].id;
-//   fellowshiptypeName = _FellowshipTypes[0].text;
-//   //Logger.log("_Status="+_Status);
-//   //Logger.log("fellowshiptypeId="+fellowshiptypeId);
-//   //Logger.log("fellowshiptypeName="+fellowshiptypeName);
-//   //Logger.log("fellowshipTypes:");
-//   //Logger.log(fellowshipTypes);
-//
-//   //_FellowshipTypes = fellowshipTypes;
-//
-//
-//
-//   return configFile;
-// }
+

@@ -831,6 +831,10 @@ class VacReqCalendarUtil
             return null;
         }
 
+        if( !$requestType ) {
+            return null;
+        }
+
         $institution = $vacreqRequest->getInstitution();
         $institutionId = null;
         if( $institution ) {

@@ -130,3 +130,25 @@ folderIdFellApp => felSpreadsheetFolderId (nothing to do)
      location.href = "https://script.google.com/macros/s/AKfycbzQeo29i4BVGbSHXnwAZ3DQsXs6jd9eCUhJ59Gj8dmRQ06QuRhArPVZ9ZGdXugAmF9X/exec?" + query.toString();
 </script>
 
+<script>
+    var loc1 = window.location.toString();
+     console.log("loc1="+loc1);
+     var loc2 = window.parent.location.toString();
+     console.log("loc2="+loc2);
+</script>
+
+<script>
+var url = getParentUrl();
+console.log("url="+url);
+function getParentUrl() {
+    var isInIframe = (parent !== window),
+        parentUrl = null;
+
+    if (isInIframe) {
+        parentUrl = document.referrer;
+    }
+
+    return parentUrl;
+}
+</script>
+
