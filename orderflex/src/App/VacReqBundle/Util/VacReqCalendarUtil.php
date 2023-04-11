@@ -827,11 +827,13 @@ class VacReqCalendarUtil
     public function getDaysDifferenceNote( $vacreqRequest )
     {
         $requestType = $vacreqRequest->getRequestType();
-        if ($requestType && $requestType->getAbbreviation() == "carryover") {
+
+        //floating day does not have request type and it does not have holiday note
+        if( !$requestType ) {
             return null;
         }
 
-        if( !$requestType ) {
+        if ($requestType && $requestType->getAbbreviation() == "carryover") {
             return null;
         }
 

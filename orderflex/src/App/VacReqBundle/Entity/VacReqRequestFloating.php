@@ -620,9 +620,9 @@ class VacReqRequestFloating
         return $requestName;
     }
 
-//    public function getRequestType() {
-//        return null;
-//    }
+    public function getRequestType() {
+        return null;
+    }
     public function getRequestTypeAbbreviation() {
         return "floatingday";
     }
