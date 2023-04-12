@@ -532,10 +532,10 @@ class SiteParameters {
      */
     private $confirmationBodyFellApp;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $confirmationEmailFellApp;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $confirmationEmailFellApp;
 
 //    /**
 //     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
@@ -668,12 +668,12 @@ class SiteParameters {
      */
     private $reportsUploadPathFellApp;
 
-    /**
-     * Link to the Application Page (so the users can click and see how it looks)
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $applicationPageLinkFellApp;
+//    /**
+//     * Link to the Application Page (so the users can click and see how it looks)
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $applicationPageLinkFellApp;
 
     ////////////////////// third party software //////////////////////////
     /**
@@ -2702,13 +2702,13 @@ class SiteParameters {
         $this->confirmationBodyFellApp = $confirmationBodyFellApp;
     }
 
-    public function getConfirmationEmailFellApp() {
-        return $this->confirmationEmailFellApp;
-    }
-
-    public function setConfirmationEmailFellApp($confirmationEmailFellApp) {
-        $this->confirmationEmailFellApp = $confirmationEmailFellApp;
-    }
+//    public function getConfirmationEmailFellApp() {
+//        return $this->confirmationEmailFellApp;
+//    }
+//
+//    public function setConfirmationEmailFellApp($confirmationEmailFellApp) {
+//        $this->confirmationEmailFellApp = $confirmationEmailFellApp;
+//    }
 
     /**
      * @param mixed $LISNameDevelopment
@@ -3095,21 +3095,21 @@ class SiteParameters {
         $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getApplicationPageLinkFellApp()
-    {
-        return $this->applicationPageLinkFellApp;
-    }
-
-    /**
-     * @param mixed $applicationPageLinkFellApp
-     */
-    public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
-    {
-        $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getApplicationPageLinkFellApp()
+//    {
+//        return $this->applicationPageLinkFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $applicationPageLinkFellApp
+//     */
+//    public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
+//    {
+//        $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
+//    }
 
     /**
      * @return mixed

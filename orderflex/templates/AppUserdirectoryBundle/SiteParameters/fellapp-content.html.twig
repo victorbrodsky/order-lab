@@ -90,11 +90,11 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'sendEmailUploadLetterFellApp'}) }}">Edit</a></td>
                     </tr>
 
-                    <tr>
-                        <td>Email address for confirmation of application submission</td>
-                        <td>{{ entity.confirmationEmailFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Email address for confirmation of application submission</td>#}
+                        {#<td>{{ entity.confirmationEmailFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     <tr>
                         <td>Email subject for confirmation of application submission</td>
@@ -109,13 +109,13 @@
                     </tr>
 
 
-                    <tr>
-                        <td>Link to the Application Page</td>
-                        <td class="rowlink-skip">
-                            <a href="{{ entity.applicationPageLinkFellApp }}" target="_blank">{{ entity.applicationPageLinkFellApp }}</a>
-                        </td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Link to the Application Page</td>#}
+                        {#<td class="rowlink-skip">#}
+                            {#<a href="{{ entity.applicationPageLinkFellApp }}" target="_blank">{{ entity.applicationPageLinkFellApp }}</a>#}
+                        {#</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     {#<tr>#}
                         {#<td>Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com)</td>#}

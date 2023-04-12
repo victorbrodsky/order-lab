@@ -252,7 +252,8 @@ class RecLetterUtil {
 
         $applicant = $fellapp->getUser();
 
-        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+        //$senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+        $senderEmail = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
 
         //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp'); //Pathology Fellowship Programs (WCMC)
         $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";

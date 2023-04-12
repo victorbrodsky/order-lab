@@ -82,10 +82,22 @@ class FellappSiteParameter {
      * @ORM\Column(type="text", nullable=true)
      */
     private $fellappRecLetterUrl;
+
+    /**
+     * Email address for confirmation of application submission
+     * 
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $confirmationEmailFellApp;
+
+    /**
+     * Link to the Application Page (so the users can click and see how it looks)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $applicationPageLinkFellApp;
     
-
-
-
+    
     
     
     public function __construct() {
@@ -220,6 +232,38 @@ class FellappSiteParameter {
     public function setFellappRecLetterUrl($fellappRecLetterUrl)
     {
         $this->fellappRecLetterUrl = $fellappRecLetterUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationEmailFellApp()
+    {
+        return $this->confirmationEmailFellApp;
+    }
+
+    /**
+     * @param mixed $confirmationEmailFellApp
+     */
+    public function setConfirmationEmailFellApp($confirmationEmailFellApp)
+    {
+        $this->confirmationEmailFellApp = $confirmationEmailFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationPageLinkFellApp()
+    {
+        return $this->applicationPageLinkFellApp;
+    }
+
+    /**
+     * @param mixed $applicationPageLinkFellApp
+     */
+    public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
+    {
+        $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
     }
 
     

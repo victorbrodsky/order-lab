@@ -699,7 +699,8 @@ class ReportGenerator {
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
             //fellapp admin
-            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+            //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
             $toEmailsArr = array($confirmationEmailFellApp);
 
             ////////// Potential error subject //////////////
@@ -967,7 +968,8 @@ class ReportGenerator {
         ////////// EOF Potential error subject //////////////
 
         //fellapp admin
-        $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+        //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+        $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
         $toEmailsArr = array($confirmationEmailFellApp);
 
         $fileNamesArr = array();

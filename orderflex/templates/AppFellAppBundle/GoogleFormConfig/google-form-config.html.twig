@@ -219,7 +219,7 @@
 
     <br>
     <p>
-        {% set applicationPageLinkFellApp = user_security_utility.getSiteSettingParameter('applicationPageLinkFellApp') %}
+        {% set applicationPageLinkFellApp = user_security_utility.getSiteSettingParameter('applicationPageLinkFellApp',fellapp_sitename) %}
         <a href="{{ applicationPageLinkFellApp }}" target="_blank">Link to the Application Page</a>
     </p>
 

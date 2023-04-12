@@ -1840,7 +1840,8 @@ class FellAppImportPopulateUtil {
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
                 if( $environment == "live" ) {
                     //send confirmation email to this applicant
-                    $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+                    //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+                    $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
                     $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp');
                     $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp');
                     //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);

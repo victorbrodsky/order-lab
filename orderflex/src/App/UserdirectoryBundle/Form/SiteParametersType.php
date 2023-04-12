@@ -594,11 +594,11 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationEmailFellApp' )
-            $builder->add('confirmationEmailFellApp',null,array(
-                'label'=>'Email address for confirmation of application submission:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationEmailFellApp' )
+//            $builder->add('confirmationEmailFellApp',null,array(
+//                'label'=>'Email address for confirmation of application submission:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
 //            $builder->add('clientEmailFellApp',null,array(
@@ -715,11 +715,11 @@ class SiteParametersType extends AbstractType
             ));
 
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicationPageLinkFellApp' )
-            $builder->add('applicationPageLinkFellApp',null,array(
-                'label'=>'Link to the Application Page:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'applicationPageLinkFellApp' )
+//            $builder->add('applicationPageLinkFellApp',null,array(
+//                'label'=>'Link to the Application Page:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearStart' )
             $builder->add('academicYearStart',null,array(
