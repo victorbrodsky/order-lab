@@ -874,7 +874,7 @@ class UserServiceUtil {
             //"userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             //"templateIdFellApp" => "",
             "backupFileIdFellApp" => "",
-            "folderIdFellApp" => "",
+            //"folderIdFellApp" => "",
             "localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
             "deleteImportedAplicationsFellApp" => false,
             "deleteOldAplicationsFellApp" => false,

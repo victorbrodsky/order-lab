@@ -636,11 +636,11 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'folderIdFellApp' )
-            $builder->add('folderIdFellApp',null,array(
-                'label'=>'Application Google Drive Folder ID (where the response spreadsheets are saved):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'folderIdFellApp' )
+//            $builder->add('folderIdFellApp',null,array(
+//                'label'=>'Application Google Drive Folder ID (where the response spreadsheets are saved):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
 //        //Not used anymore
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'configFileFolderIdFellApp' ) {

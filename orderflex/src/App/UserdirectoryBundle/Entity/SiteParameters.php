@@ -582,14 +582,14 @@ class SiteParameters {
      */
     private $backupFileIdFellApp;
 
-    /**
-     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
-     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
-     * where the response spreadsheets (response forms) are saved
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $folderIdFellApp;
+//    /**
+//     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
+//     * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
+//     * where the response spreadsheets (response forms) are saved
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $folderIdFellApp;
 
 //    /**
 //     * Deprecated, not used anymore in new version of google management
@@ -3191,21 +3191,21 @@ class SiteParameters {
         $this->backupFileIdFellApp = $backupFileIdFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFolderIdFellApp()
-    {
-        return $this->folderIdFellApp;
-    }
-
-    /**
-     * @param mixed $folderIdFellApp
-     */
-    public function setFolderIdFellApp($folderIdFellApp)
-    {
-        $this->folderIdFellApp = $folderIdFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFolderIdFellApp()
+//    {
+//        return $this->folderIdFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $folderIdFellApp
+//     */
+//    public function setFolderIdFellApp($folderIdFellApp)
+//    {
+//        $this->folderIdFellApp = $folderIdFellApp;
+//    }
 
 //    /**
 //     * @return mixed
