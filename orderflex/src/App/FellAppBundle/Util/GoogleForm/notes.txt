@@ -77,15 +77,15 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 
 
 ### Site Settings (user bundle) ###
-configFileFolderIdFellApp (will not used) - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
- -codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file
+(removed) configFileFolderIdFellApp (will not used) - Google Drive Folder ID where config file is located (must be present locally and in google app script (gas))
+(removed) -codeGoogleFormFellApp (not used) - Path to the local copy of the fellowship application form Code.gs file
 confirmationEmailFellApp - Email address for confirmation of application submission
  -applicationPageLinkFellApp (not used) - Link to the Application Page. Used for reference only
- -clientEmailFellApp (not used) - used in old pk12 auth
+(removed) -clientEmailFellApp (not used) - used in old pk12 auth
 p12KeyPathFellApp - auth credential json file
 googleDriveApiUrlFellApp - scopes: used in old authenticationP12Key getClient2 and in current authGoogleServiceAccount
- -userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
- -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
+(removed) -userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
+(removed) -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
 folderIdFellApp - Application Google Drive Folder ID (where the response spreadsheets are saved)
 localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
 identificationUploadLetterFellApp - Fellowship identification string to download recommendation letters

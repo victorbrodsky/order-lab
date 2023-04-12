@@ -563,11 +563,11 @@ class SiteParametersType extends AbstractType
             ));
         }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'codeGoogleFormFellApp' )
-            $builder->add('codeGoogleFormFellApp',null,array(
-                'label'=>'Path to the local copy of the fellowship application form Code.gs file (https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'codeGoogleFormFellApp' )
+//            $builder->add('codeGoogleFormFellApp',null,array(
+//                'label'=>'Path to the local copy of the fellowship application form Code.gs file (https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
             $builder->add('allowPopulateFellApp',null,array(
@@ -600,11 +600,11 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
-            $builder->add('clientEmailFellApp',null,array(
-                'label'=>'Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'clientEmailFellApp' )
+//            $builder->add('clientEmailFellApp',null,array(
+//                'label'=>'Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
             $builder->add('p12KeyPathFellApp',null,array(
@@ -618,17 +618,17 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userImpersonateEmailFellApp' )
-            $builder->add('userImpersonateEmailFellApp',null,array(
-                'label'=>'Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userImpersonateEmailFellApp' )
+//            $builder->add('userImpersonateEmailFellApp',null,array(
+//                'label'=>'Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'templateIdFellApp' )
-            $builder->add('templateIdFellApp',null,array(
-                'label'=>'Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'templateIdFellApp' )
+//            $builder->add('templateIdFellApp',null,array(
+//                'label'=>'Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupFileIdFellApp' )
             $builder->add('backupFileIdFellApp',null,array(
@@ -643,12 +643,12 @@ class SiteParametersType extends AbstractType
             ));
 
 //        //Not used anymore
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'configFileFolderIdFellApp' ) {
-            $builder->add('configFileFolderIdFellApp', null, array(
-                'label' => 'Google Drive Folder ID where config file is located:',
-                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
-            ));
-        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'configFileFolderIdFellApp' ) {
+//            $builder->add('configFileFolderIdFellApp', null, array(
+//                'label' => 'Google Drive Folder ID where config file is located:',
+//                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+//            ));
+//        }
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupUpdateDatetimeFellApp' )
 //            $builder->add('backupUpdateDatetimeFellApp',null,array(

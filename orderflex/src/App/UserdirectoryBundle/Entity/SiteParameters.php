@@ -495,13 +495,13 @@ class SiteParameters {
      */
     private $resappSiteParameter;
 
-    /**
-     * Path to the local copy of the fellowship application form
-     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $codeGoogleFormFellApp;
+//    /**
+//     * Path to the local copy of the fellowship application form
+//     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $codeGoogleFormFellApp;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -537,12 +537,12 @@ class SiteParameters {
      */
     private $confirmationEmailFellApp;
 
-    /**
-     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $clientEmailFellApp;
+//    /**
+//     * Client Email to get GoogleService: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $clientEmailFellApp;
 
     /**
      * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
@@ -559,20 +559,20 @@ class SiteParameters {
      */
     private $googleDriveApiUrlFellApp;
 
-    /**
-     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $userImpersonateEmailFellApp;
+//    /**
+//     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $userImpersonateEmailFellApp;
 
-    /**
-     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
-     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $templateIdFellApp;
+//    /**
+//     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
+//     * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $templateIdFellApp;
 
     /**
      * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
@@ -591,13 +591,13 @@ class SiteParameters {
      */
     private $folderIdFellApp;
 
-    /**
-     * Deprecated, not used anymore in new version of google management
-     * Config.json file folder ID
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $configFileFolderIdFellApp;
+//    /**
+//     * Deprecated, not used anymore in new version of google management
+//     * Config.json file folder ID
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $configFileFolderIdFellApp;
 
     /**
      * Backup Sheet Last Modified Date
@@ -2934,21 +2934,21 @@ class SiteParameters {
         return $this->lisDBServerPortTest;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getClientEmailFellApp()
-    {
-        return $this->clientEmailFellApp;
-    }
-
-    /**
-     * @param mixed $clientEmailFellApp
-     */
-    public function setClientEmailFellApp($clientEmailFellApp)
-    {
-        $this->clientEmailFellApp = $clientEmailFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getClientEmailFellApp()
+//    {
+//        return $this->clientEmailFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $clientEmailFellApp
+//     */
+//    public function setClientEmailFellApp($clientEmailFellApp)
+//    {
+//        $this->clientEmailFellApp = $clientEmailFellApp;
+//    }
 
     /**
      * @return mixed
@@ -2966,21 +2966,21 @@ class SiteParameters {
         $this->p12KeyPathFellApp = $p12KeyPathFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUserImpersonateEmailFellApp()
-    {
-        return $this->userImpersonateEmailFellApp;
-    }
-
-    /**
-     * @param mixed $userImpersonateEmailFellApp
-     */
-    public function setUserImpersonateEmailFellApp($userImpersonateEmailFellApp)
-    {
-        $this->userImpersonateEmailFellApp = $userImpersonateEmailFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getUserImpersonateEmailFellApp()
+//    {
+//        return $this->userImpersonateEmailFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $userImpersonateEmailFellApp
+//     */
+//    public function setUserImpersonateEmailFellApp($userImpersonateEmailFellApp)
+//    {
+//        $this->userImpersonateEmailFellApp = $userImpersonateEmailFellApp;
+//    }
 
 
     /**
@@ -3143,37 +3143,37 @@ class SiteParameters {
         $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCodeGoogleFormFellApp()
-    {
-        return $this->codeGoogleFormFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getCodeGoogleFormFellApp()
+//    {
+//        return $this->codeGoogleFormFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $codeGoogleFormFellApp
+//     */
+//    public function setCodeGoogleFormFellApp($codeGoogleFormFellApp)
+//    {
+//        $this->codeGoogleFormFellApp = $codeGoogleFormFellApp;
+//    }
 
-    /**
-     * @param mixed $codeGoogleFormFellApp
-     */
-    public function setCodeGoogleFormFellApp($codeGoogleFormFellApp)
-    {
-        $this->codeGoogleFormFellApp = $codeGoogleFormFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTemplateIdFellApp()
-    {
-        return $this->templateIdFellApp;
-    }
-
-    /**
-     * @param mixed $templateIdFellApp
-     */
-    public function setTemplateIdFellApp($templateIdFellApp)
-    {
-        $this->templateIdFellApp = $templateIdFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTemplateIdFellApp()
+//    {
+//        return $this->templateIdFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $templateIdFellApp
+//     */
+//    public function setTemplateIdFellApp($templateIdFellApp)
+//    {
+//        $this->templateIdFellApp = $templateIdFellApp;
+//    }
 
     /**
      * @return mixed
@@ -3207,21 +3207,21 @@ class SiteParameters {
         $this->folderIdFellApp = $folderIdFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getConfigFileFolderIdFellApp()
-    {
-        return $this->configFileFolderIdFellApp;
-    }
-
-    /**
-     * @param mixed $configFileFolderIdFellApp
-     */
-    public function setConfigFileFolderIdFellApp($configFileFolderIdFellApp)
-    {
-        $this->configFileFolderIdFellApp = $configFileFolderIdFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getConfigFileFolderIdFellApp()
+//    {
+//        return $this->configFileFolderIdFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $configFileFolderIdFellApp
+//     */
+//    public function setConfigFileFolderIdFellApp($configFileFolderIdFellApp)
+//    {
+//        $this->configFileFolderIdFellApp = $configFileFolderIdFellApp;
+//    }
 
     /**
      * @return mixed

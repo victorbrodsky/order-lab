@@ -41,13 +41,13 @@
                 <tbody data-link="row" class="rowlink">
 
                     {#AllowPopulateFellApp#}
-                    <tr>
-                        <td class="rowlink-skip">
-                            Path to the remote published copy of the fellowship application form's Code.gs file
-                        </td>
-                        <td>{{ entity.codeGoogleFormFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'codeGoogleFormFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td class="rowlink-skip">#}
+                            {#Path to the remote published copy of the fellowship application form's Code.gs file#}
+                        {#</td>#}
+                        {#<td>{{ entity.codeGoogleFormFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'codeGoogleFormFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     {#<tr>#}
                         {#<td class="rowlink-skip">#}
@@ -117,11 +117,11 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'applicationPageLinkFellApp'}) }}">Edit</a></td>
                     </tr>
 
-                    <tr>
-                        <td>Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com)</td>
-                        <td>{{ entity.clientEmailFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'clientEmailFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Client Email for accessing the Google Drive API (1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com)</td>#}
+                        {#<td>{{ entity.clientEmailFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'clientEmailFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     <tr>
                         <td>Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12)</td>
@@ -135,17 +135,17 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'googleDriveApiUrlFellApp'}) }}">Edit</a></td>
                     </tr>
 
-                    <tr>
-                        <td>Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org)</td>
-                        <td>{{ entity.userImpersonateEmailFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'userImpersonateEmailFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Impersonate the following user email address for accessing the Google Drive API (olegivanov@pathologysystems.org)</td>#}
+                        {#<td>{{ entity.userImpersonateEmailFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'userImpersonateEmailFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
-                    <tr>
-                        <td>Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)</td>
-                        <td>{{ entity.templateIdFellApp }}</td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'templateIdFellApp'}) }}">Edit</a></td>
-                    </tr>
+                    {#<tr>#}
+                        {#<td>Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)</td>#}
+                        {#<td>{{ entity.templateIdFellApp }}</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'templateIdFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     <tr>
                         <td>Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)</td>
