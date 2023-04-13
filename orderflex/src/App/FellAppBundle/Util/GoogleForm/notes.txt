@@ -87,7 +87,7 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (removed) -userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
 (removed) -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
 (removed) folderIdFellApp - Application Google Drive Folder ID (where the response spreadsheets are saved)
-localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
+(moved to fellapp setting, TODO: remove traces) localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
 identificationUploadLetterFellApp - Fellowship identification string to download recommendation letters
 recLetterSaltFellApp - Recommendation Letter Salt
 ####################################

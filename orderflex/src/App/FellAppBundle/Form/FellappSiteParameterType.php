@@ -92,6 +92,34 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+//        $builder->add('localInstitutionFellApp', null, array(
+//            'label' => 'Local Organizational Group for imported fellowship applications:',
+//            'attr' => array('class' => 'combobox'),
+//            'required' => false
+//        ));
+        $builder->add( 'localInstitutionFellApp', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:Institution',
+            'choice_label' => 'getTreeName',
+            'label' => 'Local organizational group for imported fellowship applications (WCM => Pathology Fellowship Programs):',
+            'required'=> false,
+            'multiple' => false,
+            //'empty_value' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.parent","department")
+                    //->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                        //'pname' => 'Pathology and Laboratory Medicine'
+                        //'medicalInstitution' => 'Medical'
+                    ));
+            },
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(

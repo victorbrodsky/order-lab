@@ -656,11 +656,11 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
-            $builder->add('localInstitutionFellApp',null,array(
-                'label'=>'Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCM)):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'localInstitutionFellApp' )
+//            $builder->add('localInstitutionFellApp',null,array(
+//                'label'=>'Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCM)):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'identificationUploadLetterFellApp' ) {
             $builder->add('identificationUploadLetterFellApp', null, array(

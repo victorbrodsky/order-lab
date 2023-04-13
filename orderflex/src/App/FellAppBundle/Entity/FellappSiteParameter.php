@@ -114,7 +114,15 @@ class FellappSiteParameter {
      */
     private $googleDriveApiUrlFellApp;
 
-    
+    /**
+     * $localInstitutionFellApp
+     * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
+     *
+     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\Institution")
+     */
+    private $localInstitutionFellApp;
+
+
     
     public function __construct() {
         
@@ -312,6 +320,22 @@ class FellappSiteParameter {
     public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
     {
         $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocalInstitutionFellApp()
+    {
+        return $this->localInstitutionFellApp;
+    }
+
+    /**
+     * @param mixed $localInstitutionFellApp
+     */
+    public function setLocalInstitutionFellApp($localInstitutionFellApp)
+    {
+        $this->localInstitutionFellApp = $localInstitutionFellApp;
     }
 
     
