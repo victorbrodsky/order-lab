@@ -88,7 +88,7 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (removed) -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey
 (removed) folderIdFellApp - Application Google Drive Folder ID (where the response spreadsheets are saved)
 (moved to fellapp setting, TODO: remove traces) localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
-identificationUploadLetterFellApp - Fellowship identification string to download recommendation letters
+identificationUploadLetterFellApp (wcmpathview?) - Fellowship identification string to download recommendation letters
 recLetterSaltFellApp - Recommendation Letter Salt
 ####################################
 
