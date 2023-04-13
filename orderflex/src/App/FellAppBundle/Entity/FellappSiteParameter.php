@@ -106,7 +106,13 @@ class FellappSiteParameter {
      */
     private $authPathFellApp;
 
-
+    /**
+     * Google Drive API URL
+     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $googleDriveApiUrlFellApp;
 
     
     
@@ -290,6 +296,22 @@ class FellappSiteParameter {
     public function setAuthPathFellApp($authPathFellApp)
     {
         $this->authPathFellApp = $authPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleDriveApiUrlFellApp()
+    {
+        return $this->googleDriveApiUrlFellApp;
+    }
+
+    /**
+     * @param mixed $googleDriveApiUrlFellApp
+     */
+    public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
+    {
+        $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
     }
 
     

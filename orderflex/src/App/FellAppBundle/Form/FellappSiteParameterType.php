@@ -87,6 +87,12 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('googleDriveApiUrlFellApp', null, array(
+            'label' => 'Google Drive API URL (https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds):',
+            'attr' => array('class' => 'form-control')
+        ));
+
+
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(
 //            'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',

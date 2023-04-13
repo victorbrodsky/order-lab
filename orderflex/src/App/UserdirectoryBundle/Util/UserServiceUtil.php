@@ -870,7 +870,7 @@ class UserServiceUtil {
                 "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             //"clientEmailFellApp" => '',
             //"p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util',
-            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
+            //"googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             //"userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             //"templateIdFellApp" => "",
             "backupFileIdFellApp" => "",

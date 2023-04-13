@@ -552,12 +552,12 @@ class SiteParameters {
 //     */
 //    private $p12KeyPathFellApp;
 
-    /**
-     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $googleDriveApiUrlFellApp;
+//    /**
+//     * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $googleDriveApiUrlFellApp;
 
 //    /**
 //     * Impersonate user Email: i.e. olegivanov@pathologysystems.org
@@ -3127,21 +3127,21 @@ class SiteParameters {
         $this->reportsUploadPathFellApp = $reportsUploadPathFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGoogleDriveApiUrlFellApp()
-    {
-        return $this->googleDriveApiUrlFellApp;
-    }
-
-    /**
-     * @param mixed $googleDriveApiUrlFellApp
-     */
-    public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
-    {
-        $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getGoogleDriveApiUrlFellApp()
+//    {
+//        return $this->googleDriveApiUrlFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $googleDriveApiUrlFellApp
+//     */
+//    public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
+//    {
+//        $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
+//    }
 
 //    /**
 //     * @return mixed

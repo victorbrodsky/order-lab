@@ -800,7 +800,8 @@ class GoogleSheetManagement {
         //echo "pkey=".$pkey."<br>";
         $private_key = file_get_contents($pkey); //notasecret
 
-        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        //$googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$googleDriveApiUrlFellApp ) {
             throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
         }
@@ -916,14 +917,15 @@ class GoogleSheetManagement {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //$credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
-        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->getParameter('fellapp.sitename'));
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$credentialsJsonFile ) {
             $logger->warning('JSON service key is not defined in Fellowship Site Parameters, in field authPathFellApp. Json file='.$credentialsJsonFile);
         }
 
-        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        //$scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+        $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$scopes ) {
-            $logger->warning('Google scope are not defined in Site Parameters, in field googleDriveApiUrlFellApp. Json file='.$credentialsJsonFile);
+            $logger->warning('Google scope are not defined in Fellowship Site Parameters, in field googleDriveApiUrlFellApp');
         }
 
         //space or comma separated
@@ -993,7 +995,7 @@ class GoogleSheetManagement {
         //}
 
         //$credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
-        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->getParameter('fellapp.sitename'));
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$credentialsJsonFile ) {
             $logger->warning('authPathFellApp is not defined in Fellowship Site Parameters. $credentialsJsonFile='.$credentialsJsonFile);
         }

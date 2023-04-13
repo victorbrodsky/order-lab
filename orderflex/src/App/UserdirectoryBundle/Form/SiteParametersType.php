@@ -612,11 +612,11 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'googleDriveApiUrlFellApp' )
-            $builder->add('googleDriveApiUrlFellApp',null,array(
-                'label'=>'Google Drive API URL (https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'googleDriveApiUrlFellApp' )
+//            $builder->add('googleDriveApiUrlFellApp',null,array(
+//                'label'=>'Google Drive API URL (https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'userImpersonateEmailFellApp' )
 //            $builder->add('userImpersonateEmailFellApp',null,array(
