@@ -120,6 +120,11 @@ class FellappSiteParameterType extends AbstractType
             },
         ));
 
+        $builder->add('identificationUploadLetterFellApp', null, array(
+            'label' => 'Fellowship identification string to download recommendation letters (wcmpathdev):',
+            'attr' => array('class' => 'form-control')
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(

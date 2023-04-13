@@ -662,12 +662,12 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'identificationUploadLetterFellApp' ) {
-            $builder->add('identificationUploadLetterFellApp', null, array(
-                'label' => 'Fellowship identification string to download recommendation letters (55555):',
-                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
-            ));
-        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'identificationUploadLetterFellApp' ) {
+//            $builder->add('identificationUploadLetterFellApp', null, array(
+//                'label' => 'Fellowship identification string to download recommendation letters (55555):',
+//                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+//            ));
+//        }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteImportedAplicationsFellApp' )
             $builder->add('deleteImportedAplicationsFellApp',null,array(

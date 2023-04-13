@@ -258,7 +258,8 @@ class RecLetterUtil {
         //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp'); //Pathology Fellowship Programs (WCMC)
         $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
 
-        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //55555
+        //$identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //55555
+        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$identificationUploadLetterFellApp ) {
             $identificationUploadLetterFellApp = "55555";
         }
@@ -820,7 +821,8 @@ class RecLetterUtil {
         }
 
         //10d: compare instituteIdentification with site settings instituteIdentification
-        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //i.e. 55555
+        //$identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //i.e. 55555
+        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp',$this->container->getParameter('fellapp.sitename'));
         $logger->notice("compare: $identificationUploadLetterFellApp ?= $instituteIdentification");
         if( $instituteIdentification && $identificationUploadLetterFellApp ) {
             $environment = $userSecUtil->getSiteSettingParameter('environment');
