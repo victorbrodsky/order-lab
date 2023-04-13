@@ -82,7 +82,7 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (moved to fellapp setting) confirmationEmailFellApp - Email address for confirmation of application submission
 (moved to fellapp setting) -applicationPageLinkFellApp (not used) - Link to the Application Page. Used for reference only
 (removed) -clientEmailFellApp (not used) - used in old pk12 auth
-p12KeyPathFellApp - auth credential json file
+(moved to fellapp setting as authPathFellApp) p12KeyPathFellApp - auth credential json file
 googleDriveApiUrlFellApp - scopes: used in old authenticationP12Key getClient2 and in current authGoogleServiceAccount
 (removed) -userImpersonateEmailFellApp (not used) - Impersonate the following user email address for accessing the Google Drive API
 (removed) -templateIdFellApp (not used) - Template Google Spreadsheet ID, the same as in gas _templateSSKey

@@ -544,13 +544,13 @@ class SiteParameters {
 //     */
 //    private $clientEmailFellApp;
 
-    /**
-     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $p12KeyPathFellApp;
+//    /**
+//     * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
+//     * E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $p12KeyPathFellApp;
 
     /**
      * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
@@ -2950,21 +2950,21 @@ class SiteParameters {
 //        $this->clientEmailFellApp = $clientEmailFellApp;
 //    }
 
-    /**
-     * @return mixed
-     */
-    public function getP12KeyPathFellApp()
-    {
-        return $this->p12KeyPathFellApp;
-    }
-
-    /**
-     * @param mixed $p12KeyPathFellApp
-     */
-    public function setP12KeyPathFellApp($p12KeyPathFellApp)
-    {
-        $this->p12KeyPathFellApp = $p12KeyPathFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getP12KeyPathFellApp()
+//    {
+//        return $this->p12KeyPathFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $p12KeyPathFellApp
+//     */
+//    public function setP12KeyPathFellApp($p12KeyPathFellApp)
+//    {
+//        $this->p12KeyPathFellApp = $p12KeyPathFellApp;
+//    }
 
 //    /**
 //     * @return mixed

@@ -852,71 +852,73 @@ class GoogleSheetManagement {
 
         return $res;
     }
-    //Authentication based on "google/apiclient": "v2.2.3" and credentials.json
-    //https://developers.google.com/people/quickstart/php
-    public function authenticationGoogleOAuth() {
-
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
-        //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
-
-        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
-        $pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
-        if( !$pkey ) {
-            $logger->warning('p12KeyPathFellApp/credentials.json is not defined in Site Parameters. File='.$pkey);
-        }
-
-        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
-//        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
-
-        //echo "pkey=".$pkey."<br>";
-//        $private_key = file_get_contents($pkey); //notasecret
-
-//        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
-//        if( !$googleDriveApiUrlFellApp ) {
-//            throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
+//    //Authentication based on "google/apiclient": "v2.2.3" and credentials.json
+//    //https://developers.google.com/people/quickstart/php
+//    public function authenticationGoogleOAuth() {
+//
+//        $logger = $this->container->get('logger');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//
+//        //$client_email = '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com';
+//        //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');
+//
+//        //$pkey = __DIR__ . '/../Util/FellowshipApplication-f1d9f98353e5.p12';
+//        //$pkey = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+//        $pkey = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->getParameter('fellapp.sitename'));
+//        if( !$pkey ) {
+//            $logger->warning('authPathFellApp is not defined in Fellowship Site Parameters. File='.$pkey);
 //        }
-
-        //PHP API scopes: https://developers.google.com/api-client-library/php/auth/service-accounts#creatinganaccount
-        //set scopes on developer console:
-        // https://admin.google.com/pathologysystems.org/AdminHome?chromeless=1#OGX:ManageOauthClients
-        //scopes: example: "https://spreadsheets.google.com/feeds https://docs.google.com/feeds"
-        //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
-//        $scopes = $googleDriveApiUrlFellApp;
-
-        $client = $this->getClient();
-
-        //$service = null;
-        $service = new \Google_Service_Drive($client);
-
-        //try {
-//            $client = $this->getClient();
-//            $service = new \Google_Service_Drive($client);
-//        } catch(Exception $e) {
-//            $subject = "Failed to authenticate to Google";
-//            $event = "Failed to authenticate to Google: " . $e->getMessage();
-//            $logger->error($event);
-//            //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-//            $userSecUtil->sendEmailToSystemEmail($subject, $event);
-//        }
-
-        $res = array(
-            'client' => $client,
-            'service' => $service
-        );
-
-        return $res;
-    }
+//
+//        //$user_to_impersonate = 'olegivanov@pathologysystems.org';
+////        $user_to_impersonate = $userSecUtil->getSiteSettingParameter('userImpersonateEmailFellApp');
+//
+//        //echo "pkey=".$pkey."<br>";
+////        $private_key = file_get_contents($pkey); //notasecret
+//
+////        $googleDriveApiUrlFellApp = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
+////        if( !$googleDriveApiUrlFellApp ) {
+////            throw new \InvalidArgumentException('googleDriveApiUrlFellApp is not defined in Site Parameters.');
+////        }
+//
+//        //PHP API scopes: https://developers.google.com/api-client-library/php/auth/service-accounts#creatinganaccount
+//        //set scopes on developer console:
+//        // https://admin.google.com/pathologysystems.org/AdminHome?chromeless=1#OGX:ManageOauthClients
+//        //scopes: example: "https://spreadsheets.google.com/feeds https://docs.google.com/feeds"
+//        //$scopes = array($googleDriveApiUrlFellApp); //'https://www.googleapis.com/auth/drive'
+////        $scopes = $googleDriveApiUrlFellApp;
+//
+//        $client = $this->getClient();
+//
+//        //$service = null;
+//        $service = new \Google_Service_Drive($client);
+//
+//        //try {
+////            $client = $this->getClient();
+////            $service = new \Google_Service_Drive($client);
+////        } catch(Exception $e) {
+////            $subject = "Failed to authenticate to Google";
+////            $event = "Failed to authenticate to Google: " . $e->getMessage();
+////            $logger->error($event);
+////            //$userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
+////            $userSecUtil->sendEmailToSystemEmail($subject, $event);
+////        }
+//
+//        $res = array(
+//            'client' => $client,
+//            'service' => $service
+//        );
+//
+//        return $res;
+//    }
 
     public function authGoogleServiceAccount() {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        //$credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->getParameter('fellapp.sitename'));
         if( !$credentialsJsonFile ) {
-            $logger->warning('JSON service key is not defined in Site Parameters, in field p12KeyPathFellApp. Json file='.$credentialsJsonFile);
+            $logger->warning('JSON service key is not defined in Fellowship Site Parameters, in field authPathFellApp. Json file='.$credentialsJsonFile);
         }
 
         $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
@@ -990,9 +992,10 @@ class GoogleSheetManagement {
         //    throw new \InvalidArgumentException('userImpersonateEmailFellApp is not defined in Site Parameters.');
         //}
 
-        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        //$credentialsJsonFile = $userSecUtil->getSiteSettingParameter('p12KeyPathFellApp');
+        $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->getParameter('fellapp.sitename'));
         if( !$credentialsJsonFile ) {
-            $logger->warning('$credentialsJsonFile is not defined in Site Parameters. $credentialsJsonFile='.$credentialsJsonFile);
+            $logger->warning('authPathFellApp is not defined in Fellowship Site Parameters. $credentialsJsonFile='.$credentialsJsonFile);
         }
 
         //$client_email = $userSecUtil->getSiteSettingParameter('clientEmailFellApp');

@@ -606,11 +606,11 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
-            $builder->add('p12KeyPathFellApp',null,array(
-                'label'=>'Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
+//            $builder->add('p12KeyPathFellApp',null,array(
+//                'label'=>'Full Path to p12 key or service account credentials.json file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'googleDriveApiUrlFellApp' )
             $builder->add('googleDriveApiUrlFellApp',null,array(

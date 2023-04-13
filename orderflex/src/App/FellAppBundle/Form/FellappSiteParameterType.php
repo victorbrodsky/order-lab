@@ -82,6 +82,11 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('authPathFellApp', null, array(
+            'label' => 'Full path to the credential authentication JSON file for Google:',
+            'attr' => array('class' => 'form-control')
+        ));
+
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(
 //            'label'=>'Application season start date (MM/DD) when the default fellowship application year changes to the following year (i.e. April 1st):',

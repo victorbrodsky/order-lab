@@ -96,8 +96,18 @@ class FellappSiteParameter {
      * @ORM\Column(type="text", nullable=true)
      */
     private $applicationPageLinkFellApp;
-    
-    
+
+    /**
+     * Rename $p12KeyPathFellApp to $authPathFellApp
+     * Full path to the credential authentication JSON file for Google
+     * C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\quickstart-FellowshipAuth.json
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $authPathFellApp;
+
+
+
     
     
     public function __construct() {
@@ -264,6 +274,22 @@ class FellappSiteParameter {
     public function setApplicationPageLinkFellApp($applicationPageLinkFellApp)
     {
         $this->applicationPageLinkFellApp = $applicationPageLinkFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthPathFellApp()
+    {
+        return $this->authPathFellApp;
+    }
+
+    /**
+     * @param mixed $authPathFellApp
+     */
+    public function setAuthPathFellApp($authPathFellApp)
+    {
+        $this->authPathFellApp = $authPathFellApp;
     }
 
     
