@@ -90,6 +90,42 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (moved to fellapp setting, TODO: remove traces) localInstitutionFellApp - Local Organizational Group for imported fellowship applications (i.e. "Pathology Fellowship Programs (WCM)")
 (moved to fellapp setting) identificationUploadLetterFellApp (wcmpath on live) - Fellowship identification string to download recommendation letters
 (moved to fellapp setting) recLetterSaltFellApp (pepper, peppertest, pepperdev) - Recommendation Letter Salt
+
+(removed) backupFileIdFellApp - Backup Google Spreadsheet ID
+allowPopulateFellApp - Periodically import fellowship applications and reference letters submitted via the Google form
+sendEmailUploadLetterFellApp - Automatically send invitation emails to upload recommendation letters
+
+confirmationSubjectFellApp - Email subject for confirmation of application submission
+***
+Your WCM/NYP fellowship application has been successfully received
+***
+
+confirmationBodyFellApp - Email body for confirmation of application submission
+***
+Thank You for submitting the fellowship application to Weill Cornell Medicine/NewYork Presbyterian Hospital.
+
+Once we receive the associated recommendation letters, your application will be reviewed and considered.
+
+If You have any questions, please do not hesitate to contact me by phone or via email.
+
+
+Sincerely,
+Jessica Misner
+Training Coordinator
+Weill Cornell Medicine
+Pathology and Laboratory Medicine
+1300 York Avenue, Room C-302
+T 212.746.6464
+F 212.746.8192
+WCMPathPrgm@med.cornell.edu
+***
+
+deleteImportedAplicationsFellApp - Delete successfully imported applications from Google Drive
+deleteOldAplicationsFellApp - Delete downloaded spreadsheets with fellowship applications after successful import into the database
+yearsOldAplicationsFellApp - Number of years to keep downloaded spreadsheets with fellowship applications as backup (2)
+spreadsheetsPathFellApp - Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets)
+applicantsUploadPathFellApp - Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads)
+reportsUploadPathFellApp - Path to the generated fellowship applications in PDF format (fellapp/Reports)
 ####################################
 
 

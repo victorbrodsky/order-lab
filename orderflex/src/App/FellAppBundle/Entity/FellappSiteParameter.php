@@ -137,8 +137,19 @@ class FellappSiteParameter {
      * @ORM\Column(type="text", nullable=true)
      */
     private $recLetterSaltFellApp;
-    
-    
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $allowPopulateFellApp;
+
+    /**
+     * Automatically send invitation emails to upload recommendation letters
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $sendEmailUploadLetterFellApp;
+
     
     
     
@@ -388,7 +399,43 @@ class FellappSiteParameter {
         $this->recLetterSaltFellApp = $recLetterSaltFellApp;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getAllowPopulateFellApp()
+    {
+        return $this->allowPopulateFellApp;
+    }
+
+    /**
+     * @param mixed $allowPopulateFellApp
+     */
+    public function setAllowPopulateFellApp($allowPopulateFellApp)
+    {
+        $this->allowPopulateFellApp = $allowPopulateFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSendEmailUploadLetterFellApp()
+    {
+        return $this->sendEmailUploadLetterFellApp;
+    }
+
+    /**
+     * @param mixed $sendEmailUploadLetterFellApp
+     */
+    public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
+    {
+        $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
+    }
+
+
+
+
+
+
 
 }
 

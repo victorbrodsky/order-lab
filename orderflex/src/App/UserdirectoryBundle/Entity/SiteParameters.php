@@ -503,17 +503,17 @@ class SiteParameters {
 //     */
 //    private $codeGoogleFormFellApp;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $allowPopulateFellApp;
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $allowPopulateFellApp;
 
-    /**
-     * Automatically send invitation emails to upload recommendation letters
-     *
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $sendEmailUploadLetterFellApp;
+//    /**
+//     * Automatically send invitation emails to upload recommendation letters
+//     *
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $sendEmailUploadLetterFellApp;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -574,13 +574,13 @@ class SiteParameters {
 //     */
 //    private $templateIdFellApp;
 
-    /**
-     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
-     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $backupFileIdFellApp;
+//    /**
+//     * Deprecated. Not used anymore. Replaced by felBackupTemplateFileId in GoogleFormConfig
+//     * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $backupFileIdFellApp;
 
 //    /**
 //     * Deprecated. Not used anymore. Replaced by felSpreadsheetFolderId in GoogleFormConfig
@@ -2638,37 +2638,37 @@ class SiteParameters {
         return $this->ldapExePath;
     }
 
-    /**
-     * @param mixed $allowPopulateFellApp
-     */
-    public function setAllowPopulateFellApp($allowPopulateFellApp)
-    {
-        $this->allowPopulateFellApp = $allowPopulateFellApp;
-    }
+//    /**
+//     * @param mixed $allowPopulateFellApp
+//     */
+//    public function setAllowPopulateFellApp($allowPopulateFellApp)
+//    {
+//        $this->allowPopulateFellApp = $allowPopulateFellApp;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getAllowPopulateFellApp()
+//    {
+//        return $this->allowPopulateFellApp;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getAllowPopulateFellApp()
-    {
-        return $this->allowPopulateFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSendEmailUploadLetterFellApp()
-    {
-        return $this->sendEmailUploadLetterFellApp;
-    }
-
-    /**
-     * @param mixed $sendEmailUploadLetterFellApp
-     */
-    public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
-    {
-        $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getSendEmailUploadLetterFellApp()
+//    {
+//        return $this->sendEmailUploadLetterFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $sendEmailUploadLetterFellApp
+//     */
+//    public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
+//    {
+//        $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
+//    }
 
 
     public function getConfirmationSubjectFellApp() {
@@ -3176,21 +3176,21 @@ class SiteParameters {
 //        $this->templateIdFellApp = $templateIdFellApp;
 //    }
 
-    /**
-     * @return mixed
-     */
-    public function getBackupFileIdFellApp()
-    {
-        return $this->backupFileIdFellApp;
-    }
-
-    /**
-     * @param mixed $backupFileIdFellApp
-     */
-    public function setBackupFileIdFellApp($backupFileIdFellApp)
-    {
-        $this->backupFileIdFellApp = $backupFileIdFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getBackupFileIdFellApp()
+//    {
+//        return $this->backupFileIdFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $backupFileIdFellApp
+//     */
+//    public function setBackupFileIdFellApp($backupFileIdFellApp)
+//    {
+//        $this->backupFileIdFellApp = $backupFileIdFellApp;
+//    }
 
 //    /**
 //     * @return mixed

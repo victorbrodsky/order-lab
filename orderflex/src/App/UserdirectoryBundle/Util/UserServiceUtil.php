@@ -873,7 +873,7 @@ class UserServiceUtil {
             //"googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             //"userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             //"templateIdFellApp" => "",
-            "backupFileIdFellApp" => "",
+            //"backupFileIdFellApp" => "",
             //"folderIdFellApp" => "",
             //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
             "deleteImportedAplicationsFellApp" => false,

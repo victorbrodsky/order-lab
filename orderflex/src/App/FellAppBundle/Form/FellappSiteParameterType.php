@@ -130,6 +130,16 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('allowPopulateFellApp',null,array(
+            'label' => 'Periodically import fellowship applications and reference letters submitted via the Google form:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('sendEmailUploadLetterFellApp', null, array(
+            'label'=>'Automatically send invitation emails to upload recommendation letters:',
+            'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(

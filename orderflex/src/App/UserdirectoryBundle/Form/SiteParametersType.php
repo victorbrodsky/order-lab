@@ -569,18 +569,18 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
-            $builder->add('allowPopulateFellApp',null,array(
-                'label' => 'Periodically import fellowship applications and reference letters submitted via the Google form:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'allowPopulateFellApp' )
+//            $builder->add('allowPopulateFellApp',null,array(
+//                'label' => 'Periodically import fellowship applications and reference letters submitted via the Google form:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'sendEmailUploadLetterFellApp' ) {
-            $builder->add('sendEmailUploadLetterFellApp', null, array(
-                'label'=>'Automatically send invitation emails to upload recommendation letters:',
-                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
-            ));
-        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'sendEmailUploadLetterFellApp' ) {
+//            $builder->add('sendEmailUploadLetterFellApp', null, array(
+//                'label'=>'Automatically send invitation emails to upload recommendation letters:',
+//                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+//            ));
+//        }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
             $builder->add('confirmationSubjectFellApp',null,array(
@@ -630,11 +630,11 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupFileIdFellApp' )
-            $builder->add('backupFileIdFellApp',null,array(
-                'label'=>'Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'backupFileIdFellApp' )
+//            $builder->add('backupFileIdFellApp',null,array(
+//                'label'=>'Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo):',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'folderIdFellApp' )
 //            $builder->add('folderIdFellApp',null,array(
