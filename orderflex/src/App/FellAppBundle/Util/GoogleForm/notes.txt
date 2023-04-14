@@ -95,12 +95,12 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (moved to fellapp setting) allowPopulateFellApp - Periodically import fellowship applications and reference letters submitted via the Google form
 (moved to fellapp setting) sendEmailUploadLetterFellApp - Automatically send invitation emails to upload recommendation letters
 
-confirmationSubjectFellApp - Email subject for confirmation of application submission
+(moved to fellapp setting) confirmationSubjectFellApp - Email subject for confirmation of application submission
 ***
 Your WCM/NYP fellowship application has been successfully received
 ***
 
-confirmationBodyFellApp - Email body for confirmation of application submission
+(moved to fellapp setting) confirmationBodyFellApp - Email body for confirmation of application submission
 ***
 Thank You for submitting the fellowship application to Weill Cornell Medicine/NewYork Presbyterian Hospital.
 
