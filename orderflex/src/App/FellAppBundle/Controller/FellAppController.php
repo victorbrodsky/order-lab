@@ -579,7 +579,7 @@ class FellAppController extends OrderAbstractController {
         //allowPopulateFellApp
         //$userUtil = new UserUtil();
         //$allowPopulateFellApp = $userUtil->getSiteSetting($em,'AllowPopulateFellApp');
-        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
+        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp',$this->getParameter('fellapp.sitename'));
 
         //At the top of the homepage, show either "Now accepting applications" if the
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."

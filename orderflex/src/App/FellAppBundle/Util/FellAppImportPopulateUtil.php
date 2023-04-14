@@ -798,7 +798,7 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp');
+        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('AllowPopulateFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$allowPopulateFellApp ) {
             $logger->warning($action." is not proceed because the AllowPopulateFellApp parameter is set to false.");
             return false;
@@ -2443,7 +2443,7 @@ class FellAppImportPopulateUtil {
     public function verifyImport() {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
-        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('allowPopulateFellApp');
+        $allowPopulateFellApp = $userSecUtil->getSiteSettingParameter('allowPopulateFellApp',$this->container->getParameter('fellapp.sitename'));
 
         if( !$allowPopulateFellApp ) {
             return "Verify Fellowship application import. Nothing to verify: allowPopulateFellApp is not set";

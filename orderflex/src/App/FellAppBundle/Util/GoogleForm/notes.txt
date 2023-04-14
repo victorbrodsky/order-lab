@@ -92,8 +92,8 @@ Use the unique config file name "config-fellapp.json" in GAS and in PHP
 (moved to fellapp setting) recLetterSaltFellApp (pepper, peppertest, pepperdev) - Recommendation Letter Salt
 
 (removed) backupFileIdFellApp - Backup Google Spreadsheet ID
-allowPopulateFellApp - Periodically import fellowship applications and reference letters submitted via the Google form
-sendEmailUploadLetterFellApp - Automatically send invitation emails to upload recommendation letters
+(moved to fellapp setting) allowPopulateFellApp - Periodically import fellowship applications and reference letters submitted via the Google form
+(moved to fellapp setting) sendEmailUploadLetterFellApp - Automatically send invitation emails to upload recommendation letters
 
 confirmationSubjectFellApp - Email subject for confirmation of application submission
 ***
