@@ -126,7 +126,7 @@ class FellappSiteParameterType extends AbstractType
         ));
 
         $builder->add('recLetterSaltFellApp', null, array(
-            'label' => 'Recommendation Letter Salt (wcmpath):',
+            'label' => 'Recommendation Letter Salt (pepper):',
             'attr' => array('class' => 'form-control')
         ));
 
