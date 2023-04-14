@@ -520,12 +520,12 @@ class SiteParameters {
      */
     private $confirmationSubjectFellApp;
 
-    /**
-     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
-     *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $recLetterSaltFellApp;
+//    /**
+//     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $recLetterSaltFellApp;
     
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -2679,21 +2679,21 @@ class SiteParameters {
         $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRecLetterSaltFellApp()
-    {
-        return $this->recLetterSaltFellApp;
-    }
-
-    /**
-     * @param mixed $recLetterSaltFellApp
-     */
-    public function setRecLetterSaltFellApp($recLetterSaltFellApp)
-    {
-        $this->recLetterSaltFellApp = $recLetterSaltFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getRecLetterSaltFellApp()
+//    {
+//        return $this->recLetterSaltFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $recLetterSaltFellApp
+//     */
+//    public function setRecLetterSaltFellApp($recLetterSaltFellApp)
+//    {
+//        $this->recLetterSaltFellApp = $recLetterSaltFellApp;
+//    }
 
     public function getConfirmationBodyFellApp() {
         return $this->confirmationBodyFellApp;

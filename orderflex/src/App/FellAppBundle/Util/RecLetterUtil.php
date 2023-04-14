@@ -54,7 +54,8 @@ class RecLetterUtil {
 
         //$str = "pepperstr";
 
-        $salt = $userSecUtil->getSiteSettingParameter('recLetterSaltFellApp');
+        //$salt = $userSecUtil->getSiteSettingParameter('recLetterSaltFellApp');
+        $salt = $userSecUtil->getSiteSettingParameter('recLetterSaltFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$salt ) {
             $salt = 'pepper';
         }

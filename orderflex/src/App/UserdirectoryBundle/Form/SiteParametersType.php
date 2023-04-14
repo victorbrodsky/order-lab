@@ -555,13 +555,13 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control textarea')
             ));
 
-        //Fellowship Application parameters
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'recLetterSaltFellApp' ) {
-            $builder->add('recLetterSaltFellApp', null, array(
-                'label' => 'Recommendation Letter Salt:',
-                'attr' => array('class' => 'form-control')
-            ));
-        }
+//        //Fellowship Application parameters
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'recLetterSaltFellApp' ) {
+//            $builder->add('recLetterSaltFellApp', null, array(
+//                'label' => 'Recommendation Letter Salt:',
+//                'attr' => array('class' => 'form-control')
+//            ));
+//        }
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'codeGoogleFormFellApp' )
 //            $builder->add('codeGoogleFormFellApp',null,array(

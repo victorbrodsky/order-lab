@@ -1444,36 +1444,7 @@ class FellAppImportPopulateUtil {
                 //$instPathologyFellowshipProgram = null;
                 //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp');
                 $instPathologyFellowshipProgram = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp',$this->container->getParameter('fellapp.sitename'));
-
-//                if( strpos((string)$localInstitutionFellApp, " (") !== false ) {
-//                    //Case 1: get string from SiteParameters - "Pathology Fellowship Programs (WCMC)"
-//                    $localInstitutionFellAppArr = explode(" (", $localInstitutionFellApp);
-//                    if (count($localInstitutionFellAppArr) == 2 && $localInstitutionFellAppArr[0] != "" && $localInstitutionFellAppArr[1] != "") {
-//                        $localInst = trim((string)$localInstitutionFellAppArr[0]); //"Pathology Fellowship Programs"
-//                        $rootInst = trim((string)$localInstitutionFellAppArr[1]);  //"(WCMC)"
-//                        $rootInst = str_replace("(", "", $rootInst);
-//                        $rootInst = str_replace(")", "", $rootInst);
-//                        //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
-//                        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
-//                        if( !$wcmc ) {
-//                            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($rootInst);
-//                            if( !$wcmc ) {
-//                                throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
-//                            }
-//                        }
-//                        $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
-//                        if( !$instPathologyFellowshipProgram ) {
-//                            throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
-//                        }
-//                    }
-//                } else {
-//                    //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
-//                    $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionFellApp);
-//                    if( !$instPathologyFellowshipProgram ) {
-//                        $instPathologyFellowshipProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($localInstitutionFellApp);
-//                    }
-//                }
-
+                
                 if( $instPathologyFellowshipProgram ) {
                     $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
                 } else {

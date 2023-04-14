@@ -121,7 +121,12 @@ class FellappSiteParameterType extends AbstractType
         ));
 
         $builder->add('identificationUploadLetterFellApp', null, array(
-            'label' => 'Fellowship identification string to download recommendation letters (wcmpathdev):',
+            'label' => 'Fellowship identification string to download recommendation letters (wcmpath):',
+            'attr' => array('class' => 'form-control')
+        ));
+
+        $builder->add('recLetterSaltFellApp', null, array(
+            'label' => 'Recommendation Letter Salt (wcmpath):',
             'attr' => array('class' => 'form-control')
         ));
 

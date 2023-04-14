@@ -130,6 +130,14 @@ class FellappSiteParameter {
      * @ORM\Column(type="text", nullable=true)
      */
     private $identificationUploadLetterFellApp;
+
+    /**
+     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recLetterSaltFellApp;
+    
     
     
     
@@ -362,6 +370,22 @@ class FellappSiteParameter {
     public function setIdentificationUploadLetterFellApp($identificationUploadLetterFellApp)
     {
         $this->identificationUploadLetterFellApp = $identificationUploadLetterFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecLetterSaltFellApp()
+    {
+        return $this->recLetterSaltFellApp;
+    }
+
+    /**
+     * @param mixed $recLetterSaltFellApp
+     */
+    public function setRecLetterSaltFellApp($recLetterSaltFellApp)
+    {
+        $this->recLetterSaltFellApp = $recLetterSaltFellApp;
     }
 
     
