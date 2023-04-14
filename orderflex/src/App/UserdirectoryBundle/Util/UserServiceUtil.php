@@ -863,11 +863,11 @@ class UserServiceUtil {
             ///////////////////// FELLAPP /////////////////////
             //"codeGoogleFormFellApp" => "",
             //"confirmationEmailFellApp" => "",
-            "confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been succesfully received",
-            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
-                "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
-                "If You have any questions, please do not hesitate to contact me by phone or via email. ".
-                "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
+            //"confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been succesfully received",
+//            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
+//                "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
+//                "If You have any questions, please do not hesitate to contact me by phone or via email. ".
+//                "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             //"clientEmailFellApp" => '',
             //"p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\App\FellAppBundle\Util',
             //"googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",

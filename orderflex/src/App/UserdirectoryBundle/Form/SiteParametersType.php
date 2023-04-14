@@ -582,17 +582,17 @@ class SiteParametersType extends AbstractType
 //            ));
 //        }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
-            $builder->add('confirmationSubjectFellApp',null,array(
-                'label'=>'Email subject for confirmation of application submission:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationSubjectFellApp' )
+//            $builder->add('confirmationSubjectFellApp',null,array(
+//                'label'=>'Email subject for confirmation of application submission:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
         
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationBodyFellApp' )
-            $builder->add('confirmationBodyFellApp',null,array(
-                'label'=>'Email body for confirmation of application submission:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationBodyFellApp' )
+//            $builder->add('confirmationBodyFellApp',null,array(
+//                'label'=>'Email body for confirmation of application submission:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
         
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'confirmationEmailFellApp' )
 //            $builder->add('confirmationEmailFellApp',null,array(

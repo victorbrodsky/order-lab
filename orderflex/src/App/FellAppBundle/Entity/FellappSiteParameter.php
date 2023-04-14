@@ -150,6 +150,16 @@ class FellappSiteParameter {
      */
     private $sendEmailUploadLetterFellApp;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $confirmationSubjectFellApp;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $confirmationBodyFellApp;
+
     
     
     
@@ -429,6 +439,38 @@ class FellappSiteParameter {
     public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
     {
         $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationSubjectFellApp()
+    {
+        return $this->confirmationSubjectFellApp;
+    }
+
+    /**
+     * @param mixed $confirmationSubjectFellApp
+     */
+    public function setConfirmationSubjectFellApp($confirmationSubjectFellApp)
+    {
+        $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationBodyFellApp()
+    {
+        return $this->confirmationBodyFellApp;
+    }
+
+    /**
+     * @param mixed $confirmationBodyFellApp
+     */
+    public function setConfirmationBodyFellApp($confirmationBodyFellApp)
+    {
+        $this->confirmationBodyFellApp = $confirmationBodyFellApp;
     }
 
 

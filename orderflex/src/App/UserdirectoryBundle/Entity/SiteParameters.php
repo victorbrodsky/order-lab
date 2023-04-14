@@ -515,10 +515,10 @@ class SiteParameters {
 //     */
 //    private $sendEmailUploadLetterFellApp;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $confirmationSubjectFellApp;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $confirmationSubjectFellApp;
 
 //    /**
 //     * Recommendation Letter Salt to generate Recommendation Letter Salted Scrypt Hash ID
@@ -527,10 +527,10 @@ class SiteParameters {
 //     */
 //    private $recLetterSaltFellApp;
     
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $confirmationBodyFellApp;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $confirmationBodyFellApp;
 
 //    /**
 //     * @ORM\Column(type="text", nullable=true)
@@ -2671,13 +2671,13 @@ class SiteParameters {
 //    }
 
 
-    public function getConfirmationSubjectFellApp() {
-        return $this->confirmationSubjectFellApp;
-    }
-
-    public function setConfirmationSubjectFellApp($confirmationSubjectFellApp) {
-        $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
-    }
+//    public function getConfirmationSubjectFellApp() {
+//        return $this->confirmationSubjectFellApp;
+//    }
+//
+//    public function setConfirmationSubjectFellApp($confirmationSubjectFellApp) {
+//        $this->confirmationSubjectFellApp = $confirmationSubjectFellApp;
+//    }
 
 //    /**
 //     * @return mixed
@@ -2695,13 +2695,13 @@ class SiteParameters {
 //        $this->recLetterSaltFellApp = $recLetterSaltFellApp;
 //    }
 
-    public function getConfirmationBodyFellApp() {
-        return $this->confirmationBodyFellApp;
-    }
-
-    public function setConfirmationBodyFellApp($confirmationBodyFellApp) {
-        $this->confirmationBodyFellApp = $confirmationBodyFellApp;
-    }
+//    public function getConfirmationBodyFellApp() {
+//        return $this->confirmationBodyFellApp;
+//    }
+//
+//    public function setConfirmationBodyFellApp($confirmationBodyFellApp) {
+//        $this->confirmationBodyFellApp = $confirmationBodyFellApp;
+//    }
 
 //    public function getConfirmationEmailFellApp() {
 //        return $this->confirmationEmailFellApp;

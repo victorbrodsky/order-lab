@@ -140,6 +140,18 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
         ));
 
+        $builder->add('confirmationSubjectFellApp',null,array(
+            'label'=>'Email subject for confirmation of application submission:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('confirmationBodyFellApp',null,array(
+            'label'=>'Email body for confirmation of application submission:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(
