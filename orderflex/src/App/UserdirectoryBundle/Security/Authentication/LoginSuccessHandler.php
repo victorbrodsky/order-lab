@@ -158,7 +158,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $this->security->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
-            $options['event'] = 'Unapproved user login attempt to '.$this->siteNameStr.' site. Username='.$username;
+            $options['event'] = 'Unapproved user login attempt with role '.$this->roleUnapproved.' to '.$this->siteNameStr.' site. Username='.$username;
             //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
             $secUtil->setLoginAttempt($request,$options);
             //exit('Unapproved user');
