@@ -102,6 +102,15 @@
 
                 {{ formmacros.field(form.yearsOldAplicationsFellApp) }}
 
+                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.spreadsheetsPathFellApp }}#}
+                {{ formmacros.field(form.spreadsheetsPathFellApp) }}
+
+                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~  entity.applicantsUploadPathFellApp }}#}
+                {{ formmacros.field(form.applicantsUploadPathFellApp) }}
+
+                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.reportsUploadPathFellApp }}#}
+                {{ formmacros.field(form.reportsUploadPathFellApp) }}
+
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-primary -->

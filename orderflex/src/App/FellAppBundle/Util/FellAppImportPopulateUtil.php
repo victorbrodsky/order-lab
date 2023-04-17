@@ -724,10 +724,10 @@ class FellAppImportPopulateUtil {
         $systemUser = $userSecUtil->findSystemUser();
 
         //$path = $this->uploadDir.'/Spreadsheets';
-        $spreadsheetsPathFellApp = $userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp');
+        $spreadsheetsPathFellApp = $userSecUtil->getSiteSettingParameter('spreadsheetsPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$spreadsheetsPathFellApp ) {
             $spreadsheetsPathFellApp = 'Spreadsheets';
-            $logger->warning('spreadsheetsPathFellApp is not defined in Site Parameters; spreadsheetsPathFellApp='.$spreadsheetsPathFellApp);
+            $logger->warning('spreadsheetsPathFellApp is not defined in Fellowship Site Parameters; spreadsheetsPathFellApp='.$spreadsheetsPathFellApp);
         }
         $path = $this->uploadDir.'/'.$spreadsheetsPathFellApp;
 
@@ -1013,10 +1013,10 @@ class FellAppImportPopulateUtil {
         //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
-        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
+        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$applicantsUploadPathFellApp ) {
             $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
-            $logger->warning('applicantsUploadPathFellApp is not defined in Site Parameters. Use default "'.$applicantsUploadPathFellApp.'" folder.');
+            $logger->warning('applicantsUploadPathFellApp is not defined in Fellowship Site Parameters. Use default "'.$applicantsUploadPathFellApp.'" folder.');
         }
         $uploadPath = $this->uploadDir.'/'.$applicantsUploadPathFellApp;
 

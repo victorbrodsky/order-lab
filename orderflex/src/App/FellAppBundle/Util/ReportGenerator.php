@@ -526,10 +526,10 @@ class ReportGenerator {
         $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
-        $reportsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        $reportsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$reportsUploadPathFellApp ) {
             $reportsUploadPathFellApp = "Reports";
-            $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
+            $logger->warning('reportsUploadPathFellApp is not defined in Fellowship Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
         //$logger->notice("reportsUploadPathFellApp=".$reportsUploadPathFellApp);
 

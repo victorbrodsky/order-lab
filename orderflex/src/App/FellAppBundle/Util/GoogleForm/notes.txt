@@ -123,15 +123,18 @@ WCMPathPrgm@med.cornell.edu
 (moved to fellapp setting) deleteImportedAplicationsFellApp - Delete successfully imported applications from Google Drive
 (moved to fellapp setting) deleteOldAplicationsFellApp - Delete downloaded spreadsheets with fellowship applications after successful import into the database
 (moved to fellapp setting) yearsOldAplicationsFellApp - Number of years to keep downloaded spreadsheets with fellowship applications as backup (2)
-spreadsheetsPathFellApp - Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets)
-applicantsUploadPathFellApp - Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads)
-reportsUploadPathFellApp - Path to the generated fellowship applications in PDF format (fellapp/Reports)
+(moved to fellapp setting) spreadsheetsPathFellApp - Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets)
+(moved to fellapp setting) applicantsUploadPathFellApp - Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads)
+(moved to fellapp setting) reportsUploadPathFellApp - Path to the generated fellowship applications in PDF format (fellapp/Reports)
 ####################################
 
 
 ### FellappSiteParameter ###
-fellappRecLetterUrl - the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
+done - fellappRecLetterUrl - the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
 
+TODO: Add:
+codeGoogleFormFellApp - Path to the local copy of the fellowship application form Code.gs and other files
+codeGoogleRecLetFellApp - Path to the local copy of the recommendation letter submission form Code.gs and other files
 ####################################
 
 

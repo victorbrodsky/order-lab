@@ -184,7 +184,28 @@ class FellappSiteParameter {
      */
     private $yearsOldAplicationsFellApp;
 
+    /**
+     * Path to spreadsheets: i.e. Spreadsheets
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $spreadsheetsPathFellApp;
 
+    /**
+     * Path to upload applicants documents: i.e. FellowshipApplicantUploads
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $applicantsUploadPathFellApp;
+
+
+    /**
+     * Path to upload applicants documents used in ReportGenerator: i.e. Reports
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reportsUploadPathFellApp;
+    
     
     
     public function __construct() {
@@ -543,6 +564,54 @@ class FellappSiteParameter {
     public function setYearsOldAplicationsFellApp($yearsOldAplicationsFellApp)
     {
         $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpreadsheetsPathFellApp()
+    {
+        return $this->spreadsheetsPathFellApp;
+    }
+
+    /**
+     * @param mixed $spreadsheetsPathFellApp
+     */
+    public function setSpreadsheetsPathFellApp($spreadsheetsPathFellApp)
+    {
+        $this->spreadsheetsPathFellApp = $spreadsheetsPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicantsUploadPathFellApp()
+    {
+        return $this->applicantsUploadPathFellApp;
+    }
+
+    /**
+     * @param mixed $applicantsUploadPathFellApp
+     */
+    public function setApplicantsUploadPathFellApp($applicantsUploadPathFellApp)
+    {
+        $this->applicantsUploadPathFellApp = $applicantsUploadPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReportsUploadPathFellApp()
+    {
+        return $this->reportsUploadPathFellApp;
+    }
+
+    /**
+     * @param mixed $reportsUploadPathFellApp
+     */
+    public function setReportsUploadPathFellApp($reportsUploadPathFellApp)
+    {
+        $this->reportsUploadPathFellApp = $reportsUploadPathFellApp;
     }
 
 

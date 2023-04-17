@@ -165,6 +165,30 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
+        $builder->add('spreadsheetsPathFellApp',null,array(
+            'label'=>'Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
+        $builder->add('applicantsUploadPathFellApp',null,array(
+            'label'=>'Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
+        $builder->add('reportsUploadPathFellApp',null,array(
+            'label'=>'Path to the generated fellowship applications in PDF format (fellapp/Reports):',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(
