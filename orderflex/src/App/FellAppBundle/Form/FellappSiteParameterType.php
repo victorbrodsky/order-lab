@@ -150,7 +150,15 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
-        
+        $builder->add('deleteImportedAplicationsFellApp',null,array(
+            'label'=>"Delete successfully imported applications from Google Drive:",
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
+        $builder->add('deleteOldAplicationsFellApp',null,array(
+            'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
 
 
         //TODO: implement date transformer when year is not set

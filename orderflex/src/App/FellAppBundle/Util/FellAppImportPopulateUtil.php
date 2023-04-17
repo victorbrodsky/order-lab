@@ -466,7 +466,7 @@ class FellAppImportPopulateUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
+        $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$deleteImportedAplicationsFellApp ) {
             $logger->warning("deleteImportedAplicationsFellApp parameter is not defined or is set to false");
             return false;
@@ -1844,7 +1844,7 @@ class FellAppImportPopulateUtil {
                 if( $deleteSourceRow ) {
 
                     $userSecUtil = $this->container->get('user_security_utility');
-                    $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
+                    $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp',$this->container->getParameter('fellapp.sitename'));
                     if( $deleteImportedAplicationsFellApp ) {
 
                         //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
@@ -2419,9 +2419,9 @@ class FellAppImportPopulateUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //deleteOldAplicationsFellApp
-        $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp');
+        $deleteOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteOldAplicationsFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$deleteOldAplicationsFellApp ) {
-            $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
+            $logger->notice('deleteOldAplicationsFellApp is FALSE or not defined in Fellowship Site Parameters. deleteOldAplicationsFellApp='.$deleteOldAplicationsFellApp);
             return false;
         }
 

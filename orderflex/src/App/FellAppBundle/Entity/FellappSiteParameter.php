@@ -160,6 +160,25 @@ class FellappSiteParameter {
      */
     private $confirmationBodyFellApp;
 
+    /**
+     * [ checkbox ] Delete successfully imported applications from Google Drive
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleteImportedAplicationsFellApp;
+
+    /**
+     * checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+     * (set it at 2) [this is to delete old excel sheets that are downloaded from google drive.
+     * Make sure it is functional and Google/Excel sheets containing applications older than
+     * the amount of years set by this option is auto-deleted along with the linked downloaded documents.
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleteOldAplicationsFellApp;
+
+
+
     
     
     
@@ -471,6 +490,38 @@ class FellappSiteParameter {
     public function setConfirmationBodyFellApp($confirmationBodyFellApp)
     {
         $this->confirmationBodyFellApp = $confirmationBodyFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleteImportedAplicationsFellApp()
+    {
+        return $this->deleteImportedAplicationsFellApp;
+    }
+
+    /**
+     * @param mixed $deleteImportedAplicationsFellApp
+     */
+    public function setDeleteImportedAplicationsFellApp($deleteImportedAplicationsFellApp)
+    {
+        $this->deleteImportedAplicationsFellApp = $deleteImportedAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleteOldAplicationsFellApp()
+    {
+        return $this->deleteOldAplicationsFellApp;
+    }
+
+    /**
+     * @param mixed $deleteOldAplicationsFellApp
+     */
+    public function setDeleteOldAplicationsFellApp($deleteOldAplicationsFellApp)
+    {
+        $this->deleteOldAplicationsFellApp = $deleteOldAplicationsFellApp;
     }
 
 

@@ -182,31 +182,31 @@
                         {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'identificationUploadLetterFellApp'}) }}">Edit</a></td>#}
                     {#</tr>#}
 
-                    <tr>
-                        <td>Delete successfully imported applications from Google Drive</td>
-                        <td>
+                    {#<tr>#}
+                        {#<td>Delete successfully imported applications from Google Drive</td>#}
+                        {#<td>#}
                             {#{{ entity.deleteImportedAplicationsFellApp }}#}
-                            {% set deleteImportedAplicationsFellAppStr = 'No' %}
-                            {% if entity.deleteImportedAplicationsFellApp == true %}
-                                {% set deleteImportedAplicationsFellAppStr = 'Yes' %}
-                            {% endif %}
-                            {{ deleteImportedAplicationsFellAppStr }}
-                        </td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteImportedAplicationsFellApp'}) }}">Edit</a></td>
-                    </tr>
+                            {#{% set deleteImportedAplicationsFellAppStr = 'No' %}#}
+                            {#{% if entity.deleteImportedAplicationsFellApp == true %}#}
+                                {#{% set deleteImportedAplicationsFellAppStr = 'Yes' %}#}
+                            {#{% endif %}#}
+                            {#{{ deleteImportedAplicationsFellAppStr }}#}
+                        {#</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteImportedAplicationsFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
-                    <tr>
-                        <td>Delete downloaded spreadsheets with fellowship applications after successful import into the database</td>
-                        <td>
+                    {#<tr>#}
+                        {#<td>Delete downloaded spreadsheets with fellowship applications after successful import into the database</td>#}
+                        {#<td>#}
                             {#{{ entity.deleteOldAplicationsFellApp }}#}
-                            {% set deleteOldAplicationsFellAppStr = 'No' %}
-                            {% if entity.deleteOldAplicationsFellApp == true %}
-                                {% set deleteOldAplicationsFellAppStr = 'Yes' %}
-                            {% endif %}
-                            {{ deleteOldAplicationsFellAppStr }}
-                        </td>
-                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteOldAplicationsFellApp'}) }}">Edit</a></td>
-                    </tr>
+                            {#{% set deleteOldAplicationsFellAppStr = 'No' %}#}
+                            {#{% if entity.deleteOldAplicationsFellApp == true %}#}
+                                {#{% set deleteOldAplicationsFellAppStr = 'Yes' %}#}
+                            {#{% endif %}#}
+                            {#{{ deleteOldAplicationsFellAppStr }}#}
+                        {#</td>#}
+                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'deleteOldAplicationsFellApp'}) }}">Edit</a></td>#}
+                    {#</tr>#}
 
                     <tr>
                         <td>Number of years to keep downloaded spreadsheets with fellowship applications as backup</td>

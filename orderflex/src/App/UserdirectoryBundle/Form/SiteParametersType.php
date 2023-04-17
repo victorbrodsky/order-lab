@@ -669,17 +669,17 @@ class SiteParametersType extends AbstractType
 //            ));
 //        }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteImportedAplicationsFellApp' )
-            $builder->add('deleteImportedAplicationsFellApp',null,array(
-                'label'=>"Delete successfully imported applications from Google Drive:",
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteImportedAplicationsFellApp' )
+//            $builder->add('deleteImportedAplicationsFellApp',null,array(
+//                'label'=>"Delete successfully imported applications from Google Drive:",
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteOldAplicationsFellApp' )
-            $builder->add('deleteOldAplicationsFellApp',null,array(
-                'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'deleteOldAplicationsFellApp' )
+//            $builder->add('deleteOldAplicationsFellApp',null,array(
+//                'label'=>'Delete downloaded spreadsheets with fellowship applications after successful import into the database:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'yearsOldAplicationsFellApp' )
             $builder->add('yearsOldAplicationsFellApp',null,array(
