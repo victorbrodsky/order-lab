@@ -640,12 +640,12 @@ class SiteParameters {
 //     */
 //    private $deleteOldAplicationsFellApp;
 
-    /**
-     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $yearsOldAplicationsFellApp;
+//    /**
+//     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+//     *
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $yearsOldAplicationsFellApp;
 
     /**
      * Path to spreadsheets: i.e. Spreadsheets
@@ -3080,21 +3080,21 @@ class SiteParameters {
         $this->applicantsUploadPathFellApp = $applicantsUploadPathFellApp;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getYearsOldAplicationsFellApp()
-    {
-        return $this->yearsOldAplicationsFellApp;
-    }
-
-    /**
-     * @param mixed $yearsOldAplicationsFellApp
-     */
-    public function setYearsOldAplicationsFellApp($yearsOldAplicationsFellApp)
-    {
-        $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getYearsOldAplicationsFellApp()
+//    {
+//        return $this->yearsOldAplicationsFellApp;
+//    }
+//
+//    /**
+//     * @param mixed $yearsOldAplicationsFellApp
+//     */
+//    public function setYearsOldAplicationsFellApp($yearsOldAplicationsFellApp)
+//    {
+//        $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
+//    }
 
 //    /**
 //     * @return mixed

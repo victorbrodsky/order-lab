@@ -120,8 +120,8 @@ F 212.746.8192
 WCMPathPrgm@med.cornell.edu
 ***
 
-deleteImportedAplicationsFellApp - Delete successfully imported applications from Google Drive
-deleteOldAplicationsFellApp - Delete downloaded spreadsheets with fellowship applications after successful import into the database
+(moved to fellapp setting) deleteImportedAplicationsFellApp - Delete successfully imported applications from Google Drive
+(moved to fellapp setting) deleteOldAplicationsFellApp - Delete downloaded spreadsheets with fellowship applications after successful import into the database
 yearsOldAplicationsFellApp - Number of years to keep downloaded spreadsheets with fellowship applications as backup (2)
 spreadsheetsPathFellApp - Path to the downloaded spreadsheets with fellowship applications (fellapp/Spreadsheets)
 applicantsUploadPathFellApp - Path to the downloaded attached documents (fellapp/FellowshipApplicantUploads)

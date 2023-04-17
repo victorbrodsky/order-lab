@@ -160,6 +160,11 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
+        $builder->add('yearsOldAplicationsFellApp',null,array(
+            'label'=>'Number of years to keep downloaded spreadsheets with fellowship applications as backup:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(

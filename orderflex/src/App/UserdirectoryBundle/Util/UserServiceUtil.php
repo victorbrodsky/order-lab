@@ -878,7 +878,7 @@ class UserServiceUtil {
             //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
             //"deleteImportedAplicationsFellApp" => false,
             //"deleteOldAplicationsFellApp" => false,
-            "yearsOldAplicationsFellApp" => 2,
+            //"yearsOldAplicationsFellApp" => 2,
             "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
             "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
             "reportsUploadPathFellApp" => "fellapp/Reports",

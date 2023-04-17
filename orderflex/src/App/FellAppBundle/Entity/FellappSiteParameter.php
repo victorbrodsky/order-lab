@@ -177,9 +177,14 @@ class FellappSiteParameter {
      */
     private $deleteOldAplicationsFellApp;
 
+    /**
+     * Used in checkbox for "Automatically delete downloaded applications that are older than [X] year(s)
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $yearsOldAplicationsFellApp;
 
 
-    
     
     
     public function __construct() {
@@ -522,6 +527,22 @@ class FellappSiteParameter {
     public function setDeleteOldAplicationsFellApp($deleteOldAplicationsFellApp)
     {
         $this->deleteOldAplicationsFellApp = $deleteOldAplicationsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getYearsOldAplicationsFellApp()
+    {
+        return $this->yearsOldAplicationsFellApp;
+    }
+
+    /**
+     * @param mixed $yearsOldAplicationsFellApp
+     */
+    public function setYearsOldAplicationsFellApp($yearsOldAplicationsFellApp)
+    {
+        $this->yearsOldAplicationsFellApp = $yearsOldAplicationsFellApp;
     }
 
 

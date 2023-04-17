@@ -681,11 +681,11 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
 //            ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'yearsOldAplicationsFellApp' )
-            $builder->add('yearsOldAplicationsFellApp',null,array(
-                'label'=>'Number of years to keep downloaded spreadsheets with fellowship applications as backup:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'yearsOldAplicationsFellApp' )
+//            $builder->add('yearsOldAplicationsFellApp',null,array(
+//                'label'=>'Number of years to keep downloaded spreadsheets with fellowship applications as backup:',
+//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'spreadsheetsPathFellApp' )
             $builder->add('spreadsheetsPathFellApp',null,array(

@@ -2425,9 +2425,9 @@ class FellAppImportPopulateUtil {
             return false;
         }
 
-        $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp');
+        $yearsOldAplicationsFellApp = $userSecUtil->getSiteSettingParameter('yearsOldAplicationsFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$yearsOldAplicationsFellApp ) {
-            $logger->warning('yearsOldAplicationsFellApp is not defined in Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
+            $logger->warning('yearsOldAplicationsFellApp is not defined in Fellowship Site Parameters. yearsOldAplicationsFellApp='.$yearsOldAplicationsFellApp);
             return false;
         }
 
