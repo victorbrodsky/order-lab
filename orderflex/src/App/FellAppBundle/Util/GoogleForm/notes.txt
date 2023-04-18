@@ -162,15 +162,11 @@ backupFileIdFellApp => felBackupTemplateFileId
 templateIdFellApp => felTemplateFileId (nothing to do)
 folderIdFellApp => felSpreadsheetFolderId (nothing to do)
 
-TODO:
+Done:
 1) test application import and rec letters
 test processBackupFellAppFromGoogleDrive
 
-TODO: auto install GAS, set permission and insert GAS to google web page
-1) how to upload GAS from local to Google drive
-2) set permission
-3) manually(?) embed GAS to google web page
-
+TODO: embed rec letter submission script to the Google site and able to pass parameters to the GAS
 <script>
      const query = new URLSearchParams(window.location.search);
      console.log("query="+query);
@@ -198,4 +194,37 @@ function getParentUrl() {
     return parentUrl;
 }
 </script>
+
+### clasp ###
+//Synchronised by CLASP order-lab\orderflex\src\App\FellAppBundle\Util\GoogleForm\FellowshipApplication\script
+//ScriptID=1F6SXOl15opArJgL_L6Gv4tXCKME-avGmJwqU674jdzdSeEqrSGvVG0Vk
+//0) clasp login
+//1) Clone an existing project: clasp clone scriptID
+//2) modify script locally
+//3) save changes on Google: clasp push
+//4) clasp version [description] => [version]
+//5) clasp deploy [version] [description]
+// Set permission
+//6) Go to https://script.google.com/home/projects/1F6SXOl15opArJgL_L6Gv4tXCKME-avGmJwqU674jdzdSeEqrSGvVG0Vk/edit
+//7) Choose Code.gs and click Run
+//8) Review Permission => Allow
+
+TODO: auto install GAS, set permission and insert GAS to google web page
+1) how to upload GAS from local to Google drive
+2) set permission
+3) manually(?) embed GAS to google web page
+
+
+//https://github.com/google/clasp#create
+Create GAS with title 'clasptest1' from local folder
+1) $ clasp create --title clasptest1 --type webapp --rootDir claspdir1
+1a) get scriptId from .clasp.json file
+2) copy GAS files to claspdir1, except .clasp.json
+3) $ clasp push
+4) $ clasp version "init deployment" => Created version 1.
+5) $ clasp deploy -V 1 => Deployment ID "abdc1234"
+6) Set permission: $ clasp open
+If changes made but we want to keep the same id "abdc1234":
+$ clasp deploy -V 1 -d "init deployment" -i abdc1234
+$ clasp deploy -V 1 -d "init deployment" -i abdc1234
 
