@@ -144,7 +144,7 @@ class RecLetterUtil {
         $logger = $this->container->get('logger');
 
         $forceSend = false;
-        $forceSend = true;
+        //$forceSend = true;
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $forceSend == false && $environment != "live" ) {
             $msg = "Server is not live: invitation email for the fellowship application ID ".$fellapp->getId()." will not be send to reference ".$reference->getFullName();
