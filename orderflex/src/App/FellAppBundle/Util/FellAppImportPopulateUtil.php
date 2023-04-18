@@ -605,11 +605,12 @@ class FellAppImportPopulateUtil {
         //get interval
         if( $modifiedDate ) {
             //echo "1modifiedDate=".$modifiedDate."<br>";
-            //$logger->notice("modifiedDate=".$modifiedDate);
+            $logger->notice("Backup spreadsheet file: modifiedDate=".$modifiedDate);
             $datetimeNow = new \DateTime();
             //$datetimeNow->modify('+9 day'); //testing
             $datetimeModified = new \DateTime($modifiedDate);
             $intervalDays = $datetimeNow->diff($datetimeModified)->days;
+            $logger->notice("Backup spreadsheet file: intervalDays=".$intervalDays);
         } else {
             $logger->notice("Ignore processing Backup spreadsheet file: modified date is empty modifiedDate=[$modifiedDate]");
             return 0;
@@ -626,7 +627,7 @@ class FellAppImportPopulateUtil {
         //dump($backupFile);
         //exit('process backup');
 
-        $logger->notice("Process backup file modified on ".$modifiedDate);
+        $logger->notice("Process backup file modified on ".$modifiedDate."; intervalDays=".$intervalDays);
 
         //download backup file to server and link it to Document DB
         $backupDb = $this->processSingleFile($backupFileIdFellApp, $service, 'Fellowship Application Backup Spreadsheet');
