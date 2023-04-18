@@ -162,6 +162,14 @@ backupFileIdFellApp => felBackupTemplateFileId
 templateIdFellApp => felTemplateFileId (nothing to do)
 folderIdFellApp => felSpreadsheetFolderId (nothing to do)
 
+TODO:
+1) test application import and rec letters
+test processBackupFellAppFromGoogleDrive
+
+TODO: auto install GAS, set permission and insert GAS to google web page
+1) how to upload GAS from local to Google drive
+2) set permission
+3) manually(?) embed GAS to google web page
 
 <script>
      const query = new URLSearchParams(window.location.search);

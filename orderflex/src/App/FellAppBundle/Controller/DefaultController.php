@@ -289,6 +289,11 @@ class DefaultController extends OrderAbstractController
 //        }
 //        //exit('files');
 
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $modifiedDate = $fellappUtil->getUpdateDateBackupFellAppTemplate();
+//        echo "modifiedDate=$modifiedDate <br>";
+//        exit();
+
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 

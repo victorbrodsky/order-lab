@@ -144,7 +144,7 @@ class RecLetterUtil {
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != "live" ) {
-            $msg = "Server is not live: invitation email will not be send to reference ".$reference->getFullName();
+            $msg = "Server is not live: invitation email for residency application will not be send to reference ".$reference->getFullName();
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$resapp);
             $res = array(
                 "res" => false,

@@ -3353,5 +3353,11 @@ class UserSecurityUtil {
         }
         return NULL;
     }
-    
+
+    public function getUploadPath() {
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
+        return $uploadPath;
+    }
+
 }

@@ -2216,4 +2216,43 @@ class FellAppUtil {
 
         return false;
     }
+
+    //felBackupTemplateFileId backupUpdateDatetimeFellApp
+    public function getUpdateDateGoogleDriveFile( $fileId ) {
+        $logger = $this->container->get('logger');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+
+        $service = $googlesheetmanagement->getGoogleService();
+
+        //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+        $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter($fileId);
+        if( !$backupFileIdFellApp ) {
+            $error = "felBackupTemplateFileId parameter is not set";
+            $logger->error($error);
+            return $error;
+        }
+
+        if( !$service ) {
+            $error = "Google API service failed!";
+            $logger->error($error);
+            return $error;
+        }
+
+        $params = array(
+            'fields' => array('modifiedTime')
+        );
+
+        //1) get backup file on GoogleDrive
+        $backupFile = $service->files->get($backupFileIdFellApp,$params);
+        //dump($backupFile);
+        //exit('111');
+
+        //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
+        $modifiedDate = $backupFile->getModifiedTime(); //V3
+
+        return $modifiedDate;
+    }
+
+    //recBackupTemplateFileId
+
 } 

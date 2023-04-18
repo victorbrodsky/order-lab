@@ -68,6 +68,7 @@
     </div> <!-- panel panel-primary -->
     {# EOF Entry #}
 
+
     {#Fellowship Installation#}
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -80,6 +81,25 @@
         </div>
         <div id="fellapp-install" class="panel-collapse collapse in">
             <div class="panel-body">
+
+                {% set updateApplicationBackupDate = fellapp_util.getUpdateDateGoogleDriveFile('felBackupTemplateFileId') %}
+                {% set updateRecletBackupDate = fellapp_util.getUpdateDateGoogleDriveFile('recBackupTemplateFileId') %}
+                {% if updateApplicationBackupDate or updateRecletBackupDate %}
+                    <div class="well">
+                        {% if updateApplicationBackupDate %}
+                            <p>
+                                Fellowship Application SpreadSheet Backup Last Modified Date:
+                                {{ updateApplicationBackupDate|date('m/d/Y H:i') }}
+                            </p>
+                        {% endif %}
+                        {% if updateRecletBackupDate %}
+                            <p>
+                                Recommendation Letter Submission SpreadSheet Backup Last Modified Date:
+                                {{ updateRecletBackupDate|date('m/d/Y H:i') }}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endif %}
 
                 {#fields#}
                 {{ formmacros.field(form.fellappRecLetterUrl) }}
@@ -102,14 +122,21 @@
 
                 {{ formmacros.field(form.yearsOldAplicationsFellApp) }}
 
-                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.spreadsheetsPathFellApp }}#}
+                {% set uploadPath = user_security_utility.getUploadPath() %}
+                <div class="well">
+                Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.spreadsheetsPathFellApp }}
                 {{ formmacros.field(form.spreadsheetsPathFellApp) }}
+                </div>
 
-                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~  entity.applicantsUploadPathFellApp }}#}
+                <div class="well">
+                Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~  entity.applicantsUploadPathFellApp }}
                 {{ formmacros.field(form.applicantsUploadPathFellApp) }}
+                </div>
 
-                {#Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.reportsUploadPathFellApp }}#}
+                <div class="well">
+                Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.reportsUploadPathFellApp }}
                 {{ formmacros.field(form.reportsUploadPathFellApp) }}
+                </div>
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->

@@ -592,7 +592,10 @@ class FellAppImportPopulateUtil {
         //testing
         //$backupFileIdFellApp = '1HBHG_53KYj59bQW_zSF221OiJJCrlFoEjy4m27TActk'; //'1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o';
         //1) get backup file on GoogleDrive
-        $backupFile = $service->files->get($backupFileIdFellApp);
+        $params = array(
+            'fields' => array('modifiedTime')
+        );
+        $backupFile = $service->files->get($backupFileIdFellApp,$params);
         //$modifiedDate = $backupFile->getModifiedDate(); //datetime V1
         $modifiedDate = $backupFile->getModifiedTime(); //V3
         //echo "0modifiedDate=".$modifiedDate."<br>";

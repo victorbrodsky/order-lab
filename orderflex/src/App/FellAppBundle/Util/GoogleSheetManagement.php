@@ -1715,5 +1715,7 @@ class GoogleSheetManagement {
         return $config->$getSettingMethod();
     }
 
+    
+
 }
 

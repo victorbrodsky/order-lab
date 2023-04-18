@@ -159,16 +159,16 @@
                         {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'folderIdFellApp'}) }}">Edit</a></td>#}
                     {#</tr>#}
 
-                    <tr>
-                        <td>Backup Sheet Last Modified Date</td>
-                        <td class="rowlink-skip">
-                            {% if entity.backupUpdateDatetimeFellApp %}
-                                {{ entity.backupUpdateDatetimeFellApp|date('m/d/Y H:i') }}
-                            {% endif %}
-                        </td>
+                    {#<tr>#}
+                        {#<td>Backup Sheet Last Modified Date</td>#}
+                        {#<td class="rowlink-skip">#}
+                            {#{% if entity.backupUpdateDatetimeFellApp %}#}
+                                {#{{ entity.backupUpdateDatetimeFellApp|date('m/d/Y H:i') }}#}
+                            {#{% endif %}#}
+                        {#</td>#}
                         {#<td>{{ entity.backupUpdateDatetimeFellApp }}</td>#}
                         {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'backupUpdateDatetimeFellApp'}) }}">Edit</a></td>#}
-                    </tr>
+                    {#</tr>#}
 
                     {#<tr>#}
                         {#<td>Local Organizational Group for imported fellowship applications (Pathology Fellowship Programs (WCM))</td>#}
