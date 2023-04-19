@@ -217,6 +217,7 @@ TODO: auto install GAS, set permission and insert GAS to google web page
 //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\FellApp\clasptest1
 //https://github.com/google/clasp#create
 Create GAS with title 'clasptest1' from local folder
+0) $ clasp login
 1) $ clasp create --title clasptest1 --type webapp --rootDir claspdir1
 1a) get scriptId from .clasp.json file
 2) copy GAS files to claspdir1, except .clasp.json

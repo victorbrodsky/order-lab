@@ -944,7 +944,7 @@ class UserServiceUtil {
 
             ////////////////////// Global TRP parameters //////////////////
             "transresProjectSelectionNote" => 'If your project request involves collaboration with any
-                                                <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"
+                                                <a target="_blank" href="https://pathology.weill.cornell.edu/divisions/hematopathology"
                                                 >Weill Cornell Hematopathology faculty members</a>,<br>
                                                 please press the "New Hematopathology Project Request" button.<br>
                                                 For all other project requests, please press the "New AP/CP Project Request" button.',
