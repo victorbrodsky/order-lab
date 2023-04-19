@@ -147,10 +147,41 @@ class FellAppSiteParametersController extends SiteParametersController
     }
 
     /**
+     * Google integration
+     *
+     * @Route("/google-integration", name="fellapp_google_integration", methods={"GET"})
+     * @Template("AppFellAppBundle/SiteParameter/google-integration.html.twig")
+     */
+    public function fellappIntegrationShowAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $dir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR .
+            "src" . DIRECTORY_SEPARATOR . "App" .
+            DIRECTORY_SEPARATOR . "FellAppBundle" . DIRECTORY_SEPARATOR . "Util" .
+            DIRECTORY_SEPARATOR . "GoogleForm"
+        ;
+
+        $manualUrl = $dir . DIRECTORY_SEPARATOR . "Readme.docx";
+        echo "manualUrl=$manualUrl <br>";
+        //$bundleFileName = "orderassets\\AppTranslationalResearchBundle\\images\\".$filename;
+        
+        return array(
+            'manualUrl' => $manualUrl,
+            'cycle' => $cycle,
+            'title' => "Google Integration Manual"
+        );
+    }
+
+    /**
      * FellAppSiteParameter Show
      *
      * @Route("/specific-site-parameters/show/", name="fellapp_siteparameters_show_specific_site_parameters", methods={"GET"})
-     * @Template("AppFellAppBundle/SiteParameter/edit-content.html.twig")
+     * @Template("AppFellAppBundle/SiteParameter/show.html.twig")
      */
     public function fellappSiteParameterShowAction( Request $request ) {
 

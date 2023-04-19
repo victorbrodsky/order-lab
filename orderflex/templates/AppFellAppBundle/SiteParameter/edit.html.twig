@@ -17,7 +17,8 @@
 {% extends "AppFellAppBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+{% import "AppFellAppBundle/SiteParameter/fellappsettingsmacros.html.twig" as fellappsettingsmacros %}
 
 
 {% block title %}
@@ -35,111 +36,112 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-    <div class="well">
+    {#<div class="well">#}
+    {#edit#}
 
-    {{ form_start(form) }}
+    {{ fellappsettingsmacros.siteSettingsForm(entity,form,cycle) }}
 
-        {{ form_errors(form) }}
+    {#{% if 0 %}#}
+    {#{{ form_start(form) }}#}
+
+        {#{{ form_errors(form) }}#}
 
         {# Defaults #}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#fellapp-Defaults">
-                        E-mail Notifications and Other Fellowship Settings
-                    </a>
-                </h4>
-            </div>
-            <div id="fellapp-Defaults" class="panel-collapse collapse in">
-                <div class="panel-body">
+        {#<div class="panel panel-primary">#}
+            {#<div class="panel-heading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a data-toggle="collapse" href="#fellapp-Defaults">#}
+                        {#E-mail Notifications and Other Fellowship Settings#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="fellapp-Defaults" class="panel-collapse collapse in">#}
+                {#<div class="panel-body">#}
 
-                    <p>
-                        Please use naming notation:
-                        <br>[[APPLICANT NAME]] - applicant name
-                        <br>[[START YEAR]] - start year of the training period
-                        <br>[[FELLOWSHIP TYPE]] - fellowship application type
-                        <br>[[INSTITUTION]] - application institution
-                        <br>[[DIRECTOR]] - program director
-                    </p>
+                    {#<p>#}
+                        {#Please use naming notation:#}
+                        {#<br>[[APPLICANT NAME]] - applicant name#}
+                        {#<br>[[START YEAR]] - start year of the training period#}
+                        {#<br>[[FELLOWSHIP TYPE]] - fellowship application type#}
+                        {#<br>[[INSTITUTION]] - application institution#}
+                        {#<br>[[DIRECTOR]] - program director#}
+                    {#</p>#}
 
-                    {{ formmacros.field(form.acceptedEmailSubject) }}
+                    {#{{ formmacros.field(form.acceptedEmailSubject) }}#}
 
-                    {{ formmacros.field(form.acceptedEmailBody) }}
+                    {#{{ formmacros.field(form.acceptedEmailBody) }}#}
 
-                    {{ formmacros.field(form.rejectedEmailSubject) }}
+                    {#{{ formmacros.field(form.rejectedEmailSubject) }}#}
 
-                    {{ formmacros.field(form.rejectedEmailBody) }}
+                    {#{{ formmacros.field(form.rejectedEmailBody) }}#}
 
-                    {% if form.fellappAcademicYearStart is defined %}
-                        {{ formmacros.dayMonthDate(form.fellappAcademicYearStart,cycle) }}
-                    {% endif %}
+                    {#{% if form.fellappAcademicYearStart is defined %}#}
+                        {#{{ formmacros.dayMonthDate(form.fellappAcademicYearStart,cycle) }}#}
+                    {#{% endif %}#}
 
-                    {% if form.fellappAcademicYearEnd is defined %}
-                        {{ formmacros.dayMonthDate(form.fellappAcademicYearEnd,cycle) }}
-                    {% endif %}
+                    {#{% if form.fellappAcademicYearEnd is defined %}#}
+                        {#{{ formmacros.dayMonthDate(form.fellappAcademicYearEnd,cycle) }}#}
+                    {#{% endif %}#}
 
-            </div> <!-- panel-body -->
-          </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-primary -->
+            {#</div> <!-- panel-body -->#}
+          {#</div> <!-- panel-collapse -->#}
+        {#</div> <!-- panel panel-primary -->#}
         {# EOF Entry #}
 
         {#Fellowship Installation#}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#fellapp-install">
-                        Google Sites Integration
-                        {#Install the Fellowship Application Form and Recommendation Letter Upload pages on Google Sites#}
-                    </a>
-                </h4>
-            </div>
-            <div id="fellapp-install" class="panel-collapse collapse in">
-                <div class="panel-body">
+        {#<div class="panel panel-primary">#}
+            {#<div class="panel-heading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a data-toggle="collapse" href="#fellapp-install">#}
+                        {#Parameters for Google Sites Integration#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="fellapp-install" class="panel-collapse collapse in">#}
+                {#<div class="panel-body">#}
 
                     {#fields#}
-                    {{ formmacros.field(form.fellappRecLetterUrl) }}
-                    {{ formmacros.field(form.confirmationEmailFellApp) }}
-                    {{ formmacros.field(form.applicationPageLinkFellApp) }}
-                    {{ formmacros.field(form.authPathFellApp) }}
-                    {{ formmacros.field(form.googleDriveApiUrlFellApp) }}
-                    {{ formmacros.field(form.localInstitutionFellApp) }}
-                    {{ formmacros.field(form.identificationUploadLetterFellApp) }}
-                    {{ formmacros.field(form.recLetterSaltFellApp) }}
+                    {#{{ formmacros.field(form.fellappRecLetterUrl) }}#}
+                    {#{{ formmacros.field(form.confirmationEmailFellApp) }}#}
+                    {#{{ formmacros.field(form.applicationPageLinkFellApp) }}#}
+                    {#{{ formmacros.field(form.authPathFellApp) }}#}
+                    {#{{ formmacros.field(form.googleDriveApiUrlFellApp) }}#}
+                    {#{{ formmacros.field(form.localInstitutionFellApp) }}#}
+                    {#{{ formmacros.field(form.identificationUploadLetterFellApp) }}#}
+                    {#{{ formmacros.field(form.recLetterSaltFellApp) }}#}
 
-                    {{ formmacros.field(form.allowPopulateFellApp) }}
-                    {{ formmacros.field(form.sendEmailUploadLetterFellApp) }}
+                    {#{{ formmacros.field(form.allowPopulateFellApp) }}#}
+                    {#{{ formmacros.field(form.sendEmailUploadLetterFellApp) }}#}
 
-                    {{ formmacros.field(form.confirmationSubjectFellApp) }}
-                    {{ formmacros.field(form.confirmationBodyFellApp) }}
+                    {#{{ formmacros.field(form.confirmationSubjectFellApp) }}#}
+                    {#{{ formmacros.field(form.confirmationBodyFellApp) }}#}
 
-                    {{ formmacros.field(form.deleteImportedAplicationsFellApp) }}
-                    {{ formmacros.field(form.deleteOldAplicationsFellApp) }}
+                    {#{{ formmacros.field(form.deleteImportedAplicationsFellApp) }}#}
+                    {#{{ formmacros.field(form.deleteOldAplicationsFellApp) }}#}
 
-                    {{ formmacros.field(form.yearsOldAplicationsFellApp) }}
+                    {#{{ formmacros.field(form.yearsOldAplicationsFellApp) }}#}
 
-                    {{ formmacros.field(form.spreadsheetsPathFellApp) }}
-                    {{ formmacros.field(form.applicantsUploadPathFellApp) }}
-                    {{ formmacros.field(form.reportsUploadPathFellApp) }}
+                    {#{{ formmacros.field(form.spreadsheetsPathFellApp) }}#}
+                    {#{{ formmacros.field(form.applicantsUploadPathFellApp) }}#}
+                    {#{{ formmacros.field(form.reportsUploadPathFellApp) }}#}
 
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-primary -->
+                {#</div> <!-- panel-body -->#}
+            {#</div> <!-- panel-collapse -->#}
+        {#</div> <!-- panel panel-primary -->#}
+        {##}
+    {#{{ form_end(form) }}#}
+    {#{% endif %}#}
 
-        {#{{ form_row(form._token) }}#}
-        {#{{ form_rest(form) }}#}
+    {#{% if cycle == "show" %}#}
+        {#<p>#}
+            {#<a class="btn btn-primary" href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}">Edit</a>#}
+        {#</p>#}
+    {#{% endif %}#}
 
-    {{ form_end(form) }}
-
-    {% if cycle == "show" %}
-        {#<br>#}
-        <p>
-            <a class="btn btn-primary" href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}">Edit</a>
-        </p>
-    {% endif %}
-
-    </div>
+    {#</div>#}
 
 {% endblock %}
+
 
 {% block additionaljs %}
 
