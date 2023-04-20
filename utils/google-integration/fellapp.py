@@ -2,6 +2,8 @@
 # Created by Oleg Ivanov
 
 #Install Google scripts for Fellowship Application and Recommendation Letters submission forms
+#https://github.com/google/clasp
+#https://developers.google.com/apps-script/guides/clasp
 #1) Create new folder, for example “MyFellowshipApplication”
 #2) Go to this folder and login to your Google Account: $ clasp login
 #3) Create a new Apps Script project: $ clasp create --title “MyFellApp” --type webapp
@@ -45,20 +47,13 @@ def help():
         "-H, --help             this help"
     )
 
-def install():
+def install( dir, title ):
     command = "clasp login"
     #command = "clasp --version"
-
     output = runCommand(command.strip())
-    #output = runCommand("clasp --version")
-    #output = check_output("clasp --version", shell=True)
 
-    #output = os.system('ls')
-    #output = subprocess.Popen(['clasp', '-v']) #,stdout=subprocess.PIPE,universal_newlines=True)
-
-    #stream = os.popen('echo Returned output')
-    #output = stream.read()
-    #output
+    command = "clasp create --type webapp --title " + title + " --rootDir " + dir
+    output = runCommand(command.strip())
 
     return output
 
@@ -137,10 +132,10 @@ def main(argv):
 
     runCommand('whoami') #testing runCommand
 
-    res = install()
+    res = install(dir,title)
 
     print(res)
 
 if __name__ == '__main__':
-    #python fellapp-gas-install.py --dir "MyFellowshipApplication" --title “MyFellApp”
+    #python fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\FellApp\MyFellowshipApplication" --title “MyFellApp”
     main(sys.argv[1:])
