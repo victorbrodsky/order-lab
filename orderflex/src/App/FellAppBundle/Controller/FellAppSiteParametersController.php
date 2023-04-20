@@ -160,18 +160,20 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $dir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR .
-            "src" . DIRECTORY_SEPARATOR . "App" .
-            DIRECTORY_SEPARATOR . "FellAppBundle" . DIRECTORY_SEPARATOR . "Util" .
-            DIRECTORY_SEPARATOR . "GoogleForm"
-        ;
+//        $dir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR .
+//            "src" . DIRECTORY_SEPARATOR . "App" .
+//            DIRECTORY_SEPARATOR . "FellAppBundle" . DIRECTORY_SEPARATOR . "Util" .
+//            DIRECTORY_SEPARATOR . "GoogleForm"
+//        ;
 
-        $manualUrl = $dir . DIRECTORY_SEPARATOR . "Readme.docx";
-        echo "manualUrl=$manualUrl <br>";
-        //$bundleFileName = "orderassets\\AppTranslationalResearchBundle\\images\\".$filename;
+        //$manualUrl = $dir . DIRECTORY_SEPARATOR . "Readme.docx";
+        //echo "manualUrl=$manualUrl <br>";
+
+        $filename = "README.pdf";
+        $bundleFileName = "orderassets\\AppFellAppBundle\\docs\\".$filename;
         
         return array(
-            'manualUrl' => $manualUrl,
+            'manualUrl' => $bundleFileName,
             'cycle' => $cycle,
             'title' => "Google Integration Manual"
         );
