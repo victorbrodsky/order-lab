@@ -32,6 +32,9 @@ use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\SiteParametersType;
 use App\UserdirectoryBundle\Util\UserUtil;
 
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+
 /**
  * SiteParameters controller.
  *
@@ -177,6 +180,100 @@ class FellAppSiteParametersController extends SiteParametersController
             'cycle' => $cycle,
             'title' => "Google Integration Manual"
         );
+    }
+
+    /**
+     * @Route("/install-gas/", name="fellapp_install_gas", methods={"GET","POST"})
+     * @Template("AppFellAppBundle/SiteParameter/install-gas.html.twig")
+     */
+    public function runInstallGasAction(Request $request)
+    {
+
+        if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('fellapp-nopermission'));
+        }
+
+        //$user = $this->getUser();
+        //$toEmail = $user->getSingleEmail();
+
+        if( isset($_POST['params']) ) {
+            $params = $_POST['params'];
+        }
+
+        if( isset($params) ) {
+            $projectDir = $this->container->get('kernel')->getProjectDir();
+            //exit("projectDir=".$projectDir);
+
+            $path = $projectDir . "/../" . DIRECTORY_SEPARATOR .
+                "utils" . DIRECTORY_SEPARATOR . "google-integration";
+
+            $path = realpath($path);
+            echo "path=".$path."<br>";
+
+            $logFile = $path . DIRECTORY_SEPARATOR . "pythonexeclog.log";
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $python = "python";
+            } else {
+                $python = "python3";
+            }
+
+            $command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
+            $command = $python ." " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
+            //$command = $command . " " . $params;
+            //$command = $python. " -V";
+            //$command = $command . " > " .$logFile;
+            echo "command=".$command."<br>";
+
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $res = $this->runProcess($command,$logFile);
+            exit("res=".$res);
+
+            //Flash
+            $this->addFlash(
+                'notice',
+                'Executed command ' . $command." with result:" . $res
+            );
+
+            return $this->redirectToRoute('fellapp_install_gas');
+        }
+
+        //exit("email res=".$emailRes);
+
+        return array();
+    }
+
+    public function runProcess($command) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            echo 'This is a server using Windows! <br>';
+            $windows = true;
+            $linux = false;
+        } else {
+            echo 'This is a server not using Windows! Assume Linux <br>';
+            $windows = false;
+            $linux = true;
+        }
+
+        if( $linux ) {
+            //$process = new Process($command);
+            $process = Process::fromShellCommandline($command);
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            $res = $process->getOutput();
+        }
+
+        if( $windows ) {
+            $res = exec($command);
+            //$res = shell_exec($command);
+            //echo "res=".$res."<br>";
+        }
+
+        //chdir($old_path);
+
+        return $res;
     }
 
     /**

@@ -38,7 +38,7 @@ class EmailController extends OrderAbstractController
     {
 
         if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -73,7 +73,7 @@ class EmailController extends OrderAbstractController
     {
 
         if (!$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');

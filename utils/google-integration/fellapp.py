@@ -42,9 +42,9 @@ ENV_NAME = "Unknown"
 def help():
     print(
         "Usage: python fellapp-gas-install.py [OPTIONS]\n" \
-        "Example: python fellapp-gas-install.py --dir 'MyFellowshipApplication' --title 'MyFellApp'\n" \
+        "Example: python fellapp-gas-install.py --dir MyFellowshipApplication --title MyFellApp\n" \
         "\n" \
-        "-d, --dir              folder name where to install the local copies of the Google scripts\n" \
+        "-d, --dir              folder name where to install the local copies of the Google scripts. New folder will be created to ./script/\n" \
         "-t, --title            title of a new Google script\n" \
         " \n" \
         "-e, --env              environment info as a string attached to the notification email\n" \
@@ -61,6 +61,7 @@ def install( dest_dir, title ):
     output.append(res)
 
     # 2) Create new folder, for example “MyFellowshipApplication”
+    dest_dir = "scripts/"+dest_dir
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
     else:
@@ -255,5 +256,5 @@ def main(argv):
     print(output)
 
 if __name__ == '__main__':
-    #python fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\FellApp\MyFellowshipApplication" --title “MyFellApp”
+    #python fellapp.py --dir "MyFellowshipApplication" --title “MyFellApp”
     main(sys.argv[1:])
