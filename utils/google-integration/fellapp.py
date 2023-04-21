@@ -140,17 +140,22 @@ def install( dest_dir, title ):
     output.append(res)
 
     # Open project script and set permission by running Code.gs
+    #command = "clasp open --webapp" asks Open which deployement?
     command = "clasp open"
     #command = "clasp run Code.gs"
     res = runCommand(command.strip())
     output.append(res)
+    #Login again, Click "Allow"
+    #Go to "Deploy" -> "Manage Deployments" -> copy Web app URL -> Run this URL in private browser
+    #TODO: wait and set permission
 
     # 8) Test deployment web url
-    #https://script.google.com/macros/s/AKfycbypzF0jiZHcUSEVK9TV7_ZrD2llrMNN9ZHGxHi6rZlWVG8PspVfl3UmzEFO1PvJfKZW2g/exec
-    url = "https://script.google.com/macros/s/"+deploymentId+"/exec"
-    print("URL="+url)
-    webbrowser.open(url)  # Go to example.com
-    output.append(res)
+    if False:
+        #https://script.google.com/macros/s/AKfycbypzF0jiZHcUSEVK9TV7_ZrD2llrMNN9ZHGxHi6rZlWVG8PspVfl3UmzEFO1PvJfKZW2g/exec
+        url = "https://script.google.com/macros/s/"+deploymentId+"/exec"
+        print("URL="+url)
+        webbrowser.open(url)  # Go to example.com
+        output.append(res)
 
     return output
 
