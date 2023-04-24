@@ -21,6 +21,42 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h4 class="panel-title">
+            <a data-toggle="collapse" href="#fellapp-instructions-auto">
+                Instructions for Auto-Installing Google Scripts
+            </a>
+        </h4>
+    </div>
+    <div id="fellapp-instructions-auto" class="panel-collapse collapse">
+        <div class="panel-body">
+            <p>
+                1) Open command console
+            </p>
+            <p>
+                2) Go to the local ORDER folder 'order-lab\utils\google-integration\'
+            </p>
+            <p>
+                3) Run 'python fellappsimple.py --title MyScript', where 'MyScript' is a prefix for the
+                Fellowship Application and Recommendation Letter scripts.<br>
+                For example, if the name is 'MyScript', the local copies of the Fellowship Application script
+                will be installed in order-lab\utils\google-integration\scripts\MyScriptFellApp and the script
+                name on Google will be MyScriptFellApp, and the local copies of the Recommendation Letter
+                script will be installed in order-lab\utils\google-integration\scripts\MyScriptRecLet
+                and the script name on Google will be MyScriptRecLet.
+            </p>
+            <p>
+                4) Open https://script.google.com/home and open google scripts 'MyScriptFellApp' and 'MyScriptRecLet'.<br>
+                Set the permission as described in the bottom of the section 1.1 in the "Instruction for Google Sites Integration":
+                ‘Deploy’ -> ‘Manage deployments’ -> click edit icon -> click ‘Deploy’ on the bottom ->
+                click ‘Authorize access’ -> choose account -> click ‘Allow’
+            </p>
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel-collapse -->
+</div> <!-- panel panel-primary -->
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">
             <a data-toggle="collapse" href="#fellapp-instructions">
                 Instructions for Google Sites Integration
             </a>

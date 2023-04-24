@@ -242,12 +242,17 @@ class FellAppSiteParametersController extends SiteParametersController
 
             //$commandFellApp = $clasppath . " -v"; //testing
             //$commandFellApp = $python . " -V";
+            //$commandFellApp = $clasppath . " login";
+            //$res = exec($commandFellApp);
+            //dump($res);
+            //exit('111');
 
             //$command = $command . " " . $params;
             //$command = $python. " -V";
             //$command = $command . " > " .$logFile;
             echo "commandFellApp=".$commandFellApp."<br>";
             echo "commandRecLet=".$commandRecLet."<br>";
+            //exit('111');
 
             $userServiceUtil = $this->container->get('user_service_utility');
 
@@ -256,7 +261,7 @@ class FellAppSiteParametersController extends SiteParametersController
 
             $logDir = $path.DIRECTORY_SEPARATOR."scripts";
             $envArr = array('HTTP' => 1);
-            $execTime = 180; //3 min
+            $execTime = 30; //3 min
             //ini_set('max_execution_time', $execTime);
             $process = new Process($commandFellApp,$logDir,$envArr,null,$execTime);
 

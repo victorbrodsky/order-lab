@@ -19,31 +19,32 @@
 # -t --title: title of a new Google script
 # -e --env
 
-import os, sys, getopt, logging
-import requests
-import smtplib
-from smtplib import SMTPException
-from email.mime.text import MIMEText
-import time
-from datetime import datetime
-import subprocess
-from subprocess import PIPE
+import os, sys, getopt
 from subprocess import check_output
 import glob, shutil
+
+#import requests
+#import smtplib
+#from smtplib import SMTPException
+#from email.mime.text import MIMEText
+#import time
+#from datetime import datetime
+#import subprocess
+#from subprocess import PIPE
 #import filecmp
 #from pathlib import Path
-import webbrowser
-import re
+#import webbrowser
+#import re
 
 DIR = ""
 TITLE = ""
 CLASP = ""
 ENV_NAME = "Unknown"
 
-def install_gas( dest_dir_name, title, clasppath ):
+def install_gas( source_dir, dest_dir, title, clasppath ):
     output = []
 
-    if dest_dir_name == '':
+    if dest_dir == '':
         res = "Destination directory name is empty"
         output.append(res)
         print(res)
@@ -55,18 +56,33 @@ def install_gas( dest_dir_name, title, clasppath ):
         print(res)
         return output
 
-    dest_dir_name = dest_dir_name.strip()
+    # if source_dir == '':
+    #     res = "Source directory name is empty"
+    #     output.append(res)
+    #     print(res)
+    #     return output
+
+    dest_dir = dest_dir.strip()
     title = title.strip()
 
+    #cd to the python script's directory
+    #os.chdir(dest_dir)
 
     # 1) Go to this folder and login to your Google Account: $ clasp login
-    command = clasppath + " login"
-    res = runCommand(command.strip())
-    output.append(res)
+    # Check if already logged in
+    command = clasppath + " login --status"
+    resLoginStatus = runCommand(command.strip())
+    print("login status resLoginStatus=", resLoginStatus)
+    if "You are not logged in" in str(resLoginStatus):
+        command = clasppath + " login"
+        res = runCommand(command.strip())
+        output.append(res)
 
     # 2) Create new folder, for example “MyFellowshipApplication”
     #Final destination path is currentfolder/scripts/dest_dir_name
-    dest_dir = "scripts/"+dest_dir_name
+    #dest_dir = "scripts/"+dest_dir_name
+    #print("dest_dir="+dest_dir)
+
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
     else:
@@ -95,7 +111,10 @@ def install_gas( dest_dir_name, title, clasppath ):
     # to local folder "MyFellowshipApplication”, except .clasp.json
 
     #"C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/"
-    source_dir = "../../"+"orderflex/src/App/FellAppBundle/Util/GoogleForm/FellowshipApplication/script/"
+    if source_dir == '':
+        source_dir = "../../"+"orderflex/src/App/FellAppBundle/Util/GoogleForm/FellowshipApplication/script/"
+
+    print("dest_dir=" + dest_dir)
     print("source_dir="+source_dir)
 
     #Get absolute path
@@ -126,7 +145,7 @@ def install_gas( dest_dir_name, title, clasppath ):
 
     # 6) Create new version: $ clasp version
     # This command displays the newly created version number 1.
-    command = clasppath + " version 'auto created Fellapp script'"
+    command = clasppath + " version 'auto created "+title+" script'"
     res = runCommand(command.strip())
     #print("version="+res)
     output.append(res)
@@ -159,12 +178,12 @@ def install_gas( dest_dir_name, title, clasppath ):
     #TODO: wait and set permission
 
     # 8) Test deployment web url
-    if False:
-        #https://script.google.com/macros/s/AKfycbypzF0jiZHcUSEVK9TV7_ZrD2llrMNN9ZHGxHi6rZlWVG8PspVfl3UmzEFO1PvJfKZW2g/exec
-        url = "https://script.google.com/macros/s/"+deploymentId+"/exec"
-        print("URL="+url)
-        webbrowser.open(url)  # Go to example.com
-        output.append(res)
+    # if False:
+    #     #https://script.google.com/macros/s/AKfycbypzF0jiZHcUSEVK9TV7_ZrD2llrMNN9ZHGxHi6rZlWVG8PspVfl3UmzEFO1PvJfKZW2g/exec
+    #     url = "https://script.google.com/macros/s/"+deploymentId+"/exec"
+    #     print("URL="+url)
+    #     webbrowser.open(url)  # Go to example.com
+    #     output.append(res)
 
     return output
 
@@ -200,27 +219,28 @@ def help():
         "-d, --dir              folder name where to install the local copies of the Google scripts. New folder will be created to ./script/\n" \
         "-t, --title            title of a new Google script\n" \
         "-c, --clasp            path to clasp\n" \
+        "-s, --source           path to the original source script\n" \
         " \n" \
         "-e, --env              environment info (optional)\n" \
         "-H, --help             this help"
     )
 
 def main(argv):
-
-    print("\n### fellapp.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
+    print("\n### fellapp.py "+"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
 
-    dir = ''            # -d
+    dest = ''            # -d
     title = ''          # -t
     clasp = ''          # -c clasp path
+    source = ''
     env = ''            # -e
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "d:t:c:e:h",
-            ["dir=", "title=", "clasp=",
+            "d:t:c:s:e:h",
+            ["dir=", "title=", "clasp=", "source=",
              "env=", "help"
             ]
         )
@@ -231,12 +251,14 @@ def main(argv):
     for opt, arg in opts:
         print('opt=' + opt + ", arg="+arg)
         if opt in ("-d", "--dir"):
-            dir = arg
+            dest = arg
             #print('webmonitor.py --urls=' + urls)
         elif opt in ("-t", "--title"):
             title = arg
         elif opt in ("-c", "--clasp"):
             clasp = arg
+        elif opt in ("-s", "--source"):
+            source = arg
         elif opt in ("-e", "--env"):                    #Environment of the this server, the source of the notification email
             env = arg
         elif opt in ("-h", "--help"):                   #On down command
@@ -249,9 +271,9 @@ def main(argv):
             help()
             sys.exit(2)
 
-    if dir:
+    if dest:
         global DIR
-        DIR = dir
+        DIR = dest
 
     if title:
         global TITLE
@@ -265,17 +287,25 @@ def main(argv):
         global ENV_NAME
         ENV_NAME = env
 
-    print('dir=' + dir + ', title=' + title + ', clasp=' + clasp)
+    print('dest=' + dest + ', title=' + title + ', clasp=' + clasp)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
-    if dir == '':
-        print('Nothing to do: dir are not provided')
+    #if prefix != '':
+        #if prefix is specified (i.e. 'MyScript') then create dir as
+        #--dir scripts\MyScriptFellApp and --dir scripts\MyScriptRecLet
+
+    if dest == '':
+        print('Nothing to do: destination directory are not provided')
         #logging.warning('Nothing to do: urls are not provided')
         return
 
     if title == '':
         print('Nothing to do: title is not provided')
         #logging.warning('Nothing to do: mailerhost is not provided')
+        return
+
+    if source == '':
+        print('Nothing to do: source is not provided')
         return
 
     if clasp == '':
@@ -285,10 +315,11 @@ def main(argv):
 
     runCommand('whoami') #testing runCommand
 
-    output = install_gas(dir,title,clasp)
+    output = install_gas(source,dest,title,clasp)
 
     print(output)
 
 if __name__ == '__main__':
     #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\venv\Scripts\python.exe fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\scripts\MyScriptFellApp" --title “MyScript” --clasp C:/Users/ch3/AppData/Roaming/npm/clasp
+    #--source C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\GoogleForm\FellowshipRecLetters\script
     main(sys.argv[1:])

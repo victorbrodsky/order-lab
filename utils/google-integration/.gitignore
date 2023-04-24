@@ -1,3 +1,6 @@
 /venv/
 /scripts/
+/__pycache__/
+/venv_todel/
+
 
