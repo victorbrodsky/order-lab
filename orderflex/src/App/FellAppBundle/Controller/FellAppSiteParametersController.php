@@ -218,21 +218,63 @@ class FellAppSiteParametersController extends SiteParametersController
                 $python = "python3";
             }
 
-            $command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
-            $command = $python ." " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
+            //$command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
+            $command = $python . " " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
+
+            $prefixFellApp = "FellApp"; //MyScriptFellApp
+            $prefixRecLet = "RecLet"; //MyScriptRecLet
+
+            $scriptFellApp = $params . $prefixFellApp;
+            $scriptRecLet = $params . $prefixRecLet;
+
+            $dir = $path . DIRECTORY_SEPARATOR . "scripts";
+            $dirFellApp = $dir . DIRECTORY_SEPARATOR . "" . $scriptFellApp;
+            $dirRecLet = $dir . DIRECTORY_SEPARATOR . "" . $scriptRecLet;
+
+            $commandFellApp = $command . " --dir " . $dirFellApp . " --title " . $scriptFellApp;
+            $commandRecLet = $command . " --dir " . $dirRecLet . " --title " . $scriptRecLet;
+
             //$command = $command . " " . $params;
             //$command = $python. " -V";
             //$command = $command . " > " .$logFile;
-            echo "command=".$command."<br>";
+            echo "commandFellApp=".$commandFellApp."<br>";
+            echo "commandRecLet=".$commandRecLet."<br>";
 
             $userServiceUtil = $this->container->get('user_service_utility');
-            $res = $this->runProcess($command,$logFile);
-            exit("res=".$res);
+
+            $commandFellApp = explode(" ",$commandFellApp);
+            $commandRecLet = explode(" ",$commandRecLet);
+
+            $logDir = $path.DIRECTORY_SEPARATOR."log";
+            $envArr = array('HTTP' => 1);
+            $execTime = 600; //10 min
+            ini_set('max_execution_time', $execTime);
+            $process = new Process($commandFellApp,$logDir,$envArr,null,$execTime);
+
+            try {
+                $process->mustRun();
+                $buffer = $process->getOutput();
+                $buffer = '<code><pre>'.$buffer.'</pre></code>';
+                dump($buffer);
+                exit("OK");
+            } catch (ProcessFailedException $exception) {
+                $buffer = $exception->getMessage();
+                dump($buffer);
+                exit("Error");
+            }
+
+            //dump($res);
+            //exit("res=");
+            $res = null;
+
+            //$resFellApp = $this->runProcess($commandFellApp,$logFile);
+            //$resRecLet = $this->runProcess($commandRecLet,$logFile);
+            //exit("resFellApp=".$resFellApp."; resRecLet=".$resRecLet);
 
             //Flash
             $this->addFlash(
                 'notice',
-                'Executed command ' . $command." with result:" . $res
+                'Executed command ' . $commandFellApp." with result:" . $buffer
             );
 
             return $this->redirectToRoute('fellapp_install_gas');

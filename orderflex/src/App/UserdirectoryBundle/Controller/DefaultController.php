@@ -292,7 +292,7 @@ class DefaultController extends OrderAbstractController
 
         $testFile = trim((string)$request->get('testFile'));
 
-        $logDir = $this->container->get('kernel')->getProjectDir() ;
+        $logDir = $this->container->get('kernel')->getProjectDir();
 
         //$tests = $logDir . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'TestBundle';
 

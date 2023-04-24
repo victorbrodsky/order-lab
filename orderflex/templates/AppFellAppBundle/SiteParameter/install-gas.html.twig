@@ -14,26 +14,32 @@
     limitations under the License.
 #}
 
-{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+{% extends "AppFellAppBundle/Default/base.html.twig" %}
 
 {% block title %}
-    Send a test email
+    Install Google Scripts
 {% endblock %}
 
 
 {% block content %}
 
     {#Show the path where GAS will be installed#}
-    
+
     <form action="{{ path('fellapp_install_gas') }}" method="post">
 
         <div class="row">
             <div class="col-xs-6" align="right">
                 <strong>
-                    Parameters to install Google Script: <br>
-                    --dir: local folder to keep local copies of the scripts. The scripts will be install inside folder order-lab\utils\google-integration\scripts<br>
-                    --title: title of a new Google scripts<br>
-                    i.e.: python fellapp.py --dir MyFellAppTest --title MyFellAppTest
+                    Google Script Name: <br>
+                    This name will be used as a prefix for Fellowship Application and Recommendation Letter scripts.<br>
+                    For example, if the name is 'MyScript', the local copies of the Fellowship Application script will be installed in
+                    order-lab\utils\google-integration\scripts\MyScriptFellApp and the script name on Google will be MyScriptFellApp,
+                    and the loacl copies of the Recommendation Letter script will be installed in
+                    order-lab\utils\google-integration\scripts\MyScriptRecLet and the script name on Google will be MyScriptRecLet.<br>
+                    {#--dir: local folder to keep local copies of the scripts. The scripts will be install inside folder#}
+                    {#order-lab\utils\google-integration\scripts<br>#}
+                    {#--title: title of a new Google scripts<br>#}
+                    {#i.e.: python fellapp.py --dir MyFellAppTest --title MyFellAppTest#}
                 </strong>
             </div>
             <div class="col-xs-6" align="left">
