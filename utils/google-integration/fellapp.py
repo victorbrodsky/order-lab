@@ -201,7 +201,7 @@ def help():
         "-t, --title            title of a new Google script\n" \
         "-c, --clasp            path to clasp\n" \
         " \n" \
-        "-e, --env              environment info as a string attached to the notification email\n" \
+        "-e, --env              environment info (optional)\n" \
         "-H, --help             this help"
     )
 
@@ -220,7 +220,7 @@ def main(argv):
         opts, args = getopt.getopt(
             argv,
             "d:t:c:e:h",
-            ["dir=", "title=", "clasp="
+            ["dir=", "title=", "clasp=",
              "env=", "help"
             ]
         )
@@ -229,6 +229,7 @@ def main(argv):
         sys.exit(2)
 
     for opt, arg in opts:
+        print('opt=' + opt + ", arg="+arg)
         if opt in ("-d", "--dir"):
             dir = arg
             #print('webmonitor.py --urls=' + urls)
@@ -278,8 +279,9 @@ def main(argv):
         return
 
     if clasp == '':
-        print('Nothing to do: clasp path is not provided')
-        return
+        clasp = 'clasp'
+        print('clasp path is not provided')
+        #return
 
     runCommand('whoami') #testing runCommand
 

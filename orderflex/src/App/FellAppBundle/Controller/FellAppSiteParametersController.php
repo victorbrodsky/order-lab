@@ -225,7 +225,7 @@ class FellAppSiteParametersController extends SiteParametersController
             //$command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
             $command = $python . " " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
 
-            $command = $command . " --clasppath " . $clasppath;
+            $command = $command . " --clasp " . $clasppath;
 
             $prefixFellApp = "FellApp"; //MyScriptFellApp
             $prefixRecLet = "RecLet"; //MyScriptRecLet
@@ -256,8 +256,8 @@ class FellAppSiteParametersController extends SiteParametersController
 
             $logDir = $path.DIRECTORY_SEPARATOR."scripts";
             $envArr = array('HTTP' => 1);
-            $execTime = 600; //10 min
-            ini_set('max_execution_time', $execTime);
+            $execTime = 180; //3 min
+            //ini_set('max_execution_time', $execTime);
             $process = new Process($commandFellApp,$logDir,$envArr,null,$execTime);
 
             try {
