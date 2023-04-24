@@ -37,21 +37,10 @@ import re
 
 DIR = ""
 TITLE = ""
+CLASP = ""
 ENV_NAME = "Unknown"
 
-def help():
-    print(
-        "Usage: python fellapp-gas-install.py [OPTIONS]\n" \
-        "Example: python fellapp-gas-install.py --dir MyFellowshipApplication --title MyFellApp\n" \
-        "\n" \
-        "-d, --dir              folder name where to install the local copies of the Google scripts. New folder will be created to ./script/\n" \
-        "-t, --title            title of a new Google script\n" \
-        " \n" \
-        "-e, --env              environment info as a string attached to the notification email\n" \
-        "-H, --help             this help"
-    )
-
-def install_gas( dest_dir_name, title ):
+def install_gas( dest_dir_name, title, clasppath ):
     output = []
 
     if dest_dir_name == '':
@@ -71,7 +60,7 @@ def install_gas( dest_dir_name, title ):
 
 
     # 1) Go to this folder and login to your Google Account: $ clasp login
-    command = "clasp login"
+    command = clasppath + " login"
     res = runCommand(command.strip())
     output.append(res)
 
@@ -98,7 +87,7 @@ def install_gas( dest_dir_name, title ):
     #print("dest_path="+dest_path)
     #return dest_path
 
-    command = "clasp create --type webapp --title " + title + " --rootDir " + dest_path
+    command = clasppath + " create --type webapp --title " + title + " --rootDir " + dest_path
     res = runCommand(command.strip())
     output.append(res)
 
@@ -130,20 +119,20 @@ def install_gas( dest_dir_name, title ):
     os.chdir(dest_dir)
 
     print("push files to Google Drive")
-    command = "clasp push -f"
+    command = clasppath + " push -f"
     res = runCommand(command.strip())
     #print("push res=" + res)
     output.append(res)
 
     # 6) Create new version: $ clasp version
     # This command displays the newly created version number 1.
-    command = "clasp version 'auto created Fellapp script'"
+    command = clasppath + " version 'auto created Fellapp script'"
     res = runCommand(command.strip())
     #print("version="+res)
     output.append(res)
 
     # 7) Using that version number, you can deploy instances of your project: $ clasp deploy -V 1
-    command = "clasp deploy -V 1"
+    command = clasppath + " deploy -V 1"
     res = runCommand(command.strip())
     #- AKfycbyPTUG0fNRdb0QO-DdHB3KYG356b8GPr5YhxDEzHJxut8wI782U4e4u45w-VqFMqZJN @1.
     #deploymentId = str(res).replace("b'- ",'')
@@ -161,7 +150,7 @@ def install_gas( dest_dir_name, title ):
 
     # Open project script and set permission by running Code.gs
     #command = "clasp open --webapp" asks Open which deployement?
-    command = "clasp open"
+    command = clasppath + " open"
     #command = "clasp run Code.gs"
     res = runCommand(command.strip())
     output.append(res)
@@ -203,21 +192,35 @@ def runCommand(command):
     print(output)
     return output
 
+def help():
+    print(
+        "Usage: python fellapp.py [OPTIONS]\n" \
+        "Example: python fellapp.py --dir MyFellApp --title MyFellApp --clasp C:/Users/ch3/AppData/Roaming/npm/clasp \n" \
+        "\n" \
+        "-d, --dir              folder name where to install the local copies of the Google scripts. New folder will be created to ./script/\n" \
+        "-t, --title            title of a new Google script\n" \
+        "-c, --clasp            path to clasp\n" \
+        " \n" \
+        "-e, --env              environment info as a string attached to the notification email\n" \
+        "-H, --help             this help"
+    )
+
 def main(argv):
 
-    print("\n### webmonitor.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
+    print("\n### fellapp.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
 
     dir = ''            # -d
     title = ''          # -t
+    clasp = ''          # -c clasp path
     env = ''            # -e
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "d:t:e:h",
-            ["dir=", "title=",
+            "d:t:c:e:h",
+            ["dir=", "title=", "clasp="
              "env=", "help"
             ]
         )
@@ -231,6 +234,8 @@ def main(argv):
             #print('webmonitor.py --urls=' + urls)
         elif opt in ("-t", "--title"):
             title = arg
+        elif opt in ("-c", "--clasp"):
+            clasp = arg
         elif opt in ("-e", "--env"):                    #Environment of the this server, the source of the notification email
             env = arg
         elif opt in ("-h", "--help"):                   #On down command
@@ -251,11 +256,15 @@ def main(argv):
         global TITLE
         TITLE = title
 
+    if clasp:
+        global CLASP
+        CLASP = clasp
+
     if env:
         global ENV_NAME
         ENV_NAME = env
 
-    print('dir=' + dir + ', title=' + title)
+    print('dir=' + dir + ', title=' + title + ', clasp=' + clasp)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
     if dir == '':
@@ -268,12 +277,16 @@ def main(argv):
         #logging.warning('Nothing to do: mailerhost is not provided')
         return
 
+    if clasp == '':
+        print('Nothing to do: clasp path is not provided')
+        return
+
     runCommand('whoami') #testing runCommand
 
-    output = install_gas(dir,title)
+    output = install_gas(dir,title,clasp)
 
     print(output)
 
 if __name__ == '__main__':
-    #python fellapp.py --dir "MyFellowshipApplication" --title “MyFellApp”
+    #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\venv\Scripts\python.exe fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\scripts\MyScriptFellApp" --title “MyScript” --clasp C:/Users/ch3/AppData/Roaming/npm/clasp
     main(sys.argv[1:])

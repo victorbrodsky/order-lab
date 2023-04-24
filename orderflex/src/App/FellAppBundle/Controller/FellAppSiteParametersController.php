@@ -213,13 +213,19 @@ class FellAppSiteParametersController extends SiteParametersController
             $logFile = $path . DIRECTORY_SEPARATOR . "pythonexeclog.log";
 
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $python = "python";
+                //$python = "python";
+                $python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."Scripts".DIRECTORY_SEPARATOR."python.exe";
+                $clasppath = "C:/Users/ch3/AppData/Roaming/npm/clasp";
             } else {
-                $python = "python3";
+                //$python = "python3";
+                $python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."python3";
+                $clasppath = "clasp";
             }
 
             //$command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
             $command = $python . " " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
+
+            $command = $command . " --clasppath " . $clasppath;
 
             $prefixFellApp = "FellApp"; //MyScriptFellApp
             $prefixRecLet = "RecLet"; //MyScriptRecLet
@@ -234,6 +240,9 @@ class FellAppSiteParametersController extends SiteParametersController
             $commandFellApp = $command . " --dir " . $dirFellApp . " --title " . $scriptFellApp;
             $commandRecLet = $command . " --dir " . $dirRecLet . " --title " . $scriptRecLet;
 
+            //$commandFellApp = $clasppath . " -v"; //testing
+            //$commandFellApp = $python . " -V";
+
             //$command = $command . " " . $params;
             //$command = $python. " -V";
             //$command = $command . " > " .$logFile;
@@ -245,7 +254,7 @@ class FellAppSiteParametersController extends SiteParametersController
             $commandFellApp = explode(" ",$commandFellApp);
             $commandRecLet = explode(" ",$commandRecLet);
 
-            $logDir = $path.DIRECTORY_SEPARATOR."log";
+            $logDir = $path.DIRECTORY_SEPARATOR."scripts";
             $envArr = array('HTTP' => 1);
             $execTime = 600; //10 min
             ini_set('max_execution_time', $execTime);
