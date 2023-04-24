@@ -51,9 +51,24 @@ def help():
         "-H, --help             this help"
     )
 
-def install( dest_dir, title ):
-
+def install_gas( dest_dir_name, title ):
     output = []
+
+    if dest_dir_name == '':
+        res = "Destination directory name is empty"
+        output.append(res)
+        print(res)
+        return output
+
+    if title == '':
+        res = "Script title is empty"
+        output.append(res)
+        print(res)
+        return output
+
+    dest_dir_name = dest_dir_name.strip()
+    title = title.strip()
+
 
     # 1) Go to this folder and login to your Google Account: $ clasp login
     command = "clasp login"
@@ -61,7 +76,8 @@ def install( dest_dir, title ):
     output.append(res)
 
     # 2) Create new folder, for example “MyFellowshipApplication”
-    dest_dir = "scripts/"+dest_dir
+    #Final destination path is currentfolder/scripts/dest_dir_name
+    dest_dir = "scripts/"+dest_dir_name
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
     else:
@@ -79,6 +95,9 @@ def install( dest_dir, title ):
 
     # 3) Create a new Apps Script project: $ clasp create --title “MyFellApp” --type webapp
     dest_path = os.path.abspath(dest_dir)
+    #print("dest_path="+dest_path)
+    #return dest_path
+
     command = "clasp create --type webapp --title " + title + " --rootDir " + dest_path
     res = runCommand(command.strip())
     output.append(res)
@@ -251,7 +270,7 @@ def main(argv):
 
     runCommand('whoami') #testing runCommand
 
-    output = install(dir,title)
+    output = install_gas(dir,title)
 
     print(output)
 
