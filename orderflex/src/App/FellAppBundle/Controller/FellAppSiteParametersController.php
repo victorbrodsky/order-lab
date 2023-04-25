@@ -213,32 +213,51 @@ class FellAppSiteParametersController extends SiteParametersController
             $logFile = $path . DIRECTORY_SEPARATOR . "pythonexeclog.log";
 
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                //$python = "python";
-                $python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."Scripts".DIRECTORY_SEPARATOR."python.exe";
+                $python = "python";
+                //$python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."Scripts".DIRECTORY_SEPARATOR."python.exe";
                 $clasppath = "C:/Users/ch3/AppData/Roaming/npm/clasp";
             } else {
-                //$python = "python3";
-                $python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."python3";
+                $python = "python3";
+                //$python = $path.DIRECTORY_SEPARATOR."venv".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."python3";
                 $clasppath = "clasp";
             }
 
             //$command = $python ." " . "'" . $path . DIRECTORY_SEPARATOR . "fellapp.py" . "'";
-            $command = $python . " " . $path . DIRECTORY_SEPARATOR . "fellapp.py";
+            $command = $python . " " . $path . DIRECTORY_SEPARATOR . "fellappsimple.py";
 
             $command = $command . " --clasp " . $clasppath;
+            $command = $command . " --title " . $params;
+            echo "command=".$command."<br>";
 
-            $prefixFellApp = "FellApp"; //MyScriptFellApp
-            $prefixRecLet = "RecLet"; //MyScriptRecLet
+            //clasp login
+            //https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?access_type=offline&scope=https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fscript.deployments%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fscript.projects%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fscript.webapp.deploy%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fdrive.metadata.readonly%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fdrive.file%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fservice.management%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Flogging.read%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2F
+            //www.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&
+            //client_id=1072944905499-vm2v2i5dvn0a0d2o4ca36i1vge8cvbn0.apps.googleusercontent.com&
+            //redirect_uri=http%3A%2F%2Flocalhost%3A57375&service=lso&o2v=2&flowName=GeneralOAuthFlow
+            //https://console.cloud.google.com/
+            //https://stackoverflow.com/questions/60838607/clasp-local-login
 
-            $scriptFellApp = $params . $prefixFellApp;
-            $scriptRecLet = $params . $prefixRecLet;
+            //$prefixFellApp = "FellApp"; //MyScriptFellApp
+            //$prefixRecLet = "RecLet"; //MyScriptRecLet
 
-            $dir = $path . DIRECTORY_SEPARATOR . "scripts";
-            $dirFellApp = $dir . DIRECTORY_SEPARATOR . "" . $scriptFellApp;
-            $dirRecLet = $dir . DIRECTORY_SEPARATOR . "" . $scriptRecLet;
+            //$scriptFellApp = $params . $prefixFellApp;
+            //$scriptRecLet = $params . $prefixRecLet;
 
-            $commandFellApp = $command . " --dir " . $dirFellApp . " --title " . $scriptFellApp;
-            $commandRecLet = $command . " --dir " . $dirRecLet . " --title " . $scriptRecLet;
+            //$dir = $path . DIRECTORY_SEPARATOR . "scripts";
+            //$dirFellApp = $dir . DIRECTORY_SEPARATOR . "" . $scriptFellApp;
+            //$dirRecLet = $dir . DIRECTORY_SEPARATOR . "" . $scriptRecLet;
+
+            //$commandFellApp = $command . " --dir " . $dirFellApp . " --title " . $scriptFellApp;
+            //$commandRecLet = $command . " --dir " . $dirRecLet . " --title " . $scriptRecLet;
 
             //$commandFellApp = $clasppath . " -v"; //testing
             //$commandFellApp = $python . " -V";
@@ -250,20 +269,22 @@ class FellAppSiteParametersController extends SiteParametersController
             //$command = $command . " " . $params;
             //$command = $python. " -V";
             //$command = $command . " > " .$logFile;
-            echo "commandFellApp=".$commandFellApp."<br>";
-            echo "commandRecLet=".$commandRecLet."<br>";
+            //echo "commandFellApp=".$commandFellApp."<br>";
+            //echo "commandRecLet=".$commandRecLet."<br>";
             //exit('111');
 
-            $userServiceUtil = $this->container->get('user_service_utility');
+            //$userServiceUtil = $this->container->get('user_service_utility');
 
-            $commandFellApp = explode(" ",$commandFellApp);
-            $commandRecLet = explode(" ",$commandRecLet);
+            //$commandFellApp = explode(" ",$commandFellApp);
+            //$commandRecLet = explode(" ",$commandRecLet);
+
+            $commandArr = explode(" ",$command);
 
             $logDir = $path.DIRECTORY_SEPARATOR."scripts";
             $envArr = array('HTTP' => 1);
             $execTime = 30; //3 min
             //ini_set('max_execution_time', $execTime);
-            $process = new Process($commandFellApp,$logDir,$envArr,null,$execTime);
+            $process = new Process($commandArr,$logDir,$envArr,null,$execTime);
 
             try {
                 $process->mustRun();
@@ -279,7 +300,7 @@ class FellAppSiteParametersController extends SiteParametersController
 
             //dump($res);
             //exit("res=");
-            $res = null;
+            //$res = null;
 
             //$resFellApp = $this->runProcess($commandFellApp,$logFile);
             //$resRecLet = $this->runProcess($commandRecLet,$logFile);
@@ -288,7 +309,7 @@ class FellAppSiteParametersController extends SiteParametersController
             //Flash
             $this->addFlash(
                 'notice',
-                'Executed command ' . $commandFellApp." with result:" . $buffer
+                'Executed command ' . $commandArr." with result:" . $buffer
             );
 
             return $this->redirectToRoute('fellapp_install_gas');
