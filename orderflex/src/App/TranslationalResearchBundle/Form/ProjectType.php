@@ -640,9 +640,19 @@ class ProjectType extends AbstractType
         ));
 
         //involveHumanTissue
+        //ONLY for CP: For the following question: Will this project involve human tissue?
+        //a) Change the answer “No” to “No (this project will only involve human fluid specimens or no human tissue at all)”
+        if( $this->params['otherUserParam'] == 'cp' ) {
+            $requireArchivalProcessingLabel = array(
+                "Yes"=>"Yes",
+                "No (this project will only involve human fluid specimens or no human tissue at all)"=>"No"
+            );
+        } else {
+            $requireArchivalProcessingLabel = array("Yes"=>"Yes", "No"=>"No");
+        }
         $builder->add('involveHumanTissue', ChoiceType::class, array( //flipped
             'label' => 'Will this project involve human tissue?',
-            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'choices' => $requireArchivalProcessingLabel, //array("Yes"=>"Yes", "No"=>"No"),
             //'choices_as_values' => true,
             'multiple' => false,
             'required' => true,
@@ -694,8 +704,15 @@ class ProjectType extends AbstractType
         ));
 
         //Archival Specimens
+        //echo "otherUserParam=".$this->params['otherUserParam']."<br>";
+        if( $this->params['otherUserParam'] == 'cp' ) {
+            $requireArchivalProcessingLabel = "Will this project require archival tissue specimens?:";
+        } else {
+            $requireArchivalProcessingLabel = "Will this project require archival specimens?:";
+        }
+        //TODO: For CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         $builder->add('requireArchivalProcessing',ChoiceType::class,array(
-            'label' => "Will this project require archival specimens?:",
+            'label' => $requireArchivalProcessingLabel, //"Will this project require archival specimens?:",
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,
             'required' => true,

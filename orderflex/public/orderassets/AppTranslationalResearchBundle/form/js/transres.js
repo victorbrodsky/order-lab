@@ -98,12 +98,73 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
     if( involveHumanTissue == "Yes" ) {
         //console.log("humanTissueForms show");
         $(".user-humanTissueForms").show('slow');
+
+        changeHumanTissueRelatedSections("Yes");
     }
 
     if( involveHumanTissue == "No" ) {
-        //console.log("humanTissueForms hide");
+        console.log("humanTissueForms NO => hide");
         $(".user-humanTissueForms").hide('slow');
+
+        //TODO: only for CP
+        changeHumanTissueRelatedSections("No");
+
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require tissue procurement/processing?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireTissueProcessing").val("No").trigger('change');
+        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
+        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",true).trigger("change");
+        //$('#parentcheck').prop('checked', true).trigger('change');
+
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require archival tissue specimens?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireArchivalProcessing").val("No").trigger('change');
+        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",true).trigger("change");
     }
+}
+function changeHumanTissueRelatedSections(value) {
+    if( value == 'Yes' ) {
+        //TODO: only for CP
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require tissue procurement/processing?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireTissueProcessing").val("No").trigger('change');
+        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").attr("checked",true).trigger("change");
+        //$('#parentcheck').prop('checked', true).trigger('change');
+
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require archival tissue specimens?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireArchivalProcessing").val("No").trigger('change');
+        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").attr("checked",true).trigger("change");
+    }
+    if( value == 'No' ) {
+        //TODO: only for CP
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require tissue procurement/processing?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireTissueProcessing").val("No").trigger('change');
+        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").attr("checked",true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",true).trigger("change");
+        //$('#parentcheck').prop('checked', true).trigger('change');
+
+        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
+        // automatically answer “No” to “Will this project require archival tissue specimens?:”
+        // and make sure that entire accordion is automatically hidden.
+        //$(".requireArchivalProcessing").val("No").trigger('change');
+        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").attr("checked",true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",true).trigger("change");
+    }
+
 }
 
 function transresRequireTissueProcessingListener() {
