@@ -96,7 +96,7 @@ function transresIrbApprovalLetterListener() {
 }
 function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
     if( involveHumanTissue == "Yes" ) {
-        //console.log("humanTissueForms show");
+        console.log("humanTissueForms Yes => show");
         $(".user-humanTissueForms").show('slow');
 
         changeHumanTissueRelatedSections("Yes");
