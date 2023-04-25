@@ -1259,7 +1259,7 @@ class GoogleSheetManagement {
         $files = array(
             "17PwcM0qPAAz8KcitIBayMzTj6XW8GSsu", //"1ohvKGunEsvSowwpozfjvjtyesN0iUeF2"; //Word
 
-            //"1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
+            ////"1Bkz0jkDWn8ymagMf6EPZQZ2Nyf18kaPXI2aqKm_eX-U", //"1is-0L26e_W76hL-UfAuuZEEo8p9ycnwnn02hZ9lzFek"; //PDF
             "1maBuBYjB_xEiQi8lqtNDzUhQwEDrFi_o", //PDF
 
             "1fd-vjpmQKdVXDiAhEzcP-5fFDZEl2kKW67nrRrtfcWg", //"17inHCzyZNyZ98E_ZngUjkUKWNp3D2J8Ri2TZWR5Oi1k"; //Google Docs
@@ -1268,7 +1268,8 @@ class GoogleSheetManagement {
             //"1imVshtA63nsr5oQOyW3cWXzXV_zhjHtyCwTKgjR8MAM", //Image 1b_tL1MDsS6fCysBcP6X7MjhdS9jryiYf
             "1pg88L0cf8Lgv1bsLaAdJGqAZewYgHzVJ", //Image
 
-            "1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ" //JSON config file
+            //"1EEZ85D4sNeffSLb35_72qi8TdjD9nLyJ" //JSON config file
+            "1Jeq07UgOb6i1TKqZEXzM4Rdeu69m_0Li" //Copy of config-fellapp.json JSON config file located in FellowshipApplication
         );
 
 //        $files1 = array(
