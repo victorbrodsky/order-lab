@@ -642,12 +642,14 @@ class ProjectType extends AbstractType
         //involveHumanTissue
         //ONLY for CP: For the following question: Will this project involve human tissue?
         //a) Change the answer “No” to “No (this project will only involve human fluid specimens or no human tissue at all)”
-        if( $this->params['otherUserParam'] == 'cp' ) {
+        if( $this->params['specialTissueProject'] == true ) {
+            //CP project
             $requireArchivalProcessingLabel = array(
                 "Yes"=>"Yes",
                 "No (this project will only involve human fluid specimens or no human tissue at all)"=>"No"
             );
         } else {
+            //All other projects
             $requireArchivalProcessingLabel = array("Yes"=>"Yes", "No"=>"No");
         }
         $builder->add('involveHumanTissue', ChoiceType::class, array( //flipped
@@ -704,13 +706,14 @@ class ProjectType extends AbstractType
         ));
 
         //Archival Specimens
+        //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         //echo "otherUserParam=".$this->params['otherUserParam']."<br>";
-        if( $this->params['otherUserParam'] == 'cp' ) {
+        //if( $this->params['otherUserParam'] == 'cp' ) {
+        if( $this->params['specialTissueProject'] == true ) {
             $requireArchivalProcessingLabel = "Will this project require archival tissue specimens?:";
         } else {
             $requireArchivalProcessingLabel = "Will this project require archival specimens?:";
         }
-        //TODO: For CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         $builder->add('requireArchivalProcessing',ChoiceType::class,array(
             'label' => $requireArchivalProcessingLabel, //"Will this project require archival specimens?:",
             'choices' => array("Yes"=>"Yes", "No"=>"No"),

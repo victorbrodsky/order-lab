@@ -524,38 +524,6 @@
         {% set specialtyId = project.getProjectSpecialty().getId() %}
     {% endif %}
 
-    {#involveHumanTissue "Will this project involve human tissue?"#}
-    {#{% set humanTissueFormStyle = "display: none;" %}#}
-    {#{% if project.involveHumanTissue == "Yes" %}#}
-        {#{% set humanTissueFormStyle = "" %}#}
-    {#{% endif %}#}
-    {#{% if form %}#}
-        {#{{ formmacros.field(form.involveHumanTissue) }}#}
-    {#{% else %}#}
-        {#{{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}#}
-    {#{% endif %}#}
-
-    {#<div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">#}
-        {#<label class="col-xs-12 control-label">Human Tissue Form</label>#}
-        {#<p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>#}
-        {#<div class="row withpaddingtop">#}
-            {#<div class="col-xs-12">#}
-                {#{{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
-    {#<div class="well form-element-holder user-documents">#}
-        {#<label class="col-xs-12 control-label">Project Documents#}
-            {#<br>Please submit completed New Project Intake Form here. The form is required for non-funded projects. There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.</label>#}
-        {#<p>You can <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}" target="_blank">download the blank form here.</a></p>#}
-        {#<div class="row withpaddingtop">#}
-            {#<div class="col-xs-12">#}
-                {#{{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
@@ -617,6 +585,10 @@
             </div>
             <div id="tissueRequestDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="tissueRequestDetailsHeading">
                 <div class="panel-body">
+
+                    {% set specialTissueProject = transres_util.specialTissueProject(project) %}
+                    {#specialTissueProject={{ specialTissueProject }}#}
+                    <input type="hidden" id="specialTissueProject" value="{{ specialTissueProject }}" />
 
                     {#involveHumanTissue "Will this project involve human tissue?"#}
                     {% set humanTissueFormStyle = "display: none;" %}

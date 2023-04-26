@@ -21,9 +21,10 @@ _transresprojecttypes = [];
 $(document).ready(function() {
 
     var cycle = $("#formcycle").val();
+    var specialTissueProject = $("#specialTissueProject").val();
 
     //console.log('transres form ready, cycle='+cycle);
-    transresIrbApprovalLetterListener();
+    transresHumanTissueListener(specialTissueProject); //transresIrbApprovalLetterListener
     transresRequireTissueProcessingListener();
     transresRequireArchivalProcessingListener();
 
@@ -87,82 +88,51 @@ function transresIrbExemptChange( exemptEl, classname ) {
 }
 
 //Will this project involve human tissue?
-function transresIrbApprovalLetterListener() {
+function transresHumanTissueListener(specialTissueProject) {
     $(".involveHumanTissue").on("change", function(e) {
         var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
         //console.log("change: checked value involveHumanTissue="+involveHumanTissue);
-        transresShowHideHumanTissueUploadSection(involveHumanTissue);
+        transresShowHideHumanTissueUploadSection(involveHumanTissue,specialTissueProject);
     });
 }
-function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
+function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialTissueProject) {
+    //console.log("involveHumanTissue="+involveHumanTissue);
     if( involveHumanTissue == "Yes" ) {
         console.log("humanTissueForms Yes => show");
         $(".user-humanTissueForms").show('slow');
-
-        changeHumanTissueRelatedSections("Yes");
     }
 
     if( involveHumanTissue == "No" ) {
         console.log("humanTissueForms NO => hide");
         $(".user-humanTissueForms").hide('slow');
+    }
 
-        //TODO: only for CP
-        changeHumanTissueRelatedSections("No");
-
-        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
-        // automatically answer “No” to “Will this project require tissue procurement/processing?:”
-        // and make sure that entire accordion is automatically hidden.
-        //$(".requireTissueProcessing").val("No").trigger('change');
-        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
-        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",true).trigger("change");
-        //$('#parentcheck').prop('checked', true).trigger('change');
-
-        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
-        // automatically answer “No” to “Will this project require archival tissue specimens?:”
-        // and make sure that entire accordion is automatically hidden.
-        //$(".requireArchivalProcessing").val("No").trigger('change');
-        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
-        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",true).trigger("change");
+    //only for specialTissueProject (i.e. CP)
+    //console.log("specialTissueProject="+specialTissueProject);
+    if( specialTissueProject == 1 || specialTissueProject == true ) {
+        console.log("use specialTissueProject");
+        changeHumanTissueRelatedSections(involveHumanTissue);
     }
 }
 function changeHumanTissueRelatedSections(value) {
     if( value == 'Yes' ) {
-        //TODO: only for CP
-        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
-        // automatically answer “No” to “Will this project require tissue procurement/processing?:”
-        // and make sure that entire accordion is automatically hidden.
-        //$(".requireTissueProcessing").val("No").trigger('change');
-        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
-        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",false).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").attr("checked",true).trigger("change");
-        //$('#parentcheck').prop('checked', true).trigger('change');
+        //If Yes is selected => don't change requireTissueProcessing and requireTissueProcessing
+        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").prop("checked",false).trigger("change");
 
-        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
-        // automatically answer “No” to “Will this project require archival tissue specimens?:”
-        // and make sure that entire accordion is automatically hidden.
-        //$(".requireArchivalProcessing").val("No").trigger('change');
-        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",false).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").attr("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").prop("checked",false).trigger("change");
     }
     if( value == 'No' ) {
         //TODO: only for CP
         //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
         // automatically answer “No” to “Will this project require tissue procurement/processing?:”
         // and make sure that entire accordion is automatically hidden.
-        //$(".requireTissueProcessing").val("No").trigger('change');
-        //$('#oleg_translationalresearchbundle_project_requireTissueProcessing').find('input.value="No"').prop('checked', true);
-        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").attr("checked",true).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").attr("checked",true).trigger("change");
-        //$('#parentcheck').prop('checked', true).trigger('change');
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
 
-        //If “No (this project will only involve human fluids or no human tissue at all)” is selected,
-        // automatically answer “No” to “Will this project require archival tissue specimens?:”
-        // and make sure that entire accordion is automatically hidden.
-        //$(".requireArchivalProcessing").val("No").trigger('change');
-        //$("#oleg_translationalresearchbundle_project_requireArchivalProcessing_1").prop("checked", true).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").attr("checked",true).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").attr("checked",true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
     }
 
 }

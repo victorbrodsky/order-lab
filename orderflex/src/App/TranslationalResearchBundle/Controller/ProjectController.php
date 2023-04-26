@@ -1992,7 +1992,7 @@ class ProjectController extends OrderAbstractController
 
         $cycle = "show";
 
-        $form = $this->createProjectForm($project,$cycle,$request); //show
+        $form = $this->createProjectForm($project,$cycle,$request); //show show-simple
 
         //append “ Approved Budget: $xx.xx” at the end of the title again,
         //only for users listed as PIs or Billing contacts or
@@ -2084,7 +2084,7 @@ class ProjectController extends OrderAbstractController
         //$cycle = "show";
         $cycle = "review";
 
-        $form = $this->createProjectForm($project,$cycle,$request); //show
+        $form = $this->createProjectForm($project,$cycle,$request); //show review
 
         //$cycle = "review";
 
@@ -2146,7 +2146,7 @@ class ProjectController extends OrderAbstractController
         $cycle = "review";
         //$cycle = "resubmit";
 
-        $form = $this->createProjectForm($project,$cycle,$request); //show
+        $form = $this->createProjectForm($project,$cycle,$request); //show resubmit
 
         return array(
             'project' => $project,
@@ -2155,132 +2155,6 @@ class ProjectController extends OrderAbstractController
             'title' => "Resubmit ".$project->getProjectInfoName(),
         );
     }
-
-//    /**
-//     * Displays a form to edit an existing project entity.
-//     *
-//     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit", methods={"GET","POST"})
-//     * @Template("AppTranslationalResearchBundle/Project/edit.html.twig")
-//     */
-//    public function editAction(Request $request, Project $project)
-//    {
-//        $transresUtil = $this->container->get('transres_util');
-//
-//        if(
-//            $transresUtil->isAdminOrPrimaryReviewer() ||
-//            $transresUtil->isProjectEditableByRequester($project)
-//        ) {
-//            //ok
-//        } else {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//
-//        $transresUtil = $this->container->get('transres_util');
-//
-//        if(
-//            $transresUtil->isAdminOrPrimaryReviewer() ||
-//            $transresUtil->isProjectEditableByRequester($project)
-//        ) {
-//            //ok
-//        } else {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//
-//        //TODO: add the verification if the logged in user can edit the project:
-//        //1) requester => project is on the draft stage or in the reject stage
-//        //2) admin => any stage
-//
-//        $user = $this->getUser();
-//        $transresUtil = $this->container->get('transres_util');
-//        $em = $this->getDoctrine()->getManager();
-//        //$routeName = $request->get('_route');
-//
-//        $cycle = "edit";
-//
-//        //edit: add all default reviewers
-//        $transresUtil->addDefaultStateReviewers($project);
-//
-//        ///////////// get originals /////////////
-//        //IRB Reviews
-//        $originalIrbReviews = new ArrayCollection();
-//        foreach ($project->getIrbReviews() as $review) {
-//            $originalIrbReviews->add($review);
-//        }
-//        //Admin Reviews
-//        $originalAdminReviews = new ArrayCollection();
-//        foreach ($project->getAdminReviews() as $review) {
-//            $originalAdminReviews->add($review);
-//        }
-//        //Committee Reviews
-//        $originalCommitteeReviews = new ArrayCollection();
-//        foreach ($project->getCommitteeReviews() as $review) {
-//            $originalCommitteeReviews->add($review);
-//        }
-//        //Final Reviews
-//        $originalFinalReviews = new ArrayCollection();
-//        foreach ($project->getFinalReviews() as $review) {
-//            $originalFinalReviews->add($review);
-//        }
-//        ///////////// EOF get originals /////////////
-//
-//
-//        $deleteForm = $this->createDeleteForm($project);
-//        $editForm = $this->createProjectForm($project,$cycle,$request); //simple edit
-//        $editForm->handleRequest($request);
-//
-//        if ($editForm->isSubmitted() && $editForm->isValid()) {
-//
-//            $project->setUpdateUser($user);
-//
-//
-//            //////////// remove the relationship between the review and the project ////////////
-////            //IRB Reviews
-////            foreach ($originalIrbReviews as $review) {
-////                if (false === $project->IrbReviews()->contains($review)) {
-////                    // remove the Task from the Tag
-////                    $project->IrbReviews()->removeElement($review);
-////
-////                    // if it was a many-to-one relationship, remove the relationship like this
-////                    $review->setProject(null);
-////
-////                    $em->persist($review);
-////
-////                    // if you wanted to delete the Tag entirely, you can also do that
-////                    $em->remove($review);
-////                }
-////            }
-//            $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
-//            $transresUtil->removeReviewsFromProject($project,$originalAdminReviews,$project->getAdminReviews());
-//            $transresUtil->removeReviewsFromProject($project,$originalCommitteeReviews,$project->getCommitteeReviews());
-//            $transresUtil->removeReviewsFromProject($project,$originalFinalReviews,$project->getFinalReviews());
-//            //////////// EOF remove the relationship between the review and the project ////////////
-//
-//            //testing
-////            $irbs = $project->getIrbReviews();
-////            echo "irbs count=".count($irbs)."<br>";
-////            foreach($irbs as $irb) {
-////                echo "irb=".$irb->getReviewer()."<br>";
-////            }
-//            //exit('exit');
-//
-//            $em->flush();
-//
-//            return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-//        }
-//
-////        echo "irbReview count=".count($project->getIrbReviews())."<br>";
-////        foreach($project->getIrbReviews() as $review){
-////            echo "reviewer=".$review->getReviewer()->getUsernameOptimal()."<br>";
-////        }
-//
-//        return array(
-//            'project' => $project,
-//            'edit_form' => $editForm->createView(),
-//            'cycle' => $cycle,
-//            'delete_form' => $deleteForm->createView(),
-//            'title' => "Edit ".$project->getProjectInfoName()
-//        );
-//    }
 
     public function createProjectEntity($user,$project=null) {
 
@@ -2496,6 +2370,10 @@ class ProjectController extends OrderAbstractController
         if( $cycle == "set-state" ) {
             $disabled = false;
         }
+
+        //true or false. If true project will be shown with different tissue questions (for example, CP project)
+        $specialTissueProject = $transresUtil->specialTissueProject($project);
+        $params['specialTissueProject'] = $specialTissueProject;
 
         $form = $this->createForm(ProjectType::class, $project, array(
             'form_custom_value' => $params,

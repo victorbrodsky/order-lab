@@ -8209,4 +8209,20 @@ class TransResUtil
 
         return $prices;
     }
+
+    //true or false. If true project will be shown with different tissue questions (for example, CP project)
+    public function specialTissueProject( $project ) {
+        if( !$project ) {
+            return false;
+        }
+        
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty ) {
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+            if( $projectSpecialtyAbbreviation == 'cp' ) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
