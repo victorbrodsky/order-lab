@@ -40,6 +40,8 @@ use App\ResAppBundle\Entity\ResAppRank;
 use App\ResAppBundle\Entity\ResAppStatus;
 use App\ResAppBundle\Entity\SpecificIndividualList;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
+use App\TranslationalResearchBundle\Entity\CollDivList;
+use App\TranslationalResearchBundle\Entity\CollLabList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\OrderableStatusList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
@@ -1043,6 +1045,9 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateBusinessPurposes");
         //return "Finished generateBusinessPurposes";
 
+        $count_generateCollLabList = $this->generateCollLabList();
+        $count_generateCollDivList = $this->generateCollDivList();
+
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
         $count_generateChartsList = $this->generateChartsList();
@@ -1184,6 +1189,9 @@ class AdminController extends OrderAbstractController
             'WorkQueueList='.$count_WorkQueueList.', '.
             'OrderableStatusList='.$count_OrderableStatusList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
+
+            'CollLabList='.$count_generateCollLabList.', '.
+            'CollDivList='.$count_generateCollDivList.', '.
 
             'generateDashboardRoles='.$count_generateDashboardRoles.', '.
             'generateChartTypeList='.$count_generateChartTypeList.', '.
@@ -7781,6 +7789,8 @@ class AdminController extends OrderAbstractController
             "transrespricetypes" => array('PriceTypeList','transrespricetypes-list','Translational Research Price Type List'),
             "workqueuetypes" => array('WorkQueueList','workqueuetypes-list','Work Queue Type List'),
             "orderablestatus" => array('OrderableStatusList','orderablestatus-list','Orderable Status List'),
+            "transrescolllabs" => array('CollLabList','transrescolllabs-list','Translational Research Collaboration Laboratory List'),
+            "transrescolldivs" => array('CollDivList','transrescolldivs-list','Translational Research Collaboration Division List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -10388,6 +10398,75 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new TissueProcessingServiceList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateCollLabList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Central Lab",
+            "Cytogenetics",
+            "Molecular",
+            "Transfusion Medicine",
+            "Cellular Therapy",
+            "Microbiology",
+            "N/A"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollLabList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new CollLabList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateCollDivList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Anatomic Pathology",
+            "Hematopathology",
+            "Clinical Pathology",
+            "Molecular Pathology",
+            "Experimental Pathology",
+            "Computational Pathology",
+            "N/A"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new CollDivList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

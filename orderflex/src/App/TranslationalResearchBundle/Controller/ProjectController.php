@@ -2372,8 +2372,11 @@ class ProjectController extends OrderAbstractController
         }
 
         //true or false. If true project will be shown with different tissue questions (for example, CP project)
-        $specialTissueProject = $transresUtil->specialTissueProject($project);
-        $params['specialTissueProject'] = $specialTissueProject;
+        $specialProjectSpecialty = $transresUtil->specialProjectSpecialty($project);
+        $params['specialProjectSpecialty'] = $specialProjectSpecialty;
+        //true or false. If true collLabs checkboxes will be shown in project (for example, CP and AP/CP project)
+        $specialExtraProjectSpecialty = $transresUtil->specialExtraProjectSpecialty($project);
+        $params['specialExtraProjectSpecialty'] = $specialExtraProjectSpecialty;
 
         $form = $this->createForm(ProjectType::class, $project, array(
             'form_custom_value' => $params,

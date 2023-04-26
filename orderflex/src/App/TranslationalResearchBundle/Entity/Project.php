@@ -628,16 +628,42 @@ class Project {
     private $targetStateRequester;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
 
-    //New fields from #294
+    ////////////// Additional fields from #294 //////////////
     //https://bitbucket.org/victorbrodsky/trp/issues/294/update-to-new-project-request-form-fields
     //1) ONLY FOR CP: C- Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”
     // and list check boxes (not radio buttons) with the following choices
     // (ALSO ADD THIS SAME QUESTION ON THE AP/CP NEW PROJECT REQUEST PAGE - NOT JUST ON THE CP NEW PROJECT REQUEST PAGE) :
     // [] Central Lab [] Cytogenetics [] Molecular [] Transfusion Medicine [] Cellular Therapy [] Microbiology [] N/A
+    /**
+     * Similar to TissueProcessingServiceList
+     * Which labs within Clinical Pathology are you collaborating with, if any?:
+     * [] Central Lab [] Cytogenetics [] Molecular [] Transfusion Medicine [] Cellular Therapy [] Microbiology [] N/A
+     *
+     * @ORM\ManyToMany(targetEntity="CollLabList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_colllab",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="colllab_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $collLabs;
 
     //2) 2. under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”
     // and list check boxes (not radio buttons) with the following choices:
     // [] Anatomic Pathology [] Hematopathology [] Clinical Pathology [] Molecular Pathology [] Experimental Pathology [] Computational Pathology [] N/A
+    /**
+     * Which division(s) are you collaborating with?:
+     * [] Anatomic Pathology [] Hematopathology [] Clinical Pathology [] Molecular Pathology [] Experimental Pathology [] Computational Pathology [] N/A
+     *
+     * @ORM\ManyToMany(targetEntity="CollDivList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_colldiv",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="colldiv_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $collDivs;
+    ////////////// EOF Additional fields from #294 //////////////
 
     //3) 4. immediately below the new “Hypothesis (one sentence):” field, add a field titled
     // “Will you need departmental statistical support?” with radio buttons () Yes () No .
@@ -715,6 +741,9 @@ class Project {
 
         $this->tissueProcessingServices = new ArrayCollection();
         $this->restrictedServices = new ArrayCollection();
+
+        $this->collLabs = new ArrayCollection();
+        $this->collDivs = new ArrayCollection();
 
         //$this->reminderEmails = new ArrayCollection();
 
@@ -2345,6 +2374,51 @@ class Project {
         $this->targetStateRequester = $targetStateRequester;
     }
 
+
+
+
+    ///////////// NEW FIELDS ////////////////////
+    /**
+     * @return mixed
+     */
+    public function getCollLabs()
+    {
+        return $this->collLabs;
+    }
+    public function addCollLab($item)
+    {
+        if( $item && !$this->collLabs->contains($item) ) {
+            $this->collLabs->add($item);
+        }
+        return $this;
+    }
+    public function removeCollLab($item)
+    {
+        $this->collLabs->removeElement($item);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCollDivs()
+    {
+        return $this->collDivs;
+    }
+    public function addCollDiv($item)
+    {
+        if( $item && !$this->collDivs->contains($item) ) {
+            $this->collDivs->add($item);
+        }
+        return $this;
+    }
+    public function removeCollDiv($item)
+    {
+        $this->collDivs->removeElement($item);
+    }
+    ////////////////////////////////////////////
+
+
     /**
      * @return mixed
      */
@@ -2463,7 +2537,9 @@ class Project {
         }
         return NULL;
     }
-    
+
+
+
 
 
 //    public function getReminderEmails()

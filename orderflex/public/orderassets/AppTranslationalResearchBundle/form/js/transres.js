@@ -21,10 +21,10 @@ _transresprojecttypes = [];
 $(document).ready(function() {
 
     var cycle = $("#formcycle").val();
-    var specialTissueProject = $("#specialTissueProject").val();
+    var specialProjectSpecialty = $("#specialProjectSpecialty").val();
 
     //console.log('transres form ready, cycle='+cycle);
-    transresHumanTissueListener(specialTissueProject); //transresIrbApprovalLetterListener
+    transresHumanTissueListener(specialProjectSpecialty); //transresIrbApprovalLetterListener
     transresRequireTissueProcessingListener();
     transresRequireArchivalProcessingListener();
 
@@ -88,14 +88,14 @@ function transresIrbExemptChange( exemptEl, classname ) {
 }
 
 //Will this project involve human tissue?
-function transresHumanTissueListener(specialTissueProject) {
+function transresHumanTissueListener(specialProjectSpecialty) {
     $(".involveHumanTissue").on("change", function(e) {
         var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
         //console.log("change: checked value involveHumanTissue="+involveHumanTissue);
-        transresShowHideHumanTissueUploadSection(involveHumanTissue,specialTissueProject);
+        transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty);
     });
 }
-function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialTissueProject) {
+function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty) {
     //console.log("involveHumanTissue="+involveHumanTissue);
     if( involveHumanTissue == "Yes" ) {
         console.log("humanTissueForms Yes => show");
@@ -107,10 +107,10 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialTiss
         $(".user-humanTissueForms").hide('slow');
     }
 
-    //only for specialTissueProject (i.e. CP)
-    //console.log("specialTissueProject="+specialTissueProject);
-    if( specialTissueProject == 1 || specialTissueProject == true ) {
-        console.log("use specialTissueProject");
+    //only for specialProjectSpecialty (i.e. CP)
+    //console.log("specialProjectSpecialty="+specialProjectSpecialty);
+    if( specialProjectSpecialty == 1 || specialProjectSpecialty == true ) {
+        console.log("use specialProjectSpecialty");
         changeHumanTissueRelatedSections(involveHumanTissue);
     }
 }

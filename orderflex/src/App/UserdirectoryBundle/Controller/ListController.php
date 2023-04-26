@@ -267,6 +267,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/", name="custom099-list", methods={"GET"})
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list", methods={"GET"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list", methods={"GET"})
+     *
+     * @Route("/list/translational-collaboration-labs/", name="transrescolllabs-list", methods={"GET"})
+     * @Route("/list/translational-collaboration-divs/", name="transrescolldivs-list", methods={"GET"})
+     *
      * @Route("/list/visa-status/", name="visastatus-list", methods={"GET"})
      * @Route("/list/resappstatuses/", name="resappstatuses-list", methods={"GET"})
      * @Route("/list/resappranks/", name="resappranks-list", methods={"GET"})
@@ -945,6 +949,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/", name="custom099_create", methods={"POST"})
      * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create", methods={"POST"})
      * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create", methods={"POST"})
+     *
+     * @Route("/list/translational-collaboration-labs/", name="transrescolllabs_create", methods={"POST"})
+     * @Route("/list/translational-collaboration-divs/", name="transrescolldivs_create", methods={"POST"})
+     *
      * @Route("/list/visastatus/", name="visastatus_create", methods={"POST"})
      * @Route("/list/resappstatuses/", name="resappstatuses_create", methods={"POST"})
      * @Route("/list/resappranks/", name="resappranks_create", methods={"POST"})
@@ -1299,6 +1307,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/new", name="custom099_new", methods={"GET"})
      * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new", methods={"GET"})
      * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new", methods={"GET"})
+     *
+     * @Route("/list/translational-collaboration-labs/new", name="transrescolllabs_new", methods={"GET"})
+     * @Route("/list/translational-collaboration-divs/new", name="transrescolldivs_new", methods={"GET"})
+     *
      * @Route("/list/visastatus/new", name="visastatus_new", methods={"GET"})
      * @Route("/list/resappstatuses/new", name="resappstatuses_new", methods={"GET"})
      * @Route("/list/resappranks/new", name="resappranks_new", methods={"GET"})
@@ -1600,6 +1612,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/{id}", name="custom099_show", methods={"GET"})
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show", methods={"GET"})
+     *
+     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_show", methods={"GET"})
+     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_show", methods={"GET"})
+     *
      * @Route("/list/visastatus/{id}", name="visastatus_show", methods={"GET"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_show", methods={"GET"})
      * @Route("/list/resappranks/{id}", name="resappranks_show", methods={"GET"})
@@ -1894,6 +1910,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/{id}/edit", name="custom099_edit", methods={"GET"})
      * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit", methods={"GET"})
      * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit", methods={"GET"})
+     *
+     * @Route("/list/translational-collaboration-labs/{id}/edit", name="transrescolllabs_edit", methods={"GET"})
+     * @Route("/list/translational-collaboration-divs/{id}/edit", name="transrescolldivs_edit", methods={"GET"})
+     *
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit", methods={"GET"})
      * @Route("/list/resappstatuses/{id}/edit", name="resappstatuses_edit", methods={"GET"})
      * @Route("/list/resappranks/{id}/edit", name="resappranks_edit", methods={"GET"})
@@ -2239,6 +2259,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/{id}", name="custom099_update", methods={"PUT"})
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update", methods={"PUT"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update", methods={"PUT"})
+     *
+     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_update", methods={"PUT"})
+     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_update", methods={"PUT"})
+     *
      * @Route("/list/visastatus/{id}", name="visastatus_update", methods={"PUT"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_update", methods={"PUT"})
      * @Route("/list/resappranks/{id}", name="resappranks_update", methods={"PUT"})
@@ -3272,6 +3296,16 @@ class ListController extends OrderAbstractController
                 $displayName = "Antibody List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transrescolllabs":
+                $className = "CollLabList";
+                $displayName = "Translational Research Collaboration Laboratory List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+            case "transrescolldivs":
+                $className = "CollDivList";
+                $displayName = "Translational Research Collaboration Division List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "workqueuetypes":
                 $className = "WorkQueueList";
@@ -4025,6 +4059,10 @@ class ListController extends OrderAbstractController
      * @Route("/list/custom099/{id}", name="custom099_delete", methods={"DELETE"})
      * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete", methods={"DELETE"})
      * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete", methods={"DELETE"})
+     *
+     * @Route("/list/translational-collaboration-labs/{id}", name="transrescolllabs_delete", methods={"DELETE"})
+     * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_delete", methods={"DELETE"})
+     *
      * @Route("/list/visastatus/{id}", name="visastatus_delete", methods={"DELETE"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_delete", methods={"DELETE"})
      * @Route("/list/resappranks/{id}", name="resappranks_delete", methods={"DELETE"})

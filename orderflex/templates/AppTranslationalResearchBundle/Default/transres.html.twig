@@ -586,9 +586,8 @@
             <div id="tissueRequestDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="tissueRequestDetailsHeading">
                 <div class="panel-body">
 
-                    {% set specialTissueProject = transres_util.specialTissueProject(project) %}
-                    {#specialTissueProject={{ specialTissueProject }}#}
-                    <input type="hidden" id="specialTissueProject" value="{{ specialTissueProject }}" />
+                    {% set specialProjectSpecialty = transres_util.specialProjectSpecialty(project) %}
+                    <input type="hidden" id="specialProjectSpecialty" value="{{ specialProjectSpecialty }}" />
 
                     {#involveHumanTissue "Will this project involve human tissue?"#}
                     {% set humanTissueFormStyle = "display: none;" %}

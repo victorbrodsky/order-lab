@@ -642,7 +642,7 @@ class ProjectType extends AbstractType
         //involveHumanTissue
         //ONLY for CP: For the following question: Will this project involve human tissue?
         //a) Change the answer “No” to “No (this project will only involve human fluid specimens or no human tissue at all)”
-        if( $this->params['specialTissueProject'] == true ) {
+        if( $this->params['specialProjectSpecialty'] == true ) {
             //CP project
             $requireArchivalProcessingLabel = array(
                 "Yes"=>"Yes",
@@ -705,11 +705,53 @@ class ProjectType extends AbstractType
             }
         ));
 
+        ////////////// Additional fields from #294 //////////////
+        //ONLY for CP and AP/CP
+        if( $this->params['specialExtraProjectSpecialty'] == true ) {
+            $builder->add('collLabs', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:CollLabList',
+                'label' => 'Which labs within Clinical Pathology are you collaborating with, if any?:',
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'attr' => array('class' => 'horizontal_type collLabs'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                }
+            ));
+        }
+
+        //For ALL “New Project Request Forms” (not just for CP)
+        $builder->add('collDivs', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:CollDivList',
+            'label' => 'Which division(s) are you collaborating with?:',
+            'required' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type collDivs'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
+        ////////////// EOF Additional fields from #294 //////////////
+
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         //echo "otherUserParam=".$this->params['otherUserParam']."<br>";
         //if( $this->params['otherUserParam'] == 'cp' ) {
-        if( $this->params['specialTissueProject'] == true ) {
+        if( $this->params['specialProjectSpecialty'] == true ) {
             $requireArchivalProcessingLabel = "Will this project require archival tissue specimens?:";
         } else {
             $requireArchivalProcessingLabel = "Will this project require archival specimens?:";
