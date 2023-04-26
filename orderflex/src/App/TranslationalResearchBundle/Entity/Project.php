@@ -628,6 +628,69 @@ class Project {
     private $targetStateRequester;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
 
+    //New fields from #294
+    //https://bitbucket.org/victorbrodsky/trp/issues/294/update-to-new-project-request-form-fields
+    //1) ONLY FOR CP: C- Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”
+    // and list check boxes (not radio buttons) with the following choices
+    // (ALSO ADD THIS SAME QUESTION ON THE AP/CP NEW PROJECT REQUEST PAGE - NOT JUST ON THE CP NEW PROJECT REQUEST PAGE) :
+    // [] Central Lab [] Cytogenetics [] Molecular [] Transfusion Medicine [] Cellular Therapy [] Microbiology [] N/A
+
+    //2) 2. under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”
+    // and list check boxes (not radio buttons) with the following choices:
+    // [] Anatomic Pathology [] Hematopathology [] Clinical Pathology [] Molecular Pathology [] Experimental Pathology [] Computational Pathology [] N/A
+
+    //3) 4. immediately below the new “Hypothesis (one sentence):” field, add a field titled
+    // “Will you need departmental statistical support?” with radio buttons () Yes () No .
+    //4) If () Yes is selected, show an additional field under it titled
+    // “What is the estimated quantity of needed statistical support hours?” with a one-line free text field.
+    // If () No is selected, delete the value in the “What is the estimated quantity of needed statistical support hours?” field
+    // and hide this “child” form field.
+
+    //5) 5. immediately below the new “What is the estimated quantity of needed statistical support hours?” field,
+    // add a field titled “Will you need informatics support?” with radio buttons () Yes () No .
+    //6) If () Yes is selected, show an additional field under it titled “Please describe the data and the needed analysis:”
+    // with a three-line free text field.
+    // If () No is selected, delete the value in the “Please describe the data and the needed analysis:” field and hide this “child” form field.
+
+    //7) 6. immediately below the new “Please describe the data and the needed analysis” field,
+    // add a field titled “Study population (include a brief description such as health status or primary diagnosis):”
+    // with a two-line free text field.
+
+    //8) 7. immediately below the new “Study population (include a brief description such as health status or primary diagnosis):” field,
+    // add a field titled “Number of involved patients:” with a one line free text field.
+
+    //9) 8. immediately below the new “Number of involved patients:” field,
+    // add a field titled “Number of involved lab result reports:” with a one line free text field.
+
+    //10) 9. immediately below the new “Number of involved lab result reports:” field,
+    // add a field titled “Study duration (projected end date for the completion of the study including data analysis and manuscript submission):”
+    // with a DATE field (MM/DD/YYYY).
+
+    //11) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
+    // with a drop down menu containing the following options: “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
+    //12) If “Not applicable” is selected,
+    // show a field titled “Please explain why the IRB submission is not applicable:” with a one-line free text field.
+    // If “Not applicable” is de-selected, delete the value of the “Please explain why the IRB submission is not applicable” field and hide it.
+
+    //13) 11. immediately under “Principal Investigator listed on the IRB application” field,
+    // add a field titled “Submitting Investigator, if different from Principal Investigator above (Add New):”.
+    // Default the currently logged in user into this field, just like you do into the “Contact(s)” field.
+    // Test to make sure “Add New” link for this field works and populates this field when a new person is added in that modal window.
+
+    // 12. immediately above the “Utilize the following specific price list:” field,
+    // add an accordion titled “Additional Details” that gets hidden if “Funded” form field box is checked by the user
+    // (and gets shown again if the “Funded” box is unchecked; Show this accordion by default in an open + visible state.
+    // In this accordion, add the following new form fields:
+    //14) a. Which department(s) outside of pathology are you collaborating with? [one-line free text field]
+    //15) b. Which outside institution(s) are you planning to collaborate with? [one-line free text field]
+    //16) c. If collaborations with outside institutions are planned,
+    // will you (or the principal investigator listed above) be the PI for the entire study? () Yes () No
+    //17) d. Background (essential information related to the project): [three-line free text field]
+    //18) e. Specific aims (please provide 2 to 3): [three-line free text field]
+    //19) f. Research strategy (provide a description of the study design, approach,
+    // and statistical methods including sample size calculation): [three-line free text field]
+    //20) g. Expected results (2 to 3 sentences): [three-line free text field]
+    //21) h. Other departmental resources requested: [one line free text field]
 
 
     public function __construct($user=null) {
