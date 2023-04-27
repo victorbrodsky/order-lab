@@ -675,37 +675,108 @@ class Project {
     // “What is the estimated quantity of needed statistical support hours?” with a one-line free text field.
     // If () No is selected, delete the value in the “What is the estimated quantity of needed statistical support hours?” field
     // and hide this “child” form field.
+    /**
+     * “Will you need departmental statistical support?”
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $needStatSupport;
+    /**
+     * “What is the estimated quantity of needed statistical support hours?” with a one-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $amountStatSupport;
 
     //6) 5. immediately below the new “What is the estimated quantity of needed statistical support hours?” field,
     // add a field titled “Will you need informatics support?” with radio buttons () Yes () No .
     //7) If () Yes is selected, show an additional field under it titled “Please describe the data and the needed analysis:”
     // with a three-line free text field.
     // If () No is selected, delete the value in the “Please describe the data and the needed analysis:” field and hide this “child” form field.
+    /**
+     * “Will you need informatics support?” with radio buttons () Yes () No .
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $needInfSupport;
+    /**
+     * “Please describe the data and the needed analysis:” with a one-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $amountInfSupport;
 
     //8) 6. immediately below the new “Please describe the data and the needed analysis” field,
     // add a field titled “Study population (include a brief description such as health status or primary diagnosis):”
     // with a two-line free text field.
+    /**
+     * “Study population (include a brief description such as health status or primary diagnosis):" with a two-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $studyPopulation;
 
     //9) 7. immediately below the new “Study population (include a brief description such as health status or primary diagnosis):” field,
     // add a field titled “Number of involved patients:” with a one line free text field.
+    /**
+     * “Number of involved patients:" with a two-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $numberPatient;
 
     //10) 8. immediately below the new “Number of involved patients:” field,
     // add a field titled “Number of involved lab result reports:” with a one line free text field.
+    /**
+     * “Number of involved lab result reports:" with a two-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $numberLabReport;
 
     //11) 9. immediately below the new “Number of involved lab result reports:” field,
     // add a field titled “Study duration (projected end date for the completion of the study including data analysis and manuscript submission):”
     // with a DATE field (MM/DD/YYYY).
+    /**
+     * “Study duration (projected end date for the completion of the study including data analysis and manuscript submission):” with a DATE field (MM/DD/YYYY)
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $studyDuration;
 
     //12) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
     // with a drop down menu containing the following options: “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
     //13) If “Not applicable” is selected,
     // show a field titled “Please explain why the IRB submission is not applicable:” with a one-line free text field.
     // If “Not applicable” is de-selected, delete the value of the “Please explain why the IRB submission is not applicable” field and hide it.
+//    /**
+//     * “IRB Approval Status:” with a drop down menu containing the following options:
+//     * “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
+//     *
+//     * @ORM\ManyToOne(targetEntity="IrbStatusList")
+//     */
+//    private $irbStatusList;
+//    /**
+//     * “Please explain why the IRB submission is not applicable:” with a one-line free text field.
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $irbStatusExplain;
 
     //14) 11. immediately under “Principal Investigator listed on the IRB application” field,
     // add a field titled “Submitting Investigator, if different from Principal Investigator above (Add New):”.
     // Default the currently logged in user into this field, just like you do into the “Contact(s)” field.
     // Test to make sure “Add New” link for this field works and populates this field when a new person is added in that modal window.
+//    /**
+//     * “Submitting Investigator, if different from Principal Investigator above (Add New):”
+//     *
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinTable(name="transres_project_subminvestigator",
+//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="subminvestigator_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    private $submittingInvestigators;
 
     // 12. immediately above the “Utilize the following specific price list:” field,
     // add an accordion titled “Additional Details” that gets hidden if “Funded” form field box is checked by the user
@@ -2420,7 +2491,170 @@ class Project {
     {
         $this->collDivs->removeElement($item);
     }
-    ////////////////////////////////////////////
+
+    /**
+     * @return mixed
+     */
+    public function getNeedStatSupport()
+    {
+        return $this->needStatSupport;
+    }
+
+    /**
+     * @param mixed $needStatSupport
+     */
+    public function setNeedStatSupport($needStatSupport)
+    {
+        $this->needStatSupport = $needStatSupport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmountStatSupport()
+    {
+        return $this->amountStatSupport;
+    }
+
+    /**
+     * @param mixed $amountStatSupport
+     */
+    public function setAmountStatSupport($amountStatSupport)
+    {
+        $this->amountStatSupport = $amountStatSupport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNeedInfSupport()
+    {
+        return $this->needInfSupport;
+    }
+
+    /**
+     * @param mixed $needInfSupport
+     */
+    public function setNeedInfSupport($needInfSupport)
+    {
+        $this->needInfSupport = $needInfSupport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAmountInfSupport()
+    {
+        return $this->amountInfSupport;
+    }
+
+    /**
+     * @param mixed $amountInfSupport
+     */
+    public function setAmountInfSupport($amountInfSupport)
+    {
+        $this->amountInfSupport = $amountInfSupport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudyPopulation()
+    {
+        return $this->studyPopulation;
+    }
+
+    /**
+     * @param mixed $studyPopulation
+     */
+    public function setStudyPopulation($studyPopulation)
+    {
+        $this->studyPopulation = $studyPopulation;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberPatient()
+    {
+        return $this->numberPatient;
+    }
+
+    /**
+     * @param mixed $numberPatient
+     */
+    public function setNumberPatient($numberPatient)
+    {
+        $this->numberPatient = $numberPatient;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberLabReport()
+    {
+        return $this->numberLabReport;
+    }
+
+    /**
+     * @param mixed $numberLabReport
+     */
+    public function setNumberLabReport($numberLabReport)
+    {
+        $this->numberLabReport = $numberLabReport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudyDuration()
+    {
+        return $this->studyDuration;
+    }
+
+    /**
+     * @param mixed $studyDuration
+     */
+    public function setStudyDuration($studyDuration)
+    {
+        $this->studyDuration = $studyDuration;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getIrbStatusList()
+//    {
+//        return $this->irbStatusList;
+//    }
+//
+//    /**
+//     * @param mixed $irbStatusList
+//     */
+//    public function setIrbStatusList($irbStatusList)
+//    {
+//        $this->irbStatusList = $irbStatusList;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getIrbStatusExplain()
+//    {
+//        return $this->irbStatusExplain;
+//    }
+//
+//    /**
+//     * @param mixed $irbStatusExplain
+//     */
+//    public function setIrbStatusExplain($irbStatusExplain)
+//    {
+//        $this->irbStatusExplain = $irbStatusExplain;
+//    }
+    
+    
+    
+    ///////////// EOF NEW FIELDS ////////////////////
 
 
     /**
