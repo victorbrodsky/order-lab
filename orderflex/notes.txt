@@ -55,7 +55,9 @@ END;
 $do$;
 ##############################
 
-
+symfony server:start
+symfony server:start -d //start server in the background
+symfony server:stop
 
 ### Migrating to 3.4 Flex: ###
 #use branch v3.4.flex: git push -u origin v3.4.flex

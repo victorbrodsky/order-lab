@@ -920,7 +920,16 @@ class GoogleSheetManagement {
         $credentialsJsonFile = $userSecUtil->getSiteSettingParameter('authPathFellApp',$this->container->getParameter('fellapp.sitename'));
         if( !$credentialsJsonFile ) {
             $logger->warning('JSON service key is not defined in Fellowship Site Parameters, in field authPathFellApp. Json file='.$credentialsJsonFile);
+            //exit('authPathFellApp is not set');
+            $res = array(
+                'client' => null,
+                'service' => null
+            );
+
+            return $res;
         }
+        //dump($credentialsJsonFile);
+        //exit('111');
 
         //$scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp');
         $scopes = $userSecUtil->getSiteSettingParameter('googleDriveApiUrlFellApp',$this->container->getParameter('fellapp.sitename'));
