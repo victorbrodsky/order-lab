@@ -665,40 +665,44 @@ class Project {
     private $collDivs;
     ////////////// EOF Additional fields from #294 //////////////
 
-    //3) 4. immediately below the new “Hypothesis (one sentence):” field, add a field titled
+    //3) 3. immediately above the “Utilize the following specific price list:” field,
+    // add a field titled “Hypothesis (one sentence):” with a one-line free text field.
+    //ALREADY EXISTS
+
+    //4) 4. immediately below the new “Hypothesis (one sentence):” field, add a field titled
     // “Will you need departmental statistical support?” with radio buttons () Yes () No .
-    //4) If () Yes is selected, show an additional field under it titled
+    //5) If () Yes is selected, show an additional field under it titled
     // “What is the estimated quantity of needed statistical support hours?” with a one-line free text field.
     // If () No is selected, delete the value in the “What is the estimated quantity of needed statistical support hours?” field
     // and hide this “child” form field.
 
-    //5) 5. immediately below the new “What is the estimated quantity of needed statistical support hours?” field,
+    //6) 5. immediately below the new “What is the estimated quantity of needed statistical support hours?” field,
     // add a field titled “Will you need informatics support?” with radio buttons () Yes () No .
-    //6) If () Yes is selected, show an additional field under it titled “Please describe the data and the needed analysis:”
+    //7) If () Yes is selected, show an additional field under it titled “Please describe the data and the needed analysis:”
     // with a three-line free text field.
     // If () No is selected, delete the value in the “Please describe the data and the needed analysis:” field and hide this “child” form field.
 
-    //7) 6. immediately below the new “Please describe the data and the needed analysis” field,
+    //8) 6. immediately below the new “Please describe the data and the needed analysis” field,
     // add a field titled “Study population (include a brief description such as health status or primary diagnosis):”
     // with a two-line free text field.
 
-    //8) 7. immediately below the new “Study population (include a brief description such as health status or primary diagnosis):” field,
+    //9) 7. immediately below the new “Study population (include a brief description such as health status or primary diagnosis):” field,
     // add a field titled “Number of involved patients:” with a one line free text field.
 
-    //9) 8. immediately below the new “Number of involved patients:” field,
+    //10) 8. immediately below the new “Number of involved patients:” field,
     // add a field titled “Number of involved lab result reports:” with a one line free text field.
 
-    //10) 9. immediately below the new “Number of involved lab result reports:” field,
+    //11) 9. immediately below the new “Number of involved lab result reports:” field,
     // add a field titled “Study duration (projected end date for the completion of the study including data analysis and manuscript submission):”
     // with a DATE field (MM/DD/YYYY).
 
-    //11) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
+    //12) 10. immediately below the “IRB Expiration Date:” field, add a field titled “IRB Approval Status:”
     // with a drop down menu containing the following options: “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
-    //12) If “Not applicable” is selected,
+    //13) If “Not applicable” is selected,
     // show a field titled “Please explain why the IRB submission is not applicable:” with a one-line free text field.
     // If “Not applicable” is de-selected, delete the value of the “Please explain why the IRB submission is not applicable” field and hide it.
 
-    //13) 11. immediately under “Principal Investigator listed on the IRB application” field,
+    //14) 11. immediately under “Principal Investigator listed on the IRB application” field,
     // add a field titled “Submitting Investigator, if different from Principal Investigator above (Add New):”.
     // Default the currently logged in user into this field, just like you do into the “Contact(s)” field.
     // Test to make sure “Add New” link for this field works and populates this field when a new person is added in that modal window.
@@ -707,16 +711,16 @@ class Project {
     // add an accordion titled “Additional Details” that gets hidden if “Funded” form field box is checked by the user
     // (and gets shown again if the “Funded” box is unchecked; Show this accordion by default in an open + visible state.
     // In this accordion, add the following new form fields:
-    //14) a. Which department(s) outside of pathology are you collaborating with? [one-line free text field]
-    //15) b. Which outside institution(s) are you planning to collaborate with? [one-line free text field]
-    //16) c. If collaborations with outside institutions are planned,
+    //15) a. Which department(s) outside of pathology are you collaborating with? [one-line free text field]
+    //16) b. Which outside institution(s) are you planning to collaborate with? [one-line free text field]
+    //17) c. If collaborations with outside institutions are planned,
     // will you (or the principal investigator listed above) be the PI for the entire study? () Yes () No
-    //17) d. Background (essential information related to the project): [three-line free text field]
-    //18) e. Specific aims (please provide 2 to 3): [three-line free text field]
-    //19) f. Research strategy (provide a description of the study design, approach,
+    //18) d. Background (essential information related to the project): [three-line free text field]
+    //19) e. Specific aims (please provide 2 to 3): [three-line free text field]
+    //20) f. Research strategy (provide a description of the study design, approach,
     // and statistical methods including sample size calculation): [three-line free text field]
-    //20) g. Expected results (2 to 3 sentences): [three-line free text field]
-    //21) h. Other departmental resources requested: [one line free text field]
+    //21) g. Expected results (2 to 3 sentences): [three-line free text field]
+    //22) h. Other departmental resources requested: [one line free text field]
 
 
     public function __construct($user=null) {

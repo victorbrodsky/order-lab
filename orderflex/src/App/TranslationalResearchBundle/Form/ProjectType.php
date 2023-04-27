@@ -251,10 +251,10 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'textarea form-control')
             ));
 
-            $builder->add('hypothesis',null,array(
-                'label' => "Hypothesis:",
-                'attr' => array('class'=>'textarea form-control')
-            ));
+//            $builder->add('hypothesis',null,array(
+//                'label' => "Hypothesis:",
+//                'attr' => array('class'=>'textarea form-control')
+//            ));
 
             $builder->add('objective',null,array(
                 'label' => "Objective:",
@@ -707,6 +707,7 @@ class ProjectType extends AbstractType
 
         ////////////// Additional fields from #294 //////////////
         //ONLY for CP and AP/CP
+        //echo "specialExtraProjectSpecialty=".$this->params['specialExtraProjectSpecialty']."<br>";
         if( $this->params['specialExtraProjectSpecialty'] == true ) {
             $builder->add('collLabs', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:CollLabList',
@@ -744,6 +745,11 @@ class ProjectType extends AbstractType
                         'typeadd' => 'user-added',
                     ));
             }
+        ));
+
+        $builder->add('hypothesis',null,array(
+            'label' => "Hypothesis:",
+            'attr' => array('class'=>'textarea form-control')
         ));
         ////////////// EOF Additional fields from #294 //////////////
 

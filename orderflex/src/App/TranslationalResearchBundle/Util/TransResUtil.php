@@ -8233,6 +8233,7 @@ class TransResUtil
         $projectSpecialty = $project->getProjectSpecialty();
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+            //echo "projectSpecialtyAbbreviation=$projectSpecialtyAbbreviation<br>";
             if( $projectSpecialtyAbbreviation == 'cp' || $projectSpecialtyAbbreviation == 'ap-cp' ) {
                 return true;
             }

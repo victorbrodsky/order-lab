@@ -2376,6 +2376,7 @@ class ProjectController extends OrderAbstractController
         $params['specialProjectSpecialty'] = $specialProjectSpecialty;
         //true or false. If true collLabs checkboxes will be shown in project (for example, CP and AP/CP project)
         $specialExtraProjectSpecialty = $transresUtil->specialExtraProjectSpecialty($project);
+        //echo "1specialExtraProjectSpecialty=".$specialExtraProjectSpecialty."<br>";
         $params['specialExtraProjectSpecialty'] = $specialExtraProjectSpecialty;
 
         $form = $this->createForm(ProjectType::class, $project, array(

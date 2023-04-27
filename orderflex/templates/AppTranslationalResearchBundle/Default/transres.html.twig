@@ -260,6 +260,22 @@
 
                     {{ formmacros.field(form.projectType) }}
 
+                    {{ formmacros.field(form.description)|raw }}
+
+                    {#immediately under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”#}
+                    {#<div class="well well-sm">#}
+                        {{ formmacros.field(form.collDivs) }}
+                    {#</div>#}
+
+                    {#Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”#}
+                    {% if form.collLabs is defined %}
+                        {#<div class="well well-sm">#}
+                            {{ formmacros.field(form.collLabs) }}
+                        {#</div>#}
+                    {% endif %}
+
+                    {{ formmacros.field(form.hypothesis) }}
+
                     {% if form.priceList is defined %}
                         {{ formmacros.field(form.priceList) }}
                     {% endif %}
@@ -268,13 +284,13 @@
 
                     {{ formmacros.field(form.fundedAccountNumber) }}
 
-                    {{ formmacros.field(form.description)|raw }}
+                    {#{{ formmacros.field(form.description)|raw }}#}
 
                     {#Hide the fields (from $budgetSummary to $expectedCompletionDate)#}
                     {% if form.budgetSummary is defined %}
                         {{ formmacros.field(form.budgetSummary) }}
 
-                        {{ formmacros.field(form.hypothesis) }}
+                        {#{{ formmacros.field(form.hypothesis) }}#}
                         {{ formmacros.field(form.objective) }}
                         {{ formmacros.field(form.expectedResults) }}
 
