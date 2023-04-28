@@ -7,6 +7,7 @@ use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -772,21 +773,57 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('needStatSupport', CheckboxType::class, array(
+        //https://stackoverflow.com/questions/39272733/boolean-values-and-choice-symfony-type
+        $builder->add('needStatSupport', ChoiceType::class, array(
+            'choices' => array(
+                'Yes' => '1',
+                'No' => '0'
+            ),
             'label' => 'Will you need departmental statistical support?:',
-            'required' => false,
-            'attr' => array('class' => 'form-control transres-project-needStatSupport'),
+            'multiple' => false,
+            'required' => true,
+            'expanded' => true,
+            'attr' => array('class'=>'horizontal_type needStatSupport')
         ));
+        $builder->get('needStatSupport')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($property) {
+                    return (string) $property;
+                },
+                function ($property) {
+                    return (bool) $property;
+                }
+            ));
         $builder->add('amountStatSupport',null,array(
             'label' => "What is the estimated quantity of needed statistical support hours?:",
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('needInfSupport', CheckboxType::class, array(
+//        $builder->add('needInfSupport', CheckboxType::class, array(
+//            'label' => 'Will you need informatics support?:',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control transres-project-needInfSupport'),
+//        ));
+        $builder->add('needInfSupport', ChoiceType::class, array(
+            'choices' => array(
+                'Yes' => '1',
+                'No' => '0'
+            ),
             'label' => 'Will you need informatics support?:',
-            'required' => false,
-            'attr' => array('class' => 'form-control transres-project-needInfSupport'),
+            'multiple' => false,
+            'required' => true,
+            'expanded' => true,
+            'attr' => array('class'=>'horizontal_type needInfSupport')
         ));
+        $builder->get('needInfSupport')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($property) {
+                    return (string) $property;
+                },
+                function ($property) {
+                    return (bool) $property;
+                }
+            ));
         $builder->add('amountInfSupport',null,array(
             'label' => "Please describe the data and the needed analysis:",
             'attr' => array('class'=>'textarea form-control')

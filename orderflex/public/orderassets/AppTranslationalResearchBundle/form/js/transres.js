@@ -28,6 +28,10 @@ $(document).ready(function() {
     transresRequireTissueProcessingListener();
     transresRequireArchivalProcessingListener();
 
+    transresNeedStatSupportListener();
+    transresNeedInfSupportListener();
+    //transresIrbStatusListListener();
+
     transresProjectFundedListener();
 
     //console.log("cycle="+cycle);
@@ -64,6 +68,8 @@ $(document).ready(function() {
 
     transresIrbExemptListener('transres-project-exemptIACUCApproval');
 
+    transresIrbStatusListListener('transres-project-irbStatusList');
+
     transresShowHideProjectDocument();
     
 });
@@ -82,6 +88,24 @@ function transresIrbExemptChange( exemptEl, classname ) {
         //$("."+classname+"-panel").fadeOut(2000);
     }
     if( exemptText == "Not Exempt" ) {
+        $("."+classname+"-panel").show('slow');
+        //$("."+classname+"-panel").fadeIn(2000);
+    }
+}
+
+function transresIrbStatusListListener( classname ) {
+    $("."+classname).on("change", function(e) {
+        transresIrbStatusListChange($(this),classname);
+    });
+}
+function transresIrbStatusListChange( exemptEl, classname ) {
+    var exemptData = exemptEl.select2('data');
+    var exemptText = exemptData.text;
+    console.log("change: IrbStatusList="+exemptText);
+    if( exemptText != "Not applicable" ) {
+        $("."+classname+"-panel").hide('slow');
+    }
+    if( exemptText == "Not applicable" ) {
         $("."+classname+"-panel").show('slow');
         //$("."+classname+"-panel").fadeIn(2000);
     }
@@ -174,6 +198,64 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
         $("#archivalspecimens").hide('slow');
     }
 }
+
+
+function transresNeedStatSupportListener() {
+    $(".needStatSupport").on("change", function(e) {
+        var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
+        // console.log("change: checked value needStatSupport="+needStatSupport);
+        transresShowHideNeedStatSupport(needStatSupport);
+    });
+}
+function transresShowHideNeedStatSupport(needStatSupport) {
+    if( needStatSupport == 1 ) {
+        // console.log("needStatSupport show");
+        $("#needstatsupport").show('slow');
+    }
+
+    if( needStatSupport == 0 ) {
+        // console.log("needStatSupport hide");
+        $("#needstatsupport").hide('slow');
+    }
+}
+
+function transresNeedInfSupportListener() {
+    $(".needInfSupport").on("change", function(e) {
+        var needInfSupport = $(".needInfSupport").find('input[name="oleg_translationalresearchbundle_project[needInfSupport]"]:checked').val();
+        // console.log("change: checked value needInfSupport="+needInfSupport);
+        transresShowHideNeedInfSupport(needInfSupport);
+    });
+}
+function transresShowHideNeedInfSupport(needInfSupport) {
+    if( needInfSupport == 1 ) {
+        // console.log("needInfSupport show");
+        $("#needInfSupport").show('slow');
+    }
+
+    if( needInfSupport == 0 ) {
+        // console.log("needInfSupport hide");
+        $("#needInfSupport").hide('slow');
+    }
+}
+
+// function transresIrbStatusListListener() {
+//     $(".irbStatusList").on("change", function(e) {
+//         var irbStatusList = $(".irbStatusList").find('input[name="oleg_translationalresearchbundle_project[irbStatusList]"]:checked').val();
+//         // console.log("change: checked value irbStatusList="+irbStatusList);
+//         transresShowHideIrbStatusList(irbStatusList);
+//     });
+// }
+// function transresShowHideIrbStatusList(irbStatusList) {
+//     if( irbStatusList == 1 ) {
+//         // console.log("irbStatusList show");
+//         $("#irbStatusList").show('slow');
+//     }
+//
+//     if( irbStatusList == 0 ) {
+//         // console.log("irbStatusList hide");
+//         $("#irbStatusList").hide('slow');
+//     }
+// }
 
 function transresProjectFundedListener() {
     //oleg_translationalresearchbundle_project_funded
@@ -326,6 +408,39 @@ function transresValidateProjectForm() {
         //console.log("Error: requireArchivalProcessing is NULL!");
         //var msg = "Please upload a completed human tissue form";
         var msg = "Please answer the required question: 'Will this project require archival specimens?'";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        //validated = false;
+        transresShowBtn();
+        return false;
+    } else {
+        //validate fields
+    }
+
+    //needStatSupport
+    var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
+    //console.log("needStatSupport="+needStatSupport);
+    if( !needStatSupport ) {
+        //console.log("Error: needStatSupport is NULL!");
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will you need departmental statistical support?'";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        //validated = false;
+        transresShowBtn();
+        return false;
+    } else {
+        //validate fields
+    }
+
+    var needInfSupport = $(".needInfSupport").find('input[name="oleg_translationalresearchbundle_project[needInfSupport]"]:checked').val();
+    //console.log("needInfSupport="+needInfSupport);
+    if( !needInfSupport ) {
+        //console.log("Error: needInfSupport is NULL!");
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will you need informatics support?'";
         $("#projectError").show();
         $("#projectError").html(msg);
 

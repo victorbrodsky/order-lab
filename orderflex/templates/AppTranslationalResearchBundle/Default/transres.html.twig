@@ -276,12 +276,14 @@
 
                     {{ formmacros.field(form.hypothesis) }}
 
-                    {{ formmacros.checkbox(form.needStatSupport) }}
+                    {#{{ formmacros.checkbox(form.needStatSupport) }}#}
                     {#show if condition#}
-                    {{ formmacros.field(form.amountStatSupport) }}
+                    {#{{ formmacros.field(form.amountStatSupport) }}#}
+                    {{ transres.needStatSupport(form,project,cycle) }}
 
-                    {{ formmacros.checkbox(form.needInfSupport) }}
-                    {{ formmacros.field(form.amountInfSupport) }}
+                    {#{{ formmacros.checkbox(form.needInfSupport) }}#}
+                    {#{{ formmacros.field(form.amountInfSupport) }}#}
+                    {{ transres.needInfSupport(form,project,cycle) }}
 
                     {{ formmacros.field(form.studyPopulation) }}
 
@@ -426,8 +428,9 @@
                         {{ formmacros.field(form.irbNumber) }}
                         {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
 
-                        {{ formmacros.field(form.irbStatusList) }}
-                        {{ formmacros.field(form.irbStatusExplain) }}
+                        {#{{ formmacros.field(form.irbStatusList) }}#}
+                        {#{{ formmacros.field(form.irbStatusExplain) }}#}
+                        {{ transres.irbStatusList(form,project,cycle) }}
 
                         <div class="well form-element-holder user-irbApprovalLetters">
                             <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
@@ -743,7 +746,6 @@
 {% endmacro %}
 
 {% macro needStatSupport( form, project, cycle ) %}
-
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
     {% set panelStyle = "" %}
@@ -758,13 +760,58 @@
         {% endif %}
 
         <div id="needstatsupport" class="panel panel-default" style="{{ panelStyle }}">
-            {#<div class="panel-heading">Fresh Tissue Procurement/Processing</div>#}
+            {#<div class="panel-heading">Departmental Statistical Support</div>#}
             <div class="panel-body">
                 {{ formmacros.field(form.amountStatSupport) }}
             </div>
         </div>
     </div>
+{% endmacro %}
 
+{% macro needInfSupport( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set panelStyle = "" %}
+    {% if not project.needInfSupport %}
+        {% set panelStyle = "display: none;" %}
+    {% endif %}
+    <div class="well">
+        {% if form %}
+            {{ formmacros.field(form.needInfSupport) }}
+        {% else %}
+            {{ formmacros.simplefield("Will you need informatics support?:", project.needInfSupport, "input", "disabled") }}
+        {% endif %}
+
+        <div id="needInfSupport" class="panel panel-default" style="{{ panelStyle }}">
+            {#<div class="panel-heading">Departmental Informatics Support</div>#}
+            <div class="panel-body">
+                {{ formmacros.field(form.amountInfSupport) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro irbStatusList( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set panelStyle = "" %}
+    {% if project.irbStatusList and project.irbStatusList.getName() == "Exempt" %}
+        {% set hideshow = "display: none;" %}
+    {% endif %}
+
+    <div class="well">
+        {% if form %}
+            {{ formmacros.field(form.irbStatusList) }}
+        {% else %}
+            {{ formmacros.simplefield("IRB Approval Status:", project.irbStatusList, "input", "disabled") }}
+        {% endif %}
+
+        <div id="irbStatusList-panel" class="panel panel-default irbStatusList-panel" style="{{ panelStyle }}">
+            <div class="panel-body">
+                {{ formmacros.field(form.irbStatusExplain) }}
+            </div>
+        </div>
+    </div>
 {% endmacro %}
 
 {% macro projectRequesters( form, project, cycle ) %}
