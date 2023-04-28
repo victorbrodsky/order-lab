@@ -276,6 +276,21 @@
 
                     {{ formmacros.field(form.hypothesis) }}
 
+                    {{ formmacros.checkbox(form.needStatSupport) }}
+                    {#show if condition#}
+                    {{ formmacros.field(form.amountStatSupport) }}
+
+                    {{ formmacros.checkbox(form.needInfSupport) }}
+                    {{ formmacros.field(form.amountInfSupport) }}
+
+                    {{ formmacros.field(form.studyPopulation) }}
+
+                    {{ formmacros.field(form.numberPatient) }}
+
+                    {{ formmacros.field(form.numberLabReport) }}
+
+                    {{ formmacros.fieldDateLabel(form.studyDuration,'allow-future-date') }}
+
                     {% if form.priceList is defined %}
                         {{ formmacros.field(form.priceList) }}
                     {% endif %}
@@ -410,6 +425,9 @@
                     <div class="well transres-project-exemptIrbApproval-panel" style="{{ hideshow }}">
                         {{ formmacros.field(form.irbNumber) }}
                         {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+
+                        {{ formmacros.field(form.irbStatusList) }}
+                        {{ formmacros.field(form.irbStatusExplain) }}
 
                         <div class="well form-element-holder user-irbApprovalLetters">
                             <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
@@ -720,6 +738,31 @@
             {{ formmacros.field(form.quantityOfTmaCoresRnaDnaAnalysisPerBlock) }}
         </div>
     </div>
+    </div>
+
+{% endmacro %}
+
+{% macro needStatSupport( form, project, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set panelStyle = "" %}
+    {% if not project.needStatSupport %}
+        {% set panelStyle = "display: none;" %}
+    {% endif %}
+    <div class="well">
+        {% if form %}
+            {{ formmacros.field(form.needStatSupport) }}
+        {% else %}
+            {{ formmacros.simplefield("Will you need departmental statistical support?:", project.needStatSupport, "input", "disabled") }}
+        {% endif %}
+
+        <div id="needstatsupport" class="panel panel-default" style="{{ panelStyle }}">
+            {#<div class="panel-heading">Fresh Tissue Procurement/Processing</div>#}
+            <div class="panel-body">
+                {{ formmacros.field(form.amountStatSupport) }}
+            </div>
+        </div>
     </div>
 
 {% endmacro %}

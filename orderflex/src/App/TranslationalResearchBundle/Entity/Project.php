@@ -663,7 +663,6 @@ class Project {
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $collDivs;
-    ////////////// EOF Additional fields from #294 //////////////
 
     //3) 3. immediately above the “Utilize the following specific price list:” field,
     // add a field titled “Hypothesis (one sentence):” with a one-line free text field.
@@ -750,7 +749,6 @@ class Project {
     // show a field titled “Please explain why the IRB submission is not applicable:” with a one-line free text field.
     // If “Not applicable” is de-selected, delete the value of the “Please explain why the IRB submission is not applicable” field and hide it.
     /**
-     * Similar: collDivs
      * “IRB Approval Status:” with a drop down menu containing the following options:
      * “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
      *
@@ -794,6 +792,7 @@ class Project {
     //21) g. Expected results (2 to 3 sentences): [three-line free text field]
     //22) h. Other departmental resources requested: [one line free text field]
 
+    ////////////// EOF Additional fields from #294 //////////////
 
     public function __construct($user=null) {
 

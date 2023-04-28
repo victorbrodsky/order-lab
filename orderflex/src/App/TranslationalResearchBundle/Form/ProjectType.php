@@ -767,7 +767,54 @@ class ProjectType extends AbstractType
                     ));
             },
         ));
-        
+        $builder->add('irbStatusExplain',null,array(
+            'label' => "Please explain why the IRB submission is not applicable:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('needStatSupport', CheckboxType::class, array(
+            'label' => 'Will you need departmental statistical support?:',
+            'required' => false,
+            'attr' => array('class' => 'form-control transres-project-needStatSupport'),
+        ));
+        $builder->add('amountStatSupport',null,array(
+            'label' => "What is the estimated quantity of needed statistical support hours?:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('needInfSupport', CheckboxType::class, array(
+            'label' => 'Will you need informatics support?:',
+            'required' => false,
+            'attr' => array('class' => 'form-control transres-project-needInfSupport'),
+        ));
+        $builder->add('amountInfSupport',null,array(
+            'label' => "Please describe the data and the needed analysis:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('studyPopulation',null,array(
+            'label' => "Study population (include a brief description such as health status or primary diagnosis):",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('numberPatient',null,array(
+            'label' => "Number of involved patients:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('numberLabReport',null,array(
+            'label' => "Number of involved lab result reports:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('studyDuration',null,array(
+            'label' => "Study duration (projected end date for the completion of the study including data analysis and manuscript submission):",
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy',
+            'html5' => false,
+            'attr' => array('class'=>'datepicker form-control')
+        ));
+
         ////////////// EOF Additional fields from #294 //////////////
 
         //Archival Specimens
