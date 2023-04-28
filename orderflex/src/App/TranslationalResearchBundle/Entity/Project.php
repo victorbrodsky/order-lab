@@ -749,19 +749,20 @@ class Project {
     //13) If “Not applicable” is selected,
     // show a field titled “Please explain why the IRB submission is not applicable:” with a one-line free text field.
     // If “Not applicable” is de-selected, delete the value of the “Please explain why the IRB submission is not applicable” field and hide it.
-//    /**
-//     * “IRB Approval Status:” with a drop down menu containing the following options:
-//     * “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
-//     *
-//     * @ORM\ManyToOne(targetEntity="IrbStatusList")
-//     */
-//    private $irbStatusList;
-//    /**
-//     * “Please explain why the IRB submission is not applicable:” with a one-line free text field.
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $irbStatusExplain;
+    /**
+     * Similar: collDivs
+     * “IRB Approval Status:” with a drop down menu containing the following options:
+     * “Approved”, “Submitted, in review”, “Pending submission”, “Not applicable”.
+     *
+     * @ORM\ManyToOne(targetEntity="IrbStatusList")
+     */
+    private $irbStatusList;
+    /**
+     * “Please explain why the IRB submission is not applicable:” with a one-line free text field.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $irbStatusExplain;
 
     //14) 11. immediately under “Principal Investigator listed on the IRB application” field,
     // add a field titled “Submitting Investigator, if different from Principal Investigator above (Add New):”.
@@ -2620,37 +2621,37 @@ class Project {
         $this->studyDuration = $studyDuration;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getIrbStatusList()
-//    {
-//        return $this->irbStatusList;
-//    }
-//
-//    /**
-//     * @param mixed $irbStatusList
-//     */
-//    public function setIrbStatusList($irbStatusList)
-//    {
-//        $this->irbStatusList = $irbStatusList;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getIrbStatusExplain()
-//    {
-//        return $this->irbStatusExplain;
-//    }
-//
-//    /**
-//     * @param mixed $irbStatusExplain
-//     */
-//    public function setIrbStatusExplain($irbStatusExplain)
-//    {
-//        $this->irbStatusExplain = $irbStatusExplain;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getIrbStatusList()
+    {
+        return $this->irbStatusList;
+    }
+
+    /**
+     * @param mixed $irbStatusList
+     */
+    public function setIrbStatusList($irbStatusList)
+    {
+        $this->irbStatusList = $irbStatusList;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIrbStatusExplain()
+    {
+        return $this->irbStatusExplain;
+    }
+
+    /**
+     * @param mixed $irbStatusExplain
+     */
+    public function setIrbStatusExplain($irbStatusExplain)
+    {
+        $this->irbStatusExplain = $irbStatusExplain;
+    }
     
     
     

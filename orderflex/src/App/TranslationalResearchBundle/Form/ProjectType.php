@@ -751,6 +751,23 @@ class ProjectType extends AbstractType
             'label' => "Hypothesis:",
             'attr' => array('class'=>'textarea form-control')
         ));
+
+        $builder->add('irbStatusList', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:IrbStatusList',
+            'label' => 'IRB Approval Status:',
+            'required' => true,
+            'attr' => array('class' => 'combobox transres-project-irbStatusList'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+        
         ////////////// EOF Additional fields from #294 //////////////
 
         //Archival Specimens

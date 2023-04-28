@@ -7791,6 +7791,7 @@ class AdminController extends OrderAbstractController
             "orderablestatus" => array('OrderableStatusList','orderablestatus-list','Orderable Status List'),
             "transrescolllabs" => array('CollLabList','transrescolllabs-list','Translational Research Collaboration Laboratory List'),
             "transrescolldivs" => array('CollDivList','transrescolldivs-list','Translational Research Collaboration Division List'),
+            "transresirbstatus" => array('IrbStatusList','transresirbstatus-list','Translational Research Irb Approval Status List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
