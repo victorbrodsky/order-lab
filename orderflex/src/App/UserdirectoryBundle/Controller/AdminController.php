@@ -43,6 +43,7 @@ use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\CollDivList;
 use App\TranslationalResearchBundle\Entity\CollLabList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Entity\IrbStatusList;
 use App\TranslationalResearchBundle\Entity\OrderableStatusList;
 use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
@@ -1047,6 +1048,7 @@ class AdminController extends OrderAbstractController
 
         $count_generateCollLabList = $this->generateCollLabList();
         $count_generateCollDivList = $this->generateCollDivList();
+        $count_generateIrbStatusList = $this->generateIrbStatusList();
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
@@ -1192,6 +1194,7 @@ class AdminController extends OrderAbstractController
 
             'CollLabList='.$count_generateCollLabList.', '.
             'CollDivList='.$count_generateCollDivList.', '.
+            'IrbStatusList='.$count_generateIrbStatusList.', '.
 
             'generateDashboardRoles='.$count_generateDashboardRoles.', '.
             'generateChartTypeList='.$count_generateChartTypeList.', '.
@@ -10468,6 +10471,37 @@ class AdminController extends OrderAbstractController
             }
 
             $listEntity = new CollDivList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+    public function generateIrbStatusList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Approved",
+            "Submitted, in review",
+            "Pending submission",
+            "Not applicable"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:IrbStatusList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new IrbStatusList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
