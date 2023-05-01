@@ -627,11 +627,17 @@
                     <input type="hidden" id="specialProjectSpecialty" value="{{ specialProjectSpecialty }}" />
 
                     {#involveHumanTissue "Will this project involve human tissue?"#}
-                    {% set humanTissueFormStyle = "display: none;" %}
+
+                    {#Hide entire panel only for special projects (i.e. CP)#}
                     {% set humanRequestDetails = "" %}
+                    {% if specialProjectSpecialty %}
+                        {% set humanRequestDetails = "display: none;" %}
+                    {% endif %}
+
+                    {% set humanTissueFormStyle = "display: none;" %}
                     {% if project.involveHumanTissue == "Yes" %}
                         {% set humanTissueFormStyle = "" %}
-                        {% set humanRequestDetails = "display: none;" %}
+                        {% set humanRequestDetails = "" %}
                     {% endif %}
                     {% if form %}
                         {{ formmacros.field(form.involveHumanTissue) }}

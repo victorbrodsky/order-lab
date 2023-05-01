@@ -153,8 +153,8 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProj
 function changeHumanTissueRelatedSections(value) {
     if( value == 'Yes' ) {
         //If Yes is selected => don't change requireTissueProcessing and requireTissueProcessing
-        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
-        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
     }
     if( value == 'No' ) {
         //TODO: only for CP
