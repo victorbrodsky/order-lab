@@ -1390,8 +1390,8 @@ class ProjectController extends OrderAbstractController
             $transresUtil->assignMinimumProjectRoles($project); //new
 
             $project->autoPopulateApprovedProjectBudget(); //new
-
             $project->calculateAndSetImplicitExpirationDate();
+            $project->processShowHideFields();
 
             //set ExpectedExprDate only when project is final approved
             //$transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
@@ -1604,6 +1604,7 @@ class ProjectController extends OrderAbstractController
             $project->setUpdateUser($user);
             $project->setUpdateDate();
             $project->calculateAndSetImplicitExpirationDate();
+            $project->processShowHideFields();
 
             $startProjectReview = false;
 

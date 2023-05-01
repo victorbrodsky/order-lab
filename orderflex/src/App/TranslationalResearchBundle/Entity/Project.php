@@ -2499,15 +2499,14 @@ class Project {
     {
         return $this->needStatSupport;
     }
-
     /**
      * @param mixed $needStatSupport
      */
     public function setNeedStatSupport($needStatSupport)
     {
         $this->needStatSupport = $needStatSupport;
+        $this->processShowHideFields();
     }
-
     /**
      * @return mixed
      */
@@ -2515,7 +2514,6 @@ class Project {
     {
         return $this->amountStatSupport;
     }
-
     /**
      * @param mixed $amountStatSupport
      */
@@ -2531,15 +2529,14 @@ class Project {
     {
         return $this->needInfSupport;
     }
-
     /**
      * @param mixed $needInfSupport
      */
     public function setNeedInfSupport($needInfSupport)
     {
         $this->needInfSupport = $needInfSupport;
+        $this->processShowHideFields();
     }
-
     /**
      * @return mixed
      */
@@ -2547,7 +2544,6 @@ class Project {
     {
         return $this->amountInfSupport;
     }
-
     /**
      * @param mixed $amountInfSupport
      */
@@ -2634,6 +2630,7 @@ class Project {
     public function setIrbStatusList($irbStatusList)
     {
         $this->irbStatusList = $irbStatusList;
+        $this->processShowHideFields();
     }
 
     /**
@@ -2651,8 +2648,23 @@ class Project {
     {
         $this->irbStatusExplain = $irbStatusExplain;
     }
-    
-    
+
+    public function processShowHideFields()
+    {
+        if( $this->getNeedStatSupport() == false ) {
+            $this->setAmountStatSupport(null);
+        }
+        if( $this->getNeedInfSupport() == false ) {
+            $this->setAmountInfSupport(null);
+        }
+
+        $irbStatus = $this->getIrbStatusList();
+        if( $irbStatus ) {
+            if( $irbStatus->getName() != "Not applicable" ) {
+                $this->setIrbStatusExplain(null);
+            }
+        }
+    }
     
     ///////////// EOF NEW FIELDS ////////////////////
 
