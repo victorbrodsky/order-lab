@@ -103,11 +103,11 @@ function transresIrbStatusListChange( exemptEl, classname ) {
     var exemptText = exemptData.text;
     console.log("change: IrbStatusList="+exemptText);
     if( exemptText != "Not applicable" ) {
-        $("."+classname+"-panel").hide('slow');
+        $("#"+"irbStatusList").hide('slow');
     }
     if( exemptText == "Not applicable" ) {
-        $("."+classname+"-panel").show('slow');
-        //$("."+classname+"-panel").fadeIn(2000);
+        //$("."+classname+"-panel").show('slow');
+        $("#"+"irbStatusList").show('slow');
     }
 }
 
@@ -122,30 +122,39 @@ function transresHumanTissueListener(specialProjectSpecialty) {
 function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty) {
     //console.log("involveHumanTissue="+involveHumanTissue);
     if( involveHumanTissue == "Yes" ) {
-        console.log("humanTissueForms Yes => show");
-        $(".user-humanTissueForms").show('slow');
+        //console.log("humanTissueForms Yes => show");
+        //$(".user-humanTissueForms").show('slow');
+        $("#transres-project-humanTissueForms").show('slow');
+
+        //only for specialProjectSpecialty (i.e. CP) => entire accordion is automatically hidden
+        if( specialProjectSpecialty == 1 || specialProjectSpecialty == true ) {
+            $("#transres-project-humanRequestDetails").show('slow');
+        }
     }
 
     if( involveHumanTissue == "No" ) {
-        console.log("humanTissueForms NO => hide");
-        $(".user-humanTissueForms").hide('slow');
+        //console.log("humanTissueForms NO => hide");
+        //$(".user-humanTissueForms").hide('slow');
+        $("#transres-project-humanTissueForms").hide('slow');
+
+        //only for specialProjectSpecialty (i.e. CP) => entire accordion is automatically hidden
+        if( specialProjectSpecialty == 1 || specialProjectSpecialty == true ) {
+            $("#transres-project-humanRequestDetails").hide('slow');
+        }
     }
 
     //only for specialProjectSpecialty (i.e. CP)
     //console.log("specialProjectSpecialty="+specialProjectSpecialty);
     if( specialProjectSpecialty == 1 || specialProjectSpecialty == true ) {
-        console.log("use specialProjectSpecialty");
+        //console.log("use specialProjectSpecialty");
         changeHumanTissueRelatedSections(involveHumanTissue);
     }
 }
 function changeHumanTissueRelatedSections(value) {
     if( value == 'Yes' ) {
         //If Yes is selected => don't change requireTissueProcessing and requireTissueProcessing
-        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
-        //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").prop("checked",false).trigger("change");
-
-        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
-        //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").prop("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
     }
     if( value == 'No' ) {
         //TODO: only for CP
@@ -238,25 +247,6 @@ function transresShowHideNeedInfSupport(needInfSupport) {
     }
 }
 
-// function transresIrbStatusListListener() {
-//     $(".irbStatusList").on("change", function(e) {
-//         var irbStatusList = $(".irbStatusList").find('input[name="oleg_translationalresearchbundle_project[irbStatusList]"]:checked').val();
-//         // console.log("change: checked value irbStatusList="+irbStatusList);
-//         transresShowHideIrbStatusList(irbStatusList);
-//     });
-// }
-// function transresShowHideIrbStatusList(irbStatusList) {
-//     if( irbStatusList == 1 ) {
-//         // console.log("irbStatusList show");
-//         $("#irbStatusList").show('slow');
-//     }
-//
-//     if( irbStatusList == 0 ) {
-//         // console.log("irbStatusList hide");
-//         $("#irbStatusList").hide('slow');
-//     }
-// }
-
 function transresProjectFundedListener() {
     //oleg_translationalresearchbundle_project_funded
     $(".transres-funded").on("change", function(e) {
@@ -281,6 +271,7 @@ function transresShowHideProjectDocument() {
 
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post.
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
+//
 function transresValidateProjectForm() {
 
     //console.log("Validate project");
@@ -451,6 +442,31 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
+    //transres-project-exemptIrbApproval=="Not Exempt" => irbStatusList=="Not applicable" => irbStatusExplain is empty
+    var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
+    var exemptIrbApprovalValue = exemptIrbApproval.text;
+    //console.log("exemptIrbApprovalValue=" + exemptIrbApprovalValue);
+    if( exemptIrbApprovalValue == "Not Exempt" ) {
+        var irbStatusList = $(".transres-project-irbStatusList").select2('data');
+        var irbStatusListValue = irbStatusList.text;
+        //console.log("irbStatusListValue=" + irbStatusListValue);
+        if( irbStatusListValue == "Not applicable" ) {
+            var irbStatusExplain = $(".transres-project-irbStatusExplain").val();
+            //console.log("irbStatusExplain=" + irbStatusExplain);
+            if( !irbStatusExplain ) {
+                var msg = "Please explain why the IRB submission is not applicable";
+                $("#projectError").show();
+                $("#projectError").html(msg);
+
+                //validated = false;
+                transresShowBtn();
+                return false;
+            }
+        } else {
+            //validate fields
+        }
+    }
+
     //get original and new (current) state
     var projectOriginalStateValue = $("#projectOriginalStateValue").val();
     var projectOriginalState = $("#projectOriginalState").val(); //Closed
@@ -526,13 +542,13 @@ function transresValidateProjectForm() {
         // }
     }
 
-    // if( 1 ) {
-    //     var msg = "Test error";
-    //     $("#projectError").show();
-    //     $("#projectError").html(msg);
-    //     transresShowBtn();
-    //     return false;
-    // }
+    if( 0 ) {
+        var msg = "Test error";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+        transresShowBtn();
+        return false;
+    }
 
     //transresShowBtn();
 

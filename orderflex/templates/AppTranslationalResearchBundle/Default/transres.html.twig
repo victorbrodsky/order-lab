@@ -628,8 +628,10 @@
 
                     {#involveHumanTissue "Will this project involve human tissue?"#}
                     {% set humanTissueFormStyle = "display: none;" %}
+                    {% set humanRequestDetails = "" %}
                     {% if project.involveHumanTissue == "Yes" %}
                         {% set humanTissueFormStyle = "" %}
+                        {% set humanRequestDetails = "display: none;" %}
                     {% endif %}
                     {% if form %}
                         {{ formmacros.field(form.involveHumanTissue) }}
@@ -637,45 +639,49 @@
                         {{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}
                     {% endif %}
 
-                    <div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
-                        <label class="col-xs-12 control-label">Human Tissue Form</label>
-                        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
+                    <div id="transres-project-humanRequestDetails" style="{{ humanRequestDetails }}">
 
-                        {#<p>Please note this tissue form must be reviewed and signed by the IRB Pathology Compliance Officer prior to uploading. For signature, please submit this completed form along with the associated IRB protocol summary or exemption letter to submit2pathology@med.cornell.edu</p>#}
-                        {% set humanTissueFormNote = transres_util.getTransresSiteProjectParameter('humanTissueFormNote',project) %}
-                        {% if humanTissueFormNote %}
-                            <p>{{ humanTissueFormNote|raw }}</p>
-                        {% endif %}
+                        <div id="transres-project-humanTissueForms" class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
+                            <label class="col-xs-12 control-label">Human Tissue Form</label>
+                            <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
 
-                        <div class="row withpaddingtop">
-                            <div class="col-xs-12">
-                                {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
+                            {#<p>Please note this tissue form must be reviewed and signed by the IRB Pathology Compliance Officer prior to uploading. For signature, please submit this completed form along with the associated IRB protocol summary or exemption letter to submit2pathology@med.cornell.edu</p>#}
+                            {% set humanTissueFormNote = transres_util.getTransresSiteProjectParameter('humanTissueFormNote',project) %}
+                            {% if humanTissueFormNote %}
+                                <p>{{ humanTissueFormNote|raw }}</p>
+                            {% endif %}
+
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <br>
-                    <hr>
-                    <br>
+                        {#<br>#}
+                        <hr>
+                        {#<br>#}
 
-                    <h4>
-                        <p class="text-primary">
-                            {#The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.#}
-                            {{ transres_util.getTransresSiteProjectParameter('specimenDetailsComment',project) }}
-                        </p>
-                    </h4>
-                    <br>
+                        <h4>
+                            <p class="text-primary">
+                                {#The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.#}
+                                {{ transres_util.getTransresSiteProjectParameter('specimenDetailsComment',project) }}
+                            </p>
+                        </h4>
+                        <br>
 
-                    {{ transres.tissueProcurement(form,project,cycle) }}
-                    {{ transres.archivalSpecimens(form,project,cycle) }}
+                        {{ transres.tissueProcurement(form,project,cycle) }}
+                        {{ transres.archivalSpecimens(form,project,cycle) }}
 
-                    {{ formmacros.field(form.restrictedServices) }}
+                        {{ formmacros.field(form.restrictedServices) }}
 
-                    {% if form.tissueFormComment is defined %}
-                        {{ formmacros.field(form.tissueFormComment) }}
-                    {% endif %}
+                        {% if form.tissueFormComment is defined %}
+                            {{ formmacros.field(form.tissueFormComment) }}
+                        {% endif %}
 
-                </div>
+                    </div> {#transres-project-humanRequestDetails#}
+
+                </div> {#panel-body#}
             </div>
         </div>
     </div>
@@ -794,24 +800,26 @@
 {% macro irbStatusList( form, project, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-    {% set panelStyle = "" %}
-    {% if project.irbStatusList and project.irbStatusList.getName() == "Exempt" %}
-        {% set hideshow = "display: none;" %}
+    {#{% set hideshow = "" %}#}
+    {% set hideshow = "display: none;" %}
+    {% if project.irbStatusList and project.irbStatusList.getName() == "Not applicable" %}
+        {#{% set hideshow = "display: none;" %}#}
+        {% set hideshow = "" %}
     {% endif %}
 
-    <div class="well">
+    {#<div class="well">#}
         {% if form %}
             {{ formmacros.field(form.irbStatusList) }}
         {% else %}
             {{ formmacros.simplefield("IRB Approval Status:", project.irbStatusList, "input", "disabled") }}
         {% endif %}
 
-        <div id="irbStatusList-panel" class="panel panel-default irbStatusList-panel" style="{{ panelStyle }}">
+        <div id="irbStatusList" class="panel panel-default" style="{{ hideshow }}">
             <div class="panel-body">
                 {{ formmacros.field(form.irbStatusExplain) }}
             </div>
         </div>
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {% macro projectRequesters( form, project, cycle ) %}

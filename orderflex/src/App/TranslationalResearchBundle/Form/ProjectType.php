@@ -757,6 +757,7 @@ class ProjectType extends AbstractType
             'class' => 'AppTranslationalResearchBundle:IrbStatusList',
             'label' => 'IRB Approval Status:',
             'required' => true,
+            //'required' => false,
             'attr' => array('class' => 'combobox transres-project-irbStatusList'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -770,7 +771,8 @@ class ProjectType extends AbstractType
         ));
         $builder->add('irbStatusExplain',null,array(
             'label' => "Please explain why the IRB submission is not applicable:",
-            'attr' => array('class'=>'textarea form-control')
+            //'required' => true,
+            'attr' => array('class'=>'textarea form-control transres-project-irbStatusExplain')
         ));
 
         //https://stackoverflow.com/questions/39272733/boolean-values-and-choice-symfony-type
