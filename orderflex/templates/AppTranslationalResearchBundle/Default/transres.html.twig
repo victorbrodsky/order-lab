@@ -764,20 +764,21 @@
     {% if not project.needStatSupport %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
-    <div class="well">
+    {#<div class="well">#}
         {% if form %}
             {{ formmacros.field(form.needStatSupport) }}
         {% else %}
             {{ formmacros.simplefield("Will you need departmental statistical support?:", project.needStatSupport, "input", "disabled") }}
         {% endif %}
 
-        <div id="needstatsupport" class="panel panel-default" style="{{ panelStyle }}">
+        {#class="panel panel-default"#}
+        <div id="needstatsupport" style="{{ panelStyle }}">
             {#<div class="panel-heading">Departmental Statistical Support</div>#}
-            <div class="panel-body">
+            {#<div class="panel-body">#}
                 {{ formmacros.field(form.amountStatSupport) }}
-            </div>
+            {#</div>#}
         </div>
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {% macro needInfSupport( form, project, cycle ) %}
@@ -787,20 +788,21 @@
     {% if not project.needInfSupport %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
-    <div class="well">
+    {#<div class="well">#}
         {% if form %}
             {{ formmacros.field(form.needInfSupport) }}
         {% else %}
             {{ formmacros.simplefield("Will you need informatics support?:", project.needInfSupport, "input", "disabled") }}
         {% endif %}
 
-        <div id="needInfSupport" class="panel panel-default" style="{{ panelStyle }}">
+        {#class="panel panel-default"#}
+        <div id="needInfSupport" style="{{ panelStyle }}">
             {#<div class="panel-heading">Departmental Informatics Support</div>#}
-            <div class="panel-body">
+            {#<div class="panel-body">#}
                 {{ formmacros.field(form.amountInfSupport) }}
-            </div>
+            {#</div>#}
         </div>
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {% macro irbStatusList( form, project, cycle ) %}
@@ -820,10 +822,11 @@
             {{ formmacros.simplefield("IRB Approval Status:", project.irbStatusList, "input", "disabled") }}
         {% endif %}
 
-        <div id="irbStatusList" class="panel panel-default" style="{{ hideshow }}">
-            <div class="panel-body">
+        {#class="panel panel-default"#}
+        <div id="irbStatusList" style="{{ hideshow }}">
+            {#<div class="panel-body">#}
                 {{ formmacros.field(form.irbStatusExplain) }}
-            </div>
+            {#</div>#}
         </div>
     {#</div>#}
 {% endmacro %}

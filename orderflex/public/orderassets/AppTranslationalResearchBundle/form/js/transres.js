@@ -217,13 +217,13 @@ function transresNeedStatSupportListener() {
     });
 }
 function transresShowHideNeedStatSupport(needStatSupport) {
-    if( needStatSupport == 1 ) {
-        // console.log("needStatSupport show");
+    if( needStatSupport == true ) {
+        //console.log("needStatSupport show");
         $("#needstatsupport").show('slow');
     }
 
-    if( needStatSupport == 0 ) {
-        // console.log("needStatSupport hide");
+    if( needStatSupport == false ) {
+        //console.log("needStatSupport hide");
         $("#needstatsupport").hide('slow');
     }
 }
@@ -236,13 +236,13 @@ function transresNeedInfSupportListener() {
     });
 }
 function transresShowHideNeedInfSupport(needInfSupport) {
-    if( needInfSupport == 1 ) {
-        // console.log("needInfSupport show");
+    if( needInfSupport == true ) {
+        //console.log("needInfSupport show");
         $("#needInfSupport").show('slow');
     }
 
-    if( needInfSupport == 0 ) {
-        // console.log("needInfSupport hide");
+    if( needInfSupport == false ) {
+        //console.log("needInfSupport hide");
         $("#needInfSupport").hide('slow');
     }
 }
