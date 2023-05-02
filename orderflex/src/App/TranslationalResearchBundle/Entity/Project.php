@@ -766,31 +766,85 @@ class Project {
     // add a field titled “Submitting Investigator, if different from Principal Investigator above (Add New):”.
     // Default the currently logged in user into this field, just like you do into the “Contact(s)” field.
     // Test to make sure “Add New” link for this field works and populates this field when a new person is added in that modal window.
+    /**
+     * “Submitting Investigator, if different from Principal Investigator above (Add New):”
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="transres_project_subminvestigator",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="subminvestigator_id", referencedColumnName="id")}
+     * )
+     **/
+    private $submitInvestigators;
 //    /**
-//     * “Submitting Investigator, if different from Principal Investigator above (Add New):”
+//     * Submitting Investigator, if different from Principal Investigator above (Add New):
 //     *
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinTable(name="transres_project_subminvestigator",
-//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="subminvestigator_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    private $submittingInvestigators;
+//     * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+//     */
+//    private $submitInvestigator;
 
     // 12. immediately above the “Utilize the following specific price list:” field,
     // add an accordion titled “Additional Details” that gets hidden if “Funded” form field box is checked by the user
     // (and gets shown again if the “Funded” box is unchecked; Show this accordion by default in an open + visible state.
     // In this accordion, add the following new form fields:
     //15) a. Which department(s) outside of pathology are you collaborating with? [one-line free text field]
+    /**
+     * Which department(s) outside of pathology are you collaborating with? [one-line free text field]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $collDepartment;
+
     //16) b. Which outside institution(s) are you planning to collaborate with? [one-line free text field]
+    /**
+     * Which outside institution(s) are you planning to collaborate with? [one-line free text field]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $collInst;
+
     //17) c. If collaborations with outside institutions are planned,
     // will you (or the principal investigator listed above) be the PI for the entire study? () Yes () No
+    /**
+     * If collaborations with outside institutions are planned,
+     * will you (or the principal investigator listed above) be the PI for the entire study? () Yes () No
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $collInstPi;
+
     //18) d. Background (essential information related to the project): [three-line free text field]
+    /**
+     * Background (essential information related to the project): [three-line free text field]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $essentialInfo;
+
     //19) e. Specific aims (please provide 2 to 3): [three-line free text field]
+    //Use already existing objective
+
     //20) f. Research strategy (provide a description of the study design, approach,
     // and statistical methods including sample size calculation): [three-line free text field]
+    /**
+     * Research strategy (provide a description of the study design, approach,
+     * and statistical methods including sample size calculation): [three-line free text field]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $strategy;
+
     //21) g. Expected results (2 to 3 sentences): [three-line free text field]
+    //Use already existing expectedResults
+
     //22) h. Other departmental resources requested: [one line free text field]
+    /**
+     * Other departmental resources requested: [one line free text field]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $otherResource;
 
     ////////////// EOF Additional fields from #294 //////////////
 
@@ -819,6 +873,7 @@ class Project {
 
         $this->collLabs = new ArrayCollection();
         $this->collDivs = new ArrayCollection();
+        $this->submitInvestigators = new ArrayCollection();
 
         //$this->reminderEmails = new ArrayCollection();
 
@@ -2665,7 +2720,124 @@ class Project {
             }
         }
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getSubmitInvestigators()
+    {
+        return $this->submitInvestigators;
+    }
+    /**
+     * @param mixed $submitInvestigators
+     */
+    public function setSubmitInvestigators($submitInvestigators)
+    {
+        $this->submitInvestigators = $submitInvestigators;
+    }
+    public function addSubmitInvestigator($item)
+    {
+        if( $item && !$this->submitInvestigators->contains($item) ) {
+            $this->submitInvestigators->add($item);
+        }
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollDepartment()
+    {
+        return $this->collDepartment;
+    }
+
+    /**
+     * @param mixed $collDepartment
+     */
+    public function setCollDepartment($collDepartment)
+    {
+        $this->collDepartment = $collDepartment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollInst()
+    {
+        return $this->collInst;
+    }
+
+    /**
+     * @param mixed $collInst
+     */
+    public function setCollInst($collInst)
+    {
+        $this->collInst = $collInst;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCollInstPi()
+    {
+        return $this->collInstPi;
+    }
+
+    /**
+     * @param mixed $collInstPi
+     */
+    public function setCollInstPi($collInstPi)
+    {
+        $this->collInstPi = $collInstPi;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEssentialInfo()
+    {
+        return $this->essentialInfo;
+    }
+
+    /**
+     * @param mixed $essentialInfo
+     */
+    public function setEssentialInfo($essentialInfo)
+    {
+        $this->essentialInfo = $essentialInfo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStrategy()
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * @param mixed $strategy
+     */
+    public function setStrategy($strategy)
+    {
+        $this->strategy = $strategy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherResource()
+    {
+        return $this->otherResource;
+    }
+
+    /**
+     * @param mixed $otherResource
+     */
+    public function setOtherResource($otherResource)
+    {
+        $this->otherResource = $otherResource;
+    }
     ///////////// EOF NEW FIELDS ////////////////////
 
 

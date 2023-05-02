@@ -888,6 +888,9 @@
             if( userInstitution ) { //&& userInstitution.length > 0
                 institutionId = userInstitution.id;
             }
+            if( institutionId == 'undefined' ) {
+                institutionId = 0;
+            }
 
             var calculateBtn = holder.find('.calculate-btn');
             var calculateBtnHtml = calculateBtn[0];
@@ -1239,9 +1242,12 @@
             var userInstitution = holder.find(instSelector).select2('data');
             var instid = 0;
             if( userInstitution ) {
-                var instid = userInstitution.id;
+                instid = userInstitution.id;
             }
-            //console.log('instid='+instid);
+            if( instid == 'undefined' ) {
+                instid = 0;
+            }
+            console.log('instid='+instid);
 
             //update #vacreq-defaultInformUsers
             var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid});
@@ -1279,7 +1285,10 @@
 
             var instid = 0;
             if( userInstitution ) {
-                var instid = userInstitution.id;
+                instid = userInstitution.id;
+            }
+            if( instid == 'undefined' ) {
+                instid = 0;
             }
             console.log('vacreqSetPersonAway instid='+instid);
 

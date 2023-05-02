@@ -257,10 +257,10 @@ class ProjectType extends AbstractType
 //                'attr' => array('class'=>'textarea form-control')
 //            ));
 
-            $builder->add('objective',null,array(
-                'label' => "Objective:",
-                'attr' => array('class'=>'textarea form-control')
-            ));
+//            $builder->add('objective',null,array(
+//                'label' => "Objective:",
+//                'attr' => array('class'=>'textarea form-control')
+//            ));
 
             $builder->add('numberOfCases',TextType::class,array(
                 'label' => "Number of Cases:",
@@ -274,10 +274,10 @@ class ProjectType extends AbstractType
                 'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
             ));
 
-            $builder->add('expectedResults',null,array(
-                'label' => "Expected Results:",
-                'attr' => array('class'=>'textarea form-control')
-            ));
+//            $builder->add('expectedResults',null,array(
+//                'label' => "Expected Results:",
+//                'attr' => array('class'=>'textarea form-control')
+//            ));
 
             $builder->add('expectedCompletionDate',null,array(
                 'label' => "Expected Completion Date:",
@@ -830,6 +830,55 @@ class ProjectType extends AbstractType
             'html5' => false,
             'attr' => array('class'=>'datepicker form-control')
         ));
+
+        //////////// Additonal Details ////////////
+        $builder->add('collDepartment',null,array(
+            'label' => "Which department(s) outside of pathology are you collaborating with?:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('collInst',null,array(
+            'label' => "Which outside institution(s) are you planning to collaborate with?:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('collInstPi',ChoiceType::class,array(
+            'label' => "If collaborations with outside institutions are planned, will you (or the principal investigator listed above) be the PI for the entire study?:",
+            'choices' => array(
+                'Yes' => true,
+                'No' => false
+            ),
+            'multiple' => false,
+            'required' => false,
+            'expanded' => true,
+            'attr' => array('class'=>'horizontal_type collInstPi')
+        ));
+
+        $builder->add('essentialInfo',null,array(
+            'label' => "Background (essential information related to the project):",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('objective',null,array(
+            'label' => "Specific aims (please provide 2 to 3):",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('strategy',null,array(
+            'label' => "Research strategy (provide a description of the study design, approach, and statistical methods including sample size calculation):",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('expectedResults',null,array(
+            'label' => "Expected results (2 to 3 sentences):",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('otherResource',null,array(
+            'label' => "Other departmental resources requested:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+        //////////// EOF Additonal Details ////////////
 
         ////////////// EOF Additional fields from #294 //////////////
 

@@ -297,6 +297,8 @@
                         {{ formmacros.field(form.priceList) }}
                     {% endif %}
 
+                    {{ transres.projectAdditionalDetails(form,project,cycle) }}
+
                     {{ formmacros.checkbox(form.funded) }}
 
                     {{ formmacros.field(form.fundedAccountNumber) }}
@@ -587,6 +589,40 @@
 
                     {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
                 </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+{% endmacro %}
+
+{% macro projectAdditionalDetails( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set specialtyId = NULL %}
+    {% if project.getProjectSpecialty() %}
+        {% set specialtyId = project.getProjectSpecialty().getId() %}
+    {% endif %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#transres-project-additional-details">
+                    Additional Details
+                </a>
+            </h4>
+        </div>
+
+        <div id="transres-project-additional-details" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {{ formmacros.field(form.collDepartment) }}
+                {{ formmacros.field(form.collInst) }}
+                {{ formmacros.field(form.collInstPi) }}
+                {{ formmacros.field(form.essentialInfo) }}
+                {{ formmacros.field(form.objective) }} {#Specific aims#}
+                {{ formmacros.field(form.strategy) }}
+                {{ formmacros.field(form.expectedResults) }}
+                {{ formmacros.field(form.otherResource) }}
+
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-info -->

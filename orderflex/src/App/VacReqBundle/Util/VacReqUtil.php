@@ -95,6 +95,10 @@ class VacReqUtil
 
     public function showDefaultInformUsers( $institutionId, $asString=false ) {
         //echo '$institutionId='.$institutionId;
+        if( !$institutionId ) {
+            return NULL;
+        }
+
         //return array();
         $vacreqSettings = $this->getSettingsByInstitution($institutionId);
         if( $vacreqSettings ) {
