@@ -253,6 +253,7 @@ function transresProjectFundedListener() {
         //var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[transres-funded]"]:checked').val();
         //console.log("change: checked value funded="+funded);
         transresShowHideProjectDocument();
+        transresShowHideProjectAdditionalDetails();
     });
 }
 function transresShowHideProjectDocument() {
@@ -265,6 +266,18 @@ function transresShowHideProjectDocument() {
     } else {
         //console.log("funded show");
         $('#transres-project-documents').collapse('show');
+    }
+}
+function transresShowHideProjectAdditionalDetails() {
+    //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
+    //funded (checked) => hide
+    //not-funded (un-checked) => show
+    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+        //console.log("funded hide");
+        $('#transres-project-additional-details').hide('slow');
+    } else {
+        //console.log("funded show");
+        $('#transres-project-additional-details').show('slow');
     }
 }
 

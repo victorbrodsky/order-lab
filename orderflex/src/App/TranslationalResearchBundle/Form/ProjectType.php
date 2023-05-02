@@ -851,6 +851,7 @@ class ProjectType extends AbstractType
             'multiple' => false,
             'required' => false,
             'expanded' => true,
+            'placeholder' => false, //'N/A', //to remove 'Null' set placeholder to false
             'attr' => array('class'=>'horizontal_type collInstPi')
         ));
 
