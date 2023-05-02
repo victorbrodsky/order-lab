@@ -99,7 +99,14 @@ class VacReqUtil
             return NULL;
         }
 
-        if( is_int($institutionId) ===  false ) {
+        //if( is_int($institutionId) ===  false ) {
+        //    return NULL;
+        //}
+        if( filter_var($institutionId, FILTER_VALIDATE_INT) === false ) {
+            //echo "Your variable is not an integer";
+            return NULL;
+        }
+        if( $institutionId <= 0 ) {
             return NULL;
         }
 
@@ -460,8 +467,8 @@ class VacReqUtil
     //$rolePartialName - "ROLE_VACREQ_SUBMITTER", "ROLE_VACREQ_APPROVER", "ROLE_VACREQ_SUPERVISOR"
     public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false ) {
         $users = array();
-
-        if( !$groupId || is_int($groupId) === false ) {
+        
+        if( !$groupId || filter_var($groupId, FILTER_VALIDATE_INT) === false  ) { //|| is_int($groupId) === false
             $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
             //echo "0user count=".count($users)."<br>";
             //exit('111');

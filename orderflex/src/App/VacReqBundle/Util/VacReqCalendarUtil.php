@@ -600,7 +600,7 @@ class VacReqCalendarUtil
 
         //get holidays where $institutionId is under $institutions
         $default = true; //select if first parameter $institution is children of second parameter 'institutions' of the holiday entity
-        if( $institutionId ) {
+        if( $institutionId && filter_var($institutionId, FILTER_VALIDATE_INT) !== false ) {
             $dql->leftJoin("list.institutions", "institutions");
 
             $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
