@@ -99,6 +99,10 @@ class VacReqUtil
             return NULL;
         }
 
+        if( is_int($institutionId) ===  false ) {
+            return NULL;
+        }
+
         //return array();
         $vacreqSettings = $this->getSettingsByInstitution($institutionId);
         if( $vacreqSettings ) {
