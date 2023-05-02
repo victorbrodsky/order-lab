@@ -461,7 +461,7 @@ class VacReqUtil
     public function getUsersByGroupId( $groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false ) {
         $users = array();
 
-        if( !$groupId ) {
+        if( !$groupId || is_int($groupId) === false ) {
             $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
             //echo "0user count=".count($users)."<br>";
             //exit('111');

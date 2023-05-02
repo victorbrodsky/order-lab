@@ -888,7 +888,7 @@
             if( userInstitution ) { //&& userInstitution.length > 0
                 institutionId = userInstitution.id;
             }
-            if( institutionId == 'undefined' ) {
+            if( typeof institutionId === 'undefined' ) {
                 institutionId = 0;
             }
 
@@ -1247,7 +1247,7 @@
             if( typeof instid === 'undefined' ) {
                 instid = 0;
             }
-            console.log('instid='+instid);
+            console.log('vacreq_orginst_defaultinformusers_ajax instid='+instid);
 
             //update #vacreq-defaultInformUsers
             var updateUserUrl = Routing.generate('vacreq_orginst_defaultinformusers_ajax', {instid:instid});
@@ -1287,7 +1287,7 @@
             if( userInstitution ) {
                 instid = userInstitution.id;
             }
-            if( instid == 'undefined' ) {
+            if( typeof instid === 'undefined' ) {
                 instid = 0;
             }
             console.log('vacreqSetPersonAway instid='+instid);
