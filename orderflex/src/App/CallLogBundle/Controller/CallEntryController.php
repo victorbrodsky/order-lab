@@ -1727,7 +1727,7 @@ class CallEntryController extends OrderAbstractController
             //echo "previousEncounterId=".$previousEncounterId."<br>";
             //$previousEncounterId = 99999999; //testing
 
-            //Check if $previousEncounter is really exists
+            //Check if $previousEncounter is really exists, however it's not supposed to happen
             if( $previousEncounterId ) {
                 $checkPreviousEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
                 if( !$checkPreviousEncounter ) {
