@@ -442,6 +442,9 @@ class TransResUtil
         if( $project->getPrincipalIrbInvestigators()->contains($user) ) {
             return true;
         }
+        if( $project->getSubmitInvestigators()->contains($user) ) {
+            return true;
+        }
         if( $project->getCoInvestigators()->contains($user) ) {
             return true;
         }
@@ -2981,7 +2984,7 @@ class TransResUtil
         $submitter = $project->getSubmitter()->getSingleEmail(false);
         $emails = array_merge($emails, array($submitter));
 
-        // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+        // 2) project's Requester (submitter, principalInvestigators, submitInvestigators, coInvestigators, pathologists)
         if( $review ) {
             //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
             if(
@@ -3322,7 +3325,7 @@ class TransResUtil
 
         return $users;
     }
-    //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+    //project's Requester (submitter, principalInvestigators, submitInvestigators, coInvestigators, pathologists)
     public function getRequesterEmails($project, $asEmail=true, $withBillingContact=true) {
         $resArr = array();
 
@@ -3355,6 +3358,18 @@ class TransResUtil
                     $resArr[] = $principalIrbInvestigator->getSingleEmail(false);
                 } else {
                     $resArr[] = $principalIrbInvestigator;
+                }
+            }
+        }
+
+        //2b submitInvestigators
+        $submitInvestigators = $project->getSubmitInvestigators();
+        foreach( $submitInvestigators as $submitInvestigator ) {
+            if( $submitInvestigator ) {
+                if( $asEmail ) {
+                    $resArr[] = $submitInvestigator->getSingleEmail(false);
+                } else {
+                    $resArr[] = $submitInvestigator;
                 }
             }
         }
@@ -3413,7 +3428,7 @@ class TransResUtil
 
         return $resArr;
     }
-    //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+    //project's Requester (submitter, principalInvestigators, submitInvestigators, coInvestigators, pathologists)
     public function getRequesterMiniEmails($project, $asEmail=true) {
         $resArr = array();
 
@@ -4077,6 +4092,7 @@ class TransResUtil
         $dql->leftJoin('finalReviews.reviewer','finalReviewer');
         $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
+        $dql->leftJoin('project.submitInvestigators','submitInvestigators');
         $dql->leftJoin('project.coInvestigators','coInvestigators');
         $dql->leftJoin('project.pathologists','pathologists');
         $dql->leftJoin('project.billingContact','billingContact');
@@ -4108,6 +4124,7 @@ class TransResUtil
                 $myRequestProjectsCriterion =
                     "principalInvestigators.id = :userId OR " .
                     "principalIrbInvestigator.id = :userId OR " .
+                    "submitInvestigators.id = :userId OR " .
                     "coInvestigators.id = :userId OR " .
                     "pathologists.id = :userId OR " .
                     "contacts.id = :userId OR " .
@@ -4229,6 +4246,7 @@ class TransResUtil
         $dql->leftJoin('finalReviews.reviewer','finalReviewer');
         $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
+        $dql->leftJoin('project.submitInvestigators','submitInvestigators');
         $dql->leftJoin('project.coInvestigators','coInvestigators');
         $dql->leftJoin('project.pathologists','pathologists');
         $dql->leftJoin('project.billingContact','billingContact');
@@ -4251,6 +4269,7 @@ class TransResUtil
             $myRequestProjectsCriterion =
                 "principalInvestigators.id = :userId OR " .
                 "principalIrbInvestigator.id = :userId OR " .
+                "submitInvestigators.id = :userId OR " .
                 "coInvestigators.id = :userId OR " .
                 "pathologists.id = :userId OR " .
                 "contacts.id = :userId OR " .
@@ -6297,6 +6316,14 @@ class TransResUtil
             }
         }
 
+        //2b submitInvestigators
+        $submitInvestigators = $project->getSubmitInvestigators();
+        foreach( $submitInvestigators as $submitInvestigator ) {
+            if( $submitInvestigator ) {
+                $resArr[] = $submitInvestigator;
+            }
+        }
+
         //3 coInvestigators
         $cois = $project->getCoInvestigators();
         foreach( $cois as $coi ) {
@@ -8043,6 +8070,7 @@ class TransResUtil
             $dql->leftJoin('project.submitter', 'submitter');
             $dql->leftJoin('project.principalInvestigators', 'principalInvestigators');
             $dql->leftJoin('project.principalIrbInvestigator', 'principalIrbInvestigator');
+            $dql->leftJoin('project.submitInvestigators', 'submitInvestigators');
             $dql->leftJoin('project.coInvestigators', 'coInvestigators');
             $dql->leftJoin('project.pathologists', 'pathologists');
             $dql->leftJoin('project.billingContact', 'billingContact');
@@ -8062,6 +8090,7 @@ class TransResUtil
         $myRequestProjectsCriterion =
             "principalInvestigators.id = :userId OR " .
             "principalIrbInvestigator.id = :userId OR " .
+            "submitInvestigators.id = :userId OR " .
             "coInvestigators.id = :userId OR " .
             "pathologists.id = :userId OR " .
             "contacts.id = :userId OR " .

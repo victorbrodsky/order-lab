@@ -2012,6 +2012,7 @@ class RequestController extends OrderAbstractController
 
             $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
             $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
+            $dql->leftJoin('project.submitInvestigators','projectSubmitInvestigators');
             $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
             $dql->leftJoin('project.pathologists','projectPathologists');
             $dql->leftJoin('project.billingContact','projectBillingContact');
@@ -2026,6 +2027,7 @@ class RequestController extends OrderAbstractController
                 //project's requesters
                 "projectPrincipalInvestigators.id = :userId OR ".
                 "projectPrincipalIrbInvestigator.id = :userId OR ".
+                "projectSubmitInvestigators.id = :userId OR ".
                 "projectCoInvestigators.id = :userId OR ".
                 "projectPathologists.id = :userId OR ".
                 "projectContacts.id = :userId OR ".

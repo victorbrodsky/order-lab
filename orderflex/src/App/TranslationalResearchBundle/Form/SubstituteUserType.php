@@ -148,6 +148,11 @@ class SubstituteUserType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
+        $builder->add('projectSubmitInvestigators', CheckboxType::class, array(
+            'label' => 'Submitting Investigators(s):',
+            'required' => false,
+            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+        ));
         $builder->add('projectCoInvestigators', CheckboxType::class, array(
             'label' => 'Co-Investigator(s):',
             'required' => false,

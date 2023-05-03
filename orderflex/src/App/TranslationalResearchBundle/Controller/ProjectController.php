@@ -205,6 +205,7 @@ class ProjectController extends OrderAbstractController
         $dql->leftJoin('finalReviews.reviewer','finalReviewer');
         $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
+        $dql->leftJoin('project.submitInvestigators','submitInvestigators');
         $dql->leftJoin('project.coInvestigators','coInvestigators');
         $dql->leftJoin('project.pathologists','pathologists');
         $dql->leftJoin('project.billingContact','billingContact');
@@ -790,6 +791,7 @@ class ProjectController extends OrderAbstractController
             $showAssCriterion =
             "principalInvestigators.id IN (:assUserIds) OR ".
             "principalIrbInvestigator.id IN (:assUserIds) OR ".
+            "submitInvestigators.id IN (:assUserIds) OR ".
             "coInvestigators.id IN (:assUserIds) OR ".
             "pathologists.id IN (:assUserIds) OR ".
             "contacts.id IN (:assUserIds) OR ".
@@ -1205,6 +1207,7 @@ class ProjectController extends OrderAbstractController
         $showOnlyMyProjectsCriterion =
             "principalInvestigators.id = :userId OR ".
             "principalIrbInvestigator.id = :userId OR ".
+            "submitInvestigators.id = :userId OR ".
             "coInvestigators.id = :userId OR ".
             "pathologists.id = :userId OR ".
             "contacts.id = :userId OR ".

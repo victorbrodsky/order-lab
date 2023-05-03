@@ -427,6 +427,16 @@ class ProjectType extends AbstractType
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
+        //Add submitInvestigators similar to coInvestigators
+        $builder->add('submitInvestigators', EntityType::class, array(
+            'class' => 'AppUserdirectoryBundle:User',
+            'label'=> "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        ));
+
         $builder->add( 'coInvestigators', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
             'label'=> "Co-Investigator(s)$addUserOnFly:",
@@ -881,6 +891,9 @@ class ProjectType extends AbstractType
             'label' => "Other departmental resources requested:",
             'attr' => array('class'=>'textarea form-control')
         ));
+
+        //Add submitInvestigators similar to coInvestigators. Added above
+
         //////////// EOF Additonal Details ////////////
 
         ////////////// EOF Additional fields from #294 //////////////

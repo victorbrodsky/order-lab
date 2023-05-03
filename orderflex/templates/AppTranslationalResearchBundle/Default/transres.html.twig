@@ -902,6 +902,13 @@ Show this accordion by default in an open + visible state.
                     {{ transres.usersInfo(form.principalIrbInvestigator,principalIrbInvestigators,cycle) }}
 
                     {% if cycle == "show" %}
+                        {% set submitInvestigators = [project.submitInvestigators] %}
+                    {% else %}
+                        {% set submitInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.submitInvestigators,submitInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
                         {% set pathologists = project.pathologists %}
                     {% else %}
                         {% set pathologists = null %}

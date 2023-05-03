@@ -491,8 +491,9 @@ class DefaultReviewerController extends OrderAbstractController
         //project's requester
         $projectPis = $form->get('projectPis')->getData();
         $projectPisIrb = $form->get('projectPisIrb')->getData();
-        $projectPathologists = $form->get('projectPathologists')->getData();
         $projectCoInvestigators = $form->get('projectCoInvestigators')->getData();
+        $projectPathologists = $form->get('projectPathologists')->getData();
+        $projectSubmitInvestigators = $form->get('projectSubmitInvestigators')->getData();
         $projectContacts = $form->get('projectContacts')->getData();
         $projectBillingContact = $form->get('projectBillingContact')->getData();
 
@@ -541,6 +542,7 @@ class DefaultReviewerController extends OrderAbstractController
         $dql->leftJoin('finalReviews.reviewer','finalReviewer');
         $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
+        $dql->leftJoin('project.submitInvestigators','submitInvestigators');
         $dql->leftJoin('project.coInvestigators','coInvestigators');
         $dql->leftJoin('project.pathologists','pathologists');
         $dql->leftJoin('project.billingContact','billingContact');
@@ -583,6 +585,9 @@ class DefaultReviewerController extends OrderAbstractController
             }
             if( $projectPisIrb ) {
                 $projectUsers[] = "principalIrbInvestigator.id = :userId";
+            }
+            if( $projectSubmitInvestigators ) {
+                $projectUsers[] = "submitInvestigators.id = :userId";
             }
             if( $projectPathologists ) {
                 $projectUsers[] = "pathologists.id = :userId";
@@ -695,6 +700,15 @@ class DefaultReviewerController extends OrderAbstractController
                         $toFlush = true;
                         $msgArr[] = $this->getMsg("PI listed on IRB",$substituteUser,$replaceUser); //"PI listed on IRB substituted from " . $substituteUser . " to " . $replaceUser;
                     }
+                }
+            }
+            if( $project->getSubmitInvestigators()->contains($substituteUser) ) {
+                echo "### User is Submit Investigators <br>";
+                if( $projectSubmitInvestigators ) {
+                    $project->removeSubmitInvestigator($substituteUser);
+                    $project->addSubmitInvestigator($replaceUser);
+                    $toFlush = true;
+                    $msgArr[] = $this->getMsg("Submit Investigator",$substituteUser,$replaceUser); //"Submit Investigator substituted from " . $substituteUser . " to " . $replaceUser;
                 }
             }
             if( $project->getPathologists()->contains($substituteUser) ) {

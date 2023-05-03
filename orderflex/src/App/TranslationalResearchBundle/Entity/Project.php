@@ -2728,19 +2728,16 @@ class Project {
     {
         return $this->submitInvestigators;
     }
-    /**
-     * @param mixed $submitInvestigators
-     */
-    public function setSubmitInvestigators($submitInvestigators)
-    {
-        $this->submitInvestigators = $submitInvestigators;
-    }
     public function addSubmitInvestigator($item)
     {
         if( $item && !$this->submitInvestigators->contains($item) ) {
             $this->submitInvestigators->add($item);
         }
         return $this;
+    }
+    public function removeSubmitInvestigator($item)
+    {
+        $this->submitInvestigators->removeElement($item);
     }
 
     /**
