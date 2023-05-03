@@ -558,6 +558,8 @@
         {#{% set humanTissueForms = project.humanTissueForms %}#}
     {% endif %}
 
+    {#documents|length = {{ documents|length }}#}
+
     {% set specialtyId = NULL %}
     {% if project.getProjectSpecialty() %}
         {% set specialtyId = project.getProjectSpecialty().getId() %}

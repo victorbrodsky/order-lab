@@ -756,8 +756,8 @@ class ProjectType extends AbstractType
         $builder->add('irbStatusList', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:IrbStatusList',
             'label' => 'IRB Approval Status:',
-            'required' => true,
-            //'required' => false,
+            'required' => false,
+            'required' => false,
             'attr' => array('class' => 'combobox transres-project-irbStatusList'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -771,7 +771,7 @@ class ProjectType extends AbstractType
         ));
         $builder->add('irbStatusExplain',null,array(
             'label' => "Please explain why the IRB submission is not applicable:",
-            //'required' => true,
+            'required' => false,
             'attr' => array('class'=>'textarea form-control transres-project-irbStatusExplain')
         ));
 
@@ -783,8 +783,9 @@ class ProjectType extends AbstractType
             ),
             'label' => 'Will you need departmental statistical support?:',
             'multiple' => false,
-            'required' => true,
+            'required' => false,
             'expanded' => true,
+            'placeholder' => false, //to remove 'Null' set placeholder to false
             'attr' => array('class'=>'horizontal_type needStatSupport')
         ));
         $builder->add('amountStatSupport',null,array(
@@ -799,8 +800,9 @@ class ProjectType extends AbstractType
             ),
             'label' => 'Will you need informatics support?:',
             'multiple' => false,
-            'required' => true,
+            'required' => false,
             'expanded' => true,
+            'placeholder' => false, //to remove 'Null' set placeholder to false
             'attr' => array('class'=>'horizontal_type needInfSupport')
         ));
         $builder->add('amountInfSupport',null,array(
@@ -851,7 +853,7 @@ class ProjectType extends AbstractType
             'multiple' => false,
             'required' => false,
             'expanded' => true,
-            'placeholder' => false, //'N/A', //to remove 'Null' set placeholder to false
+            'placeholder' => false, //to remove 'Null' set placeholder to false
             'attr' => array('class'=>'horizontal_type collInstPi')
         ));
 

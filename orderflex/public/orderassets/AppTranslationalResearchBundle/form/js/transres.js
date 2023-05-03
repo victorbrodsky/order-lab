@@ -100,8 +100,11 @@ function transresIrbStatusListListener( classname ) {
 }
 function transresIrbStatusListChange( exemptEl, classname ) {
     var exemptData = exemptEl.select2('data');
-    var exemptText = exemptData.text;
-    console.log("change: IrbStatusList="+exemptText);
+    var exemptText = null;
+    if( exemptData ) {
+        exemptText = exemptData.text;
+    }
+    //console.log("change: IrbStatusList="+exemptText);
     if( exemptText != "Not applicable" ) {
         $("#"+"irbStatusList").hide('slow');
     }
@@ -422,38 +425,38 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
-    //needStatSupport
-    var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
-    //console.log("needStatSupport="+needStatSupport);
-    if( !needStatSupport ) {
-        //console.log("Error: needStatSupport is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will you need departmental statistical support?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
-
-        //validated = false;
-        transresShowBtn();
-        return false;
-    } else {
-        //validate fields
-    }
-
-    var needInfSupport = $(".needInfSupport").find('input[name="oleg_translationalresearchbundle_project[needInfSupport]"]:checked').val();
-    //console.log("needInfSupport="+needInfSupport);
-    if( !needInfSupport ) {
-        //console.log("Error: needInfSupport is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will you need informatics support?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
-
-        //validated = false;
-        transresShowBtn();
-        return false;
-    } else {
-        //validate fields
-    }
+    // //needStatSupport
+    // var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
+    // //console.log("needStatSupport="+needStatSupport);
+    // if( !needStatSupport ) {
+    //     //console.log("Error: needStatSupport is NULL!");
+    //     //var msg = "Please upload a completed human tissue form";
+    //     var msg = "Please answer the required question: 'Will you need departmental statistical support?'";
+    //     $("#projectError").show();
+    //     $("#projectError").html(msg);
+    //
+    //     //validated = false;
+    //     transresShowBtn();
+    //     return false;
+    // } else {
+    //     //validate fields
+    // }
+    //
+    // var needInfSupport = $(".needInfSupport").find('input[name="oleg_translationalresearchbundle_project[needInfSupport]"]:checked').val();
+    // //console.log("needInfSupport="+needInfSupport);
+    // if( !needInfSupport ) {
+    //     //console.log("Error: needInfSupport is NULL!");
+    //     //var msg = "Please upload a completed human tissue form";
+    //     var msg = "Please answer the required question: 'Will you need informatics support?'";
+    //     $("#projectError").show();
+    //     $("#projectError").html(msg);
+    //
+    //     //validated = false;
+    //     transresShowBtn();
+    //     return false;
+    // } else {
+    //     //validate fields
+    // }
 
     //transres-project-exemptIrbApproval=="Not Exempt" => irbStatusList=="Not applicable" => irbStatusExplain is empty
     var exemptIrbApproval = $(".transres-project-exemptIrbApproval").select2('data');
