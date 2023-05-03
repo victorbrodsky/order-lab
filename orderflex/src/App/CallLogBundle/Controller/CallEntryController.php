@@ -1724,10 +1724,26 @@ class CallEntryController extends OrderAbstractController
             //if $previousEncounterId set => use this encounter, $previousEncounterId is null => don't change anything and use existing message encounter
             //$previousEncounter = null;
             $previousEncounterId = $form->get("previousEncounterId")->getData();
-            //echo "previousEncounterId=".$previousEncounterId."<br>";
-            //if( $previousEncounterId ) {
-            //    $previousEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
-            //}
+            echo "previousEncounterId=".$previousEncounterId."<br>";
+            $previousEncounterId = 99999999; //testing
+
+            //Check if $previousEncounter is really exists
+            if( $previousEncounterId ) {
+                $checkPreviousEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
+                if( !$checkPreviousEncounter ) {
+                    //Recovery for previous encounter is not found by ID
+                    $logger = $this->container->get('logger');
+                    $errorMsg = "Previous encounter is not found by ID=".$previousEncounterId . ". Create a new encounter. Current user is ".$user;
+                    $logger->warning($errorMsg);
+                    $emailUtil = $this->container->get('user_mailer_utility');
+                    $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                    //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                    $emailUtil->sendEmail($siteEmail,"Previous encounter is not found by ID",$errorMsg);
+
+                    //set $previousEncounterId to null. This will create a new Encounter
+                    $previousEncounterId = null;
+                }
+            }
 
 //            $previousEncounters = $form->get("previousEncounters")->getData();
 //            echo "previousEncounters=".$previousEncounters."<br>";
@@ -1857,14 +1873,31 @@ class CallEntryController extends OrderAbstractController
                 }
 
                 if( $previousEncounterId ) {
-
-                    //$newEncounter = $previousEncounter;
                     $newEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
                     if( !$newEncounter ) {
-                        throw new \Exception("Previous encounter is not found by ID=".$previousEncounterId);
+                        $errorMsg = "Previous encounter is not found by ID=".$previousEncounterId . " Current user is ".$user;
+                        throw new \Exception($errorMsg);
                     }
 
-                } else {
+//                    $tempPreviousEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
+//                    if( $tempPreviousEncounter ) {
+//                        $newEncounter = $tempPreviousEncounter;
+//                    } else {
+//                        //throw new \Exception($errorMsg);
+//                        //Recovery for previous encounter is not found by ID
+//                        $logger = $this->container->get('logger');
+//                        $errorMsg = "Previous encounter is not found by ID=".$previousEncounterId . ". Create a new encounter. Current user is ".$user;
+//                        $logger->warning($errorMsg);
+//                        $emailUtil = $this->container->get('user_mailer_utility');
+//                        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+//                        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+//                        $emailUtil->sendEmail($siteEmail,"Previous encounter is not found by ID",$errorMsg);
+//                    }
+                }
+//                if( $newEncounter ) {
+//                    //OK: Previous encounter is found by $previousEncounterId => go to "Use $newEncounter" below
+//                }
+                else {
                     ////////////// processing new encounter ///////////////////
                     //exit('processing new encounter');
                     $newEncounter->setSource($system);
@@ -1918,6 +1951,7 @@ class CallEntryController extends OrderAbstractController
 
                 }//if( !$previousEncounterId )
 
+                //Use $newEncounter
                 //backup encounter to message
                 $calllogUtil->copyEncounterBackupToMessage($message,$newEncounter);
 
