@@ -614,7 +614,7 @@ class ProjectType extends AbstractType
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
 
-
+        //TODO: hide if Project Documents does not exists
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Document(s):',

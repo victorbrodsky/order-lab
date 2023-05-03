@@ -2721,6 +2721,7 @@ class Project {
         }
     }
 
+    //submitInvestigators similar to coInvestigators
     /**
      * @return mixed
      */

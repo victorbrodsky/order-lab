@@ -536,7 +536,7 @@
 
 {% endmacro %}
 
-
+{#TODO: hide if Project Documents does not exists#}
 {% macro projectDocument( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
@@ -902,7 +902,7 @@ Show this accordion by default in an open + visible state.
                     {{ transres.usersInfo(form.principalIrbInvestigator,principalIrbInvestigators,cycle) }}
 
                     {% if cycle == "show" %}
-                        {% set submitInvestigators = [project.submitInvestigators] %}
+                        {% set submitInvestigators = project.submitInvestigators %}
                     {% else %}
                         {% set submitInvestigators = null %}
                     {% endif %}
