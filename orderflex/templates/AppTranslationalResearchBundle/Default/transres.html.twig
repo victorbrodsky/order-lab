@@ -171,26 +171,6 @@
     </div>
 
 {% endmacro %}
-{% macro projectObjFullInfo( project, cycle ) %}
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="projectFullInfoHeading">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectFullInfo" aria-expanded="true">
-                        Associated Project Info
-                    </a>
-                </h4>
-            </div>
-            <div id="projectFullInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectFullInfoHeading">
-                <div class="panel-body">
-                    {{ transres.projectFormShow(null,project,cycle) }}
-                    {{ transres.projectObjInfo(project,cycle) }}
-                </div>
-            </div>
-        </div>
-    </div>
-{% endmacro %}
 
 {% macro projectIncludeInfo( project, cycle ) %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
@@ -212,24 +192,6 @@
     </div>
 {% endmacro %}
 
-{% macro projectFormEdit( form, project, cycle ) %}
-
-    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
-
-    <div style="display: none">
-        {% if form.messageCategory is defined %}
-            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
-        {% endif %}
-    </div>
-
-    <div id="form-node-holder"></div>
-
-    {{ transres.tissueRequestDetails(form,project,cycle) }}
-
-    {{ transres.projectDocument(form,project,cycle) }}
-
-{% endmacro %}
 
 {% macro projectBodyFormFields( form, project, cycle ) %}
 
@@ -488,55 +450,7 @@
 
 {% endmacro %}
 
-{% macro projectFormShow( form, project, cycle ) %}
-
-    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
-
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="projectContentHeading">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectContent" aria-expanded="true">
-                        Project
-                    </a>
-                </h4>
-            </div>
-            <div id="projectContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectContentHeading">
-                <div class="panel-body">
-
-                    {% set callLogViewClass = "order-white-background" %}
-                    <div class="text-left {{ callLogViewClass }}">
-                        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
-                    </div>
-
-                    {% if form and form is defined %}
-                        {{ transres.tissueRequestDetails(form,project,cycle) }}
-                    {% endif %}
-
-                    {{ transres.projectDocument(form,project,cycle) }}
-
-                    {% if project.getInvolveHumanTissue() == "Yes" and project.getHumanTissueForms()|length > 0 %}
-                        <div class="well well-sm">
-                            <p><b>Project's Tissue Form(s):</b></p>
-                            {% for tissueFormDocument in project.getHumanTissueForms() %}
-                                {% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}
-                                <p>
-                                <a href="{{ absolutePath }}" target="_blank">
-                                    {{ tissueFormDocument.getOriginalname() }} (uploaded {{ tissueFormDocument.getCreatedate()|date('m/d/Y H:i:s') }})
-                                </a>
-                                </p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-{% endmacro %}
-
-{#TODO: hide if Project Documents does not exists#}
+{#hide if Project Documents does not exists#}
 {% macro projectDocument( form, project, cycle ) %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
@@ -2605,3 +2519,93 @@ Show this accordion by default in an open + visible state.
     {% endapply %}
 {% endmacro %}
 
+
+
+
+
+{#Used only in Formnode forms#}
+{% macro projectFormEdit( form, project, cycle ) %}
+    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+    <div style="display: none">
+        {% if form.messageCategory is defined %}
+            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+        {% endif %}
+    </div>
+
+    <div id="form-node-holder"></div>
+
+    {{ transres.tissueRequestDetails(form,project,cycle) }}
+
+    {{ transres.projectDocument(form,project,cycle) }}
+{% endmacro %}
+{#Used only in Formnode forms#}
+{% macro projectObjFullInfo( project, cycle ) %}
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectFullInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectFullInfo" aria-expanded="true">
+                        Associated Project Info
+                    </a>
+                </h4>
+            </div>
+            <div id="projectFullInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectFullInfoHeading">
+                <div class="panel-body">
+                    {{ transres.projectFormShow(null,project,cycle) }}
+                    {{ transres.projectObjInfo(project,cycle) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{#Used only in Formnode forms#}
+{% macro projectFormShow( form, project, cycle ) %}
+
+    {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectContent" aria-expanded="true">
+                        Project
+                    </a>
+                </h4>
+            </div>
+            <div id="projectContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectContentHeading">
+                <div class="panel-body">
+
+                    {% set callLogViewClass = "order-white-background" %}
+                    <div class="text-left {{ callLogViewClass }}">
+                        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
+                    </div>
+
+                    {% if form and form is defined %}
+                        {{ transres.tissueRequestDetails(form,project,cycle) }}
+                    {% endif %}
+
+                    {{ transres.projectDocument(form,project,cycle) }}
+
+                    {% if project.getInvolveHumanTissue() == "Yes" and project.getHumanTissueForms()|length > 0 %}
+                        <div class="well well-sm">
+                            <p><b>Project's Tissue Form(s):</b></p>
+                            {% for tissueFormDocument in project.getHumanTissueForms() %}
+                                {% set absolutePath = tissueFormDocument.getAbsoluteUploadFullPath() %}
+                                <p>
+                                    <a href="{{ absolutePath }}" target="_blank">
+                                        {{ tissueFormDocument.getOriginalname() }} (uploaded {{ tissueFormDocument.getCreatedate()|date('m/d/Y H:i:s') }})
+                                    </a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}

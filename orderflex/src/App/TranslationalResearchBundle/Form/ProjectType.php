@@ -614,7 +614,7 @@ class ProjectType extends AbstractType
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
 
-        //TODO: hide if Project Documents does not exists
+        //hide if Project Documents does not exists
         if( $this->params['cycle'] != 'new' ) {
             $projectDocuments = $this->project->getDocuments();
             if( $projectDocuments && count($projectDocuments) > 0 ) {
