@@ -220,7 +220,7 @@ class Project {
     private $finalReviews;
 
     /**
-     * Project Documents
+     * Project Intake Form Documents
      *
      * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_document",
@@ -2023,22 +2023,6 @@ class Project {
     /**
      * @return mixed
      */
-    public function getObjective()
-    {
-        return $this->objective;
-    }
-
-    /**
-     * @param mixed $objective
-     */
-    public function setObjective($objective)
-    {
-        $this->objective = $objective;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getNumberOfCases()
     {
         return $this->numberOfCases;
@@ -2066,22 +2050,6 @@ class Project {
     public function setNumberOfCohorts($numberOfCohorts)
     {
         $this->numberOfCohorts = $numberOfCohorts;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExpectedResults()
-    {
-        return $this->expectedResults;
-    }
-
-    /**
-     * @param mixed $expectedResults
-     */
-    public function setExpectedResults($expectedResults)
-    {
-        $this->expectedResults = $expectedResults;
     }
 
     /**
@@ -2741,6 +2709,7 @@ class Project {
         $this->submitInvestigators->removeElement($item);
     }
 
+    /////////// Additional Details (8) ///////////////
     /**
      * @return mixed
      */
@@ -2806,6 +2775,23 @@ class Project {
     }
 
     /**
+     * Specific aims
+     *
+     * @return mixed
+     */
+    public function getObjective()
+    {
+        return $this->objective;
+    }
+    /**
+     * @param mixed $objective
+     */
+    public function setObjective($objective)
+    {
+        $this->objective = $objective;
+    }
+
+    /**
      * @return mixed
      */
     public function getStrategy()
@@ -2824,6 +2810,22 @@ class Project {
     /**
      * @return mixed
      */
+    public function getExpectedResults()
+    {
+        return $this->expectedResults;
+    }
+
+    /**
+     * @param mixed $expectedResults
+     */
+    public function setExpectedResults($expectedResults)
+    {
+        $this->expectedResults = $expectedResults;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOtherResource()
     {
         return $this->otherResource;
@@ -2836,6 +2838,35 @@ class Project {
     {
         $this->otherResource = $otherResource;
     }
+
+    public function hasAdditionalDetails() {
+        if( $this->getCollDepartment() ) {
+            return true;
+        }
+        if( $this->getCollInst() ) {
+            return true;
+        }
+        if( $this->getCollInstPi() ) {
+            return true;
+        }
+        if( $this->getEssentialInfo() ) {
+            return true;
+        }
+        if( $this->getObjective() ) {
+            return true;
+        }
+        if( $this->getStrategy() ) {
+            return true;
+        }
+        if( $this->getExpectedResults() ) {
+            return true;
+        }
+        if( $this->getOtherResource() ) {
+            return true;
+        }
+        return false;
+    }
+    /////////// EOF Additional Details (8) ///////////////
     ///////////// EOF NEW FIELDS ////////////////////
 
 

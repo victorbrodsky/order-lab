@@ -545,56 +545,56 @@
         {% set cycle = "show" %}
     {% endif %}
 
+    {% set documents = null %}
     {% if form %}
         {% set asFormOrEntity = "asForm" %}
-        {% set documents = form.documents %}
-        {#{% set irbApprovalLetters = form.irbApprovalLetters %}#}
-        {#{% set humanTissueForms = form.humanTissueForms %}#}
+        {% if form.documents is defined %}
+            {% set documents = form.documents %}
+        {% endif %}
     {% else %}
         {% set cycle = "show" %}
         {% set asFormOrEntity = "asEntity" %}
         {% set documents = project.documents %}
-        {#{% set irbApprovalLetters = project.irbApprovalLetters %}#}
-        {#{% set humanTissueForms = project.humanTissueForms %}#}
     {% endif %}
 
     {#documents|length = {{ documents|length }}#}
-    {% if documents|length > 0 %}
+    {#asFormOrEntity = {{ asFormOrEntity }}#}
+    {% if documents and documents|length > 0 %}
 
-    {% set specialtyId = NULL %}
-    {% if project.getProjectSpecialty() %}
-        {% set specialtyId = project.getProjectSpecialty().getId() %}
-    {% endif %}
+        {% set specialtyId = NULL %}
+        {% if project.getProjectSpecialty() %}
+            {% set specialtyId = project.getProjectSpecialty().getId() %}
+        {% endif %}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#transres-project-documents">
-                    Project Documents
-                </a>
-            </h4>
-        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#transres-project-documents">
+                        Project Documents
+                    </a>
+                </h4>
+            </div>
 
-        <div id="transres-project-documents" class="panel-collapse collapse in">
-            <div class="panel-body">
-                <div class="well form-element-holder user-documents">
+            <div id="transres-project-documents" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="well form-element-holder user-documents">
 
-                    <label class="col-xs-12 control-label">
-                        Please submit completed New Project Intake Form here.
-                        The form is required for non-funded projects.
-                        There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
-                    </label>
-                    <p>
-                        You can
-                        <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
-                           target="_blank">download the blank form here.</a>
-                    </p>
+                        <label class="col-xs-12 control-label">
+                            Please submit completed New Project Intake Form here.
+                            The form is required for non-funded projects.
+                            There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
+                        </label>
+                        <p>
+                            You can
+                            <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
+                               target="_blank">download the blank form here.</a>
+                        </p>
 
-                    {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
-                </div>
-            </div> <!-- panel-body -->
-        </div> <!-- panel-collapse -->
-    </div> <!-- panel panel-info -->
+                        {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
+                    </div>
+                </div> <!-- panel-body -->
+            </div> <!-- panel-collapse -->
+        </div> <!-- panel panel-info -->
 
     {% endif %}
 
@@ -608,27 +608,29 @@ Show this accordion by default in an open + visible state.
 {% macro projectAdditionalDetails( form, project, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-    {#Funded => hide#}
-    {#Un funded => show#}
-    {% set panelStyle = "" %}
-    {% if project.getFunded() %}
-        {#hidden if “Funded” form field box is checked#}
-        {% set panelStyle = "display: none;" %}
-    {% endif %}
+    {% if form.collDepartment is defined or form.collInst is defined %}
+        {#Funded => hide#}
+        {#Un funded => show#}
+        {% set panelStyle = "" %}
+        {% if project.getFunded() %}
+            {#hidden if “Funded” form field box is checked#}
+            {% set panelStyle = "display: none;" %}
+        {% endif %}
 
-    <div id="transres-project-additional-details" class="panel panel-default" style="{{ panelStyle }}">
-        <div class="panel-heading">Additional Details</div>
-        <div class="panel-body">
-            {{ formmacros.field(form.collDepartment) }}
-            {{ formmacros.field(form.collInst) }}
-            {{ formmacros.field(form.collInstPi) }}
-            {{ formmacros.field(form.essentialInfo) }}
-            {{ formmacros.field(form.objective) }} {#Specific aims#}
-            {{ formmacros.field(form.strategy) }}
-            {{ formmacros.field(form.expectedResults) }}
-            {{ formmacros.field(form.otherResource) }}
+        <div id="transres-project-additional-details" class="panel panel-default" style="{{ panelStyle }}">
+            <div class="panel-heading">Additional Details</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.collDepartment) }}
+                {{ formmacros.field(form.collInst) }}
+                {{ formmacros.field(form.collInstPi) }}
+                {{ formmacros.field(form.essentialInfo) }}
+                {{ formmacros.field(form.objective) }} {#Specific aims#}
+                {{ formmacros.field(form.strategy) }}
+                {{ formmacros.field(form.expectedResults) }}
+                {{ formmacros.field(form.otherResource) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endmacro %}
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}

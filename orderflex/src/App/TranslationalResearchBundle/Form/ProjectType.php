@@ -615,16 +615,21 @@ class ProjectType extends AbstractType
         }//if
 
         //TODO: hide if Project Documents does not exists
-        $builder->add('documents', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Document(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+        if( $this->params['cycle'] != 'new' ) {
+            $projectDocuments = $this->project->getDocuments();
+            if( $projectDocuments && count($projectDocuments) > 0 ) {
+                $builder->add('documents', CollectionType::class, array(
+                    'entry_type' => DocumentType::class,
+                    'label' => 'Document(s):',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'required' => false,
+                    'by_reference' => false,
+                    'prototype' => true,
+                    'prototype_name' => '__documentsid__',
+                ));
+            }
+        }
 
         if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
             $builder->add('irbApprovalLetters', CollectionType::class, array(
@@ -843,57 +848,69 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'datepicker form-control')
         ));
 
-        //////////// Additonal Details ////////////
-        $builder->add('collDepartment',null,array(
-            'label' => "Which department(s) outside of pathology are you collaborating with?:",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('collInst',null,array(
-            'label' => "Which outside institution(s) are you planning to collaborate with?:",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('collInstPi',ChoiceType::class,array(
-            'label' => "If collaborations with outside institutions are planned, will you (or the principal investigator listed above) be the PI for the entire study?:",
-            'choices' => array(
-                'Yes' => true,
-                'No' => false
-            ),
-            'multiple' => false,
-            'required' => false,
-            'expanded' => true,
-            'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class'=>'horizontal_type collInstPi')
-        ));
-
-        $builder->add('essentialInfo',null,array(
-            'label' => "Background (essential information related to the project):",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('objective',null,array(
-            'label' => "Specific aims (please provide 2 to 3):",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('strategy',null,array(
-            'label' => "Research strategy (provide a description of the study design, approach, and statistical methods including sample size calculation):",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('expectedResults',null,array(
-            'label' => "Expected results (2 to 3 sentences):",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-        $builder->add('otherResource',null,array(
-            'label' => "Other departmental resources requested:",
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
         //Add submitInvestigators similar to coInvestigators. Added above
 
+        //////////// Additonal Details (8) ////////////
+        //always show if new, edit
+        //hide if show, review and empty
+        $hideAdditionalDetails = false;
+        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'review' ) {
+            if( $this->params['project']->hasAdditionalDetails() === false ) {
+                $hideAdditionalDetails = true;
+            }
+        }
+        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
+            $hideAdditionalDetails = false;
+        }
+        if( $hideAdditionalDetails === false ) {
+            $builder->add('collDepartment', null, array(
+                'label' => "Which department(s) outside of pathology are you collaborating with?:",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('collInst', null, array(
+                'label' => "Which outside institution(s) are you planning to collaborate with?:",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('collInstPi', ChoiceType::class, array(
+                'label' => "If collaborations with outside institutions are planned, will you (or the principal investigator listed above) be the PI for the entire study?:",
+                'choices' => array(
+                    'Yes' => true,
+                    'No' => false
+                ),
+                'multiple' => false,
+                'required' => false,
+                'expanded' => true,
+                'placeholder' => false, //to remove 'Null' set placeholder to false
+                'attr' => array('class' => 'horizontal_type collInstPi')
+            ));
+
+            $builder->add('essentialInfo', null, array(
+                'label' => "Background (essential information related to the project):",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('objective', null, array(
+                'label' => "Specific aims (please provide 2 to 3):",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('strategy', null, array(
+                'label' => "Research strategy (provide a description of the study design, approach, and statistical methods including sample size calculation):",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('expectedResults', null, array(
+                'label' => "Expected results (2 to 3 sentences):",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('otherResource', null, array(
+                'label' => "Other departmental resources requested:",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+        }
         //////////// EOF Additonal Details ////////////
 
         ////////////// EOF Additional fields from #294 //////////////
