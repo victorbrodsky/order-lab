@@ -215,18 +215,18 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
 function transresNeedStatSupportListener() {
     $(".needStatSupport").on("change", function(e) {
         var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
-        // console.log("change: checked value needStatSupport="+needStatSupport);
+        console.log("change: checked value needStatSupport="+needStatSupport);
         transresShowHideNeedStatSupport(needStatSupport);
     });
 }
 function transresShowHideNeedStatSupport(needStatSupport) {
     if( needStatSupport == true ) {
-        //console.log("needStatSupport show");
+        console.log("needStatSupport show");
         $("#needstatsupport").show('slow');
     }
 
     if( needStatSupport == false ) {
-        //console.log("needStatSupport hide");
+        console.log("needStatSupport hide");
         $("#needstatsupport").hide('slow');
     }
 }
