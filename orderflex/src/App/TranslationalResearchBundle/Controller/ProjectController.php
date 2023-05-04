@@ -2477,6 +2477,8 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * Download one single project
+     *
      * @Route("/download-projects-spreadsheet/{ids}/{limit}", methods={"GET"}, name="translationalresearch_download_projects_excel")
      */
     public function downloadApplicantListExcelAction(Request $request, $ids=null, $limit=null) {
@@ -2484,9 +2486,6 @@ class ProjectController extends OrderAbstractController
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
-        //$projectids = $request->query->get('projectids');
-        //exit("projectids=".$projectids);
 
         //$limit = 2; //testing
         //exit("ids=".$ids);
@@ -2502,22 +2501,12 @@ class ProjectController extends OrderAbstractController
             exit("No Projects to Export to spreadsheet");
         }
 
-        //ini_set('memory_limit', '4096M');
-        //ini_set('memory_limit', '128M');
-
-        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
         $fileName = "Projects-".date('m-d-Y').".xlsx";
-        //$fileName = "Projects-".date('m-d-Y').".csv";
-        //$fileName = str_replace("  ", " ", $fileName);
-        //$fileName = str_replace(" ", "-", $fileName);
-        //$fileName = "Projects";
         //exit("filename=".$fileName);
-
-        //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
         $projectIdsArr = explode(',', $ids);
 
@@ -2568,6 +2557,8 @@ class ProjectController extends OrderAbstractController
     }
 
     /**
+     * Download multiple filtered projects
+     *
      * @Route("/download-projects-spreadsheet-post", methods={"POST"}, name="translationalresearch_download_projects_excel_post")
      */
     public function downloadApplicantListExcelPostAction(Request $request) {
