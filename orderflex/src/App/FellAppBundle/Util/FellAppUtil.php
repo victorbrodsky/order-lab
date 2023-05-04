@@ -2229,13 +2229,13 @@ class FellAppUtil {
         if( !$backupFileIdFellApp ) {
             $error = "felBackupTemplateFileId parameter is not set";
             $logger->error($error);
-            return $error;
+            return null; //$error;
         }
 
         if( !$service ) {
             $error = "Google API service failed!";
             $logger->error($error);
-            return $error;
+            return null; //$error;
         }
 
         $params = array(

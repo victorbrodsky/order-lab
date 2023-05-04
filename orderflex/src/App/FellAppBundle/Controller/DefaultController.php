@@ -296,7 +296,7 @@ class DefaultController extends OrderAbstractController
         $felBackupTemplateFileId = $fellappUtil->getUpdateDateGoogleDriveFile('felBackupTemplateFileId');
 //        $modifiedDate = $fellappUtil->getUpdateDateBackupFellAppTemplate();
 //        echo "modifiedDate=$modifiedDate <br>";
-        exit($felBackupTemplateFileId);
+        exit("felBackupTemplateFileId=".$felBackupTemplateFileId);
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
