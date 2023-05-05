@@ -15,77 +15,18 @@
  *  limitations under the License.
  */
 
-Window.prototype.transresValidateProjectForm = transresValidateProjectForm;
-Window.prototype.transresSubmitBtnRegister = transresSubmitBtnRegister;
+//Window.prototype.transresValidateProjectForm = transresValidateProjectForm;
+//Window.prototype.transresSubmitBtnRegister = transresSubmitBtnRegister;
 
 //export transresValidateProjectForm = transresValidateProjectForm;
 //export transresSubmitBtnRegister;
 
-var _transresprojecttypes = [];
-//_transresitemcodes = [];
-
-$(document).ready(function() {
-
-    var cycle = $("#formcycle").val();
-    var specialProjectSpecialty = $("#specialProjectSpecialty").val();
-
-    //console.log('transres form ready, cycle='+cycle);
-    transresHumanTissueListener(specialProjectSpecialty); //transresIrbApprovalLetterListener
-    transresRequireTissueProcessingListener();
-    transresRequireArchivalProcessingListener();
-
-    transresNeedStatSupportListener();
-    transresNeedInfSupportListener();
-    //transresIrbStatusListListener();
-
-    transresProjectFundedListener();
-
-    //console.log("cycle="+cycle);
-    if( cycle == "new" || cycle == "edit") {
-        transresNewUserListener();
-
-        //CONSTRUCT MODAL with Preloaded
-        if(1) {
-            var url = Routing.generate('employees_new_simple_user');
-            var comboboxValue = "[[lastName]]";
-            $.ajax({
-                url: url,
-                timeout: _ajaxTimeout,
-                type: "GET",
-                //type: "POST",
-                data: {comboboxValue: comboboxValue},
-                //dataType: 'json',
-                async: asyncflag
-            }).success(function (response) {
-                //console.log(response);
-                //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder
-                constructAddNewUserModalByForm(response, "[[fieldId]]", "translationalresearch", "[[otherUserParam]]", "#add-new-user-modal-prototype",false);
-            }).done(function () {
-                //lbtn.stop();
-            }).error(function (jqXHR, textStatus, errorThrown) {
-                console.log('Error : ' + errorThrown);
-            });
-        }
-    }
-
-    getComboboxGeneric(null,'transresprojecttypes',_transresprojecttypes,false);
-
-    transresIrbExemptListener('transres-project-exemptIrbApproval');
-
-    transresIrbExemptListener('transres-project-exemptIACUCApproval');
-
-    transresIrbStatusListListener('transres-project-irbStatusList');
-
-    transresShowHideProjectDocument();
-    
-});
-
-function transresIrbExemptListener( classname ) {
+export function transresIrbExemptListener( classname ) {
     $("."+classname).on("change", function(e) {
         transresIrbExemptChange($(this),classname);
     });
 }
-function transresIrbExemptChange( exemptEl, classname ) {
+export function transresIrbExemptChange( exemptEl, classname ) {
     var exemptData = exemptEl.select2('data');
     var exemptText = exemptData.text;
     //console.log("change: exemptText="+exemptText);
@@ -99,12 +40,12 @@ function transresIrbExemptChange( exemptEl, classname ) {
     }
 }
 
-function transresIrbStatusListListener( classname ) {
+export function transresIrbStatusListListener( classname ) {
     $("."+classname).on("change", function(e) {
         transresIrbStatusListChange($(this),classname);
     });
 }
-function transresIrbStatusListChange( exemptEl, classname ) {
+export function transresIrbStatusListChange( exemptEl, classname ) {
     var exemptData = exemptEl.select2('data');
     var exemptText = null;
     if( exemptData ) {
@@ -121,14 +62,14 @@ function transresIrbStatusListChange( exemptEl, classname ) {
 }
 
 //Will this project involve human tissue?
-function transresHumanTissueListener(specialProjectSpecialty) {
+export function transresHumanTissueListener(specialProjectSpecialty) {
     $(".involveHumanTissue").on("change", function(e) {
         var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
         //console.log("change: checked value involveHumanTissue="+involveHumanTissue);
         transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty);
     });
 }
-function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty) {
+export function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProjectSpecialty) {
     //console.log("involveHumanTissue="+involveHumanTissue);
     if( involveHumanTissue == "Yes" ) {
         //console.log("humanTissueForms Yes => show");
@@ -159,7 +100,7 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue,specialProj
         changeHumanTissueRelatedSections(involveHumanTissue);
     }
 }
-function changeHumanTissueRelatedSections(value) {
+export function changeHumanTissueRelatedSections(value) {
     if( value == 'Yes' ) {
         //If Yes is selected => don't change requireTissueProcessing and requireTissueProcessing
         //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
@@ -179,14 +120,14 @@ function changeHumanTissueRelatedSections(value) {
 
 }
 
-function transresRequireTissueProcessingListener() {
+export function transresRequireTissueProcessingListener() {
     $(".requireTissueProcessing").on("change", function(e) {
         var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
         //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
         transresShowHideRequireTissueProcessing(requireTissueProcessing);
     });
 }
-function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
+export function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
     if( requireTissueProcessing == "Yes" ) {
         //console.log("requireTissueProcessing show");
         $("#tissueprocurement").show('slow');
@@ -198,14 +139,14 @@ function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
     }
 }
 
-function transresRequireArchivalProcessingListener() {
+export function transresRequireArchivalProcessingListener() {
     $(".requireArchivalProcessing").on("change", function(e) {
         var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
         //console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
         transresShowHideRequireArchivalProcessing(requireArchivalProcessing);
     });
 }
-function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
+export function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
     if( requireArchivalProcessing == "Yes" ) {
         //console.log("requireArchivalProcessing show");
         $("#archivalspecimens").show('slow');
@@ -218,14 +159,14 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
 }
 
 
-function transresNeedStatSupportListener() {
+export function transresNeedStatSupportListener() {
     $(".needStatSupport").on("change", function(e) {
         var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
         console.log("change: checked value needStatSupport="+needStatSupport);
         transresShowHideNeedStatSupport(needStatSupport);
     });
 }
-function transresShowHideNeedStatSupport(needStatSupport) {
+export function transresShowHideNeedStatSupport(needStatSupport) {
     if( needStatSupport == true ) {
         console.log("needStatSupport show");
         $("#needstatsupport").show('slow');
@@ -237,14 +178,14 @@ function transresShowHideNeedStatSupport(needStatSupport) {
     }
 }
 
-function transresNeedInfSupportListener() {
+export function transresNeedInfSupportListener() {
     $(".needInfSupport").on("change", function(e) {
         var needInfSupport = $(".needInfSupport").find('input[name="oleg_translationalresearchbundle_project[needInfSupport]"]:checked').val();
         // console.log("change: checked value needInfSupport="+needInfSupport);
         transresShowHideNeedInfSupport(needInfSupport);
     });
 }
-function transresShowHideNeedInfSupport(needInfSupport) {
+export function transresShowHideNeedInfSupport(needInfSupport) {
     if( needInfSupport == true ) {
         //console.log("needInfSupport show");
         $("#needInfSupport").show('slow');
@@ -256,7 +197,7 @@ function transresShowHideNeedInfSupport(needInfSupport) {
     }
 }
 
-function transresProjectFundedListener() {
+export function transresProjectFundedListener() {
     //oleg_translationalresearchbundle_project_funded
     $(".transres-funded").on("change", function(e) {
         //var funded = $(".transres-funded").find('input[name="oleg_translationalresearchbundle_project[transres-funded]"]:checked').val();
@@ -265,7 +206,7 @@ function transresProjectFundedListener() {
         transresShowHideProjectAdditionalDetails();
     });
 }
-function transresShowHideProjectDocument() {
+export function transresShowHideProjectDocument() {
     //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
     //funded (checked) => hide
     //not-funded (un-checked) => show
@@ -277,7 +218,7 @@ function transresShowHideProjectDocument() {
         $('#transres-project-documents').collapse('show');
     }
 }
-function transresShowHideProjectAdditionalDetails() {
+export function transresShowHideProjectAdditionalDetails() {
     //collapse it (“hide it”) when the user puts a checkmark into the “Funded” field (uncollapse this accordion when the checkmark is removed)
     //funded (checked) => hide
     //not-funded (un-checked) => show
@@ -294,7 +235,7 @@ function transresShowHideProjectAdditionalDetails() {
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post.
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 //
-function transresValidateProjectForm() {
+export function transresValidateProjectForm() {
 
     //console.log("Validate project");
 
@@ -547,7 +488,7 @@ function transresValidateProjectForm() {
 
         var title = $('#project-change-state-data').attr('trp-closure-title-data');
         console.log("new title="+title);
-        
+
         trpConstructClosureProjectModal(projectChangeStateData,false,'afterFunctionEditPage');
         transresShowBtn();
 
@@ -587,25 +528,25 @@ function transresValidateProjectForm() {
     //projectForm.submit(); // If all the validations succeeded
 }
 
-function transresSubmitBtnRegister(btnName) {
+export function transresSubmitBtnRegister(btnName) {
     var btnNameId = "oleg_translationalresearchbundle_project_"+btnName;
     _clickedSubmitBtnId = btnNameId;
     console.log("_clickedSubmitBtnId="+_clickedSubmitBtnId);
 }
 
-function transresHideBtn() {
+export function transresHideBtn() {
     //console.log("hide submit buttons");
     $(":submit").hide();
     $('#please-wait').show();
 }
-function transresShowBtn() {
+export function transresShowBtn() {
     //console.log("show submit buttons");
     $(":submit").show();
     $('#please-wait').hide();
 }
 
 //New User functionality
-function transresNewUserListener() {
+export function transresNewUserListener() {
     $('.add-new-user-on-enter').find('.select2-search-field > input.select2-input').on('keyup', function (e) {
         if (e.keyCode === 13)
         {
@@ -644,7 +585,7 @@ function transresNewUserListener() {
 
 
 }
-function transresOpenNewUserModal(thisElement,comboboxValue) {
+export function transresOpenNewUserModal(thisElement,comboboxValue) {
     //console.log("value="+thisElement.value);
 
     //select2-no-results select2-drop
@@ -667,7 +608,7 @@ function transresOpenNewUserModal(thisElement,comboboxValue) {
     constructNewUserModal(btnDom,sitename,otherUserParam,comboboxValue);
 }
 
-function transresTestEmailNotations(specialtyId) {
+export function transresTestEmailNotations(specialtyId) {
 
     var modalElResult = $('#transres-email-test-result');
     var modalEl = $("#modal_test_email_naming_notation_"+specialtyId);

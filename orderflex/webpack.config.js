@@ -41,7 +41,8 @@ Encore
     .addEntry('userdates', './assets/userdates/js/index.jsx')
     .addEntry('userdates-css', './assets/userdates/css/index.css')
 
-    .addEntry('transresjs', './assets/transres/js/index.jsx')
+    .addEntry('transresjs', './assets/transres/js/project.jsx')
+    .addEntry('transresjs-edit', './assets/transres/js/project-edit.jsx')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

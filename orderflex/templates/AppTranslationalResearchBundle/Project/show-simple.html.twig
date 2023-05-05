@@ -52,6 +52,11 @@
 
 {% endblock %}
 
-{% block additionaljs %}
-    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
+{#{% block additionaljs %}#}
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>#}
+{#{% endblock %}#}
+
+{% block javascripts %}
+    {#import using webpack transres.js (assets/transres/js/index.jsx)#}
+    {{ encore_entry_script_tags('transresjs') }}
 {% endblock %}

@@ -130,7 +130,7 @@
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
 
-    <script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>#}
     <script src="{{ asset('orderassets/FOSCommentBundle/js/comments.js') }}"></script>
 
 <script type="text/javascript">
@@ -157,42 +157,10 @@
             }
             ////////////// EOF Submit comment //////////////
 
-
             event.stopPropagation();
             window.onbeforeunload = null;
 
-//            var reviewHolder = $(this).closest('.transres-review-holder');
-
-//            //click all transres-update-project-specific-btn buttons
-//            reviewHolder.find('.transres-update-project-specific-btn').each(function( index ) {
-//                //console.log( index + ": " + $( this ).text() );
-//                $( this ).click();
-//                //alert("index="+index);
-//            });
-
-            //Submit Comment on review btn click
-//            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
-//            //console.log("comment="+comment);
-//            if( comment ) {
-//                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
-//            }
-
-            //get alert if the additional info button clicked and no comment is provided
-//            if( $(this).hasClass('transres-missinginfo') && !comment ) {
-//                //below the button and then press this 'Request...' button again
-//                alert("Please specify what additional information you would like the submitter to provide in the comment field.");
-//                return false;
-//            }
-
-            ////////// Update IRB Expiration Date by transres-irb_review //////////
-//            if( $(this).hasClass('transres-irb_review') ) {
-//                transresUpdateIrbExpDate();
-//            }
-            ////////// EOF Update IRB Expiration Date //////////
-
             console.log("done review");
-
-            //return false;
         });
 
         //transres-update-irbexpirationdate
@@ -528,4 +496,7 @@
 
 {% endblock %}
 
-
+{% block javascripts %}
+    {#import using webpack transres.js (assets/transres/js/index.jsx)#}
+    {{ encore_entry_script_tags('transresjs') }}
+{% endblock %}
