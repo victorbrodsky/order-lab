@@ -2,6 +2,10 @@
  * Created by ch3 on 10/1/2021.
  */
 
+
+//defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
+//Window.prototype.trpCloseReactivationProjectAction = trpCloseReactivationProjectAction;
+
 var _clickedSubmitBtnId = null;
 
 function trpConstructClosureProjectModal(actionBtn,asyncType,afterFunctionReload) { //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {

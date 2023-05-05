@@ -165,6 +165,13 @@ function changeHumanTissueRelatedSections(value) {
         //If Yes is selected => don't change requireTissueProcessing and requireTissueProcessing
         //$("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",true).trigger("change");
         //$("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",true).trigger("change");
+        //set to default => unselect all and show all
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='Yes']").prop("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireTissueProcessing]'][value='No']").prop("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='Yes']").prop("checked",false).trigger("change");
+        $("input[name='oleg_translationalresearchbundle_project[requireArchivalProcessing]'][value='No']").prop("checked",false).trigger("change");
+        //$("#tissueprocurement").show('slow');
+        //$("#archivalspecimens").show('slow');
     }
     if( value == 'No' ) {
         //TODO: only for CP
@@ -501,7 +508,7 @@ function transresValidateProjectForm() {
 
     //"Closed" -> Any except "Canceled" => check exp date (only non-funded projects)
     var projectFundedValue = $("#oleg_translationalresearchbundle_project_funded").is(":checked");
-    //console.log("projectFundedValue="+projectFundedValue);
+    console.log("projectFundedValue="+projectFundedValue);
     if( !projectFundedValue ) {
         //var projectOriginalState = $("#projectOriginalState").val(); //Closed
         var projectOriginalExpDateStr = $("#projectOriginalExpDateStr").val();
@@ -509,7 +516,7 @@ function transresValidateProjectForm() {
         //var projectCurrentStateData = $("#oleg_translationalresearchbundle_project_state").select2('data');
         //var projectCurrentStateValue = projectCurrentStateData.text; //Closed
         //console.log("projectOriginalState="+projectOriginalState+", projectOriginalExpDateStr="+projectOriginalExpDateStr);
-        //console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
+        console.log("projectCurrentStateValue="+projectCurrentStateValue+", projectCurrentExpDateStr="+projectCurrentExpDateStr);
         if (projectOriginalState != projectCurrentStateValue) {
             if (projectOriginalState == "Closed" && projectCurrentStateValue != "Canceled") {
                 //Create exp date object
@@ -519,9 +526,10 @@ function transresValidateProjectForm() {
                 var today = new Date();
                 var todayPlusSevenDaysObject = new Date();
                 todayPlusSevenDaysObject.setDate(today.getDate() + 7);
-                //console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
+                console.log("projectCurrentExpDateObject="+projectCurrentExpDateObject.toString()+", todayPlusSevenDaysObject="+todayPlusSevenDaysObject.toString());
                 if (todayPlusSevenDaysObject >= projectCurrentExpDateObject) {
                     var msg = "Please update the expected expiration date " + projectCurrentExpDateStr + " to a future date, at least 7 days ahead";
+                    console.log("show msg="+msg);
                     $("#projectError").show();
                     $("#projectError").html(msg);
                     transresShowBtn();
