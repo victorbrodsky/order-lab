@@ -15,6 +15,7 @@
  *  limitations under the License.
  */
 
+//defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
 Window.prototype.transresValidateProjectForm = transresValidateProjectForm;
 Window.prototype.transresSubmitBtnRegister = transresSubmitBtnRegister;
 
