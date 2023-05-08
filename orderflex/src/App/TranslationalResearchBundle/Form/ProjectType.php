@@ -202,7 +202,7 @@ class ProjectType extends AbstractType
 
         $builder->add('funded',CheckboxType::class,array(
             'required' => false,
-            'label'=>"Funded:",
+            'label'=>"Has this project been funded?:", //"Funded:",
             'attr' => array('class'=>'form-control transres-funded')
         ));
 
@@ -295,7 +295,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('totalCost', null, array(
-            'label' => 'Estimated Total Costs ($) ('.$this->params['feeScheduleLink'].'):',
+            'label' => 'Estimated total cost / Project budget amount ($) ('.$this->params['feeScheduleLink'].'):', //Estimated Total Costs ($)
             'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             //'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
@@ -914,12 +914,32 @@ class ProjectType extends AbstractType
         //////////// EOF Additonal Details ////////////
         ////////////// EOF Additional fields from #294 //////////////
 
+        ////////////// Additional fields from #294 //////////////
         if( $this->params['cycle'] != 'new' ) {
             $builder->add('progressUpdate', null, array(
                 'label' => "Progress Updates:",
                 'attr' => array('class' => 'textarea form-control')
             ));
         }
+
+        $builder->add('fundByPath', ChoiceType::class, array(
+            'label' => "Is funding for this project requested from the Pathology Department?:",
+            'choices' => array(
+                'Yes' => true,
+                'No' => false
+            ),
+            'multiple' => false,
+            'required' => false,
+            'expanded' => true,
+            'placeholder' => false, //to remove 'Null' set placeholder to false
+            'attr' => array('class' => 'horizontal_type fundByPath')
+        ));
+
+        $builder->add('fundDescription', null, array(
+            'label' => "Please describe the planned expenses that comprise the budget for this project:",
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        ////////////// EOF Additional fields from #294 //////////////
 
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”

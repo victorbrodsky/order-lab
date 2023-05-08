@@ -848,6 +848,7 @@ class Project {
 
     ////////////// EOF Additional fields from #294 //////////////
 
+    ////////////// Additional fields from #295 //////////////
     /**
      * Progress Updates: [three-line free text]
      *
@@ -855,6 +856,20 @@ class Project {
      */
     private $progressUpdate;
 
+    /**
+     * Is funding for this project requested from the Pathology Department? () Yes () No (radio buttons)
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $fundByPath;
+
+    /**
+     * Please describe the planned expenses that comprise the budget for this project: three line free text field
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $fundDescription;
+    ////////////// EOF Additional fields from #295 //////////////
 
 
 
@@ -2880,6 +2895,7 @@ class Project {
     /////////// EOF Additional Details (8) ///////////////
     ///////////// EOF NEW FIELDS ////////////////////
 
+    ////////////// Additional fields from #294 //////////////
     /**
      * @return mixed
      */
@@ -2894,6 +2910,39 @@ class Project {
     {
         $this->progressUpdate = $progressUpdate;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFundByPath()
+    {
+        return $this->fundByPath;
+    }
+
+    /**
+     * @param mixed $fundByPath
+     */
+    public function setFundByPath($fundByPath)
+    {
+        $this->fundByPath = $fundByPath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFundDescription()
+    {
+        return $this->fundDescription;
+    }
+
+    /**
+     * @param mixed $fundDescription
+     */
+    public function setFundDescription($fundDescription)
+    {
+        $this->fundDescription = $fundDescription;
+    }
+    ////////////// EOF Additional fields from #294 //////////////
 
     /**
      * @return mixed

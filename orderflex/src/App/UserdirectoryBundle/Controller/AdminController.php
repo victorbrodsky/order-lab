@@ -10327,6 +10327,7 @@ class AdminController extends OrderAbstractController
             "Exploratory Research (Preliminary Study)",
             "Experimental Research (Descriptive Study)",
             "Clinical Research (Case Study)",
+            "Clinical Research (Observational Study)",
             "Clinical trial (JCTO & Clinical Trials)",
             "Education/Teaching (Pathology Faculty)",
             "USCAP Submission"

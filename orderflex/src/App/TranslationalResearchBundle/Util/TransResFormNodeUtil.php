@@ -212,7 +212,7 @@ class TransResFormNodeUtil
         //totalCost (string)
         $formParams = array(
             'parent' => $projectSection,
-            'name' => "Estimated Total Costs ($)",
+            'name' => "Estimated total cost / Project budget amount ($)",
             'objectType' => $objectTypeNumericString,
         );
         $newField = $formNodeUtil->createV2FormNode($formParams);
