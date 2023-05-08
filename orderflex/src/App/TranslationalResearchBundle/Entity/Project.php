@@ -848,12 +848,12 @@ class Project {
 
     ////////////// EOF Additional fields from #294 //////////////
 
-//    /**
-//     * Progress Updates: [three-line free text]
-//     *
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $progressUpdate;
+    /**
+     * Progress Updates: [three-line free text]
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $progressUpdate;
 
 
 
@@ -2880,20 +2880,20 @@ class Project {
     /////////// EOF Additional Details (8) ///////////////
     ///////////// EOF NEW FIELDS ////////////////////
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getProgressUpdate()
-//    {
-//        return $this->progressUpdate;
-//    }
-//    /**
-//     * @param mixed $progressUpdate
-//     */
-//    public function setProgressUpdate($progressUpdate)
-//    {
-//        $this->progressUpdate = $progressUpdate;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getProgressUpdate()
+    {
+        return $this->progressUpdate;
+    }
+    /**
+     * @param mixed $progressUpdate
+     */
+    public function setProgressUpdate($progressUpdate)
+    {
+        $this->progressUpdate = $progressUpdate;
+    }
 
     /**
      * @return mixed

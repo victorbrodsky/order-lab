@@ -350,9 +350,9 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
-    {#{% if form.progressUpdate is defined %}#}
-        {#{{ formmacros.field(form.progressUpdate) }}#}
-    {#{% endif %}#}
+    {% if form.progressUpdate is defined %}
+        {{ formmacros.field(form.progressUpdate) }}
+    {% endif %}
 
 {% endmacro %}
 
