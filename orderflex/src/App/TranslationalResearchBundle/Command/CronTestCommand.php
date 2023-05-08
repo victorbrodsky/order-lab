@@ -70,6 +70,9 @@ class CronTestCommand extends Command {
 //        $projectExpirationResults = $transresReminderUtil->sendProjectExpirationReminder($testing);
 //        $results = $results . "; " . $projectExpirationResults;
 //        exit($results);
+//        $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find(1);
+//        $res = $transresReminderUtil->autoCloseExpiredProject($project,true);
+//        exit($res);
 //        ////////////// EOF expiration projects //////////////
 
 

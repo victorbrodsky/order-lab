@@ -848,6 +848,17 @@ class Project {
 
     ////////////// EOF Additional fields from #294 //////////////
 
+//    /**
+//     * Progress Updates: [three-line free text]
+//     *
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $progressUpdate;
+
+
+
+
+
     public function __construct($user=null) {
 
         $this->principalInvestigators = new ArrayCollection();
@@ -2869,6 +2880,20 @@ class Project {
     /////////// EOF Additional Details (8) ///////////////
     ///////////// EOF NEW FIELDS ////////////////////
 
+//    /**
+//     * @return mixed
+//     */
+//    public function getProgressUpdate()
+//    {
+//        return $this->progressUpdate;
+//    }
+//    /**
+//     * @param mixed $progressUpdate
+//     */
+//    public function setProgressUpdate($progressUpdate)
+//    {
+//        $this->progressUpdate = $progressUpdate;
+//    }
 
     /**
      * @return mixed

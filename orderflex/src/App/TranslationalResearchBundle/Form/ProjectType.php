@@ -912,8 +912,12 @@ class ProjectType extends AbstractType
             ));
         }
         //////////// EOF Additonal Details ////////////
-
         ////////////// EOF Additional fields from #294 //////////////
+
+//        $builder->add('progressUpdate', null, array(
+//            'label' => "Progress Updates:",
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
 
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”

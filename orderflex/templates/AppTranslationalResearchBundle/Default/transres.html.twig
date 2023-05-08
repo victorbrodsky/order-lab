@@ -350,6 +350,10 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
+    {#{% if form.progressUpdate is defined %}#}
+        {#{{ formmacros.field(form.progressUpdate) }}#}
+    {#{% endif %}#}
+
 {% endmacro %}
 
 {% macro projectIrbInfo( form, project, cycle ) %}

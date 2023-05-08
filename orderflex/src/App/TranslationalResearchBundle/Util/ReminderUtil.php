@@ -1551,14 +1551,16 @@ class ReminderUtil
         //Subject: Your project HP3528 has been marked as "inactive"
         $emailSubject = "Your project ".$project->getOid()." has been marked as \"inactive\"";
 
-        $projectUrl = $this->container->get('router')->generate(
-            'translationalresearch_project_show',
-            array(
-                'id' => $project->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+        //shown as a 'localhost'
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+        $projectUrl = $transresUtil->getProjectShowUrl($project);
 
         //$emailBody = "Your project request ".$project->getOid().
         //    " has been auto closed $projectExprDurationChangeStatus days after its expiration date $projectExpirationStr.";
@@ -1617,6 +1619,15 @@ class ReminderUtil
 
         return true;
     }
+
+//    public function autoCloseExpiredProjectTest( $project, $testing=false ) {
+//        //TODO: test if it shown as a 'localhost'
+//        $transresUtil = $this->container->get('transres_util');
+//        $projectUrl = $transresUtil->getProjectShowUrl($project);
+//
+//        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+//        exit("projectUrl=$projectUrl");
+//    }
 }
 
 
