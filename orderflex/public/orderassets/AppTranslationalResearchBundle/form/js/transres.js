@@ -271,6 +271,7 @@ function transresProjectFundedListener() {
         //console.log("change: checked value funded="+funded);
         transresShowHideProjectDocument();
         transresShowHideProjectAdditionalDetails();
+        transresShowHideYes();
     });
 }
 function transresShowHideProjectDocument() {
@@ -296,6 +297,22 @@ function transresShowHideProjectAdditionalDetails() {
         //console.log("funded show");
         $('#transres-project-additional-details').show('slow');
     }
+}
+function transresShowHideYes() {
+    //var label = 'Has this project been funded?:';
+    if($("#oleg_translationalresearchbundle_project_funded").prop('checked') == true){
+        console.log("transresShowHideYes Yes");
+        //label = 'Has this project been funded? Yes:';
+        //$('.transres-funded').closest('row').find('label').html('Has this project been funded? Yes:');
+        //$('label[for="foo"]').html();
+        $('#label-funded').html('Yes');
+    } else {
+        console.log("transresShowHideYes No");
+        //label = 'Has this project been funded?:';
+        //$('.transres-funded').closest('row').find('label').html('Has this project been funded?:');
+        $('#label-funded').html('');
+    }
+    //$('label[for="oleg_translationalresearchbundle_project_funded"]').html(label);
 }
 
 

@@ -259,7 +259,20 @@
                         {{ formmacros.field(form.priceList) }}
                     {% endif %}
 
-                    {{ formmacros.checkbox(form.funded) }}
+                    {#{{ formmacros.checkbox(form.funded) }}#}
+                    {#<div id="label-funded">Yes</div>#}
+                    <p>
+                    <div class="row">
+                        {{ form_errors(form.funded) }}
+                        <div class="col-xs-6" align="right">
+                            {{ form_label(form.funded) }}
+                        </div>
+                        <div class="col-xs-6 text-center" align="left" style="width: 50px; display: inline-block;">
+                            {{ form_widget(form.funded) }}
+                            <div id="label-funded" style="display: inline-block;">Yes</div>
+                        </div>
+                    </div>
+                    </p>
 
                     {{ transres.projectAdditionalDetails(form,project,cycle) }}
 
