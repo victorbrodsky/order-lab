@@ -203,8 +203,21 @@ class ProjectType extends AbstractType
         $builder->add('funded',CheckboxType::class,array(
             'required' => false,
             'label'=>"Has this project been funded?:", //"Funded:",
-            'attr' => array('class'=>'form-control transres-funded')
+            //'attr' => array('class'=>'form-control transres-funded')
+            'attr' => array('class'=>'transres-funded')
         ));
+//        $builder->add('funded', ChoiceType::class, array(
+//            'label' => "Has this project been funded?:",
+//            'choices' => array(
+//                'Yes' => true,
+//                //'No' => false
+//            ),
+//            'required' => false,
+//            'expanded' => true,
+//            'multiple' => true,
+//            'placeholder' => false, //to remove 'Null' set placeholder to false
+//            'attr' => array('class' => 'horizontal_type collInstPi')
+//        ));
 
         $builder->add('fundedAccountNumber',null, array(
             'label' => 'If funded, please provide account number:',
