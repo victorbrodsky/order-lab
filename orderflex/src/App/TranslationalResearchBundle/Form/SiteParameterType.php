@@ -285,7 +285,7 @@ class SiteParameterType extends AbstractType
 
         //Disable/Enable new project
         $builder->add('enableNewProjectOnSelector', ChoiceType::class, array(
-            'label' => 'Enable the display the button (project specialty) on the "New Project Request" page (translational-research/project/new):',
+            'label' => 'Enable the display the button (project specialty) on the "New Project Request" selector page (translational-research/project/select-new-project-type):',
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')

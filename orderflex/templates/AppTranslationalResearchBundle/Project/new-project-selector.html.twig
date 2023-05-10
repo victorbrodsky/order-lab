@@ -1,6 +1,5 @@
 {% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
 
-
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -34,11 +33,12 @@
 
 {% endblock %}
 
-{% block maincss %}
-{% endblock %}
+{#{% block maincss %}#}
+{#{% endblock %}#}
 
 {% block mainjs %}
     {#Simple static page: Remove timeout and others js#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
 {% endblock %}
 

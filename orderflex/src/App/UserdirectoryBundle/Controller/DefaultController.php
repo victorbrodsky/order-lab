@@ -968,6 +968,11 @@ class DefaultController extends OrderAbstractController
         //dump($mailer);
         exit('someTestAction disabled');
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
+        $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');
+        exit($maintenance . ", " . $liveSiteRootUrl);
+
         $userServiceUtil = $this->container->get('user_service_utility');
         $commandName = 'webmonitor.py'; //"independentmonitor";
         $res = $userServiceUtil->getCronStatus($commandName,false); //getCronStatus -> getCronStatusLinux -> getCronJobFullNameLinux (add cron:)

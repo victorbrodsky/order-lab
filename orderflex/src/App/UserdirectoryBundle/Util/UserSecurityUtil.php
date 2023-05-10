@@ -63,6 +63,9 @@ class UserSecurityUtil {
     protected $tokenStorage;
     protected $requestStack;
 
+    protected $siteSettingsParam = null;
+    //protected $initCountTest = 0;
+
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container=null,
@@ -79,6 +82,43 @@ class UserSecurityUtil {
             //$this->secToken = $container->get('security.token_storage');
             //$this->secAuth = $container->get('security.authorization_checker');
         //}
+
+        //$this->siteSettingsParam = $this->getSingleSiteSettingsParam();
+    }
+
+    //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once
+    public function getSingleSiteSettingsParam() {
+        if( $this->siteSettingsParam === null ) {
+
+            //$this->initCountTest++;
+            //echo "initCountTest=".$this->initCountTest."<br>";
+
+            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            //echo "params count=".count($params)."<br>";
+
+            if (count($params) == 0) {
+                //return -1;
+                return null;
+                //return "[Site Settings is not initialized]";
+            }
+
+            if (count($params) > 1) {
+                $logger = $this->container->get('logger');
+                $msg = 'Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
+                $logger->error($msg);
+                exit($msg);
+                //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+            }
+
+            //$param = $params[0];
+            $this->siteSettingsParam = $params[0];
+        }
+
+        if( $this->siteSettingsParam === null ) {
+            return null;
+        }
+
+        return $this->siteSettingsParam;
     }
 
     public function isCurrentUser( $id ) {
@@ -1504,8 +1544,7 @@ class UserSecurityUtil {
 //        return $this->getSiteSettingParameter($parameter);
 //    }
     //return parameter specified by $parameter. If the first time login when site parameter does not exist yet, return -1.
-    public function getSiteSettingParameter( $parameter, $sitename=null ) {
-
+    public function getSiteSettingParameter_ORIG( $parameter, $sitename=null ) {
         $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
 
 //        if( !$params ) {
@@ -1529,6 +1568,69 @@ class UserSecurityUtil {
         }
 
         $param = $params[0];
+
+        if( $parameter == null ) {
+            return $param;
+        }
+
+        $getSettingMethod = "get".$parameter;
+
+        //Get specific site setting parameter
+        if( $sitename ) {
+            //Convention name: CalllogSiteParameter
+            $getterSiteParameter = "get".$sitename."SiteParameter"; //getCallogSiteParameter
+
+            $specificSiteSettingParameter = $param->$getterSiteParameter();
+            if( $specificSiteSettingParameter ) {
+
+                if( !method_exists($specificSiteSettingParameter, $getSettingMethod) ){
+                    return null;
+                }
+
+                $res = $specificSiteSettingParameter->$getSettingMethod();
+            } else {
+                return null;
+                //return "[$sitename Site Settings is not initialized]";
+            }
+
+        } else {
+            $res = $param->$getSettingMethod();
+        }
+
+        return $res;
+    }
+
+    public function getSiteSettingParameter( $parameter, $sitename=null ) {
+
+//        if( $this->siteSettingsParam === null ) {
+//
+//            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//            //echo "params count=".count($params)."<br>";
+//
+//            if (count($params) == 0) {
+//                //return -1;
+//                return null;
+//                //return "[Site Settings is not initialized]";
+//            }
+//
+//            if (count($params) > 1) {
+//                $logger = $this->container->get('logger');
+//                $msg = 'Must have only one parameter object. Found ' . count($params) . ' object(s). Please follow the initialization instructions.';
+//                $logger->error($msg);
+//                exit($msg);
+//                //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//
+//            //$param = $params[0];
+//            $this->siteSettingsParam = $params[0];
+//        }
+
+        $param = $this->getSingleSiteSettingsParam();
+        //$param = $this->siteSettingsParam;
+
+        if( $param === null ) {
+            return null;
+        }
 
         if( $parameter == null ) {
             return $param;
@@ -1724,23 +1826,33 @@ class UserSecurityUtil {
     }
     public function getMaxIdleTimeAndMaintenance() {
 
-        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//
+//        if( !$params ) {
+//            //new DB does not have SiteParameters object
+//            $res = array(
+//                'maxIdleTime' => 1800,
+//                'maintenance' => false
+//            );
+//            return $res; //30 min
+//        }
+//
+//        if( count($params) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
+//        }
+//
+//        $param = $params[0];
 
-        if( !$params ) {
-            //new DB does not have SiteParameters object
+        $param = $this->getSingleSiteSettingsParam();
+        //$param = $this->siteSettingsParam;
+        if( !$param ) {
             $res = array(
                 'maxIdleTime' => 1800,
                 'maintenance' => false
             );
             return $res; //30 min
-            //throw new \Exception( 'Parameter object is not found' );
         }
 
-        if( count($params) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
-        }
-
-        $param = $params[0];
         $maxIdleTime = $param->getMaxIdleTime();
         $maintenance = $param->getMaintenance();
 

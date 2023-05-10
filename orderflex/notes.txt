@@ -343,13 +343,16 @@ git push originme
 or: git push -u -f originme main
 
 ###### git branching ######
-git branch iss53
-git switch iss53
--make changes in iss53 branch
+Create a new branch: git branch crazy-experiment
+git switch crazy-experiment
+--- make changes in crazy-experiment branch ---
 git add .
-git commit -m "make changes in iss53"
+git commit -m "make changes in crazy-experiment"
 git switch master
-git merge iss53
+git merge crazy-experiment
+--- finished working with branch crazy-experiment ---
+Delete local branch:        git branch -d crazy-experiment
+Delete a remote branch:     git push origin --delete crazy-experiment
 ###### EOF git branching ######
 
 Redirect:

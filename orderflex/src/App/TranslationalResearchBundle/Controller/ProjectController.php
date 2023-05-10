@@ -1243,11 +1243,8 @@ class ProjectController extends OrderAbstractController
      */
     public function newProjectSelectorAction(Request $request)
     {
-//        if (false == $this->isGranted('ROLE_USER')) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
         $transresUtil = $this->container->get('transres_util');
+
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
         
         //Remove specialties with enableNewProjectOnSelector is false
@@ -1264,7 +1261,7 @@ class ProjectController extends OrderAbstractController
 
         return array(
             'specialties' => $specialtiesFiltered,
-            'title' => "Please select the specialty for your project request"
+            'title' => "New Project Request"
         );
     }
 
