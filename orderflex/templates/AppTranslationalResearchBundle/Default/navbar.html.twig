@@ -592,11 +592,12 @@
                             {#Reviewers#}
                             {% if is_granted('ROLE_TRANSRES_ADMIN') %}
 
-                                {% if specialties|length > 0 %}
+                                {% set reviewSpecialties = transres_util.getTransResProjectReviewSpecialties() %}
+                                {% if reviewSpecialties|length > 0 %}
                                     <li class="dropdown-submenu">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reviewers</a>
                                         <ul class="dropdown-menu">
-                                            {% for specialty in specialties %}
+                                            {% for specialty in reviewSpecialties %}
                                                 <li>
                                                     <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
                                                     >Default Reviewers for {{ specialty.getName() }}</a>

@@ -3578,6 +3578,20 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
+    public function getTransResProjectReviewSpecialties( $userAllowed=true ) {
+        $specialties = $this->getTransResProjectSpecialties($userAllowed);
+
+        $allowedSpecialties = array();
+
+        foreach($specialties as $specialty) {
+            if( $this->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
+                $allowedSpecialties[] = $specialty;
+            }
+        }
+
+        return $allowedSpecialties;
+    }
+
     //NOT USED?
     public function getCommentAuthorNameByLoggedUser( $comment ) {
 
