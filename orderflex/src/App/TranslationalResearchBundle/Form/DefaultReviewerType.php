@@ -35,7 +35,7 @@ class DefaultReviewerType extends AbstractType
             $builder->add('primaryReview', CheckboxType::class, array(
                 'label' => 'Primary Review:',
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+                //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
             ));
         }
 

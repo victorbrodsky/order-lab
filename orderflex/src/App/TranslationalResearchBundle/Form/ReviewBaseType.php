@@ -359,7 +359,7 @@ class ReviewBaseType extends AbstractType
                     'label' => 'Primary Reviewer:',
                     'required' => false,
                     'disabled' => $this->params['disabledReviewers'],
-                    'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+                    //'attr' => array('class' => 'form-control1', 'style' => 'margin:0'),
                 ));
             }
 

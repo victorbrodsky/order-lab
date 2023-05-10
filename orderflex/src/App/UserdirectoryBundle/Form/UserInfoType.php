@@ -90,7 +90,7 @@ class UserInfoType extends AbstractType
                 $builder->add('preferredMobilePhoneVerified', CheckboxType::class, array(
                     'label' => 'Mobile Phone Verified:',
                     'required' => false,
-                    'attr' => array('class' => 'form-control', 'style' => 'margin:0')
+                    //'attr' => array('class' => 'form-control', 'style' => 'margin:0')
                 ));
             }
         }

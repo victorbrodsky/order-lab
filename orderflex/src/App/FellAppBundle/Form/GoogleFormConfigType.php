@@ -66,7 +66,7 @@ class GoogleFormConfigType extends AbstractType
         $builder->add('acceptingSubmission', CheckboxType::class, array(
             'label' => "Accepting Submission",
             'required' => false,
-            'attr' => array('class' => 'form-control checkbox')
+            //'attr' => array('class' => 'form-control checkbox')
         ));
 
         $builder->add('fellowshipSubspecialties', EntityType::class, array(
@@ -115,7 +115,7 @@ class GoogleFormConfigType extends AbstractType
         $builder->add('letterAcceptingSubmission', CheckboxType::class, array(
             'label' => "Accepting Submission of the Recommendation Letters:",
             'required' => false,
-            'attr' => array('class' => 'form-control checkbox')
+            //'attr' => array('class' => 'form-control checkbox')
         ));
 
         $builder->add('letterError', null, array(

@@ -148,13 +148,13 @@ class UserPreferencesType extends AbstractType
             $builder->add('excludeFromSearch', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Exclude from Employee Directory search results:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+                'attr' => array('class'=>'form-control-modif')
             ));
 
             $builder->add('noAttendingEmail', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Do not send a notification email if listed as an "attending" in a Call Log Book Entry:',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+                'attr' => array('class'=>'form-control-modif')
             ));
 
             $builder->add('lifeForm', EntityType::class, array(

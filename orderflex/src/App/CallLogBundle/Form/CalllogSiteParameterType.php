@@ -128,12 +128,12 @@ class CalllogSiteParameterType extends AbstractType
 
         $builder->add('showAccession', null, array(
             'label' => 'Show Accession Number:',
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('showAccessionHome', null, array(
             'label' => 'Show Accession Number on the Homepage:',
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('city', null, array(
@@ -267,13 +267,13 @@ class CalllogSiteParameterType extends AbstractType
             //'mapped' => false,
             'required' => false,
             //'data' => true,
-            'attr' => array('class' => 'form-control'),
+            //'attr' => array('class' => 'form-control'),
         ));
 
         $builder->add('enableDocumentUpload',CheckboxType::class, array(
             'label' => 'Enable Document Upload Section:',
             'required' => false,
-            'attr' => array('class' => 'form-control'),
+            //'attr' => array('class' => 'form-control'),
         ));
 
         $builder->add('county', null, array(

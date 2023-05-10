@@ -81,7 +81,7 @@ class PerSiteSettingsType extends AbstractType
             $builder->add('tooltip', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Show tool tips for locked fields:',
-                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+                //'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
 
 

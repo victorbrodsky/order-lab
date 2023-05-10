@@ -99,12 +99,12 @@ class VacReqSiteParameterType extends AbstractType
         $builder->add('floatingRestrictDateRange', CheckboxType::class, array(
             'label' => 'Restrict Floating Date Range:',
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
         $builder->add('enableFloatingDay', CheckboxType::class, array(
             'label' => 'Enable Floating Day Requests (show/hide new floating day page link):',
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
 
 //        $builder->add('holidayDatesUrl', null, array(

@@ -274,25 +274,26 @@
                     {#</div>#}
                     {#</p>#}
                     <p>
-                        <div class="col-xs-6" align="right">
-                            {{ form_label(form.funded) }}
-                        </div>
-                    {#style="width: 50px;"#}
-                        <div class="col-xs-6 text-center" align="left">
-                            <div class="horizontal_type">
-                                <div class="radio_inline">
-                                    {{ form_widget(form.funded) }}
-                                    {#<div id="label-funded">Yes</div>#}
-                                    {% if project.getFunded() %}
-                                        <label id="label-funded" for="oleg_translationalresearchbundle_project_funded">Yes</label>
-                                    {% else %}
-                                        <label id="label-funded" for="oleg_translationalresearchbundle_project_funded"></label>
-                                    {% endif %}
-                                </div>
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                {{ form_label(form.funded) }}
+                            </div>
+                        {#style="width: 50px;"#}
+                            <div class="col-xs-6 text-center" align="left">
+                                {#<div class="horizontal_type">#}
+                                    <div class="radio_inline">
+                                        {{ form_widget(form.funded) }}
+                                        {% if project.getFunded() %}
+                                            <label id="label-funded" for="oleg_translationalresearchbundle_project_funded">Yes</label>
+                                        {% else %}
+                                            <label id="label-funded" for="oleg_translationalresearchbundle_project_funded"></label>
+                                        {% endif %}
+                                    </div>
+                                {#</div>#}
                             </div>
                         </div>
                     </p>
-                    <br>
+                    {#<br>#}
                     {#{{ formmacros.field(form.funded) }}#}
 
                     {{ transres.projectAdditionalDetails(form,project,cycle) }}
@@ -1167,7 +1168,7 @@ Show this accordion by default in an open + visible state.
                 {{ transres.fieldPriceList(priceListStr,"Utilize the following specific price list:",1) }}
 
                 {% set noBudgetLimit = project.getNoBudgetLimit() %}
-                {{ transres.fieldNoBudgetLimit(noBudgetLimit,"No Budget Limit:",1) }}
+                {{ transres.fieldNoBudgetLimit(noBudgetLimit,"No budget limit:",1) }}
 
                 {#Show this "Approved Project Budget" field#}
                 {% set approvedProjectBudget = project.getApprovedProjectBudget() %}
@@ -1908,13 +1909,13 @@ Show this accordion by default in an open + visible state.
             <input id="transres_update_project_noBudgetLimit"
                    type="checkbox"
                    class="form-control"
-                   placeholder="No Budget Limit"
+                   placeholder="No budget limit"
                    {{ checked }}
             >
         </div>
         <div class="col-xs-3" style="width: 50px;" align="left">
             {% if updateButton is defined and updateButton %}
-                <div class="btn btn-primary btn-sm transres-update-project-specific-btn transres-update-project-noBudgetLimit">Update "No Budget Limit"</div>
+                <div class="btn btn-primary btn-sm transres-update-project-specific-btn transres-update-project-noBudgetLimit">Update "No budget limit"</div>
             {% endif %}
         </div>
     </div>

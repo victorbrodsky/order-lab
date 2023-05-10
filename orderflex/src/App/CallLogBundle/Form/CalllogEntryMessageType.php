@@ -56,7 +56,7 @@ class CalllogEntryMessageType extends AbstractType
         $builder->add('addPatientToList', CheckboxType::class, array(
             'label' => 'Add patient to the list:',
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
 
 

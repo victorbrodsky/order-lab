@@ -3184,7 +3184,7 @@ class RequestController extends OrderAbstractController
                 
                 $eventType = "Project Approved Budget Limit Updated";
                 $res = "Project " . $project->getOid() . " has been updated: " .
-                    "No Budget Limit changed from " .
+                    "No budget limit changed from " .
                     $originalNoBudgetLimitStr . " to " . $noBudgetLimitStr;
                 $transresUtil->setEventLog($project,$eventType,$res);
 
@@ -3193,7 +3193,7 @@ class RequestController extends OrderAbstractController
                     $res
                 );
             } else {
-                $res = "No Budget Limit for project ID " . $project->getOid() . " is unchanged.";
+                $res = "No budget limit for project ID " . $project->getOid() . " is unchanged.";
             }
         } else {
             //$res = "Logical error: project not found by ID $projectId";

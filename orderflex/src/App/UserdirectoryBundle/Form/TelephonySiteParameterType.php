@@ -66,7 +66,7 @@ class TelephonySiteParameterType extends AbstractType
         $builder->add('phoneNumberVerification', CheckboxType::class, array(
             'label' => 'Phone number verification:',
             'required' => false,
-            'attr' => array('class'=>'form-control')
+            //'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'edit' ) {

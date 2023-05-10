@@ -92,148 +92,148 @@ class SubstituteUserType extends AbstractType
         $builder->add('excludedProjectCompleted', CheckboxType::class, array(
             'label' => 'Completed project requests:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('excludedProjectCanceled', CheckboxType::class, array(
             'label' => 'Canceled project requests:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('excludedProjectDraft', CheckboxType::class, array(
             'label' => 'Draft project requests:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Request
         $builder->add('excludedRequestCompleted', CheckboxType::class, array(
             'label' => 'Completed work requests:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('excludedRequestCanceled', CheckboxType::class, array(
             'label' => 'Canceled project requests:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Invoice
         $builder->add('excludedInvoicePaid', CheckboxType::class, array(
             'label' => 'Paid invoices:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('excludedInvoicePartiallyPaid', CheckboxType::class, array(
             'label' => 'Partially paid invoices:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('excludedInvoiceCanceled', CheckboxType::class, array(
             'label' => 'Canceled invoices:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
 
         //Perform substitution in the following project request fields:
         $builder->add('projectPis', CheckboxType::class, array(
             'label' => 'Principal Investigator(s) for the project:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectPisIrb', CheckboxType::class, array(
             'label' => 'Principal Investigator listed on the IRB application:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectPathologists', CheckboxType::class, array(
             'label' => $this->params['institutionName'].' Pathologist(s) Involved:', //NYP/WCM
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectSubmitInvestigators', CheckboxType::class, array(
             'label' => 'Submitting Investigators(s):',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectCoInvestigators', CheckboxType::class, array(
             'label' => 'Co-Investigator(s):',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectContacts', CheckboxType::class, array(
             'label' => 'Contact(s):',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectBillingContact', CheckboxType::class, array(
             'label' => 'Billing Contact:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //IRB Reviewer
         $builder->add('projectReviewerIrb', CheckboxType::class, array(
             'label' => 'IRB Reviewer:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerIrbDelegate', CheckboxType::class, array(
             'label' => 'IRB Reviewer Delegate:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Admin Reviewer
         $builder->add('projectReviewerAdmin', CheckboxType::class, array(
             'label' => 'Administrative Reviewer:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerAdminDelegate', CheckboxType::class, array(
             'label' => 'Administrative Reviewer Delegate:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Committee Reviewer
         $builder->add('projectReviewerCommittee', CheckboxType::class, array(
             'label' => 'Committee Reviewer:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerCommitteeDelegate', CheckboxType::class, array(
             'label' => 'Committee Reviewer Delegate:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Primary Committee Reviewer
         $builder->add('projectReviewerPrimaryCommittee', CheckboxType::class, array(
             'label' => 'Primary Committee Reviewer:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerPrimaryCommitteeDelegate', CheckboxType::class, array(
             'label' => 'Primary Committee Reviewer Delegate:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         //Final Reviewer
         $builder->add('projectReviewerFinal', CheckboxType::class, array(
             'label' => 'Final Reviewer:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('projectReviewerFinalDelegate', CheckboxType::class, array(
             'label' => 'Final Reviewer Delegate:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
 
         //Perform substitution in the following work request fields:
         $builder->add('requestPis', CheckboxType::class, array(
             'label' => 'Principal Investigator(s) for the project:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('requestBillingContact', CheckboxType::class, array(
             'label' => 'Billing Contact:',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
 
         //Perform substitution in the following invoice fields:
@@ -245,12 +245,12 @@ class SubstituteUserType extends AbstractType
         $builder->add('invoiceBillingContact', CheckboxType::class, array(
             'label' => "PI's Billing Contact:",
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
         $builder->add('invoiceSalesperson', CheckboxType::class, array(
             'label' => "Salesperson:",
             'required' => false,
-            'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+            //'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
         ));
 
     }

@@ -204,7 +204,7 @@ class ResearchLabType extends AbstractType
                 //'mapped' => false,
                 'required' => false,
                 'label' => 'Principal Investigator of this Lab:',
-                'attr' => array('class'=>'form-control researchlab-piDummy-field', 'style'=>'margin:0')
+                'attr' => array('class'=>'researchlab-piDummy-field')
             ));
 
             ////////////////////////// EOF comment and pi /////////////////////////

@@ -113,7 +113,7 @@ class ReferenceType extends AbstractType
 
         $builder->add('recLetterReceived', CheckboxType::class, array(
             'label' => 'Recommendation Letter Received:',
-            'attr' => array('class'=>'checkbox')
+            //'attr' => array('class'=>'checkbox')
         ));
 
     }

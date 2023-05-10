@@ -330,9 +330,9 @@ class ProjectType extends AbstractType
                 $this->params['trpCommitteeReviewer']
             ) {
                 $builder->add('noBudgetLimit', CheckboxType::class, array(
-                    'label' => 'No Budget Limit:',
+                    'label' => 'No budget limit:',
                     'required' => false,
-                    'attr' => array('class' => 'form-control transres-project-noBudgetLimit'),
+                    'attr' => array('class' => 'transres-project-noBudgetLimit'),
                 ));
             }
         }

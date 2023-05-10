@@ -421,7 +421,7 @@ class CrnMessageType extends AbstractType
         $builder->add('addAccessionToList', CheckboxType::class, array(
             'label' => 'Add accession to the list:',
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            //'attr' => array('class' => 'form-control')
         ));
 
 
