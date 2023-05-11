@@ -3578,6 +3578,7 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
+    //rename to getTransResProjectEnabledSpecialties
     public function getTransResProjectReviewSpecialties( $userAllowed=true ) {
         $specialties = $this->getTransResProjectSpecialties($userAllowed);
 
@@ -3590,6 +3591,20 @@ class TransResUtil
         }
 
         return $allowedSpecialties;
+    }
+
+    public function getTransResRequesterGroups() {
+
+        $user = $this->security->getUser();
+
+        $groups = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        return $groups;
     }
 
     //NOT USED?

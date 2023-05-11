@@ -1246,6 +1246,8 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
+        //TODO: replced by getTransResProjectReviewSpecialties 
+        
         
         //Remove specialties with enableNewProjectOnSelector is false
         $specialtiesFiltered = array();
@@ -1255,6 +1257,8 @@ class ProjectController extends OrderAbstractController
                 $specialtiesFiltered[] = $specialty;
             }
         }
+
+        $groups = $transresUtil->getTransResRequesterGroups();
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
