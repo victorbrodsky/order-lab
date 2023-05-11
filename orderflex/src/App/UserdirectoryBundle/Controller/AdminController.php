@@ -49,6 +49,7 @@ use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\ProjectTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
+use App\TranslationalResearchBundle\Entity\RequesterGroupList;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
 use App\TranslationalResearchBundle\Entity\WorkQueueList;
@@ -1049,6 +1050,7 @@ class AdminController extends OrderAbstractController
         $count_generateCollLabList = $this->generateCollLabList();
         $count_generateCollDivList = $this->generateCollDivList();
         $count_generateIrbStatusList = $this->generateIrbStatusList();
+        $count_generateRequesterGroupList = $this->generateRequesterGroupList();
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
@@ -1195,6 +1197,7 @@ class AdminController extends OrderAbstractController
             'CollLabList='.$count_generateCollLabList.', '.
             'CollDivList='.$count_generateCollDivList.', '.
             'IrbStatusList='.$count_generateIrbStatusList.', '.
+            'RequesterGroupList='.$count_generateRequesterGroupList.', '.
 
             'generateDashboardRoles='.$count_generateDashboardRoles.', '.
             'generateChartTypeList='.$count_generateChartTypeList.', '.
@@ -7795,6 +7798,7 @@ class AdminController extends OrderAbstractController
             "transrescolllabs" => array('CollLabList','transrescolllabs-list','Translational Research Collaboration Laboratory List'),
             "transrescolldivs" => array('CollDivList','transrescolldivs-list','Translational Research Collaboration Division List'),
             "transresirbstatus" => array('IrbStatusList','transresirbstatus-list','Translational Research Irb Approval Status List'),
+            "transresrequestergroup" => array('RequesterGroupList','transresrequestergroup-list','Translational Research Requester Group List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -10504,6 +10508,45 @@ class AdminController extends OrderAbstractController
 
             $listEntity = new IrbStatusList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateRequesterGroupList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Internal - WCM Pathology Faculty" => "Internal",
+            "External - Non-WCM Pathology Faculty" => "External"
+        );
+
+        $count = 10;
+        foreach( $types as $name => $abbreviation ) {
+
+            //exit("name=$name, abbreviation=$abbreviation");
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            //$listEntity = $em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByAbbreviation($abbreviation);
+            //if( $listEntity ) {
+            //    continue;
+            //}
+
+            $listEntity = new RequesterGroupList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

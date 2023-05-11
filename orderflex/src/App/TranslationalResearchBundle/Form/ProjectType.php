@@ -785,7 +785,6 @@ class ProjectType extends AbstractType
             'class' => 'AppTranslationalResearchBundle:IrbStatusList',
             'label' => 'IRB Approval Status:',
             'required' => false,
-            'required' => false,
             'attr' => array('class' => 'combobox transres-project-irbStatusList'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -953,6 +952,22 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
         ////////////// EOF Additional fields from #294 //////////////
+
+        $builder->add('requesterGroup', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:RequesterGroupList',
+            'label' => 'Requester group:',
+            'required' => false,
+            'attr' => array('class' => 'combobox transres-project-requesterGroup'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”

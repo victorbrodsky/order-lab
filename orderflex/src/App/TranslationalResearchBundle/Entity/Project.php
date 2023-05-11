@@ -870,8 +870,18 @@ class Project {
      */
     private $fundDescription;
     ////////////// EOF Additional fields from #295 //////////////
-
-
+    
+    //#295: add a new field titled “Requester group:” showing the values from the list manager’s
+    // new “Translational research project requester group” list
+    // (“Internal - WCM Pathology Faculty” and “External - Non-WCM Pathology Faculty”)
+    //Similar to IrbStatusList
+    /**
+     * Requester group
+     *
+     * @ORM\ManyToOne(targetEntity="RequesterGroupList")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $requesterGroup;
 
 
     public function __construct($user=null) {
@@ -2943,6 +2953,22 @@ class Project {
         $this->fundDescription = $fundDescription;
     }
     ////////////// EOF Additional fields from #294 //////////////
+
+    /**
+     * @return mixed
+     */
+    public function getRequesterGroup()
+    {
+        return $this->requesterGroup;
+    }
+    /**
+     * @param mixed $requesterGroup
+     */
+    public function setRequesterGroup($requesterGroup)
+    {
+        $this->requesterGroup = $requesterGroup;
+    }
+
 
     /**
      * @return mixed

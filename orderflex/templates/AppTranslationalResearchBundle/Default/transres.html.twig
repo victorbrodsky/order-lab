@@ -831,7 +831,7 @@ Show this accordion by default in an open + visible state.
 
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
-    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -845,6 +845,9 @@ Show this accordion by default in an open + visible state.
             </div>
             <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
                 <div class="panel-body">
+
+                    {#requesterGroup#}
+                    {#{{ formmacros.field(form.requesterGroup) }}#}
 
                     {% if cycle == "show" %}
                         {% set principalInvestigators = project.principalInvestigators %}
