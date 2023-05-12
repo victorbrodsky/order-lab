@@ -23,12 +23,37 @@
 
     <br>
 
+    {% for requesterGroup in requesterGroups %}
 
-    {% for specialty in specialties %}
-        <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-            >{{ specialty.getName() }} Project Request</a>
-        </p>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#requesterGroup-{{ requesterGroup.getUrlSlug() }}" aria-expanded="true">
+                            {{ requesterGroup.getName() }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="requesterGroup-{{ requesterGroup.getUrlSlug() }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {% for specialty in specialties %}
+                                <p>
+                                    <a class="btn btn-primary"
+                                       href="{{ path(
+                                        translationalresearch_sitename~'_project_new',
+                                        {
+                                           'specialtyStr':specialty.getAbbreviation(),
+                                           'requester-group':requesterGroup.getUrlSlug()
+                                        }
+                                       ) }}"
+                                    >{{ specialty.getName() }} Project Request</a>
+                                </p>
+                            {% endfor %}
+                        </div>
+                </div>
+            </div>
+        </div>
+
     {% endfor %}
 
 {% endblock %}

@@ -3607,6 +3607,33 @@ class TransResUtil
         return $groups;
     }
 
+    public function getRequesterGroupObject( $requesterGroupStr ) {
+        //echo "requesterGroupStr=".$requesterGroupStr."<br>";
+        $requesterGroup = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByUrlSlug($requesterGroupStr);
+
+        if( !$requesterGroup ) {
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+            $dql =  $repository->createQueryBuilder("list");
+
+            $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
+            $query = $this->em->createQuery($dql);
+            $query->setParameter('urlSlug',$requesterGroupStr);
+            $requesterGroups = $query->getResult();
+            //echo "requesterGroups=".count($requesterGroups)."<br>";
+
+            if( count($requesterGroups) == 1 ) {
+                $requesterGroup = $requesterGroups[0];
+            }
+        }
+
+        if( !$requesterGroup ) {
+            //throw new \Exception( "Project requester group is not found by name '".$requesterGroupStr."'" );
+            return NULL;
+        }
+
+        return $requesterGroup;
+    }
+
     //NOT USED?
     public function getCommentAuthorNameByLoggedUser( $comment ) {
 

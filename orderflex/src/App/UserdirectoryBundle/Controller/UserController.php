@@ -365,6 +365,14 @@ class UserController extends OrderAbstractController
 
         //exit("employees_home");
 
+//        return array(
+//            'accessreqs' => null,
+//            'locations' => null,
+//            'entities' => array(),
+//            'search' => null,
+//            'all' => null,
+//        );
+
         if(
             false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
             false == $this->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
@@ -377,6 +385,7 @@ class UserController extends OrderAbstractController
         //$search = $form->get('search')->getData();
 
         //check for active access requests
+        //$accessreqs = "";
         $accessreqs = $this->getActiveAccessReq();
 
         $search = trim((string)$request->get('search') );
@@ -405,7 +414,6 @@ class UserController extends OrderAbstractController
         $roles = null;
 
         if( $search != "" || $userid != "" ) {
-
             //location search
             //$userUtil = new UserUtil();
             $userUtil = $this->container->get('user_utility');

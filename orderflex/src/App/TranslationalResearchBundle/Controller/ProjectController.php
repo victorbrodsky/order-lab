@@ -1246,8 +1246,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
-        //TODO: replced by getTransResProjectReviewSpecialties 
-        
+        //TODO: replced by getTransResProjectReviewSpecialties
         
         //Remove specialties with enableNewProjectOnSelector is false
         $specialtiesFiltered = array();
@@ -1258,29 +1257,41 @@ class ProjectController extends OrderAbstractController
             }
         }
 
-        //$requesterGroups = $transresUtil->getTransResRequesterGroups();
+        $requesterGroups = $transresUtil->getTransResRequesterGroups();
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
             'specialties' => $specialtiesFiltered,
-            //'requesterGroups' => $groups,
+            'requesterGroups' => $requesterGroups,
             'title' => "New Project Request"
         );
     }
 
     /**
      * Select new project specialty
+     * "/project/new/{specialtyStr}/{requesterGroup}"
      *
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      */
     public function newProjectAction(Request $request, $specialtyStr=null)
     {
+
         if( !$specialtyStr ) {
             return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
         }
+
+        //$specialtyStr = $request->query->get('specialty');
+        $requesterGroupStr = $request->query->get('requester-group');
+
+        //echo "specialtyStr=$specialtyStr, requesterGroupStr=$requesterGroupStr <br>";
+        //exit('111');
+
+//        if( !$requesterGroupStr ) {
+//            return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
+//        }
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
@@ -1339,6 +1350,12 @@ class ProjectController extends OrderAbstractController
         $project = $this->createProjectEntity($user,null);
 
         $project->setProjectSpecialty($specialty);
+
+        //Set requester group
+        if( $requesterGroupStr ) {
+            $requesterGroup = $transresUtil->getRequesterGroupObject($requesterGroupStr);
+            $project->setRequesterGroup($requesterGroup);
+        }
 
         //set default exempt
         $exemptIrbApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");
