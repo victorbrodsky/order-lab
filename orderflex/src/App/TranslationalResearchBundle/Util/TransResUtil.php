@@ -3595,7 +3595,7 @@ class TransResUtil
 
     public function getTransResRequesterGroups() {
 
-        $user = $this->security->getUser();
+        //$user = $this->security->getUser();
 
         $groups = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findBy(
             array(

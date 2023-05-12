@@ -662,6 +662,10 @@
         {{ formmacros.field(form.list.textAttribute) }}
     {% endif %}
 
+    {% if form.list.urlSlug is defined %}
+        {{ formmacros.field(form.list.urlSlug) }}
+    {% endif %}
+
     {% if form.list is defined %}
         {% if form.list.orderinlist is defined %}
             {{ formmacros.field(form.list.orderinlist) }}
@@ -809,6 +813,10 @@
 
     {% if edit_form.list.textAttribute is defined %}
         {{ formmacros.field(edit_form.list.textAttribute) }}
+    {% endif %}
+
+    {% if edit_form.list.urlSlug is defined %}
+        {{ formmacros.field(edit_form.list.urlSlug) }}
     {% endif %}
 
     {% if entity.updatedby %}

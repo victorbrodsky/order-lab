@@ -214,6 +214,10 @@ class ListType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('urlSlug',null,array(
+            'label' => 'Url Slug:',
+            'attr' => array('class' => 'form-control')
+        ));
 
     }
 

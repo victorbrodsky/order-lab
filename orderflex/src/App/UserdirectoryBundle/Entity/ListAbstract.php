@@ -155,8 +155,7 @@ abstract class ListAbstract
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $version;
-
-
+    
     /**
      * Additional attributes in JSON format (e.g.
      * {"attributeGroupTitle":{"attribute01Title":"attribute01Value","attribute02Title":"attribute02Value"}} )
@@ -180,7 +179,11 @@ abstract class ListAbstract
 //     */
 //    protected $fulltitleshort;
 
-
+    /**
+     * URL Slug
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $urlSlug;
 
 
     public function __construct( $creator = null ) {
@@ -568,6 +571,24 @@ abstract class ListAbstract
     {
         $this->textAttribute = $textAttribute;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUrlSlug()
+    {
+        return $this->urlSlug;
+    }
+
+    /**
+     * @param mixed $urlSlug
+     */
+    public function setUrlSlug($urlSlug)
+    {
+        $this->urlSlug = $urlSlug;
+    }
+
+
 
 
 //    /**

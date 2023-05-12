@@ -847,7 +847,7 @@ Show this accordion by default in an open + visible state.
                 <div class="panel-body">
 
                     {#requesterGroup#}
-                    {{ formmacros.field(form.requesterGroup) }}
+                    {#{{ formmacros.field(form.requesterGroup) }}#}
 
                     {% if cycle == "show" %}
                         {% set principalInvestigators = project.principalInvestigators %}

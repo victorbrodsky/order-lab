@@ -10529,12 +10529,17 @@ class AdminController extends OrderAbstractController
         );
 
         $count = 10;
-        foreach( $types as $name => $abbreviation ) {
+        foreach( $types as $name => $urlSlug ) {
 
             //exit("name=$name, abbreviation=$abbreviation");
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByName($name);
             if( $listEntity ) {
+
+                //temp
+                //$listEntity->setUrlSlug($urlSlug);
+                //$em->flush();
+
                 continue;
             }
 
@@ -10546,7 +10551,7 @@ class AdminController extends OrderAbstractController
             $listEntity = new RequesterGroupList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
-            $listEntity->setAbbreviation($abbreviation);
+            $listEntity->setUrlSlug($urlSlug);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

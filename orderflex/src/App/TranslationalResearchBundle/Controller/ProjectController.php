@@ -1258,13 +1258,14 @@ class ProjectController extends OrderAbstractController
             }
         }
 
-        $groups = $transresUtil->getTransResRequesterGroups();
+        //$requesterGroups = $transresUtil->getTransResRequesterGroups();
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
             'specialties' => $specialtiesFiltered,
+            //'requesterGroups' => $groups,
             'title' => "New Project Request"
         );
     }
