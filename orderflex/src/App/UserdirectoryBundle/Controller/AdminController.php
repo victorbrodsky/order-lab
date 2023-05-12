@@ -10537,8 +10537,8 @@ class AdminController extends OrderAbstractController
             if( $listEntity ) {
 
                 //temp
-                $listEntity->setUrlSlug($urlSlug);
-                $em->flush();
+                //$listEntity->setUrlSlug($urlSlug);
+                //$em->flush();
 
                 continue;
             }
