@@ -106,6 +106,7 @@
 
     <div class="container col-xs-12">
 {% if 1 %}
+    {#BASE 1#}
         {{ usermacros.nonLiveSiteWarning() }}
 
         {% block browsercheck %}
@@ -125,6 +126,7 @@
 {% endif %}
         <div class="text-center col-xs-12">
 {% if 1 %}
+        {#BASE 2#}
             {% include 'AppUserdirectoryBundle/Security/idle_timeout.html.twig' %}
             
             <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
@@ -168,6 +170,7 @@
         </div>
 {% endif %}
 {% if 1 %}
+    {#BASE 3#}
         <div class="order-content text-center col-xs-12">
             {% block content %}{% endblock %}
         </div>
@@ -177,6 +180,7 @@
         </div>
 {% endif %}
 {% if 1 %}
+    {#BASE 4#}
         {% block footer %}
         <div class="order-content text-center col-xs-12">
             <!-- footer -->
@@ -186,6 +190,7 @@
 {% endif %}
         {% block mainjs %}
 {% if 1 %}
+    {#BASE 5#}
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
             {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
 

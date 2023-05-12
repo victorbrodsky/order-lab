@@ -28,6 +28,7 @@
 
 {% block content %}
 {% if 1 %}
+    {#CONTENT 1#}
     <div style="margin-top:25px;">
 
         {% if all is defined and all %}
@@ -95,6 +96,7 @@
 
 {% block contentleft %}
 {% if 1 %}
+    {#CONTENTLEFT#}
     {% if not entities and not locations and sameusers is not defined %}
 
         <div style="margin-top:50px;">
@@ -118,13 +120,13 @@
 
 
             <br>
-
+{% if 1 %}
             <p>
 
                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                     {#{% set pendingadminreview = render(controller("App\\UserdirectoryBundle\\Controller\\UserController::pendingAdminReviewAction")) %}#}
-                    {#{% set pendingadminreview = "" %}#}
+                    {% set pendingadminreview = "" %}
                     {% set pendingadminreview = user_service_utility.getPendingAdminReview() %}
 
                     There are:
@@ -144,7 +146,7 @@
                 {% endif %}
 
             </p>
-
+{% endif %}
 
         </div>
 

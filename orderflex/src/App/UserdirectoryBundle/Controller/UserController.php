@@ -365,6 +365,7 @@ class UserController extends OrderAbstractController
 
         //exit("employees_home");
 
+        //testing
 //        return array(
 //            'accessreqs' => null,
 //            'locations' => null,
@@ -372,6 +373,7 @@ class UserController extends OrderAbstractController
 //            'search' => null,
 //            'all' => null,
 //        );
+        //Performance (DB 200 queries) affected by: getPendingAdminReview base->navbar
 
         if(
             false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
