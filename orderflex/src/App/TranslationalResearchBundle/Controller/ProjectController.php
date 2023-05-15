@@ -228,6 +228,8 @@ class ProjectController extends OrderAbstractController
         //$filterError = true;
         //$transresUsers = array($user);
         $transresUsers = $transresUtil->getAppropriatedUsers();
+        //echo "transresUsers count=".count($transresUsers)."<br>";
+
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $stateChoiceArr["All except Drafts"] = "All-except-Drafts";
         $stateChoiceArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
@@ -359,11 +361,20 @@ class ProjectController extends OrderAbstractController
 
         $filterform->handleRequest($request);
 
+        if(1) { //testing
+            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            $associatedUsers = $filterform['associatedUsers']->getData();
+            $submitter = $filterform['submitter']->getData();
+            $reviewers = $filterform['reviewers']->getData();
+        } else {
+            $principalInvestigators = null;
+            $associatedUsers = null;
+            $submitter = null;
+            $reviewers = null;
+        }
+
         $projectSpecialties = $filterform['projectSpecialty']->getData();
         $states = $filterform['state']->getData();
-        $principalInvestigators = $filterform['principalInvestigators']->getData();
-        $associatedUsers = $filterform['associatedUsers']->getData();
-        $submitter = $filterform['submitter']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $searchId = $filterform['searchId']->getData();
@@ -373,7 +384,6 @@ class ProjectController extends OrderAbstractController
         $fundingType = $filterform['fundingType']->getData();
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
-        $reviewers = $filterform['reviewers']->getData();
         $humanTissue = $filterform['humanTissue']->getData();
         $exemptIrbApproval = $filterform['exemptIrbApproval']->getData();
         $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();

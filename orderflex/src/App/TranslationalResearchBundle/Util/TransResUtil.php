@@ -6609,6 +6609,7 @@ class TransResUtil
         return $requestIds;
     }
 
+    //TODO: optimize to get id and displayname only
     public function getAppropriatedUsers() {
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
 
@@ -6620,13 +6621,18 @@ class TransResUtil
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
-        $dql->leftJoin("list.employmentStatus", "employmentStatus");
-        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->leftJoin("list.infos", "infos");
+//        if(0) {
+//            $dql->leftJoin("list.employmentStatus", "employmentStatus");
+//            $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+//        }
+
+        if(1) { //testing
+            $dql->leftJoin("list.infos", "infos");
+            $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
+            $dql->orderBy("infos.lastName", "ASC");
+        }
 
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-        $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
-
         //added additional filters
         //$dql->andWhere("list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system'");
         //$dql->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)");
@@ -6635,23 +6641,39 @@ class TransResUtil
         //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL)");
         //$curdate = date("Y-m-d", time());
         //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')");
-
         //$dql->orderBy("infos.displayName","ASC");
-        $dql->orderBy("infos.lastName","ASC");
-
         //$dql->setMaxResults(10); //testing
 
         $query = $dql->getQuery();
 
-        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
+        //https://phpdox.net/demo/Symfony2/classes/Doctrine_ORM_Query.xhtml
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true); //this will reduce queries, but make getUsernameOptimal (or UserInfo) empty
         //doctrine cache queries
         //$query->useQueryCache(true);
         //$query->useResultCache(true);
 
         $users = $query->getResult();
 
+        //$query->setHint(Query::HINT_REFRESH_ENTITY, true);
+        //dump($users);
+        //exit('111');
+
+//        foreach($users as $user) {
+//            echo $user."";
+//        }
+//        exit('111');
+
         return $users;
+    }
+
+    public function getUserOptimalName( $userId ) {
+        //return $userId;
+        $this->em->clear();
+        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //return $user."";
+        //$optimalName = $user->getDisplayName();
+        $optimalName = $user->getUsernameOptimal();
+        return $optimalName;
     }
 
     public function getPricesList() {

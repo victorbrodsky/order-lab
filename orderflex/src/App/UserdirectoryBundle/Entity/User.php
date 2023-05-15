@@ -1190,6 +1190,7 @@ class User extends UserBase {
 
     public function __toString(): string
     {
+        //return $this->getDisplayOrFirstLastname();
         return $this->getUserNameStr();
     }
 

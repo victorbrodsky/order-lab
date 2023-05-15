@@ -86,33 +86,46 @@ class FilterType extends AbstractType
             'data' => $this->params['defaultStatesArr'],
             'attr' => array('class' => 'combobox'),
         ));
+        
+        if(1) { //testing
+            $builder->add('principalInvestigators', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:User',
+                'label' => false,    //"Principal Investigator(s):",
+                'required' => false,
+                'multiple' => true,
+                'choices' => $this->params['transresUsers'],
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        }
 
-        $builder->add('principalInvestigators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
-            'label'=> false,    //"Principal Investigator(s):",
-            'required'=> false,
-            'multiple' => true,
-            'choices' => $this->params['transresUsers'],
-            'attr' => array('class'=>'combobox combobox-width'),
-        ));
+        if(1) { //testing
+            $builder->add('associatedUsers', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:User',
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                'choices' => $this->params['transresUsers'],
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
 
-        $builder->add('associatedUsers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
-            'label'=> false,  
-            'required'=> false,
-            'multiple' => true,
-            'choices' => $this->params['transresUsers'],
-            'attr' => array('class'=>'combobox combobox-width')
-        ));
+            $builder->add('submitter', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:User',
+                'label' => false,
+                'required' => false,
+                'multiple' => false,
+                'choices' => $this->params['transresUsers'],
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
 
-        $builder->add('submitter', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
-            'label'=> false,
-            'required'=> false,
-            'multiple' => false,
-            'choices' => $this->params['transresUsers'],
-            'attr' => array('class'=>'combobox combobox-width'),
-        ));
+            $builder->add('reviewers', EntityType::class, array(
+                'class' => 'AppUserdirectoryBundle:User',
+                'label' => false,    //"Principal Investigator(s):",
+                'required' => false,
+                'multiple' => true,
+                'choices' => $this->params['transresUsers'],
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Reviewer(s)'),
+            ));
+        }
 
         $builder->add('startDate', DateTimeType::class, array(
             'label' => false,
@@ -189,14 +202,7 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External Legacy ID'),
         ));
 
-        $builder->add('reviewers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
-            'label'=> false,    //"Principal Investigator(s):",
-            'required'=> false,
-            'multiple' => true,
-            'choices' => $this->params['transresUsers'],
-            'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>'Reviewer(s)'),
-        ));
+
 
 
         $builder->add('humanTissue',ChoiceType::class, array(
