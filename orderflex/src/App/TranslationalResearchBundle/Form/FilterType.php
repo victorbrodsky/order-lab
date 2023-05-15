@@ -94,14 +94,6 @@ class FilterType extends AbstractType
             'multiple' => true,
             'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName","ASC");
-//            },
         ));
 
         $builder->add('associatedUsers', EntityType::class, array(
@@ -120,14 +112,6 @@ class FilterType extends AbstractType
             'multiple' => false,
             'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName","ASC");
-//            },
         ));
 
         $builder->add('startDate', DateTimeType::class, array(
@@ -212,14 +196,6 @@ class FilterType extends AbstractType
             'multiple' => true,
             'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>'Reviewer(s)'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName","ASC");
-//            },
         ));
 
 

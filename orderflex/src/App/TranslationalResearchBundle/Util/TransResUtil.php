@@ -6639,6 +6639,8 @@ class TransResUtil
         //$dql->orderBy("infos.displayName","ASC");
         $dql->orderBy("infos.lastName","ASC");
 
+        //$dql->setMaxResults(10); //testing
+
         $query = $dql->getQuery();
 
         //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);

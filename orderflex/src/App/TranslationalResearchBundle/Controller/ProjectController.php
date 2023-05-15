@@ -226,6 +226,7 @@ class ProjectController extends OrderAbstractController
 
         //////// create filter //////////
         //$filterError = true;
+        //$transresUsers = array($user);
         $transresUsers = $transresUtil->getAppropriatedUsers();
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $stateChoiceArr["All except Drafts"] = "All-except-Drafts";
