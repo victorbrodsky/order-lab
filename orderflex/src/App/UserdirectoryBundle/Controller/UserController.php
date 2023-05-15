@@ -362,17 +362,8 @@ class UserController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/home.html.twig")
      */
     public function indexAction( Request $request ) {
-
         //exit("employees_home");
 
-        //testing
-//        return array(
-//            'accessreqs' => null,
-//            'locations' => null,
-//            'entities' => array(),
-//            'search' => null,
-//            'all' => null,
-//        );
         //Performance (DB 200 queries) affected by: getPendingAdminReview base->navbar
 
         if(
@@ -910,13 +901,17 @@ class UserController extends OrderAbstractController
 
         //Pending Administrative Review
         if( $filter && $filter == "Pending Administrative Review" ) {
-            $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-            $criteriastr .= "(".
-                "administrativeTitles.status = ".$pendingStatus.
-                " OR appointmentTitles.status = ".$pendingStatus.
-                " OR medicalTitles.status = ".$pendingStatus.
-                //" OR locations.status = ".$pendingStatus.
-            ")";
+//            $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+//            $criteriastr .= "(".
+//                "administrativeTitles.status = ".$pendingStatus.
+//                " OR appointmentTitles.status = ".$pendingStatus.
+//                " OR medicalTitles.status = ".$pendingStatus.
+//                //" OR locations.status = ".$pendingStatus.
+//            ")";
+
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $criteriastr .= $userServiceUtil->getPendingReviewCriteria();
+            //echo "criteriastr=$criteriastr <br>";
         }
 
         //With Administrative Title

@@ -4109,33 +4109,38 @@ Pathology and Laboratory Medicine",
             return $pendingCount;
         }
 
-        $limitFlag = false;
+        //$limitFlag = false;
 
-        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-        $criteriastr = "(".
-            "administrativeTitles.status = ".$pendingStatus.
-            " OR appointmentTitles.status = ".$pendingStatus.
-            " OR medicalTitles.status = ".$pendingStatus.
-            //" OR locations.status = ".$pendingStatus.
-            ")";
+//        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+//        $criteriastr = "(".
+//            "administrativeTitles.status = ".$pendingStatus.
+//            " OR appointmentTitles.status = ".$pendingStatus.
+//            " OR medicalTitles.status = ".$pendingStatus.
+//            //" OR locations.status = ".$pendingStatus.
+//            ")";
+//
+//        //current_only
+//        $curdate = date("Y-m-d", time());
+//        $criteriastr .= " AND (";
+//        $criteriastr .= "employmentStatus.id IS NULL";
+//        $criteriastr .= " OR ";
+//        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+//        $criteriastr .= ")";
+//
+//        //filter out system user
+//        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+//
+//        //filter out Pathology Fellowship Applicants
+//        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+//
+//        //activeAD
+//        $totalcriteriastr = $totalcriteriastr . " AND (user.activeAD = TRUE AND user.enabled = TRUE)";
+//
+//        if( $criteriastr ) {
+//            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+//        }
 
-        //current_only
-        $curdate = date("Y-m-d", time());
-        $criteriastr .= " AND (";
-        $criteriastr .= "employmentStatus.id IS NULL";
-        $criteriastr .= " OR ";
-        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
-        $criteriastr .= ")";
-
-        //filter out system user
-        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
-
-        //filter out Pathology Fellowship Applicants
-        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
-
-        if( $criteriastr ) {
-            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
-        }
+        $totalcriteriastr = $this->getPendingReviewCriteria();
 
         //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
 
@@ -4177,6 +4182,38 @@ Pathology and Laboratory Medicine",
         //exit('111');
 
         return $pendingCount;
+    }
+    public function getPendingReviewCriteria() {
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+        $criteriastr = "(".
+            "administrativeTitles.status = ".$pendingStatus.
+            " OR appointmentTitles.status = ".$pendingStatus.
+            " OR medicalTitles.status = ".$pendingStatus.
+            //" OR locations.status = ".$pendingStatus.
+            ")";
+
+        //current_only
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (";
+        $criteriastr .= "employmentStatus.id IS NULL";
+        $criteriastr .= " OR ";
+        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $criteriastr .= ")";
+
+        //filter out system user
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+
+        //filter out Pathology Fellowship Applicants
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+
+        //activeAD
+        $totalcriteriastr = $totalcriteriastr . " AND (user.activeAD = TRUE AND user.enabled = TRUE)";
+
+        if( $criteriastr ) {
+            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+        }
+
+        return $totalcriteriastr;
     }
 
     /**

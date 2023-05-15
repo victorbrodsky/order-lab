@@ -105,8 +105,6 @@
 <body>
 
     <div class="container col-xs-12">
-{% if 1 %}
-    {#BASE 1#}
         {{ usermacros.nonLiveSiteWarning() }}
 
         {% block browsercheck %}
@@ -123,10 +121,7 @@
             {% endblock %}
 
         </div>
-{% endif %}
         <div class="text-center col-xs-12">
-{% if 1 %}
-        {#BASE 2#}
             {% include 'AppUserdirectoryBundle/Security/idle_timeout.html.twig' %}
             
             <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
@@ -168,9 +163,6 @@
             <input type="hidden" id="authuser_id" value="{{userId}}" />
 
         </div>
-{% endif %}
-{% if 1 %}
-    {#BASE 3#}
         <div class="order-content text-center col-xs-12">
             {% block content %}{% endblock %}
         </div>
@@ -178,19 +170,15 @@
         <div class="order-content col-xs-12">
             {% block contentleft %}{% endblock %}
         </div>
-{% endif %}
-{% if 1 %}
-    {#BASE 4#}
+
         {% block footer %}
-        <div class="order-content text-center col-xs-12">
-            <!-- footer -->
-            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
-        </div>
+            <div class="order-content text-center col-xs-12">
+                <!-- footer -->
+                {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
+            </div>
         {% endblock %}
-{% endif %}
+
         {% block mainjs %}
-{% if 1 %}
-    {#BASE 5#}
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
             {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
 
@@ -234,7 +222,6 @@
             {#FOSJsRoutingBundle#}
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-{% endif %}
         {% endblock %}
 
         {% block additionaljs %}{% endblock %}
