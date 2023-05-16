@@ -93,6 +93,17 @@ class FilterType extends AbstractType
                 'label' => false,    //"Principal Investigator(s):",
                 'required' => false,
                 'multiple' => true,
+                //'choice_label' => 'username',
+                'choices' => $this->params['transresUsers'],
+                'attr' => array('class' => 'combobox combobox-width'),
+            ));
+        } else {
+            $builder->add('principalInvestigators', ChoiceType::class, array(
+                //'class' => 'AppUserdirectoryBundle:User',
+                'label' => false,    //"Principal Investigator(s):",
+                'required' => false,
+                'multiple' => true,
+                //'choice_label' => 'username',
                 'choices' => $this->params['transresUsers'],
                 'attr' => array('class' => 'combobox combobox-width'),
             ));

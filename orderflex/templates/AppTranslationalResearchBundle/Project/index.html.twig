@@ -387,6 +387,7 @@
                         {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}
                         {#{% set piOptimalName = null %}#}
                         {% set piOptimalName = principalInvestigator.getUsernameOptimal() %}
+                        {#{% set piOptimalName = transres_util.getUserOptimalName(principalInvestigator) %}#}
                         {#{% set piOptimalName = transres_util.getUserOptimalName(principalInvestigator.id) %}#}
                         {% set personlink = '<a href="'~personurl~'" target="_blank">'~piOptimalName~'</a>'  %}
                         {{ personlink|raw }}<br>

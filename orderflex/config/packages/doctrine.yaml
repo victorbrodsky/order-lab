@@ -137,9 +137,9 @@ doctrine:
                         dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
                         alias: GedmoTree # this one is optional and will default to the name set for the mapping
                         is_bundle: false
-                hydrators:
-                     SimpleHydrator: \App\UserdirectoryBundle\Hydrator\SimpleHydrator
-                     StainHydrator: \App\OrderformBundle\Hydrator\StainHydrator
+                #hydrators:
+                #     SimpleHydrator: \App\UserdirectoryBundle\Hydrator\SimpleHydrator
+                #     StainHydrator: \App\OrderformBundle\Hydrator\StainHydrator
                 dql:
                      string_functions:
                         CAST: App\UserdirectoryBundle\Query\CastFunction
@@ -175,3 +175,4 @@ when@prod:
                     adapter: cache.app
                 doctrine.system_cache_pool:
                     adapter: cache.system
+

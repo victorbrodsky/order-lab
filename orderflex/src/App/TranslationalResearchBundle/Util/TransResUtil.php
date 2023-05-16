@@ -6609,29 +6609,29 @@ class TransResUtil
         return $requestIds;
     }
 
-    //TODO: optimize to get id and displayname only
+    //TODO: optimize to get user only: add displayname to the User and auto populate it from infos
     public function getAppropriatedUsers() {
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
-
+    
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
         //return $users;
-
+    
         //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
         $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
-
-//        if(0) {
-//            $dql->leftJoin("list.employmentStatus", "employmentStatus");
-//            $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-//        }
-
+    
+    //        if(0) {
+    //            $dql->leftJoin("list.employmentStatus", "employmentStatus");
+    //            $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+    //        }
+    
         if(1) { //testing
             $dql->leftJoin("list.infos", "infos");
             $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
             $dql->orderBy("infos.lastName", "ASC");
         }
-
+    
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //added additional filters
         //$dql->andWhere("list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system'");
@@ -6643,7 +6643,49 @@ class TransResUtil
         //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')");
         //$dql->orderBy("infos.displayName","ASC");
         //$dql->setMaxResults(10); //testing
+    
+        $query = $dql->getQuery();
+    
+        //https://phpdox.net/demo/Symfony2/classes/Doctrine_ORM_Query.xhtml
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true); //this will reduce queries, but make getUsernameOptimal (or UserInfo) empty
+        //doctrine cache queries
+        //$query->useQueryCache(true);
+        //$query->useResultCache(true);
+    
+        $users = $query->getResult();
 
+        //dump($users);
+        //exit('users='.count($users)); //2105
+
+        //$query->setHint(Query::HINT_REFRESH_ENTITY, true);
+        //dump($users);
+        //exit('111');
+    
+    //        foreach($users as $user) {
+    //            echo $user."";
+    //        }
+    //        exit('111');
+    
+        return $users;
+    }
+    public function getAppropriatedUsers_TEST() {
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
+
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
+        //return $users;
+
+        //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder("list");
+        //$dql->select('list.id as id, list.username as username');
+        $dql->select('list');
+
+        if(1) { //testing
+            $dql->leftJoin("list.infos", "infos");
+            $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
+            $dql->orderBy("infos.lastName", "ASC");
+        }
+        
         $query = $dql->getQuery();
 
         //https://phpdox.net/demo/Symfony2/classes/Doctrine_ORM_Query.xhtml
@@ -6654,22 +6696,16 @@ class TransResUtil
 
         $users = $query->getResult();
 
-        //$query->setHint(Query::HINT_REFRESH_ENTITY, true);
         //dump($users);
-        //exit('111');
-
-//        foreach($users as $user) {
-//            echo $user."";
-//        }
-//        exit('111');
+        //exit('users='.count($users));
 
         return $users;
     }
-
-    public function getUserOptimalName( $userId ) {
+    
+    public function getUserOptimalName( $user ) {
         //return $userId;
-        $this->em->clear();
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //$this->em->clear();
+        //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
         //return $user."";
         //$optimalName = $user->getDisplayName();
         $optimalName = $user->getUsernameOptimal();

@@ -733,5 +733,6 @@ class UserRepository extends EntityRepository {
         //return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)->getResult();
         return $query->getQuery()->getResult();
     }
+    
 }
 
