@@ -3551,6 +3551,17 @@ class TransResUtil
         return $emails;
     }
 
+    public function getTransResCollaborationDivs() {
+        $collDivs = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        return $collDivs;
+    }
+
     public function getTransResProjectSpecialties( $userAllowed=true ) {
 
         $user = $this->security->getUser();

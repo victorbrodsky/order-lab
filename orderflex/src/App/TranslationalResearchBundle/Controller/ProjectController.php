@@ -1258,13 +1258,29 @@ class ProjectController extends OrderAbstractController
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
         //TODO: replced by getTransResProjectReviewSpecialties
-        
+
+        $collDivs = $transresUtil->getTransResCollaborationDivs();
+
+        $collDivsFiltered = array();
+
         //Remove specialties with enableNewProjectOnSelector is false
         $specialtiesFiltered = array();
         foreach($specialties as $specialty) {
             //$fieldName, $project=null, $projectSpecialty=null
             if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
                 $specialtiesFiltered[] = $specialty;
+            }
+
+            foreach($collDivs as $collDiv) {
+                $specialtyAbbr = $specialty->getAbbreviation();
+                $collDivUrlSlug = $collDiv->getUrlSlug();
+                if( $specialtyAbbr && $collDivUrlSlug ) {
+                    $specialtyAbbr = strtolower($specialtyAbbr);
+                    $collDivUrlSlug = strtolower($collDivUrlSlug);
+                    if( $specialtyAbbr == $collDivUrlSlug ) {
+                        $collDivsFiltered[$specialtyAbbr] = $collDivUrlSlug; //use urlSlug
+                    }
+                }
             }
         }
 
@@ -1275,6 +1291,7 @@ class ProjectController extends OrderAbstractController
 
         return array(
             'specialties' => $specialtiesFiltered,
+            'collDivsFiltered' => $collDivsFiltered,
             'requesterGroups' => $requesterGroups,
             'title' => "New Project Request"
         );

@@ -10458,17 +10458,17 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "Anatomic Pathology",
-            "Hematopathology",
-            "Clinical Pathology",
-            "Molecular Pathology",
-            "Experimental Pathology",
-            "Computational Pathology",
-            "N/A"
+            "Anatomic Pathology" => "ap",
+            "Hematopathology" => "hematopathology",
+            "Clinical Pathology" => "cp",
+            "Molecular Pathology" => "",
+            "Experimental Pathology" => "",
+            "Computational Pathology" => "csp",
+            "N/A" => ""
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name => $urlSlug ) {
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByName($name);
             if( $listEntity ) {
@@ -10477,6 +10477,8 @@ class AdminController extends OrderAbstractController
 
             $listEntity = new CollDivList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setUrlSlug($urlSlug);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
