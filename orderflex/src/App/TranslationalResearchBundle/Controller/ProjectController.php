@@ -1365,7 +1365,9 @@ class ProjectController extends OrderAbstractController
         //Set requester group
         if( $requesterGroupStr ) {
             $requesterGroup = $transresUtil->getRequesterGroupObject($requesterGroupStr);
-            $project->setRequesterGroup($requesterGroup);
+            if( $requesterGroup ) {
+                $project->setRequesterGroup($requesterGroup);
+            }
         }
 
         //set default exempt
