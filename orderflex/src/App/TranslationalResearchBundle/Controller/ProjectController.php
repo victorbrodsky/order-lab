@@ -1320,8 +1320,9 @@ class ProjectController extends OrderAbstractController
 
         //$specialtyStr = $request->query->get('specialty');
         $requesterGroupStr = $request->query->get('requester-group');
+        $collDivStr = $request->query->get('collaborating-division');
 
-        //echo "specialtyStr=$specialtyStr, requesterGroupStr=$requesterGroupStr <br>";
+        //echo "specialtyStr=$specialtyStr, requesterGroupStr=$requesterGroupStr, collDivStr=$collDivStr <br>";
         //exit('111');
 
 //        if( !$requesterGroupStr ) {
@@ -1388,9 +1389,16 @@ class ProjectController extends OrderAbstractController
 
         //Set requester group
         if( $requesterGroupStr ) {
-            $requesterGroup = $transresUtil->getRequesterGroupObject($requesterGroupStr);
-            if( $requesterGroup ) {
-                $project->setRequesterGroup($requesterGroup);
+            $requesterGroupObject = $transresUtil->getRequesterGroupObject($requesterGroupStr);
+            if( $requesterGroupObject ) {
+                $project->setRequesterGroup($requesterGroupObject);
+            }
+        }
+
+        if( $collDivStr ) {
+            $collDivObject = $transresUtil->getCollaborationDivObject($collDivStr);
+            if( $collDivObject ) {
+                $project->addCollDiv($collDivObject);
             }
         }
 

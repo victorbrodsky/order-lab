@@ -3561,6 +3561,32 @@ class TransResUtil
 
         return $collDivs;
     }
+    public function getCollaborationDivObject( $collDivStr ) {
+        //echo "requesterGroupStr=".$requesterGroupStr."<br>";
+        $collDiv = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByUrlSlug($collDivStr);
+
+        if( !$collDiv ) {
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+            $dql =  $repository->createQueryBuilder("list");
+
+            $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
+            $query = $this->em->createQuery($dql);
+            $query->setParameter('urlSlug',$collDivStr);
+            $collDivs = $query->getResult();
+            //echo "requesterGroups=".count($requesterGroups)."<br>";
+
+            if( count($collDivs) == 1 ) {
+                $collDiv = $collDivs[0];
+            }
+        }
+
+        if( !$collDiv ) {
+            //throw new \Exception( "Project Collaboration Division is not found by name '".$collDivStr."'" );
+            return NULL;
+        }
+
+        return $collDiv;
+    }
 
     public function getTransResProjectSpecialties( $userAllowed=true ) {
 
