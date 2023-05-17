@@ -1271,18 +1271,25 @@ class ProjectController extends OrderAbstractController
                 $specialtiesFiltered[] = $specialty;
             }
 
+            $specialtyAbbr = $specialty->getAbbreviation();
+            $specialtyAbbr = strtolower($specialtyAbbr);
+            $collDivsFiltered[$specialtyAbbr] = null;
+
             foreach($collDivs as $collDiv) {
-                $specialtyAbbr = $specialty->getAbbreviation();
                 $collDivUrlSlug = $collDiv->getUrlSlug();
+                //echo "specialtyAbbr=$specialtyAbbr, collDivUrlSlug=$collDivUrlSlug <br>";
                 if( $specialtyAbbr && $collDivUrlSlug ) {
-                    $specialtyAbbr = strtolower($specialtyAbbr);
                     $collDivUrlSlug = strtolower($collDivUrlSlug);
+                    //echo "specialtyAbbr=[$specialtyAbbr], collDivUrlSlug=[$collDivUrlSlug] <br>";
                     if( $specialtyAbbr == $collDivUrlSlug ) {
+                        //echo "!!! Match $specialtyAbbr=>$collDivUrlSlug<br>";
                         $collDivsFiltered[$specialtyAbbr] = $collDivUrlSlug; //use urlSlug
                     }
                 }
             }
         }
+
+        //dump($collDivsFiltered);exit('111');
 
         $requesterGroups = $transresUtil->getTransResRequesterGroups();
 

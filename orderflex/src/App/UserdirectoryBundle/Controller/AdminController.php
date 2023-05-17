@@ -10472,6 +10472,10 @@ class AdminController extends OrderAbstractController
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByName($name);
             if( $listEntity ) {
+
+                //$listEntity->setUrlSlug($urlSlug);
+                //$em->flush();
+
                 continue;
             }
 

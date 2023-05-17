@@ -37,6 +37,7 @@
                 <div id="requesterGroup-{{ requesterGroup.getUrlSlug() }}" class="panel-collapse collapse in">
                         <div class="panel-body">
                             {% for specialty in specialties %}
+                                {#collDivsFiltered={{ collDivsFiltered[specialty.getAbbreviation()] }}#}
                                 <p>
                                     <a class="btn btn-primary"
                                        href="{{ path(
@@ -44,7 +45,7 @@
                                         {
                                            'specialtyStr':specialty.getAbbreviation(),
                                            'requester-group':requesterGroup.getUrlSlug(),
-                                            'collaborating-division':
+                                            'collaborating-division':collDivsFiltered[specialty.getAbbreviation()]
                                         }
                                        ) }}"
                                     >{{ specialty.getName() }} Project Request</a>
