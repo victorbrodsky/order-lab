@@ -870,7 +870,8 @@ class Project {
      */
     private $fundDescription;
     ////////////// EOF Additional fields from #295 //////////////
-    
+
+    ////////////// #295 //////////////
     //#295: add a new field titled “Requester group:” showing the values from the list manager’s
     // new “Translational research project requester group” list
     // (“Internal - WCM Pathology Faculty” and “External - Non-WCM Pathology Faculty”)
@@ -882,6 +883,16 @@ class Project {
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $requesterGroup;
+
+//    /**
+//     * Computational translational project categories: Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
+//     *
+//     * @ORM\ManyToOne(targetEntity="CompCategoryList")
+//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+//     */
+//    private $compCategory;
+    ////////////// EOF #295 //////////////
+
 
 
     public function __construct($user=null) {

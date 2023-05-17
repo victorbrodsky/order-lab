@@ -10139,6 +10139,8 @@ class AdminController extends OrderAbstractController
             "USCAP" =>                              array("uscap",          "USCAP",            "USCAP", "USCAP"), //USCAP (prefix USCAP)
             "Anatomic Pathology" =>                 array("ap",             "AP",               "AP",    "AP"),    //Anatomic Pathology (prefix AP)
             "Clinical Pathology" =>                 array("cp",             "CP",               "CP",    "CP"), //Clinical Pathology (prefix CP)
+
+            "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP")
         );
 
         $flush = false;
