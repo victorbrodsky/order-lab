@@ -884,13 +884,15 @@ class Project {
      */
     private $requesterGroup;
 
-//    /**
-//     * Computational translational project categories: Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
-//     *
-//     * @ORM\ManyToOne(targetEntity="CompCategoryList")
-//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-//     */
-//    private $compCategory;
+    //24- On https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=Internal&collaborating-division=CSP
+    // and on https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=External&collaborating-division=CSP ,
+    // set the checkbox “[v] Computational Pathology” to checked on load for question
+    // “Which division(s) are you collaborating with?:“
+    // and under it (because it is checked), unhide a question titled “Computational study category:”
+    // showing the five members of the list “Computational translational project categories”
+    // as unchecked check boxes. If “[v] Computational Pathology” checkbox
+    // on any New Project Request page is unchecked (as an answer to “Which division(s)
+    // are you collaborating with?:“), CLEAR/uncheck the answers for and hide the “Computational study category:” question/field.
     /**
      * Computational translational project categories (Types): Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
      *
