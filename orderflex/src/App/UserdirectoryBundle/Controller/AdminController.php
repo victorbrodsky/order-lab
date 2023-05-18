@@ -1052,7 +1052,7 @@ class AdminController extends OrderAbstractController
         $count_generateCollDivList = $this->generateCollDivList();
         $count_generateIrbStatusList = $this->generateIrbStatusList();
         $count_generateRequesterGroupList = $this->generateRequesterGroupList();
-        $count_generateCompCategoryList = $this->generateRequesterGroupList();
+        $count_generateCompCategoryList = $this->generateCompCategoryList();
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
