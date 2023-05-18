@@ -829,10 +829,14 @@ Show this accordion by default in an open + visible state.
 {% macro collDivs( form, project, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-    {% set hideshow = "display: none;" %}
+    {% set hideshowCollLabs = "display: none;" %}
+    {% set hideshowCompTypes = "display: none;" %}
     {% for collDiv in project.collDivs %}
         {% if collDiv and collDiv.getName() == "Clinical Pathology" %}
-            {% set hideshow = "" %}
+            {% set hideshowCollLabs = "" %}
+        {% endif %}
+        {% if collDiv and collDiv.getName() == "Computational Pathology" %}
+            {% set hideshowCompTypes = "" %}
         {% endif %}
     {% endfor %}
 
@@ -843,8 +847,12 @@ Show this accordion by default in an open + visible state.
         {#{{ formmacros.simplefield_checkbox( "Which division(s) are you collaborating with?:", project.collDivs, "", "disabled" ) }}#}
     {% endif %}
 
-    <div id="collDivs" style="{{ hideshow }}">
+    <div id="collLabs" style="{{ hideshowCollLabs }}">
         {{ formmacros.field(form.collLabs) }}
+    </div>
+
+    <div id="compTypes" style="{{ hideshowCompTypes }}">
+        {{ formmacros.field(form.compTypes) }}
     </div>
 {% endmacro %}
 

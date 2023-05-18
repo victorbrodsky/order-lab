@@ -248,29 +248,45 @@ function transresShowHideNeedStatSupport(needStatSupport) {
 
 function transresCollDivsListener() {
     $(".collDivs").on("change", function(e) {
-        var showcollDivs = false;
+        var showCollLabs = false;
+        var showCompTypes = false;
         $('input[name="oleg_translationalresearchbundle_project[collDivs][]"]').each(function () {
             //var sThisVal = (this.checked ? $(this).parent().text().trim() : "");
             if( this.checked ) {
                 var collDiv = $(this).parent().text().trim();
                 //console.log("change=" + collDiv);
                 if( collDiv == "Clinical Pathology" ) {
-                    showcollDivs = true;
+                    showCollLabs = true;
+                }
+                if( collDiv == "Computational Pathology" ) {
+                    showCompTypes = true;
                 }
             }
         });
-        transresShowHideCollDivs(showcollDivs);
+        transresShowHideCollLabs(showCollLabs);
+        transresShowHideCompTypes(showCompTypes);
     });
 }
-function transresShowHideCollDivs(collDivs) {
+function transresShowHideCollLabs(collDivs) {
     if( collDivs == true ) {
         //console.log("collDivs show");
-        $("#collDivs").show('slow');
+        $("#collLabs").show('slow');
     }
 
     if( collDivs == false ) {
         //console.log("collDivs hide");
-        $("#collDivs").hide('slow');
+        $("#collLabs").hide('slow');
+    }
+}
+function transresShowHideCompTypes(compTypes) {
+    if( compTypes == true ) {
+        //console.log("compTypes show");
+        $("#compTypes").show('slow');
+    }
+
+    if( compTypes == false ) {
+        //console.log("compTypes hide");
+        $("#compTypes").hide('slow');
     }
 }
 
