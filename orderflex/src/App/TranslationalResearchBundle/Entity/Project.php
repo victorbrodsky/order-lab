@@ -891,6 +891,16 @@ class Project {
 //     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
 //     */
 //    private $compCategory;
+    /**
+     * Computational translational project categories (Types): Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
+     *
+     * @ORM\ManyToMany(targetEntity="CompCategoryList")
+     * @ORM\JoinTable(name="transres_project_comptype",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="comptype_id", referencedColumnName="id")}
+     * )
+     **/
+    private $compTypes;
     ////////////// EOF #295 //////////////
 
 
@@ -921,6 +931,7 @@ class Project {
         $this->collLabs = new ArrayCollection();
         $this->collDivs = new ArrayCollection();
         $this->submitInvestigators = new ArrayCollection();
+        $this->compTypes = new ArrayCollection();
 
         //$this->reminderEmails = new ArrayCollection();
 
@@ -2754,6 +2765,25 @@ class Project {
     public function removeSubmitInvestigator($item)
     {
         $this->submitInvestigators->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompTypes()
+    {
+        return $this->compTypes;
+    }
+    public function addCompType($item)
+    {
+        if( $item && !$this->compTypes->contains($item) ) {
+            $this->compTypes->add($item);
+        }
+        return $this;
+    }
+    public function removeCompType($item)
+    {
+        $this->compTypes->removeElement($item);
     }
 
     /////////// Additional Details (8) ///////////////

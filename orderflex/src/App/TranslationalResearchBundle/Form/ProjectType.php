@@ -969,6 +969,24 @@ class ProjectType extends AbstractType
             },
         ));
 
+        $builder->add('compTypes', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:CompCategoryList',
+            'label' => 'Computational study category:',
+            'required' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type compTypes'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
+
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         //echo "otherUserParam=".$this->params['otherUserParam']."<br>";
