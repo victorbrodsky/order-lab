@@ -1592,10 +1592,15 @@ class Project {
     }
 
     /**
+     * 'Yes' or 'No'
+     *
      * @param mixed $involveHumanTissue
      */
     public function setInvolveHumanTissue($involveHumanTissue)
     {
+        if( $involveHumanTissue ) {
+            $involveHumanTissue = ucfirst($involveHumanTissue);
+        }
         $this->involveHumanTissue = $involveHumanTissue;
     }
 

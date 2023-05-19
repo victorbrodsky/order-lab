@@ -1399,6 +1399,14 @@ class ProjectController extends OrderAbstractController
             $collDivObject = $transresUtil->getCollaborationDivObject($collDivStr);
             if( $collDivObject ) {
                 $project->addCollDiv($collDivObject);
+
+                //On CSP set the radio button for the “Will this project involve human tissue?” to “No” by default on load
+                //echo "collDivStr=".strtolower($collDivStr)."<br>";
+                if( strtolower($collDivStr) == "csp" ) {
+                    //involveHumanTissue
+                    //echo "set involveHumanTissue to No<br>";
+                    $project->setInvolveHumanTissue("No");
+                }
             }
         }
 

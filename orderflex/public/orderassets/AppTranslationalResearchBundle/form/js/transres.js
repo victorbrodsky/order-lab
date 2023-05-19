@@ -276,6 +276,8 @@ function transresShowHideCollLabs(collDivs) {
     if( collDivs == false ) {
         //console.log("collDivs hide");
         $("#collLabs").hide('slow');
+        //uncheck all answers
+        $('#collLabs').find('input:checkbox').removeAttr('checked');
     }
 }
 function transresShowHideCompTypes(compTypes) {
@@ -287,6 +289,8 @@ function transresShowHideCompTypes(compTypes) {
     if( compTypes == false ) {
         //console.log("compTypes hide");
         $("#compTypes").hide('slow');
+        //uncheck all answers
+        $('#compTypes').find('input:checkbox').removeAttr('checked');
     }
 }
 
