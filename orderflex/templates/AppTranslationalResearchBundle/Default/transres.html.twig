@@ -882,6 +882,7 @@ Show this accordion by default in an open + visible state.
                     {% endif %}
                     {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
 
+                    {#project.principalIrbInvestigator={{ project.principalIrbInvestigator }}#}
                     {% if cycle == "show" %}
                         {% set principalIrbInvestigators = [project.principalIrbInvestigator] %}
                     {% else %}
@@ -977,6 +978,7 @@ Show this accordion by default in an open + visible state.
         <div class="well well-sm">
             <div style="text-align: center;">
                 <p>
+                    {#usersEntity|length={{ usersEntity|length }}#}
                     <strong>{{ usersForm.vars.label }}</strong>
                     {% if usersEntity|length == 0 %}
                         None

@@ -2717,7 +2717,7 @@ class ProjectController extends OrderAbstractController
 
         $pageUrl = $this->generateUrl(
             //'translationalresearch_project_show',
-            'translationalresearch_project_show_simple',
+            'translationalresearch_project_show_simple_pdf',
             array('id'=>$id),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); // use absolute path!
@@ -2745,5 +2745,16 @@ class ProjectController extends OrderAbstractController
         //exit();
     }
 
+    /**
+     * Finds and displays a project entity on a simple html page
+     * via ajax when project is changed on the new work request page.
+     *
+     * @Route("/project/show-simple-pdf/{id}", name="translationalresearch_project_show_simple_pdf", methods={"GET"}, options={"expose"=true})
+     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
+     */
+    public function showProjectPdfAction(Request $request, Project $project)
+    {
+        return $this->showAction($request, $project);
+    }
 
 }
