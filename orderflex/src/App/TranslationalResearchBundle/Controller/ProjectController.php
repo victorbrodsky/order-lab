@@ -2672,4 +2672,77 @@ class ProjectController extends OrderAbstractController
     }
 
 
+    /**
+     * Download one single project
+     *
+     * @Route("/download-projects-pdf/{id}", methods={"GET"}, name="translationalresearch_download_projects_pdf")
+     */
+    public function downloadProjectPdfAction(Request $request, $id=null) {
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //$limit = 2; //testing
+        //exit("ids=".$ids);
+        //exit("limit=".$limit);
+
+        if( !$id ) {
+            exit("Project id is null, no project to export to pdf");
+        }
+
+        //$transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = "Project-".date('m-d-Y').".pdf";
+        //exit("filename=".$fileName);
+
+        //testing
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        $workRequests = $transresRequestUtil->getProjectMiniRequests(3370);
+//        foreach($workRequests as $request) {
+//            print_r($request);
+//            $oid = $request['oid'];
+//            exit('oid='.$oid);
+//        }
+//        exit('111');
+
+        //take care of authentication
+        $session = $request->getSession(); //$this->container->get('session');
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
+        $pageUrl = $this->generateUrl(
+            'translationalresearch_project_show',
+            array('id'=>$id),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); // use absolute path!
+
+        //$snappyPdf = $this->container->get('knp_snappy.pdf');
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $snappyPdf = $fellappRepGen->getSnappyPdf();
+
+        //$output = $fellappRepGen->getSnappyPdf()->getOutput
+        $output = $snappyPdf->getOutput($pageUrl, array(
+            'cookie' => array(
+                'PHPSESSID' => $PHPSESSID
+            )));
+
+        return new Response(
+            $output,
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
+
+        //$transresUtil->downloadProjectPdf($id,$fileName,$limit);
+        //header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //exit();
+    }
+
+
 }
