@@ -2674,6 +2674,7 @@ class ProjectController extends OrderAbstractController
 
     /**
      * Download one single project
+     * Similarly as fellapp_download_interview_applicants_list_pdf
      *
      * @Route("/download-projects-pdf/{id}", methods={"GET"}, name="translationalresearch_download_projects_pdf")
      */
@@ -2715,7 +2716,8 @@ class ProjectController extends OrderAbstractController
         $PHPSESSID = $session->getId();
 
         $pageUrl = $this->generateUrl(
-            'translationalresearch_project_show',
+            //'translationalresearch_project_show',
+            'translationalresearch_project_show_simple',
             array('id'=>$id),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); // use absolute path!
@@ -2724,7 +2726,6 @@ class ProjectController extends OrderAbstractController
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $snappyPdf = $fellappRepGen->getSnappyPdf();
 
-        //$output = $fellappRepGen->getSnappyPdf()->getOutput
         $output = $snappyPdf->getOutput($pageUrl, array(
             'cookie' => array(
                 'PHPSESSID' => $PHPSESSID
