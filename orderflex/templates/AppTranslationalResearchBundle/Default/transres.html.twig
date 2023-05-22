@@ -879,6 +879,11 @@ Show this accordion by default in an open + visible state.
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
 
+    {#Show full requester info#}
+    {#{% if cycle == "pdf" %}#}
+        {#{% set cycle = "show" %}#}
+    {#{% endif %}#}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectRequestersHeading">
@@ -992,11 +997,6 @@ Show this accordion by default in an open + visible state.
     {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
-        {% if usersEntity|length == 0 %}
-            <p>
-                <strong>{{ usersForm.vars.label }}</strong> None
-            </p>
-        {% else %}
         <div class="well well-sm">
             <div style="text-align: center;">
                 <p>
@@ -1013,7 +1013,6 @@ Show this accordion by default in an open + visible state.
                 {% endif %}
             {% endfor %}
         </div>
-        {% endif %}
         {% do usersForm.setRendered %}
     {% else %}
         {#{{ formmacros.field(usersForm) }}#}
@@ -1048,7 +1047,7 @@ Show this accordion by default in an open + visible state.
 {% macro userInfo( userForm, userEntity, cycle, fieldType ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% if cycle == "show" or cycle == "review" %}
+    {% if cycle == "show" or cycle == "review" or cycle == "pdf" %}
         {% if fieldType is defined and fieldType == 'left' %}
             {% set colLeft = 2 %}
             {% set colMiddle = 6 %}

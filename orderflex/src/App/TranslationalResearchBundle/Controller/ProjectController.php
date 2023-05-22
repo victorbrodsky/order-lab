@@ -2700,6 +2700,13 @@ class ProjectController extends OrderAbstractController
             exit("Project id is null, no project to export to pdf");
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($id);
+
+        if( !$project ) {
+            exit("Project not found by id $id");
+        }
+
         //$transresUtil = $this->container->get('transres_util');
 
         // set_time_limit(int $seconds): bool
@@ -2707,7 +2714,16 @@ class ProjectController extends OrderAbstractController
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
-        $fileName = "Project-".date('m-d-Y').".pdf";
+        //$fileName = "Project-".date('m-d-Y').".pdf";
+
+        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
+        $creationDate = new \DateTime();
+        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
+        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
+        $fileName = str_replace(" ","-",$fileName);
+
+        //Project-Request-APCP3379-Generated-On-05-22-2023-at-16-58-35-EDT.pdf
         //exit("filename=".$fileName);
 
         //testing
