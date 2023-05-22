@@ -2,6 +2,11 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+    {% set collapseShow = "" %}
+    {% if cycle == "pdf" %}
+        {% set collapseShow = "in" %}
+    {% endif %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectInfoHeading">
@@ -11,7 +16,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="projectInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectInfoHeading">
+            <div id="projectInfo" class="panel-collapse collapse {{ collapseShow }}" role="tabpanel" aria-labelledby="projectInfoHeading">
                 <div class="panel-body">
 
                     {% if project.exportId %}
@@ -52,9 +57,11 @@
                     {{ transres.updateInfo(form,cycle) }}
 
                     {#expired notification email#}
-                    <hr>
-                    {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
-                    {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+                    {% if cycle != "pdf" %}
+                        <hr>
+                        {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
+                        {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+                    {% endif %}
 
                     {#Project Closure/Reactivation#}
                     {#{% if form.closureReason is defined %}#}
@@ -72,14 +79,16 @@
                         {#{{ formmacros.field(form.targetStateRequester) }}#}
                     {#{% endif %}#}
                     {% if cycle != "new" %}
-                        <hr>
+                        {% if cycle != "pdf" %}
+                            <hr>
+                        {% endif %}
                         {#cycle={{ cycle }}<br>#}
                         {#view page: show if not empty#}
                         {#edit page: always show#}
-                        {% if cycle == "show" and project.getClosureReason() %}
+                        {% if (cycle == "show" or cycle == "pdf") and project.getClosureReason() %}
                             {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "textarea", "disabled") }}
                         {% endif %}
-                        {% if cycle == "show" and project.getReactivationReason() %}
+                        {% if (cycle == "show" or cycle == "pdf") and project.getReactivationReason() %}
                             {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "textarea", "disabled") }}
                         {% endif %}
 
@@ -432,6 +441,7 @@
                         {#{{ formmacros.field(form.irbStatusExplain) }}#}
                         {{ transres.irbStatusList(form,project,cycle) }}
 
+                        {% if cycle != "pdf" %}
                         <div class="well form-element-holder user-irbApprovalLetters">
                             <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
                             <div class="row withpaddingtop">
@@ -440,6 +450,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
                     </div>
 
@@ -488,8 +499,9 @@
 
 {#hide if Project Documents does not exists#}
 {% macro projectDocument( form, project, cycle ) %}
+    {% if cycle != "pdf" %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 
     {% if cycle == "review" %}
         {% set cycle = "show" %}
@@ -547,7 +559,7 @@
         </div> <!-- panel panel-info -->
 
     {% endif %}
-
+    {% endif %}
 {% endmacro %}
 
 {#
@@ -589,6 +601,7 @@ Show this accordion by default in an open + visible state.
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}
 {% macro tissueRequestDetails( form, project, cycle ) %}
+
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
@@ -599,7 +612,11 @@ Show this accordion by default in an open + visible state.
 
     {% if form %}
         {% set asFormOrEntity = "asForm" %}
-        {% set humanTissueForms = form.humanTissueForms %}
+        {% if form.humanTissueForms is defined %}
+            {% set humanTissueForms = form.humanTissueForms %}
+        {% else %}
+            {% set humanTissueForms = null %}
+        {% endif %}
     {% else %}
         {% set cycle = "show" %}
         {% set asFormOrEntity = "asEntity" %}
@@ -642,6 +659,7 @@ Show this accordion by default in an open + visible state.
 
                     <div id="transres-project-humanRequestDetails" style="{{ humanRequestDetails }}">
 
+                        {% if cycle != "pdf" %}
                         <div id="transres-project-humanTissueForms" class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
                             <label class="col-xs-12 control-label">Human Tissue Form</label>
                             <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
@@ -662,14 +680,15 @@ Show this accordion by default in an open + visible state.
                         {#<br>#}
                         <hr>
                         {#<br>#}
+                        {% endif %}
 
-                        <h4>
+                        <h5>
                             <p class="text-primary">
                                 {#The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.#}
                                 {{ transres_util.getTransresSiteProjectParameter('specimenDetailsComment',project) }}
                             </p>
-                        </h4>
-                        <br>
+                        </h5>
+                        {#<br>#}
 
                         {{ transres.tissueProcurement(form,project,cycle) }}
                         {{ transres.archivalSpecimens(form,project,cycle) }}
@@ -686,7 +705,6 @@ Show this accordion by default in an open + visible state.
             </div>
         </div>
     </div>
-
 {% endmacro %}
 {% macro tissueProcurement( form, project, cycle ) %}
 
@@ -882,11 +900,8 @@ Show this accordion by default in an open + visible state.
                     {% endif %}
                     {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
 
-                    {#project.principalIrbInvestigator={{ project.principalIrbInvestigator }}#}
                     {% if cycle == "show" %}
-                        {#{% set principalIrbInvestigators = [project.principalIrbInvestigator] %}#}
                         {% set principalIrbInvestigators = project.getPrincipalIrbInvestigators() %}
-                        {#principalIrbInvestigators={{ principalIrbInvestigators|length }}#}
                     {% else %}
                         {% set principalIrbInvestigators = null %}
                     {% endif %}
@@ -980,7 +995,6 @@ Show this accordion by default in an open + visible state.
         <div class="well well-sm">
             <div style="text-align: center;">
                 <p>
-                    {#usersEntity|length={{ usersEntity|length }}#}
                     <strong>{{ usersForm.vars.label }}</strong>
                     {% if usersEntity|length == 0 %}
                         None

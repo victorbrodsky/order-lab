@@ -617,10 +617,12 @@
                                     <i class="fa fa-file-pdf fa-lg"></i> Export project summary to a PDF</a>
                             </li>
 
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                             <li>
-                                <a href="{{ path('translationalresearch_download_projects_pdf',{'id':project.id}) }}" target="_blank">
-                                    View project PDF page test</a>
+                                <a href="{{ path('translationalresearch_project_show_simple_pdf',{'id':project.id}) }}" target="_blank"
+                                >View project summary (for PDF testing)</a>
                             </li>
+                            {% endif %}
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
                                 {#<li>#}

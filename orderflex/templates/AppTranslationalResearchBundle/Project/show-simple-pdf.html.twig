@@ -3,7 +3,7 @@
 {% block header %}
 {% endblock %}
 
-{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
 
@@ -48,8 +48,8 @@
 
         {{ transres.projectInfo(form,project,cycle) }}
 
-        {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
-        {{ transres.projectReviews(form,cycle,sitename,1) }}
+        {#{{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}#}
+        {#{{ transres.projectReviews(form,cycle,sitename,1) }}#}
 
     {{ form_end(form) }}
 

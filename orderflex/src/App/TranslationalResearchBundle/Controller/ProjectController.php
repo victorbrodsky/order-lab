@@ -1962,7 +1962,7 @@ class ProjectController extends OrderAbstractController
      * @Route("/project/show/{id}", name="translationalresearch_project_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/show.html.twig")
      */
-    public function showAction(Request $request, Project $project)
+    public function showAction(Request $request, Project $project, $cycle="show")
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -1973,7 +1973,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
-        $cycle = "show";
+        //$cycle = "show";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 
@@ -2349,6 +2349,14 @@ class ProjectController extends OrderAbstractController
         $params['showAdminReviewer'] = true;
         $params['showCommitteeReviewer'] = true;
         $params['showFinalReviewer'] = true;
+
+        if( $cycle == "pdf" ) {
+            $params['showIrbReviewer'] = false;
+            $params['showAdminReviewer'] = false;
+            $params['showCommitteeReviewer'] = false;
+            $params['showFinalReviewer'] = false;
+        }
+
         if(
             $this->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
@@ -2410,7 +2418,7 @@ class ProjectController extends OrderAbstractController
             }
         }
 
-        if( $cycle == "show" || $cycle == "review" ) {
+        if( $cycle == "show" || $cycle == "review" || $cycle == "pdf" ) {
             $disabled = true;
         }
 
@@ -2731,6 +2739,9 @@ class ProjectController extends OrderAbstractController
                 'PHPSESSID' => $PHPSESSID
             )));
 
+        //dump($output);
+        //exit('111');
+
         return new Response(
             $output,
             200,
@@ -2754,7 +2765,7 @@ class ProjectController extends OrderAbstractController
      */
     public function showProjectPdfAction(Request $request, Project $project)
     {
-        return $this->showAction($request, $project);
+        return $this->showAction($request, $project, "pdf");
     }
 
 }

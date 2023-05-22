@@ -2951,6 +2951,13 @@ class Project {
         if( $this->getOtherResource() ) {
             return true;
         }
+        if( $this->getFundDescription() ) {
+            return true;
+        }
+        //fundByPath (boolean) Yes, No
+        if( $this->getFundByPath() !== null ) {
+            return true;
+        }
         return false;
     }
     /////////// EOF Additional Details (8) ///////////////

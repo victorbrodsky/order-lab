@@ -45,9 +45,9 @@ class ProjectType extends AbstractType
 
         //$user_tz = $this->params['user']->getPreferences()->getTimezone();
 
-        if( $this->params['cycle'] != 'new' ) {
+        if ($this->params['cycle'] != 'new') {
 
-            $builder->add('state',ChoiceType::class, array(
+            $builder->add('state', ChoiceType::class, array(
                 'label' => 'Status:',
                 'required' => false,
                 'disabled' => $this->params['disabledState'],
@@ -67,7 +67,7 @@ class ProjectType extends AbstractType
 
             $builder->add('stateComment', null, array(
                 'label' => "Status Comment:",
-                'attr' => array('class'=>'textarea form-control')
+                'attr' => array('class' => 'textarea form-control')
             ));
         }
 
@@ -78,10 +78,10 @@ class ProjectType extends AbstractType
 //            ));
 //        }
 
-        if(
+        if (
             $this->params['cycle'] != 'new' &&
             //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
-            $this->params['trpAdmin'] && 
+            $this->params['trpAdmin'] &&
             $this->project->getCreateDate()
         ) {
             $builder->add('createDate', DateType::class, array(
@@ -94,7 +94,7 @@ class ProjectType extends AbstractType
                 'required' => false,
             ));
 
-            if(
+            if (
                 $this->params['cycle'] == 'edit' &&
                 //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
                 $this->params['trpAdmin']
@@ -107,7 +107,7 @@ class ProjectType extends AbstractType
                 ));
             } else {
                 $builder->add('submitter', null, array(
-                    'label' => "Submitted By:", 
+                    'label' => "Submitted By:",
                     'disabled' => true,
                     'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
                 ));
@@ -136,7 +136,7 @@ class ProjectType extends AbstractType
         }
 
         //visible only to TRP Admin, TRP Tech, Deputy Platform Admin, and Platform Admin
-        if( 1 ) {
+        if (1) {
             if (
                 //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
                 //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_TECHNICIAN')
@@ -144,7 +144,7 @@ class ProjectType extends AbstractType
                 $this->params['trpTech']
             ) {
                 //if( $this->params['cycle'] == "new" ) {
-                if( 1 ) {
+                if (1) {
                     $builder->add('priceList', EntityType::class, array(
                         'class' => 'AppTranslationalResearchBundle:PriceTypeList',
                         'choice_label' => 'name',
@@ -161,8 +161,7 @@ class ProjectType extends AbstractType
                                 ->setParameters(array(
                                     'typedef' => 'default',
                                     'typeadd' => 'user-added',
-                                ))
-                                ;
+                                ));
                         },
                     ));
                 } else {
@@ -177,8 +176,7 @@ class ProjectType extends AbstractType
                         'attr' => array('class' => 'combobox combobox-width'),
                         'query_builder' => function (EntityRepository $er) {
                             return $er->createQueryBuilder('list')
-                                ->orderBy("list.orderinlist", "ASC")
-                                ;
+                                ->orderBy("list.orderinlist", "ASC");
                         },
                     ));
                 }
@@ -188,23 +186,23 @@ class ProjectType extends AbstractType
         }
 
         //////////// Project fields ////////////
-        $builder->add('title',null,array(
+        $builder->add('title', null, array(
             'required' => false,
-            'label'=>"Title:",
-            'attr' => array('class'=>'textarea form-control')
+            'label' => "Title:",
+            'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('irbNumber',null, array(
-            'label' => $this->params['transresUtil']->getHumanName().' Number:',
+        $builder->add('irbNumber', null, array(
+            'label' => $this->params['transresUtil']->getHumanName() . ' Number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('funded',CheckboxType::class,array(
+        $builder->add('funded', CheckboxType::class, array(
             'required' => false,
-            'label'=>"Has this project been funded?:", //"Funded:",
+            'label' => "Has this project been funded?:", //"Funded:",
             //'attr' => array('class'=>'form-control transres-funded')
-            'attr' => array('class'=>'transres-funded')
+            'attr' => array('class' => 'transres-funded')
         ));
 //        $builder->add('funded', ChoiceType::class, array(
 //            'label' => "Has this project been funded?:",
@@ -219,15 +217,15 @@ class ProjectType extends AbstractType
 //            'attr' => array('class' => 'horizontal_type collInstPi')
 //        ));
 
-        $builder->add('fundedAccountNumber',null, array(
+        $builder->add('fundedAccountNumber', null, array(
             'label' => 'If funded, please provide account number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('irbExpirationDate',DateType::class,array(
+        $builder->add('irbExpirationDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => $this->params['transresUtil']->getHumanName()." Expiration Date:",
+            'label' => $this->params['transresUtil']->getHumanName() . " Expiration Date:",
             'format' => 'MM/dd/yyyy',
             'html5' => false,
             //'view_timezone' => $user_tz,
@@ -236,7 +234,7 @@ class ProjectType extends AbstractType
             'required' => false,
         ));
 
-        if( $this->params['cycle'] != 'new' && $this->params['admin'] ) {
+        if ($this->params['cycle'] != 'new' && $this->params['admin']) {
             $builder->add('expectedExpirationDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Expected Expiration Date (for non-funded project only):",
@@ -250,7 +248,7 @@ class ProjectType extends AbstractType
 
             //visible only to the TRP admin role (or the relevant Admin role per project type - CTP,  MISI) and only on the Edit/View pages
             //$this->params['transresUtil']
-            if( $this->params['admin'] ) {
+            if ($this->params['admin']) {
                 $builder->add('reasonForStatusChange', null, array(
                     'label' => "Reason for status change or closure:",
                     'attr' => array('class' => 'textarea form-control')
@@ -259,7 +257,7 @@ class ProjectType extends AbstractType
         }
 
         ///////////////// Hide 7 fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
-        if(0) {
+        if (0) {
             $builder->add('budgetSummary', null, array(
                 'label' => "Provide a Detailed Budget Outline/Summary:",
                 'attr' => array('class' => 'textarea form-control')
@@ -275,16 +273,16 @@ class ProjectType extends AbstractType
 //                'attr' => array('class'=>'textarea form-control')
 //            ));
 
-            $builder->add('numberOfCases',TextType::class,array(
+            $builder->add('numberOfCases', TextType::class, array(
                 'label' => "Number of Cases:",
                 'required' => false,
-                'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+                'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
             ));
 
-            $builder->add('numberOfCohorts',TextType::class,array(
+            $builder->add('numberOfCohorts', TextType::class, array(
                 'label' => "Number of Cohorts:",
                 'required' => false,
-                'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+                'attr' => array('class' => 'form-control digit-mask mask-text-align-left')
             ));
 
 //            $builder->add('expectedResults',null,array(
@@ -292,23 +290,23 @@ class ProjectType extends AbstractType
 //                'attr' => array('class'=>'textarea form-control')
 //            ));
 
-            $builder->add('expectedCompletionDate',null,array(
+            $builder->add('expectedCompletionDate', null, array(
                 'label' => "Expected Completion Date:",
                 'widget' => 'single_text',
                 'format' => 'MM/dd/yyyy',
                 'html5' => false,
-                'attr' => array('class'=>'datepicker form-control')
+                'attr' => array('class' => 'datepicker form-control')
             ));
         }
         ///////////////// EOF Hide the fields (from $budgetSummary to $expectedCompletionDate) ///////////////////
 
-        $builder->add('description',null,array(
+        $builder->add('description', null, array(
             'label' => "Brief Description:",
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('totalCost', null, array(
-            'label' => 'Estimated total cost / Project budget amount ($) ('.$this->params['feeScheduleLink'].'):', //Estimated Total Costs ($)
+            'label' => 'Estimated total cost / Project budget amount ($) (' . $this->params['feeScheduleLink'] . '):', //Estimated Total Costs ($)
             'required' => true,
             //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
             //'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
@@ -316,14 +314,14 @@ class ProjectType extends AbstractType
         ));
 
 
-        if( $this->params['cycle'] != "new" ) {
+        if ($this->params['cycle'] != "new") {
             $builder->add('approvedProjectBudget', null, array(
                 'label' => 'Approved Project Budget ($):',
                 'required' => false,
                 'attr' => array('class' => 'form-control currency-mask-without-prefix transres-project-approvedProjectBudget'),
             ));
 
-            if(
+            if (
                 //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
                 //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER')
                 $this->params['trpAdmin'] ||
@@ -355,7 +353,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
-            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getHumanName().' approval?:',
+            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -372,7 +370,7 @@ class ProjectType extends AbstractType
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
-            'label' => 'Is this project exempt from '.$this->params['transresUtil']->getAnimalName().' approval?:',
+            'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
             'query_builder' => function (EntityRepository $er) {
@@ -386,15 +384,15 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add('iacucNumber',null, array(
-            'label' => $this->params['transresUtil']->getAnimalName().' Number:',
+        $builder->add('iacucNumber', null, array(
+            'label' => $this->params['transresUtil']->getAnimalName() . ' Number:',
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('iacucExpirationDate',DateType::class,array(
+        $builder->add('iacucExpirationDate', DateType::class, array(
             'widget' => 'single_text',
-            'label' => $this->params['transresUtil']->getAnimalName()." Expiration Date:",
+            'label' => $this->params['transresUtil']->getAnimalName() . " Expiration Date:",
             'format' => 'MM/dd/yyyy',
             'html5' => false,
             //'view_timezone' => $user_tz,
@@ -406,9 +404,9 @@ class ProjectType extends AbstractType
 
 
         $addUserOnFly = "";
-        if( $this->params['cycle'] == "new" || $this->params['cycle'] == "edit" ) {
+        if ($this->params['cycle'] == "new" || $this->params['cycle'] == "edit") {
             $sitename = "'translationalresearch'";
-            $otherUserParam = "'".$this->params['otherUserParam']."'";
+            $otherUserParam = "'" . $this->params['otherUserParam'] . "'";
 
             //Original
             //$addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
@@ -419,76 +417,76 @@ class ProjectType extends AbstractType
             //$addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#user-add-new-user">Add New</a>)';
 
             //Preloaded
-            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
+            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ',' . $otherUserParam . ');">Add New</a>)';
         }
 
-        $builder->add( 'principalInvestigators', EntityType::class, array(
+        $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s) for the project$addUserOnFly:",
-            'required'=> true,
+            'label' => "Principal Investigator(s) for the project$addUserOnFly:",
+            'required' => true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
-        $builder->add( 'principalIrbInvestigator', EntityType::class, array(
+        $builder->add('principalIrbInvestigator', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Principal Investigator listed on the ".$this->params['transresUtil']->getHumanName()." application$addUserOnFly:",
-            'required'=> false,
+            'label' => "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
+            'required' => false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         //Add submitInvestigators similar to coInvestigators
         $builder->add('submitInvestigators', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
-            'required'=> false,
+            'label' => "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
+            'required' => false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
-        $builder->add( 'coInvestigators', EntityType::class, array(
+        $builder->add('coInvestigators', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Co-Investigator(s)$addUserOnFly:",
-            'required'=> false,
+            'label' => "Co-Investigator(s)$addUserOnFly:",
+            'required' => false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
-        $builder->add( 'pathologists', EntityType::class, array(
+        $builder->add('pathologists', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> $this->params['institutionName']." Pathologist(s) Involved$addUserOnFly:",
-            'required'=> false,
+            'label' => $this->params['institutionName'] . " Pathologist(s) Involved$addUserOnFly:",
+            'required' => false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
-        $builder->add( 'contacts', EntityType::class, array(
+        $builder->add('contacts', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Contact(s)$addUserOnFly:",
-            'required'=> true,
+            'label' => "Contact(s)$addUserOnFly:",
+            'required' => true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
-        $builder->add( 'billingContact', EntityType::class, array(
+        $builder->add('billingContact', EntityType::class, array(
             'class' => 'AppUserdirectoryBundle:User',
-            'label'=> "Billing Contact$addUserOnFly:",
-            'required'=> false,
+            'label' => "Billing Contact$addUserOnFly:",
+            'required' => false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
         ));
 
         //Reviews
         //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
-        if( $this->params['showIrbReviewer'] ) {
+        if ($this->params['showIrbReviewer']) {
             //echo "show irb_review<br>";
             $this->params['stateStr'] = "irb_review";
             $this->params['standAlone'] = false;
@@ -508,7 +506,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['showAdminReviewer'] ) {
+        if ($this->params['showAdminReviewer']) {
             //echo "show admin_review<br>";
             $this->params['stateStr'] = "admin_review";
             $this->params['standAlone'] = false;
@@ -528,7 +526,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['showCommitteeReviewer'] ) {
+        if ($this->params['showCommitteeReviewer']) {
             //echo "show committee_review<br>";
             $this->params['stateStr'] = "committee_review";
             $this->params['standAlone'] = false;
@@ -548,7 +546,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['showFinalReviewer'] ) {
+        if ($this->params['showFinalReviewer']) {
             //echo "show final_review<br>";
             $this->params['stateStr'] = "final_review";
             $this->params['standAlone'] = false;
@@ -569,7 +567,7 @@ class ProjectType extends AbstractType
         }
 
 
-        if( 0 && $this->params['cycle'] != 'show' && $this->params['cycle'] != 'review' ) { //
+        if (0 && $this->params['cycle'] != 'show' && $this->params['cycle'] != 'review') { //
             /////////////////////////////////////// messageCategory ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $message = $event->getData();
@@ -627,13 +625,29 @@ class ProjectType extends AbstractType
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
 
-        //hide if Project Documents does not exists
-        if( $this->params['cycle'] != 'new' ) {
-            $projectDocuments = $this->project->getDocuments();
-            if( $projectDocuments && count($projectDocuments) > 0 ) {
-                $builder->add('documents', CollectionType::class, array(
+        //don't show attached document's links on pdf, these docs will be embedded on the project's pdf.
+        if ($this->params['cycle'] != 'pdf') {
+            //hide if Project Documents does not exists
+            if ($this->params['cycle'] != 'new') {
+                $projectDocuments = $this->project->getDocuments();
+                if ($projectDocuments && count($projectDocuments) > 0) {
+                    $builder->add('documents', CollectionType::class, array(
+                        'entry_type' => DocumentType::class,
+                        'label' => 'Document(s):',
+                        'allow_add' => true,
+                        'allow_delete' => true,
+                        'required' => false,
+                        'by_reference' => false,
+                        'prototype' => true,
+                        'prototype_name' => '__documentsid__',
+                    ));
+                }
+            }
+
+            if ($this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit') {
+                $builder->add('irbApprovalLetters', CollectionType::class, array(
                     'entry_type' => DocumentType::class,
-                    'label' => 'Document(s):',
+                    'label' => $this->params['transresUtil']->getHumanName() . ' Approval Letter:',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'required' => false,
@@ -642,12 +656,10 @@ class ProjectType extends AbstractType
                     'prototype_name' => '__documentsid__',
                 ));
             }
-        }
 
-        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
-            $builder->add('irbApprovalLetters', CollectionType::class, array(
+            $builder->add('humanTissueForms', CollectionType::class, array(
                 'entry_type' => DocumentType::class,
-                'label' => $this->params['transresUtil']->getHumanName().' Approval Letter:',
+                'label' => 'Human Tissue Form:',
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -656,17 +668,6 @@ class ProjectType extends AbstractType
                 'prototype_name' => '__documentsid__',
             ));
         }
-
-        $builder->add('humanTissueForms', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Human Tissue Form:',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
 
         //involveHumanTissue
         //ONLY for CP: For the following question: Will this project involve human tissue?
@@ -866,7 +867,7 @@ class ProjectType extends AbstractType
         //always show if new, edit
         //hide if show, review and empty
         $hideAdditionalDetails = false;
-        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'review' ) {
+        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'review' || $this->params['cycle'] == 'pdf' ) {
             if( $this->params['project']->hasAdditionalDetails() === false ) {
                 $hideAdditionalDetails = true;
             }
@@ -918,10 +919,30 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'textarea form-control')
             ));
 
+            $builder->add('fundByPath', ChoiceType::class, array(
+                'label' => "Is funding for this project requested from the Pathology Department?:",
+                'choices' => array(
+                    'Yes' => true,
+                    'No' => false
+                ),
+                'multiple' => false,
+                'required' => false,
+                'expanded' => true,
+                'placeholder' => false, //to remove 'Null' set placeholder to false
+                'attr' => array('class' => 'horizontal_type fundByPath')
+            ));
+
+            /// Additional fields from #295 ///
+            $builder->add('fundDescription', null, array(
+                'label' => "Please describe the planned expenses that comprise the budget for this project:",
+                'attr' => array('class' => 'textarea form-control')
+            ));
+
             $builder->add('otherResource', null, array(
                 'label' => "Other departmental resources requested:",
                 'attr' => array('class' => 'textarea form-control')
             ));
+            /// EOF Additional fields from #295 ///
         }
         //////////// EOF Additonal Details ////////////
         ////////////// EOF Additional fields from #294 //////////////
@@ -933,24 +954,6 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'textarea form-control')
             ));
         }
-
-        $builder->add('fundByPath', ChoiceType::class, array(
-            'label' => "Is funding for this project requested from the Pathology Department?:",
-            'choices' => array(
-                'Yes' => true,
-                'No' => false
-            ),
-            'multiple' => false,
-            'required' => false,
-            'expanded' => true,
-            'placeholder' => false, //to remove 'Null' set placeholder to false
-            'attr' => array('class' => 'horizontal_type fundByPath')
-        ));
-
-        $builder->add('fundDescription', null, array(
-            'label' => "Please describe the planned expenses that comprise the budget for this project:",
-            'attr' => array('class' => 'textarea form-control')
-        ));
         ////////////// EOF Additional fields from #294 //////////////
 
         $builder->add('requesterGroup', EntityType::class, array(
