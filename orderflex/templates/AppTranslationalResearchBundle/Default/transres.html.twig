@@ -992,6 +992,11 @@ Show this accordion by default in an open + visible state.
     {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
+        {% if usersEntity|length == 0 %}
+            <p>
+                <strong>{{ usersForm.vars.label }}</strong> None
+            </p>
+        {% else %}
         <div class="well well-sm">
             <div style="text-align: center;">
                 <p>
@@ -1008,6 +1013,7 @@ Show this accordion by default in an open + visible state.
                 {% endif %}
             {% endfor %}
         </div>
+        {% endif %}
         {% do usersForm.setRendered %}
     {% else %}
         {#{{ formmacros.field(usersForm) }}#}

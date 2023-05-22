@@ -2702,6 +2702,9 @@ class ProjectController extends OrderAbstractController
 
         //$transresUtil = $this->container->get('transres_util');
 
+        // set_time_limit(int $seconds): bool
+        set_time_limit(360);
+
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
         //$fileName = "Projects ".date('m/d/Y H:i').".xlsx";
         $fileName = "Project-".date('m-d-Y').".pdf";
