@@ -884,7 +884,9 @@ Show this accordion by default in an open + visible state.
 
                     {#project.principalIrbInvestigator={{ project.principalIrbInvestigator }}#}
                     {% if cycle == "show" %}
-                        {% set principalIrbInvestigators = [project.principalIrbInvestigator] %}
+                        {#{% set principalIrbInvestigators = [project.principalIrbInvestigator] %}#}
+                        {% set principalIrbInvestigators = project.getPrincipalIrbInvestigators() %}
+                        {#principalIrbInvestigators={{ principalIrbInvestigators|length }}#}
                     {% else %}
                         {% set principalIrbInvestigators = null %}
                     {% endif %}
@@ -947,7 +949,7 @@ Show this accordion by default in an open + visible state.
                     {#{% endif %}#}
 
                     {% if cycle == "show" %}
-                        {% set billingContacts = [project.billingContact] %}
+                        {% set billingContacts = project.getBillingContacts() %}
                     {% else %}
                         {% set billingContacts = null %}
                     {% endif %}

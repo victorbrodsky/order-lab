@@ -1410,7 +1410,9 @@ class Project {
     public function getPrincipalIrbInvestigators()
     {
         $principalIrbInvestigators = new ArrayCollection();
-        $principalIrbInvestigators->add($this->principalIrbInvestigator);
+        if( $this->getPrincipalIrbInvestigator() ) {
+            $principalIrbInvestigators->add($this->getPrincipalIrbInvestigator());
+        }
         return $principalIrbInvestigators;
     }
 
@@ -1488,9 +1490,10 @@ class Project {
     }
     public function getBillingContacts()
     {
-        //return array($this->billingContact);
         $billingContacts = new ArrayCollection();
-        $billingContacts->add($this->billingContact);
+        if( $this->getBillingContact() ) {
+            $billingContacts->add($this->getBillingContact());
+        }
         return $billingContacts;
     }
     /**

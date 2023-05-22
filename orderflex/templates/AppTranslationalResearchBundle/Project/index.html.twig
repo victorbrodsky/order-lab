@@ -617,6 +617,11 @@
                                     <i class="fa fa-file-pdf fa-lg"></i> Export project summary to a PDF</a>
                             </li>
 
+                            <li>
+                                <a href="{{ path('translationalresearch_download_projects_pdf',{'id':project.id}) }}" target="_blank">
+                                    View project PDF page test</a>
+                            </li>
+
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
                                 {#<li>#}
                                     {#<a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing only!)</a>#}
