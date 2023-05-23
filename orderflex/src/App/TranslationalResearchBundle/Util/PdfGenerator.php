@@ -671,4 +671,211 @@ class PdfGenerator
         //echo "generated ok! <br>";
     }
 
+    //project PDF generation
+    public function exportProjectPdf( $project, $request ) {
+        set_time_limit(360); //in seconds
+
+        $router = $this->container->get('router');
+
+        //take care of authentication
+        $session = $request->getSession(); //$this->container->get('session');
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
+        $pageUrl = $router->generate(
+            'translationalresearch_project_show_simple_pdf',
+            array('id'=>$project->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); // use absolute path!
+
+        //$snappyPdf = $this->container->get('knp_snappy.pdf');
+        //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        //$snappyPdf = $fellappRepGen->getSnappyPdf();
+
+        $output = $this->container->get('knp_snappy.pdf')->getOutput(
+            $pageUrl,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        );
+
+        //dump($output);
+        //exit('111');
+
+        return $output;
+    }
+    public function generateProjectPdf( $invoice, $authorUser, $request=null ) {
+
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        $logger = $this->container->get('logger');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( !$request ) {
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+        }
+
+        if( !$authorUser ) {
+            $authorUser = $userSecUtil->findSystemUser();
+        }
+
+        //generate file name. use PI in the pdf file name as per Ning, Jeff request.
+        $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice",$invoice->getPrincipalInvestigator());
+        $logger->notice("Start to generate PDF invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
+
+        //check and create Report and temp folders
+        $reportsUploadPath = "transres" . DIRECTORY_SEPARATOR . "InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        if( !$reportsUploadPath ) {
+            $reportsUploadPath = "InvoicePDF";
+            $logger->warning('InvoicePDFUploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
+        }
+        $uploadReportPath = $this->uploadDir . DIRECTORY_SEPARATOR . $reportsUploadPath;
+
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        //$logger->notice("1reportPath=".$reportPath);
+
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        //$logger->notice("2reportPath=".$reportPath);
+
+        //echo "reportPath=".$reportPath."<br>";
+        //$reportPath = realpath($reportPath);
+        //echo "reportPath=".$reportPath."<br>";
+
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
+        }
+
+        //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
+        //$outdir = $reportPath.'/'.$invoice->getOid().'/';
+        $outdir = $reportPath . DIRECTORY_SEPARATOR;
+
+        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //0) generate application pdf
+        //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
+        $applicationFilePath = $outdir . $fileFullReportUniqueName;
+
+        $this->generatePdf($invoice,$applicationFilePath,$request); //this does not work with https
+        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+        //$pdfPath = "translationalresearch_invoice_download";
+        //$pdfPathParametersArr = array('id' => $invoice->getId());
+        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
+
+        //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
+
+        //4) add PDF to invoice DB
+        $filesize = filesize($applicationFilePath);
+        $documentPdf = $this->createInvoicePdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
+        if( $documentPdf ) {
+            $documentPdfId = $documentPdf->getId();
+        } else {
+            $documentPdfId = null;
+        }
+
+        $event = "PDF for Invoice with ID ".$invoice->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        //echo $event."<br>";
+        //$logger->notice($event);
+
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$invoice,null,'Invoice PDF Created');
+
+        //delete application temp folder
+        //$this->deleteDir($outdir);
+
+        $res = array(
+            'filename' => $fileFullReportUniqueName,
+            'pdf' => $applicationFilePath,
+            'size' => $filesize
+        );
+
+        $logger->notice($event);
+
+        return $res;
+    }
+    //use KnpSnappyBundle to convert html to pdf
+    //http://wkhtmltopdf.org must be installed on server
+    public function generateAndSaveProjectPdf($project,$applicationOutputFilePath,$request) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( file_exists($applicationOutputFilePath) ) {
+            //return;
+            $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
+            unlink($applicationOutputFilePath);
+        }
+
+        ini_set('max_execution_time', 300); //300 sec
+
+        //testing
+        //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        //echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        //$default_system_email = $this->container->getParameter('default_system_email');
+        //echo "default_system_email=$default_system_email<br>";
+
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+        //exit("connectionChannel=".$connectionChannel);
+        //$connectionChannel = 'http';
+
+        $router = $this->container->get('router');
+
+        //$replaceContext = false;
+        $replaceContext = true;
+        if( $replaceContext ) {
+            //generate application URL
+            $context = $router->getContext();
+
+            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+            $originalHost = $context->getHost();
+            $originalScheme = $context->getScheme();
+            $originalBaseUrl = $context->getBaseUrl();
+
+            $context->setHost('localhost');
+            //$context->setHost('collage.med.cornell.edu');
+            $context->setScheme($connectionChannel);
+            //$context->setBaseUrl('/order');
+        }
+
+        //exit("oid=".$invoice->getOid());
+
+        //invoice download
+        $pageUrl = $router->generate('translationalresearch_project_show_simple_pdf',
+            array(
+                'id' => $project->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+
+        //take care of authentication
+        $session = $request->getSession();
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $applicationOutputFilePath,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        );
+
+        if( $replaceContext ) {
+            //set back to original context
+            $context->setHost($originalHost);
+            $context->setScheme($originalScheme);
+            $context->setBaseUrl($originalBaseUrl);
+        }
+
+        //echo "generated ok! <br>";
+    }
+
 }

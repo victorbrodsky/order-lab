@@ -335,11 +335,29 @@ class ProjectType extends AbstractType
             }
         }
 
-        $builder->add('projectType', CustomSelectorType::class, array(
-            'label' => 'Project Type:',
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-transresprojecttypes', 'type' => 'hidden'),
-            'classtype' => 'transresprojecttypes'
+        if( $this->params['cycle'] == "show" || $this->params['cycle'] == "review" || $this->params['cycle'] == "pdf" ) {
+            $builder->add('projectType', EntityType::class, array(
+                'class' => 'AppTranslationalResearchBundle:ProjectTypeList',
+                'label' => 'Project Type:',
+                'required' => false,
+                'attr' => array('class' => 'combobox transres-project-projectType'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        } else {
+            //Allow to type in new project type
+            $builder->add('projectType', CustomSelectorType::class, array(
+                'label' => 'Project Type:',
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-transresprojecttypes', 'type' => 'hidden'),
+                'classtype' => 'transresprojecttypes'
 //            'query_builder' => function (EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
 //                    ->where("list.type = :typedef OR list.type = :typeadd")
@@ -349,7 +367,8 @@ class ProjectType extends AbstractType
 //                        'typeadd' => 'user-added',
 //                    ));
 //            },
-        ));
+            ));
+        }
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
             'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
