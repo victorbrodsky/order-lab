@@ -56,6 +56,10 @@
 
                     {{ transres.updateInfo(form,cycle) }}
 
+                    {% if form.progressUpdate is defined %}
+                        {{ formmacros.field(form.progressUpdate) }}
+                    {% endif %}
+
                     {#expired notification email#}
                     {% if cycle != "pdf" %}
                         <hr>
@@ -100,10 +104,18 @@
                     {% endif %}
                     {#EOF Project Closure/Reactivation#}
 
+                    {#{% if cycle != "show" or cycle != "review"  %}#}
+                        {#{{ transres.projectPdf(form,project,cycle) }}#}
+                    {#{% endif %}#}
+
                 </div>
             </div>
         </div>
     </div>
+
+    {% if cycle != "show" or cycle != "review"  %}
+        {{ transres.projectPdf(form,project,cycle) }}
+    {% endif %}
 
 {% endmacro %}
 
@@ -391,9 +403,9 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
-    {% if form.progressUpdate is defined %}
-        {{ formmacros.field(form.progressUpdate) }}
-    {% endif %}
+    {#{% if form.progressUpdate is defined %}#}
+        {#{{ formmacros.field(form.progressUpdate) }}#}
+    {#{% endif %}#}
 
 {% endmacro %}
 
@@ -497,68 +509,112 @@
 
 {% endmacro %}
 
+{% macro projectPdf( form, project, cycle ) %}
+    {% if cycle != "pdf" %}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+        {% if cycle == "review" %}
+            {% set cycle = "show" %}
+        {% endif %}
+
+        {% set projectPdfs = null %}
+        {% if form %}
+            {% set asFormOrEntity = "asForm" %}
+            {% if form.projectPdfs is defined %}
+                {% set projectPdfs = form.projectPdfs %}
+            {% endif %}
+        {% else %}
+            {% set cycle = "show" %}
+            {% set asFormOrEntity = "asEntity" %}
+            {% set projectPdfs = project.projectPdfs %}
+        {% endif %}
+
+        {% if projectPdfs and projectPdfs|length > 0 %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#transres-project-projectpdfs">
+                            Project PDFs
+                        </a>
+                    </h4>
+                </div>
+
+                <div id="transres-project-projectpdfs" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="well form-element-holder user-documents">
+                            {{ usermacros.documentsContainer(null,projectPdfs,cycle,'noprototype',8,'default','Project PDFs',asFormOrEntity) }}
+                        </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
 {#hide if Project Documents does not exists#}
 {% macro projectDocument( form, project, cycle ) %}
     {% if cycle != "pdf" %}
-    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+        {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 
-    {% if cycle == "review" %}
-        {% set cycle = "show" %}
-    {% endif %}
-
-    {% set documents = null %}
-    {% if form %}
-        {% set asFormOrEntity = "asForm" %}
-        {% if form.documents is defined %}
-            {% set documents = form.documents %}
-        {% endif %}
-    {% else %}
-        {% set cycle = "show" %}
-        {% set asFormOrEntity = "asEntity" %}
-        {% set documents = project.documents %}
-    {% endif %}
-
-    {#documents|length = {{ documents|length }}#}
-    {#asFormOrEntity = {{ asFormOrEntity }}#}
-    {% if documents and documents|length > 0 %}
-
-        {% set specialtyId = NULL %}
-        {% if project.getProjectSpecialty() %}
-            {% set specialtyId = project.getProjectSpecialty().getId() %}
+        {% if cycle == "review" %}
+            {% set cycle = "show" %}
         {% endif %}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#transres-project-documents">
-                        Project Documents
-                    </a>
-                </h4>
-            </div>
+        {% set documents = null %}
+        {% if form %}
+            {% set asFormOrEntity = "asForm" %}
+            {% if form.documents is defined %}
+                {% set documents = form.documents %}
+            {% endif %}
+        {% else %}
+            {% set cycle = "show" %}
+            {% set asFormOrEntity = "asEntity" %}
+            {% set documents = project.documents %}
+        {% endif %}
 
-            <div id="transres-project-documents" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <div class="well form-element-holder user-documents">
+        {#documents|length = {{ documents|length }}#}
+        {#asFormOrEntity = {{ asFormOrEntity }}#}
+        {% if documents and documents|length > 0 %}
 
-                        <label class="col-xs-12 control-label">
-                            Please submit completed New Project Intake Form here.
-                            The form is required for non-funded projects.
-                            There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
-                        </label>
-                        <p>
-                            You can
-                            <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
-                               target="_blank">download the blank form here.</a>
-                        </p>
+            {% set specialtyId = NULL %}
+            {% if project.getProjectSpecialty() %}
+                {% set specialtyId = project.getProjectSpecialty().getId() %}
+            {% endif %}
 
-                        {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
-                    </div>
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#transres-project-documents">
+                            Project Documents
+                        </a>
+                    </h4>
+                </div>
 
-    {% endif %}
+                <div id="transres-project-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="well form-element-holder user-documents">
+
+                            <label class="col-xs-12 control-label">
+                                Please submit completed New Project Intake Form here.
+                                The form is required for non-funded projects.
+                                There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
+                            </label>
+                            <p>
+                                You can
+                                <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
+                                   target="_blank">download the blank form here.</a>
+                            </p>
+
+                            {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
+                        </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+        {% endif %}
     {% endif %}
 {% endmacro %}
 

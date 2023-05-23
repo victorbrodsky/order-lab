@@ -904,17 +904,17 @@ class Project {
      **/
     private $compTypes;
 
-//    /**
-//     * Export project summary to a PDF
-//     *
-//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="transres_project_pdf",
-//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="pdf_id", referencedColumnName="id", onDelete="CASCADE")}
-//     *      )
-//     * @ORM\OrderBy({"createdate" = "ASC"})
-//     **/
-//    private $projectPdfs;
+    /**
+     * Export project summary to a PDF
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_pdf",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pdf_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $projectPdfs;
     ////////////// EOF #295 //////////////
 
 
@@ -936,6 +936,7 @@ class Project {
         $this->documents = new ArrayCollection();
         $this->irbApprovalLetters = new ArrayCollection();
         $this->humanTissueForms = new ArrayCollection();
+        $this->projectPdfs = new ArrayCollection();
 
         $this->requests = new ArrayCollection();
 
@@ -3024,6 +3025,7 @@ class Project {
     }
     ////////////// EOF Additional fields from #294 //////////////
 
+    ////////////// Additional fields from #295 //////////////
     /**
      * @return mixed
      */
@@ -3039,6 +3041,24 @@ class Project {
         $this->requesterGroup = $requesterGroup;
     }
 
+    public function addProjectPdf($item)
+    {
+        if( $item && !$this->projectPdfs->contains($item) ) {
+            $this->projectPdfs->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeProjectPdf($item)
+    {
+        $this->projectPdfs->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getProjectPdfs()
+    {
+        return $this->projectPdfs;
+    }
+    ////////////// EOF Additional fields from #295 //////////////
 
     /**
      * @return mixed

@@ -1009,6 +1009,19 @@ class ProjectType extends AbstractType
             }
         ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'review'  ) {
+            $builder->add('projectPdfs', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Project summary to a PDF:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+        }
+
         //Archival Specimens
         //ONLY for CP change “Will this project require archival specimens?:” to “Will this project require archival tissue specimens?:”
         //echo "otherUserParam=".$this->params['otherUserParam']."<br>";

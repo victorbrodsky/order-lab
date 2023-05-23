@@ -1486,7 +1486,8 @@ class ProjectController extends OrderAbstractController
             //generate project PDF
             if( !$testing ) {
                 $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project); //new
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //new
+                $em->flush();
             }
 
             //process form nodes
@@ -1799,7 +1800,8 @@ class ProjectController extends OrderAbstractController
             //generate project PDF
             if( !$testing ) {
                 $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project); //edit
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //edit
+                $em->flush();
             }
 
             //process form nodes
@@ -2728,8 +2730,8 @@ class ProjectController extends OrderAbstractController
         //Project-Request-APCP3379-Generated-On-05-22-2023-at-16-58-35-EDT.pdf
         //exit("filename=".$fileName);
 
-        //$pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
-        $transresPdfUtil->generateAndSaveProjectPdf($project,null,$request); //testing
+        $pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
+        //$transresPdfUtil->generateAndSaveProjectPdf($project,null,$request); //testing
 
         return new Response(
             $pdfContent,

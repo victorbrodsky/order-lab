@@ -92,7 +92,7 @@ class PdfGenerator
 
         //4) add PDF to invoice DB
         $filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
+        $documentPdf = $this->createPdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -103,7 +103,14 @@ class PdfGenerator
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$invoice,null,'Invoice PDF Created');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $invoice,
+            $request,
+            'Invoice PDF Created'
+        );
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -277,7 +284,16 @@ class PdfGenerator
     }
 
     //create invoice report in DB
-    protected function createInvoicePdfDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType) {
+    protected function createPdfDB(
+        $holderEntity,
+        $holderMethodSingularStr,
+        $author,
+        $uniqueTitle,
+        $path,
+        $filesize,
+        $documentType,
+        $replace=false
+    ) {
 
         $logger = $this->container->get('logger');
 
@@ -303,12 +319,11 @@ class PdfGenerator
         $removeMethod = "remove".$holderMethodSingularStr;
         $addMethod = "add".$holderMethodSingularStr;
 
-        //do not remove documents Application PDF
-        //move all reports to OldReports
-        if( $holderMethodSingularStr == "report" ) {
-            foreach ($holderEntity->getReports() as $report) {
-                $holderEntity->removeReport($report);
-                $holderEntity->addOldReport($report);
+        //replace old document with a new one
+        if( $replace ) {
+            foreach ($holderEntity->$getMethod() as $old) {
+                $holderEntity->$removeMethod($old);
+                $this->em->remove($old);
             }
         }
 
@@ -426,7 +441,15 @@ class PdfGenerator
 
         //add PDF to invoice DB
         //$filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($transresRequest,"packingSlipPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Packing Slip PDF');
+        $documentPdf = $this->createPdfDB(
+            $transresRequest,
+            "packingSlipPdf",
+            $authorUser,
+            $fileFullReportUniqueName,
+            $uploadReportPath,
+            $filesize,
+            'Packing Slip PDF'
+        );
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -437,7 +460,14 @@ class PdfGenerator
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$transresRequest,null,'Packing Slip PDF Created');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $transresRequest,
+            $request,
+            'Packing Slip PDF Created'
+        );
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -711,6 +741,7 @@ class PdfGenerator
 
         return $output;
     }
+    //TODO: test the generation time. knp_snappy has a time delay
     public function generateAndSaveProjectPdf( $project, $authorUser, $request=null ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
@@ -774,9 +805,18 @@ class PdfGenerator
 
         //4) add PDF to project DB
         $filesize = filesize($applicationFilePath);
-        exit("filesize=$filesize; applicationFilePath=$applicationFilePath");
+        //exit("filesize=$filesize; applicationFilePath=$applicationFilePath");
 
-        $documentPdf = $this->createInvoicePdfDB($project,"projectPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Project PDF');
+        $documentPdf = $this->createPdfDB(
+            $project,
+            "projectPdf",
+            $authorUser,
+            $fileFullReportUniqueName,
+            $uploadReportPath,
+            $filesize,
+            'Project PDF',
+            true //$replace=true
+        );
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -793,7 +833,7 @@ class PdfGenerator
             $event,
             $authorUser,
             $project,
-            null,
+            $request,
             'Project PDF Created'
         );
 
