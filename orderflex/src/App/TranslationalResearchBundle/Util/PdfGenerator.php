@@ -319,7 +319,11 @@ class PdfGenerator
         $this->em->persist($object);
         $this->em->flush();
 
-        $logger->notice("Document created with ID=".$object->getId()." for ".get_class($holderEntity)." ID=".$holderEntity->getId() . "; documentType=".$documentType);
+        $logger->notice(
+            "Document created with ID=".$object->getId()." for " .
+            get_class($holderEntity) . " ID=".$holderEntity->getId() .
+            "; documentType=".$documentType
+        );
 
         return $object;
     }
@@ -707,7 +711,7 @@ class PdfGenerator
 
         return $output;
     }
-    public function generateProjectPdf( $invoice, $authorUser, $request=null ) {
+    public function generateAndSaveProjectPdf( $project, $authorUser, $request=null ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -723,14 +727,21 @@ class PdfGenerator
         }
 
         //generate file name. use PI in the pdf file name as per Ning, Jeff request.
-        $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice",$invoice->getPrincipalInvestigator());
-        $logger->notice("Start to generate PDF invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
+        //$fileFullReportUniqueName = $this->constructUniqueFileName($project,"Project",$project->getPrincipalInvestigator());
+        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
+        $creationDate = new \DateTime();
+        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
+        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
+        $fileFullReportUniqueName = str_replace(" ","-",$fileName);
+
+        $logger->notice("Start to generate PDF project ID=".$project->getOid()."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
-        $reportsUploadPath = "transres" . DIRECTORY_SEPARATOR . "InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        $reportsUploadPath = "transres" . DIRECTORY_SEPARATOR . "ProjectPDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
         if( !$reportsUploadPath ) {
-            $reportsUploadPath = "InvoicePDF";
-            $logger->warning('InvoicePDFUploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
+            $reportsUploadPath = "ProjectPDF";
+            $logger->warning('ProjectPDFUploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
         }
         $uploadReportPath = $this->uploadDir . DIRECTORY_SEPARATOR . $reportsUploadPath;
 
@@ -749,38 +760,42 @@ class PdfGenerator
             chmod($reportPath, 0700);
         }
 
-        //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
-        //$outdir = $reportPath.'/'.$invoice->getOid().'/';
+        //$outdir = $reportPath.'/temp_'.$project->getOid().'/';
+        //$outdir = $reportPath.'/'.$project->getOid().'/';
         $outdir = $reportPath . DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
-        //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
+        //$applicationFilePath = $outdir . "application_ID" . $project->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdf($invoice,$applicationFilePath,$request); //this does not work with https
+        $this->generateProjectPdf($project,$applicationFilePath,$request); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
-        //$pdfPath = "translationalresearch_invoice_download";
-        //$pdfPathParametersArr = array('id' => $invoice->getId());
-        //$this->generatePdfPhantomjs($pdfPath,$pdfPathParametersArr,$applicationFilePath,$request);
-
-        //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
-
-        //4) add PDF to invoice DB
+        //4) add PDF to project DB
         $filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
+        exit("filesize=$filesize; applicationFilePath=$applicationFilePath");
+
+        $documentPdf = $this->createInvoicePdfDB($project,"projectPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Project PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
             $documentPdfId = null;
         }
 
-        $event = "PDF for Invoice with ID ".$invoice->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        $event = "PDF for project with ID ".$project->getOid()." has been successfully created " .
+            $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$invoice,null,'Invoice PDF Created');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $project,
+            null,
+            'Project PDF Created'
+        );
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -797,14 +812,14 @@ class PdfGenerator
     }
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
-    public function generateAndSaveProjectPdf($project,$applicationOutputFilePath,$request) {
+    public function generateProjectPdf($project,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
             //return;
-            $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
+            $logger->notice("generateProjectPdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
 
@@ -831,7 +846,7 @@ class PdfGenerator
             //generate application URL
             $context = $router->getContext();
 
-            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+            //http://192.168.37.128/order/app_dev.php/translational-research/...
             $originalHost = $context->getHost();
             $originalScheme = $context->getScheme();
             $originalBaseUrl = $context->getBaseUrl();
@@ -842,9 +857,7 @@ class PdfGenerator
             //$context->setBaseUrl('/order');
         }
 
-        //exit("oid=".$invoice->getOid());
-
-        //invoice download
+        //Project download
         $pageUrl = $router->generate('translationalresearch_project_show_simple_pdf',
             array(
                 'id' => $project->getId()

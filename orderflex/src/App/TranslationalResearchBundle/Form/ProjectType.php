@@ -45,7 +45,7 @@ class ProjectType extends AbstractType
 
         //$user_tz = $this->params['user']->getPreferences()->getTimezone();
 
-        if ($this->params['cycle'] != 'new') {
+        if( $this->params['cycle'] != 'new' && $this->params['cycle'] != 'pdf' ) {
 
             $builder->add('state', ChoiceType::class, array(
                 'label' => 'Status:',

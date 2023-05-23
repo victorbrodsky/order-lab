@@ -903,6 +903,18 @@ class Project {
      * )
      **/
     private $compTypes;
+
+//    /**
+//     * Export project summary to a PDF
+//     *
+//     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="transres_project_pdf",
+//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="pdf_id", referencedColumnName="id", onDelete="CASCADE")}
+//     *      )
+//     * @ORM\OrderBy({"createdate" = "ASC"})
+//     **/
+//    private $projectPdfs;
     ////////////// EOF #295 //////////////
 
 
