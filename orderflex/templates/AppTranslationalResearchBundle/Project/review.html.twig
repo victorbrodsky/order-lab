@@ -135,6 +135,10 @@
 
 <script type="text/javascript">
 
+    //var _projectUpdateCounter = 0;
+    //var _projectUpdateAsyncflag = true;
+    //var _projectUpdatePdf = true;
+
     $(document).ready(function() {
 
         //expandTextarea();
@@ -165,19 +169,19 @@
 
         //transres-update-irbexpirationdate
         $('.transres-update-irbexpirationdate').click(function(event) {
-            transresUpdateIrbExpDate($(this));
+            transresUpdateIrbExpDate(true,$(this));
         });
 
         $('.transres-update-project-pricelist').click(function(event) {
-            transresUpdateProjectPriceList($(this));
+            transresUpdateProjectPriceList(true,$(this));
         });
 
         $('.transres-update-project-approvedProjectBudget').click(function(event) {
-            transresUpdateApprovedProjectBudget($(this));
+            transresUpdateApprovedProjectBudget(true,$(this));
         });
 
         $('.transres-update-project-noBudgetLimit').click(function(event) {
-            transresUpdateNoBudgetLimit($(this));
+            transresUpdateNoBudgetLimit(true,$(this));
         });
 
         //addCommentButtonClickListener();
@@ -207,17 +211,54 @@
             reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
         }
 
-        transresUpdateIrbExpDate();
-        transresUpdateProjectPriceList();
+        //_projectUpdateAsyncflag = false;
+        //_projectUpdatePdf = false;
+        ////// Here do all update asynchronously //////
+        transresUpdateIrbExpDate(false);
+        transresUpdateProjectPriceList(false);
 
-        transresUpdateApprovedProjectBudget();
-        transresUpdateNoBudgetLimit();
+        transresUpdateApprovedProjectBudget(false);
+        transresUpdateNoBudgetLimit(false);
+        ////// EOF Here do all update asynchronously //////
 
         //TODO: might add logic to update project's PDF only once after all updates by a dedicated project PDF update by ajax
+        transresUpdateProjectPdf();
+        //_projectUpdateAsyncflag = true;
+        //_projectUpdatePdf = true;
     }
 
+    function transresUpdateProjectPdf() {
+        var url = Routing.generate('translationalresearch_update_project_pdf');
+        //url = url + "/" + projectId + "/" + irbExpDate
 
-    function transresUpdateIrbExpDate(btnEl) {
+        var projectId = $("#projectid").val();
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId},
+            //dataType: 'json',
+            async: asyncflag
+            //async: false
+        }).success(function(response) {
+            //console.log(response);
+            if( response != "NotOK" ) {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-irbExpirationDate").val(irbExpDate);
+            }
+        }).done(function() {
+            //
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
+
+    function transresUpdateIrbExpDate(updatePdf,btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -257,6 +298,10 @@
             lbtn.start();
             //console.log('lbtn start');
         }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
 
         var url = Routing.generate('translationalresearch_update_irb_exp_date');
         //url = url + "/" + projectId + "/" + irbExpDate
@@ -266,10 +311,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, value: irbExpDate },
+            data: {projectId: projectId, value: irbExpDate, updatePdf: updatePdf},
             //dataType: 'json',
-            async: asyncflag
-            //async: false
+            //async: asyncflag
+            async: projectUpdateAsyncflag
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) { //if( response == "NotOK" ) ???
@@ -281,6 +326,7 @@
             if( lbtn ) {
                 lbtn.stop();
             }
+            //_projectUpdateCounter++;
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -288,7 +334,7 @@
         return false;
     }
 
-    function transresUpdateProjectPriceList(btnEl) {
+    function transresUpdateProjectPriceList(updatePdf,btnEl) {
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -314,6 +360,10 @@
             lbtn.start();
             //console.log('lbtn start');
         }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
 
         var priceListData = priceListEl.select2('data');
         var priceListId = null;
@@ -331,9 +381,10 @@
                 timeout: _ajaxTimeout,
                 //type: "GET",
                 type: "POST",
-                data: {projectId: projectId, pricelistid: priceListId },
+                data: {projectId: projectId, pricelistid: priceListId, updatePdf: updatePdf},
                 //dataType: 'json',
-                async: asyncflag
+                async: projectUpdateAsyncflag
+                //async: asyncflag
                 //async: false
             }).success(function(response) {
                 //console.log(response);
@@ -346,6 +397,7 @@
                 if( lbtn ) {
                     lbtn.stop();
                 }
+                //_projectUpdateCounter++;
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
             });
@@ -355,7 +407,7 @@
         return false;
     }
 
-    function transresUpdateApprovedProjectBudget(btnEl) {
+    function transresUpdateApprovedProjectBudget(updatePdf,btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -382,6 +434,10 @@
             lbtn.start();
             console.log('lbtn start');
         }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
 
         var approvedProjectBudget = approvedProjectBudgetEl.val();
 
@@ -395,10 +451,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
+            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget, updatePdf: updatePdf},
             //dataType: 'json',
-            async: asyncflag
-            //async: false
+            //async: asyncflag
+            async: projectUpdateAsyncflag
         }).success(function (response) {
             //console.log(response);
             if (response != "NotOK") {
@@ -410,6 +466,7 @@
             if( lbtn ) {
                 lbtn.stop();
             }
+            //_projectUpdateCounter++;
         }).error(function (jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -417,7 +474,7 @@
         return false;
     }
 
-    function transresUpdateNoBudgetLimit(btnEl) {
+    function transresUpdateNoBudgetLimit(updatePdf,btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -444,6 +501,10 @@
             lbtn.start();
             //console.log('lbtn start');
         }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
 
         //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
         var noBudgetLimit = 0;
@@ -461,10 +522,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, noBudgetLimit: noBudgetLimit },
+            data: {projectId: projectId, noBudgetLimit: noBudgetLimit, updatePdf: updatePdf},
             //dataType: 'json',
-            async: asyncflag
-            //async: false
+            //async: asyncflag
+            async: projectUpdateAsyncflag
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) {
@@ -486,6 +547,7 @@
             if( lbtn ) {
                 lbtn.stop();
             }
+            //_projectUpdateCounter++;
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });

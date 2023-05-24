@@ -2877,7 +2877,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -2937,9 +2938,11 @@ class RequestController extends OrderAbstractController
             $em->flush();
 
             //generate project PDF
-            $transresPdfUtil = $this->container->get('transres_pdf_generator');
-            $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_irb_exp_date
-            $em->flush();
+            if( $updatePdf ) {
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
+                $em->flush();
+            }
 
             //add eventlog changed IRB
             $eventType = "Project Updated";
@@ -2965,7 +2968,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3019,33 +3023,35 @@ class RequestController extends OrderAbstractController
                     $em->flush();
 
                     //generate project PDF
-                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                    $user = $this->getUser();
-                    $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_pricelist
-                    $em->flush();
+                    if( $updatePdf ) {
+                        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                        $user = $this->getUser();
+                        $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_pricelist
+                        $em->flush();
+                    }
                 }
 
-                    if( !$priceList ) {
-                        $priceList = "Default";
-                    }
+                if( !$priceList ) {
+                    $priceList = "Default";
+                }
 
-                    if( !$originalPriceList ) {
-                        $originalPriceList = "Default";
-                    }
+                if( !$originalPriceList ) {
+                    $originalPriceList = "Default";
+                }
 
-                    //add eventlog changed Admin Review
-                    if( $originalPriceList != $priceList ) {
-                        $eventType = "Project Updated";
-                        $res = "Project ID " . $project->getOid() . " has been updated: " .
-                            " Price list changed from " .
-                            $originalPriceList . " to " . $priceList;
-                        $transresUtil->setEventLog($project,$eventType,$res);
+                //add eventlog changed Admin Review
+                if( $originalPriceList != $priceList ) {
+                    $eventType = "Project Updated";
+                    $res = "Project ID " . $project->getOid() . " has been updated: " .
+                        " Price list changed from " .
+                        $originalPriceList . " to " . $priceList;
+                    $transresUtil->setEventLog($project,$eventType,$res);
 
-                        $this->addFlash(
-                            'notice',
-                            $res
-                        );
-                    }
+                    $this->addFlash(
+                        'notice',
+                        $res
+                    );
+                }
             } else {
                 if( !$originalPriceList ) {
                     $originalPriceList = "Default";
@@ -3068,7 +3074,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3108,9 +3115,11 @@ class RequestController extends OrderAbstractController
                 $em->flush();
 
                 //generate project PDF
-                $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_approvedprojectbudget
-                $em->flush();
+                if( $updatePdf ) {
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_approvedprojectbudget
+                    $em->flush();
+                }
 
                 $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);
                 
@@ -3142,7 +3151,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3187,10 +3197,12 @@ class RequestController extends OrderAbstractController
                 $em->flush();
 
                 //generate project PDF
-                $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $user = $this->getUser();
-                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
-                $em->flush();
+                if( $updatePdf ) {
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $user = $this->getUser();
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_nobudgetlimit
+                    $em->flush();
+                }
 
                 $originalNoBudgetLimitStr = "No";
                 if( $originalNoBudgetLimit ) {

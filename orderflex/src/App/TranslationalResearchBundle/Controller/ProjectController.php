@@ -2763,26 +2763,6 @@ class ProjectController extends OrderAbstractController
         );
 
         return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-
-//        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
-//        $creationDate = new \DateTime();
-//        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
-//        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
-//        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
-//        $fileName = str_replace(" ","-",$fileName);
-//
-//        //Project-Request-APCP3379-Generated-On-05-22-2023-at-16-58-35-EDT.pdf
-//        //exit("filename=".$fileName);
-//
-        $pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
-        return new Response(
-            $pdfContent,
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
-            )
-        );
     }
 
     /**
@@ -2795,6 +2775,61 @@ class ProjectController extends OrderAbstractController
     public function showProjectPdfAction(Request $request, Project $project)
     {
         return $this->showAction($request, $project, "pdf");
+    }
+
+    /**
+     * Force to update project PDF
+     *
+     * @Route("/project/update-project-pdf/", name="translationalresearch_update_project_pdf", methods={"GET","POST"}, options={"expose"=true})
+     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
+     */
+    public function updateProjectPdfAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = trim((string)$request->get('projectId') );
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+
+        $permission = true;
+        $res = "NotOK";
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
+            //ok
+        } else {
+            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            $permission = false;
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $permission = false;
+        }
+
+        if( $permission == false ) {
+            $response = new Response($res);
+            return $response;
+        }
+
+        if( $project ) {
+
+            //generate project PDF
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $user = $this->getUser();
+            $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
+            $em->flush();
+
+            $res = "Project " . $project->getOid() . " PDF has been updated";
+
+            $this->addFlash(
+                'notice',
+                $res
+            );
+        } else {
+            //$res = "Logical error: project not found by ID $projectId";
+        }
+
+        $response = new Response($res);
+        return $response;
     }
 
 }
