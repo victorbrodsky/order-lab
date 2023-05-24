@@ -322,6 +322,16 @@ class PdfGenerator
         //replace old document with a new one
         if( $replace ) {
             foreach ($holderEntity->$getMethod() as $old) {
+
+                //remove $old from server
+                $oldPath = $old->getServerPath();
+                if( file_exists($oldPath) ) {
+                    $logger->notice("create Pdf DB: unlink file path=" . $oldPath);
+                    unlink($oldPath);
+                } else {
+                    $logger->warning("create Pdf DB: cannot unlink, file is not existed path=" . $oldPath);
+                }
+
                 $holderEntity->$removeMethod($old);
                 $this->em->remove($old);
             }
@@ -705,7 +715,7 @@ class PdfGenerator
         //echo "generated ok! <br>";
     }
 
-    //project PDF generation
+    //NOT USED. project PDF generation
     public function exportProjectPdf( $project, $request ) {
         set_time_limit(360); //in seconds
 

@@ -2936,6 +2936,11 @@ class RequestController extends OrderAbstractController
             //$em->flush($project);
             $em->flush();
 
+            //generate project PDF
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_irb_exp_date
+            $em->flush();
+
             //add eventlog changed IRB
             $eventType = "Project Updated";
             $res = "Project ID ".$project->getOid() ." has been updated: ".
@@ -3011,6 +3016,12 @@ class RequestController extends OrderAbstractController
                 //if( $priceList ) {
                 if( $originalPriceListId != $pricelistid ) {
                     $project->setPriceList($priceList);
+                    $em->flush();
+
+                    //generate project PDF
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $user = $this->getUser();
+                    $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_pricelist
                     $em->flush();
                 }
 
@@ -3096,6 +3107,11 @@ class RequestController extends OrderAbstractController
                 $project->setUpdateUser($user);
                 $em->flush();
 
+                //generate project PDF
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_approvedprojectbudget
+                $em->flush();
+
                 $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);
                 
                 $eventType = "Project Approved Budget Updated";
@@ -3168,6 +3184,12 @@ class RequestController extends OrderAbstractController
                 }
 
                 $project->setNoBudgetLimit($noBudgetLimit);
+                $em->flush();
+
+                //generate project PDF
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                $user = $this->getUser();
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
                 $em->flush();
 
                 $originalNoBudgetLimitStr = "No";

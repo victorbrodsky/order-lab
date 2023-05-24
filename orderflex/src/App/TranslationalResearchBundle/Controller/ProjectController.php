@@ -2717,22 +2717,58 @@ class ProjectController extends OrderAbstractController
             exit("Project not found by id $id");
         }
 
-        //$transresUtil = $this->container->get('transres_util');
+        //testing
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
-
-        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
-        $creationDate = new \DateTime();
-        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
-        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
-        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
-        $fileName = str_replace(" ","-",$fileName);
-
-        //Project-Request-APCP3379-Generated-On-05-22-2023-at-16-58-35-EDT.pdf
-        //exit("filename=".$fileName);
-
         $pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
-        //$transresPdfUtil->generateAndSaveProjectPdf($project,null,$request); //testing
+        return new Response(
+            $pdfContent,
+            200,
+            array(
+                'Content-Type'          => 'application/pdf',
+                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
+            )
+        );
 
+        $pdf = $project->getSingleProjectPdf();
+        if( $pdf ) {
+            return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+        }
+
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $user = $this->getUser();
+        $res = $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request);
+
+        $filename = $res['filename'];
+        $filsize = $res['size'];
+        //echo "filsize=$filsize; filename=$filename <br>";
+
+        if( $filename && $filsize ) {
+            //exit("OK: filsize=$filsize; filename=$filename");
+            $pdf = $project->getSingleProjectPdf();
+            if( $pdf ) {
+                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+            }
+        }
+
+        //exit("pdf no");
+        $this->addFlash(
+            'warning',
+            "Logical error: project PDF not found"
+        );
+
+        return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+
+//        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
+//        $creationDate = new \DateTime();
+//        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+//        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
+//        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
+//        $fileName = str_replace(" ","-",$fileName);
+//
+//        //Project-Request-APCP3379-Generated-On-05-22-2023-at-16-58-35-EDT.pdf
+//        //exit("filename=".$fileName);
+//
+        $pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
         return new Response(
             $pdfContent,
             200,

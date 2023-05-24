@@ -3058,6 +3058,14 @@ class Project {
     {
         return $this->projectPdfs;
     }
+    public function getSingleProjectPdf()
+    {
+        $pdfs = $this->getProjectPdfs();
+        if( count($pdfs) > 0 ) {
+            return $pdfs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
     ////////////// EOF Additional fields from #295 //////////////
 
     /**
