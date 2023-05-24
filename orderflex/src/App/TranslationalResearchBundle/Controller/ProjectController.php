@@ -2718,20 +2718,26 @@ class ProjectController extends OrderAbstractController
         }
 
         //testing
-        $transresPdfUtil = $this->container->get('transres_pdf_generator');
-        $pdfContent = $transresPdfUtil->exportProjectPdf($project,$request);
-        return new Response(
-            $pdfContent,
-            200,
-            array(
-                'Content-Type'          => 'application/pdf',
-                'Content-Disposition'   => 'attachment; filename="'.$fileName.'"'
-            )
-        );
+        if(0) {
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $pdfContent = $transresPdfUtil->exportProjectPdf($project, $request);
+            $fileName = "test.pdf";
+            return new Response(
+                $pdfContent,
+                200,
+                array(
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+                )
+            );
+        }
 
         $pdf = $project->getSingleProjectPdf();
         if( $pdf ) {
-            return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+            $pdfPath = $pdf->getServerPath();
+            if( file_exists($pdfPath) ) {
+                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+            }
         }
 
         $transresPdfUtil = $this->container->get('transres_pdf_generator');

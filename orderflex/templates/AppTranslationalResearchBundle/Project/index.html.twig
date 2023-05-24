@@ -612,16 +612,20 @@
                                     <i class="fa fa-file-excel fa-lg"></i> Export project summary to a spreadsheet</a>
                             </li>
 
+                            {% set pdfStyle= "color: grey" %}
+                            {% if project.ifExistProjectPdf() %}
+                                {% set pdfStyle= "color: green" %}
+                            {% endif %}
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_pdf',{'id':project.id}) }}">
-                                    <i class="fa fa-file-pdf fa-lg"></i> Export project summary to a PDF</a>
+                                    <i class="fa fa-file-pdf fa-lg" style="{{ pdfStyle }}"></i> Export project summary to a PDF</a>
                             </li>
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                            <li>
-                                <a href="{{ path('translationalresearch_project_show_simple_pdf',{'id':project.id}) }}" target="_blank"
-                                >View project summary (for PDF testing)</a>
-                            </li>
+                                <li>
+                                    <a href="{{ path('translationalresearch_project_show_simple_pdf',{'id':project.id}) }}" target="_blank"
+                                    >View project summary (visible by Admin for PDF testing)</a>
+                                </li>
                             {% endif %}
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}

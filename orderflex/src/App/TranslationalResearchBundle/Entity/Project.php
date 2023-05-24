@@ -3066,6 +3066,16 @@ class Project {
         }
         return null;
     }
+    public function ifExistProjectPdf() {
+        $pdf = $this->getSingleProjectPdf();
+        if( $pdf ) {
+            $pdfPath = $pdf->getServerPath();
+            if( file_exists($pdfPath) ) {
+                return true;
+            }
+        }
+        return false;
+    }
     ////////////// EOF Additional fields from #295 //////////////
 
     /**

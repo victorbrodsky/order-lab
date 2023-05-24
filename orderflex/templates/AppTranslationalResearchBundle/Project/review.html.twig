@@ -165,19 +165,19 @@
 
         //transres-update-irbexpirationdate
         $('.transres-update-irbexpirationdate').click(function(event) {
-            transresUpdateIrbExpDate();
+            transresUpdateIrbExpDate($(this));
         });
 
         $('.transres-update-project-pricelist').click(function(event) {
-            transresUpdateProjectPriceList();
+            transresUpdateProjectPriceList($(this));
         });
 
         $('.transres-update-project-approvedProjectBudget').click(function(event) {
-            transresUpdateApprovedProjectBudget();
+            transresUpdateApprovedProjectBudget($(this));
         });
 
         $('.transres-update-project-noBudgetLimit').click(function(event) {
-            transresUpdateNoBudgetLimit();
+            transresUpdateNoBudgetLimit($(this));
         });
 
         //addCommentButtonClickListener();
@@ -212,10 +212,12 @@
 
         transresUpdateApprovedProjectBudget();
         transresUpdateNoBudgetLimit();
+
+        //TODO: might add logic to update project's PDF only once after all updates by a dedicated project PDF update by ajax
     }
 
 
-    function transresUpdateIrbExpDate() {
+    function transresUpdateIrbExpDate(btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -242,11 +244,18 @@
             return false;
         }
 
-        //console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+        //console.log("transres UpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
 
         if( projectId == null || irbExpDate == null ) {
             //console.log("return false: projectId or irbExpDate is null");
             return false;
+        }
+
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
         }
 
         var url = Routing.generate('translationalresearch_update_irb_exp_date');
@@ -259,8 +268,8 @@
             type: "POST",
             data: {projectId: projectId, value: irbExpDate },
             //dataType: 'json',
-            //async: asyncflag
-            async: false
+            async: asyncflag
+            //async: false
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) { //if( response == "NotOK" ) ???
@@ -269,7 +278,9 @@
                 $(".transres-project-irbExpirationDate").val(irbExpDate);
             }
         }).done(function() {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -277,7 +288,7 @@
         return false;
     }
 
-    function transresUpdateProjectPriceList() {
+    function transresUpdateProjectPriceList(btnEl) {
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -295,6 +306,13 @@
         } else {
             //price list is hidden for this user
             return false;
+        }
+
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
         }
 
         var priceListData = priceListEl.select2('data');
@@ -315,8 +333,8 @@
                 type: "POST",
                 data: {projectId: projectId, pricelistid: priceListId },
                 //dataType: 'json',
-                //async: asyncflag
-                async: false
+                async: asyncflag
+                //async: false
             }).success(function(response) {
                 //console.log(response);
                 if( response != "NotOK" ) {
@@ -325,7 +343,9 @@
                     $(".transres-project-priceList").select2('val', priceListId);
                 }
             }).done(function() {
-                //lbtn.stop();
+                if( lbtn ) {
+                    lbtn.stop();
+                }
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
             });
@@ -335,7 +355,7 @@
         return false;
     }
 
-    function transresUpdateApprovedProjectBudget() {
+    function transresUpdateApprovedProjectBudget(btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -356,6 +376,13 @@
             return false;
         }
 
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            console.log('lbtn start');
+        }
+
         var approvedProjectBudget = approvedProjectBudgetEl.val();
 
         //if( priceListId ) {
@@ -370,8 +397,8 @@
             type: "POST",
             data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
             //dataType: 'json',
-            //async: asyncflag
-            async: false
+            async: asyncflag
+            //async: false
         }).success(function (response) {
             //console.log(response);
             if (response != "NotOK") {
@@ -380,7 +407,9 @@
                 $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
             }
         }).done(function () {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function (jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -388,7 +417,7 @@
         return false;
     }
 
-    function transresUpdateNoBudgetLimit() {
+    function transresUpdateNoBudgetLimit(btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -409,6 +438,13 @@
             return false;
         }
 
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
+        }
+
         //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
         var noBudgetLimit = 0;
         if( noBudgetLimitEl.is(":checked") ) {
@@ -427,8 +463,8 @@
             type: "POST",
             data: {projectId: projectId, noBudgetLimit: noBudgetLimit },
             //dataType: 'json',
-            //async: asyncflag
-            async: false
+            async: asyncflag
+            //async: false
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) {
@@ -447,7 +483,9 @@
                 }
             }
         }).done(function() {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
