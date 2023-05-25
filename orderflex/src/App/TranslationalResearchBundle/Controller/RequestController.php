@@ -2923,7 +2923,11 @@ class RequestController extends OrderAbstractController
             //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
 
+            $logger = $this->container->get('logger');
+            $logger->notice("irbExpDate=".$irbExpDate->format("m/d/Y H:i:s").", originalIrbExpDate=".$originalIrbExpDate->format("m/d/Y H:i:s"));
+
             if( $irbExpDate != $originalIrbExpDate ) {
+                $logger->notice("irbExpDate is not the same originalIrbExpDate");
 
                 if ($originalIrbExpDate) {
                     $originalIrbExpDateStr = $originalIrbExpDate->format('m/d/Y');
@@ -2959,6 +2963,7 @@ class RequestController extends OrderAbstractController
                 $transresUtil->setEventLog($project, $eventType, $res);
 
             } else {
+                $logger->notice("irbExpDate is the same originalIrbExpDate");
                 $res = "Expiration Date for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
             }
 
