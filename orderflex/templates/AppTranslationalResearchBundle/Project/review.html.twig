@@ -259,6 +259,8 @@
 
     function transresUpdateIrbExpDate(updatePdf,btnEl) {
 
+        console.log("transresUpdate IrbExpDate click");
+
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -267,27 +269,28 @@
         var irbExpDateEl = $('#transres_irbExpirationDate');
         if( irbExpDateEl && irbExpDateEl.length > 0 ) {
             irbExpDate = irbExpDateEl.val();
-            //console.log("transres-review-submit: irbExpDate=" + irbExpDate);
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate);
             if( !irbExpDate ) {
                 return false;
             }
 
             projectId = $("#projectid").val();
             var irbExpirationDate = $("#project-irbExpirationDate").val(); //MM/dd/yyyy
-            //console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
             if( irbExpDate == irbExpirationDate ) {
                 return false;
             }
             //return false;
             //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
         } else {
+            console.log("transres-review-submit: irbExpDate is null");
             return false;
         }
 
-        //console.log("transres UpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+        console.log("transres UpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
 
         if( projectId == null || irbExpDate == null ) {
-            //console.log("return false: projectId or irbExpDate is null");
+            console.log("return false: projectId or irbExpDate is null");
             return false;
         }
 
@@ -295,7 +298,7 @@
         if( typeof btnEl !== 'undefined' ) {
             lbtn = Ladda.create(btnEl.get(0));
             lbtn.start();
-            //console.log('lbtn start');
+            console.log('transresUpdate IrbExpDate lbtn start');
         }
         var projectUpdateAsyncflag = false;
         if( updatePdf ) {

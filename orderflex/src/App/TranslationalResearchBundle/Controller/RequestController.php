@@ -2917,41 +2917,50 @@ class RequestController extends OrderAbstractController
 
         if( $project ) {
             $originalIrbExpDateStr = "Unknown";
-            if( $project->getIrbExpirationDate() ) {
-                $originalIrbExpDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
-            }
+            $originalIrbExpDate = $project->getIrbExpirationDate();
 
             $value = trim((string)$request->get('value'));
             //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
-            //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
-            //echo "value=".$irbExpDate->format("m/d/Y H:i:s")."<br>";
-            $project->setIrbExpirationDate($irbExpDate);
 
-            //$receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
-            //echo "value=".$value."<br>";
-            //$valueDateTime = \DateTime::createFromFormat('m/d/Y',$value);
-            //$project->setIrbExpirationDate($valueDateTime);
+            if( $irbExpDate != $originalIrbExpDate ) {
 
-            //$em->flush($receivingObject);
-            //$em->flush($project);
-            $em->flush();
+                if ($originalIrbExpDate) {
+                    $originalIrbExpDateStr = $originalIrbExpDate->format('m/d/Y');
+                }
 
-            //generate project PDF
-            if( $updatePdf ) {
-                $logger = $this->container->get('logger');
-                $logger->notice("translationalresearch_update_irb_exp_date updated PDF: updatePdf=$updatePdf");
-                $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
+                //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
+                //echo "value=".$irbExpDate->format("m/d/Y H:i:s")."<br>";
+                $project->setIrbExpirationDate($irbExpDate);
+
+                //$receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
+                //echo "value=".$value."<br>";
+                //$valueDateTime = \DateTime::createFromFormat('m/d/Y',$value);
+                //$project->setIrbExpirationDate($valueDateTime);
+
+                //$em->flush($receivingObject);
+                //$em->flush($project);
                 $em->flush();
-            }
 
-            //add eventlog changed IRB
-            $eventType = "Project Updated";
-            $res = "Project ID ".$project->getOid() ." has been updated: ".
-                $transresUtil->getHumanName()." Expiration Date changed from ".
-                $originalIrbExpDateStr." to ".$value;
-            $transresUtil->setEventLog($project,$eventType,$res);
+                //generate project PDF
+                if ($updatePdf) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_irb_exp_date updated PDF: updatePdf=$updatePdf");
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
+                    $em->flush();
+                }
+
+                //add eventlog changed IRB
+                $eventType = "Project Updated";
+                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                    $transresUtil->getHumanName() . " Expiration Date changed from " .
+                    $originalIrbExpDateStr . " to " . $value;
+                $transresUtil->setEventLog($project, $eventType, $res);
+
+            } else {
+                $res = "Expiration Date for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
+            }
 
             $this->addFlash(
                 'notice',

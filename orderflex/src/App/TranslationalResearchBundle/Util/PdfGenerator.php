@@ -834,7 +834,7 @@ class PdfGenerator
         }
 
         $event = "PDF for project with ID ".$project->getOid()." has been successfully created " .
-            $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+            $fileFullReportUniqueName . " (PDF document ID ".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 
