@@ -168,6 +168,7 @@
         });
 
         //transres-update-irbexpirationdate
+        //Here do all update asynchronously (async=true)
         $('.transres-update-irbexpirationdate').click(function(event) {
             transresUpdateIrbExpDate(true,$(this));
         });
@@ -213,7 +214,7 @@
 
         //_projectUpdateAsyncflag = false;
         //_projectUpdatePdf = false;
-        ////// Here do all update asynchronously //////
+        ////// Here do all update synchronously (async=false) //////
         transresUpdateIrbExpDate(false);
         transresUpdateProjectPriceList(false);
 
@@ -222,6 +223,7 @@
         ////// EOF Here do all update asynchronously //////
 
         //TODO: might add logic to update project's PDF only once after all updates by a dedicated project PDF update by ajax
+        //TODO: verify logic for update review page (approve/reject/more info). PDF updated twice for IRBReview?
         transresUpdateProjectPdf();
         //_projectUpdateAsyncflag = true;
         //_projectUpdatePdf = true;
@@ -236,12 +238,9 @@
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
-            //type: "GET",
             type: "POST",
             data: {projectId: projectId},
-            //dataType: 'json',
             async: asyncflag
-            //async: false
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) {
@@ -302,6 +301,7 @@
         if( updatePdf ) {
             projectUpdateAsyncflag = true;
         }
+        console.log("updatePdf="+updatePdf);
 
         var url = Routing.generate('translationalresearch_update_irb_exp_date');
         //url = url + "/" + projectId + "/" + irbExpDate

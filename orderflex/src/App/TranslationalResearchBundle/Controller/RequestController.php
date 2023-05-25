@@ -2939,6 +2939,8 @@ class RequestController extends OrderAbstractController
 
             //generate project PDF
             if( $updatePdf ) {
+                $logger = $this->container->get('logger');
+                $logger->notice("translationalresearch_update_irb_exp_date updated PDF: updatePdf=$updatePdf");
                 $transresPdfUtil = $this->container->get('transres_pdf_generator');
                 $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
                 $em->flush();
@@ -3024,6 +3026,8 @@ class RequestController extends OrderAbstractController
 
                     //generate project PDF
                     if( $updatePdf ) {
+                        $logger = $this->container->get('logger');
+                        $logger->notice("translationalresearch_update_project_pricelist updated PDF: updatePdf=$updatePdf");
                         $transresPdfUtil = $this->container->get('transres_pdf_generator');
                         $user = $this->getUser();
                         $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_pricelist
@@ -3116,6 +3120,8 @@ class RequestController extends OrderAbstractController
 
                 //generate project PDF
                 if( $updatePdf ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_project_approvedprojectbudget updated PDF: updatePdf=$updatePdf");
                     $transresPdfUtil = $this->container->get('transres_pdf_generator');
                     $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_approvedprojectbudget
                     $em->flush();
@@ -3198,6 +3204,8 @@ class RequestController extends OrderAbstractController
 
                 //generate project PDF
                 if( $updatePdf ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_project_nobudgetlimit updated PDF: updatePdf=$updatePdf");
                     $transresPdfUtil = $this->container->get('transres_pdf_generator');
                     $user = $this->getUser();
                     $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_nobudgetlimit

@@ -2818,6 +2818,9 @@ class ProjectController extends OrderAbstractController
             $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
             $em->flush();
 
+            $logger = $this->container->get('logger');
+            $logger->notice("translationalresearch_update_project_pdf updated PDF");
+
             $res = "Project " . $project->getOid() . " PDF has been updated";
 
             $this->addFlash(
