@@ -921,6 +921,9 @@ class PdfGenerator
         session_write_close();
         $PHPSESSID = $session->getId();
 
+        //$snappy->setTimeout(300);
+        //https://github.com/KnpLabs/KnpSnappyBundle
+        //process_timeout: 20 # In seconds
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath,
@@ -929,7 +932,7 @@ class PdfGenerator
                     'PHPSESSID' => $PHPSESSID
                 )
             )
-        );
+        ); //->setTimeout1(300);
 
         if( $replaceContext ) {
             //set back to original context
