@@ -752,7 +752,7 @@ class PdfGenerator
         return $output;
     }
     //TODO: test the generation time. knp_snappy has a time delay
-    public function generateAndSaveProjectPdf( $project, $authorUser, $request=null ) {
+    public function generateAndSaveProjectPdf( $project, $authorUser=null, $request=null ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -942,6 +942,7 @@ class PdfGenerator
         }
 
         //echo "generated ok! <br>";
+        return $applicationOutputFilePath;
     }
 
 }

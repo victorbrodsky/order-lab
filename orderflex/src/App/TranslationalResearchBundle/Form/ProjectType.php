@@ -1132,7 +1132,7 @@ class ProjectType extends AbstractType
         if( $this->params['reSubmitReview'] === true ) {
             $builder->add('reSubmitReview', SubmitType::class, array(
                 'label' => 'Save Changes and Resubmit Project',
-                'attr' => array('class'=>'btn btn-success')
+                'attr' => array('class'=>'btn btn-success transres-reSubmitReview')
             ));
 
             $builder->add('reSubmitReviewComment',TextareaType::class,array(

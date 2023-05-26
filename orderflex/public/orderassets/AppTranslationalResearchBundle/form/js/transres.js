@@ -79,8 +79,17 @@ $(document).ready(function() {
     transresIrbStatusListListener('transres-project-irbStatusList');
 
     transresShowHideProjectDocument();
+
+    //transresReSubmitReviewBtnListener();
     
 });
+
+// function transresReSubmitReviewBtnListener() {
+//     $('.transres-reSubmitReview').on("click", function(e) {
+//         var lbtn = Ladda.create($(this).get(0));
+//         lbtn.start();
+//     });
+// }
 
 function transresIrbExemptListener( classname ) {
     $("."+classname).on("change", function(e) {
@@ -670,6 +679,10 @@ function transresSubmitBtnRegister(btnName) {
 
 function transresHideBtn() {
     //console.log("hide submit buttons");
+    // $(":submit").each(function () {
+    //     var lbtn = Ladda.create($(this).get(0));
+    //     lbtn.start();
+    // });
     $(":submit").hide();
     $('#please-wait').show();
 }

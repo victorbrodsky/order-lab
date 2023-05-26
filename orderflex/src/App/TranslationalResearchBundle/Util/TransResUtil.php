@@ -3059,8 +3059,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
         }
 
         //Case: missing info: send to requesters(submitter, contact), ccs: admins
@@ -3094,8 +3096,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); ////send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
         }
 
         //Case: rejected: send to requesters(submitter, contact), ccs: admins
@@ -3133,8 +3137,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
         }
 
         //Case: Final Approved
@@ -3226,8 +3232,10 @@ class TransResUtil
 //            $logger->notice('adminsCcs:['.implode("|",$adminsCcs).']');
 //            $logger->notice('senderEmail:['.$senderEmail.']');
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
         }
 
         //All other cases: final approved, closes ...
@@ -3250,8 +3258,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
         }
 
         if( $subject && $body ) {
@@ -8347,5 +8357,81 @@ class TransResUtil
         }
         return false;
     }
-    
+
+    public function getProjectAttachments( $project ) {
+        $attachmentArr = array();
+
+        //Export project summary to a PDF ($projectPdfs)
+        $pdfPath = null;
+        $pdf = $project->getSingleProjectPdf();
+        if( $pdf ) {
+            $pdfPath = $pdf->getServerPath();
+            if( !file_exists($pdfPath) ) {
+                $pdfPath = null;
+            }
+        }
+
+        if( !$pdfPath ) {
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $res = $transresPdfUtil->generateAndSaveProjectPdf($project);
+
+            $filename = $res['filename'];
+            $filsize = $res['size'];
+            //echo "filsize=$filsize; filename=$filename <br>";
+
+            if ($filename && $filsize) {
+                //exit("OK: filsize=$filsize; filename=$filename");
+                $pdf = $project->getSingleProjectPdf();
+                if( $pdf && $pdf->pathExist() ) {
+                    $pdfPath = $pdf->getServerPath();
+                    if( !file_exists($pdfPath) ) {
+                        $pdfPath = null;
+                    }
+                }
+            }
+        }
+
+        if( $pdfPath ) {
+            $pdfName = $pdf->getDescriptiveFilename();
+            $attachmentArr[] = array($pdfPath,$pdfName);
+        }
+
+        //Project Intake Form Documents (documents)
+        $doc = $project->getSingleDocument();
+//        if( $doc->pathExist() ) {
+//            $path = $doc->getServerPath();
+//            if( $path ) {
+//                $name = $doc->getDescriptiveFilename();
+//                $attachmentArr[] = array($path,$name);
+//            }
+//        }
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+        
+        
+        //check for IRB approval letter (irbApprovalLetters)
+        $doc = $project->getSingleIrbApprovalLetter();
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+
+        //Human Tissue Form ($humanTissueForms)
+        $doc = $project->getSingleHumanTissueForm();
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+
+        return $attachmentArr;
+    }
+
 }

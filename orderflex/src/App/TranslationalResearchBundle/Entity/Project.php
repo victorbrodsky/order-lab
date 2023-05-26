@@ -1752,6 +1752,14 @@ class Project {
     {
         return $this->documents;
     }
+    public function getSingleDocument()
+    {
+        $docs = $this->getDocuments();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
 
     public function addIrbApprovalLetter($item)
     {
@@ -1770,6 +1778,14 @@ class Project {
     {
         return $this->irbApprovalLetters;
     }
+    public function getSingleIrbApprovalLetter()
+    {
+        $docs = $this->getIrbApprovalLetters();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
 
     public function addHumanTissueForm($item)
     {
@@ -1787,6 +1803,14 @@ class Project {
     public function getHumanTissueForms()
     {
         return $this->humanTissueForms;
+    }
+    public function getSingleHumanTissueForm()
+    {
+        $docs = $this->getHumanTissueForms();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
     }
 
     public function getRequests()
@@ -3069,12 +3093,16 @@ class Project {
     public function ifExistProjectPdf() {
         $pdf = $this->getSingleProjectPdf();
         if( $pdf ) {
-            $pdfPath = $pdf->getServerPath();
-            if( file_exists($pdfPath) ) {
-                return true;
-            }
+            return $pdf->pathExist();
         }
         return false;
+//        if( $pdf ) {
+//            $pdfPath = $pdf->getServerPath();
+//            if( file_exists($pdfPath) ) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
     ////////////// EOF Additional fields from #295 //////////////
 

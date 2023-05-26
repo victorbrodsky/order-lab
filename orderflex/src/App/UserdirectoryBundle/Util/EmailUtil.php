@@ -26,6 +26,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\File;
 
 
 /**
@@ -56,7 +58,7 @@ class EmailUtil {
     //$attachmentPath: absolute path to the attachment file (optional)
     //$attachmentFilename: attachment file name (optional)
     //$fromEmail: site's email or system email will be used if null (optional)
-    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null ) {
+    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null, $attachmentArr=array() ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -252,6 +254,26 @@ class EmailUtil {
             }
 
             $message->attachFromPath($attachmentPath,$attachmentFilename);
+
+            //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
+            // These methods have been deprecated and replaced with addPart().
+        }
+        
+        if( $attachmentArr && is_array($attachmentArr) ) {
+            foreach($attachmentArr as $attachment) {
+                $pdfPath = null;
+                $pdfName = null;
+                if( array_key_exists(0,$attachment) ) {
+                    $pdfPath = $attachment[0];
+                }
+                if( array_key_exists(1,$attachment) ) {
+                    $pdfName = $attachment[1];
+                }
+
+                if( $pdfPath ) {
+                    $message->addPart(new DataPart(new File($pdfPath), $pdfName));
+                }
+            }
         }
 
         $emailsStr = "";
