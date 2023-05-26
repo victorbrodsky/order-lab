@@ -652,14 +652,21 @@ class Document {
         return false;
     }
 
-    public function getAttachmentArr() {
-        $attachmentArr = null;
+    public function getAttachmentElementArr() {
+        $attachmentElementArr = null;
         $path = $this->getServerPath();
         if( $path && file_exists($path) ) {
             $name = $this->getDescriptiveFilename();
-            $attachmentArr = array($path,$name);
+            $attachmentElementArr = array('path'=>$path,'name'=>$name);
         }
-        return $attachmentArr;
+        return $attachmentElementArr;
+    }
+    public function getAttachmentArr() {
+        $attachmentElementArr = $this->getAttachmentElementArr();
+        if( $attachmentElementArr ) {
+            return array($attachmentElementArr);
+        }
+        return null;
     }
 
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error:

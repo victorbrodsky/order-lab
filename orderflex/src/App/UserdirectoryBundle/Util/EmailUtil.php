@@ -254,20 +254,22 @@ class EmailUtil {
             }
 
             $message->attachFromPath($attachmentPath,$attachmentFilename);
-
-            //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
-            // These methods have been deprecated and replaced with addPart().
         }
-        
+
+        //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
+        // These methods have been deprecated and replaced with addPart().
+        //TODO: rewrite $attachmentPath and $attachmentFilename to array compatible with new addPart using Document->getAttachmentArr
+        //array(array($pdfPath1,$pdfName1),array($pdfPath2,$pdfName2)...)
+        //array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
         if( $attachmentArr && is_array($attachmentArr) ) {
             foreach($attachmentArr as $attachment) {
                 $pdfPath = null;
                 $pdfName = null;
-                if( array_key_exists(0,$attachment) ) {
-                    $pdfPath = $attachment[0];
+                if( array_key_exists('path',$attachment) ) {
+                    $pdfPath = $attachment['path'];
                 }
-                if( array_key_exists(1,$attachment) ) {
-                    $pdfName = $attachment[1];
+                if( array_key_exists('name',$attachment) ) {
+                    $pdfName = $attachment['name'];
                 }
 
                 if( $pdfPath ) {

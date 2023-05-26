@@ -1233,8 +1233,11 @@ class TransResUtil
 
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $admins = $this->getTransResAdminEmails($project,true,true); //set Transition
+
+                        $attachmentArr = $this->getProjectAttachments($project);
+
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail );
+                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail, null, null, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResAdmin = "Email To: ".implode("; ",$admins);
@@ -1253,8 +1256,11 @@ class TransResUtil
 
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $primaryReviewerEmails = $this->getCommiteePrimaryReviewerEmails($project); //ok
+
+                        $attachmentArr = $this->getProjectAttachments($project);
+
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail );
+                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail, null, null, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResPrimary = "Email To: ".implode("; ",$admins);
@@ -8393,20 +8399,13 @@ class TransResUtil
 
         if( $pdfPath ) {
             $pdfName = $pdf->getDescriptiveFilename();
-            $attachmentArr[] = array($pdfPath,$pdfName);
+            $attachmentArr[] = array('path'=>$pdfPath,'name'=>$pdfName);
         }
 
         //Project Intake Form Documents (documents)
         $doc = $project->getSingleDocument();
-//        if( $doc->pathExist() ) {
-//            $path = $doc->getServerPath();
-//            if( $path ) {
-//                $name = $doc->getDescriptiveFilename();
-//                $attachmentArr[] = array($path,$name);
-//            }
-//        }
         if( $doc && $doc->pathExist() ) {
-            $docAttachmentArr = $doc->getAttachmentArr();
+            $docAttachmentArr = $doc->getAttachmentElementArr();
             if ($docAttachmentArr) {
                 $attachmentArr[] = $docAttachmentArr;
             }
@@ -8416,7 +8415,7 @@ class TransResUtil
         //check for IRB approval letter (irbApprovalLetters)
         $doc = $project->getSingleIrbApprovalLetter();
         if( $doc && $doc->pathExist() ) {
-            $docAttachmentArr = $doc->getAttachmentArr();
+            $docAttachmentArr = $doc->getAttachmentElementArr();
             if ($docAttachmentArr) {
                 $attachmentArr[] = $docAttachmentArr;
             }
@@ -8425,7 +8424,7 @@ class TransResUtil
         //Human Tissue Form ($humanTissueForms)
         $doc = $project->getSingleHumanTissueForm();
         if( $doc && $doc->pathExist() ) {
-            $docAttachmentArr = $doc->getAttachmentArr();
+            $docAttachmentArr = $doc->getAttachmentElementArr();
             if ($docAttachmentArr) {
                 $attachmentArr[] = $docAttachmentArr;
             }
