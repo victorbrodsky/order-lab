@@ -1222,6 +1222,10 @@ class TransResUtil
                         $subject = "Project request ".$project->getOid(). " has been reviewed by a committee member";
                         $body = $subject . " who is recommending it to be " . $review->getDecisionStr();
 
+                        //In the notification email body add a sentence as a separate paragraph above the links stating
+                        // “The project description is attached to this email.”
+                        $body = $body.$break.$break. "The project description is attached to this email.";
+
                         /////////////////// Email to Admin ///////////////////////
                         //get project url
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
@@ -1249,6 +1253,10 @@ class TransResUtil
 
                         /////////////////// Email to Primary Reviewer, TO: PRIMARY COMMITTEE REVIEWER ONLY ///////////////////////
                         $emailBody = $body .$break.$break. "At the time of this notification, the status of this project request is '$originalStateLabel'.";
+
+                        //In the notification email body add a sentence as a separate paragraph above the links stating
+                        // “The project description is attached to this email.”
+                        $emailBody = $emailBody.$break.$break. "The project description is attached to this email.";
 
                         //To review this project request, please visit the link below: LINK-TO-REVIEW-PROJECT-REQUEST
                         $emailBody = $emailBody .$break.$break. "To review this project request, please visit the link below:";
@@ -3058,6 +3066,11 @@ class TransResUtil
             //To review this project request, please visit the link below: http://LINK TO THE REVIEW PAGE FOR THIS PROJECT REQUEST
             $body = $projectInfo . " is now awaiting your review.";
             $body = $body . " At the time of this notification, the status of this project request is '$currentStateLabel'.";
+
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             $body = $body . $break.$break;
             $body = $body . "To review this project request, please visit the link below:";
             $body = $body . $break. $projectReviewUrl;
@@ -3095,6 +3108,10 @@ class TransResUtil
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //To supply the requested information and re-submit for review, please visit:
             $projectResubmitUrl = $this->getProjectResubmitUrl($project);
             $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit the following link:".$break.$projectResubmitUrl;
@@ -3125,6 +3142,10 @@ class TransResUtil
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
             $body = $statusChangeMsg . $break.$break. "To view the details of this project request, please visit the link below:".$break.$projectUrl;
+
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
 
             //If you have any questions, please contact
             // [FirstNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
@@ -3224,9 +3245,12 @@ class TransResUtil
             $body = $body . $break.$break . "Any outstanding invoices associated with this project request or your other project requests can be accessed via the following link:";
             $body = $body . $break . $linkMyOutstandingInvoices;
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
@@ -3256,9 +3280,12 @@ class TransResUtil
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
