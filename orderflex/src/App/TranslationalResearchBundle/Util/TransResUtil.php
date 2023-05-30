@@ -1237,7 +1237,7 @@ class TransResUtil
                         $attachmentArr = $this->getProjectAttachments($project);
 
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail, null, null, $attachmentArr );
+                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResAdmin = "Email To: ".implode("; ",$admins);
@@ -1260,7 +1260,7 @@ class TransResUtil
                         $attachmentArr = $this->getProjectAttachments($project);
 
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail, null, null, $attachmentArr );
+                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResPrimary = "Email To: ".implode("; ",$admins);
@@ -3068,7 +3068,7 @@ class TransResUtil
             $attachmentArr = $this->getProjectAttachments($project);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: missing info: send to requesters(submitter, contact), ccs: admins
@@ -3105,7 +3105,7 @@ class TransResUtil
             $attachmentArr = $this->getProjectAttachments($project);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: rejected: send to requesters(submitter, contact), ccs: admins
@@ -3146,7 +3146,7 @@ class TransResUtil
             $attachmentArr = $this->getProjectAttachments($project);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: Final Approved
@@ -3241,7 +3241,7 @@ class TransResUtil
             $attachmentArr = $this->getProjectAttachments($project);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //All other cases: final approved, closes ...
@@ -3267,7 +3267,7 @@ class TransResUtil
             $attachmentArr = $this->getProjectAttachments($project);
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, null, null, $attachmentArr );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         if( $subject && $body ) {
@@ -8410,8 +8410,7 @@ class TransResUtil
                 $attachmentArr[] = $docAttachmentArr;
             }
         }
-        
-        
+
         //check for IRB approval letter (irbApprovalLetters)
         $doc = $project->getSingleIrbApprovalLetter();
         if( $doc && $doc->pathExist() ) {

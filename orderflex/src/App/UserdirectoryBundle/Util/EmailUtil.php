@@ -55,10 +55,11 @@ class EmailUtil {
     //$ccs: same as $emails (optional)
     //$subject: string
     //$body: html email text
-    //$attachmentPath: absolute path to the attachment file (optional)
+    //$attachmentData: string - absolute path to the attachment file (optional)
+    // or array - array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
     //$attachmentFilename: attachment file name (optional)
     //$fromEmail: site's email or system email will be used if null (optional)
-    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null, $attachmentArr=array() ) {
+    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentData=null, $attachmentFilename=null ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -74,6 +75,7 @@ class EmailUtil {
 
         $sitenameAbbreviation = null;
         $url = null;
+        $attachmentPath = null; //single attachment path or comma separated attachment paths
 
         //site specific settings
         $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -245,15 +247,49 @@ class EmailUtil {
         }
 
         // Optionally add any attachments
-        if( $attachmentPath ) {
+//        if( $attachmentPath ) {
+//
+//            if( $attachmentPath ) {
+//                $logger->notice("Attachment exists; fromPath=".$attachmentPath);
+//            } else {
+//                $logger->notice("Attachment is NULL; fromPath=".$attachmentPath);
+//            }
+//
+//            $message->attachFromPath($attachmentPath,$attachmentFilename);
+//        }
 
-            if( $attachmentPath ) {
-                $logger->notice("Attachment exists; fromPath=".$attachmentPath);
+        //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
+        // These methods have been deprecated and replaced with addPart().
+        if( $attachmentData ) {
+            if( is_array($attachmentData) ) {
+                //$attachmentData - array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
+                foreach($attachmentData as $attachment) {
+                    $pdfPath = null;
+                    $pdfName = null;
+                    if( array_key_exists('path',$attachment) ) {
+                        $pdfPath = $attachment['path'];
+                    }
+                    if( array_key_exists('name',$attachment) ) {
+                        $pdfName = $attachment['name'];
+                    }
+
+                    if( $pdfPath ) {
+                        $message->addPart(new DataPart(new File($pdfPath), $pdfName));
+                        if( $attachmentPath ) {
+                            $attachmentPath = $attachmentPath . ", " . $pdfPath;
+                        } else {
+                            $attachmentPath = $pdfPath;
+                        }
+
+                    }
+                }
             } else {
-                $logger->notice("Attachment is NULL; fromPath=".$attachmentPath);
+                //$attachmentData - string
+                $logger->notice("Attachment exists; attachmentData=".$attachmentData);
+                $message->addPart(new DataPart(new File($attachmentData), $attachmentFilename));
             }
-
-            $message->attachFromPath($attachmentPath,$attachmentFilename);
+        } else {
+            $logger->notice("attachmentData is NULL");
         }
 
         //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
@@ -261,22 +297,22 @@ class EmailUtil {
         //TODO: rewrite $attachmentPath and $attachmentFilename to array compatible with new addPart using Document->getAttachmentArr
         //array(array($pdfPath1,$pdfName1),array($pdfPath2,$pdfName2)...)
         //array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
-        if( $attachmentArr && is_array($attachmentArr) ) {
-            foreach($attachmentArr as $attachment) {
-                $pdfPath = null;
-                $pdfName = null;
-                if( array_key_exists('path',$attachment) ) {
-                    $pdfPath = $attachment['path'];
-                }
-                if( array_key_exists('name',$attachment) ) {
-                    $pdfName = $attachment['name'];
-                }
-
-                if( $pdfPath ) {
-                    $message->addPart(new DataPart(new File($pdfPath), $pdfName));
-                }
-            }
-        }
+//        if( $attachmentArr && is_array($attachmentArr) ) {
+//            foreach($attachmentArr as $attachment) {
+//                $pdfPath = null;
+//                $pdfName = null;
+//                if( array_key_exists('path',$attachment) ) {
+//                    $pdfPath = $attachment['path'];
+//                }
+//                if( array_key_exists('name',$attachment) ) {
+//                    $pdfName = $attachment['name'];
+//                }
+//
+//                if( $pdfPath ) {
+//                    $message->addPart(new DataPart(new File($pdfPath), $pdfName));
+//                }
+//            }
+//        }
 
         $emailsStr = "";
         if( $emails && count($emails) > 0 ) {
