@@ -317,6 +317,25 @@ class TransResSiteParameters {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableNewProjectAccessPage;
+    //Show this project specialty in the Project Requests By Type top navigation bar menu: [Yes/No]
+    /**
+     * Show this project specialty in the Project Requests By Type top navigation bar menu: [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnNavbar;
+    //Show this project specialty in the Work Requests top navigation bar menu: [Yes/No]
+    /**
+     * Show this project specialty in the Work Requests top navigation bar menu: [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnWorkReqNavbar;
+    //Show this project specialty in the Reviewer Configuration top navigation bar menu: [Yes/No]
+    /**
+     * Show this project specialty in the Reviewer Configuration top navigation bar menu: [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnConfig;
+
 
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:

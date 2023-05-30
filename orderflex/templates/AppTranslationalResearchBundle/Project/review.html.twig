@@ -135,10 +135,6 @@
 
 <script type="text/javascript">
 
-    //var _projectUpdateCounter = 0;
-    //var _projectUpdateAsyncflag = true;
-    //var _projectUpdatePdf = true;
-
     $(document).ready(function() {
 
         //expandTextarea();
@@ -212,21 +208,16 @@
             reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
         }
 
-        //_projectUpdateAsyncflag = false;
-        //_projectUpdatePdf = false;
         ////// Here do all update synchronously (async=false) //////
         transresUpdateIrbExpDate(false);
         transresUpdateProjectPriceList(false);
 
         transresUpdateApprovedProjectBudget(false);
         transresUpdateNoBudgetLimit(false);
-        ////// EOF Here do all update asynchronously //////
+        ////// EOF Here do all update synchronously (async=false) //////
 
-        //TODO: might add logic to update project's PDF only once after all updates by a dedicated project PDF update by ajax
-        //TODO: verify logic for update review page (approve/reject/more info). PDF updated twice for IRBReview?
+        //update project PDF by the review page (approve/reject/more info)
         transresUpdateProjectPdf();
-        //_projectUpdateAsyncflag = true;
-        //_projectUpdatePdf = true;
     }
 
     function transresUpdateProjectPdf() {
@@ -329,7 +320,6 @@
             if( lbtn ) {
                 lbtn.stop();
             }
-            //_projectUpdateCounter++;
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -400,7 +390,6 @@
                 if( lbtn ) {
                     lbtn.stop();
                 }
-                //_projectUpdateCounter++;
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
             });
@@ -469,7 +458,6 @@
             if( lbtn ) {
                 lbtn.stop();
             }
-            //_projectUpdateCounter++;
         }).error(function (jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -550,7 +538,6 @@
             if( lbtn ) {
                 lbtn.stop();
             }
-            //_projectUpdateCounter++;
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
