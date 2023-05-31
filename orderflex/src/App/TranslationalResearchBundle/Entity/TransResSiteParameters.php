@@ -317,9 +317,9 @@ class TransResSiteParameters {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableNewProjectAccessPage;
-    //Show this project specialty in the Project Requests By Type top navigation bar menu: [Yes/No]
+
     /**
-     * Show this project specialty in the Project Requests By Type top navigation bar menu: [Yes/No]
+     * Show this project specialty in the Project Requests By Type top navigation bar menu (list the projects by specialty): [Yes/No]
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableProjectOnNavbar;
@@ -700,6 +700,10 @@ class TransResSiteParameters {
         $this->setEnableNewProjectAccessPage(true);
         $this->setEnableNewProjectOnNavbar(true);
         $this->setEnableNewProjectOnSelector(true);
+        $this->setEnableProjectOnNavbar(true);
+        $this->setEnableProjectOnWorkReqNavbar(true);
+        $this->setEnableProjectOnConfig(true);
+
 
         $this->setOverBudgetSendEmail(true);
         $this->setApprovedBudgetSendEmail(true);
@@ -1695,6 +1699,54 @@ class TransResSiteParameters {
     public function setEnableNewProjectAccessPage($enableNewProjectAccessPage)
     {
         $this->enableNewProjectAccessPage = $enableNewProjectAccessPage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableProjectOnNavbar()
+    {
+        return $this->enableProjectOnNavbar;
+    }
+
+    /**
+     * @param mixed $enableProjectOnNavbar
+     */
+    public function setEnableProjectOnNavbar($enableProjectOnNavbar)
+    {
+        $this->enableProjectOnNavbar = $enableProjectOnNavbar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableProjectOnWorkReqNavbar()
+    {
+        return $this->enableProjectOnWorkReqNavbar;
+    }
+
+    /**
+     * @param mixed $enableProjectOnWorkReqNavbar
+     */
+    public function setEnableProjectOnWorkReqNavbar($enableProjectOnWorkReqNavbar)
+    {
+        $this->enableProjectOnWorkReqNavbar = $enableProjectOnWorkReqNavbar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableProjectOnConfig()
+    {
+        return $this->enableProjectOnConfig;
+    }
+
+    /**
+     * @param mixed $enableProjectOnConfig
+     */
+    public function setEnableProjectOnConfig($enableProjectOnConfig)
+    {
+        $this->enableProjectOnConfig = $enableProjectOnConfig;
     }
 
     /**

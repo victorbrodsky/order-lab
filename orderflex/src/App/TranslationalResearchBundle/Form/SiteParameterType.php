@@ -302,6 +302,24 @@ class SiteParameterType extends AbstractType
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
+        $builder->add('enableProjectOnNavbar', ChoiceType::class, array(
+            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('enableNewProjectAccessPage', ChoiceType::class, array(
+            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('enableNewProjectAccessPage', ChoiceType::class, array(
+            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
 
         $builder->add('emailNoteConcern', null, array(
             'label' => "Email Notification Asking To Contact With Concerns:",
