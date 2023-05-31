@@ -3658,7 +3658,7 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
-    //Specialties filtered by enableProjectOnConfig (old name getTransResProjectReviewSpecialties)
+    //Specialties filtered by enableProjectOnConfig
     public function getTransResEnableProjectOnConfigSpecialties( $userAllowed=true ) {
         $specialties = $this->getTransResProjectSpecialties($userAllowed);
 
