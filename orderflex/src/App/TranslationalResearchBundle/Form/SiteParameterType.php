@@ -39,6 +39,7 @@ class SiteParameterType extends AbstractType
         } else {
             //If specialty is not set (default) => Yes, No
             $booleanChoices = array(
+                'Not set' => NULL,
                 'Yes' => true,
                 'No' => false,
             );
@@ -302,20 +303,21 @@ class SiteParameterType extends AbstractType
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
+        //ticket 295(28)
         $builder->add('enableProjectOnNavbar', ChoiceType::class, array(
-            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+            'label' => 'Show this project specialty in the Project Requests By Type top navigation bar menu (Project Requests->By type):',
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('enableNewProjectAccessPage', ChoiceType::class, array(
-            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+        $builder->add('enableProjectOnWorkReqNavbar', ChoiceType::class, array(
+            'label' => 'Show this project specialty in the Work Requests top navigation bar menu (Work Requests->* by type):',
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')
         ));
-        $builder->add('enableNewProjectAccessPage', ChoiceType::class, array(
-            'label' => 'Enable access the "New Project Request" page URL (this is for users who might bookmark this page and try to return to it):',
+        $builder->add('enableProjectOnConfig', ChoiceType::class, array(
+            'label' => 'Show this project specialty in the Reviewer Configuration top navigation bar menu (Configuration->Reviewers):',
             'choices' => $this->booleanChoices,
             'required' => $this->booleanRequired,
             'attr' => array('class' => 'form-control')

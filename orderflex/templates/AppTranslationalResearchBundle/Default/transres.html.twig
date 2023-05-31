@@ -2128,7 +2128,10 @@ Show this accordion by default in an open + visible state.
 
                 {{ formmacros.field(form.humanTissueFormNote) }}
 
+                {{ formmacros.field(form.updateProjectFundNumber) }}
+
                 <hr>
+
 
                 {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnSelector,"",form.vars.value.enableNewProjectOnSelector) }}#}
                 {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnNavbar,"",form.vars.value.enableNewProjectOnNavbar) }}#}
@@ -2137,7 +2140,12 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(form.enableNewProjectOnSelector) }}
                 {{ formmacros.field(form.enableNewProjectOnNavbar) }}
                 {{ formmacros.field(form.enableNewProjectAccessPage) }}
-                {{ formmacros.field(form.updateProjectFundNumber) }}
+
+                {{ formmacros.field(form.enableProjectOnNavbar) }}
+                {{ formmacros.field(form.enableProjectOnWorkReqNavbar) }}
+                {{ formmacros.field(form.enableProjectOnConfig) }}
+
+
 
                 {#<hr>#}
                 {#<h4>#}

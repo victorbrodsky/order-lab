@@ -3658,14 +3658,29 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
-    //rename to getTransResProjectEnabledSpecialties
-    public function getTransResProjectReviewSpecialties( $userAllowed=true ) {
+    //Specialties filtered by enableProjectOnConfig (old name getTransResProjectReviewSpecialties)
+    public function getTransResEnableProjectOnConfigSpecialties( $userAllowed=true ) {
         $specialties = $this->getTransResProjectSpecialties($userAllowed);
 
         $allowedSpecialties = array();
 
         foreach($specialties as $specialty) {
-            if( $this->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
+            if( $this->getTransresSiteProjectParameter('enableProjectOnConfig',null,$specialty) === true ) {
+                $allowedSpecialties[] = $specialty;
+            }
+        }
+
+        return $allowedSpecialties;
+    }
+
+    //Specialties filtered by enableProjectOnNavbar
+    public function getTransResEnableProjectOnNavbar( $userAllowed=true ) {
+        $specialties = $this->getTransResProjectSpecialties($userAllowed);
+
+        $allowedSpecialties = array();
+
+        foreach($specialties as $specialty) {
+            if( $this->getTransresSiteProjectParameter('enableProjectOnNavbar',null,$specialty) === true ) {
                 $allowedSpecialties[] = $specialty;
             }
         }

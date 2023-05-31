@@ -1257,7 +1257,6 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
-        //TODO: replced by getTransResProjectReviewSpecialties
 
         $collDivs = $transresUtil->getTransResCollaborationDivs();
 
