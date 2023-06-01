@@ -25,6 +25,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\TranslationalResearchBundle\Form\FeeFilterType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -3271,12 +3272,31 @@ class RequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        
-        $filterform = $this->createForm(ListFilterType::class, null, array(
+
+        //$transresUtil = $this->container->get('transres_util');
+        //$specialties = $transresUtil->getTransResProjectSpecialties(false);
+
+        $specialties = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+        $filterSpecialties = array();
+        foreach($specialties as $specialty) {
+            $filterSpecialties[$specialty->getShortName()] = $specialty->getId();
+        }
+        $params = array(
+            'specialties'=>$filterSpecialties
+        );
+
+        $filterform = $this->createForm(FeeFilterType::class, null, array(
             'method' => 'GET',
+            'form_custom_value' => $params
         ));
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
+        $specialties = $filterform['specialties']->getData();
 
         $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
@@ -3310,6 +3330,18 @@ class RequestController extends OrderAbstractController
 
             $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
+        }
+
+        if( $specialties && count($specialties) > 0 ) {
+            //$specialtyTypes = array();
+            //$specialtyStr = "";
+            foreach($specialties as $specialty) {
+                echo "specialty=$specialty <br>";
+                $dql->andWhere("projectSpecialties.id != ".$specialty);
+            }
+            //projectSpecialties
+            //$specialtyStr = "projectSpecialties.id NOT IN (".implode(",",$specialties).")";
+            //$dql->andWhere($specialtyStr);
         }
 
         $limit = 30;
