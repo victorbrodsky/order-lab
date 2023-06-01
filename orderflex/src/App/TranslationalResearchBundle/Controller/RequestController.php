@@ -3301,7 +3301,8 @@ class RequestController extends OrderAbstractController
         $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        $dql->innerJoin("list.projectSpecialties", "projectSpecialties");
         $dql->leftJoin("list.prices", "prices");
 
         $dqlParameters = array();
@@ -3333,15 +3334,41 @@ class RequestController extends OrderAbstractController
         }
 
         if( $specialties && count($specialties) > 0 ) {
-            //$specialtyTypes = array();
-            //$specialtyStr = "";
-            foreach($specialties as $specialty) {
-                echo "specialty=$specialty <br>";
-                $dql->andWhere("projectSpecialties.id != ".$specialty);
+
+            //$dql->andWhere("projectSpecialties.id != 5");
+
+            if(0) {
+                $transresUtil = $this->container->get('transres_util');
+                foreach ($specialties as $specialty) {
+                    echo "specialty=$specialty <br>";
+                    $specialtyEntity = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($specialty);
+                    $orderableProjectSpecialties = $transresUtil->orderableProjectSpecialties($specialtyEntity,false);
+                    $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialties) . ")";
+                    $dql->andWhere($specialtyStr);
+                }
             }
+
+            if(0) {
+                $specialtyTypes = array();
+                $specialtyStr = "";
+                foreach ($specialties as $specialty) {
+                    echo "specialty=$specialty <br>";
+                    //$dql->andWhere("projectSpecialties.id != ".$specialty);
+                    $specialtyTypes[] = "projectSpecialties.id != $specialty";
+                }
+                $specialtyStr = implode(" AND ", $specialtyTypes);
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+
             //projectSpecialties
-            //$specialtyStr = "projectSpecialties.id NOT IN (".implode(",",$specialties).")";
-            //$dql->andWhere($specialtyStr);
+            if(1) {
+                $specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties.id NOT IN (" . implode(",", $specialties) . ")";
+                //$specialtyStr = "projectSpecialties IN (" . implode(",", $specialties) . ")";
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+            $dql->orderBy("list.orderinlist", "ASC"); //testing
         }
 
         $limit = 30;
@@ -3350,6 +3377,19 @@ class RequestController extends OrderAbstractController
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
         }
+
+        $query->setMaxResults(10);
+        echo "query=".$query->getSql()."<br>";
+        $lists = $query->getResult();
+        foreach($lists as $list) {
+            $specArr = array();
+            foreach($list->getProjectSpecialties() as $spec) {
+                $specArr[] = $spec."";
+            }
+            echo $list->getId().": ".implode(", ",$specArr)."<br>";
+        }
+        dump($lists);
+        exit('111');
 
         $paginationParams = array(
             'defaultSortFieldName' => 'list.orderinlist',

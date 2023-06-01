@@ -7568,7 +7568,7 @@ class TransResUtil
         return number_format((float)$number, 2, '.', ',');
     }
     
-    public function orderableProjectSpecialties($fee) {
+    public function orderableProjectSpecialties( $fee, $asObject=true ) {
 
         //1) get all specialties
         $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
@@ -7584,7 +7584,11 @@ class TransResUtil
         foreach($specialties as $specialty) {
             if( $hideSpecialties->contains($specialty) ) {
             } else {
-                $orderableSpcialties[] = $specialty;
+                if( $asObject ) {
+                    $orderableSpcialties[] = $specialty;
+                } else {
+                    $orderableSpcialties[] = $specialty->getId();
+                }
             }
 
         }
