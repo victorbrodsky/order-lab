@@ -5967,6 +5967,29 @@ class VacReqUtil
         }
 
         //if( $organizationalInstitutions && $institution ) { //$organizationalInstitutions &&
+//        if( $institution ) { //$organizationalInstitutions &&
+//            //echo "add to organizationalInstitutions; count=".count($organizationalInstitutions)."<br>";
+//            if( $organizationalInstitutions === null ||
+//                (   $organizationalInstitutions &&
+//                    is_array($organizationalInstitutions) &&
+//                    !array_key_exists($institution->getId(), $organizationalInstitutions)
+//                )
+//            ) {
+//                $thisApprovers = $this->getRequestApprovers( $entity, $institutionType );
+//                $approversArr = array();
+//                if( $thisApprovers && is_array($thisApprovers) ) {
+//                    foreach ($thisApprovers as $thisApprover) {
+//                        $approversArr[] = $thisApprover->getUsernameShortest();
+//                    }
+//                }
+//                if( count($approversArr) > 0 ) {
+//                    $orgName = $institution . " (for review by " . implode(", ",$approversArr) . ")";
+//                } else {
+//                    $orgName = $institution."";
+//                }
+//                $organizationalInstitutions[$institution->getId()] = $orgName;
+//            }
+//        }
         if( $institution ) { //$organizationalInstitutions &&
             //echo "add to organizationalInstitutions; count=".count($organizationalInstitutions)."<br>";
             if( $organizationalInstitutions === null ||
