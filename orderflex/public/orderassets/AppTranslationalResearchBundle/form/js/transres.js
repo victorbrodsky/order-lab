@@ -38,6 +38,7 @@ $(document).ready(function() {
     transresNeedStatSupportListener();
     transresNeedInfSupportListener();
     //transresIrbStatusListListener();
+    transresCollDivsListener();
 
     transresProjectFundedListener();
 
@@ -229,19 +230,47 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
 function transresNeedStatSupportListener() {
     $(".needStatSupport").on("change", function(e) {
         var needStatSupport = $(".needStatSupport").find('input[name="oleg_translationalresearchbundle_project[needStatSupport]"]:checked').val();
-        console.log("change: checked value needStatSupport="+needStatSupport);
+        //console.log("change: checked value needStatSupport="+needStatSupport);
         transresShowHideNeedStatSupport(needStatSupport);
     });
 }
 function transresShowHideNeedStatSupport(needStatSupport) {
     if( needStatSupport == true ) {
-        console.log("needStatSupport show");
+        //console.log("needStatSupport show");
         $("#needstatsupport").show('slow');
     }
 
     if( needStatSupport == false ) {
-        console.log("needStatSupport hide");
+        //console.log("needStatSupport hide");
         $("#needstatsupport").hide('slow');
+    }
+}
+
+function transresCollDivsListener() {
+    $(".collDivs").on("change", function(e) {
+        var showcollDivs = false;
+        $('input[name="oleg_translationalresearchbundle_project[collDivs][]"]').each(function () {
+            //var sThisVal = (this.checked ? $(this).parent().text().trim() : "");
+            if( this.checked ) {
+                var collDiv = $(this).parent().text().trim();
+                //console.log("change=" + collDiv);
+                if( collDiv == "Clinical Pathology" ) {
+                    showcollDivs = true;
+                }
+            }
+        });
+        transresShowHideCollDivs(showcollDivs);
+    });
+}
+function transresShowHideCollDivs(collDivs) {
+    if( collDivs == true ) {
+        //console.log("collDivs show");
+        $("#collDivs").show('slow');
+    }
+
+    if( collDivs == false ) {
+        //console.log("collDivs hide");
+        $("#collDivs").hide('slow');
     }
 }
 

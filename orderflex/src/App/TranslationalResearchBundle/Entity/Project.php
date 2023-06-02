@@ -870,7 +870,8 @@ class Project {
      */
     private $fundDescription;
     ////////////// EOF Additional fields from #295 //////////////
-    
+
+    ////////////// #295 //////////////
     //#295: add a new field titled “Requester group:” showing the values from the list manager’s
     // new “Translational research project requester group” list
     // (“Internal - WCM Pathology Faculty” and “External - Non-WCM Pathology Faculty”)
@@ -882,6 +883,28 @@ class Project {
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $requesterGroup;
+
+    //24- On https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=Internal&collaborating-division=CSP
+    // and on https://view.med.cornell.edu/translational-research/project/new/cp?requester-group=External&collaborating-division=CSP ,
+    // set the checkbox “[v] Computational Pathology” to checked on load for question
+    // “Which division(s) are you collaborating with?:“
+    // and under it (because it is checked), unhide a question titled “Computational study category:”
+    // showing the five members of the list “Computational translational project categories”
+    // as unchecked check boxes. If “[v] Computational Pathology” checkbox
+    // on any New Project Request page is unchecked (as an answer to “Which division(s)
+    // are you collaborating with?:“), CLEAR/uncheck the answers for and hide the “Computational study category:” question/field.
+    /**
+     * Computational translational project categories (Types): Transcriptomics, Genomics, Epigenomics, Multiomics, Imaging
+     *
+     * @ORM\ManyToMany(targetEntity="CompCategoryList")
+     * @ORM\JoinTable(name="transres_project_comptype",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="comptype_id", referencedColumnName="id")}
+     * )
+     **/
+    private $compTypes;
+    ////////////// EOF #295 //////////////
+
 
 
     public function __construct($user=null) {
@@ -910,6 +933,7 @@ class Project {
         $this->collLabs = new ArrayCollection();
         $this->collDivs = new ArrayCollection();
         $this->submitInvestigators = new ArrayCollection();
+        $this->compTypes = new ArrayCollection();
 
         //$this->reminderEmails = new ArrayCollection();
 
@@ -2743,6 +2767,25 @@ class Project {
     public function removeSubmitInvestigator($item)
     {
         $this->submitInvestigators->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompTypes()
+    {
+        return $this->compTypes;
+    }
+    public function addCompType($item)
+    {
+        if( $item && !$this->compTypes->contains($item) ) {
+            $this->compTypes->add($item);
+        }
+        return $this;
+    }
+    public function removeCompType($item)
+    {
+        $this->compTypes->removeElement($item);
     }
 
     /////////// Additional Details (8) ///////////////

@@ -737,7 +737,7 @@ class ProjectType extends AbstractType
         ////////////// Additional fields from #294 //////////////
         //ONLY for CP and AP/CP
         //echo "specialExtraProjectSpecialty=".$this->params['specialExtraProjectSpecialty']."<br>";
-        if( $this->params['specialExtraProjectSpecialty'] == true ) {
+//        if( $this->params['specialExtraProjectSpecialty'] == true ) {
             $builder->add('collLabs', EntityType::class, array(
                 'class' => 'AppTranslationalResearchBundle:CollLabList',
                 'label' => 'Which labs within Clinical Pathology are you collaborating with, if any?:',
@@ -755,7 +755,7 @@ class ProjectType extends AbstractType
                         ));
                 }
             ));
-        }
+//        }
 
         //For ALL “New Project Request Forms” (not just for CP)
         $builder->add('collDivs', EntityType::class, array(
@@ -967,6 +967,24 @@ class ProjectType extends AbstractType
                         'typeadd' => 'user-added',
                     ));
             },
+        ));
+
+        $builder->add('compTypes', EntityType::class, array(
+            'class' => 'AppTranslationalResearchBundle:CompCategoryList',
+            'label' => 'Computational study category:',
+            'required' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type compTypes'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
         ));
 
         //Archival Specimens

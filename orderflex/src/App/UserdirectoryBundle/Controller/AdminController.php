@@ -42,6 +42,7 @@ use App\ResAppBundle\Entity\SpecificIndividualList;
 use App\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use App\TranslationalResearchBundle\Entity\CollDivList;
 use App\TranslationalResearchBundle\Entity\CollLabList;
+use App\TranslationalResearchBundle\Entity\CompCategoryList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use App\TranslationalResearchBundle\Entity\IrbStatusList;
 use App\TranslationalResearchBundle\Entity\OrderableStatusList;
@@ -1051,6 +1052,7 @@ class AdminController extends OrderAbstractController
         $count_generateCollDivList = $this->generateCollDivList();
         $count_generateIrbStatusList = $this->generateIrbStatusList();
         $count_generateRequesterGroupList = $this->generateRequesterGroupList();
+        $count_generateCompCategoryList = $this->generateCompCategoryList();
 
         //Dashboards (7 lists)
         $count_generateDashboardRoles = $this->generateDashboardRoles();
@@ -1198,6 +1200,7 @@ class AdminController extends OrderAbstractController
             'CollDivList='.$count_generateCollDivList.', '.
             'IrbStatusList='.$count_generateIrbStatusList.', '.
             'RequesterGroupList='.$count_generateRequesterGroupList.', '.
+            'CompCategoryList='.$count_generateCompCategoryList.', '.
 
             'generateDashboardRoles='.$count_generateDashboardRoles.', '.
             'generateChartTypeList='.$count_generateChartTypeList.', '.
@@ -7799,6 +7802,7 @@ class AdminController extends OrderAbstractController
             "transrescolldivs" => array('CollDivList','transrescolldivs-list','Translational Research Collaboration Division List'),
             "transresirbstatus" => array('IrbStatusList','transresirbstatus-list','Translational Research Irb Approval Status List'),
             "transresrequestergroup" => array('RequesterGroupList','transresrequestergroup-list','Translational Research Requester Group List'),
+            "transrescomptypes" => array('CompCategoryList','transrescomptypes-list','Translational Research Computational Categories List'),
 
             "visastatus" => array('VisaStatus','visastatus-list','Visa Status'),
             "healthcareprovidercommunication" => array('HealthcareProviderCommunicationList','healthcareprovidercommunication-list','Healthcare Provider Initial Communication List'),
@@ -10139,6 +10143,8 @@ class AdminController extends OrderAbstractController
             "USCAP" =>                              array("uscap",          "USCAP",            "USCAP", "USCAP"), //USCAP (prefix USCAP)
             "Anatomic Pathology" =>                 array("ap",             "AP",               "AP",    "AP"),    //Anatomic Pathology (prefix AP)
             "Clinical Pathology" =>                 array("cp",             "CP",               "CP",    "CP"), //Clinical Pathology (prefix CP)
+
+            "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP")
         );
 
         $flush = false;
@@ -10458,25 +10464,31 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "Anatomic Pathology",
-            "Hematopathology",
-            "Clinical Pathology",
-            "Molecular Pathology",
-            "Experimental Pathology",
-            "Computational Pathology",
-            "N/A"
+            "Anatomic Pathology" => "ap",
+            "Hematopathology" => "hematopathology",
+            "Clinical Pathology" => "cp",
+            "Molecular Pathology" => "",
+            "Experimental Pathology" => "",
+            "Computational Pathology" => "csp",
+            "N/A" => ""
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name => $urlSlug ) {
 
             $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByName($name);
             if( $listEntity ) {
+
+                //$listEntity->setUrlSlug($urlSlug);
+                //$em->flush();
+
                 continue;
             }
 
             $listEntity = new CollDivList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setUrlSlug($urlSlug);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
@@ -10552,6 +10564,41 @@ class AdminController extends OrderAbstractController
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setUrlSlug($urlSlug);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateCompCategoryList() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Transcriptomics",
+            "Genomics",
+            "Epigenomics",
+            "Multiomics",
+            "Imaging"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            //exit("name=$name, abbreviation=$abbreviation");
+
+            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CompCategoryList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new CompCategoryList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

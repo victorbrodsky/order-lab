@@ -20,16 +20,6 @@
 
 <head>
 
-    {#{% extends "AppUserdirectoryBundle/Default/base-main.html.twig" %}#}
-    {#{% block javascripts %}#}
-        {#{{ parent() }}#}
-        {#{{ encore_entry_script_tags('entry') }}#}
-    {#{% endblock %}#}
-    {#{% block stylesheets %}#}
-        {#{{ parent() }}#}
-        {#{{ encore_entry_link_tags('entry') }}#}
-    {#{% endblock %}#}
-
     {% block stylesheets_base %}
         {#{{ encore_entry_link_tags('dashboard_base') }}#}
     {% endblock %}
@@ -38,23 +28,12 @@
     {% endblock %}
 
     {% block bootstrapcss %}
-        {#{% stylesheets#}
-            {#'bundles/appuserdirectory/bootstrap/css/*' filter='cssrewrite'#}
-            {#'bundles/appuserdirectory/form/css/form.css' filter='cssrewrite'#}
-        {#%}#}
-            {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-        {#{% endstylesheets %}#}
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
     {% endblock %}
 
     {% block errorwatchjs %}
-        {#{% javascripts#}
-            {#'@AppUserdirectoryBundle/Resources/public/form/js/errorwatch.js'#}
-        {#%}#}
-            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-        {#{% endjavascripts %}#}
         <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/errorwatch.js') }}"></script>
     {% endblock %}
 
@@ -64,17 +43,6 @@
 
     {% block maincss %}
 
-        {#jasny is used for clickable rows#}
-
-        {#{% stylesheets#}
-        {#'bundles/appuserdirectory/select2/select2.css' filter='cssrewrite'#}
-        {#'bundles/appuserdirectory/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
-        {#'bundles/appuserdirectory/ladda/ladda-themeless.css' filter='cssrewrite'#}
-        {#'bundles/appuserdirectory/form/css/action.css' filter='cssrewrite'#}
-        {#'bundles/appuserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'#}
-        {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-        {#{% endstylesheets %}#}
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jasny/css/jasny-bootstrap.min.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda-themeless.css') }}" />
@@ -136,9 +104,7 @@
 
 <body>
 
-
     <div class="container col-xs-12">
-
         {{ usermacros.nonLiveSiteWarning() }}
 
         {% block browsercheck %}
@@ -155,9 +121,7 @@
             {% endblock %}
 
         </div>
-
         <div class="text-center col-xs-12">
-
             {% include 'AppUserdirectoryBundle/Security/idle_timeout.html.twig' %}
             
             <div class="browser-notice alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
@@ -188,7 +152,6 @@
             {% endfor %}
 
             <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-            {#maxIdleTime={{app.session.get('maxIdleTime')}}#}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
             <input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
 
@@ -200,8 +163,6 @@
             <input type="hidden" id="authuser_id" value="{{userId}}" />
 
         </div>
-
-
         <div class="order-content text-center col-xs-12">
             {% block content %}{% endblock %}
         </div>
@@ -211,14 +172,13 @@
         </div>
 
         {% block footer %}
-        <div class="order-content text-center col-xs-12">
-            <!-- footer -->
-            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
-        </div>
+            <div class="order-content text-center col-xs-12">
+                <!-- footer -->
+                {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
+            </div>
         {% endblock %}
 
         {% block mainjs %}
-
             <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
             {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-3.6.0.min.js') }}"></script>#}
 
@@ -262,7 +222,6 @@
             {#FOSJsRoutingBundle#}
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-
         {% endblock %}
 
         {% block additionaljs %}{% endblock %}

@@ -26,9 +26,7 @@
     Employee Directory
 {% endblock %}
 
-
 {% block content %}
-
     <div style="margin-top:25px;">
 
         {% if all is defined and all %}
@@ -89,13 +87,11 @@
 
 
     </div>
-
 {% endblock %}
 
 
 
 {% block contentleft %}
-
     {% if not entities and not locations and sameusers is not defined %}
 
         <div style="margin-top:50px;">
@@ -119,12 +115,12 @@
 
 
             <br>
-
             <p>
 
                 {% if is_granted('ROLE_USERDIRECTORY_EDITOR') %}
 
                     {#{% set pendingadminreview = render(controller("App\\UserdirectoryBundle\\Controller\\UserController::pendingAdminReviewAction")) %}#}
+                    {#{% set pendingadminreview = "" %}#}
                     {% set pendingadminreview = user_service_utility.getPendingAdminReview() %}
 
                     There are:
@@ -145,7 +141,6 @@
 
             </p>
 
-
         </div>
 
         <br>
@@ -162,8 +157,6 @@
         {{ usermacros.userTeamAjax( app.user.getId, 'home', 'My Team', employees_sitename ) }}
 
     {% endif %}
-
 {% endblock %}
-
 
 

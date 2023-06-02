@@ -272,6 +272,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/", name="transrescolldivs-list", methods={"GET"})
      * @Route("/list/translational-irb-approval-status/", name="transresirbstatus-list", methods={"GET"})
      * @Route("/list/translational-requester-group/", name="transresrequestergroup-list", methods={"GET"})
+     * @Route("/list/transrescomptypes/", name="transrescomptypes-list", methods={"GET"})
      *
      * @Route("/list/visa-status/", name="visastatus-list", methods={"GET"})
      * @Route("/list/resappstatuses/", name="resappstatuses-list", methods={"GET"})
@@ -956,6 +957,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/", name="transrescolldivs_create", methods={"POST"})
      * @Route("/list/translational-irb-approval-status/", name="transresirbstatus_create", methods={"POST"})
      * @Route("/list/translational-requester-group/", name="transresrequestergroup_create", methods={"POST"})
+     * @Route("/list/transrescomptypes/", name="transrescomptypes_create", methods={"POST"})
      *
      * @Route("/list/visastatus/", name="visastatus_create", methods={"POST"})
      * @Route("/list/resappstatuses/", name="resappstatuses_create", methods={"POST"})
@@ -1316,6 +1318,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/new", name="transrescolldivs_new", methods={"GET"})
      * @Route("/list/translational-irb-approval-status/new", name="transresirbstatus_new", methods={"GET"})
      * @Route("/list/translational-requester-group/new", name="transresrequestergroup_new", methods={"GET"})
+     * @Route("/list/transrescomptypes/new", name="transrescomptypes_new", methods={"GET"})
      *
      * @Route("/list/visastatus/new", name="visastatus_new", methods={"GET"})
      * @Route("/list/resappstatuses/new", name="resappstatuses_new", methods={"GET"})
@@ -1623,6 +1626,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_show", methods={"GET"})
      * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_show", methods={"GET"})
      * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_show", methods={"GET"})
+     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_show", methods={"GET"})
      *
      * @Route("/list/visastatus/{id}", name="visastatus_show", methods={"GET"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_show", methods={"GET"})
@@ -1923,6 +1927,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/{id}/edit", name="transrescolldivs_edit", methods={"GET"})
      * @Route("/list/translational-irb-approval-status/{id}/edit", name="transresirbstatus_edit", methods={"GET"})
      * @Route("/list/translational-requester-group/{id}/edit", name="transresrequestergroup_edit", methods={"GET"})
+     * @Route("/list/transrescomptypes/{id}/edit", name="transrescomptypes_edit", methods={"GET"})
      *
      * @Route("/list/visastatus/{id}/edit", name="visastatus_edit", methods={"GET"})
      * @Route("/list/resappstatuses/{id}/edit", name="resappstatuses_edit", methods={"GET"})
@@ -2274,6 +2279,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_update", methods={"PUT"})
      * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_update", methods={"PUT"})
      * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_update", methods={"PUT"})
+     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_update", methods={"PUT"})
      *
      * @Route("/list/visastatus/{id}", name="visastatus_update", methods={"PUT"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_update", methods={"PUT"})
@@ -3328,6 +3334,11 @@ class ListController extends OrderAbstractController
                 $displayName = "Translational Research Requester Group List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transrescomptypes":
+                $className = "CompCategoryList";
+                $displayName = "Translational Research Computational Categories List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "workqueuetypes":
                 $className = "WorkQueueList";
@@ -4086,6 +4097,7 @@ class ListController extends OrderAbstractController
      * @Route("/list/translational-collaboration-divs/{id}", name="transrescolldivs_delete", methods={"DELETE"})
      * @Route("/list/translational-irb-approval-status/{id}", name="transresirbstatus_delete", methods={"DELETE"})
      * @Route("/list/translational-requester-group/{id}", name="transresrequestergroup_delete", methods={"DELETE"})
+     * @Route("/list/transrescomptypes/{id}", name="transrescomptypes_delete", methods={"DELETE"})
      *
      * @Route("/list/visastatus/{id}", name="visastatus_delete", methods={"DELETE"})
      * @Route("/list/resappstatuses/{id}", name="resappstatuses_delete", methods={"DELETE"})

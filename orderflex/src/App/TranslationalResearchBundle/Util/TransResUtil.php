@@ -3551,6 +3551,43 @@ class TransResUtil
         return $emails;
     }
 
+    public function getTransResCollaborationDivs() {
+        $collDivs = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        return $collDivs;
+    }
+    public function getCollaborationDivObject( $collDivStr ) {
+        //echo "requesterGroupStr=".$requesterGroupStr."<br>";
+        $collDiv = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByUrlSlug($collDivStr);
+
+        if( !$collDiv ) {
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+            $dql =  $repository->createQueryBuilder("list");
+
+            $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
+            $query = $this->em->createQuery($dql);
+            $query->setParameter('urlSlug',$collDivStr);
+            $collDivs = $query->getResult();
+            //echo "requesterGroups=".count($requesterGroups)."<br>";
+
+            if( count($collDivs) == 1 ) {
+                $collDiv = $collDivs[0];
+            }
+        }
+
+        if( !$collDiv ) {
+            //throw new \Exception( "Project Collaboration Division is not found by name '".$collDivStr."'" );
+            return NULL;
+        }
+
+        return $collDiv;
+    }
+
     public function getTransResProjectSpecialties( $userAllowed=true ) {
 
         $user = $this->security->getUser();
@@ -3605,6 +3642,33 @@ class TransResUtil
         );
 
         return $groups;
+    }
+
+    public function getRequesterGroupObject( $requesterGroupStr ) {
+        //echo "requesterGroupStr=".$requesterGroupStr."<br>";
+        $requesterGroup = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByUrlSlug($requesterGroupStr);
+
+        if( !$requesterGroup ) {
+            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+            $dql =  $repository->createQueryBuilder("list");
+
+            $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
+            $query = $this->em->createQuery($dql);
+            $query->setParameter('urlSlug',$requesterGroupStr);
+            $requesterGroups = $query->getResult();
+            //echo "requesterGroups=".count($requesterGroups)."<br>";
+
+            if( count($requesterGroups) == 1 ) {
+                $requesterGroup = $requesterGroups[0];
+            }
+        }
+
+        if( !$requesterGroup ) {
+            //throw new \Exception( "Project requester group is not found by name '".$requesterGroupStr."'" );
+            return NULL;
+        }
+
+        return $requesterGroup;
     }
 
     //NOT USED?
@@ -6582,24 +6646,30 @@ class TransResUtil
         return $requestIds;
     }
 
+    //TODO: optimize to get user only: add displayname to the User and auto populate it from infos
     public function getAppropriatedUsers() {
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
-
+    
         //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
         //return $users;
-
+    
         //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
         $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
-
-        $dql->leftJoin("list.employmentStatus", "employmentStatus");
-        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->leftJoin("list.infos", "infos");
-
+    
+    //        if(0) {
+    //            $dql->leftJoin("list.employmentStatus", "employmentStatus");
+    //            $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+    //        }
+    
+        if(1) { //testing
+            $dql->leftJoin("list.infos", "infos");
+            $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
+            $dql->orderBy("infos.lastName", "ASC");
+        }
+    
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-        $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
-
         //added additional filters
         //$dql->andWhere("list.keytype IS NOT NULL AND list.primaryPublicUserId != 'system'");
         //$dql->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)");
@@ -6608,21 +6678,75 @@ class TransResUtil
         //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate IS NULL)");
         //$curdate = date("Y-m-d", time());
         //$dql->andWhere("(employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."')");
-
         //$dql->orderBy("infos.displayName","ASC");
-        $dql->orderBy("infos.lastName","ASC");
+        //$dql->setMaxResults(10); //testing
+    
+        $query = $dql->getQuery();
+    
+        //https://phpdox.net/demo/Symfony2/classes/Doctrine_ORM_Query.xhtml
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true); //this will reduce queries, but make getUsernameOptimal (or UserInfo) empty
+        //doctrine cache queries
+        //$query->useQueryCache(true);
+        //$query->useResultCache(true);
+    
+        $users = $query->getResult();
 
+        //dump($users);
+        //exit('users='.count($users)); //2105
+
+        //$query->setHint(Query::HINT_REFRESH_ENTITY, true);
+        //dump($users);
+        //exit('111');
+    
+    //        foreach($users as $user) {
+    //            echo $user."";
+    //        }
+    //        exit('111');
+    
+        return $users;
+    }
+    public function getAppropriatedUsers_TEST() {
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
+
+        //$users = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
+        //return $users;
+
+        //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
+        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder("list");
+        //$dql->select('list.id as id, list.username as username');
+        $dql->select('list');
+
+        if(1) { //testing
+            $dql->leftJoin("list.infos", "infos");
+            $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
+            $dql->orderBy("infos.lastName", "ASC");
+        }
+        
         $query = $dql->getQuery();
 
-        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
+        //https://phpdox.net/demo/Symfony2/classes/Doctrine_ORM_Query.xhtml
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true); //this will reduce queries, but make getUsernameOptimal (or UserInfo) empty
         //doctrine cache queries
         //$query->useQueryCache(true);
         //$query->useResultCache(true);
 
         $users = $query->getResult();
 
+        //dump($users);
+        //exit('users='.count($users));
+
         return $users;
+    }
+    
+    public function getUserOptimalName( $user ) {
+        //return $userId;
+        //$this->em->clear();
+        //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //return $user."";
+        //$optimalName = $user->getDisplayName();
+        $optimalName = $user->getUsernameOptimal();
+        return $optimalName;
     }
 
     public function getPricesList() {

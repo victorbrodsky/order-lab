@@ -362,8 +362,9 @@ class UserController extends OrderAbstractController
      * @Template("AppUserdirectoryBundle/Default/home.html.twig")
      */
     public function indexAction( Request $request ) {
-
         //exit("employees_home");
+
+        //Performance (DB 200 queries) affected by: getPendingAdminReview base->navbar
 
         if(
             false == $this->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
@@ -377,6 +378,7 @@ class UserController extends OrderAbstractController
         //$search = $form->get('search')->getData();
 
         //check for active access requests
+        //$accessreqs = "";
         $accessreqs = $this->getActiveAccessReq();
 
         $search = trim((string)$request->get('search') );
@@ -405,7 +407,6 @@ class UserController extends OrderAbstractController
         $roles = null;
 
         if( $search != "" || $userid != "" ) {
-
             //location search
             //$userUtil = new UserUtil();
             $userUtil = $this->container->get('user_utility');
@@ -900,13 +901,17 @@ class UserController extends OrderAbstractController
 
         //Pending Administrative Review
         if( $filter && $filter == "Pending Administrative Review" ) {
-            $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-            $criteriastr .= "(".
-                "administrativeTitles.status = ".$pendingStatus.
-                " OR appointmentTitles.status = ".$pendingStatus.
-                " OR medicalTitles.status = ".$pendingStatus.
-                //" OR locations.status = ".$pendingStatus.
-            ")";
+//            $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+//            $criteriastr .= "(".
+//                "administrativeTitles.status = ".$pendingStatus.
+//                " OR appointmentTitles.status = ".$pendingStatus.
+//                " OR medicalTitles.status = ".$pendingStatus.
+//                //" OR locations.status = ".$pendingStatus.
+//            ")";
+
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $criteriastr .= $userServiceUtil->getPendingReviewCriteria();
+            //echo "criteriastr=$criteriastr <br>";
         }
 
         //With Administrative Title

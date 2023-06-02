@@ -62,7 +62,9 @@
                     {{ form_widget(filterform.searchId) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
+                    {% if filterform.principalInvestigators is defined %}
+                        {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-1">
                     {#<a data-toggle="collapse" href="#transres-AdvancedSearch">#}
@@ -100,13 +102,7 @@
             {% else %}
                 {% set advacedCollapse = '' %}
             {% endif %}
-            {#<br>#}
-            {#<div class="row">#}
-                {#<a data-toggle="collapse" href="#transres-AdvancedSearch">#}
-                    {#Advanced Search#}
-                    {#glyphicon glyphicon-wrench#}
-                {#</a>#}
-            {#</div>#}
+
             <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
                 <div class="panel-body">
 
@@ -131,7 +127,9 @@
                             {{ form_widget(filterform.searchTitle) }}
                         </div>
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                            {% if filterform.submitter is defined %}
+                                {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                            {% endif %}
                         </div>
                     </div>
                     <br>
@@ -151,7 +149,9 @@
 
                     <div class="row">
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.reviewers) }}
+                            {% if filterform.reviewers is defined %}
+                                {{ form_widget(filterform.reviewers) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                             {{ form_widget(filterform.exportId) }}
@@ -383,9 +383,13 @@
 
                 <td class="rowlink-skip">
                     {% for principalInvestigator in project.principalInvestigators %}
-                        {#{{ principalInvestigator }}<br>#}
+                        {#principalInvestigator.id={{ principalInvestigator.id }}<br>#}
                         {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}
-                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~principalInvestigator.getUsernameOptimal()~'</a>'  %}
+                        {#{% set piOptimalName = null %}#}
+                        {% set piOptimalName = principalInvestigator.getUsernameOptimal() %}
+                        {#{% set piOptimalName = transres_util.getUserOptimalName(principalInvestigator) %}#}
+                        {#{% set piOptimalName = transres_util.getUserOptimalName(principalInvestigator.id) %}#}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~piOptimalName~'</a>'  %}
                         {{ personlink|raw }}<br>
                     {% endfor %}
                 </td>

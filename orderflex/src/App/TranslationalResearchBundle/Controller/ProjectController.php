@@ -226,7 +226,10 @@ class ProjectController extends OrderAbstractController
 
         //////// create filter //////////
         //$filterError = true;
+        //$transresUsers = array($user);
         $transresUsers = $transresUtil->getAppropriatedUsers();
+        //echo "transresUsers count=".count($transresUsers)."<br>";
+
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $stateChoiceArr["All except Drafts"] = "All-except-Drafts";
         $stateChoiceArr["All except Drafts and Canceled"] = "All-except-Drafts-and-Canceled";
@@ -358,11 +361,20 @@ class ProjectController extends OrderAbstractController
 
         $filterform->handleRequest($request);
 
+        if(1) { //testing
+            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            $associatedUsers = $filterform['associatedUsers']->getData();
+            $submitter = $filterform['submitter']->getData();
+            $reviewers = $filterform['reviewers']->getData();
+        } else {
+            $principalInvestigators = null;
+            $associatedUsers = null;
+            $submitter = null;
+            $reviewers = null;
+        }
+
         $projectSpecialties = $filterform['projectSpecialty']->getData();
         $states = $filterform['state']->getData();
-        $principalInvestigators = $filterform['principalInvestigators']->getData();
-        $associatedUsers = $filterform['associatedUsers']->getData();
-        $submitter = $filterform['submitter']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $searchId = $filterform['searchId']->getData();
@@ -372,7 +384,6 @@ class ProjectController extends OrderAbstractController
         $fundingType = $filterform['fundingType']->getData();
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
-        $reviewers = $filterform['reviewers']->getData();
         $humanTissue = $filterform['humanTissue']->getData();
         $exemptIrbApproval = $filterform['exemptIrbApproval']->getData();
         $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();
@@ -1246,9 +1257,12 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
-        //TODO: replced by getTransResProjectReviewSpecialties 
-        
-        
+        //TODO: replced by getTransResProjectReviewSpecialties
+
+        $collDivs = $transresUtil->getTransResCollaborationDivs();
+
+        $collDivsFiltered = array();
+
         //Remove specialties with enableNewProjectOnSelector is false
         $specialtiesFiltered = array();
         foreach($specialties as $specialty) {
@@ -1256,31 +1270,64 @@ class ProjectController extends OrderAbstractController
             if( $transresUtil->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
                 $specialtiesFiltered[] = $specialty;
             }
+
+            $specialtyAbbr = $specialty->getAbbreviation();
+            $specialtyAbbr = strtolower($specialtyAbbr);
+            $collDivsFiltered[$specialtyAbbr] = null;
+
+            foreach($collDivs as $collDiv) {
+                $collDivUrlSlug = $collDiv->getUrlSlug();
+                //echo "specialtyAbbr=$specialtyAbbr, collDivUrlSlug=$collDivUrlSlug <br>";
+                if( $specialtyAbbr && $collDivUrlSlug ) {
+                    $collDivUrlSlug = strtolower($collDivUrlSlug);
+                    //echo "specialtyAbbr=[$specialtyAbbr], collDivUrlSlug=[$collDivUrlSlug] <br>";
+                    if( $specialtyAbbr == $collDivUrlSlug ) {
+                        //echo "!!! Match $specialtyAbbr=>$collDivUrlSlug<br>";
+                        $collDivsFiltered[$specialtyAbbr] = $collDivUrlSlug; //use urlSlug
+                    }
+                }
+            }
         }
 
-        //$requesterGroups = $transresUtil->getTransResRequesterGroups();
+        //dump($collDivsFiltered);exit('111');
+
+        $requesterGroups = $transresUtil->getTransResRequesterGroups();
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
             'specialties' => $specialtiesFiltered,
-            //'requesterGroups' => $groups,
+            'collDivsFiltered' => $collDivsFiltered,
+            'requesterGroups' => $requesterGroups,
             'title' => "New Project Request"
         );
     }
 
     /**
      * Select new project specialty
+     * "/project/new/{specialtyStr}/{requesterGroup}"
      *
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new", methods={"GET","POST"})
      * @Template("AppTranslationalResearchBundle/Project/new.html.twig")
      */
     public function newProjectAction(Request $request, $specialtyStr=null)
     {
+
         if( !$specialtyStr ) {
             return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
         }
+
+        //$specialtyStr = $request->query->get('specialty');
+        $requesterGroupStr = $request->query->get('requester-group');
+        $collDivStr = $request->query->get('collaborating-division');
+
+        //echo "specialtyStr=$specialtyStr, requesterGroupStr=$requesterGroupStr, collDivStr=$collDivStr <br>";
+        //exit('111');
+
+//        if( !$requesterGroupStr ) {
+//            return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
+//        }
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
@@ -1339,6 +1386,21 @@ class ProjectController extends OrderAbstractController
         $project = $this->createProjectEntity($user,null);
 
         $project->setProjectSpecialty($specialty);
+
+        //Set requester group
+        if( $requesterGroupStr ) {
+            $requesterGroupObject = $transresUtil->getRequesterGroupObject($requesterGroupStr);
+            if( $requesterGroupObject ) {
+                $project->setRequesterGroup($requesterGroupObject);
+            }
+        }
+
+        if( $collDivStr ) {
+            $collDivObject = $transresUtil->getCollaborationDivObject($collDivStr);
+            if( $collDivObject ) {
+                $project->addCollDiv($collDivObject);
+            }
+        }
 
         //set default exempt
         $exemptIrbApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");

@@ -225,16 +225,13 @@
                     {{ formmacros.field(form.description)|raw }}
 
                     {#immediately under “Brief Description” field, add a field titled “Which division(s) are you collaborating with?”#}
-                    {#<div class="well well-sm">#}
-                        {{ formmacros.field(form.collDivs) }}
-                    {#</div>#}
+                    {#{{ formmacros.field(form.collDivs) }}#}
+                    {{ transres.collDivs(form,project,cycle) }}
 
                     {#Under field “Project Type”, add a field titled “Which labs within Clinical Pathology are you collaborating with, if any?”#}
-                    {% if form.collLabs is defined %}
-                        {#<div class="well well-sm">#}
-                            {{ formmacros.field(form.collLabs) }}
-                        {#</div>#}
-                    {% endif %}
+                    {#{% if form.collLabs is defined %}#}
+                        {#{{ formmacros.field(form.collLabs) }}#}
+                    {#{% endif %}#}
 
                     {{ formmacros.field(form.hypothesis) }}
 
@@ -829,6 +826,28 @@ Show this accordion by default in an open + visible state.
     {#</div>#}
 {% endmacro %}
 
+{% macro collDivs( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% set hideshow = "display: none;" %}
+    {% for collDiv in project.collDivs %}
+        {% if collDiv and collDiv.getName() == "Clinical Pathology" %}
+            {% set hideshow = "" %}
+        {% endif %}
+    {% endfor %}
+
+    {% if form %}
+        {{ formmacros.field(form.collDivs) }}
+    {#{% else %}#}
+        {#{{ formmacros.simplefield("Which division(s) are you collaborating with?:", null, "input", "disabled") }}#}
+        {#{{ formmacros.simplefield_checkbox( "Which division(s) are you collaborating with?:", project.collDivs, "", "disabled" ) }}#}
+    {% endif %}
+
+    <div id="collDivs" style="{{ hideshow }}">
+        {{ formmacros.field(form.collLabs) }}
+    </div>
+{% endmacro %}
+
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
@@ -846,8 +865,7 @@ Show this accordion by default in an open + visible state.
             <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
                 <div class="panel-body">
 
-                    {#requesterGroup#}
-                    {#{{ formmacros.field(form.requesterGroup) }}#}
+                    {{ formmacros.field(form.requesterGroup) }}
 
                     {% if cycle == "show" %}
                         {% set principalInvestigators = project.principalInvestigators %}
