@@ -1583,7 +1583,7 @@ class RequestController extends OrderAbstractController
 
         //for carry-over request only Tentative Approval group can exists and the Organizational Group might be empty
         //For example, Brooklyn Methodist is independent institution with a single stage approval
-        if( count($organizationalInstitutions) == 0 && ($tentativeInstitutions === null or count($tentativeInstitutions) == 0) ) {
+        if( count($organizationalInstitutions) == 0 && ($tentativeInstitutions === null || count($tentativeInstitutions) == 0) ) {
             //If count($organizationalInstitutions) == 0 then try to run http://hosthame/order/directory/admin/sync-db/
 
             if( $this->isGranted('ROLE_VACREQ_ADMIN') ) {
