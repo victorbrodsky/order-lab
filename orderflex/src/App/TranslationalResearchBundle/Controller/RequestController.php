@@ -3298,11 +3298,11 @@ class RequestController extends OrderAbstractController
         $search = $filterform['search']->getData();
         $specialties = $filterform['specialties']->getData();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
-        //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
-        $dql->innerJoin("list.projectSpecialties", "projectSpecialties");
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
         $dql->leftJoin("list.prices", "prices");
 
         $dqlParameters = array();
@@ -3337,7 +3337,8 @@ class RequestController extends OrderAbstractController
 
             //$dql->andWhere("projectSpecialties.id != 5");
 
-            if(0) {
+            //working
+            if(1) {
                 $transresUtil = $this->container->get('transres_util');
                 foreach ($specialties as $specialty) {
                     echo "specialty=$specialty <br>";
@@ -3346,6 +3347,13 @@ class RequestController extends OrderAbstractController
                     $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialties) . ")";
                     $dql->andWhere($specialtyStr);
                 }
+            }
+
+            if(0) {
+                //https://stackoverflow.com/questions/71236107/doctrine-wrong-results-when-using-not-in-with-postgresql-and-symfony-4-4
+                $dql->innerJoin('list.projectSpecialties', 'projectSpecialties',
+                    'WITH', 'IDENTITY(projectSpecialties.id) NOT IN('.implode(",", $specialties).')');
+                //$dqlParameters['specialties'] = $specialties;
             }
 
             if(0) {
@@ -3362,9 +3370,15 @@ class RequestController extends OrderAbstractController
             }
 
             //projectSpecialties
-            if(1) {
-                $specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties.id NOT IN (" . implode(",", $specialties) . ")";
-                //$specialtyStr = "projectSpecialties IN (" . implode(",", $specialties) . ")";
+            if(0) {
+                $specialtyStr = "projectSpecialties.id NOT IN (" .
+                    implode(",", $specialties)
+                    //":specialties"
+                    . ")"
+                ;
+                //$specialtyStr = "projectSpecialties != 5";
+                //$dqlParameters['specialties'] = array(5); //$specialties;
+                //$specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties IN (" . implode(",", $specialties) . ")";
                 echo "specialtyStr=$specialtyStr <br>";
                 $dql->andWhere($specialtyStr);
             }
@@ -3378,18 +3392,21 @@ class RequestController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
-        $query->setMaxResults(10);
-        echo "query=".$query->getSql()."<br>";
-        $lists = $query->getResult();
-        foreach($lists as $list) {
-            $specArr = array();
-            foreach($list->getProjectSpecialties() as $spec) {
-                $specArr[] = $spec."";
+        if(0) {
+            //$query->setMaxResults(1000);
+            echo "query=" . $query->getSql() . "<br>";
+            $lists = $query->getResult();
+            echo "count=".count($lists)."<br>";
+            foreach ($lists as $list) {
+                $specArr = array();
+                foreach ($list->getProjectSpecialties() as $spec) {
+                    $specArr[] = $spec . " (".$spec->getId().")";
+                }
+                echo $list->getId() . ": " . implode(", ", $specArr) . "<br>";
             }
-            echo $list->getId().": ".implode(", ",$specArr)."<br>";
+            dump($lists);
+            exit('111');
         }
-        dump($lists);
-        exit('111');
 
         $paginationParams = array(
             'defaultSortFieldName' => 'list.orderinlist',

@@ -59,7 +59,7 @@ class FeeFilterType extends AbstractType
             //'data' => array('default','user-added'),
             'multiple' => true,
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>"Specialties")
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>"Orderable for specialties")
         ));
 //        $builder->add( 'specialties', EntityType::class, array(
 //            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
