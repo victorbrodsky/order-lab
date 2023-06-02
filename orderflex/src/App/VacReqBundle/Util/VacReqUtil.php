@@ -5969,7 +5969,12 @@ class VacReqUtil
         //if( $organizationalInstitutions && $institution ) { //$organizationalInstitutions &&
         if( $institution ) { //$organizationalInstitutions &&
             //echo "add to organizationalInstitutions; count=".count($organizationalInstitutions)."<br>";
-            if( !array_key_exists($institution->getId(), $organizationalInstitutions) ) {
+            if( $organizationalInstitutions === null ||
+                (   $organizationalInstitutions &&
+                    is_array($organizationalInstitutions) &&
+                    !array_key_exists($institution->getId(), $organizationalInstitutions)
+                )
+            ) {
                 $thisApprovers = $this->getRequestApprovers( $entity, $institutionType );
                 $approversArr = array();
                 if( $thisApprovers && is_array($thisApprovers) ) {
