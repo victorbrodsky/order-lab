@@ -7596,6 +7596,33 @@ class TransResUtil
         return $orderableSpcialties;
     }
 
+    public function orderableProjectReverseSpecialties( $hideSpecialtiesArr, $asObject=true ) {
+        //1) get all specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default", "user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        //2) get diff specialties
+        $orderableSpcialties = array();
+        //$hideSpecialties = $fee->getProjectSpecialties();
+        foreach($specialties as $specialty) {
+            if( in_array($specialty->getId(),$hideSpecialtiesArr) ) {
+            } else {
+                if( $asObject ) {
+                    $orderableSpcialties[] = $specialty;
+                } else {
+                    $orderableSpcialties[] = $specialty->getId();
+                }
+            }
+
+        }
+
+        return $orderableSpcialties;
+    }
+
 
     //Run when specialty is added via Site Setting's '2) Populate All Lists with Default Values (Part A)'
     //Run when add specialty via Platform List Manager's (directory/admin/list-manager/?filter%5Bsearch%5D=specialty):
