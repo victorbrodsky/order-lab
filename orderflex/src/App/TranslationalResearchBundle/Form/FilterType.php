@@ -342,6 +342,23 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'combobox submit-on-enter-field', 'placeholder' => 'Expiration'),
         ));
 
+        //Requester Group: “Any” + RequesterGroupList
+//        $builder->add('requesterGroup', EntityType::class, array(
+//            'class' => 'AppTranslationalResearchBundle:RequesterGroupList',
+//            'label' => false,
+//            'required' => false,
+//            'multiple' => false,
+//            'choices' => $this->params['transresUsers'],
+//            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Requester Group')
+//        ));
+        $builder->add('requesterGroup',ChoiceType::class, array(
+            'label' => false,
+            'required' => true,
+            'multiple' => false,
+            'choices' => $this->params['requesterGroup'],
+            'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder'=>'Requester Group'),
+        ));
+
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => true,

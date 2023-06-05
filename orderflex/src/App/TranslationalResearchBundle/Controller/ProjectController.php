@@ -240,6 +240,8 @@ class ProjectController extends OrderAbstractController
 
         $expectedExpirationDateChoices = $transresUtil->getExpectedExpirationDateChoices();
 
+        $requesterGroup = $transresUtil->getProjectRequesterGroupChoices();
+
         $trpAdminOrTech = false;
         if(
             $this->isGranted('ROLE_TRANSRES_ADMIN') ||
@@ -264,6 +266,7 @@ class ProjectController extends OrderAbstractController
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash"),
             'transresPricesList' => $transresPricesList,
             'expectedExpirationDateChoices' => $expectedExpirationDateChoices,
+            'requesterGroup' => $requesterGroup,
             'overBudget' => 'all',
             'fundingType' => null
         );
@@ -392,6 +395,7 @@ class ProjectController extends OrderAbstractController
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
         $briefDescription = $filterform['briefDescription']->getData();
         $expectedExpirationDateChoices = $filterform['expectedExpirationDateChoices']->getData();
+        $requesterGroup = $filterform['requesterGroup']->getData();
 
         $priceList = NULL;
         if( isset($filterform['priceList']) ) {
@@ -678,6 +682,20 @@ class ProjectController extends OrderAbstractController
             }
 
             $advancedFilter++;
+        }
+
+        if( $requesterGroup ) {
+            if( $requesterGroup == 'Any' ) {
+                //filter nothing
+            }
+            elseif( $requesterGroup == 'None' ) {
+                $dql->andWhere('project.requesterGroup IS NULL');
+            }
+            else {
+                $dql->andWhere('project.requesterGroup = :requesterGroup');
+                $dqlParameters['requesterGroup'] = $requesterGroup;
+            }
+
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
@@ -2312,12 +2330,27 @@ class ProjectController extends OrderAbstractController
 
         $institutionName = $transresUtil->getTransresSiteProjectParameter('institutionName',$project);
 
+        $feeScheduleUrlArr = array();
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty ) {
+            $projectSpecialtyId = $projectSpecialty->getId();
+            $feeScheduleUrlArr = array(
+                'orderable-for-specialty[specialties][]' => $projectSpecialtyId
+            );
+        }
+
+
         $feeScheduleUrl = $this->container->get('router')->generate(
             'translationalresearchfeesschedule-list',
-            array(),
+            //array(
+            //    'orderable-for-specialty[specialties][]' => $project->getProjectSpecialty()->getId()
+            //),
+            $feeScheduleUrlArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
+        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
+            $feeScheduleUrl.
+            ">See fee schedule</a>";
 
         $trpAdmin = false;
         if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {

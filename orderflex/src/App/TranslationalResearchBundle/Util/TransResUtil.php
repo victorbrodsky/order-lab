@@ -8209,6 +8209,19 @@ class TransResUtil
         return $expectedExpirationDateChoices;
     }
 
+    public function getProjectRequesterGroupChoices() {
+        $choiceRequesterGroups = array(
+            'Any Requester Group' => 'Any',
+            'No Requester Group' => 'None'
+        );
+
+        $requesterGroups = $this->getTransResRequesterGroups();
+        foreach($requesterGroups as $requesterGroup) {
+            $choiceRequesterGroups[$requesterGroup->getName()] = $requesterGroup->getId();
+        }
+
+        return $choiceRequesterGroups;
+    }
 
     //on the user facing fee schedule page, show internal pricing if the logged
     // in user is associated with (PI, etc) and has any projects (even closed)

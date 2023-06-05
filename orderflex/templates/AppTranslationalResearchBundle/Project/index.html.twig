@@ -214,6 +214,9 @@
                             {% endif %}
                         </div>
                         <div class="col-xs-4">
+                            {% if filterform.requesterGroup is defined %}
+                                {{ form_widget(filterform.requesterGroup) }}
+                            {% endif %}
                         </div>
                         <div class="col-xs-4">
                         </div>

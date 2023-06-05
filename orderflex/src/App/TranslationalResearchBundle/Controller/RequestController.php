@@ -3301,7 +3301,7 @@ class RequestController extends OrderAbstractController
         $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
-        //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
         $dql->leftJoin("list.prices", "prices");
 
@@ -3336,25 +3336,80 @@ class RequestController extends OrderAbstractController
         if( $specialties && count($specialties) > 0 ) {
 
             //$dql->andWhere("projectSpecialties.id != 5");
-            echo "specialties=".implode(",", $specialties)."<br>";
+            //echo "specialties=".implode(",", $specialties)."<br>";
 
             //working
-            if(0) {
+            //TODO: to review 'IN' and 'NOT IN' if working correctly
+            if(1) {
                 $transresUtil = $this->container->get('transres_util');
                 $orderableProjectSpecialtyIds = $transresUtil->orderableProjectReverseSpecialties($specialties,false);
                 $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialtyIds) . ")";
-                echo "specialtyStr=$specialtyStr <br>";
+                //echo "specialtyStr=$specialtyStr <br>";
                 $dql->andWhere($specialtyStr);
 
-//                foreach ($specialties as $specialty) {
-//                    //echo "specialty=$specialty <br>";
-//                    $specialtyEntity = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialty);
-//                    echo "specialty=$specialty, $specialtyEntity <br>";
-//                    $orderableProjectSpecialties = $transresUtil->orderableProjectSpecialties($specialtyEntity,false);
-//                    $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialties) . ")";
-//                    echo "specialtyStr=$specialtyStr <br>";
-//                    $dql->andWhere($specialtyStr);
-//                }
+                $specialtyStr = "projectSpecialties.id NOT IN (" . implode(",", $specialties) . ")";
+                //echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+
+            if(0) {
+                //https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html#dql-select-examples
+                $query = $em->createQuery(
+                  'SELECT list.id FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+                  JOIN AppTranslationalResearchBundle:SpecialtyList specialties WITH specialties.requestCategories = list.id
+                  WHERE :projectSpecialties MEMBER OF list.projectSpecialties AND list.projectSpecialties=7'
+                );
+                $query->setParameter('projectSpecialties', $specialties);
+
+                //'SELECT u FROM User u WHERE u.gender IN (SELECT IDENTITY(agl.gender) FROM Site s JOIN s.activeGenderList agl WHERE s.id = ?1)'
+                $query = $em->createQuery(
+                    'SELECT list FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+                     WHERE list.projectSpecialties IN 
+                      (SELECT IDENTITY(requestCategories.projectSpecialties) FROM AppTranslationalResearchBundle:SpecialtyList specialties 
+                        JOIN specialties.requestCategories requestCategories 
+                        WHERE specialties.id = ?7
+                      )'
+                );
+
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('222');
+            }
+
+            if(0) {
+                //$dql->innerJoin('u.groups', 'g', 'WITH', 'g.user_id = u.id')
+                //$dql->innerJoin('list.projectSpecialties', 'projectSpecialties', 'WITH', 'projectSpecialties.requestCategories = list.id');
+                //$dql->andWhere('projectSpecialties.id IN (7)');
+
+                $dql = $em->createQueryBuilder('list')
+                    ->select('list')
+                    ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+                    //->innerJoin('list.projectSpecialties', 'projectSpecialties', 'WITH', 'projectSpecialties.requestCategories = list.id')
+                    ->innerJoin('list.projectSpecialties', 'projectSpecialties')
+                    ->andWhere('projectSpecialties NOT IN (7)');
+
+                $query = $em->createQuery($dql);
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('111');
             }
 
             //NOT MEMBER OF
@@ -3376,10 +3431,17 @@ class RequestController extends OrderAbstractController
                     ->andWhere(sprintf('%s IS NULL', $property));
             }
 
-            if(1) {
-                $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');
-                $group = implode(",", $specialties);
-                $query->setParameter('groupId', $group);
+            if(0) {
+                //$query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');
+                $specialtyTypes = array();
+                foreach ($specialties as $specialty) {
+                    echo "specialty=$specialty <br>";
+                    //$dql->andWhere("projectSpecialties.id != ".$specialty);
+                    $specialtyTypes[] = "projectSpecialties.id != $specialty";
+                }
+                $specialtyStr = implode(" AND ", $specialtyTypes);
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
             }
 
 
@@ -3426,7 +3488,7 @@ class RequestController extends OrderAbstractController
             $query->setParameters( $dqlParameters );
         }
 
-        if(1) {
+        if(0) {
             //$query->setMaxResults(1000);
             echo "query=" . $query->getSql() . "<br>";
             $lists = $query->getResult();
