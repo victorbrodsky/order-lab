@@ -652,6 +652,12 @@ class SiteParameterType extends AbstractType
         ));
         //////////////////// EOF Project Closure/Reactivation ////////////////////
 
+        $builder->add('recipientFundNumber', null, array(
+            'label' => "Recipient Fund Number (61211820 for all specialty, except MISI 87000819):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
     }
     
     /**

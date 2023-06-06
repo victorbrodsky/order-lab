@@ -684,7 +684,12 @@ class TransResSiteParameters {
     private $projectReactivationBody;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
 
-
+    /**
+     * Recipient Fund Number, the same (the current one of 61211820) except MISI, which will have the value of 87000819
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $recipientFundNumber;
 
 
     public function __construct($user=null) {
@@ -2241,6 +2246,22 @@ class TransResSiteParameters {
     public function setProjectReactivationBody($projectReactivationBody)
     {
         $this->projectReactivationBody = $projectReactivationBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecipientFundNumber()
+    {
+        return $this->recipientFundNumber;
+    }
+
+    /**
+     * @param mixed $recipientFundNumber
+     */
+    public function setRecipientFundNumber($recipientFundNumber)
+    {
+        $this->recipientFundNumber = $recipientFundNumber;
     }
 
 

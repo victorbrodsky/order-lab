@@ -3353,6 +3353,38 @@ class RequestController extends OrderAbstractController
             }
 
             if(0) {
+                //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+                //$specialtyStr = "projectSpecialties.id NOT IN (:ids)";
+                $specialtyStr = "projectSpecialties.id NOT IN (:ids)";
+                //echo "specialtyStr=$specialtyStr <br>";
+                $dql->where($specialtyStr);
+                //$dql->andWhere($specialtyStr);
+
+                $query = $em->createQuery($dql);
+
+                //$transresUtil = $this->container->get('transres_util');
+                //$orderableProjectSpecialtyIds = $transresUtil->orderableProjectReverseSpecialties($specialties,false);
+                //echo "orderableProjectSpecialtyIds=".implode(",", $orderableProjectSpecialtyIds)." <br>";
+                //$dqlParameters['ids'] = $orderableProjectSpecialtyIds;
+
+                $dqlParameters['ids'] = $specialties;
+                $query->setParameters( $dqlParameters );
+
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('111');
+            }
+
+            if(0) {
                 //https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html#dql-select-examples
                 $query = $em->createQuery(
                   'SELECT list.id FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
