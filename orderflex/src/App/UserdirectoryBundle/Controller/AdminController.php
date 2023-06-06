@@ -10222,6 +10222,7 @@ class AdminController extends OrderAbstractController
         $types = array(
             "CTP Lab" => array("QUEUECTP"),
             "MISI Lab" => array("QUEUEMISI"),
+            "CSP Lab" => array("QUEUECSP"),
         );
 
         $count = 10;
