@@ -691,6 +691,8 @@ class TransResSiteParameters {
      */
     private $recipientFundNumber;
 
+    //TODO: do we need parameter for 500031 and 700031 used in JV' GL Account?
+
 
     public function __construct($user=null) {
         $this->setCreator($user);

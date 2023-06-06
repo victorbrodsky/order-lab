@@ -5947,6 +5947,8 @@ class TransResRequestUtil
         $overwriteFormula = false;
         //$overwriteFormula = true;
 
+        $transresUtil = $this->container->get('transres_util');
+
         $testing = false;
         //$testing = true;
 
@@ -5977,6 +5979,7 @@ class TransResRequestUtil
             $pi = $invoice->getPrincipalInvestigator();
 
             ///// Show only to ROLE_TRANSRES_BILLING_ADMIN and this PI and this BILLING CONTACTS //////
+            $project = null;
             $specialtyStr = "";
             $transresRequest = $invoice->getTransresRequest();
             if( $transresRequest ) {
@@ -5985,6 +5988,11 @@ class TransResRequestUtil
                     $specialty = $project->getProjectSpecialty();
                     if( $specialty ) {
                         $specialtyStr = $specialty->getUppercaseName();
+                    }
+
+                    $recipientFundNumber = $transresUtil->getTransresSiteProjectParameter('recipientFundNumber',$project);
+                    if( !$recipientFundNumber ) {
+                        $recipientFundNumber = "N/A - Recipient Fund Number is empty in Site Settings"; //"61211820";
                     }
                 }
             }
@@ -6151,7 +6159,7 @@ class TransResRequestUtil
             //Fund -  please request JV fund transfer to TRP account 61211820
             $col = $colIndexArr['Fund'];
             $cell = $sheet->getCellByColumnAndRow($col, $row);
-            $cell->setValue("61211820");
+            $cell->setValue($recipientFundNumber); //"61211820"
 
             //TEXT (invoice ID)
             $col = $colIndexArr['Text'];
