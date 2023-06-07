@@ -8525,17 +8525,25 @@ class TransResUtil
 
         $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
-        $dql->select('list');
+        //$dql->select("DISTINCT(list.id) as id, list.name");
+        $dql->select("list");
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
 
-        if(0) {
-            $specialtyStr = "projectSpecialties.id NOT IN (:ids)";
-            $specialtyStr = "projectSpecialties.id != $specialtiesStr"; //=67, !=106 total=109
+        if(1) {
+            //$specialtyStr = "projectSpecialties.id IN ($specialtiesStr)";
+            $specialtyStr = "projectSpecialties.id = $specialtiesStr"; //=67, !=106 total=109
             echo "specialtyStr: $specialtyStr <br>";
             $dql->where($specialtyStr);
             //$dql->andWhere($specialtyStr);
         }
+
+//SELECT t0.id FROM public.transres_requestcategorytypelist t0
+//LEFT JOIN public.transres_requestcategory_specialty t2 ON t0.id=t2.requestcategorytypelist_id
+//LEFT JOIN public.transres_specialtylist t1 ON t1.id = t2.specialtylist_id
+//WHERE t1.id NOT IN (5)
+//GROUP BY t0.id
+//ORDER BY t0.id DESC
 
         if(0) {
             $query = $this->em->createQuery(
@@ -8557,12 +8565,8 @@ class TransResUtil
             $query = $this->em->createQuery($sql)->setParameter('id', $specialtiesStr);
         }
 
-        if(1) {
-            //$this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findByProjectSpecialties(5);
-            $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProjectSpecialties(5);
-        }
-
-        //$query = $this->em->createQuery($dql);
+        $query = $this->em->createQuery($dql);
+        echo "query=" . $query->getSql() . "<br>";
 
         //$dqlParameters['ids'] = $specialties;
         //$query->setParameters( $dqlParameters );
@@ -8571,6 +8575,9 @@ class TransResUtil
 
         echo "count=".count($lists)."<br>";
         foreach ($lists as $list) {
+            //dump($list);
+            //echo $list['id']." ".$list['name']."<br>";
+
             $specArr = array();
             foreach ($list->getProjectSpecialties() as $spec) {
                 $specArr[] = $spec . " (".$spec->getId().")";

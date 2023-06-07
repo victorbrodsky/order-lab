@@ -237,6 +237,9 @@ class DefaultController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
         $transresUtil->feeFilterTest();
+        //$fee = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneById(5);
+        //echo "fee=".$fee."<br>";
+        exit('111');
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

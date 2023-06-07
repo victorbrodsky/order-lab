@@ -25,31 +25,40 @@
 
 namespace App\TranslationalResearchBundle\Repository;
 
-//use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+class RequestCategoryTypeListRepository extends EntityRepository {
 
-class RequestCategoryTypeListRepository extends ServiceEntityRepository {
-
-    public function findByProjectSpecialties($specialty)
+    public function findFeeByProjectSpecialties($specialty)
     {
         $entityManager = $this->getEntityManager();
 
-        $sql = "
-                SELECT list
-                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
-                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty
-                WHERE list.id = :id
-            ";
-        $query = $entityManager->createQuery($sql)->setParameter('id', $specialty);
+        $sql = "SELECT list".
+                " FROM AppTranslationalResearchBundle:RequestCategoryTypeList list".
+                " INNER JOIN AppTranslationalResearchBundle:SpecialtyList s"
+                ." ON list.projectSpecialties.id = s.id"
+            ;
+        echo "sql=$sql <br>";
+        $query = $entityManager->createQuery($sql);//->setParameter('ids', $specialty);
 
         return $query->getOneOrNullResult();
     }
 
-    public function findOneByProjectSpecialties($id) {
-        $em = $this->_em;
-        $categoryDb = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProjectSpecialties($id);
-        return $categoryDb;
-    }
+//    public function findOneByProjectSpecialties($id) {
+//        $em = $this->_em;
+//        $categoryDb = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProjectSpecialties($id);
+//        return $categoryDb;
+//    }
 
+//    public function findOneById($id) {
+//        $sql = "
+//                SELECT list
+//                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
+//                WHERE list.id = :id
+//            ";
+//        $query = $this->em->createQuery($sql)->setParameter('id', 91);
+//        $fee = $query->getOneOrNullResult();
+//        echo "fee=".$fee."<br>";
+//        return $fee;
+//    }
 }

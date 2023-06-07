@@ -24,6 +24,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
+//If use via repository: @ORM\Entity(repositoryClass="App\TranslationalResearchBundle\Repository\RequestCategoryTypeListRepository")
+
 /**
  * Fee Schedule
  *
