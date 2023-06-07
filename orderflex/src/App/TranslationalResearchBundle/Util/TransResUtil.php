@@ -8517,5 +8517,68 @@ class TransResUtil
 
         return $attachmentArr;
     }
+    
+    public function feeFilterTest() {
+        $specialties = array(5);
+        $specialtiesStr = implode(",", $specialties);
+        echo "specialties=".$specialtiesStr." <br>";
+
+        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
+
+        if(0) {
+            $specialtyStr = "projectSpecialties.id NOT IN (:ids)";
+            $specialtyStr = "projectSpecialties.id != $specialtiesStr"; //=67, !=106 total=109
+            echo "specialtyStr: $specialtyStr <br>";
+            $dql->where($specialtyStr);
+            //$dql->andWhere($specialtyStr);
+        }
+
+        if(0) {
+            $query = $this->em->createQuery(
+                'SELECT list,specialty
+                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty 
+                WHERE list.id = :id
+                '
+            )->setParameter('id', $specialtiesStr);
+        }
+
+        if(0) {
+            $sql = "
+                SELECT list
+                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
+                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty
+                WHERE list.id = :id
+            ";
+            $query = $this->em->createQuery($sql)->setParameter('id', $specialtiesStr);
+        }
+
+        if(1) {
+            //$this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findByProjectSpecialties(5);
+            $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProjectSpecialties(5);
+        }
+
+        //$query = $this->em->createQuery($dql);
+
+        //$dqlParameters['ids'] = $specialties;
+        //$query->setParameters( $dqlParameters );
+        $lists = $query->getResult();
+        //$lists = $query->getOneOrNullResult();
+
+        echo "count=".count($lists)."<br>";
+        foreach ($lists as $list) {
+            $specArr = array();
+            foreach ($list->getProjectSpecialties() as $spec) {
+                $specArr[] = $spec . " (".$spec->getId().")";
+            }
+            echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+        }
+        dump($lists);
+        exit('111');
+    }
 
 }

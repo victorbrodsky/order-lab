@@ -31,6 +31,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
+ * Price lists
+ *
  * @ORM\Entity
  * @ORM\Table(name="transres_prices")
  */

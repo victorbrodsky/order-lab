@@ -82,5 +82,4 @@ class ListAbstractRepository extends EntityRepository {
 
         return $newEntity;
     }
-
 }

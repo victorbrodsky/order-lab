@@ -652,8 +652,9 @@ class SiteParameterType extends AbstractType
         ));
         //////////////////// EOF Project Closure/Reactivation ////////////////////
 
+        //"Recipient Fund Number used in JV (61211820 for all specialty, except for MISI 87000819):"
         $builder->add('recipientFundNumber', null, array(
-            'label' => "Recipient Fund Number used in JV (61211820 for all specialty, except for MISI 87000819):",
+            'label' => "Recipient Fund Number for the generated Unpaid Billing Summary:", 
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

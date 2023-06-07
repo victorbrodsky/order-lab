@@ -235,6 +235,9 @@ class DefaultController extends OrderAbstractController
 //        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 //        echo "projectUrl=$projectUrl <br>";
 
+        $transresUtil = $this->container->get('transres_util');
+        $transresUtil->feeFilterTest();
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 
