@@ -350,6 +350,7 @@ git add .
 git commit -m "make changes in crazy-experiment"
 git switch master
 git merge crazy-experiment
+git push origin master
 --- finished working with branch crazy-experiment ---
 Delete local branch:        git branch -d crazy-experiment
 Delete a remote branch:     git push origin --delete crazy-experiment
