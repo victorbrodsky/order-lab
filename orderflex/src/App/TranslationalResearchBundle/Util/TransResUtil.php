@@ -8530,9 +8530,10 @@ class TransResUtil
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
 
-        if(1) {
+        if(0) {
             //$specialtyStr = "projectSpecialties.id IN ($specialtiesStr)";
             $specialtyStr = "projectSpecialties.id = $specialtiesStr"; //=67, !=106 total=109
+            $specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties.id IN (5)";
             echo "specialtyStr: $specialtyStr <br>";
             $dql->where($specialtyStr);
             //$dql->andWhere($specialtyStr);
@@ -8544,6 +8545,37 @@ class TransResUtil
 //WHERE t1.id NOT IN (5)
 //GROUP BY t0.id
 //ORDER BY t0.id DESC
+
+        //https://stackoverflow.com/questions/48942150/many-to-many-relation-select-all-a-except-for-those-linked-to-b
+/* Working
+        SELECT  a.*
+FROM    public.transres_requestcategorytypelist a
+WHERE   NOT EXISTS (SELECT 1
+                    FROM public.transres_requestcategory_specialty b
+                    WHERE a.id = b.requestcategorytypelist_id
+        AND b.specialtylist_id IN (7, 8))
+*/
+        if(1) {
+            $dql = "
+                SELECT list
+                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
+                WHERE NOT EXISTS (
+                  SELECT 1
+                  FROM list.projectSpecialties b
+                  WHERE list.id = b.requestcategorytypelist_id
+                  AND b.specialtylist_id IN (7, 8)
+                )
+            ";
+            //https://stackoverflow.com/questions/43162939/doctrine-query-with-join-table
+            $dql->select('list')
+                ->join('list.projectSpecialties', 'projectSpecialties', 'WITH', 'd member of o.discounts')
+                ->where('o.status = :status')
+                ->setParameter('status', Order::STATUS_SUCCESS)
+            ;
+            //$query = $this->em->createQuery($sql); //->setParameter('ids', $specialtiesStr);
+        }
+
+
 
         if(0) {
             $query = $this->em->createQuery(
@@ -8577,7 +8609,6 @@ class TransResUtil
         foreach ($lists as $list) {
             //dump($list);
             //echo $list['id']." ".$list['name']."<br>";
-
             $specArr = array();
             foreach ($list->getProjectSpecialties() as $spec) {
                 $specArr[] = $spec . " (".$spec->getId().")";
