@@ -8554,6 +8554,16 @@ WHERE   NOT EXISTS (SELECT 1
                     FROM public.transres_requestcategory_specialty b
                     WHERE a.id = b.requestcategorytypelist_id
         AND b.specialtylist_id IN (7, 8))
+
+SELECT  a.*
+FROM    public.transres_requestcategorytypelist a
+WHERE   NOT EXISTS (
+    SELECT 1
+    FROM public.transres_requestcategory_specialty b
+    WHERE a.id = b.requestcategorytypelist_id
+    AND b.specialtylist_id IN (7,5)
+)
+
 */
         if(1) {
             $dql = "
