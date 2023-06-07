@@ -25,6 +25,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\TranslationalResearchBundle\Form\FeeFilterType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -2877,7 +2878,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -2916,32 +2918,55 @@ class RequestController extends OrderAbstractController
 
         if( $project ) {
             $originalIrbExpDateStr = "Unknown";
-            if( $project->getIrbExpirationDate() ) {
-                $originalIrbExpDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
-            }
+            $originalIrbExpDate = $project->getIrbExpirationDate();
 
             $value = trim((string)$request->get('value'));
             //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
-            //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
-            //echo "value=".$irbExpDate->format("m/d/Y H:i:s")."<br>";
-            $project->setIrbExpirationDate($irbExpDate);
 
-            //$receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
-            //echo "value=".$value."<br>";
-            //$valueDateTime = \DateTime::createFromFormat('m/d/Y',$value);
-            //$project->setIrbExpirationDate($valueDateTime);
+            $logger = $this->container->get('logger');
+            $logger->notice("irbExpDate=".$irbExpDate->format("m/d/Y H:i:s").", originalIrbExpDate=".$originalIrbExpDate->format("m/d/Y H:i:s"));
 
-            //$em->flush($receivingObject);
-            //$em->flush($project);
-            $em->flush();
+            if( $irbExpDate != $originalIrbExpDate ) {
+                $logger->notice("irbExpDate is not the same originalIrbExpDate");
 
-            //add eventlog changed IRB
-            $eventType = "Project Updated";
-            $res = "Project ID ".$project->getOid() ." has been updated: ".
-                $transresUtil->getHumanName()." Expiration Date changed from ".
-                $originalIrbExpDateStr." to ".$value;
-            $transresUtil->setEventLog($project,$eventType,$res);
+                if ($originalIrbExpDate) {
+                    $originalIrbExpDateStr = $originalIrbExpDate->format('m/d/Y');
+                }
+
+                //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
+                //echo "value=".$irbExpDate->format("m/d/Y H:i:s")."<br>";
+                $project->setIrbExpirationDate($irbExpDate);
+
+                //$receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
+                //echo "value=".$value."<br>";
+                //$valueDateTime = \DateTime::createFromFormat('m/d/Y',$value);
+                //$project->setIrbExpirationDate($valueDateTime);
+
+                //$em->flush($receivingObject);
+                //$em->flush($project);
+                $em->flush();
+
+                //generate project PDF
+                if ($updatePdf) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_irb_exp_date updated PDF: updatePdf=$updatePdf");
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
+                    $em->flush();
+                }
+
+                //add eventlog changed IRB
+                $eventType = "Project Updated";
+                $res = "Project ID " . $project->getOid() . " has been updated: " .
+                    $transresUtil->getHumanName() . " Expiration Date changed from " .
+                    $originalIrbExpDateStr . " to " . $value;
+                $transresUtil->setEventLog($project, $eventType, $res);
+
+            } else {
+                $logger->notice("irbExpDate is the same originalIrbExpDate");
+                $res = "Expiration Date for project ID " . $project->getOid() . " is unchanged."; //" has not been updated";
+            }
 
             $this->addFlash(
                 'notice',
@@ -2960,7 +2985,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3012,29 +3038,39 @@ class RequestController extends OrderAbstractController
                 if( $originalPriceListId != $pricelistid ) {
                     $project->setPriceList($priceList);
                     $em->flush();
+
+                    //generate project PDF
+                    if( $updatePdf ) {
+                        $logger = $this->container->get('logger');
+                        $logger->notice("translationalresearch_update_project_pricelist updated PDF: updatePdf=$updatePdf");
+                        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                        $user = $this->getUser();
+                        $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_pricelist
+                        $em->flush();
+                    }
                 }
 
-                    if( !$priceList ) {
-                        $priceList = "Default";
-                    }
+                if( !$priceList ) {
+                    $priceList = "Default";
+                }
 
-                    if( !$originalPriceList ) {
-                        $originalPriceList = "Default";
-                    }
+                if( !$originalPriceList ) {
+                    $originalPriceList = "Default";
+                }
 
-                    //add eventlog changed Admin Review
-                    if( $originalPriceList != $priceList ) {
-                        $eventType = "Project Updated";
-                        $res = "Project ID " . $project->getOid() . " has been updated: " .
-                            " Price list changed from " .
-                            $originalPriceList . " to " . $priceList;
-                        $transresUtil->setEventLog($project,$eventType,$res);
+                //add eventlog changed Admin Review
+                if( $originalPriceList != $priceList ) {
+                    $eventType = "Project Updated";
+                    $res = "Project ID " . $project->getOid() . " has been updated: " .
+                        " Price list changed from " .
+                        $originalPriceList . " to " . $priceList;
+                    $transresUtil->setEventLog($project,$eventType,$res);
 
-                        $this->addFlash(
-                            'notice',
-                            $res
-                        );
-                    }
+                    $this->addFlash(
+                        'notice',
+                        $res
+                    );
+                }
             } else {
                 if( !$originalPriceList ) {
                     $originalPriceList = "Default";
@@ -3057,7 +3093,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3096,6 +3133,15 @@ class RequestController extends OrderAbstractController
                 $project->setUpdateUser($user);
                 $em->flush();
 
+                //generate project PDF
+                if( $updatePdf ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_project_approvedprojectbudget updated PDF: updatePdf=$updatePdf");
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_approvedprojectbudget
+                    $em->flush();
+                }
+
                 $transresUtil->sendProjectApprovedBudgetUpdateEmail($project,$originalApprovedProjectBudget);
                 
                 $eventType = "Project Approved Budget Updated";
@@ -3126,7 +3172,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $updatePdf = trim((string)$request->get('updatePdf'));
+        $projectId = trim((string)$request->get('projectId'));
         $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
 
         $permission = true;
@@ -3169,6 +3216,16 @@ class RequestController extends OrderAbstractController
 
                 $project->setNoBudgetLimit($noBudgetLimit);
                 $em->flush();
+
+                //generate project PDF
+                if( $updatePdf ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("translationalresearch_update_project_nobudgetlimit updated PDF: updatePdf=$updatePdf");
+                    $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    $user = $this->getUser();
+                    $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_nobudgetlimit
+                    $em->flush();
+                }
 
                 $originalNoBudgetLimitStr = "No";
                 if( $originalNoBudgetLimit ) {
@@ -3215,17 +3272,37 @@ class RequestController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        
-        $filterform = $this->createForm(ListFilterType::class, null, array(
+
+        //$transresUtil = $this->container->get('transres_util');
+        //$specialties = $transresUtil->getTransResProjectSpecialties(false);
+
+        $specialties = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+        $filterSpecialties = array();
+        foreach($specialties as $specialty) {
+            $filterSpecialties[$specialty->getShortName()] = $specialty->getId();
+        }
+        $params = array(
+            'specialties'=>$filterSpecialties
+        );
+
+        $filterform = $this->createForm(FeeFilterType::class, null, array(
             'method' => 'GET',
+            'form_custom_value' => $params
         ));
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
+        $specialties = $filterform['specialties']->getData();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
         $dql->leftJoin("list.prices", "prices");
 
         $dqlParameters = array();
@@ -3256,11 +3333,207 @@ class RequestController extends OrderAbstractController
             $dqlParameters['search'] = '%'.$search.'%';
         }
 
+        if( $specialties && count($specialties) > 0 ) {
+
+            //$dql->andWhere("projectSpecialties.id != 5");
+            //echo "specialties=".implode(",", $specialties)."<br>";
+
+            //working
+            //TODO: to review 'IN' and 'NOT IN' if working correctly
+            if(1) {
+                $transresUtil = $this->container->get('transres_util');
+                $orderableProjectSpecialtyIds = $transresUtil->orderableProjectReverseSpecialties($specialties,false);
+                $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialtyIds) . ")";
+                //echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+
+                $specialtyStr = "projectSpecialties.id NOT IN (" . implode(",", $specialties) . ")";
+                //echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+
+            if(0) {
+                //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+                //$specialtyStr = "projectSpecialties.id NOT IN (:ids)";
+                $specialtyStr = "projectSpecialties.id NOT IN (:ids)";
+                //echo "specialtyStr=$specialtyStr <br>";
+                $dql->where($specialtyStr);
+                //$dql->andWhere($specialtyStr);
+
+                $query = $em->createQuery($dql);
+
+                //$transresUtil = $this->container->get('transres_util');
+                //$orderableProjectSpecialtyIds = $transresUtil->orderableProjectReverseSpecialties($specialties,false);
+                //echo "orderableProjectSpecialtyIds=".implode(",", $orderableProjectSpecialtyIds)." <br>";
+                //$dqlParameters['ids'] = $orderableProjectSpecialtyIds;
+
+                $dqlParameters['ids'] = $specialties;
+                $query->setParameters( $dqlParameters );
+
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('111');
+            }
+
+            if(0) {
+                //https://www.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html#dql-select-examples
+                $query = $em->createQuery(
+                  'SELECT list.id FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+                  JOIN AppTranslationalResearchBundle:SpecialtyList specialties WITH specialties.requestCategories = list.id
+                  WHERE :projectSpecialties MEMBER OF list.projectSpecialties AND list.projectSpecialties=7'
+                );
+                $query->setParameter('projectSpecialties', $specialties);
+
+                //'SELECT u FROM User u WHERE u.gender IN (SELECT IDENTITY(agl.gender) FROM Site s JOIN s.activeGenderList agl WHERE s.id = ?1)'
+                $query = $em->createQuery(
+                    'SELECT list FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+                     WHERE list.projectSpecialties IN 
+                      (SELECT IDENTITY(requestCategories.projectSpecialties) FROM AppTranslationalResearchBundle:SpecialtyList specialties 
+                        JOIN specialties.requestCategories requestCategories 
+                        WHERE specialties.id = ?7
+                      )'
+                );
+
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('222');
+            }
+
+            if(0) {
+                //$dql->innerJoin('u.groups', 'g', 'WITH', 'g.user_id = u.id')
+                //$dql->innerJoin('list.projectSpecialties', 'projectSpecialties', 'WITH', 'projectSpecialties.requestCategories = list.id');
+                //$dql->andWhere('projectSpecialties.id IN (7)');
+
+                $dql = $em->createQueryBuilder('list')
+                    ->select('list')
+                    ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+                    //->innerJoin('list.projectSpecialties', 'projectSpecialties', 'WITH', 'projectSpecialties.requestCategories = list.id')
+                    ->innerJoin('list.projectSpecialties', 'projectSpecialties')
+                    ->andWhere('projectSpecialties NOT IN (7)');
+
+                $query = $em->createQuery($dql);
+                $lists = $query->getResult();
+
+                echo "count=".count($lists)."<br>";
+                foreach ($lists as $list) {
+                    $specArr = array();
+                    foreach ($list->getProjectSpecialties() as $spec) {
+                        $specArr[] = $spec . " (".$spec->getId().")";
+                    }
+                    echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+                }
+                dump($lists);
+                exit('111');
+            }
+
+            //NOT MEMBER OF
+            //https://stackoverflow.com/questions/69798888/doctrine-querybuilder-manytomany-not-in-how-do-i-filter-only-entities-wher
+            if(0) {
+                //$dql->innerJoin('list.projectSpecialties', 'projectSpecialties',
+                //    'WITH', 'IDENTITY(projectSpecialties.id) NOT IN('.implode(",", $specialties).')');
+                //$dql->andWhere( 'list.projectSpecialties NOT MEMBER OF '.implode(",", $specialties).'' );
+                $property = 'projectSpecialties';
+                $parameterName = 'hidespec';
+                $value = 7;
+                $dql->innerJoin(
+                    sprintf('o.%s', $property),
+                    $property,
+                    'WITH',
+                    sprintf('%s.id = :%s', $property, $parameterName)
+                )
+                    ->setParameter($parameterName, $value)
+                    ->andWhere(sprintf('%s IS NULL', $property));
+            }
+
+            if(0) {
+                //$query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');
+                $specialtyTypes = array();
+                foreach ($specialties as $specialty) {
+                    echo "specialty=$specialty <br>";
+                    //$dql->andWhere("projectSpecialties.id != ".$specialty);
+                    $specialtyTypes[] = "projectSpecialties.id != $specialty";
+                }
+                $specialtyStr = implode(" AND ", $specialtyTypes);
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+
+
+            if(0) {
+                //https://stackoverflow.com/questions/71236107/doctrine-wrong-results-when-using-not-in-with-postgresql-and-symfony-4-4
+                //$dql->innerJoin('list.projectSpecialties', 'projectSpecialties',
+                //    'WITH', 'IDENTITY(projectSpecialties.id) NOT IN('.implode(",", $specialties).')');
+                //$dqlParameters['specialties'] = $specialties;
+            }
+
+            if(0) {
+                $specialtyTypes = array();
+                $specialtyStr = "";
+                foreach ($specialties as $specialty) {
+                    echo "specialty=$specialty <br>";
+                    //$dql->andWhere("projectSpecialties.id != ".$specialty);
+                    $specialtyTypes[] = "projectSpecialties.id != $specialty";
+                }
+                $specialtyStr = implode(" AND ", $specialtyTypes);
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+
+            //projectSpecialties
+            if(0) {
+                $specialtyStr = "projectSpecialties.id NOT IN (" .
+                    implode(",", $specialties)
+                    //":specialties"
+                    . ")"
+                ;
+                //$specialtyStr = "projectSpecialties != 5";
+                //$dqlParameters['specialties'] = array(5); //$specialties;
+                //$specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties IN (" . implode(",", $specialties) . ")";
+                echo "specialtyStr=$specialtyStr <br>";
+                $dql->andWhere($specialtyStr);
+            }
+            $dql->orderBy("list.orderinlist", "ASC"); //testing
+        }
+
         $limit = 30;
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
+        }
+
+        if(0) {
+            //$query->setMaxResults(1000);
+            echo "query=" . $query->getSql() . "<br>";
+            $lists = $query->getResult();
+            echo "count=".count($lists)."<br>";
+            foreach ($lists as $list) {
+                $specArr = array();
+                foreach ($list->getProjectSpecialties() as $spec) {
+                    $specArr[] = $spec . " (".$spec->getId().")";
+                }
+                echo $list->getId() . ": hide specialties for " . implode(", ", $specArr) . "<br>";
+            }
+            dump($lists);
+            exit('111');
         }
 
         $paginationParams = array(

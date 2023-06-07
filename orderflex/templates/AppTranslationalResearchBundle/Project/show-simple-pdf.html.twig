@@ -1,0 +1,105 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% block header %}
+{% endblock %}
+
+{#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
+{% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
+
+
+{#{% block title %}#}
+    {#{{ title }}#}
+{#{% endblock %}#}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {% if messageToUsers is not defined %}
+        {% set messageToUsers = transres_util.getTrpMessageToUsers(project) %}
+    {% endif %}
+
+    {% if messageToUsers is defined and messageToUsers %}
+        <h5 class="alert alert-danger well-lg safary-fix" align="center">
+            {{ messageToUsers|raw }}
+        </h5>
+    {% endif %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    <br><br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {#<p>#}
+        {#<button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>#}
+        {#<button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>#}
+    {#</p>#}
+
+    {{ form_start(form) }}
+
+        {{ transres.projectRequesters(form,project,cycle) }}
+
+        {{ transres.projectBodyFormFields(form,project,cycle) }}
+
+        {{ transres.projectInfo(form,project,cycle) }}
+
+        {#{{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}#}
+        {#{{ transres.projectReviews(form,cycle,sitename,1) }}#}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{#{% block additionaljs %}#}
+    {#<script src="{{ asset('orderassets/AppTranslationalResearchBundle/form/js/transres.js') }}"></script>#}
+{#{% endblock %}#}
+
+{#{% block mainjs %}#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jasny/js/rowlink.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-treeSelectAjax.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/jstree.min.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jstree.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-basetitles.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/modal.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppOrderformBundle/form/js/tooltips.js') }}"></script>#}
+
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/typeahead/typeahead.bundle.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-typeahead.js') }}"></script>#}
+
+    {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
+    {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
+
+{#{% endblock %}#}
+
+{% block javascripts %}
+    {#import using webpack transres.js (assets/transres/js/index.jsx)#}
+    {{ encore_entry_script_tags('transresjs') }}
+{% endblock %}

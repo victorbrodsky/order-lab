@@ -92,7 +92,7 @@ class PdfGenerator
 
         //4) add PDF to invoice DB
         $filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
+        $documentPdf = $this->createPdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -103,7 +103,14 @@ class PdfGenerator
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$invoice,null,'Invoice PDF Created');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $invoice,
+            $request,
+            'Invoice PDF Created'
+        );
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -277,7 +284,16 @@ class PdfGenerator
     }
 
     //create invoice report in DB
-    protected function createInvoicePdfDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType) {
+    protected function createPdfDB(
+        $holderEntity,
+        $holderMethodSingularStr,
+        $author,
+        $uniqueTitle,
+        $path,
+        $filesize,
+        $documentType,
+        $replace=false
+    ) {
 
         $logger = $this->container->get('logger');
 
@@ -303,12 +319,21 @@ class PdfGenerator
         $removeMethod = "remove".$holderMethodSingularStr;
         $addMethod = "add".$holderMethodSingularStr;
 
-        //do not remove documents Application PDF
-        //move all reports to OldReports
-        if( $holderMethodSingularStr == "report" ) {
-            foreach ($holderEntity->getReports() as $report) {
-                $holderEntity->removeReport($report);
-                $holderEntity->addOldReport($report);
+        //replace old document with a new one
+        if( $replace ) {
+            foreach ($holderEntity->$getMethod() as $old) {
+
+                //remove $old from server
+                $oldPath = $old->getServerPath();
+                if( file_exists($oldPath) ) {
+                    $logger->notice("create Pdf DB: unlink file path=" . $oldPath);
+                    unlink($oldPath);
+                } else {
+                    $logger->warning("create Pdf DB: cannot unlink, file is not existed path=" . $oldPath);
+                }
+
+                $holderEntity->$removeMethod($old);
+                $this->em->remove($old);
             }
         }
 
@@ -319,7 +344,11 @@ class PdfGenerator
         $this->em->persist($object);
         $this->em->flush();
 
-        $logger->notice("Document created with ID=".$object->getId()." for ".get_class($holderEntity)." ID=".$holderEntity->getId() . "; documentType=".$documentType);
+        $logger->notice(
+            "Document created with ID=".$object->getId()." for " .
+            get_class($holderEntity) . " ID=".$holderEntity->getId() .
+            "; documentType=".$documentType
+        );
 
         return $object;
     }
@@ -422,7 +451,15 @@ class PdfGenerator
 
         //add PDF to invoice DB
         //$filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($transresRequest,"packingSlipPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Packing Slip PDF');
+        $documentPdf = $this->createPdfDB(
+            $transresRequest,
+            "packingSlipPdf",
+            $authorUser,
+            $fileFullReportUniqueName,
+            $uploadReportPath,
+            $filesize,
+            'Packing Slip PDF'
+        );
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -433,7 +470,14 @@ class PdfGenerator
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$transresRequest,null,'Packing Slip PDF Created');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $transresRequest,
+            $request,
+            'Packing Slip PDF Created'
+        );
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -669,6 +713,237 @@ class PdfGenerator
 //        }
 
         //echo "generated ok! <br>";
+    }
+
+    //NOT USED. project PDF generation
+    public function exportProjectPdf( $project, $request ) {
+        set_time_limit(360); //in seconds
+
+        $router = $this->container->get('router');
+
+        //take care of authentication
+        $session = $request->getSession(); //$this->container->get('session');
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
+        $pageUrl = $router->generate(
+            'translationalresearch_project_show_simple_pdf',
+            array('id'=>$project->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); // use absolute path!
+
+        //$snappyPdf = $this->container->get('knp_snappy.pdf');
+        //$fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        //$snappyPdf = $fellappRepGen->getSnappyPdf();
+
+        $output = $this->container->get('knp_snappy.pdf')->getOutput(
+            $pageUrl,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        );
+
+        //dump($output);
+        //exit('111');
+
+        return $output;
+    }
+    //TODO: test the generation time. knp_snappy has a time delay
+    public function generateAndSaveProjectPdf( $project, $authorUser=null, $request=null ) {
+
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        $logger = $this->container->get('logger');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( !$request ) {
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+        }
+
+        if( !$authorUser ) {
+            $authorUser = $userSecUtil->findSystemUser();
+        }
+
+        //generate file name. use PI in the pdf file name as per Ning, Jeff request.
+        //$fileFullReportUniqueName = $this->constructUniqueFileName($project,"Project",$project->getPrincipalInvestigator());
+        //Project-Request-APCP123-Generated-On-MM-DD-YYYY-at-HH-MM-EST.PDF
+        $creationDate = new \DateTime();
+        $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
+        $creationDateStr = $creationDate->format('m-d-Y \a\t H-i-s T');
+        $fileName = "Project-Request-".$project->getOid()."-Generated-On-".$creationDateStr.".pdf";
+        $fileFullReportUniqueName = str_replace(" ","-",$fileName);
+
+        $logger->notice("Start to generate PDF project ID=".$project->getOid()."; filename=".$fileFullReportUniqueName);
+
+        //check and create Report and temp folders
+        $reportsUploadPath = "transres" . DIRECTORY_SEPARATOR . "ProjectPDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        if( !$reportsUploadPath ) {
+            $reportsUploadPath = "ProjectPDF";
+            $logger->warning('ProjectPDFUploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
+        }
+        $uploadReportPath = $this->uploadDir . DIRECTORY_SEPARATOR . $reportsUploadPath;
+
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
+        //$logger->notice("1reportPath=".$reportPath);
+
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        //$logger->notice("2reportPath=".$reportPath);
+
+        //echo "reportPath=".$reportPath."<br>";
+        //$reportPath = realpath($reportPath);
+        //echo "reportPath=".$reportPath."<br>";
+
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
+        }
+
+        //$outdir = $reportPath.'/temp_'.$project->getOid().'/';
+        //$outdir = $reportPath.'/'.$project->getOid().'/';
+        $outdir = $reportPath . DIRECTORY_SEPARATOR;
+
+        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //0) generate application pdf
+        //$applicationFilePath = $outdir . "application_ID" . $project->getOid() . ".pdf";
+        $applicationFilePath = $outdir . $fileFullReportUniqueName;
+
+        $this->generateProjectPdf($project,$applicationFilePath,$request); //this does not work with https
+        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+
+        //4) add PDF to project DB
+        $filesize = filesize($applicationFilePath);
+        //exit("filesize=$filesize; applicationFilePath=$applicationFilePath");
+
+        $documentPdf = $this->createPdfDB(
+            $project,
+            "projectPdf",
+            $authorUser,
+            $fileFullReportUniqueName,
+            $uploadReportPath,
+            $filesize,
+            'Project PDF',
+            true //$replace=true
+        );
+        if( $documentPdf ) {
+            $documentPdfId = $documentPdf->getId();
+        } else {
+            $documentPdfId = null;
+        }
+
+        $event = "PDF for project with ID ".$project->getOid()." has been successfully created " .
+            $fileFullReportUniqueName . " (PDF document ID ".$documentPdfId.")";
+        //echo $event."<br>";
+        //$logger->notice($event);
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('translationalresearch.sitename'),
+            $event,
+            $authorUser,
+            $project,
+            $request,
+            'Project PDF Created'
+        );
+
+        //delete application temp folder
+        //$this->deleteDir($outdir);
+
+        $res = array(
+            'filename' => $fileFullReportUniqueName,
+            'pdf' => $applicationFilePath,
+            'size' => $filesize
+        );
+
+        $logger->notice($event);
+
+        return $res;
+    }
+    //use KnpSnappyBundle to convert html to pdf
+    //http://wkhtmltopdf.org must be installed on server
+    public function generateProjectPdf($project,$applicationOutputFilePath,$request) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        if( file_exists($applicationOutputFilePath) ) {
+            //return;
+            $logger->notice("generateProjectPdf: unlink file already exists path=" . $applicationOutputFilePath );
+            unlink($applicationOutputFilePath);
+        }
+
+        ini_set('max_execution_time', 300); //300 sec
+
+        //testing
+        //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        //echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        //$default_system_email = $this->container->getParameter('default_system_email');
+        //echo "default_system_email=$default_system_email<br>";
+
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+        //exit("connectionChannel=".$connectionChannel);
+        //$connectionChannel = 'http';
+
+        $router = $this->container->get('router');
+
+        //$replaceContext = false;
+        $replaceContext = true;
+        if( $replaceContext ) {
+            //generate application URL
+            $context = $router->getContext();
+
+            //http://192.168.37.128/order/app_dev.php/translational-research/...
+            $originalHost = $context->getHost();
+            $originalScheme = $context->getScheme();
+            $originalBaseUrl = $context->getBaseUrl();
+
+            $context->setHost('localhost');
+            //$context->setHost('collage.med.cornell.edu');
+            $context->setScheme($connectionChannel);
+            //$context->setBaseUrl('/order');
+        }
+
+        //Project download
+        $pageUrl = $router->generate('translationalresearch_project_show_simple_pdf',
+            array(
+                'id' => $project->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+
+        //take care of authentication
+        $session = $request->getSession();
+        $session->save();
+        session_write_close();
+        $PHPSESSID = $session->getId();
+
+        //knp_snappy
+        //$snappy->setTimeout(300);
+        //https://github.com/KnpLabs/KnpSnappyBundle
+        //process_timeout: 20 # In seconds
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $applicationOutputFilePath,
+            array(
+                'cookie' => array(
+                    'PHPSESSID' => $PHPSESSID
+                )
+            )
+        );
+
+        if( $replaceContext ) {
+            //set back to original context
+            $context->setHost($originalHost);
+            $context->setScheme($originalScheme);
+            $context->setBaseUrl($originalBaseUrl);
+        }
+
+        //echo "generated ok! <br>";
+        return $applicationOutputFilePath;
     }
 
 }

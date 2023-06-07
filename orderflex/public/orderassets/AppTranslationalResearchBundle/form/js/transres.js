@@ -79,8 +79,17 @@ $(document).ready(function() {
     transresIrbStatusListListener('transres-project-irbStatusList');
 
     transresShowHideProjectDocument();
+
+    //transresReSubmitReviewBtnListener();
     
 });
+
+// function transresReSubmitReviewBtnListener() {
+//     $('.transres-reSubmitReview').on("click", function(e) {
+//         var lbtn = Ladda.create($(this).get(0));
+//         lbtn.start();
+//     });
+// }
 
 function transresIrbExemptListener( classname ) {
     $("."+classname).on("change", function(e) {
@@ -248,29 +257,49 @@ function transresShowHideNeedStatSupport(needStatSupport) {
 
 function transresCollDivsListener() {
     $(".collDivs").on("change", function(e) {
-        var showcollDivs = false;
+        var showCollLabs = false;
+        var showCompTypes = false;
         $('input[name="oleg_translationalresearchbundle_project[collDivs][]"]').each(function () {
             //var sThisVal = (this.checked ? $(this).parent().text().trim() : "");
             if( this.checked ) {
                 var collDiv = $(this).parent().text().trim();
                 //console.log("change=" + collDiv);
                 if( collDiv == "Clinical Pathology" ) {
-                    showcollDivs = true;
+                    showCollLabs = true;
+                }
+                if( collDiv == "Computational Pathology" ) {
+                    showCompTypes = true;
                 }
             }
         });
-        transresShowHideCollDivs(showcollDivs);
+        transresShowHideCollLabs(showCollLabs);
+        transresShowHideCompTypes(showCompTypes);
     });
 }
-function transresShowHideCollDivs(collDivs) {
+function transresShowHideCollLabs(collDivs) {
     if( collDivs == true ) {
         //console.log("collDivs show");
-        $("#collDivs").show('slow');
+        $("#collLabs").show('slow');
     }
 
     if( collDivs == false ) {
         //console.log("collDivs hide");
-        $("#collDivs").hide('slow');
+        $("#collLabs").hide('slow');
+        //uncheck all answers
+        $('#collLabs').find('input:checkbox').removeAttr('checked');
+    }
+}
+function transresShowHideCompTypes(compTypes) {
+    if( compTypes == true ) {
+        //console.log("compTypes show");
+        $("#compTypes").show('slow');
+    }
+
+    if( compTypes == false ) {
+        //console.log("compTypes hide");
+        $("#compTypes").hide('slow');
+        //uncheck all answers
+        $('#compTypes').find('input:checkbox').removeAttr('checked');
     }
 }
 
@@ -650,6 +679,10 @@ function transresSubmitBtnRegister(btnName) {
 
 function transresHideBtn() {
     //console.log("hide submit buttons");
+    // $(":submit").each(function () {
+    //     var lbtn = Ladda.create($(this).get(0));
+    //     lbtn.start();
+    // });
     $(":submit").hide();
     $('#please-wait').show();
 }

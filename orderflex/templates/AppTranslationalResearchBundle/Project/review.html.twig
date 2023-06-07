@@ -164,20 +164,21 @@
         });
 
         //transres-update-irbexpirationdate
+        //Here do all update asynchronously (async=true)
         $('.transres-update-irbexpirationdate').click(function(event) {
-            transresUpdateIrbExpDate();
+            transresUpdateIrbExpDate(true,$(this));
         });
 
         $('.transres-update-project-pricelist').click(function(event) {
-            transresUpdateProjectPriceList();
+            transresUpdateProjectPriceList(true,$(this));
         });
 
         $('.transres-update-project-approvedProjectBudget').click(function(event) {
-            transresUpdateApprovedProjectBudget();
+            transresUpdateApprovedProjectBudget(true,$(this));
         });
 
         $('.transres-update-project-noBudgetLimit').click(function(event) {
-            transresUpdateNoBudgetLimit();
+            transresUpdateNoBudgetLimit(true,$(this));
         });
 
         //addCommentButtonClickListener();
@@ -207,15 +208,49 @@
             reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
         }
 
-        transresUpdateIrbExpDate();
-        transresUpdateProjectPriceList();
+        ////// Here do all update synchronously (async=false) //////
+        transresUpdateIrbExpDate(false);
+        transresUpdateProjectPriceList(false);
 
-        transresUpdateApprovedProjectBudget();
-        transresUpdateNoBudgetLimit();
+        transresUpdateApprovedProjectBudget(false);
+        transresUpdateNoBudgetLimit(false);
+        ////// EOF Here do all update synchronously (async=false) //////
+
+        //update project PDF by the review page (approve/reject/more info)
+        transresUpdateProjectPdf();
     }
 
+    function transresUpdateProjectPdf() {
+        var url = Routing.generate('translationalresearch_update_project_pdf');
+        //url = url + "/" + projectId + "/" + irbExpDate
 
-    function transresUpdateIrbExpDate() {
+        var projectId = $("#projectid").val();
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            type: "POST",
+            data: {projectId: projectId},
+            async: asyncflag
+        }).success(function(response) {
+            //console.log(response);
+            if( response != "NotOK" ) {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+                $(".transres-project-irbExpirationDate").val(irbExpDate);
+            }
+        }).done(function() {
+            //
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
+
+    function transresUpdateIrbExpDate(updatePdf,btnEl) {
+
+        //console.log("transresUpdate IrbExpDate click");
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -239,15 +274,28 @@
             //return false;
             //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
         } else {
+            //console.log("transres-review-submit: irbExpDate is null");
             return false;
         }
 
-        //console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+        //console.log("transres UpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
 
         if( projectId == null || irbExpDate == null ) {
             //console.log("return false: projectId or irbExpDate is null");
             return false;
         }
+
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('transresUpdate IrbExpDate lbtn start');
+        }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
+        //console.log("updatePdf="+updatePdf);
 
         var url = Routing.generate('translationalresearch_update_irb_exp_date');
         //url = url + "/" + projectId + "/" + irbExpDate
@@ -257,10 +305,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, value: irbExpDate },
+            data: {projectId: projectId, value: irbExpDate, updatePdf: updatePdf},
             //dataType: 'json',
             //async: asyncflag
-            async: false
+            async: projectUpdateAsyncflag
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) { //if( response == "NotOK" ) ???
@@ -269,7 +317,9 @@
                 $(".transres-project-irbExpirationDate").val(irbExpDate);
             }
         }).done(function() {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -277,7 +327,7 @@
         return false;
     }
 
-    function transresUpdateProjectPriceList() {
+    function transresUpdateProjectPriceList(updatePdf,btnEl) {
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
 
@@ -297,6 +347,17 @@
             return false;
         }
 
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
+        }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
+
         var priceListData = priceListEl.select2('data');
         var priceListId = null;
         if( priceListData ) {
@@ -313,10 +374,11 @@
                 timeout: _ajaxTimeout,
                 //type: "GET",
                 type: "POST",
-                data: {projectId: projectId, pricelistid: priceListId },
+                data: {projectId: projectId, pricelistid: priceListId, updatePdf: updatePdf},
                 //dataType: 'json',
+                async: projectUpdateAsyncflag
                 //async: asyncflag
-                async: false
+                //async: false
             }).success(function(response) {
                 //console.log(response);
                 if( response != "NotOK" ) {
@@ -325,7 +387,9 @@
                     $(".transres-project-priceList").select2('val', priceListId);
                 }
             }).done(function() {
-                //lbtn.stop();
+                if( lbtn ) {
+                    lbtn.stop();
+                }
             }).error(function(jqXHR, textStatus, errorThrown) {
                 console.log('Error : ' + errorThrown);
             });
@@ -335,7 +399,7 @@
         return false;
     }
 
-    function transresUpdateApprovedProjectBudget() {
+    function transresUpdateApprovedProjectBudget(updatePdf,btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -356,6 +420,17 @@
             return false;
         }
 
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
+        }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
+
         var approvedProjectBudget = approvedProjectBudgetEl.val();
 
         //if( priceListId ) {
@@ -368,10 +443,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget},
+            data: {projectId: projectId, approvedProjectBudget: approvedProjectBudget, updatePdf: updatePdf},
             //dataType: 'json',
             //async: asyncflag
-            async: false
+            async: projectUpdateAsyncflag
         }).success(function (response) {
             //console.log(response);
             if (response != "NotOK") {
@@ -380,7 +455,9 @@
                 $(".transres-project-approvedProjectBudget").val(approvedProjectBudget); //transres-project-approvedProjectBudget
             }
         }).done(function () {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function (jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });
@@ -388,7 +465,7 @@
         return false;
     }
 
-    function transresUpdateNoBudgetLimit() {
+    function transresUpdateNoBudgetLimit(updatePdf,btnEl) {
 
         $(".transres-alert").find(".alert").html("");
         $(".transres-alert").hide();
@@ -409,6 +486,17 @@
             return false;
         }
 
+        var lbtn = null;
+        if( typeof btnEl !== 'undefined' ) {
+            lbtn = Ladda.create(btnEl.get(0));
+            lbtn.start();
+            //console.log('lbtn start');
+        }
+        var projectUpdateAsyncflag = false;
+        if( updatePdf ) {
+            projectUpdateAsyncflag = true;
+        }
+
         //var noBudgetLimit = $('#transres_update_project_noBudgetLimit').val();
         var noBudgetLimit = 0;
         if( noBudgetLimitEl.is(":checked") ) {
@@ -425,10 +513,10 @@
             timeout: _ajaxTimeout,
             //type: "GET",
             type: "POST",
-            data: {projectId: projectId, noBudgetLimit: noBudgetLimit },
+            data: {projectId: projectId, noBudgetLimit: noBudgetLimit, updatePdf: updatePdf},
             //dataType: 'json',
             //async: asyncflag
-            async: false
+            async: projectUpdateAsyncflag
         }).success(function(response) {
             //console.log(response);
             if( response != "NotOK" ) {
@@ -447,7 +535,9 @@
                 }
             }
         }).done(function() {
-            //lbtn.stop();
+            if( lbtn ) {
+                lbtn.stop();
+            }
         }).error(function(jqXHR, textStatus, errorThrown) {
             console.log('Error : ' + errorThrown);
         });

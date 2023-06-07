@@ -317,6 +317,23 @@ class TransResSiteParameters {
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableNewProjectAccessPage;
+    //ticket 295(28)
+    /**
+     * Show this project specialty in the Project Requests By Type top navigation bar menu (list the projects by specialty): [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnNavbar;
+    /**
+     * Show this project specialty in the Work Requests top navigation bar menu: [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnWorkReqNavbar;
+    /**
+     * Show this project specialty in the Reviewer Configuration top navigation bar menu: [Yes/No]
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableProjectOnConfig;
+
 
     /**
      * Translational Research Email Notification Asking To Contact With Concerns:
@@ -667,7 +684,14 @@ class TransResSiteParameters {
     private $projectReactivationBody;
     //////////////////// EOF Project Closure/Reactivation ////////////////////
 
+    /**
+     * Recipient Fund Number, the same (the current one of 61211820) except MISI, which will have the value of 87000819
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $recipientFundNumber;
 
+    //TODO: do we need parameter for 500031 and 700031 used in JV' GL Account?
 
 
     public function __construct($user=null) {
@@ -681,6 +705,10 @@ class TransResSiteParameters {
         $this->setEnableNewProjectAccessPage(true);
         $this->setEnableNewProjectOnNavbar(true);
         $this->setEnableNewProjectOnSelector(true);
+        $this->setEnableProjectOnNavbar(true);
+        $this->setEnableProjectOnWorkReqNavbar(true);
+        $this->setEnableProjectOnConfig(true);
+
 
         $this->setOverBudgetSendEmail(true);
         $this->setApprovedBudgetSendEmail(true);
@@ -1681,6 +1709,54 @@ class TransResSiteParameters {
     /**
      * @return mixed
      */
+    public function getEnableProjectOnNavbar()
+    {
+        return $this->enableProjectOnNavbar;
+    }
+
+    /**
+     * @param mixed $enableProjectOnNavbar
+     */
+    public function setEnableProjectOnNavbar($enableProjectOnNavbar)
+    {
+        $this->enableProjectOnNavbar = $enableProjectOnNavbar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableProjectOnWorkReqNavbar()
+    {
+        return $this->enableProjectOnWorkReqNavbar;
+    }
+
+    /**
+     * @param mixed $enableProjectOnWorkReqNavbar
+     */
+    public function setEnableProjectOnWorkReqNavbar($enableProjectOnWorkReqNavbar)
+    {
+        $this->enableProjectOnWorkReqNavbar = $enableProjectOnWorkReqNavbar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableProjectOnConfig()
+    {
+        return $this->enableProjectOnConfig;
+    }
+
+    /**
+     * @param mixed $enableProjectOnConfig
+     */
+    public function setEnableProjectOnConfig($enableProjectOnConfig)
+    {
+        $this->enableProjectOnConfig = $enableProjectOnConfig;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getHumanTissueFormNote()
     {
         return $this->humanTissueFormNote;
@@ -2172,6 +2248,22 @@ class TransResSiteParameters {
     public function setProjectReactivationBody($projectReactivationBody)
     {
         $this->projectReactivationBody = $projectReactivationBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecipientFundNumber()
+    {
+        return $this->recipientFundNumber;
+    }
+
+    /**
+     * @param mixed $recipientFundNumber
+     */
+    public function setRecipientFundNumber($recipientFundNumber)
+    {
+        $this->recipientFundNumber = $recipientFundNumber;
     }
 
 

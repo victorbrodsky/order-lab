@@ -2,6 +2,11 @@
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
 
+    {% set collapseShow = "" %}
+    {% if cycle == "pdf" %}
+        {% set collapseShow = "in" %}
+    {% endif %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectInfoHeading">
@@ -11,7 +16,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="projectInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectInfoHeading">
+            <div id="projectInfo" class="panel-collapse collapse {{ collapseShow }}" role="tabpanel" aria-labelledby="projectInfoHeading">
                 <div class="panel-body">
 
                     {% if project.exportId %}
@@ -51,10 +56,16 @@
 
                     {{ transres.updateInfo(form,cycle) }}
 
+                    {% if form.progressUpdate is defined %}
+                        {{ formmacros.field(form.progressUpdate) }}
+                    {% endif %}
+
                     {#expired notification email#}
-                    <hr>
-                    {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
-                    {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+                    {% if cycle != "pdf" %}
+                        <hr>
+                        {{ formmacros.simplefield("Sent expiration reminder email:", project.getExpirationNotifyCounterStr(), "input", "disabled") }}
+                        {{ formmacros.simplefield("Sent expired email:", project.getExpiredNotifyCounterStr(), "input", "disabled") }}
+                    {% endif %}
 
                     {#Project Closure/Reactivation#}
                     {#{% if form.closureReason is defined %}#}
@@ -72,14 +83,16 @@
                         {#{{ formmacros.field(form.targetStateRequester) }}#}
                     {#{% endif %}#}
                     {% if cycle != "new" %}
-                        <hr>
+                        {% if cycle != "pdf" %}
+                            <hr>
+                        {% endif %}
                         {#cycle={{ cycle }}<br>#}
                         {#view page: show if not empty#}
                         {#edit page: always show#}
-                        {% if cycle == "show" and project.getClosureReason() %}
+                        {% if (cycle == "show" or cycle == "pdf") and project.getClosureReason() %}
                             {{ formmacros.simplefield("Reason for project closure:", project.getClosureReason(), "textarea", "disabled") }}
                         {% endif %}
-                        {% if cycle == "show" and project.getReactivationReason() %}
+                        {% if (cycle == "show" or cycle == "pdf") and project.getReactivationReason() %}
                             {{ formmacros.simplefield("Reason for project reactivation:", project.getReactivationReason(), "textarea", "disabled") }}
                         {% endif %}
 
@@ -91,10 +104,18 @@
                     {% endif %}
                     {#EOF Project Closure/Reactivation#}
 
+                    {#{% if cycle != "show" or cycle != "review"  %}#}
+                        {#{{ transres.projectPdf(form,project,cycle) }}#}
+                    {#{% endif %}#}
+
                 </div>
             </div>
         </div>
     </div>
+
+    {% if cycle != "show" or cycle != "review"  %}
+        {{ transres.projectPdf(form,project,cycle) }}
+    {% endif %}
 
 {% endmacro %}
 
@@ -382,9 +403,9 @@
 
     {{ transres.tissueRequestDetails(form,project,cycle) }}
 
-    {% if form.progressUpdate is defined %}
-        {{ formmacros.field(form.progressUpdate) }}
-    {% endif %}
+    {#{% if form.progressUpdate is defined %}#}
+        {#{{ formmacros.field(form.progressUpdate) }}#}
+    {#{% endif %}#}
 
 {% endmacro %}
 
@@ -432,6 +453,7 @@
                         {#{{ formmacros.field(form.irbStatusExplain) }}#}
                         {{ transres.irbStatusList(form,project,cycle) }}
 
+                        {% if cycle != "pdf" %}
                         <div class="well form-element-holder user-irbApprovalLetters">
                             <label class="col-xs-12 control-label">{{ humanName }} Approval Letter</label>
                             <div class="row withpaddingtop">
@@ -440,6 +462,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
 
                     </div>
 
@@ -486,68 +509,113 @@
 
 {% endmacro %}
 
+{% macro projectPdf( form, project, cycle ) %}
+    {% if cycle != "pdf" %}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+
+        {% if cycle == "review" %}
+            {% set cycle = "show" %}
+        {% endif %}
+
+        {% set projectPdfs = null %}
+        {% if form %}
+            {% set asFormOrEntity = "asForm" %}
+            {% if form.projectPdfs is defined %}
+                {% set projectPdfs = form.projectPdfs %}
+            {% endif %}
+        {% else %}
+            {% set cycle = "show" %}
+            {% set asFormOrEntity = "asEntity" %}
+            {% set projectPdfs = project.projectPdfs %}
+        {% endif %}
+
+        {% if projectPdfs and projectPdfs|length > 0 %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#transres-project-projectpdfs">
+                            Project PDFs
+                        </a>
+                    </h4>
+                </div>
+
+                <div id="transres-project-projectpdfs" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="well form-element-holder user-documents">
+                            {{ usermacros.documentsContainer(null,projectPdfs,cycle,'noprototype',8,'default','Project PDFs',asFormOrEntity) }}
+                        </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
 {#hide if Project Documents does not exists#}
 {% macro projectDocument( form, project, cycle ) %}
-    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {% if cycle != "pdf" %}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+        {#{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}#}
 
-    {% if cycle == "review" %}
-        {% set cycle = "show" %}
-    {% endif %}
-
-    {% set documents = null %}
-    {% if form %}
-        {% set asFormOrEntity = "asForm" %}
-        {% if form.documents is defined %}
-            {% set documents = form.documents %}
-        {% endif %}
-    {% else %}
-        {% set cycle = "show" %}
-        {% set asFormOrEntity = "asEntity" %}
-        {% set documents = project.documents %}
-    {% endif %}
-
-    {#documents|length = {{ documents|length }}#}
-    {#asFormOrEntity = {{ asFormOrEntity }}#}
-    {% if documents and documents|length > 0 %}
-
-        {% set specialtyId = NULL %}
-        {% if project.getProjectSpecialty() %}
-            {% set specialtyId = project.getProjectSpecialty().getId() %}
+        {% if cycle == "review" %}
+            {% set cycle = "show" %}
         {% endif %}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#transres-project-documents">
-                        Project Documents
-                    </a>
-                </h4>
-            </div>
+        {% set documents = null %}
+        {% if form %}
+            {% set asFormOrEntity = "asForm" %}
+            {% if form.documents is defined %}
+                {% set documents = form.documents %}
+            {% endif %}
+        {% else %}
+            {% set cycle = "show" %}
+            {% set asFormOrEntity = "asEntity" %}
+            {% set documents = project.documents %}
+        {% endif %}
 
-            <div id="transres-project-documents" class="panel-collapse collapse in">
-                <div class="panel-body">
-                    <div class="well form-element-holder user-documents">
+        {#documents|length = {{ documents|length }}#}
+        {#asFormOrEntity = {{ asFormOrEntity }}#}
+        {% if documents and documents|length > 0 %}
 
-                        <label class="col-xs-12 control-label">
-                            Please submit completed New Project Intake Form here.
-                            The form is required for non-funded projects.
-                            There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
-                        </label>
-                        <p>
-                            You can
-                            <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
-                               target="_blank">download the blank form here.</a>
-                        </p>
+            {% set specialtyId = NULL %}
+            {% if project.getProjectSpecialty() %}
+                {% set specialtyId = project.getProjectSpecialty().getId() %}
+            {% endif %}
 
-                        {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
-                    </div>
-                </div> <!-- panel-body -->
-            </div> <!-- panel-collapse -->
-        </div> <!-- panel panel-info -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#transres-project-documents">
+                            Project Documents
+                        </a>
+                    </h4>
+                </div>
 
+                <div id="transres-project-documents" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="well form-element-holder user-documents">
+
+                            <label class="col-xs-12 control-label">
+                                Please submit completed New Project Intake Form here.
+                                The form is required for non-funded projects.
+                                There is no need to fill it out if the project is funded by a grant or another source outside of the pathology department.
+                            </label>
+                            <p>
+                                You can
+                                <a href="{{ path(translationalresearch_sitename~'_download_new_study_intake_form', {'specialtyId':specialtyId}) }}"
+                                   target="_blank">download the blank form here.</a>
+                            </p>
+
+                            {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
+                        </div>
+                    </div> <!-- panel-body -->
+                </div> <!-- panel-collapse -->
+            </div> <!-- panel panel-info -->
+
+        {% endif %}
     {% endif %}
-
 {% endmacro %}
 
 {#
@@ -589,6 +657,7 @@ Show this accordion by default in an open + visible state.
 
 {#Used in: projectFormShow, projectFormEdit, projectBodyFormFields#}
 {% macro tissueRequestDetails( form, project, cycle ) %}
+
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
@@ -599,7 +668,11 @@ Show this accordion by default in an open + visible state.
 
     {% if form %}
         {% set asFormOrEntity = "asForm" %}
-        {% set humanTissueForms = form.humanTissueForms %}
+        {% if form.humanTissueForms is defined %}
+            {% set humanTissueForms = form.humanTissueForms %}
+        {% else %}
+            {% set humanTissueForms = null %}
+        {% endif %}
     {% else %}
         {% set cycle = "show" %}
         {% set asFormOrEntity = "asEntity" %}
@@ -642,6 +715,7 @@ Show this accordion by default in an open + visible state.
 
                     <div id="transres-project-humanRequestDetails" style="{{ humanRequestDetails }}">
 
+                        {% if cycle != "pdf" %}
                         <div id="transres-project-humanTissueForms" class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
                             <label class="col-xs-12 control-label">Human Tissue Form</label>
                             <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
@@ -662,14 +736,15 @@ Show this accordion by default in an open + visible state.
                         {#<br>#}
                         <hr>
                         {#<br>#}
+                        {% endif %}
 
-                        <h4>
+                        <h5>
                             <p class="text-primary">
                                 {#The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.#}
                                 {{ transres_util.getTransresSiteProjectParameter('specimenDetailsComment',project) }}
                             </p>
-                        </h4>
-                        <br>
+                        </h5>
+                        {#<br>#}
 
                         {{ transres.tissueProcurement(form,project,cycle) }}
                         {{ transres.archivalSpecimens(form,project,cycle) }}
@@ -686,7 +761,6 @@ Show this accordion by default in an open + visible state.
             </div>
         </div>
     </div>
-
 {% endmacro %}
 {% macro tissueProcurement( form, project, cycle ) %}
 
@@ -829,10 +903,14 @@ Show this accordion by default in an open + visible state.
 {% macro collDivs( form, project, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-    {% set hideshow = "display: none;" %}
+    {% set hideshowCollLabs = "display: none;" %}
+    {% set hideshowCompTypes = "display: none;" %}
     {% for collDiv in project.collDivs %}
         {% if collDiv and collDiv.getName() == "Clinical Pathology" %}
-            {% set hideshow = "" %}
+            {% set hideshowCollLabs = "" %}
+        {% endif %}
+        {% if collDiv and collDiv.getName() == "Computational Pathology" %}
+            {% set hideshowCompTypes = "" %}
         {% endif %}
     {% endfor %}
 
@@ -843,8 +921,12 @@ Show this accordion by default in an open + visible state.
         {#{{ formmacros.simplefield_checkbox( "Which division(s) are you collaborating with?:", project.collDivs, "", "disabled" ) }}#}
     {% endif %}
 
-    <div id="collDivs" style="{{ hideshow }}">
+    <div id="collLabs" style="{{ hideshowCollLabs }}">
         {{ formmacros.field(form.collLabs) }}
+    </div>
+
+    <div id="compTypes" style="{{ hideshowCompTypes }}">
+        {{ formmacros.field(form.compTypes) }}
     </div>
 {% endmacro %}
 
@@ -852,6 +934,11 @@ Show this accordion by default in an open + visible state.
     {% import "AppTranslationalResearchBundle/Default/transres.html.twig" as transres %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+
+    {#Show full requester info#}
+    {#{% if cycle == "pdf" %}#}
+        {#{% set cycle = "show" %}#}
+    {#{% endif %}#}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -875,7 +962,7 @@ Show this accordion by default in an open + visible state.
                     {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
 
                     {% if cycle == "show" %}
-                        {% set principalIrbInvestigators = [project.principalIrbInvestigator] %}
+                        {% set principalIrbInvestigators = project.getPrincipalIrbInvestigators() %}
                     {% else %}
                         {% set principalIrbInvestigators = null %}
                     {% endif %}
@@ -938,7 +1025,7 @@ Show this accordion by default in an open + visible state.
                     {#{% endif %}#}
 
                     {% if cycle == "show" %}
-                        {% set billingContacts = [project.billingContact] %}
+                        {% set billingContacts = project.getBillingContacts() %}
                     {% else %}
                         {% set billingContacts = null %}
                     {% endif %}
@@ -1016,7 +1103,7 @@ Show this accordion by default in an open + visible state.
 {% macro userInfo( userForm, userEntity, cycle, fieldType ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% if cycle == "show" or cycle == "review" %}
+    {% if cycle == "show" or cycle == "review" or cycle == "pdf" %}
         {% if fieldType is defined and fieldType == 'left' %}
             {% set colLeft = 2 %}
             {% set colMiddle = 6 %}
@@ -2041,7 +2128,12 @@ Show this accordion by default in an open + visible state.
 
                 {{ formmacros.field(form.humanTissueFormNote) }}
 
+                {{ formmacros.field(form.recipientFundNumber) }}
+
+                {{ formmacros.field(form.updateProjectFundNumber) }}
+
                 <hr>
+
 
                 {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnSelector,"",form.vars.value.enableNewProjectOnSelector) }}#}
                 {#{{ formmacros.checkbox_with_value(form.enableNewProjectOnNavbar,"",form.vars.value.enableNewProjectOnNavbar) }}#}
@@ -2050,7 +2142,12 @@ Show this accordion by default in an open + visible state.
                 {{ formmacros.field(form.enableNewProjectOnSelector) }}
                 {{ formmacros.field(form.enableNewProjectOnNavbar) }}
                 {{ formmacros.field(form.enableNewProjectAccessPage) }}
-                {{ formmacros.field(form.updateProjectFundNumber) }}
+
+                {{ formmacros.field(form.enableProjectOnNavbar) }}
+                {{ formmacros.field(form.enableProjectOnWorkReqNavbar) }}
+                {{ formmacros.field(form.enableProjectOnConfig) }}
+
+
 
                 {#<hr>#}
                 {#<h4>#}

@@ -903,6 +903,18 @@ class Project {
      * )
      **/
     private $compTypes;
+
+    /**
+     * Export project summary to a PDF
+     *
+     * @ORM\ManyToMany(targetEntity="App\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_pdf",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="pdf_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $projectPdfs;
     ////////////// EOF #295 //////////////
 
 
@@ -924,6 +936,7 @@ class Project {
         $this->documents = new ArrayCollection();
         $this->irbApprovalLetters = new ArrayCollection();
         $this->humanTissueForms = new ArrayCollection();
+        $this->projectPdfs = new ArrayCollection();
 
         $this->requests = new ArrayCollection();
 
@@ -1410,7 +1423,9 @@ class Project {
     public function getPrincipalIrbInvestigators()
     {
         $principalIrbInvestigators = new ArrayCollection();
-        $principalIrbInvestigators->add($this->principalIrbInvestigator);
+        if( $this->getPrincipalIrbInvestigator() ) {
+            $principalIrbInvestigators->add($this->getPrincipalIrbInvestigator());
+        }
         return $principalIrbInvestigators;
     }
 
@@ -1488,9 +1503,10 @@ class Project {
     }
     public function getBillingContacts()
     {
-        //return array($this->billingContact);
         $billingContacts = new ArrayCollection();
-        $billingContacts->add($this->billingContact);
+        if( $this->getBillingContact() ) {
+            $billingContacts->add($this->getBillingContact());
+        }
         return $billingContacts;
     }
     /**
@@ -1592,10 +1608,15 @@ class Project {
     }
 
     /**
+     * 'Yes' or 'No'
+     *
      * @param mixed $involveHumanTissue
      */
     public function setInvolveHumanTissue($involveHumanTissue)
     {
+        if( $involveHumanTissue ) {
+            $involveHumanTissue = ucfirst($involveHumanTissue);
+        }
         $this->involveHumanTissue = $involveHumanTissue;
     }
 
@@ -1731,6 +1752,14 @@ class Project {
     {
         return $this->documents;
     }
+    public function getSingleDocument()
+    {
+        $docs = $this->getDocuments();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
 
     public function addIrbApprovalLetter($item)
     {
@@ -1749,6 +1778,14 @@ class Project {
     {
         return $this->irbApprovalLetters;
     }
+    public function getSingleIrbApprovalLetter()
+    {
+        $docs = $this->getIrbApprovalLetters();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
 
     public function addHumanTissueForm($item)
     {
@@ -1766,6 +1803,14 @@ class Project {
     public function getHumanTissueForms()
     {
         return $this->humanTissueForms;
+    }
+    public function getSingleHumanTissueForm()
+    {
+        $docs = $this->getHumanTissueForms();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
     }
 
     public function getRequests()
@@ -2943,6 +2988,13 @@ class Project {
         if( $this->getOtherResource() ) {
             return true;
         }
+        if( $this->getFundDescription() ) {
+            return true;
+        }
+        //fundByPath (boolean) Yes, No
+        if( $this->getFundByPath() !== null ) {
+            return true;
+        }
         return false;
     }
     /////////// EOF Additional Details (8) ///////////////
@@ -2997,6 +3049,7 @@ class Project {
     }
     ////////////// EOF Additional fields from #294 //////////////
 
+    ////////////// Additional fields from #295 //////////////
     /**
      * @return mixed
      */
@@ -3012,6 +3065,46 @@ class Project {
         $this->requesterGroup = $requesterGroup;
     }
 
+    public function addProjectPdf($item)
+    {
+        if( $item && !$this->projectPdfs->contains($item) ) {
+            $this->projectPdfs->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeProjectPdf($item)
+    {
+        $this->projectPdfs->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getProjectPdfs()
+    {
+        return $this->projectPdfs;
+    }
+    public function getSingleProjectPdf()
+    {
+        $pdfs = $this->getProjectPdfs();
+        if( count($pdfs) > 0 ) {
+            return $pdfs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
+    public function ifExistProjectPdf() {
+        $pdf = $this->getSingleProjectPdf();
+        if( $pdf ) {
+            return $pdf->pathExist();
+        }
+        return false;
+//        if( $pdf ) {
+//            $pdfPath = $pdf->getServerPath();
+//            if( file_exists($pdfPath) ) {
+//                return true;
+//            }
+//        }
+//        return false;
+    }
+    ////////////// EOF Additional fields from #295 //////////////
 
     /**
      * @return mixed

@@ -255,7 +255,12 @@ class DefaultReviewerController extends OrderAbstractController
             $eventType = "Default Reviewer Updated";
             $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
             $reviewer = $reviewersArr['reviewer'];
-            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+
+            $reviewerDelegate = "N/A";
+            if( array_key_exists('reviewerDelegate', $reviewersArr) ) {
+                $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            }
+
             $stateStr = $defaultReviewer->getState();
             //get state string: irb_review=>IRB Review
             $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);

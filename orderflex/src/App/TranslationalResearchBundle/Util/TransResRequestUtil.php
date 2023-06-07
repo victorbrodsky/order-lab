@@ -2775,12 +2775,14 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
 
         //get all enabled project specialties
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
-            array(
-                'type' => array("default","user-added")
-            ),
-            array('orderinlist' => 'ASC')
-        );
+//        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+//            array(
+//                'type' => array("default","user-added")
+//            ),
+//            array('orderinlist' => 'ASC')
+//        );
+
+        $specialties = $transresUtil->getTransResProjectSpecialties($userAllowed=true);
 
         $allowSpecialties = array();
         foreach($specialties as $projectSpecialty) {
@@ -2809,9 +2811,12 @@ class TransResRequestUtil
             return $filterTypes;
         }
 
+        //filter $specialties by enableProjectOnWorkReqNavbar
+        $allowEnabledSpecialties = $this->getTransResEnableProjectOnWorkReqNavbar($specialties);
+
         //All by type
         $elements2 = array('All Requests');
-        foreach($allowSpecialties as $allowSpecialty) {
+        foreach($allowEnabledSpecialties as $allowSpecialty) {
             $elements2[] = "All $allowSpecialty Requests";
         }
         $elements2[] = 'All Requests (including Drafts)';
@@ -2820,8 +2825,7 @@ class TransResRequestUtil
 
         //Pending by type
         $elements3 = array('All Pending Requests');
-        //$filterTypes['Pending by type'] = 'All Pending Requests';
-        foreach($allowSpecialties as $allowSpecialty) {
+        foreach($allowEnabledSpecialties as $allowSpecialty) {
             $elements3[] = "All $allowSpecialty Pending Requests";
         }
         $filterTypes['Pending by type'] = $elements3;
@@ -2829,8 +2833,7 @@ class TransResRequestUtil
 
         //Active by type
         $elements4 = array('All Active Requests');
-        //$filterTypes['Active by type'] = 'All Active Requests';
-        foreach($allowSpecialties as $allowSpecialty) {
+        foreach($allowEnabledSpecialties as $allowSpecialty) {
             $elements4[] = "All $allowSpecialty Active Requests";
         }
         $filterTypes['Active by type'] = $elements4;
@@ -2838,8 +2841,7 @@ class TransResRequestUtil
 
         //Completed by type
         $elements5 = array('All Completed Requests');
-//        $filterTypes['Completed by type'] = 'All Completed Requests';
-        foreach($allowSpecialties as $allowSpecialty) {
+        foreach($allowEnabledSpecialties as $allowSpecialty) {
             $elements5[] = "All $allowSpecialty Completed Requests";
         }
         $filterTypes['Completed by type'] = $elements5;
@@ -2847,8 +2849,7 @@ class TransResRequestUtil
 
         //Completed & notified by type
         $elements6 = array('All Completed and Notified Requests');
-        //$filterTypes['Completed & notified by type'] = 'All Completed and Notified Requests';
-        foreach($allowSpecialties as $allowSpecialty) {
+        foreach($allowEnabledSpecialties as $allowSpecialty) {
             $elements6[] = "All $allowSpecialty Completed and Notified Requests";
         }
         $filterTypes['Completed & notified by type'] = $elements6;
@@ -2866,6 +2867,19 @@ class TransResRequestUtil
         $filterTypes['By queues'] = $elements7;
 
         return $filterTypes;
+    }
+    //Specialties filtered by enableProjectOnWorkReqNavbar
+    public function getTransResEnableProjectOnWorkReqNavbar( $specialties ) {
+        $transresUtil = $this->container->get('transres_util');
+        $allowedSpecialties = array();
+
+        foreach($specialties as $specialty) {
+            if( $transresUtil->getTransresSiteProjectParameter('enableProjectOnWorkReqNavbar',null,$specialty) === true ) {
+                $allowedSpecialties[] = $specialty;
+            }
+        }
+
+        return $allowedSpecialties;
     }
     //get allowed filter request types for logged in user
     public function getRequestFilterPresetType_ORIG() {
@@ -5933,6 +5947,8 @@ class TransResRequestUtil
         $overwriteFormula = false;
         //$overwriteFormula = true;
 
+        $transresUtil = $this->container->get('transres_util');
+
         $testing = false;
         //$testing = true;
 
@@ -5963,6 +5979,7 @@ class TransResRequestUtil
             $pi = $invoice->getPrincipalInvestigator();
 
             ///// Show only to ROLE_TRANSRES_BILLING_ADMIN and this PI and this BILLING CONTACTS //////
+            $project = null;
             $specialtyStr = "";
             $transresRequest = $invoice->getTransresRequest();
             if( $transresRequest ) {
@@ -5971,6 +5988,11 @@ class TransResRequestUtil
                     $specialty = $project->getProjectSpecialty();
                     if( $specialty ) {
                         $specialtyStr = $specialty->getUppercaseName();
+                    }
+
+                    $recipientFundNumber = $transresUtil->getTransresSiteProjectParameter('recipientFundNumber',$project);
+                    if( !$recipientFundNumber ) {
+                        $recipientFundNumber = "N/A - Recipient Fund Number is empty in Site Settings"; //"61211820";
                     }
                 }
             }
@@ -6137,7 +6159,7 @@ class TransResRequestUtil
             //Fund -  please request JV fund transfer to TRP account 61211820
             $col = $colIndexArr['Fund'];
             $cell = $sheet->getCellByColumnAndRow($col, $row);
-            $cell->setValue("61211820");
+            $cell->setValue($recipientFundNumber); //"61211820"
 
             //TEXT (invoice ID)
             $col = $colIndexArr['Text'];

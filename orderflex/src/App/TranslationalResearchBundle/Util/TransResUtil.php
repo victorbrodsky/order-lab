@@ -1222,6 +1222,10 @@ class TransResUtil
                         $subject = "Project request ".$project->getOid(). " has been reviewed by a committee member";
                         $body = $subject . " who is recommending it to be " . $review->getDecisionStr();
 
+                        //In the notification email body add a sentence as a separate paragraph above the links stating
+                        // “The project description is attached to this email.”
+                        $body = $body.$break.$break. "The project description is attached to this email.";
+
                         /////////////////// Email to Admin ///////////////////////
                         //get project url
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
@@ -1233,8 +1237,11 @@ class TransResUtil
 
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $admins = $this->getTransResAdminEmails($project,true,true); //set Transition
+
+                        $attachmentArr = $this->getProjectAttachments($project);
+
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail );
+                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResAdmin = "Email To: ".implode("; ",$admins);
@@ -1247,14 +1254,21 @@ class TransResUtil
                         /////////////////// Email to Primary Reviewer, TO: PRIMARY COMMITTEE REVIEWER ONLY ///////////////////////
                         $emailBody = $body .$break.$break. "At the time of this notification, the status of this project request is '$originalStateLabel'.";
 
+                        //In the notification email body add a sentence as a separate paragraph above the links stating
+                        // “The project description is attached to this email.”
+                        $emailBody = $emailBody.$break.$break. "The project description is attached to this email.";
+
                         //To review this project request, please visit the link below: LINK-TO-REVIEW-PROJECT-REQUEST
                         $emailBody = $emailBody .$break.$break. "To review this project request, please visit the link below:";
                         $emailBody = $emailBody . $break. $projectReviewUrl;
 
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $primaryReviewerEmails = $this->getCommiteePrimaryReviewerEmails($project); //ok
+
+                        $attachmentArr = $this->getProjectAttachments($project);
+
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail );
+                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail, $attachmentArr );
 
                         if( $subject && $emailBody ) {
                             $emailResPrimary = "Email To: ".implode("; ",$admins);
@@ -3052,6 +3066,11 @@ class TransResUtil
             //To review this project request, please visit the link below: http://LINK TO THE REVIEW PAGE FOR THIS PROJECT REQUEST
             $body = $projectInfo . " is now awaiting your review.";
             $body = $body . " At the time of this notification, the status of this project request is '$currentStateLabel'.";
+
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             $body = $body . $break.$break;
             $body = $body . "To review this project request, please visit the link below:";
             $body = $body . $break. $projectReviewUrl;
@@ -3059,8 +3078,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: missing info: send to requesters(submitter, contact), ccs: admins
@@ -3087,6 +3108,10 @@ class TransResUtil
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //To supply the requested information and re-submit for review, please visit:
             $projectResubmitUrl = $this->getProjectResubmitUrl($project);
             $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit the following link:".$break.$projectResubmitUrl;
@@ -3094,8 +3119,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); ////send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: rejected: send to requesters(submitter, contact), ccs: admins
@@ -3116,6 +3143,10 @@ class TransResUtil
             $projectUrl = $this->getProjectShowUrl($project);
             $body = $statusChangeMsg . $break.$break. "To view the details of this project request, please visit the link below:".$break.$projectUrl;
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //If you have any questions, please contact
             // [FirstNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
             // LastNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
@@ -3133,8 +3164,10 @@ class TransResUtil
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //Case: Final Approved
@@ -3212,9 +3245,12 @@ class TransResUtil
             $body = $body . $break.$break . "Any outstanding invoices associated with this project request or your other project requests can be accessed via the following link:";
             $body = $body . $break . $linkMyOutstandingInvoices;
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
@@ -3226,8 +3262,10 @@ class TransResUtil
 //            $logger->notice('adminsCcs:['.implode("|",$adminsCcs).']');
 //            $logger->notice('senderEmail:['.$senderEmail.']');
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         //All other cases: final approved, closes ...
@@ -3242,16 +3280,21 @@ class TransResUtil
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project,$reason);
 
+            //In the notification email body add a sentence as a separate paragraph above the links stating
+            // “The project description is attached to this email.”
+            $body = $body.$break.$break. "The project description is attached to this email.";
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-
             $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project,true,true); //send TransitionEmail
 
+            $attachmentArr = $this->getProjectAttachments($project);
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail, $attachmentArr );
         }
 
         if( $subject && $body ) {
@@ -3615,14 +3658,29 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
-    //rename to getTransResProjectEnabledSpecialties
-    public function getTransResProjectReviewSpecialties( $userAllowed=true ) {
+    //Specialties filtered by enableProjectOnConfig
+    public function getTransResEnableProjectOnConfigSpecialties( $userAllowed=true ) {
         $specialties = $this->getTransResProjectSpecialties($userAllowed);
 
         $allowedSpecialties = array();
 
         foreach($specialties as $specialty) {
-            if( $this->getTransresSiteProjectParameter('enableNewProjectOnSelector',null,$specialty) === true ) {
+            if( $this->getTransresSiteProjectParameter('enableProjectOnConfig',null,$specialty) === true ) {
+                $allowedSpecialties[] = $specialty;
+            }
+        }
+
+        return $allowedSpecialties;
+    }
+
+    //Specialties filtered by enableProjectOnNavbar
+    public function getTransResEnableProjectOnNavbar( $userAllowed=true ) {
+        $specialties = $this->getTransResProjectSpecialties($userAllowed);
+
+        $allowedSpecialties = array();
+
+        foreach($specialties as $specialty) {
+            if( $this->getTransresSiteProjectParameter('enableProjectOnNavbar',null,$specialty) === true ) {
                 $allowedSpecialties[] = $specialty;
             }
         }
@@ -7510,7 +7568,7 @@ class TransResUtil
         return number_format((float)$number, 2, '.', ',');
     }
     
-    public function orderableProjectSpecialties($fee) {
+    public function orderableProjectSpecialties( $fee, $asObject=true ) {
 
         //1) get all specialties
         $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
@@ -7526,7 +7584,38 @@ class TransResUtil
         foreach($specialties as $specialty) {
             if( $hideSpecialties->contains($specialty) ) {
             } else {
-                $orderableSpcialties[] = $specialty;
+                if( $asObject ) {
+                    $orderableSpcialties[] = $specialty;
+                } else {
+                    $orderableSpcialties[] = $specialty->getId();
+                }
+            }
+
+        }
+
+        return $orderableSpcialties;
+    }
+
+    public function orderableProjectReverseSpecialties( $hideSpecialtiesArr, $asObject=true ) {
+        //1) get all specialties
+        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default", "user-added")
+            ),
+            array('orderinlist' => 'ASC')
+        );
+
+        //2) get diff specialties
+        $orderableSpcialties = array();
+        //$hideSpecialties = $fee->getProjectSpecialties();
+        foreach($specialties as $specialty) {
+            if( in_array($specialty->getId(),$hideSpecialtiesArr) ) {
+            } else {
+                if( $asObject ) {
+                    $orderableSpcialties[] = $specialty;
+                } else {
+                    $orderableSpcialties[] = $specialty->getId();
+                }
             }
 
         }
@@ -8120,6 +8209,19 @@ class TransResUtil
         return $expectedExpirationDateChoices;
     }
 
+    public function getProjectRequesterGroupChoices() {
+        $choiceRequesterGroups = array(
+            'Any Requester Group' => 'Any',
+            'No Requester Group' => 'None'
+        );
+
+        $requesterGroups = $this->getTransResRequesterGroups();
+        foreach($requesterGroups as $requesterGroup) {
+            $choiceRequesterGroups[$requesterGroup->getName()] = $requesterGroup->getId();
+        }
+
+        return $choiceRequesterGroups;
+    }
 
     //on the user facing fee schedule page, show internal pricing if the logged
     // in user is associated with (PI, etc) and has any projects (even closed)
@@ -8347,4 +8449,73 @@ class TransResUtil
         }
         return false;
     }
+
+    public function getProjectAttachments( $project ) {
+        $attachmentArr = array();
+
+        //Export project summary to a PDF ($projectPdfs)
+        $pdfPath = null;
+        $pdf = $project->getSingleProjectPdf();
+        if( $pdf ) {
+            $pdfPath = $pdf->getServerPath();
+            if( !file_exists($pdfPath) ) {
+                $pdfPath = null;
+            }
+        }
+
+        if( !$pdfPath ) {
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $res = $transresPdfUtil->generateAndSaveProjectPdf($project);
+
+            $filename = $res['filename'];
+            $filsize = $res['size'];
+            //echo "filsize=$filsize; filename=$filename <br>";
+
+            if ($filename && $filsize) {
+                //exit("OK: filsize=$filsize; filename=$filename");
+                $pdf = $project->getSingleProjectPdf();
+                if( $pdf && $pdf->pathExist() ) {
+                    $pdfPath = $pdf->getServerPath();
+                    if( !file_exists($pdfPath) ) {
+                        $pdfPath = null;
+                    }
+                }
+            }
+        }
+
+        if( $pdfPath ) {
+            $pdfName = $pdf->getDescriptiveFilename();
+            $attachmentArr[] = array('path'=>$pdfPath,'name'=>$pdfName);
+        }
+
+        //Project Intake Form Documents (documents)
+        $doc = $project->getSingleDocument();
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentElementArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+
+        //check for IRB approval letter (irbApprovalLetters)
+        $doc = $project->getSingleIrbApprovalLetter();
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentElementArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+
+        //Human Tissue Form ($humanTissueForms)
+        $doc = $project->getSingleHumanTissueForm();
+        if( $doc && $doc->pathExist() ) {
+            $docAttachmentArr = $doc->getAttachmentElementArr();
+            if ($docAttachmentArr) {
+                $attachmentArr[] = $docAttachmentArr;
+            }
+        }
+
+        return $attachmentArr;
+    }
+
 }

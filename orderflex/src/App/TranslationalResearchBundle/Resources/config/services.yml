@@ -65,7 +65,6 @@ services:
         class: App\TranslationalResearchBundle\Util\ReminderUtil
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
-
 framework:
     workflows:
         transres_project:

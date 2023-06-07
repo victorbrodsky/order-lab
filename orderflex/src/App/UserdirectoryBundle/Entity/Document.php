@@ -642,6 +642,33 @@ class Document {
         return $fileSize;
     }
 
+    public function pathExist() {
+        $path = $this->getServerPath();
+        if( $path ) {
+            if( file_exists($path) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getAttachmentElementArr() {
+        $attachmentElementArr = null;
+        $path = $this->getServerPath();
+        if( $path && file_exists($path) ) {
+            $name = $this->getDescriptiveFilename();
+            $attachmentElementArr = array('path'=>$path,'name'=>$name);
+        }
+        return $attachmentElementArr;
+    }
+    public function getAttachmentArr() {
+        $attachmentElementArr = $this->getAttachmentElementArr();
+        if( $attachmentElementArr ) {
+            return array($attachmentElementArr);
+        }
+        return null;
+    }
+
     //TODO: swiftmailer\swiftmailer\lib\classes\Swift\ByteStream\FileByteStream.php Error:
     // Unable to open file for reading => use 'realpath' in email util
     //Accepted path: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\documents\filename.pdf

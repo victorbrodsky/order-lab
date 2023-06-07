@@ -240,6 +240,8 @@ class ProjectController extends OrderAbstractController
 
         $expectedExpirationDateChoices = $transresUtil->getExpectedExpirationDateChoices();
 
+        $requesterGroup = $transresUtil->getProjectRequesterGroupChoices();
+
         $trpAdminOrTech = false;
         if(
             $this->isGranted('ROLE_TRANSRES_ADMIN') ||
@@ -264,6 +266,7 @@ class ProjectController extends OrderAbstractController
             'humanAnimalNameSlash' => $transresUtil->getHumanAnimalName("slash"),
             'transresPricesList' => $transresPricesList,
             'expectedExpirationDateChoices' => $expectedExpirationDateChoices,
+            'requesterGroup' => $requesterGroup,
             'overBudget' => 'all',
             'fundingType' => null
         );
@@ -392,6 +395,7 @@ class ProjectController extends OrderAbstractController
         $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
         $briefDescription = $filterform['briefDescription']->getData();
         $expectedExpirationDateChoices = $filterform['expectedExpirationDateChoices']->getData();
+        $requesterGroup = $filterform['requesterGroup']->getData();
 
         $priceList = NULL;
         if( isset($filterform['priceList']) ) {
@@ -678,6 +682,20 @@ class ProjectController extends OrderAbstractController
             }
 
             $advancedFilter++;
+        }
+
+        if( $requesterGroup ) {
+            if( $requesterGroup == 'Any' ) {
+                //filter nothing
+            }
+            elseif( $requesterGroup == 'None' ) {
+                $dql->andWhere('project.requesterGroup IS NULL');
+            }
+            else {
+                $dql->andWhere('project.requesterGroup = :requesterGroup');
+                $dqlParameters['requesterGroup'] = $requesterGroup;
+            }
+
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
@@ -1257,7 +1275,6 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
-        //TODO: replced by getTransResProjectReviewSpecialties
 
         $collDivs = $transresUtil->getTransResCollaborationDivs();
 
@@ -1399,6 +1416,14 @@ class ProjectController extends OrderAbstractController
             $collDivObject = $transresUtil->getCollaborationDivObject($collDivStr);
             if( $collDivObject ) {
                 $project->addCollDiv($collDivObject);
+
+                //On CSP set the radio button for the “Will this project involve human tissue?” to “No” by default on load
+                //echo "collDivStr=".strtolower($collDivStr)."<br>";
+                if( strtolower($collDivStr) == "csp" ) {
+                    //involveHumanTissue
+                    //echo "set involveHumanTissue to No<br>";
+                    $project->setInvolveHumanTissue("No");
+                }
             }
         }
 
@@ -1472,6 +1497,13 @@ class ProjectController extends OrderAbstractController
                 $em->flush();
 
                 $project->generateOid();
+                $em->flush();
+            }
+
+            //generate project PDF
+            if( !$testing ) {
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //new
                 $em->flush();
             }
 
@@ -1670,7 +1702,7 @@ class ProjectController extends OrderAbstractController
 
             $project->setUpdateUser($user);
             $project->setUpdateDate();
-            $project->calculateAndSetImplicitExpirationDate();
+            $project->calculateAndSetImplicitExpirationDate(); //edit
             $project->processShowHideFields();
 
             $startProjectReview = false;
@@ -1780,6 +1812,13 @@ class ProjectController extends OrderAbstractController
                         }
                     }
                 }
+            }
+
+            //generate project PDF
+            if( !$testing ) {
+                $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //edit
+                $em->flush();
             }
 
             //process form nodes
@@ -1954,7 +1993,7 @@ class ProjectController extends OrderAbstractController
      * @Route("/project/show/{id}", name="translationalresearch_project_show", methods={"GET"})
      * @Template("AppTranslationalResearchBundle/Project/show.html.twig")
      */
-    public function showAction(Request $request, Project $project)
+    public function showAction(Request $request, Project $project, $cycle="show")
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -1965,7 +2004,7 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
-        $cycle = "show";
+        //$cycle = "show";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 
@@ -2291,12 +2330,27 @@ class ProjectController extends OrderAbstractController
 
         $institutionName = $transresUtil->getTransresSiteProjectParameter('institutionName',$project);
 
+        $feeScheduleUrlArr = array();
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty ) {
+            $projectSpecialtyId = $projectSpecialty->getId();
+            $feeScheduleUrlArr = array(
+                'orderable-for-specialty[specialties][]' => $projectSpecialtyId
+            );
+        }
+
+
         $feeScheduleUrl = $this->container->get('router')->generate(
             'translationalresearchfeesschedule-list',
-            array(),
+            //array(
+            //    'orderable-for-specialty[specialties][]' => $project->getProjectSpecialty()->getId()
+            //),
+            $feeScheduleUrlArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".$feeScheduleUrl.">See fee schedule</a>";
+        $feeScheduleLink = "<a target='_blank' data-toggle='tooltip' title='Products/Services (Fee Schedule) List' href=".
+            $feeScheduleUrl.
+            ">See fee schedule</a>";
 
         $trpAdmin = false;
         if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -2341,6 +2395,14 @@ class ProjectController extends OrderAbstractController
         $params['showAdminReviewer'] = true;
         $params['showCommitteeReviewer'] = true;
         $params['showFinalReviewer'] = true;
+
+        if( $cycle == "pdf" ) {
+            $params['showIrbReviewer'] = false;
+            $params['showAdminReviewer'] = false;
+            $params['showCommitteeReviewer'] = false;
+            $params['showFinalReviewer'] = false;
+        }
+
         if(
             $this->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
@@ -2402,7 +2464,7 @@ class ProjectController extends OrderAbstractController
             }
         }
 
-        if( $cycle == "show" || $cycle == "review" ) {
+        if( $cycle == "show" || $cycle == "review" || $cycle == "pdf" ) {
             $disabled = true;
         }
 
@@ -2663,5 +2725,146 @@ class ProjectController extends OrderAbstractController
         exit();
     }
 
+
+    /**
+     * Download one single project
+     * Similarly as fellapp_download_interview_applicants_list_pdf
+     *
+     * @Route("/download-projects-pdf/{id}", methods={"GET"}, name="translationalresearch_download_projects_pdf")
+     */
+    public function downloadProjectPdfAction(Request $request, $id=null) {
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( !$id ) {
+            exit("Project id is null, no project to export to pdf");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($id);
+
+        if( !$project ) {
+            exit("Project not found by id $id");
+        }
+
+        //testing
+        if(0) {
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $pdfContent = $transresPdfUtil->exportProjectPdf($project, $request);
+            $fileName = "test.pdf";
+            return new Response(
+                $pdfContent,
+                200,
+                array(
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"'
+                )
+            );
+        }
+
+        $pdf = $project->getSingleProjectPdf();
+        if( $pdf ) {
+            $pdfPath = $pdf->getServerPath();
+            if( file_exists($pdfPath) ) {
+                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+            }
+        }
+
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
+        $user = $this->getUser();
+        $res = $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request);
+
+        $filename = $res['filename'];
+        $filsize = $res['size'];
+        //echo "filsize=$filsize; filename=$filename <br>";
+
+        if( $filename && $filsize ) {
+            //exit("OK: filsize=$filsize; filename=$filename");
+            $pdf = $project->getSingleProjectPdf();
+            if( $pdf ) {
+                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
+            }
+        }
+
+        //exit("pdf no");
+        $this->addFlash(
+            'warning',
+            "Logical error: project PDF not found"
+        );
+
+        return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+    }
+
+    /**
+     * Finds and displays a project entity on a simple html page
+     * via ajax when project is changed on the new work request page.
+     *
+     * @Route("/project/show-simple-pdf/{id}", name="translationalresearch_project_show_simple_pdf", methods={"GET"}, options={"expose"=true})
+     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
+     */
+    public function showProjectPdfAction(Request $request, Project $project)
+    {
+        return $this->showAction($request, $project, "pdf");
+    }
+
+    /**
+     * Force to update project PDF
+     *
+     * @Route("/project/update-project-pdf/", name="translationalresearch_update_project_pdf", methods={"GET","POST"}, options={"expose"=true})
+     * @Template("AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig")
+     */
+    public function updateProjectPdfAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        $projectId = trim((string)$request->get('projectId') );
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+
+        $permission = true;
+        $res = "NotOK";
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project) ) {
+            //ok
+        } else {
+            //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            $permission = false;
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $permission = false;
+        }
+
+        if( $permission == false ) {
+            $response = new Response($res);
+            return $response;
+        }
+
+        if( $project ) {
+
+            //generate project PDF
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $user = $this->getUser();
+            $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
+            $em->flush();
+
+            $logger = $this->container->get('logger');
+            $logger->notice("translationalresearch_update_project_pdf updated PDF");
+
+            $res = "Project " . $project->getOid() . " PDF has been updated";
+
+            $this->addFlash(
+                'notice',
+                $res
+            );
+        } else {
+            //$res = "Logical error: project not found by ID $projectId";
+        }
+
+        $response = new Response($res);
+        return $response;
+    }
 
 }

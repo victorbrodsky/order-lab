@@ -482,7 +482,32 @@ class RequestCategoryTypeList extends ListAbstract
 
     public function getOptimalAbbreviationName( $priceList=NULL ) {
         //return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
-        return $this->getProductId($priceList) . " (" .$this->getSection() . ") - " . $this->getName() . ": " . $this->getFeeStr($priceList) . "/" . $this->getFeeUnit();
+
+        $productId = $this->getProductId($priceList);
+        if( $productId ) {
+            $productId = $productId . " ";
+        }
+
+        $section = $this->getSection();
+        if( $section ) {
+            $section = "(" .$this->getSection() . ") ";
+        }
+
+        $feeName1 = $productId . $section;
+        if( $feeName1 ) {
+            $feeName1 = $feeName1 . "- ";
+        }
+
+        $feeStr = $this->getFeeStr($priceList);
+        $feeUnit = $this->getFeeUnit();
+
+        //$feeName = $this->getProductId($priceList) . " (" .$this->getSection() . ") - " . $this->getName() . ": " . $this->getFeeStr($priceList) . "/" . $this->getFeeUnit();
+
+        $feeName = $feeName1 .
+            $this->getName() . ": " .
+            $feeStr . "/" . $feeUnit;
+
+        return $feeName;
     }
 
     public function getProductIdAndName() {

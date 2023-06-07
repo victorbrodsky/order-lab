@@ -15,17 +15,17 @@
  *  limitations under the License.
  */
 
-namespace App\UserdirectoryBundle\Form;
+namespace App\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
-use App\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ListFilterType extends AbstractType
+class FeeFilterType extends AbstractType
 {
 
     protected $params;
@@ -49,29 +49,36 @@ class ListFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        if( isset($this->params['className']) ) {
-            $className = $this->params['className'];
-        } else {
-            $className = NULL;
-        }
+//        if( isset($this->params['specialties']) ) {
+//            $specialties = $this->params['specialties'];
+//        } else {
+//            $specialties = NULL;
+//        }
+        $builder->add('specialties', ChoiceType::class, array(
+            'choices' => $this->params['specialties'],
+            //'data' => array('default','user-added'),
+            'multiple' => true,
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width', 'placeholder'=>"Orderable for specialties")
+        ));
+//        $builder->add( 'specialties', EntityType::class, array(
+//            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+//            'label' => false,
+//            'choice_label' => 'name',
+//            'required'=> false,
+//            'multiple' => true,
+//            'attr' => array('class'=>'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
 
-        if( $className && $className == "AntibodyList" ) {
-            $types = array(
-                "default" => "default",
-                "user-added" => "user-added",
-                "disabled" => "disabled",
-                "draft" => "draft",
-                "hidden" => "hidden"
-            );
-            $builder->add('type', ChoiceType::class, array(
-                'choices' => $types,
-                'data' => array('default','user-added'),
-                //'choices_as_values' => true,
-                'multiple' => true,
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width select2-list-type', 'placeholder'=>"Type")
-            ));
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -84,6 +91,6 @@ class ListFilterType extends AbstractType
 
     public function getBlockPrefix(): string
     {
-        return 'filter';
+        return 'orderable-for-specialty';
     }
 }

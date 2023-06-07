@@ -297,19 +297,10 @@
                                             >All Projects</a>
                                         </li>
 
-                                        {#add lists: “Projects utilizing external pricing” and “Projects utilizing internal pricing”#}
-                                        {#{% set priceLists = transres_util.getDbPriceLists() %}#}
-                                        {#{% if priceLists|length > 0 %}#}
-                                            {#{% for priceList in priceLists %}#}
-                                                {#<li>#}
-                                                    {#<a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty][]':priceList.id}) }}"#}
-                                                    {#>All {{ priceList.getName() }} Projects</a>#}
-                                                {#</li>#}
-                                            {#{% endfor %}#}
-                                        {#{% endif %}#}
-
-                                        {% if specialties|length > 0 %}
-                                            {% for specialty in specialties %}
+                                        {#filtered by enableProjectOnNavbar#}
+                                        {% set enableProjectOnNavbarSpecialties = transres_util.getTransResEnableProjectOnNavbar() %}
+                                        {% if enableProjectOnNavbarSpecialties|length > 0 %}
+                                            {% for specialty in enableProjectOnNavbarSpecialties %}
                                                 <li>
                                                     <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty][]':specialty.id}) }}"
                                                     >All {{ specialty.getName() }} Projects</a>
@@ -346,34 +337,34 @@
                     </li>
 
                     {% if simpleMenu %}
-                    <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
+                        <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Work Requests<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
 
-                        {% if 0 %}
-                            {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
-                            {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                                <li id="nav-bar-translationalresearch-new-standalone-request">
-                                    <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New work request</a>
-                                </li>
+                            {% if 0 %}
+                                {#Products/Services filter is not implemented yet. Disable until it will be implemented.#}
+                                {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                    <li id="nav-bar-translationalresearch-new-standalone-request">
+                                        <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New work request</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
 
-                        {#<li id="nav-bar-translationalresearch-my-requests">#}
-                            {#<a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>#}
-                        {#</li>#}
+                            {#<li id="nav-bar-translationalresearch-my-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>#}
+                            {#</li>#}
 
-                        {#<li id="nav-bar-translationalresearch-all-requests">#}
-                            {#<a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>#}
-                        {#</li>#}
+                            {#<li id="nav-bar-translationalresearch-all-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>#}
+                            {#</li>#}
 
-                        <hr style="margin-top: 10px; margin-bottom: 10px;">
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
 
-                        {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType_ORIG() %}
-                        {{ navbarmacros.createFilterRequestType_ORIG(filterRequestTypes) }}
+                            {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType_ORIG() %}
+                            {{ navbarmacros.createFilterRequestType_ORIG(filterRequestTypes) }}
 
-                        </ul>
-                    </li>
+                            </ul>
+                        </li>
                     {% endif %}
 
                     {#multi-level#}
@@ -391,16 +382,8 @@
                                 {% endif %}
                             {% endif %}
 
-                            {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
-
                             {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
                             {{ navbarmacros.createFilterRequestType(filterRequestTypes) }}
-                            {#<li class="dropdown-submenu">#}
-                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">My work requests</a>#}
-                                {#<ul class="dropdown-menu">#}
-                                    {#{{ navbarmacros.createFilterRequestType(filterRequestTypes) }}#}
-                                {#</ul>#}
-                            {#</li>#}
                         </ul>
                     </li>
 
@@ -591,8 +574,7 @@
 
                             {#Reviewers#}
                             {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-
-                                {% set reviewSpecialties = transres_util.getTransResProjectReviewSpecialties() %}
+                                {% set reviewSpecialties = transres_util.getTransResEnableProjectOnConfigSpecialties() %}
                                 {% if reviewSpecialties|length > 0 %}
                                     <li class="dropdown-submenu">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reviewers</a>
