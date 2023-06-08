@@ -3063,8 +3063,8 @@ class VacReqUtil
         }
         if( !$academicYearStart ) {
             //$academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
-            //$academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         return $academicYearStart;
     }
@@ -3078,8 +3078,8 @@ class VacReqUtil
         }
         if( !$academicYearEnd ) {
             //$academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
-            //$academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
         return $academicYearEnd;
     }
