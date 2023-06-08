@@ -209,7 +209,10 @@ class FellappSiteParameter {
     
     
     public function __construct() {
-        
+        $this->setAllowPopulateFellApp(false);
+        $this->setSendEmailUploadLetterFellApp(false);
+        $this->setDeleteImportedAplicationsFellApp(false);
+        $this->setDeleteOldAplicationsFellApp(false);
     }
 
 

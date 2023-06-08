@@ -1248,7 +1248,7 @@ class UserServiceUtil {
         $logger->notice("Finished with Auto Assign Institution");
 
         //set AllowPopulateFellApp to false
-        $params->setAllowPopulateFellApp(false);
+        //$params->setAllowPopulateFellApp(false);
 
         $em->persist($params);
         $em->flush();
