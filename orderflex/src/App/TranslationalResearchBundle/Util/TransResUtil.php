@@ -8527,13 +8527,15 @@ class TransResUtil
         $dql =  $repository->createQueryBuilder("list");
         //$dql->select("DISTINCT(list.id) as id, list.name");
         $dql->select("list");
-        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
 
         if(0) {
+            $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
             //$specialtyStr = "projectSpecialties.id IN ($specialtiesStr)";
             $specialtyStr = "projectSpecialties.id = $specialtiesStr"; //=67, !=106 total=109
-            $specialtyStr = "projectSpecialties.id IS NOT NULL AND projectSpecialties.id IN (5)";
+            $specialtyStr = "projectSpecialties.id IN (7,8)";
+            //$specialtyStr = "projectSpecialties.id IN (7,8) AND projectSpecialties.requestCategories IS NULL";
             echo "specialtyStr: $specialtyStr <br>";
             $dql->where($specialtyStr);
             //$dql->andWhere($specialtyStr);
@@ -8564,28 +8566,82 @@ WHERE   NOT EXISTS (
     AND b.specialtylist_id IN (7,5)
 )
 
+
+SELECT a.*
+FROM public.transres_requestcategorytypelist a
+LEFT JOIN public.transres_requestcategory_specialty j
+    ON a.id = j.requestcategorytypelist_id AND j.specialtylist_id IN (7, 8)
+WHERE
+    j.requestcategorytypelist_id IS NULL;
 */
-        if(1) {
+        if(0) {
+            //FROM transres_requestcategory_specialty b
             $dql = "
                 SELECT list
                 FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
                 WHERE NOT EXISTS (
                   SELECT 1
-                  FROM list.projectSpecialties b
+                  FROM transres_requestcategory_specialty b
                   WHERE list.id = b.requestcategorytypelist_id
                   AND b.specialtylist_id IN (7, 8)
                 )
             ";
+            //$query = $this->em->createQuery($sql1); //->setParameter('ids', $specialtiesStr);
+        }
+        if(1) {
+            $conn = $this->em->getConnection();
+
+            $dql = "
+                SELECT list
+                FROM transres_requestcategorytypelist list
+                WHERE NOT EXISTS (
+                  SELECT 1
+                  FROM transres_requestcategory_specialty b
+                  WHERE list.id = b.requestcategorytypelist_id
+                  AND b.specialtylist_id IN (7, 8)
+                )
+            ";
+
+            $res = $conn->executeQuery($dql)->fetchAll();
+            dump($res);
+            exit('111');
+        }
+        if(0) {
             //https://stackoverflow.com/questions/43162939/doctrine-query-with-join-table
-            $dql->select('list')
-                ->join('list.projectSpecialties', 'projectSpecialties', 'WITH', 'd member of o.discounts')
-                ->where('o.status = :status')
-                ->setParameter('status', Order::STATUS_SUCCESS)
+            $dql->join('list.projectSpecialties', 'projectSpecialties', 'WITH', 'list MEMBER OF projectSpecialties.requestCategories')
+                ->where('projectSpecialties IN (7,8)')
+//                //->setParameter('ids', 7)
             ;
-            //$query = $this->em->createQuery($sql); //->setParameter('ids', $specialtiesStr);
+
+            //public function innerJoin($join, $alias, $conditionType = null, $condition = null);
+//            $dql->join('list.projectSpecialties', 'projectSpecialties', 'WHERE', 'NOT EXISTS (SELECT 1 FROM )')
+//                ->where('projectSpecialties NOT IN (7,8)')
+//            ;
+        }
+        if(0) {
+            //https://stackoverflow.com/questions/43162939/doctrine-query-with-join-table
+            $dql->join(
+                'list.projectSpecialties', 'projectSpecialties',
+                'ON',
+                'list.id = projectSpecialties.requestcategorytypelist_id AND projectSpecialties.specialtylist_id IN (7,8)'
+            )
+                ->where('projectSpecialties.requestcategorytypelist_id IS NULL')
+//                //->setParameter('ids', 7)
+            ;
+
+            //public function innerJoin($join, $alias, $conditionType = null, $condition = null);
+//            $dql->join('list.projectSpecialties', 'projectSpecialties', 'WHERE', 'NOT EXISTS (SELECT 1 FROM )')
+//                ->where('projectSpecialties NOT IN (7,8)')
+//            ;
+
         }
 
-
+        if(0) {
+            $specialtyStr = "NOT EXISTS (SELECT 1 FROM projectSpecialties WHERE projectSpecialties.id IN (7,8) )";
+            echo "specialtyStr: $specialtyStr <br>";
+            $dql->where($specialtyStr);
+            //$dql->andWhere($specialtyStr);
+        }
 
         if(0) {
             $query = $this->em->createQuery(
