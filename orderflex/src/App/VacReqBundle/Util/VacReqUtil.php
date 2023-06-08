@@ -1656,19 +1656,20 @@ class VacReqUtil
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
 
-        $userSecUtil = $this->container->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
         //echo "yearRange=".$yearRange."<br>";
-
-        //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearEnd
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        //academicYearStart
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
+        $academicYearEnd = $this->getAcademicYearEnd();
 
         //constract start and end date for DB select "Y-m-d"
         //academicYearStart
@@ -1828,13 +1829,14 @@ class VacReqUtil
     // SUM numberOfDays from this request's academic start date and this request's first day away
     public function getPriorApprovedDays( $request, $requestTypeStr ) {
 
-        $userSecUtil = $this->container->get('user_security_utility');
-
+//        $userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
 
         //academicYearStart
         $academicYearStartStr = $academicYearStart->format('m-d');
@@ -2350,18 +2352,21 @@ class VacReqUtil
     //$status: 'approved'
     public function getRequestsByUserYears( $user, $yearRangeStr, $requestTypeStr, $status=null ) {
 
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearEnd
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        //academicYearStart
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+//            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
+        $academicYearEnd = $this->getAcademicYearEnd();
 
         //constract start and end date for DB select "Y-m-d"
         $academicYearStartStr = $academicYearStart->format('m-d');
@@ -2772,7 +2777,7 @@ class VacReqUtil
     //$position describes which academic year edge to construct. In case if the request spans over couple years (probably impossible case).
     // rstart--|y|--|y+1|--|y+2|--rend => position==first=>return y; position==last=>return y+2
     public function getAcademicYearEdgeDateBetweenRequestStartEnd( $request, $position="first" ) {
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
 
         $finalStartEndDates = $request->getFinalStartEndDates();
         $finalStartDate = $finalStartEndDates['startDate'];
@@ -2781,18 +2786,22 @@ class VacReqUtil
         $endDateMD = $finalEndDate->format('m-d');
 
         //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
         //academicYearStart String
         $academicYearStartMD = $academicYearStart->format('m-d');
 
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+//            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearEnd = $this->getAcademicYearEnd();
         //academicYearEnd String
         $academicYearEndMD = $academicYearEnd->format('m-d');
 
@@ -2884,18 +2893,21 @@ class VacReqUtil
 
         //return "2014-2015, 2015-2016";
         $academicYearStr = null;
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        //academicYearStart: July 01
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd: June 30
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+//            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
+        $academicYearEnd = $this->getAcademicYearEnd();
 
         //$res['academicYearStart'] = $academicYearStart;
         //$res['academicYearEnd'] = $academicYearEnd;
@@ -2962,19 +2974,21 @@ class VacReqUtil
     //$yearOffset: 0=>current year, -1=>previous year
     //return format: Y-m-d
     public function getCurrentAcademicYearStartEndDates($asDateTimeObject=false, $yearOffset=null) {
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
-            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+//            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
         //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
-            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+//            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
+        $academicYearEnd = $this->getAcademicYearEnd();
 
         $startDateMD = $academicYearStart->format('m-d');
         $endDateMD = $academicYearEnd->format('m-d');
@@ -3037,6 +3051,37 @@ class VacReqUtil
             'startDate'=> $startDate,
             'endDate'=> $endDate,
         );
+    }
+
+    public function getAcademicYearStart() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+        if( !$academicYearStart ) {
+            $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+            //$academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        if( !$academicYearStart ) {
+            //$academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart');
+            //$academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+        }
+        return $academicYearStart;
+    }
+    public function getAcademicYearEnd() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+        if( !$academicYearEnd ) {
+            $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+            //$academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+        if( !$academicYearEnd ) {
+            //$academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd');
+            //$academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+        }
+        return $academicYearEnd;
     }
 
     public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
@@ -4523,7 +4568,7 @@ class VacReqUtil
     //replace numbers from VacReqApprovalTypeList (accrued days, max days)
     //Used in new vacation and carryover request new page
     public function getHeaderInfoMessages($user, $approvalGroupType=null) {
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
 
         if( !$approvalGroupType ) {
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
@@ -4543,18 +4588,19 @@ class VacReqUtil
         $totalAccruedDays = $this->getTotalAccruedDays($user,$approvalGroupType);
 
         //$currentStartYear
-        $yearRange = $this->getCurrentAcademicYearRange();
-        $yearRangeArr = explode("-",$yearRange);
-        $currentStartYear = $yearRangeArr[1];
+        //$yearRange = $this->getCurrentAcademicYearRange();
+        //$yearRangeArr = explode("-",$yearRange);
+        //$currentStartYear = $yearRangeArr[1];
 
-        $startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "End" );
-        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
-        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
+        //$startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "End" );
+        //$startAcademicYearDate = new \DateTime($startAcademicYearStr);
+        //$startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
 
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
         $academicYearStartString = $academicYearStart->format("F jS");
 
         //$vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
@@ -4572,10 +4618,11 @@ class VacReqUtil
         }
 
         //Calculate May 30th as 1 month before End Year
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearEnd = $this->getAcademicYearEnd();
         //shift $academicYearEnd by month back
         $academicYearEnd->modify("-1 month"); //May 30th
         //$academicYearEnd->modify("last day of previous month"); //May 31st
@@ -7334,18 +7381,19 @@ class VacReqUtil
 
         //return "2014-2015, 2015-2016";
         $academicYearStr = null;
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        //academicYearStart: July 01
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearEnd: June 30
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        //academicYearStart: July 01
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd: June 30
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        //$academicYearStart = $this->getAcademicYearStart();
+        //$academicYearEnd = $this->getAcademicYearEnd();
 
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDateStr = $dates['startDate']; //Y-m-d
@@ -7443,19 +7491,20 @@ class VacReqUtil
     //get approved floating day for the academical year specified by $yearRange (2015-2016 - current academic year)
     //yearRange: "2021-2022"
     public function getUserFloatingDay( $user, $yearRange, $statusArr=array('approved') ) {
-        $userSecUtil = $this->container->get('user_security_utility');
+//        $userSecUtil = $this->container->get('user_security_utility');
         //echo "yearRange=".$yearRange."<br>";
-
-        //academicYearStart
-        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-        if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-        }
-        //academicYearEnd
-        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-        if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-        }
+//        //academicYearStart
+//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
+//        if( !$academicYearStart ) {
+//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+//        }
+//        //academicYearEnd
+//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
+//        if( !$academicYearEnd ) {
+//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+//        }
+        $academicYearStart = $this->getAcademicYearStart();
+        $academicYearEnd = $this->getAcademicYearEnd();
 
         //$floatingDayDateFrom = new \DateTime($floatingDayDate->format("Y-m-d")." 00:00:00");
         //$floatingDayDateTo = new \DateTime($floatingDayDate->format("Y-m-d")." 23:59:59");
