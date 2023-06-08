@@ -64,6 +64,9 @@ class VacReqCalendarUtil
 
         $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByAbbreviation($country);
         if( !$countryEntity ) {
+            $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        }
+        if( !$countryEntity ) {
             throw new \Exception( 'Countries is not found by abbreviation=' . $country );
         }
 
