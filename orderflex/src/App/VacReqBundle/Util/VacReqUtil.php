@@ -1122,7 +1122,7 @@ class VacReqUtil
             $userSecUtil = $this->container->get('user_security_utility');
             $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
             if (!$holidaysUrl) {
-                throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
+                //throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
             }
             $holidayLink = '<a href="' . $holidaysUrl . '" target="_blank">holidays</a>';
 

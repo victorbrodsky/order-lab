@@ -1948,7 +1948,7 @@ class FloatingDayController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( !$holidaysUrl ) {
-            throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
+            //throw new \InvalidArgumentException('holidaysUrl is not defined in Site Parameters.');
         }
         $holidaysUrl = '<a target="_blank" href="'.$holidaysUrl.'">holidays</a>';
 
