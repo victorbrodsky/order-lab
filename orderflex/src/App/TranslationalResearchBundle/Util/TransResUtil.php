@@ -8519,6 +8519,7 @@ class TransResUtil
     }
 
     //NOT USED
+    //Testing select from manytomany by not existed IDs
     public function feeFilterTest() {
         $specialties = array(7,8);
         $specialtiesStr = implode(",", $specialties);
