@@ -235,11 +235,11 @@ class DefaultController extends OrderAbstractController
 //        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 //        echo "projectUrl=$projectUrl <br>";
 
-        $transresUtil = $this->container->get('transres_util');
-        $transresUtil->feeFilterTest();
+        //$transresUtil = $this->container->get('transres_util');
+        //$transresUtil->feeFilterTest();
         //$fee = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneById(5);
         //echo "fee=".$fee."<br>";
-        exit('111');
+        //exit('111');
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

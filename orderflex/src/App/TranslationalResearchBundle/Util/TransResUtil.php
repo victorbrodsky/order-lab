@@ -8517,7 +8517,8 @@ class TransResUtil
 
         return $attachmentArr;
     }
-    
+
+    //NOT USED
     public function feeFilterTest() {
         $specialties = array(7,8);
         $specialtiesStr = implode(",", $specialties);
