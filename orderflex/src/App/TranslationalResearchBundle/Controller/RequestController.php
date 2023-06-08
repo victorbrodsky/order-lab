@@ -3338,9 +3338,32 @@ class RequestController extends OrderAbstractController
             //$dql->andWhere("projectSpecialties.id != 5");
             //echo "specialties=".implode(",", $specialties)."<br>";
 
-            //working
-            //TODO: to review 'IN' and 'NOT IN' if working correctly
+            //Working: 1) get list's (fees) ids get list with not existed specialty, then 2) use these ids to filter the list
             if(1) {
+                $specialtiesStr = implode(",", $specialties);
+                //https://stackoverflow.com/questions/48942150/many-to-many-relation-select-all-a-except-for-those-linked-to-b
+                //1) get list's (fees) ids get list with not existed specialty
+                $conn = $em->getConnection();
+                $subDql = "
+                    SELECT list.id as id
+                    FROM transres_requestcategorytypelist list
+                    WHERE NOT EXISTS (
+                      SELECT 1
+                      FROM transres_requestcategory_specialty b
+                      WHERE list.id = b.requestcategorytypelist_id
+                      AND b.specialtylist_id IN ($specialtiesStr)
+                    )
+                ";
+                $filteredIds = $conn->executeQuery($subDql)->fetchAll(\PDO::FETCH_COLUMN,0);
+
+                //2) use these ids to filter the list
+                $whereFilteredIds = "list.id IN (:filteredIds)";
+                $dqlParameters['filteredIds'] = $filteredIds;
+                $dql->andWhere($whereFilteredIds);
+            }
+
+            //to review 'IN' and 'NOT IN' if working correctly
+            if(0) {
                 $transresUtil = $this->container->get('transres_util');
                 $orderableProjectSpecialtyIds = $transresUtil->orderableProjectReverseSpecialties($specialties,false);
                 $specialtyStr = "projectSpecialties.id IN (" . implode(",", $orderableProjectSpecialtyIds) . ")";

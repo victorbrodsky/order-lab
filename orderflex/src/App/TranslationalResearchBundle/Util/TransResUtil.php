@@ -8519,7 +8519,7 @@ class TransResUtil
     }
     
     public function feeFilterTest() {
-        $specialties = array(5);
+        $specialties = array(7,8);
         $specialtiesStr = implode(",", $specialties);
         echo "specialties=".$specialtiesStr." <br>";
 
@@ -8527,7 +8527,7 @@ class TransResUtil
         $dql =  $repository->createQueryBuilder("list");
         //$dql->select("DISTINCT(list.id) as id, list.name");
         $dql->select("list");
-        //$dql->leftJoin("list.projectSpecialties", "projectSpecialties");
+        $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
 
         if(0) {
@@ -8588,23 +8588,35 @@ WHERE
             ";
             //$query = $this->em->createQuery($sql1); //->setParameter('ids', $specialtiesStr);
         }
+        //Working
         if(1) {
             $conn = $this->em->getConnection();
 
             $dql = "
-                SELECT list
+                SELECT list.id as id
                 FROM transres_requestcategorytypelist list
                 WHERE NOT EXISTS (
                   SELECT 1
                   FROM transres_requestcategory_specialty b
                   WHERE list.id = b.requestcategorytypelist_id
-                  AND b.specialtylist_id IN (7, 8)
+                  AND b.specialtylist_id IN ($specialtiesStr)
                 )
             ";
 
-            $res = $conn->executeQuery($dql)->fetchAll();
+            $res = $conn->executeQuery($dql)->fetchAll(\PDO::FETCH_COLUMN,0);
             dump($res);
             exit('111');
+        }
+        if(1) {
+            //https://stackoverflow.com/questions/31536137/doctrine-not-exists-subquery
+            $sub = $this->em->createQueryBuilder();
+            $sub->select("t");
+            $sub->from("AppTranslationalResearchBundle:SpecialtyList","t");
+            $sub->leftJoin("t.requestCategories","requestCategories");
+            $sub->andWhere('projectSpecialties = list.id');
+            $sub->andWhere("projectSpecialties IN ($specialtiesStr)");
+
+            $dql->andWhere($dql->expr()->not($dql->expr()->exists($sub->getDQL())));
         }
         if(0) {
             //https://stackoverflow.com/questions/43162939/doctrine-query-with-join-table
