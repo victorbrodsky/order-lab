@@ -2966,12 +2966,14 @@ class VacReqUtil
         //academicYearStart: July 01
         $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
         if( !$academicYearStart ) {
-            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
+            $academicYearStart = \DateTime::createFromFormat('Y-m-d', date("Y")."-07-01");
+            //throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
         }
         //academicYearEnd: June 30
         $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
         if( !$academicYearEnd ) {
-            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
+            $academicYearEnd = \DateTime::createFromFormat('Y-m-d', date("Y")."-06-30");
+            //throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
         }
 
         $startDateMD = $academicYearStart->format('m-d');
