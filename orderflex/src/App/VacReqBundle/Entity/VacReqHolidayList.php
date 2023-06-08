@@ -144,8 +144,10 @@ class VacReqHolidayList extends ListAbstract {
 
     public function setInstitutions($institutions)
     {
-        foreach($institutions as $institution) {
-            $this->addInstitution($institution);
+        if( $institutions && is_array($institutions) ) {
+            foreach ($institutions as $institution) {
+                $this->addInstitution($institution);
+            }
         }
     }
 

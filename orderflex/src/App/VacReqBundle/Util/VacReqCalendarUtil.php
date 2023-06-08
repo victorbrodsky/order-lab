@@ -77,7 +77,8 @@ class VacReqCalendarUtil
         //    echo 'defaultInstitutions='.$defaultInstitution."<br>";
         //}
         if( !$defaultInstitutions || count($defaultInstitutions) == 0 ) {
-            throw new \Exception( 'Default instance maintained for the following institutions not found in vacreq site settings' );
+            $defaultInstitutions = NULL;
+            //throw new \Exception( 'Default instance maintained for the following institutions not found in vacreq site settings' );
         }
 
         $res = array();
