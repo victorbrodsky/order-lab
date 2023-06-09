@@ -1573,7 +1573,8 @@ class VacReqUtil
         return $totalPendingDays;
     }
 
-    public function getCurrentAcademicYearRange() {
+    //$centuryToStr - Replace century to string, i.e. $centuryToStr='FY': 2022 -> FY22
+    public function getCurrentAcademicYearRange( $centuryToStr=null ) {
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDate = $dates['startDate']; //Y-m-d
         //echo "startDate=".$startDate."<br>";
@@ -1585,6 +1586,12 @@ class VacReqUtil
         $currentYearEndDateArr = explode("-",$endDate);
         $endYear = $currentYearEndDateArr[0];
 
+        if( $centuryToStr ) {
+            //replace first two chars by $centuryToStr: 2022 -> FY22
+            $startYear = $centuryToStr . substr($startYear, 2);
+            $endYear = $centuryToStr . substr($endYear, 2);
+        }
+
         $yearRange = $startYear."-".$endYear;
 
         return $yearRange;
@@ -1592,7 +1599,7 @@ class VacReqUtil
 
     //$offset = 0 => previous year
     //$offset = 1 => previous previous year
-    public function getPreviousAcademicYearRange( $offset = null ) {
+    public function getPreviousAcademicYearRange( $offset = null, $centuryToStr=null ) {
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDate = $dates['startDate']; //Y-m-d
         //echo "startDate=".$startDate."<br>";
@@ -1608,6 +1615,12 @@ class VacReqUtil
             $startYear = $startYear - 1;
         }
 
+        if( $centuryToStr ) {
+            //replace first two chars by $centuryToStr: 2022 -> FY22
+            $startYear = $centuryToStr . substr($startYear, 2);
+            $endYear = $centuryToStr . substr($endYear, 2);
+        }
+
         //echo "previous year=".$year."<br>";
 
         $yearRange = $startYear."-".$endYear;
@@ -1615,7 +1628,7 @@ class VacReqUtil
         return $yearRange;
     }
 
-    public function getNextAcademicYearRange() {
+    public function getNextAcademicYearRange( $centuryToStr=null ) {
         $dates = $this->getCurrentAcademicYearStartEndDates();
         $startDate = $dates['startDate']; //Y-m-d
         //echo "startDate=".$startDate."<br>";
@@ -1627,6 +1640,12 @@ class VacReqUtil
         $endYear = $startYear + 1; //next year end
 
         //echo "next year=".$year."<br>";
+
+        if( $centuryToStr ) {
+            //replace first two chars by $centuryToStr: 2022 -> FY22
+            $startYear = $centuryToStr . substr($startYear, 2);
+            $endYear = $centuryToStr . substr($endYear, 2);
+        }
 
         $yearRange = $startYear."-".$endYear;
 
@@ -6861,6 +6880,216 @@ class VacReqUtil
 
     }
 
+    //127.0.0.1/order/index_dev.php/time-away-request/download-summary-report-spreadsheet/
+    public function createtSummaryMultiYears( $userId, $fileName, $yearRangeStr ) {
+
+        set_time_limit(600);
+
+        //echo "userIds=".count($userIds)."<br>";
+        //exit('1');
+
+        //$testing = true;
+        $testing = false;
+
+        $author = $this->security->getUser();
+        $newline =  "\n"; //"<br>\n";
+
+//        $centuryToStr = 'FY';
+//        if( $centuryToStr ) {
+//            //replace first two chars by $centuryToStr: 2022 -> FY22
+//            $startYear = $centuryToStr . substr($startYear, 2);
+//            $endYear = $centuryToStr . substr($endYear, 2);
+//        }
+
+        //rows:
+        //Prior FY carry-over
+        //Accrued vacation days
+        //Total days available
+        //Less days taken
+        //Days available for carry-over 
+
+        $columns = array(
+            '',                   //0 - A
+            'Y1',                 //1 - B
+            'Y2',                 //2 - C
+            'Y3'
+        );
+        
+        if( $testing == false ) {
+            //$writer = WriterFactory::create(Type::XLSX);
+            $writer = WriterEntityFactory::createXLSXWriter();
+
+            //$writer->setColumnsWidth(25); //setDefaultColumnWidth(25);
+
+            $writer->openToBrowser($fileName);
+
+            $headerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("E0E0E0"))
+                ->build();
+
+            $requestStyle = (new StyleBuilder())
+                ->setFontSize(10)
+                //->setShouldWrapText()
+                ->build();
+
+            $border = (new BorderBuilder())
+                ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
+                ->build();
+            $footerStyle = (new StyleBuilder())
+                ->setFontBold()
+                //->setFontItalic()
+                ->setFontSize(12)
+                ->setFontColor(Color::BLACK)
+                ->setShouldWrapText()
+                ->setBackgroundColor(Color::toARGB("EBF1DE"))
+                ->setBorder($border)
+                ->build();
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                $columns,
+                $headerStyle
+            );
+            $writer->addRow($spoutRow);
+        }
+
+        $totalNumberBusinessDays = 0;
+        $totalNumberVacationDays = 0;
+        $totalNumberPendingVacationDays = 0;
+        $totalRequests = 0;
+        $totalCarryoverApprovedRequests = 0;
+        $totalApprovedFloatingDays = 0;
+
+        $row = 2;
+
+        $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        if( !$subjectUser ) {
+            return null;
+        }
+
+//            //check if author can have access to view this request
+//            if( false == $this->security->isGranted("read", $vacreq) ) {
+//                continue; //skip this applicant because the current user does not permission to view this applicant
+//            }
+
+        $data = array();
+
+        //$data[0] = ""; //$subjectUser->getId();
+
+        $data[array_search('Person', $columns)] = $subjectUser."";
+        //$data[0] = $subjectUser->getSingleEmail()."";
+
+        $data[array_search('Email', $columns)] = $subjectUser->getSingleEmail();
+
+        //Group
+        $groups = "";
+        $groupParams = array();
+        $groupParams['statusArr'] = array('default','user-added');
+        $groupParams['asObject'] = true;
+        $groupParams['asUser'] = true;
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+        $organizationalInstitutions = $this->getGroupsByPermission($subjectUser,$groupParams);
+        //dump($organizationalInstitutions);
+        //exit('111');
+        foreach($organizationalInstitutions as $organizationalInstitution) {
+            if( $groups ) {
+                $groups = $groups . $newline;
+            }
+            $groups = $groups . $organizationalInstitution->getShortestName();
+        }
+        $data[array_search('Group', $columns)] = $groups;
+
+        $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'vacation', $yearRangeStr);
+        $approvedVacDays = $vacationDaysRes['numberOfDays'];
+        $approvedVacDays = intval($approvedVacDays);
+        $totalNumberVacationDays = $totalNumberVacationDays + $approvedVacDays;
+        $data[array_search('Approved Vacation Days', $columns)] = $approvedVacDays;
+
+
+        $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'business', $yearRangeStr);
+        $approvedBusDays = $businessDaysRes['numberOfDays'];
+        $approvedBusDays = intval($approvedBusDays);
+        $totalNumberBusinessDays = $totalNumberBusinessDays + $approvedBusDays;
+        $data[array_search('Approved Business Days', $columns)] = $approvedBusDays;
+
+        $data[array_search('Approved Vacation and Business Days', $columns)] = $approvedVacDays + $approvedBusDays;
+
+        $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser, 'vacation', $yearRangeStr, "pending");
+        $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+        $pendingVacDays = intval($pendingVacDays);
+        $totalNumberPendingVacationDays = $totalNumberPendingVacationDays + $pendingVacDays;
+        $data[array_search('Pending Vacation Days', $columns)] = $pendingVacDays;
+
+        //Total Number of Vacation Requests
+        $vacationRequests = $this->getRequestsByUserYears($subjectUser, $yearRangeStr, 'vacation');
+        $businessRequests = $this->getRequestsByUserYears($subjectUser, $yearRangeStr, 'business');
+        $totalThisRequests = count($vacationRequests) + count($businessRequests);
+        $totalRequests = $totalRequests + $totalThisRequests;
+        $data[array_search('Total Number of Vacation Requests', $columns)] = $totalThisRequests;
+
+        //$carryOverYear = '2022'; //2021-2022
+        $startYearArr = $this->getYearsFromYearRangeStr($yearRangeStr);
+        $carryOverYear = $startYearArr[0];
+        $approvedRequests = $this->getCarryOverRequestsByUserStatusYear($subjectUser, 'approved', $carryOverYear);
+        $carryoverApprovedRequests = count($approvedRequests);
+        $totalCarryoverApprovedRequests = $totalCarryoverApprovedRequests + $carryoverApprovedRequests;
+        $data[array_search('Approved Carry Over Days', $columns)] = $carryoverApprovedRequests;
+
+        //Approved Floating Days
+        $approvedFloatingDays = $this->getUserFloatingDay($subjectUser, $yearRangeStr, array('approved'));
+        $approvedFloatingDays = intval($approvedFloatingDays);
+        $totalApprovedFloatingDays = $totalApprovedFloatingDays + $approvedFloatingDays;
+        $data[array_search('Approved Floating Days', $columns)] = $approvedFloatingDays;
+
+        //print_r($data);
+        //exit('111');
+
+        if( $testing == false ) {
+            //$writer->addRowWithStyle($data,$requestStyle);
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
+            $writer->addRow($spoutRow);
+        }
+
+        //exit('111');
+
+        $data = array();
+
+        //$data[0] = "";
+        $data[array_search('Person', $columns)] = "Total";
+        $data[array_search('Email', $columns)] = NULL;
+        $data[array_search('Group', $columns)] = NULL;
+        $data[array_search('Approved Vacation Days', $columns)] = $totalNumberVacationDays;
+        $data[array_search('Approved Business Days', $columns)] = $totalNumberBusinessDays;
+        $data[array_search('Approved Vacation and Business Days', $columns)] = $totalNumberVacationDays + $totalNumberBusinessDays;
+        $data[array_search('Pending Vacation Days', $columns)] = $totalNumberPendingVacationDays;
+        $data[array_search('Total Number of Vacation Requests', $columns)] = $totalRequests;
+        $data[array_search('Approved Carry Over Days', $columns)] = $totalCarryoverApprovedRequests;
+        $data[array_search('Approved Floating Days', $columns)] = $totalApprovedFloatingDays;
+
+        if( $testing == false ) {
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
+            $writer->addRow($spoutRow);
+
+            //set color light green to the last Total row
+            //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+            //exit("ids=".$fellappids);
+
+            $writer->close();
+        } else {
+            print_r($data);
+            exit('111');
+        }
+
+    }
+
     public function redirectIndex( $request ) {
         $routeName = $request->get('_route');
         $requestType = NULL;
@@ -7650,6 +7879,10 @@ class VacReqUtil
         }
 
         return NULL;
+    }
+
+    public function downloadSummarySpreadsheet() {
+
     }
 
 }

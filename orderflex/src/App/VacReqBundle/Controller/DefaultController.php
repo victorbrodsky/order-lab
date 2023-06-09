@@ -392,6 +392,57 @@ class DefaultController extends OrderAbstractController
     }
 
     /**
+     * @Route("/download-summary-report-multiple-years-spreadsheet/{userId}", name="vacreq_download_summary_report_multiple_years_spreadsheet", methods={"GET"})
+     */
+    public function downloadSummaryMultiYearSpreadsheetAction(Request $request, $userId )
+    {
+
+        if (false == $this->isGranted('ROLE_VACREQ_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        echo "downloadSummaryMultiYearSpreadsheetAction: userId=".$userId."<br>";
+
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $em = $this->getDoctrine()->getManager();
+        //$user = $this->getUser();
+
+        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+
+        $yearRangeStr = $request->request->get('year');
+
+        $yearRanges = array();
+
+        //Current Academic Year
+        $currentAcademicYearRange = $vacreqUtil->getCurrentAcademicYearRange();
+        list($year1,$maxYear) = explode("-", $currentAcademicYearRange);
+        //$maxYear = $year2;
+        $yearRanges[] = $currentAcademicYearRange;
+
+        //Current Academic Year - 1
+        $yearRanges[] = $vacreqUtil->getPreviousAcademicYearRange();
+
+        //Current Academic Year - 2
+        $previousAcademicYearRange = $vacreqUtil->getPreviousAcademicYearRange(1);
+        //$minYear = $previousAcademicYearRange[0];
+        list($minYear,$year2) = explode("-", $currentAcademicYearRange);
+        //$minYear = $year1;
+
+        $yearRangeStr = $minYear."-".$maxYear;
+        echo "yearRangeStr=$yearRangeStr <br>";
+
+        $fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
+        $fileName = str_replace(" ","-",$fileName);
+
+        dump($yearRanges);
+        exit('fileName='.$fileName);
+
+        $vacreqUtil->createtSummaryMultiYears($userId,$fileName,$yearRanges);
+
+        exit();
+    }
+
+    /**
      * http://127.0.0.1/order/index_dev.php/time-away-request/multiple-carry-over-requests
      *
      * @Route("/multiple-carry-over-requests", name="vacreq_multiple_carry_over_requests")

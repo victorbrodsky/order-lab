@@ -325,7 +325,11 @@
 
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
-                                <a href="{{ path(vacreq_sitename~'_carryover', { 'userId': submitter.id }) }}">Carry Over Vacation Days</a>
+                                <a href="{{ path(vacreq_sitename~'_carryover', { 'userId': submitter.id }) }}">Manage carry-over days</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet', { 'userId': submitter.id }) }}">Download summary in spreadsheet</a>
                             </li>
                         </ul>
 
