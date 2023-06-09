@@ -38,11 +38,16 @@
     {#Set row color#}
     {% set tdclassname = "" %}
     {% if request %}
+        {#request.getStatus()={{ request.getStatus() }}#}
+        {#parentRequest.extraStatus={{ parentRequest.extraStatus }}<br>#}
         {% if request.getStatus() == 'pending' %}
             {% set tdclassname = "alert alert-warning" %}
         {% endif %}
         {% if request.getStatus() == 'approved' %}
             {% set tdclassname = "alert alert-success" %}
+            {% if parentRequest.extraStatus == "Cancellation Requested" %}
+                {% set tdclassname = "alert action-amend-status" %}
+            {% endif %}
         {% endif %}
         {% if request.getStatus() == 'rejected' %}
             {% set tdclassname = "alert alert-danger" %}

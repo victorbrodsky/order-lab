@@ -1702,6 +1702,8 @@ class ApproverController extends OrderAbstractController
 
     //My Group vacreq_mygroup
     /**
+     * Get groups and populate them in mySingleGroupAction
+     *
      * @Route("/my-group/", name="vacreq_my_group", methods={"GET", "POST"})
      * @Route("/summary/", name="vacreq_summary", methods={"GET", "POST"})
      * @Template("AppVacReqBundle/Group/mygroup.html.twig")
@@ -1884,23 +1886,12 @@ class ApproverController extends OrderAbstractController
         
         $yearRanges = array();
         //Current Academic Year
-        //$currentYear = new \DateTime();
-        //$currentYear = $currentYear->format('Y');
-        //$previousYear = $currentYear - 1;
-        //$yearRanges[] = $previousYear."-".$currentYear;
-        //$yearRange = $vacreqUtil->getCurrentAcademicYearRange();
         $yearRanges[] = $this->vacreqUtil->getCurrentAcademicYearRange();
 
         //Current Academic Year - 1
-        //$currentYear = $currentYear - 1;
-        //$previousYear = $currentYear - 1;
-        //$yearRanges[] = $previousYear."-".$currentYear;
         $yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange();
 
         //Current Academic Year - 2
-        //$currentYear = $currentYear - 1;
-        //$previousYear = $currentYear - 1;
-        //$yearRanges[] = $previousYear."-".$currentYear;
         $yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(1);
 
         $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8');
