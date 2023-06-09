@@ -109,15 +109,18 @@
                 {#</th>#}
             {#</tr>#}
 
-            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
-                {{ yearRange }} Business Travel
-            </th>
+            {#<th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">#}
+                {#{{ yearRange }} Business Travel#}
+            {#</th>#}
 
-            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
-                {{ yearRange }} Business Travel Days Pending Approval
-            </th>
+            {#<th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">#}
+                {#{{ yearRange }} Business Travel Days Pending Approval#}
+            {#</th>#}
 
-            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
+            {##### Vacation #####}
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};"
+                title="Total approved Vacation days"
+            >
                 {{ yearRange }} Vacation
             </th>
 
@@ -125,9 +128,9 @@
                 {{ yearRange }} Vacation Days Pending Approval
             </th>
 
-            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
-                {{ yearRange }} Total
-            </th>
+            {#<th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">#}
+                {#{{ yearRange }} Total#}
+            {#</th>#}
 
             {#<th style="background-color: {{ backgroundColor }}">#}
                 {#{{ yearRange }} Pending Approval Days#}
@@ -145,8 +148,27 @@
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
-            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};"
+                title="Total approved Floating days"
+            >
                 {{ yearRange }} Floating Days
+            </th>
+
+            {##### Business Travel #####}
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};"
+                title="Total approved Business Travel days"
+            >
+                {{ yearRange }} Business Travel
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};">
+                {{ yearRange }} Business Travel Days Pending Approval
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}; font-weight: {{ fontWeight }};"
+                title="Total approved days (Vacation + Business)"
+            >
+                {{ yearRange }} Total approved days
             </th>
 
         {% endfor %}
@@ -201,18 +223,19 @@
                 {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
                 {#totalRemainingDays={{ totalRemainingDays }}#}
 
-                <td style="background-color: {{ backgroundColor }}">
+                {#<td style="background-color: {{ backgroundColor }}">#}
                     {#{{ businessDays }}#}
-                    {{ vacreqmacros.incomingRequestHref( businessDays, submitter, yearRange, groupId, 1, 'businessRequest', vacreq_sitename ) }}
-                    {% if not businessAccurate %}
-                        <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
-                    {% endif %}
-                </td>
+                    {#{{ vacreqmacros.incomingRequestHref( businessDays, submitter, yearRange, groupId, 1, 'businessRequest', vacreq_sitename ) }}#}
+                    {#{% if not businessAccurate %}#}
+                        {#<span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>#}
+                    {#{% endif %}#}
+                {#</td>#}
 
-                <td style="background-color: {{ backgroundColor }}">
-                    {{ vacreqmacros.incomingRequestHref( pendingDaysB, submitter, yearRange, groupId, '', 'businessRequest-pending', vacreq_sitename ) }}
-                </td>
+                {#<td style="background-color: {{ backgroundColor }}">#}
+                    {#{{ vacreqmacros.incomingRequestHref( pendingDaysB, submitter, yearRange, groupId, '', 'businessRequest-pending', vacreq_sitename ) }}#}
+                {#</td>#}
 
+                {##### Vacation #####}
                 <td style="background-color: {{ backgroundColor }}">
                     {#{{ vacationDays }}#}
                     {{ vacreqmacros.incomingRequestHref( vacationDays, submitter, yearRange, groupId, 1, 'vacationRequest', vacreq_sitename ) }}
@@ -225,14 +248,14 @@
                     {{ vacreqmacros.incomingRequestHref( pendingDaysV, submitter, yearRange, groupId, '', 'vacationRequest-pending', vacreq_sitename ) }}
                 </td>
 
-                <td style="background-color: {{ backgroundColor }}">
+                {#<td style="background-color: {{ backgroundColor }}">#}
                     {#{{ businessDays + vacationDays }}#}
-                    {% set totalDays = businessDays + vacationDays %}
-                    {{ vacreqmacros.incomingRequestHref( totalDays, submitter, yearRange, groupId, 1, 'businessRequest-vacationRequest', vacreq_sitename ) }}
-                    {% if not businessAccurate or not vacationAccurate %}
-                        <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
-                    {% endif %}
-                </td>
+                    {#{% set totalDays = businessDays + vacationDays %}#}
+                    {#{{ vacreqmacros.incomingRequestHref( totalDays, submitter, yearRange, groupId, 1, 'businessRequest-vacationRequest', vacreq_sitename ) }}#}
+                    {#{% if not businessAccurate or not vacationAccurate %}#}
+                        {#<span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>#}
+                    {#{% endif %}#}
+                {#</td>#}
 
                 {#pending#}
                 {#<td style="background-color: {{ backgroundColor }}">#}
@@ -267,6 +290,28 @@
                             <hr style="margin-top: 5px; margin-bottom: 5px;">
                         {% endif %}
                     {% endfor %}
+                </td>
+
+                {##### Business Travel #####}
+                <td style="background-color: {{ backgroundColor }}">
+                    {#{{ businessDays }}#}
+                    {{ vacreqmacros.incomingRequestHref( businessDays, submitter, yearRange, groupId, 1, 'businessRequest', vacreq_sitename ) }}
+                    {% if not businessAccurate %}
+                        <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                    {% endif %}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ vacreqmacros.incomingRequestHref( pendingDaysB, submitter, yearRange, groupId, '', 'businessRequest-pending', vacreq_sitename ) }}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {#{{ businessDays + vacationDays }}#}
+                    {% set totalDays = businessDays + vacationDays %}
+                    {{ vacreqmacros.incomingRequestHref( totalDays, submitter, yearRange, groupId, 1, 'businessRequest-vacationRequest', vacreq_sitename ) }}
+                    {% if not businessAccurate or not vacationAccurate %}
+                        <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                    {% endif %}
                 </td>
 
             {% endfor %}
