@@ -3344,9 +3344,14 @@ class TransResUtil
         foreach( $admins as $user ) {
             if( $user ) {
                 if( $asEmail ) {
-                    $users[] = $user->getSingleEmail(false);
+                    $userEmail = $user->getSingleEmail(false);
+                    if( in_array($userEmail, $users) == false ) {
+                        $users[] = $user->getSingleEmail(false);
+                    }
                 } else {
-                    $users[] = $user;
+                    if( in_array($user, $users) == false ) {
+                        $users[] = $user;
+                    }
                 }
             }
         }
@@ -3359,9 +3364,16 @@ class TransResUtil
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {
-                    $users[] = $user->getSingleEmail(false);
+                    //$users[] = $user->getSingleEmail(false);
+                    $userEmail = $user->getSingleEmail(false);
+                    if( in_array($userEmail, $users) == false ) {
+                        $users[] = $user->getSingleEmail(false);
+                    }
                 } else {
-                    $users[] = $user;
+                    //$users[] = $user;
+                    if( in_array($user, $users) == false ) {
+                        $users[] = $user;
+                    }
                 }
             }
         }

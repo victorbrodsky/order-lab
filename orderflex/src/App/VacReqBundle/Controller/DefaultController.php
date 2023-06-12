@@ -397,6 +397,7 @@ class DefaultController extends OrderAbstractController
     public function downloadSummaryMultiYearSpreadsheetAction(Request $request, $userId )
     {
 
+        exit("Under construction");
         if (false == $this->isGranted('ROLE_VACREQ_ADMIN')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
@@ -424,6 +425,7 @@ class DefaultController extends OrderAbstractController
 
         //Current Academic Year - 2
         $previousAcademicYearRange = $vacreqUtil->getPreviousAcademicYearRange(1);
+        $yearRanges[] = $previousAcademicYearRange;
         //$minYear = $previousAcademicYearRange[0];
         list($minYear,$year2) = explode("-", $currentAcademicYearRange);
         //$minYear = $year1;

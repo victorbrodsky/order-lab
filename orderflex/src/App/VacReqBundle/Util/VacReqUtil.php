@@ -6896,9 +6896,11 @@ class VacReqUtil
 
 //        $centuryToStr = 'FY';
 //        if( $centuryToStr ) {
-//            //replace first two chars by $centuryToStr: 2022 -> FY22
-//            $startYear = $centuryToStr . substr($startYear, 2);
-//            $endYear = $centuryToStr . substr($endYear, 2);
+//            foreach($yearRangeStr as $yearRange) {
+//                //replace first two chars by $centuryToStr: 2022 -> FY22
+//                $startYear = $centuryToStr . substr($startYear, 2);
+//                $endYear = $centuryToStr . substr($endYear, 2);
+//            }
 //        }
 
         //rows:
