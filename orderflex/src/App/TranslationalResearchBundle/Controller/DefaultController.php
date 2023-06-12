@@ -241,7 +241,7 @@ class DefaultController extends OrderAbstractController
         //echo "fee=".$fee."<br>";
         //exit('111');
 
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3380); //live 3644
+        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3644); //live 3644
         $resArr = $transresUtil->getTransResAdminEmails($project,false,true);
         dump($resArr);
         exit('111');
