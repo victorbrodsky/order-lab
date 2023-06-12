@@ -6881,6 +6881,7 @@ class VacReqUtil
     }
 
     //127.0.0.1/order/index_dev.php/time-away-request/download-summary-report-spreadsheet/
+    //TODO: switch to https://packagist.org/packages/wilsonglasser/spout or https://packagist.org/packages/exment-git/spout
     public function createtSummaryMultiYears( $userId, $fileName, $yearRangeStr ) {
 
         $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
@@ -6934,6 +6935,7 @@ class VacReqUtil
             $writer = WriterEntityFactory::createXLSXWriter();
 
             //$writer->setColumnsWidth(25); //setDefaultColumnWidth(25);
+            //$writer->setDefaultColumnWidth(25);
 
             $writer->openToBrowser($fileName);
 
@@ -6964,11 +6966,13 @@ class VacReqUtil
                 ->setBorder($border)
                 ->build();
 
+            //Add Title "Vacation Audit User Name"
             $data[0] = "Vacation Audit " . $subjectUser->getDisplayName();
             $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
             //$spoutRow = WriterEntityFactory::createRowFromArray($data);
             $writer->addRow($spoutRow);
 
+            //Add FY** row: FY20-FY21 | FY21-FY22 | FY22-FY23
             $spoutRow = WriterEntityFactory::createRowFromArray(
                 $columns,
                 $headerStyle
@@ -6976,6 +6980,7 @@ class VacReqUtil
             $writer->addRow($spoutRow);
         }
 
+        $inaccuracyMessage = $this->getInaccuracyMessage();
 
         $totalNumberBusinessDays = 0;
         $totalNumberVacationDays = 0;
@@ -6991,20 +6996,58 @@ class VacReqUtil
 //                continue; //skip this applicant because the current user does not permission to view this applicant
 //            }
 
+        //Add row with "Prior FY carry-over"
         $data = array();
-
+        $data[0] = "Prior FY carry-over";
+        $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
-            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
-            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
-            $writer->addRow($spoutRow);
-
-            //set color light green to the last Total row
-            //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
-
-            //exit("ids=".$fellappids);
-
-            $writer->close();
+            $data[$col] = $this->getUserCarryOverDays($subjectUser,$yearRange);
+            $col++;
         }
+        //$spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
+        //Add row with "Accrued vacation days"
+        $data = array();
+        $data[0] = "Accrued vacation days";
+        $col = 1;
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $accruedDays = 24;
+            $data[$col] = $accruedDays;
+            $col++;
+        }
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
+        //Add row with "Total days available"
+        $data = array();
+        $data[0] = "Total days available";
+        $col = 1;
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $accruedDays = 24;
+            $carryoverDays = $this->getUserCarryOverDays($subjectUser,$yearRange);
+            $totalDays = intval($accruedDays) + intval($carryoverDays);
+            $data[$col] = $totalDays;
+            $col++;
+        }
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
+        //Add row with "Less days taken"
+        $data = array();
+        $data[0] = "Less days taken";
+        $col = 1;
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRange);
+            $vacationDays = $vacationDaysRes['numberOfDays'];
+            //$vacationAccurate = $vacationDaysRes['accurate'];
+            $data[$col] = $vacationDays;
+            $col++;
+        }
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
         
         $writer->close();
 
