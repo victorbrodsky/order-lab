@@ -6883,6 +6883,11 @@ class VacReqUtil
     //127.0.0.1/order/index_dev.php/time-away-request/download-summary-report-spreadsheet/
     public function createtSummaryMultiYears( $userId, $fileName, $yearRangeStr ) {
 
+        $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        if( !$subjectUser ) {
+            return null;
+        }
+
         set_time_limit(600);
 
         //echo "userIds=".count($userIds)."<br>";
@@ -6894,29 +6899,36 @@ class VacReqUtil
         $author = $this->security->getUser();
         $newline =  "\n"; //"<br>\n";
 
-//        $centuryToStr = 'FY';
-//        if( $centuryToStr ) {
-//            foreach($yearRangeStr as $yearRange) {
-//                //replace first two chars by $centuryToStr: 2022 -> FY22
-//                $startYear = $centuryToStr . substr($startYear, 2);
-//                $endYear = $centuryToStr . substr($endYear, 2);
-//            }
-//        }
-
         //rows:
         //Prior FY carry-over
         //Accrued vacation days
         //Total days available
         //Less days taken
-        //Days available for carry-over 
+        //Days available for carry-over
 
         $columns = array(
             '',                   //0 - A
-            'Y1',                 //1 - B
-            'Y2',                 //2 - C
-            'Y3'
+            //'Y1',                 //1 - B
+            //'Y2',                 //2 - C
+            //'Y3'
         );
-        
+
+        $centuryToStr = 'FY';
+        $yearsStr = array();
+        if( $centuryToStr ) {
+            foreach( array_reverse($yearRangeStr) as $yearRange) {
+                list($startYear,$endYear) = explode("-", $yearRange);
+                //replace first two chars by $centuryToStr: 2022 -> FY22
+                $startYear = $centuryToStr . substr($startYear, 2);
+                $endYear = $centuryToStr . substr($endYear, 2);
+                $colTitle = $startYear . "-" . $endYear;
+                $columns[] = $colTitle;
+                $yearsStr[] = $colTitle;
+            }
+        }
+        //dump($columns);
+        //exit('fileName='.$fileName);
+
         if( $testing == false ) {
             //$writer = WriterFactory::create(Type::XLSX);
             $writer = WriterEntityFactory::createXLSXWriter();
@@ -6952,12 +6964,18 @@ class VacReqUtil
                 ->setBorder($border)
                 ->build();
 
+            $data[0] = "Vacation Audit " . $subjectUser->getDisplayName();
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
+            $writer->addRow($spoutRow);
+
             $spoutRow = WriterEntityFactory::createRowFromArray(
                 $columns,
                 $headerStyle
             );
             $writer->addRow($spoutRow);
         }
+
 
         $totalNumberBusinessDays = 0;
         $totalNumberVacationDays = 0;
@@ -6968,17 +6986,32 @@ class VacReqUtil
 
         $row = 2;
 
-        $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
-        if( !$subjectUser ) {
-            return null;
-        }
-
 //            //check if author can have access to view this request
 //            if( false == $this->security->isGranted("read", $vacreq) ) {
 //                continue; //skip this applicant because the current user does not permission to view this applicant
 //            }
 
         $data = array();
+
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
+            //$spoutRow = WriterEntityFactory::createRowFromArray($data);
+            $writer->addRow($spoutRow);
+
+            //set color light green to the last Total row
+            //$ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+            //exit("ids=".$fellappids);
+
+            $writer->close();
+        }
+        
+        $writer->close();
+
+        //TODO: working on summary
+        return;
+
+
 
         //$data[0] = ""; //$subjectUser->getId();
 

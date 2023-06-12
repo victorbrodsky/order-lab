@@ -397,7 +397,7 @@ class DefaultController extends OrderAbstractController
     public function downloadSummaryMultiYearSpreadsheetAction(Request $request, $userId )
     {
 
-        exit("Under construction");
+        //exit("Under construction");
         if (false == $this->isGranted('ROLE_VACREQ_ADMIN')) {
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
@@ -426,18 +426,20 @@ class DefaultController extends OrderAbstractController
         //Current Academic Year - 2
         $previousAcademicYearRange = $vacreqUtil->getPreviousAcademicYearRange(1);
         $yearRanges[] = $previousAcademicYearRange;
-        //$minYear = $previousAcademicYearRange[0];
-        list($minYear,$year2) = explode("-", $currentAcademicYearRange);
+        list($year1,$minYear) = explode("-", $previousAcademicYearRange);
         //$minYear = $year1;
 
         $yearRangeStr = $minYear."-".$maxYear;
         echo "yearRangeStr=$yearRangeStr <br>";
 
-        $fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
-        $fileName = str_replace(" ","-",$fileName);
+        //$fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
+        //2022-2023 Away Request Audit Summary for FirstName LastName generated on MM-DD-YYYY at HH-MM-SS.csv
+        $fileName = "$yearRangeStr Away Request Audit Summary for ".$subjectUser->getDisplayName()." generated on ".date('m-d-Y \a\t H-i-s').".xlsx";
 
-        dump($yearRanges);
-        exit('fileName='.$fileName);
+        //$fileName = str_replace(" ","-",$fileName);
+
+        //dump($yearRanges);
+        //exit('fileName='.$fileName);
 
         $vacreqUtil->createtSummaryMultiYears($userId,$fileName,$yearRanges);
 
