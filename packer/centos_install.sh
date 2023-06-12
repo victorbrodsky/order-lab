@@ -238,7 +238,7 @@ f_install_util () {
 	#Expected version ">=14". Got "12.22.12"
 	echo -e ${COLOR} Install Yarn ${NC}
 	curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
-	curl --silent --location https://rpm.nodesource.com/setup_14.x | sudo bash -
+	curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
 	sudo yum install -y yarn
 	yarn --version
 	
