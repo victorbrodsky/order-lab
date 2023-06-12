@@ -25,9 +25,9 @@ class DefaultController extends OrderAbstractController
      */
     public function aboutAction( Request $request ) {
 
-        $em = $this->getDoctrine()->getManager();
-        $transresRequestUtil = $this->container->get('transres_request_util');
-        $transresUtil = $this->container->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
+        //$transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresUtil = $this->container->get('transres_util');
 
         //$userServiceUtil = $this->container->get('user_service_utility');
         //$userServiceUtil->browserCheck();
@@ -241,10 +241,10 @@ class DefaultController extends OrderAbstractController
         //echo "fee=".$fee."<br>";
         //exit('111');
 
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3644); //live 3644
-        $resArr = $transresUtil->getTransResAdminEmails($project,false,true);
-        dump($resArr);
-        exit('111');
+        //$project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3644); //live 3644
+        //$resArr = $transresUtil->getTransResAdminEmails($project,false,true);
+        //dump($resArr);
+        //exit('111');
 
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
