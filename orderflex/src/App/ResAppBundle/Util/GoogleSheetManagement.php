@@ -981,7 +981,7 @@ class GoogleSheetManagement {
                     printf("Open the following link in your browser:\n%s\n", $authUrl);
                     print 'Enter verification code: ';
                     $authCode = trim(fgets(STDIN));
-                    $authCode = "4/iAHGyavRVejz5AyTchoSwNXMkOSVOpHIdI0f4a-wqJedC1AZNN-GYgI";
+                    $authCode = "xxxxxxxxxxxxxxxxx";
 
                     // Exchange authorization code for an access token.
                     $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);

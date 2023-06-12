@@ -1076,7 +1076,7 @@ class GoogleSheetManagement {
 //        //$client->setAccessType('offline');
 //        //$client->setPrompt('select_account consent');
 //
-//        //$client->setDeveloperKey("AIzaSyBlJc1rS1mBLXD5sYEEOwBvSB1NhUwJ-rI");
+//        //$client->setDeveloperKey("xxxxxxxxxxxx");
 //
 //        //$client->addScope($scopes);
 //        $client->addScope("https://www.googleapis.com/auth/drive");
@@ -1111,7 +1111,7 @@ class GoogleSheetManagement {
 //                    printf("Open the following link in your browser:\n%s\n", $authUrl);
 //                    print 'Enter verification code: ';
 //                    $authCode = trim(fgets(STDIN));
-//                    $authCode = "4/iAHGyavRVejz5AyTchoSwNXMkOSVOpHIdI0f4a-wqJedC1AZNN-GYgI";
+//                    $authCode = "xxxxxxxxxxxxxxx";
 //
 //                    // Exchange authorization code for an access token.
 //                    $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
