@@ -3345,13 +3345,13 @@ class TransResUtil
             if( $user ) {
                 if( $asEmail ) {
                     $userEmail = $user->getSingleEmail(false);
-                    //if( in_array($userEmail, $users) == false ) {
+                    if( in_array($userEmail, $users) == false ) {
                         $users[] = $userEmail;
-                    //}
+                    }
                 } else {
-                    //if( in_array($user, $users) == false ) {
+                    if( in_array($user, $users) == false ) {
                         $users[] = $user;
-                    //}
+                    }
                 }
             }
         }
@@ -3364,16 +3364,14 @@ class TransResUtil
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {
-                    //$users[] = $user->getSingleEmail(false);
                     $userEmail = $user->getSingleEmail(false);
-                    //if( in_array($userEmail, $users) == false ) {
+                    if( in_array($userEmail, $users) == false ) {
                         $users[] = $userEmail;
-                    //}
+                    }
                 } else {
-                    //$users[] = $user;
-                    //if( in_array($user, $users) == false ) {
+                    if( in_array($user, $users) == false ) {
                         $users[] = $user;
-                    //}
+                    }
                 }
             }
         }
