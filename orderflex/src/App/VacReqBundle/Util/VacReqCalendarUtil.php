@@ -442,6 +442,7 @@ class VacReqCalendarUtil
     //1) find holidays in range in list 1 (VacReqHolidayList)
     //2) confirm that the holiday in list 1 are observer in list 2 by comparing HolidayName
     //3) exclude holidays on the weekends
+    //$custom = true => return array of date and name of the holidays
     public function getHolidaysInRange( $startDate, $endDate, $institutionId, $custom=false ) {
 
         //echo "inst: $institutionId, $startDate $endDate <br>";

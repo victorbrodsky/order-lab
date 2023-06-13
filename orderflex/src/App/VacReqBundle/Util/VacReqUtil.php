@@ -1675,18 +1675,6 @@ class VacReqUtil
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
 
-//        $userSecUtil = $this->container->get('user_security_utility');
-        //echo "yearRange=".$yearRange."<br>";
-//        //academicYearStart
-//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-//        if( !$academicYearStart ) {
-//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-//        }
-//        //academicYearEnd
-//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-//        if( !$academicYearEnd ) {
-//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-//        }
         $academicYearStart = $this->getAcademicYearStart();
         $academicYearEnd = $this->getAcademicYearEnd();
 
@@ -1719,9 +1707,11 @@ class VacReqUtil
 //        }
 
         //step2: get requests with start date earlier than academic Year Start
+        //TODO: test and review days in the transaction between years
         $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
+        //$accurateBefore = false;
         //echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
@@ -1751,6 +1741,7 @@ class VacReqUtil
 
     // |-----start-----|year|-----end-----|year+1|----|
     // |-----start-----|2015-07-01|-----end-----|2016-06-30|----|
+    //$requestTypeStr = 'vacation' or 'business'
     public function getApprovedBeforeAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
         //$logger = $this->container->get('logger');
         $days = 0;
@@ -1761,6 +1752,8 @@ class VacReqUtil
         //echo "before endStr=".$endStr."<br>";
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true,$status);
         //echo "before requests count=".count($requests)."<br>";
+
+        $accurateNoteArr = array();
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
@@ -1775,16 +1768,52 @@ class VacReqUtil
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() );
             //echo "workingDays=".$workingDays."<br>";
-            if( $workingDays > $subRequest->getNumberOfDays() ) {
+
+            $requestNumberOfDays = $subRequest->getNumberOfDays();
+
+            if( $workingDays > $requestNumberOfDays ) {
                 //$logger->warning("Logical error getApprovedBeforeAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
-                $workingDays = $subRequest->getNumberOfDays();
+                $workingDays = $requestNumberOfDays;
             }
 
-            if( $workingDays != $subRequest->getNumberOfDays() ) {
+            if( $workingDays != $requestNumberOfDays ) {
                 //inaccuracy
                 //echo "user=".$request->getUser()."<br>";
                 //echo "Before: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$subRequest->getNumberOfDays()."<br>";
                 $accurate = false;
+                $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ from $workingDays weekly working days"; //based on 5 days per week
+            }
+
+            //TODO: Use holiday dates to calculate the WCM working days
+            if( $accurate ) {
+                //$requestTypeStr = 'vacation' or 'business'
+                //getDaysDifferenceNote($vacreqRequest)
+                //count number of vacation days from $startDate and $endDate
+                $startDate = null;
+                $endDate = null;
+                if( $startStr ) {
+                    $startDate = \DateTime::createfromformat('Y-m-d H:i:s', $startStr);
+                }
+                if( $endStr ) {
+                    $endDate = \DateTime::createfromformat('Y-m-d H:i:s', $endStr);
+                }
+                $institution = $request->getInstitution();
+                $institutionId = null;
+                if( $institution ) {
+                    $institutionId = $institution->getId();
+                }
+                //$countedNumberOfDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
+                $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom=false);
+                $holidays = array(); $holidays[] = 1;//testing
+                $countedNumberOfDays = intval($workingDays) - count($holidays);
+
+                if( $countedNumberOfDays != $requestNumberOfDays ) {
+                    $accurate = false;
+                    $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ".
+                        " from $countedNumberOfDays working days corrected by holidays".
+                        " (".intval($workingDays)."-".count($holidays).")";
+                }
+                //$accurate = false;
             }
 
             //echo $request->getId().": before: request days=".$workingDays."<br>";
@@ -1793,7 +1822,8 @@ class VacReqUtil
 
         $res = array(
             'numberOfDays' => $days,
-            'accurate' => $accurate
+            'accurate' => $accurate,
+            'accurateNoteArr' => $accurateNoteArr
         );
 
         return $res;
@@ -2163,6 +2193,12 @@ class VacReqUtil
         return $numberOfDays;
     }
     public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false ) {
+
+        //testing
+//        $startStr = "2023-06-29";
+//        $endStr = "2023-07-02";
+//        $startStr = "2023-07-02";
+//        $endStr = "2023-06-29";
 
         //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
@@ -7049,9 +7085,10 @@ class VacReqUtil
         $data[0] = "Vacation days taken";
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
-            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRange);
+            $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRange); //TODO: test it
             $vacationDays = $vacationDaysRes['numberOfDays'];
             $vacationAccurate = $vacationDaysRes['accurate'];
+            //$vacationAccurate = false;
             $data[$col] = "-".$vacationDays;
             $yearData[$yearRange]['vacationDays'] = $vacationDays;
             $yearData[$yearRange]['vacationAccurate'] = $vacationAccurate;
@@ -7079,6 +7116,7 @@ class VacReqUtil
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
             $vacationAccurate = $yearData[$yearRange]['vacationAccurate'];
+            //$vacationAccurate = false;
             if( !$vacationAccurate ) {
                 $data[$col] = "* ".$inaccuracyMessage;
             } else {
