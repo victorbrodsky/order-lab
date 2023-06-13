@@ -1669,10 +1669,12 @@ class VacReqUtil
     }
 
     public function getInaccuracyMessage() {
-        return "the count may be imprecise due to included holidays";
+        //return "the count may be imprecise due to included holidays";
+        return "the count may be imprecise due to included transition between academic years";
     }
 
     //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
+    //TODO: include holidays: compare $requestNumberOfDays with submitted days ($subRequest->getNumberOfDays()) for request submitted with modified away days
     public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
 
         $academicYearStart = $this->getAcademicYearStart();
@@ -1707,7 +1709,6 @@ class VacReqUtil
 //        }
 
         //step2: get requests with start date earlier than academic Year Start
-        //TODO: test and review days in the transaction between years
         $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
@@ -1729,7 +1730,7 @@ class VacReqUtil
         $res['accurate'] = true;
 
         if( !$accurateBefore || !$accurateAfter ) {
-            $res['accurate'] = false;
+            $res['accurate'] = false; //accurate = false indicates that calculation contains transition between academic year
         }
 
 //        $res['accurate'] = false;//testing
@@ -1753,7 +1754,7 @@ class VacReqUtil
         $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true,$status);
         //echo "before requests count=".count($requests)."<br>";
 
-        $accurateNoteArr = array();
+        //$accurateNoteArr = array();
 
         foreach( $requests as $request ) {
             $subRequest = $request->$subRequestGetMethod();
@@ -1781,7 +1782,7 @@ class VacReqUtil
                 //echo "user=".$request->getUser()."<br>";
                 //echo "Before: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$subRequest->getNumberOfDays()."<br>";
                 $accurate = false;
-                $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ from $workingDays weekly working days"; //based on 5 days per week
+                //$accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ from $workingDays weekly working days"; //based on 5 days per week
             }
 
 //            //TODO: Use holiday dates to calculate the WCM working days
@@ -1822,8 +1823,8 @@ class VacReqUtil
 
         $res = array(
             'numberOfDays' => $days,
-            'accurate' => $accurate,
-            'accurateNoteArr' => $accurateNoteArr
+            'accurate' => $accurate, //accurate = false indicates that calculation contains transition between academic year
+            //'accurateNoteArr' => $accurateNoteArr
         );
 
         return $res;
@@ -1856,7 +1857,8 @@ class VacReqUtil
             $startDate = $subRequest->getStartDate();
             $endDate = new \DateTime($requestEndAcademicYearStr);
 
-            ///// get holidays /////
+//            ///// get holidays /////
+//            //TODO: include holidays: compare $requestNumberOfDays with submitted days $subRequest->getNumberOfDays()
 //            $holidays = array();
 //            $institution = $request->getInstitution();
 //            $institutionId = null;
@@ -1864,11 +1866,10 @@ class VacReqUtil
 //                $institutionId = $institution->getId();
 //            }
 //            $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId,$custom=false);
-            ///// EOF get holidays /////
+//            ///// EOF get holidays /////
 
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
-            //$workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate,$holidays);
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
             //echo "calculated workingDays=".$workingDays."<br>";
 
@@ -1891,7 +1892,7 @@ class VacReqUtil
 
         $res = array(
             'numberOfDays' => $days,
-            'accurate' => $accurate //accurate = true indicates that calculation contains transition between academic year
+            'accurate' => $accurate //accurate = false indicates that calculation contains transition between academic year
         );
 
         return $res;
@@ -2758,12 +2759,12 @@ class VacReqUtil
         return $errorMsg;
     }
 
-    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate, $holidays = array() ) {
+    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
         $starDateStr = $starDate->format('Y-m-d');
         $endDateStr = $endDate->format('Y-m-d');
         //echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
         //exit('111');
-        //$holidays = array();
+        $holidays = array();
         //$holidays = ['*-12-25', '*-01-01', '*-07-04']; # variable and fixed holidays
         //return $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
         return $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
@@ -7040,7 +7041,8 @@ class VacReqUtil
             $writer->addRow($spoutRow);
         }
 
-        $inaccuracyMessage = "The count of the vacation days may be imprecise due to included holidays"; //$this->getInaccuracyMessage();
+        //$inaccuracyMessage = "The count of the vacation days may be imprecise due to included holidays"; //$this->getInaccuracyMessage();
+        $inaccuracyMessage = $this->getInaccuracyMessage();
 
         $totalNumberBusinessDays = 0;
         $totalNumberVacationDays = 0;
