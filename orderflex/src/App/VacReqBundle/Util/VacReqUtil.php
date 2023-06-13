@@ -1784,37 +1784,37 @@ class VacReqUtil
                 $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ from $workingDays weekly working days"; //based on 5 days per week
             }
 
-            //TODO: Use holiday dates to calculate the WCM working days
-            if( $accurate ) {
-                //$requestTypeStr = 'vacation' or 'business'
-                //getDaysDifferenceNote($vacreqRequest)
-                //count number of vacation days from $startDate and $endDate
-                $startDate = null;
-                $endDate = null;
-                if( $startStr ) {
-                    $startDate = \DateTime::createfromformat('Y-m-d H:i:s', $startStr);
-                }
-                if( $endStr ) {
-                    $endDate = \DateTime::createfromformat('Y-m-d H:i:s', $endStr);
-                }
-                $institution = $request->getInstitution();
-                $institutionId = null;
-                if( $institution ) {
-                    $institutionId = $institution->getId();
-                }
-                //$countedNumberOfDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
-                $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom=false);
-                $holidays = array(); $holidays[] = 1;//testing
-                $countedNumberOfDays = intval($workingDays) - count($holidays);
-
-                if( $countedNumberOfDays != $requestNumberOfDays ) {
-                    $accurate = false;
-                    $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ".
-                        " from $countedNumberOfDays working days corrected by holidays".
-                        " (".intval($workingDays)."-".count($holidays).")";
-                }
-                //$accurate = false;
-            }
+//            //TODO: Use holiday dates to calculate the WCM working days
+//            if( $accurate ) {
+//                //$requestTypeStr = 'vacation' or 'business'
+//                //getDaysDifferenceNote($vacreqRequest)
+//                //count number of vacation days from $startDate and $endDate
+//                $startDate = null;
+//                $endDate = null;
+//                if( $startStr ) {
+//                    $startDate = \DateTime::createfromformat('Y-m-d H:i:s', $startStr);
+//                }
+//                if( $endStr ) {
+//                    $endDate = \DateTime::createfromformat('Y-m-d H:i:s', $endStr);
+//                }
+//                $institution = $request->getInstitution();
+//                $institutionId = null;
+//                if( $institution ) {
+//                    $institutionId = $institution->getId();
+//                }
+//                //$countedNumberOfDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
+//                $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom=false);
+//                //$holidays = array(); $holidays[] = 1;//testing
+//                $countedNumberOfDays = intval($workingDays) - count($holidays);
+//
+//                if( $countedNumberOfDays != $requestNumberOfDays ) {
+//                    $accurate = false;
+//                    $accurateNoteArr[$request->getId()] = "Submitted $requestNumberOfDays days off differ".
+//                        " from $countedNumberOfDays working days corrected by holidays".
+//                        " (".intval($workingDays)."-".count($holidays).")";
+//                }
+//                //$accurate = false;
+//            }
 
             //echo $request->getId().": before: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
@@ -1833,6 +1833,7 @@ class VacReqUtil
     // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
     public function getApprovedAfterAcademicYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $status="approved" ) {
         //$logger = $this->container->get('logger');
+        $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
         $days = 0;
         $accurate = true;
         $subRequestGetMethod = "getRequest".$requestTypeStr;
@@ -1852,17 +1853,35 @@ class VacReqUtil
             //echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
             //echo "requestStartAcademicYearStr=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
 
+            $startDate = $subRequest->getStartDate();
+            $endDate = new \DateTime($requestEndAcademicYearStr);
+
+            ///// get holidays /////
+//            $holidays = array();
+//            $institution = $request->getInstitution();
+//            $institutionId = null;
+//            if( $institution ) {
+//                $institutionId = $institution->getId();
+//            }
+//            $holidays = $vacreqCalendarUtil->getHolidaysInRange($startDate,$endDate,$institutionId,$custom=false);
+            ///// EOF get holidays /////
+
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
-            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
+            //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
+            //$workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate,$holidays);
+            $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
             //echo "calculated workingDays=".$workingDays."<br>";
-            if( $workingDays > $subRequest->getNumberOfDays() ) {
+
+            $requestNumberOfDays = $subRequest->getNumberOfDays();
+
+            if( $workingDays > $requestNumberOfDays ) {
                 //$logger->warning("Logical error getApprovedAfterAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
-                $workingDays = $subRequest->getNumberOfDays();
+                $workingDays = $requestNumberOfDays;
             }
 
-            if( $workingDays != $subRequest->getNumberOfDays() ) {
+            if( $workingDays != $requestNumberOfDays ) {
                 //inaccuracy
-                //echo "After: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$subRequest->getNumberOfDays()."<br>";
+                //echo "After: ID# ".$request->getId()." inaccurate: workingDays=".$workingDays." enteredDays=".$requestNumberOfDays."<br>";
                 $accurate = false;
             }
 
@@ -1872,7 +1891,7 @@ class VacReqUtil
 
         $res = array(
             'numberOfDays' => $days,
-            'accurate' => $accurate
+            'accurate' => $accurate //accurate = true indicates that calculation contains transition between academic year
         );
 
         return $res;
@@ -2739,11 +2758,12 @@ class VacReqUtil
         return $errorMsg;
     }
 
-    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
+    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate, $holidays = array() ) {
         $starDateStr = $starDate->format('Y-m-d');
         $endDateStr = $endDate->format('Y-m-d');
-        //echo $starDateStr . " --- " . $endDateStr ."<br>";
-        $holidays = array();
+        //echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
+        //exit('111');
+        //$holidays = array();
         //$holidays = ['*-12-25', '*-01-01', '*-07-04']; # variable and fixed holidays
         //return $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
         return $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
