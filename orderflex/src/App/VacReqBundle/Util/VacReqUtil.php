@@ -1742,6 +1742,10 @@ class VacReqUtil
             $res['accurate'] = false;
         }
 
+//        $res['accurate'] = false;//testing
+//        dump($res);
+//        exit('111');
+
         return $res;
     }
 
@@ -6980,7 +6984,7 @@ class VacReqUtil
             $writer->addRow($spoutRow);
         }
 
-        $inaccuracyMessage = $this->getInaccuracyMessage();
+        $inaccuracyMessage = "The count of the vacation days may be imprecise due to included holidays"; //$this->getInaccuracyMessage();
 
         $totalNumberBusinessDays = 0;
         $totalNumberVacationDays = 0;
@@ -6996,12 +7000,16 @@ class VacReqUtil
 //                continue; //skip this applicant because the current user does not permission to view this applicant
 //            }
 
+        $yearData = array();
+        
         //Add row with "Prior FY carry-over"
         $data = array();
         $data[0] = "Prior FY carry-over";
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
-            $data[$col] = $this->getUserCarryOverDays($subjectUser,$yearRange);
+            $carryoverDays = $this->getUserCarryOverDays($subjectUser,$yearRange);
+            $data[$col] = $carryoverDays;
+            $yearData[$yearRange]['carryoverDays'] = $carryoverDays;
             $col++;
         }
         //$spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
@@ -7015,6 +7023,7 @@ class VacReqUtil
         foreach( array_reverse($yearRangeStr) as $yearRange) {
             $accruedDays = 24;
             $data[$col] = $accruedDays;
+            $yearData[$yearRange]['accruedDays'] = $accruedDays;
             $col++;
         }
         $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
@@ -7025,10 +7034,11 @@ class VacReqUtil
         $data[0] = "Total days available";
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
-            $accruedDays = 24;
-            $carryoverDays = $this->getUserCarryOverDays($subjectUser,$yearRange);
+            $accruedDays = $yearData[$yearRange]['accruedDays']; //24;
+            $carryoverDays = $yearData[$yearRange]['carryoverDays']; //$this->getUserCarryOverDays($subjectUser,$yearRange);
             $totalDays = intval($accruedDays) + intval($carryoverDays);
             $data[$col] = $totalDays;
+            $yearData[$yearRange]['totalDays'] = $totalDays;
             $col++;
         }
         $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
@@ -7036,19 +7046,49 @@ class VacReqUtil
 
         //Add row with "Less days taken"
         $data = array();
-        $data[0] = "Less days taken";
+        $data[0] = "Vacation days taken";
         $col = 1;
         foreach( array_reverse($yearRangeStr) as $yearRange) {
             $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($subjectUser,'vacation',$yearRange);
             $vacationDays = $vacationDaysRes['numberOfDays'];
-            //$vacationAccurate = $vacationDaysRes['accurate'];
-            $data[$col] = $vacationDays;
+            $vacationAccurate = $vacationDaysRes['accurate'];
+            $data[$col] = "-".$vacationDays;
+            $yearData[$yearRange]['vacationDays'] = $vacationDays;
+            $yearData[$yearRange]['vacationAccurate'] = $vacationAccurate;
             $col++;
         }
         $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
         $writer->addRow($spoutRow);
 
-        
+        //Days available for carry-over
+        $data = array();
+        $data[0] = "Days available for carry-over";
+        $col = 1;
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $totalDays = $yearData[$yearRange]['totalDays'];
+            $vacationDays = $yearData[$yearRange]['vacationDays'];
+            $data[$col] = $totalDays - $vacationDays;
+            $col++;
+        }
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
+        //Add accurate message
+        $data = array();
+        $data[0] = "Accuracy note";
+        $col = 1;
+        foreach( array_reverse($yearRangeStr) as $yearRange) {
+            $vacationAccurate = $yearData[$yearRange]['vacationAccurate'];
+            if( !$vacationAccurate ) {
+                $data[$col] = "* ".$inaccuracyMessage;
+            } else {
+                $data[$col] = "";
+            }
+            $col++;
+        }
+        $spoutRow = WriterEntityFactory::createRowFromArray($data,$requestStyle);
+        $writer->addRow($spoutRow);
+
         $writer->close();
 
         //TODO: working on summary

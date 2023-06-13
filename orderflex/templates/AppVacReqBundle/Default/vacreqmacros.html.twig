@@ -287,6 +287,12 @@
                 <a href="{{ path(vacreq_sitename~'_review', { 'id': entity.id }) }}" target="_blank">Review</a>
             </li>
 
+            <li>
+                <a
+                    href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
+                    { 'userId': entity.user.id }) }}">Download summary in spreadsheet</a>
+            </li>
+
             {#<li class="divider"></li>#}
             {#{% if entity.status != 'completed' and entity.getOverallStatus() != 'completed' %}#}
 
