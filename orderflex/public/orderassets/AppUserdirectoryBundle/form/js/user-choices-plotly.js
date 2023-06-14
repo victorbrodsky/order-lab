@@ -48,9 +48,11 @@ function plotlyGetChartsReact(thisSitename) {
 
     if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
         console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
+        alert('plotlyGetChartsReact: window.ChartsComponent is not defined');
     }
     if (typeof window === "undefined") {
         console.log('plotlyGetChartsReact: window is not defined');
+        alert('plotlyGetChartsReact: window is not defined');
     }
 
 
