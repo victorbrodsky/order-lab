@@ -1187,7 +1187,7 @@ class VacReqUtil
 
         $subjectUser = $entity->getUser();
 
-        //get userCarryOver. TODO: This does not distinguish between approved, rejected or pending requests.
+        //get userCarryOver. This does not distinguish between approved, rejected or pending requests.
         //Each user has only one VacReqUserCarryOver. VacReqUserCarryOver has multiple carryOvers(VacReqCarryOver: year, days)
         $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
         //echo "found userCarryOverID=".$userCarryOver->getId()."<br>";
@@ -1482,9 +1482,9 @@ class VacReqUtil
 
     //Do not use it (do not delete CarryOver for canceled carry over request).
     //Use syncVacReqCarryOverRequest instead to take care update days in CarryOver
-    //TODO: if multiple carry over requests are existed, then the VacReqUserCarryOver should be changed according to them.
-    //TODO: we might have one carry over request approved and one denied for the same year.
-    //TODO: Currently, VacReqUserCarryOver is synchronised to the latest approved request.
+    //if multiple carry over requests are existed, then the VacReqUserCarryOver should be changed according to them.
+    //we might have one carry over request approved and one denied for the same year.
+    //Currently, VacReqUserCarryOver is synchronised to the latest approved request. All preceding carryover requests are canceled.
     public function deleteCanceledVacReqCarryOverRequest( $entity )
     {
 
@@ -1673,10 +1673,10 @@ class VacReqUtil
         return "the count may be imprecise due to included transition between academic years";
     }
 
-    //calculate approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
+    //Main function to calculate total approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     //TODO: include holidays: compare $requestNumberOfDays with submitted days ($subRequest->getNumberOfDays()) for request submitted with modified away days
     public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
-
+        //exit('get ApprovedTotalDaysAcademicYear');
         $academicYearStart = $this->getAcademicYearStart();
         $academicYearEnd = $this->getAcademicYearEnd();
 
@@ -1698,7 +1698,8 @@ class VacReqUtil
         //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
         //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
-        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",false,$status,$bruteForce);
+        //getApprovedYearDays($user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false)
+        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",$asObject=false,$status,$bruteForce);
         //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
@@ -1751,7 +1752,7 @@ class VacReqUtil
 
         //echo "before startStr=".$startStr."<br>";
         //echo "before endStr=".$endStr."<br>";
-        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",true,$status);
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"before",$asObject=true,$status);
         //echo "before requests count=".count($requests)."<br>";
 
         //$accurateNoteArr = array();
@@ -1841,7 +1842,7 @@ class VacReqUtil
 
         //echo "after startStr=".$startStr."<br>";
         //echo "after endStr=".$endStr."<br>";
-        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",true,$status);
+        $requests = $this->getApprovedYearDays($user,$requestTypeStr,$startStr,$endStr,"after",$asObject=true,$status);
         //echo "after requests count=".count($requests)."<br>";
 
         foreach( $requests as $request ) {
@@ -1949,7 +1950,7 @@ class VacReqUtil
         return $days;
     }
 
-    //TODO: select distinct start, end dates
+    //NOT USED
     //http://stackoverflow.com/questions/7224792/sql-to-find-time-elapsed-from-multiple-overlapping-intervals
     public function getApprovedYearDays_SingleQuery( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
 
@@ -2151,7 +2152,7 @@ class VacReqUtil
 //            .")"
 //        );
 
-        //TODO: select user, distinct start, end dates
+        //select user, distinct start, end dates
         //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
         //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
         //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
@@ -2212,7 +2213,20 @@ class VacReqUtil
 
         return $numberOfDays;
     }
-    public function getApprovedYearDays( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false ) {
+    //$asObject=false => Return number of days or
+    //$asObject=true => Return specific requests.
+    // If $requestTypeStr=business/requestBusiness => return business requests
+    // If $requestTypeStr=vacation/requestVacation => return vacation requests
+    public function getApprovedYearDays(
+        $user,
+        $requestTypeStr,  //business/vacation
+        $startStr=null,
+        $endStr=null,
+        $type=null,
+        $asObject=false,
+        $status='approved',
+        $bruteForce=false
+    ) {
 
         //testing
 //        $startStr = "2023-06-29";
@@ -2294,7 +2308,7 @@ class VacReqUtil
         ));
 
         //bruteForce not used!!! Instead, we prevent to submit and approve overlap requests
-        if( $bruteForce == true ) {
+        if( 0 && $bruteForce == true ) {
             $requests = $query->getResult();
             $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
             //echo "bruteForce days=".$numberOfDays."<br>";
@@ -2318,8 +2332,8 @@ class VacReqUtil
 //            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
 //            return $numberOfDays;
 //            //EOF sum the number of days
-//            //////////////////////////////////////////////////////////////
 
+            //sum and return number of days
             if(0) {
                 $numberOfDaysRes = $query->getSingleResult();
                 $numberOfDays = $numberOfDaysRes['numberOfDays'];
@@ -2425,7 +2439,7 @@ class VacReqUtil
         return $overlappedMessage;
     }
 
-    //TODO: get all user's requests by year range "2021-2022"
+    //Get all user's requests by year range "2021-2022"
     //$yearRangeStr: '2021-2022'
     //$requestTypeStr: 'business' or 'vacation'
     //$status: 'approved'
@@ -4519,132 +4533,7 @@ class VacReqUtil
         return "";
     }
 
-//    public function getHeaderInfoMessages_OLD( $user, $approvalGroupType=null ) {
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//
-//
-//        //{{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
-//        //"You have accrued X vacation days this academic year (and will accrue X*12 by [date of academic year start from site settings, show as July 1st, 20XX]."
-//        //"You have accrued 10 vacation days this academic year (and will accrue 24 by July 1st, 2016."
-//        //accrued days up to this month calculated by vacationAccruedDaysPerMonth
-//        $accruedDays = $this->getAccruedDaysUpToThisMonth($user,$approvalGroupType);
-//        $totalAccruedDays = $this->getTotalAccruedDays();
-//
-//
-//        //$currentStartYear
-//        $yearRange = $this->getCurrentAcademicYearRange();
-//        $yearRangeArr = explode("-",$yearRange);
-//        $currentStartYear = $yearRangeArr[1];
-//
-//        $startAcademicYearStr = $this->getEdgeAcademicYearDate( $currentStartYear, "End" );
-//        $startAcademicYearDate = new \DateTime($startAcademicYearStr);
-//        $startAcademicYearDateStr = $startAcademicYearDate->format("F jS, Y");
-//
-////        $accruedDaysString =    "You have accrued ".$accruedDays." vacation days this academic year".
-////                                " (and will accrue ".$totalAccruedDays." by ".$startAcademicYearDateStr.").";
-//
-//        $academicYearStart = $userSecUtil->getSiteSettingParameter('academicYearStart','vacreq');
-//        if( !$academicYearStart ) {
-//            throw new \InvalidArgumentException('academicYearStart is not defined in Site Parameters.');
-//        }
-//        $academicYearStartString = $academicYearStart->format("F jS");
-//
-//        $vacationAccruedDaysPerMonth = $userSecUtil->getSiteSettingParameter('vacationAccruedDaysPerMonth','vacreq');
-//        if( !$vacationAccruedDaysPerMonth ) {
-//            throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-//        }
-//
-//        if(0) {
-//            //If you have worked here since [July 1st] or before,
-//            // You have so far accrued [22] vacation days this academic year (and will accrue [24] by [July 1st], [2016]).
-//            $accruedDaysString = "If you have worked here since $academicYearStartString or before, you have so far accrued " .
-//                $accruedDays . " vacation days this academic year (and will accrue " . $totalAccruedDays . " by " . $startAcademicYearDateStr . ").";
-//            //Alternatively, if you started after July 1st, you can calculate the amount of vacation days
-//            // you have accrued by multiplying the number of months since your start date by 2.
-//            $accruedDaysString .= "<br>Alternatively, if you started after $academicYearStartString, you can calculate the amount of vacation days" .
-//                " you have accrued by multiplying the number of months since your start date by $vacationAccruedDaysPerMonth.";
-//        }
-//
-//        //Calculate May 30th as 1 month before End Year
-//        $academicYearEnd = $userSecUtil->getSiteSettingParameter('academicYearEnd','vacreq');
-//        if( !$academicYearEnd ) {
-//            throw new \InvalidArgumentException('academicYearEnd is not defined in Site Parameters.');
-//        }
-//        //shift $academicYearEnd by month back
-//        $academicYearEnd->modify("-1 month"); //May 30th
-//        //$academicYearEnd->modify("last day of previous month"); //May 31st
-//        $academicYearEndString = $academicYearEnd->format("F jS");
-//
-//        //get max carry over days
-//        $maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays','vacreq');
-//        if( !$maxCarryOverVacationDays ) {
-//            $maxCarryOverVacationDays = 10;
-//        }
-//
-//        //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
-//        //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
-//        //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
-//        $accruedDaysString = "Faculty accrue $totalAccruedDays vacation days per year, or $vacationAccruedDaysPerMonth days per month.";
-//        $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
-//        $accruedDaysString .= "<br>The maximum one can carry over to the next fiscal year $maxCarryOverVacationDays days, no exceptions.";
-//        $accruedDaysString .= " This request must be made in writing and approved by your Vice Chair.";
-//        $accruedDaysString .= " The request is due by $academicYearEndString of the same fiscal year.";
-//
-//        //If for the current academic year the value of carried over vacation days is not empty and not zero for the logged in user,
-//        // append a third sentence stating "You have Y additional vacation days carried over from [Current Academic Year -1, show as 2014-2015]."
-//        $currentYearRange = $this->getCurrentAcademicYearRange();
-//        $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
-//        //echo "carriedOverDays=".$carriedOverDays."<br>";
-//        $carriedOverDaysString = null;
-//        if( $carriedOverDays ) {
-//            $lastYearRange = $this->getPreviousAcademicYearRange();
-//            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange;
-//        }
-//
-//        //Carry over days to the next academic year
-//        $nextYearRange = $this->getNextAcademicYearRange();
-//        $carriedOverDaysNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
-//        //echo "carriedOverDaysNextYear=".$carriedOverDaysNextYear."<br>";
-//        //$carriedOverDaysNextYearString = null;
-//        if( $carriedOverDaysNextYear ) {
-//            if( $carriedOverDaysString ) {
-//                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
-//            } else {
-//                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
-//            }
-//        }
-//
-//        if( $carriedOverDaysString ) {
-//            $carriedOverDaysString = $carriedOverDaysString . ".";
-//        }
-//
-//        //totalAllocatedDays - vacationDays + carryOverDays
-//        $remainingDaysRes = $this->totalVacationRemainingDays($user);
-//        //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-//        ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
-//        // You have [17] remaining vacation days during the current academic year.
-//        $remainingDaysString = "Based on the assumed ".$totalAccruedDays." accrued days per year and on approved carry over ".
-//            "requests documented in this system,".
-//            " you have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
-//        if( !$remainingDaysRes['accurate'] ) {
-//            $remainingDaysString .= " (".$this->getInaccuracyMessage().")";
-//        }
-//        $remainingDaysString .= ".";
-//
-//
-//        $messages = array();
-//        $messages['accruedDaysString'] = $accruedDaysString;
-//        //$messages['accruedDays'] = $accruedDays;
-//        $messages['totalAccruedDays'] = $totalAccruedDays;
-//        $messages['carriedOverDaysString'] = $carriedOverDaysString;
-//        //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
-//        $messages['remainingDaysString'] = $remainingDaysString;
-//
-//
-//        return $messages;
-//    }
-    //TODO: get a full header message based on the noteForVacationDays and noteForCarryOverDays
+    //Get a full header message based on the noteForVacationDays and noteForCarryOverDays
     //replace numbers from VacReqApprovalTypeList (accrued days, max days)
     //Used in new vacation and carryover request new page
     public function getHeaderInfoMessages($user, $approvalGroupType=null) {
@@ -5856,7 +5745,6 @@ class VacReqUtil
         $action = null;
 
         //echo "status=$status <br>";
-        //TODO: check if required here
         $institution = $entity->getInstitution();
         $tentativeInstitution = $entity->getTentativeInstitution();
         //sync tentative status and org status
@@ -5906,7 +5794,6 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                //TODO: fix it!
                 if( $session ) {
                     $session->getFlashBag()->add(
                         'notice',
@@ -5946,7 +5833,6 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                //TODO: fix it!
                 if( $session ) {
                     $session->getFlashBag()->add(
                         'notice',
@@ -6033,7 +5919,6 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                //TODO: fix it!
                 if( $session ) {
                     $session->getFlashBag()->add(
                         'notice',
@@ -6068,7 +5953,6 @@ class VacReqUtil
                 $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
 
                 //Flash
-                //TODO: fix it!
                 if( $session ) {
                     $session->getFlashBag()->add(
                         'notice',
