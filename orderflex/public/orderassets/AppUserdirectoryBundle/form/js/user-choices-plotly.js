@@ -44,7 +44,7 @@ $(document).ready(function() {
 
 });
 
-function outsidePlotlyGetChartsReact(thisSitename) {
+function plotlyGetChartsReact(thisSitename) {
 
     // if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
     //     console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
