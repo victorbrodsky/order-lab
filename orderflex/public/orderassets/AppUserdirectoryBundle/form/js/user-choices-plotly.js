@@ -59,6 +59,7 @@ function plotlyGetChartsReact(thisSitename) {
     //clear alert alert-danger
     dashboardClearAlertMessages();
 
+    //call function from Charts.jsx
     window.ChartsComponent.plotlyGetChartsReact(thisSitename);
     //plotlyGetCharts(thisSitename);
 }

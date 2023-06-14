@@ -1653,18 +1653,18 @@ class VacReqUtil
     }
 
     //calculate approved total days for current academical year
-    public function getApprovedTotalDays( $user, $requestTypeStr, $bruteForce=false ) {
+    public function getApprovedTotalDays( $user, $requestTypeStr ) { //, $bruteForce=false
         $yearRange = $this->getCurrentAcademicYearRange();
         //echo "getApprovedTotalDays yearRange=".$yearRange."<br>";
-        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved", $bruteForce );
+        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved" ); //, $bruteForce
         return $res;
     }
 
     //calculate approved total days for current academical year
-    public function getPreviousYearApprovedTotalDays( $user, $requestTypeStr, $bruteForce=false ) {
+    public function getPreviousYearApprovedTotalDays( $user, $requestTypeStr ) { //, $bruteForce=false
         $yearRange = $this->getPreviousAcademicYearRange();
         //echo "getPreviousYearApprovedTotalDays yearRange=".$yearRange."<br>";
-        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved", $bruteForce );
+        $res = $this->getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, "approved" ); //, $bruteForce
         return $res;
     }
 
@@ -1675,7 +1675,7 @@ class VacReqUtil
 
     //Main function to calculate total approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     //TODO: include holidays: compare $requestNumberOfDays with submitted days ($subRequest->getNumberOfDays()) for request submitted with modified away days
-    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $bruteForce=false ) {
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) { //, $bruteForce=false
         //exit('get ApprovedTotalDaysAcademicYear');
         $academicYearStart = $this->getAcademicYearStart();
         $academicYearEnd = $this->getAcademicYearEnd();
@@ -1706,8 +1706,8 @@ class VacReqUtil
             $academicYearEndStr,
             "inside",
             $asObject=false,
-            $status,
-            $bruteForce
+            $status
+            //$bruteForce
         );
         //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
@@ -1719,14 +1719,14 @@ class VacReqUtil
 //        }
 
         //step2: get requests with start date earlier than academic Year Start
-        $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
+        $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //$accurateBefore = false;
         //echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
-        $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status,$bruteForce);
+        $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
         //echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
@@ -2233,8 +2233,8 @@ class VacReqUtil
         $endStr=null,       //period end date (30 June 2023)
         $type=null,
         $asObject=false,
-        $status='approved',
-        $bruteForce=false
+        $status='approved'
+        //$bruteForce=false
     ) {
 
         //testing
@@ -2249,9 +2249,9 @@ class VacReqUtil
         $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
         $dql =  $repository->createQueryBuilder("request");
 
-        if( $bruteForce == true ) {
-            $asObject = true;
-        }
+//        if( $bruteForce == true ) {
+//            $asObject = true;
+//        }
 
         if( $asObject ) {
             $dql->select('request');
@@ -2317,12 +2317,12 @@ class VacReqUtil
         ));
 
         //bruteForce not used!!! Instead, we prevent to submit and approve overlap requests
-        if( 0 && $bruteForce == true ) {
-            $requests = $query->getResult();
-            $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
-            //echo "bruteForce days=".$numberOfDays."<br>";
-            return $numberOfDays;
-        }
+//        if( 0 && $bruteForce == true ) {
+//            $requests = $query->getResult();
+//            $numberOfDays = $this->getNotOverlapNumberOfWorkingDays($requests,$requestTypeStr);
+//            //echo "bruteForce days=".$numberOfDays."<br>";
+//            return $numberOfDays;
+//        }
 
         if( $asObject ) {
             $requests = $query->getResult();

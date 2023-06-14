@@ -28,7 +28,7 @@ class DashboardController extends OrderAbstractController
 
     /**
      * Template("AppDashboardBundle/Dashboard/dashboard-choices.html.twig")
-     *
+     * .../dashboards/
      *
      * @Route("/", name="dashboard_home")
      * @Template("AppDashboardBundle/React/dashboard-choices.html.twig")
