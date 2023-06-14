@@ -46,6 +46,15 @@ $(document).ready(function() {
 
 function plotlyGetChartsReact(thisSitename) {
 
+    if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
+        console.log('window.ChartsComponent is not defined');
+    }
+
+    if (typeof window === "undefined") {
+        console.log('window is not defined');
+    }
+
+
     //clear alert alert-danger
     dashboardClearAlertMessages();
 
@@ -509,8 +518,11 @@ function dashboardClearAlertMessages() {
     //document.getElementById("charts").innerHTML = "";
     //$('#charts').html(null);
 
-    //It looks like the React-rendered content of this container was removed without using React. This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
+    //It looks like the React-rendered content of this container was removed without using React.
+    // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-    window.ChartsComponent.removeErrorLine();
+    if( window.ChartsComponent && typeof window.ChartsComponent !== 'undefined' ) {
+        window.ChartsComponent.removeErrorLine();
+    }
 }
 
