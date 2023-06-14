@@ -1021,7 +1021,7 @@ class VacReqUtil
     //"During the current academic year, you have received X approved vacation days in total."
     // (if X = 1, show "During the current academic year, you have received X approved vacation day."
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
-    public function getApprovedDaysString( $user, $bruteForce=false ) {
+    public function getApprovedDaysString( $user ) { //$bruteForce=false
 
         $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
 
@@ -1042,7 +1042,7 @@ class VacReqUtil
 
         //////////////////////// Business /////////////////////
         $requestTypeStr = 'business';
-        $res = $this->getApprovedTotalDays($user,$requestTypeStr,$bruteForce);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr); //$bruteForce
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
 
@@ -1080,7 +1080,7 @@ class VacReqUtil
 
         //////////////////////// Vacation /////////////////////
         $requestTypeStr = 'vacation';
-        $res = $this->getApprovedTotalDays($user,$requestTypeStr,$bruteForce);
+        $res = $this->getApprovedTotalDays($user,$requestTypeStr); //$bruteForce
         $numberOfDays = $res['numberOfDays'];
         $accurate = $res['accurate'];
         if( !$numberOfDays || $numberOfDays == 0 ) {
@@ -1699,7 +1699,16 @@ class VacReqUtil
 
         //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
         //getApprovedYearDays($user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false)
-        $numberOfDaysInside = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",$asObject=false,$status,$bruteForce);
+        $numberOfDaysInside = $this->getApprovedYearDays(
+            $user,
+            $requestTypeStr,
+            $academicYearStartStr,
+            $academicYearEndStr,
+            "inside",
+            $asObject=false,
+            $status,
+            $bruteForce
+        );
         //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
@@ -2219,9 +2228,9 @@ class VacReqUtil
     // If $requestTypeStr=vacation/requestVacation => return vacation requests
     public function getApprovedYearDays(
         $user,
-        $requestTypeStr,  //business/vacation
-        $startStr=null,
-        $endStr=null,
+        $requestTypeStr,    //business/vacation
+        $startStr=null,     //period start date (1 July 2023)
+        $endStr=null,       //period end date (30 June 2023)
         $type=null,
         $asObject=false,
         $status='approved',
@@ -2247,7 +2256,7 @@ class VacReqUtil
         if( $asObject ) {
             $dql->select('request');
         } else {
-            $dql->select('DISTINCT user.id, requestType.startDate, requestType.endDate, requestType.numberOfDays as numberOfDays');
+            $dql->select('DISTINCT user.id, requestType.startDate as startDate, requestType.endDate as endDate, requestType.numberOfDays as numberOfDays');
             //$dql->select('SUM(requestType.numberOfDays) as numberOfDays');
         }
 
@@ -2352,6 +2361,8 @@ class VacReqUtil
                         //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
                         //echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
                         $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+
+                        //TODO: adjust to holidays here or give a warning?
                     }
                     //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
                 }

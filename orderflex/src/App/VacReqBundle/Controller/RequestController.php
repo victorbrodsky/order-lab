@@ -377,8 +377,8 @@ class RequestController extends OrderAbstractController
         }
 
         //calculate approved vacation days in total.
-        $bruteForce = false;
-        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user,$bruteForce);
+        //$bruteForce = false;
+        $totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
         //echo "totalApprovedDaysString=".$totalApprovedDaysString."<br>";
 
         //get header messages
