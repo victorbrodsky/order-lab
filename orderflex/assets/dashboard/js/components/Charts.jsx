@@ -22,9 +22,17 @@ class Charts extends Component {
         //const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
         this.state = { charts: [], loading: true, errorMessageRoot: props.errorMessageRoot};
 
-        if( typeof window === "undefined" ) {
+        if( typeof window !== "undefined" ) {
+            console.log('window is defined!!!');
+        } else {
             console.log('window is not defined');
         }
+        if( typeof window.ChartsComponent !== "undefined" ) {
+            console.log('window.ChartsComponent is defined!!!');
+        } else {
+            console.log('window.ChartsComponent is not defined');
+        }
+
         //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
         window.ChartsComponent = this;
     }
