@@ -402,7 +402,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        echo "downloadSummaryMultiYearSpreadsheetAction: userId=".$userId."<br>";
+        //echo "downloadSummaryMultiYearSpreadsheetAction: userId=".$userId."<br>";
 
         $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
@@ -430,7 +430,7 @@ class DefaultController extends OrderAbstractController
         //$minYear = $year1;
 
         $yearRangeStr = $minYear."-".$maxYear;
-        echo "yearRangeStr=$yearRangeStr <br>";
+        //echo "yearRangeStr=$yearRangeStr <br>";
 
         //$fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
         //2022-2023 Away Request Audit Summary for FirstName LastName generated on MM-DD-YYYY at HH-MM-SS.csv
