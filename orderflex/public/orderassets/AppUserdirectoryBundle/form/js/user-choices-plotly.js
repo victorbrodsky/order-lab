@@ -44,24 +44,25 @@ $(document).ready(function() {
 
 });
 
-function plotlyGetChartsReact(thisSitename) {
+function outsidePlotlyGetChartsReact(thisSitename) {
 
-    if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
-        console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
-        alert('plotlyGetChartsReact: window.ChartsComponent is not defined');
-    }
-    if (typeof window === "undefined") {
-        console.log('plotlyGetChartsReact: window is not defined');
-        alert('plotlyGetChartsReact: window is not defined');
-    }
-
-
+    // if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
+    //     console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
+    //     alert('plotlyGetChartsReact: window.ChartsComponent is not defined');
+    // }
+    // if (typeof window === "undefined") {
+    //     console.log('plotlyGetChartsReact: window is not defined');
+    //     alert('plotlyGetChartsReact: window is not defined');
+    // }
+    
     //clear alert alert-danger
-    dashboardClearAlertMessages();
+   dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    window.ChartsComponent.plotlyGetChartsReact(thisSitename);
+    //window.ChartsComponent.plotlyGetChartsReact(thisSitename);
     //plotlyGetCharts(thisSitename);
+
+    ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -523,8 +524,9 @@ function dashboardClearAlertMessages() {
     //It looks like the React-rendered content of this container was removed without using React.
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-    if( window.ChartsComponent && typeof window.ChartsComponent !== 'undefined' ) {
-        window.ChartsComponent.removeErrorLine();
-    }
+    //if( window.ChartsComponent && typeof window.ChartsComponent !== 'undefined' ) {
+        //window.ChartsComponent.removeErrorLine();
+        ChartsRendered.removeErrorLine();
+    //}
 }
 

@@ -67,6 +67,7 @@
 
 ///////////
 
+//import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
 
 import React from 'react';
 import ReactDOM from "react-dom/client";
@@ -75,15 +76,23 @@ import '../css/app.css';
 import Charts from './components/Charts';
 
 
+//https://codepen.io/brettdewoody/pen/JprXEN/
+//Accessing React Component Methods and State from Outside React:
+//html has onclick="plotlyGetChartsReact('dashboard'), but plotlyGetChartsReact is in the Charts class
+//Solution: use ref ChartsRendered in render, then use this ChartsRendered in outside JS function
+
+
+
 const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <Router>
-            <Charts errorMessageRoot={errorMessageRoot}/>
+            <Charts ref={(ChartsRendered) => {window.ChartsRendered = ChartsRendered}} errorMessageRoot={errorMessageRoot}/>
         </Router>
     </React.StrictMode>
 );
+//var ChartsRendered = root.render...
 
 const REACT_VERSION = React.version;
 // ReactDOM.render(

@@ -11,6 +11,7 @@ import ReactDOM from "react-dom/client";
 //import { Routes ,Route, Redirect, Link, withRouter } from 'react-router-dom';
 import SingleChart from './SingleChart';
 
+//called by an entry point dashboard.jsx
 class Charts extends Component {
     constructor(props) {
         console.log("Charts constructor");
@@ -22,21 +23,21 @@ class Charts extends Component {
         //const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
         this.state = { charts: [], loading: true, errorMessageRoot: props.errorMessageRoot};
 
-        if( typeof window !== "undefined" ) {
-            console.log('window is defined!!!');
-        } else {
-            console.log('window is not defined');
-            alert('window is not defined');
-        }
-        if( typeof window.ChartsComponent !== "undefined" ) {
-            console.log('window.ChartsComponent is defined!!!');
-        } else {
-            console.log('window.ChartsComponent is not defined');
-            alert('window.ChartsComponent is not defined');
-        }
-
-        //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
-        window.ChartsComponent = this;
+        // if( typeof window !== "undefined" ) {
+        //     console.log('window is defined!!!');
+        // } else {
+        //     console.log('window is not defined');
+        //     alert('window is not defined');
+        // }
+        // if( typeof window.ChartsComponent !== "undefined" ) {
+        //     console.log('window.ChartsComponent is defined!!!');
+        // } else {
+        //     console.log('window.ChartsComponent is not defined');
+        //     alert('window.ChartsComponent is not defined');
+        // }
+        //
+        // //https://stackoverflow.com/questions/31612598/call-a-react-component-method-from-outside/46150660
+        //window.ChartsComponent = this;
     }
 
     componentDidMount() {
