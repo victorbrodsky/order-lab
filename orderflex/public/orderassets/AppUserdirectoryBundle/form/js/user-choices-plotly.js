@@ -47,11 +47,10 @@ $(document).ready(function() {
 function plotlyGetChartsReact(thisSitename) {
 
     if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
-        console.log('window.ChartsComponent is not defined');
+        console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
     }
-
     if (typeof window === "undefined") {
-        console.log('window is not defined');
+        console.log('plotlyGetChartsReact: window is not defined');
     }
 
 
