@@ -55,7 +55,7 @@ function outsidePlotlyGetChartsReact(thisSitename) {
     //     alert('plotlyGetChartsReact: window is not defined');
     // }
 
-    
+
     //clear alert alert-danger
    dashboardClearAlertMessages();
 
