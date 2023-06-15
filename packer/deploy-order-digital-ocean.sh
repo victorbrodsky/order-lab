@@ -1,6 +1,11 @@
 #!/bin/bash
 # ORDER installation script
 
+#There are 3 files containing installation code: 
+#1) This file deploy-order-digital-ocean.sh
+#2) centos-install.sh
+#3) order-packer-centos.json
+
 #bash deploy-order-digital-ocean.sh 
 #--token API-TOKEN-FROM-STEP-1 
 #--os operational system: centos (default) or ubuntu

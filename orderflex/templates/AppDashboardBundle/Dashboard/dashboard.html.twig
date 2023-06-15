@@ -102,25 +102,23 @@
 {% endblock %}
 
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('dashboard') }}
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('dashboard') }}
+{% endblock %}
+
 {% block additionaljs %}
 
-    {#{% javascripts#}
-    {#'@AppUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'#}
-    {#'@AppTranslationalResearchBundle/Resources/public/form/js/transres-plotly.js'#}
-    {#%}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>
-
-    {#<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
+    {#testing remove#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>#}
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>#}
 
     <script type="text/javascript">
         var charts = {{ chartsArray|json_encode|raw }};
 
-        $(document).ready(function() {
+        //$(document).ready(function() {
 //            console.log("dashboard.html.twig");
 
              //$('#filter-btn').click();
@@ -128,7 +126,7 @@
 //                 document.getElementById("filter-btn").click(); //chart-filter-btn
 //             }
 
-        });
+        //});
 
 //        function favoriteChart(chartId) {
 //            console.log("chartId="+chartId);

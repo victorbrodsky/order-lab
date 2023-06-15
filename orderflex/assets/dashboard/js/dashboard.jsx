@@ -67,7 +67,10 @@
 
 ///////////
 
-//import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
+console.log('Dashboard main JavaScript file dashboard.jsx');
+
+import '/public/orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js';
+import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
 
 import React from 'react';
 import ReactDOM from "react-dom/client";
