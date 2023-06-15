@@ -394,8 +394,20 @@ class RequestController extends OrderAbstractController
         $accruedDaysString = $messages['accruedDaysString'];
         $carriedOverDaysString = $messages['carriedOverDaysString'];
         $remainingDaysString = $messages['remainingDaysString'];
-        $noteForVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForVacationDays",$user,$approvalGroupType);
-        $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
+
+        //Notes are getting from VacReqApprovalTypeList (currently 'fellow' and 'faculty' approval group types)
+        $noteForVacationDays = NULL;
+        if( $routeName == "vacreq_new" ) {
+            $noteForVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForVacationDays",$user,$approvalGroupType);
+        }
+        //echo "noteForVacationDays=$noteForVacationDays <br>";
+
+        $noteForCarryOverDays = NULL;
+        if( $routeName == "vacreq_carryoverrequest" ) {
+            $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
+        }
+        //echo "noteForCarryOverDays=$noteForCarryOverDays <br>";
+
         ///////////// EOF get new header with parameters from VacReqApprovalTypeList /////////////
 
         //get $requestTypeCarryOverId

@@ -56,7 +56,7 @@ class VacReqSiteParameter
      */
     private $holidaysUrl;
 
-    ////////// TODO: Moved to the VacReqApprovalTypeList //////////////
+    ////////// TODO: Moved to the VacReqApprovalTypeList (can be deleted) //////////////
     /**
      * Moved to the VacReqApprovalTypeList - Done
      * @ORM\Column(type="integer", nullable=true)

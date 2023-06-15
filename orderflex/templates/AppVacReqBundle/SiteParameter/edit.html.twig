@@ -14,6 +14,8 @@
     limitations under the License.
 #}
 
+{#Used in site settings edit page#}
+
 {% extends "AppVacReqBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
@@ -60,18 +62,15 @@
 
                     {{ formmacros.field(form.holidaysUrl) }}
 
-                    {{ formmacros.field(form.vacationAccruedDaysPerMonth) }}
-
-                    {% if form.maxVacationDays is defined %}
-                        {{ formmacros.field(form.maxVacationDays) }}
-                    {% endif %}
-
-                    {{ formmacros.field(form.maxCarryOverVacationDays) }}
-
-                    {{ formmacros.field(form.noteForVacationDays) }}
-
-
-                    {{ formmacros.field(form.noteForCarryOverDays) }}
+                    {#get new header with parameters from VacReqApprovalTypeList#}
+                    {#{{ formmacros.field(form.vacationAccruedDaysPerMonth) }}#}
+                    {#{% if form.maxVacationDays is defined %}#}
+                        {#{{ formmacros.field(form.maxVacationDays) }}#}
+                    {#{% endif %}#}
+                    {#{{ formmacros.field(form.maxCarryOverVacationDays) }}#}
+                    {#{{ formmacros.field(form.noteForVacationDays) }}#}
+                    {#{{ formmacros.field(form.noteForCarryOverDays) }}#}
+                    {#EOF get new header with parameters from VacReqApprovalTypeList#}
 
                     <hr>
 
@@ -98,6 +97,15 @@
                     {% endif %}
 
                     {{ formmacros.field(form.institutions) }}
+
+                    <hr>
+                    <p>
+                        The parameters:
+                        Vacation days accrued per month by faculty, Maximum number vacation days per year,<br>
+                        Maximum number of carry over vacation days per year,<br>
+                        Note for vacation days, Note for carry over vacation days<br>
+                        can be modified in the platform list manager "Vacation Request Approval Type List"
+                    </p>
 
             </div> <!-- panel-body -->
           </div> <!-- panel-collapse -->

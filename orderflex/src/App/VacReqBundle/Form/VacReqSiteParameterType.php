@@ -63,30 +63,28 @@ class VacReqSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('vacationAccruedDaysPerMonth',null,array(
-            'label'=>'Vacation days accrued per month by faculty (2):',
-            'attr' => array('class'=>'form-control')
-        ));
-
+        ////////// TODO: Moved to the VacReqApprovalTypeList (can be deleted) //////////////
+//        $builder->add('vacationAccruedDaysPerMonth',null,array(
+//            'label'=>'Vacation days accrued per month by faculty (2):',
+//            'attr' => array('class'=>'form-control')
+//        ));
 //        $builder->add('maxVacationDays', null, array(
 //            'label' => 'Maximum number vacation days per year (usually 12*2=24 days):',
 //            'attr' => array('class' => 'form-control')
 //        ));
-
-        $builder->add('maxCarryOverVacationDays', null, array(
-            'label' => 'Maximum number of carry over vacation days per year (for example 15):',
-            'attr' => array('class' => 'form-control')
-        ));
-
-        $builder->add('noteForVacationDays', null, array(
-            'label' => 'Note for vacation days:',
-            'attr' => array('class' => 'textarea form-control')
-        ));
-
-        $builder->add('noteForCarryOverDays', null, array(
-            'label' => 'Note for carry over vacation days:',
-            'attr' => array('class' => 'textarea form-control')
-        ));
+//        $builder->add('maxCarryOverVacationDays', null, array(
+//            'label' => 'Maximum number of carry over vacation days per year (for example 15):',
+//            'attr' => array('class' => 'form-control')
+//        ));
+//        $builder->add('noteForVacationDays', null, array(
+//            'label' => 'Note for vacation days:',
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
+//        $builder->add('noteForCarryOverDays', null, array(
+//            'label' => 'Note for carry over vacation days:',
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
+        ////////// EOF Moved to the VacReqApprovalTypeList //////////////
 
         $builder->add('floatingDayName', null, array(
             'label' => 'Floating Day Link Name (i.e. Floating Day):',
