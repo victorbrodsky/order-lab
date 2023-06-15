@@ -14,10 +14,10 @@
     limitations under the License.
 #}
 
+{#NOT USED ?#}
+
 {% extends "AppDashboardBundle/Default/base.html.twig" %}
-
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-
 
 {% block title %}
     React Dashboards
@@ -46,6 +46,9 @@
 {% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('dashboard') }}
+{% endblock %}
+{% block additionaljs %}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
 {% endblock %}
 
 

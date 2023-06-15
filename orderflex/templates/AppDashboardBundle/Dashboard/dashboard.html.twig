@@ -112,27 +112,11 @@
 {% block additionaljs %}
 
     {#testing remove#}
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js') }}"></script>
     {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js') }}"></script>#}
 
     <script type="text/javascript">
         var charts = {{ chartsArray|json_encode|raw }};
-
-        //$(document).ready(function() {
-//            console.log("dashboard.html.twig");
-
-             //$('#filter-btn').click();
-//             if( document.getElementById("filter-btn") ) {
-//                 document.getElementById("filter-btn").click(); //chart-filter-btn
-//             }
-
-        //});
-
-//        function favoriteChart(chartId) {
-//            console.log("chartId="+chartId);
-//            return;
-//        }
-
     </script>
 
 

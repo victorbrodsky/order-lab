@@ -1,3 +1,5 @@
+//defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
+Window.prototype.userPlotlyGetChartsReact = userPlotlyGetChartsReact;
 
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
