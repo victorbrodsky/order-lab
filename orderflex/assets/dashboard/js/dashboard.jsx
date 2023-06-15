@@ -93,7 +93,6 @@ root.render(
         </Router>
     </React.StrictMode>
 );
-//var ChartsRendered = root.render...
 
 const REACT_VERSION = React.version;
 // ReactDOM.render(

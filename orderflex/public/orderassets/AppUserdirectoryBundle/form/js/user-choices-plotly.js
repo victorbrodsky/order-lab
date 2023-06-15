@@ -1,5 +1,6 @@
 //defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
 Window.prototype.userPlotlyGetChartsReact = userPlotlyGetChartsReact;
+Window.prototype.dashboardClearAllCharts = dashboardClearAllCharts;
 
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
@@ -47,26 +48,11 @@ $(document).ready(function() {
 });
 
 function userPlotlyGetChartsReact(thisSitename) {
-
-    console.log('userPlotlyGetChartsReact');
-
-    // if( !window.ChartsComponent || typeof window.ChartsComponent === 'undefined' ) {
-    //     console.log('plotlyGetChartsReact: window.ChartsComponent is not defined');
-    //     alert('plotlyGetChartsReact: window.ChartsComponent is not defined');
-    // }
-    // if (typeof window === "undefined") {
-    //     console.log('plotlyGetChartsReact: window is not defined');
-    //     alert('plotlyGetChartsReact: window is not defined');
-    // }
-
-
+    //console.log('userPlotlyGetChartsReact');
     //clear alert alert-danger
-   dashboardClearAlertMessages();
+    dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    //window.ChartsComponent.plotlyGetChartsReact(thisSitename);
-    //plotlyGetCharts(thisSitename);
-
     ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
@@ -529,9 +515,7 @@ function dashboardClearAlertMessages() {
     //It looks like the React-rendered content of this container was removed without using React.
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-    //if( window.ChartsComponent && typeof window.ChartsComponent !== 'undefined' ) {
-        //window.ChartsComponent.removeErrorLine();
-        ChartsRendered.removeErrorLine();
-    //}
+    //window.ChartsComponent.removeErrorLine();
+    ChartsRendered.removeErrorLine();
 }
 
