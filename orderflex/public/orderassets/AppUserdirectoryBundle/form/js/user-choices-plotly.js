@@ -54,7 +54,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    ChartsRendered.plotlyGetChartsReact(thisSitename);
+    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -517,6 +517,6 @@ function dashboardClearAlertMessages() {
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
 
-    ChartsRendered.removeErrorLine();
+    window.ChartsRendered.removeErrorLine();
 }
 
