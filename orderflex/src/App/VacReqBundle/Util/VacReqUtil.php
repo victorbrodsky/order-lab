@@ -4941,10 +4941,12 @@ class VacReqUtil
         if( !$approvalGroupType ) {
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
         }
+        echo "approvalGroupType=$approvalGroupType<br>";
 
         if( $approvalGroupType ) {
             $allowCarryOver = $this->getValueApprovalGroupTypeByUser("allowCarryOver",$user,$approvalGroupType);
             if( !$allowCarryOver ) {
+                echo "NOT allowCarryOver<br>";
                 return NULL;
             }
         } else {

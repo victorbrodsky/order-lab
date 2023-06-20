@@ -69,6 +69,7 @@ class RequestController extends OrderAbstractController
         $user = $this->getUser();
         $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
         $routeName = $request->get('_route');
+        $newCarryOverRequest = null;
 
         //permitted only for users with allowCarryOver
         if( $routeName == "vacreq_carryoverrequest" ) {
@@ -405,6 +406,7 @@ class RequestController extends OrderAbstractController
         //echo "noteForVacationDays=$noteForVacationDays <br>";
 
         $noteForCarryOverDays = NULL;
+        $noteForCarryOverDays = "test carryover note";
         if( $routeName == "vacreq_carryoverrequest" ) {
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
         }
@@ -426,6 +428,8 @@ class RequestController extends OrderAbstractController
         }
 
         $overlappedMessage = $vacreqUtil->getHeaderOverlappedMessage($user);
+
+        echo "newCarryOverRequest=$newCarryOverRequest <br>";
 
         return array(
             'entity' => $entity,
