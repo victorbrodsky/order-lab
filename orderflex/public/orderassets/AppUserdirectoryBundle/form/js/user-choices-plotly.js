@@ -84,7 +84,7 @@ function dashboardClearAlertMessages() {
     //     alert('window.ChartsRendered undefined');
     // }
 
-    window.ChartsRendered.removeErrorLine();
+    ChartsRendered.removeErrorLine();
 }
 
 function userPlotlyGetChartsReact(thisSitename) {
@@ -93,7 +93,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
+    ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
