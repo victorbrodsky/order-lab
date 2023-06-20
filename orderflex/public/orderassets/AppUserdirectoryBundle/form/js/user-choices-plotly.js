@@ -8,7 +8,7 @@ var _retrievedChartCount = 0;
 
 $(document).ready(function() {
 
-    $(window.ChartsRendered).ready(function() {
+    //$(window.ChartsRendered).ready(function() {
         $('root').ready(function() {
 
 
@@ -51,7 +51,7 @@ $(document).ready(function() {
     //favoriteToggleButtonInit();
 
         });
-    });
+    //});
 });
 
 
