@@ -6,7 +6,8 @@ Window.prototype.favoriteChart = favoriteChart;
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
 
-$(document).ready(function() {
+$(window).load(function() {
+//$(document).ready(function() {
 
     //$('if( document.getElementById("filter-btn") ) {
     //     document.getElementById("filter-btn").click(); //chart-filter-btn
@@ -35,7 +36,7 @@ $(document).ready(function() {
     if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
-            //document.getElementById("filter-btn").click(); //chart-filter-btn
+            document.getElementById("filter-btn").click(); //chart-filter-btn
         }
     }
 
@@ -45,8 +46,6 @@ $(document).ready(function() {
     //$( favoriteEl ).appendTo( "#charts" );
 
     //favoriteToggleButtonInit();
-    //ChartsRendered.removeErrorLine();
-
 });
 
 //clear alert messages
