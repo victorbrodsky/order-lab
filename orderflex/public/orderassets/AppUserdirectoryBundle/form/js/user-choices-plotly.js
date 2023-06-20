@@ -42,15 +42,18 @@ $(document).ready(function() {
     if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
-            alert("document.readyState="+document.readyState);
+            //alert("document.readyState="+document.readyState);
 
-
-            // if( jQuery.browser.safari && document.readyState != "complete" ) {
-            //     setTimeout( arguments.callee, 100 );
-            //     return;
-            // } else {
-                document.getElementById("filter-btn").click(); //chart-filter-btn
-            // }
+            //if (jQuery.browser.safari && document.readyState != "complete") {
+            //var dashboardIsSafari = browsers.safari.value;
+            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            alert("isSafari="+isSafari);
+            if( isSafari ) {
+                 setTimeout( clickDisplayBtn, 100 );
+             } else {
+                //document.getElementById("filter-btn").click(); //chart-filter-btn
+                clickDisplayBtn();
+             }
         }
     }
 
@@ -65,6 +68,13 @@ $(document).ready(function() {
     //});
 });
 
+function clickDisplayBtn() {
+    document.getElementById("filter-btn").click(); //chart-filter-btn
+}
+
+// function dashboardIsSafari() {
+//     return browsers.safari.value;
+// }
 
 //clear alert messages
 function dashboardClearAlertMessages() {
