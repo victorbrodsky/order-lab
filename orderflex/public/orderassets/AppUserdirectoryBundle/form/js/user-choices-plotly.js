@@ -47,7 +47,7 @@ $(document).ready(function() {
             //if (jQuery.browser.safari && document.readyState != "complete") {
             //var dashboardIsSafari = browsers.safari.value;
             var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-            alert("isSafari="+isSafari);
+            //alert("isSafari="+isSafari);
             if( isSafari ) {
                  setTimeout( clickDisplayBtn, 3000 );
              } else {
