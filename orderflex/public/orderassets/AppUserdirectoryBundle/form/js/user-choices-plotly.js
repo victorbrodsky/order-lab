@@ -6,8 +6,9 @@ Window.prototype.favoriteChart = favoriteChart;
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
 
-$(window.ChartsRendered).ready(function() {
-//$(document).ready(function() {
+$(document).ready(function() {
+
+    $(window.ChartsRendered).ready(function() {
 
     //$('if( document.getElementById("filter-btn") ) {
     //     document.getElementById("filter-btn").click(); //chart-filter-btn
@@ -46,6 +47,8 @@ $(window.ChartsRendered).ready(function() {
     //$( favoriteEl ).appendTo( "#charts" );
 
     //favoriteToggleButtonInit();
+
+    });
 });
 
 
