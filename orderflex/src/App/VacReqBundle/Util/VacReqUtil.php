@@ -4941,12 +4941,12 @@ class VacReqUtil
         if( !$approvalGroupType ) {
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
         }
-        echo "approvalGroupType=$approvalGroupType<br>";
+        //echo "approvalGroupType=$approvalGroupType<br>";
 
         if( $approvalGroupType ) {
             $allowCarryOver = $this->getValueApprovalGroupTypeByUser("allowCarryOver",$user,$approvalGroupType);
             if( !$allowCarryOver ) {
-                echo "NOT allowCarryOver<br>";
+                //echo "NOT allowCarryOver<br>";
                 return NULL;
             }
         } else {
@@ -5056,7 +5056,7 @@ class VacReqUtil
                 }
             }
 
-            //TODO: show only on vacation request page, hide on carryover page
+            //show only on vacation request page, hide on carryover page
             //$link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
             $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining vacation days' . $carryOverNote . '</a>';
 

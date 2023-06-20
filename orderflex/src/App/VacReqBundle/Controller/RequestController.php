@@ -69,7 +69,7 @@ class RequestController extends OrderAbstractController
         $user = $this->getUser();
         $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
         $routeName = $request->get('_route');
-        $newCarryOverRequest = null;
+        $newCarryOverRequestStr = null;
 
         //permitted only for users with allowCarryOver
         if( $routeName == "vacreq_carryoverrequest" ) {
@@ -123,9 +123,7 @@ class RequestController extends OrderAbstractController
             //set Destination year (2016)
             //$entity->setDestinationYear( date("Y") );
 
-            //$newCarryOverRequest = null;
-            //$newCarryOverRequest = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
-            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
+            //$newCarryOverRequestStr = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
 
             //check if 'days' parameter is set in http request
             $carryOverRequestDays = $request->query->get('days');
@@ -155,7 +153,8 @@ class RequestController extends OrderAbstractController
             $title = "Vacation/Business Travel Request";
             $eventType = "Business/Vacation Request Created";
 
-            $newCarryOverRequest = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
+            //show only on vacation request page, hide on carryover page
+            $newCarryOverRequestStr = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
         }
 
         //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
@@ -429,8 +428,6 @@ class RequestController extends OrderAbstractController
 
         $overlappedMessage = $vacreqUtil->getHeaderOverlappedMessage($user);
 
-        echo "newCarryOverRequest=$newCarryOverRequest <br>";
-
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -450,7 +447,7 @@ class RequestController extends OrderAbstractController
             'carriedOverDaysString' => $carriedOverDaysString, //getHeaderInfoMessages
             'remainingDaysString' => $remainingDaysString, //getHeaderInfoMessages
             //Second header - only carry over
-            'newCarryOverRequest' => $newCarryOverRequest, //function
+            'newCarryOverRequestStr' => $newCarryOverRequestStr, //function
 
         );
     }
