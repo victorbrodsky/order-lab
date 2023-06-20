@@ -69,7 +69,9 @@ $(document).ready(function() {
 });
 
 function clickDisplayBtn() {
-    document.getElementById("filter-btn").click(); //chart-filter-btn
+    if( typeof window.ChartsRendered !== 'undefined' ) {
+        document.getElementById("filter-btn").click(); //chart-filter-btn
+    }
 }
 
 // function dashboardIsSafari() {
