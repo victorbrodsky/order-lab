@@ -1,6 +1,7 @@
 //defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
 Window.prototype.userPlotlyGetChartsReact = userPlotlyGetChartsReact;
 Window.prototype.dashboardClearAllCharts = dashboardClearAllCharts;
+Window.prototype.favoriteChart = favoriteChart;
 
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
