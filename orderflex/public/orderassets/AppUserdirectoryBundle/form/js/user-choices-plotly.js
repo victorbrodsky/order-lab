@@ -9,6 +9,8 @@ var _retrievedChartCount = 0;
 $(document).ready(function() {
 
     $(window.ChartsRendered).ready(function() {
+        $(ChartsRendered).ready(function() {
+
 
     //$('if( document.getElementById("filter-btn") ) {
     //     document.getElementById("filter-btn").click(); //chart-filter-btn
@@ -48,6 +50,7 @@ $(document).ready(function() {
 
     //favoriteToggleButtonInit();
 
+        });
     });
 });
 
