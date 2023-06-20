@@ -49,7 +49,7 @@ $(document).ready(function() {
             var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             alert("isSafari="+isSafari);
             if( isSafari ) {
-                 setTimeout( clickDisplayBtn, 100 );
+                 setTimeout( clickDisplayBtn, 3000 );
              } else {
                 //document.getElementById("filter-btn").click(); //chart-filter-btn
                 clickDisplayBtn();
@@ -105,7 +105,7 @@ function dashboardClearAlertMessages() {
     //     alert('window.ChartsRendered undefined');
     // }
 
-    ChartsRendered.removeErrorLine();
+    window.ChartsRendered.removeErrorLine();
 }
 
 function userPlotlyGetChartsReact(thisSitename) {
@@ -114,7 +114,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    ChartsRendered.plotlyGetChartsReact(thisSitename);
+    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
