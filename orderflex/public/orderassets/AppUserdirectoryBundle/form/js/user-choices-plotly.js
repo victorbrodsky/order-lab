@@ -66,16 +66,17 @@ function dashboardClearAlertMessages() {
 
     if( typeof window === 'undefined' ) {
         console.log('window undefined');
+        alert('window undefined');
     }
     if( typeof ChartsRendered === 'undefined' ) {
         console.log('ChartsRendered undefined');
+        alert('ChartsRendered undefined');
     }
     if( typeof window.ChartsRendered === 'undefined' ) {
         console.log('window.ChartsRendered undefined');
+        alert('window.ChartsRendered undefined');
     }
-    if( typeof Window.ChartsRendered === 'undefined' ) {
-        console.log('Window.ChartsRendered undefined');
-    }
+
 
     ChartsRendered.removeErrorLine();
 }
