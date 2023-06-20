@@ -49,7 +49,7 @@ $(document).ready(function() {
             var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             //alert("isSafari="+isSafari);
             if( isSafari ) {
-                 setTimeout( clickDisplayBtn, 3000 );
+                 setTimeout( clickDisplayBtn, 2000 );
              } else {
                 //document.getElementById("filter-btn").click(); //chart-filter-btn
                 clickDisplayBtn();
