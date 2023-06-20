@@ -435,7 +435,8 @@ Symfony 4.4 with PHP 7.4:
 	If you unzipped the downloaded source code:
 
 			<VirtualHost *:80>
-				<Directory 'C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
+			    DocumentRoot "C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
+				<Directory "C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
 					Options +FollowSymLinks -Includes
 					AllowOverride All  
 					Require all granted
@@ -450,7 +451,8 @@ Symfony 4.4 with PHP 7.4:
 	Or if you cloned the source code using the git clone command:
 
 			<VirtualHost *:80>
-				<Directory 'C:\ORDER_LOCATION\order-lab\orderflex\web\"
+				DocumentRoot "C:\ORDER_LOCATION\order-lab-master\orderflex\web\"
+				<Directory "C:\ORDER_LOCATION\order-lab\orderflex\web\"
 					Options +FollowSymLinks -Includes
 					AllowOverride All  
 					Require all granted
