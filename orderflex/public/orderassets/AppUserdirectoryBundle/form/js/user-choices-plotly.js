@@ -48,7 +48,7 @@ $(document).ready(function() {
             //     setTimeout( arguments.callee, 100 );
             //     return;
             // } else {
-                document.getElementById("filter-btn").click(); //chart-filter-btn
+                //document.getElementById("filter-btn").click(); //chart-filter-btn
             // }
         }
     }
