@@ -6,10 +6,12 @@ Window.prototype.favoriteChart = favoriteChart;
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
 
-$(document).ready(function() {
+$(window).load(function() {
+//$(document).ready(function() {
 
     //$(window.ChartsRendered).ready(function() {
         $('root').ready(function() {
+            $('charts').ready(function() {
 
 
     //$('if( document.getElementById("filter-btn") ) {
@@ -51,7 +53,7 @@ $(document).ready(function() {
     //favoriteToggleButtonInit();
 
         });
-    //});
+    });
 });
 
 
