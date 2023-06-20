@@ -11,7 +11,7 @@ var _retrievedChartCount = 0;
 $(document).ready(function() {
 
     //$(window.ChartsRendered).ready(function() {
-        //$('root').ready(function() {
+        //$('Charts').ready(function() {
             //$('charts').ready(function() {
 
 
@@ -42,13 +42,14 @@ $(document).ready(function() {
     if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
+            alert("document.readyState="+document.readyState);
 
 
             // if( jQuery.browser.safari && document.readyState != "complete" ) {
             //     setTimeout( arguments.callee, 100 );
             //     return;
             // } else {
-                //document.getElementById("filter-btn").click(); //chart-filter-btn
+                document.getElementById("filter-btn").click(); //chart-filter-btn
             // }
         }
     }
