@@ -16,10 +16,10 @@ Encore
     //.setManifestKeyPrefix('build/')
 
     //added for subdomain /order/
-    //.setPublicPath('/order/build')
-    //.setManifestKeyPrefix('order/build/')
-    .setPublicPath('/build')
-    .setManifestKeyPrefix('build/')
+    .setPublicPath('/order/build')
+    .setManifestKeyPrefix('order/build/')
+    //.setPublicPath('/build')
+    //.setManifestKeyPrefix('build/')
 
     /*
      * ENTRY CONFIG
