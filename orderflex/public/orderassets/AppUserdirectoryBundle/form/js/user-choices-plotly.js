@@ -503,7 +503,7 @@ function dashboardClearAllCharts() {
 
 //clear alert messages
 function dashboardClearAlertMessages() {
-    //console.log("dashboardClearAlertMessages");
+    //console.log("dashboard ClearAlertMessages");
     //clear alert alert-danger
     //$('.dashboard-alert-msg').remove();
     //$('#error-message').empty();
@@ -517,6 +517,7 @@ function dashboardClearAlertMessages() {
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
     //window.ChartsComponent.removeErrorLine();
-    window.ChartsRendered.removeErrorLine();
+    //window.ChartsRendered.removeErrorLine();
+    ChartsRendered.removeErrorLine();
 }
 
