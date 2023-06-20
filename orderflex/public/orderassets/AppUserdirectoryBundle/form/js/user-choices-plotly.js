@@ -45,6 +45,7 @@ $(document).ready(function() {
     //$( favoriteEl ).appendTo( "#charts" );
 
     //favoriteToggleButtonInit();
+    ChartsRendered.removeErrorLine();
 
 });
 
@@ -64,6 +65,8 @@ function dashboardClearAlertMessages() {
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
 
+    return;
+
     if( typeof window === 'undefined' ) {
         console.log('window undefined');
         alert('window undefined');
@@ -76,7 +79,6 @@ function dashboardClearAlertMessages() {
         console.log('window.ChartsRendered undefined');
         alert('window.ChartsRendered undefined');
     }
-
 
     ChartsRendered.removeErrorLine();
 }
