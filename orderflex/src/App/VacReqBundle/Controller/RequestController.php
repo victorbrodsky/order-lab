@@ -405,7 +405,6 @@ class RequestController extends OrderAbstractController
         //echo "noteForVacationDays=$noteForVacationDays <br>";
 
         $noteForCarryOverDays = NULL;
-        $noteForCarryOverDays = "test carryover note";
         if( $routeName == "vacreq_carryoverrequest" ) {
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
         }
