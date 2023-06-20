@@ -89,7 +89,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <Router>
-            <Charts ref={(ChartsRendered) => {Window.ChartsRendered = ChartsRendered}} errorMessageRoot={errorMessageRoot}/>
+            <Charts ref={(ChartsRendered) => {window.ChartsRendered = ChartsRendered}} errorMessageRoot={errorMessageRoot}/>
         </Router>
     </React.StrictMode>
 );

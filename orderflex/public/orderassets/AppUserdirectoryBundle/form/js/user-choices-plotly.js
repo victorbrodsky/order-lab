@@ -54,7 +54,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    Window.ChartsRendered.plotlyGetChartsReact(thisSitename);
+    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -495,7 +495,7 @@ function favoriteChart(favoriteEl,chartId) {
 function dashboardClearAllCharts() {
     //console.log("dashboardClearAllCharts");
 
-    dashboardClearAlertMessages();
+    //dashboardClearAlertMessages();
 
     //var chartTypes = $("#filter_chartType").select2("val");
     $("#filter_chartType").val(null).trigger('change');
@@ -518,6 +518,6 @@ function dashboardClearAlertMessages() {
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
     //window.ChartsComponent.removeErrorLine();
     //window.ChartsRendered.removeErrorLine();
-    Window.ChartsRendered.removeErrorLine();
+    window.ChartsRendered.removeErrorLine();
 }
 
