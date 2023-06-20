@@ -1,5 +1,4 @@
 //defined functions that used outside the script (i.e. in FormType and onclick, onsubmit ...)
-window.ChartsRendered = null;
 Window.prototype.userPlotlyGetChartsReact = userPlotlyGetChartsReact;
 Window.prototype.dashboardClearAllCharts = dashboardClearAllCharts;
 Window.prototype.favoriteChart = favoriteChart;
@@ -55,7 +54,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
+    ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -518,6 +517,6 @@ function dashboardClearAlertMessages() {
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
 
-    window.ChartsRendered.removeErrorLine();
+    ChartsRendered.removeErrorLine();
 }
 

@@ -84,7 +84,6 @@ import Charts from './components/Charts';
 //html has onclick="plotlyGetChartsReact('dashboard'), but plotlyGetChartsReact is in the Charts class
 //Solution: use ref ChartsRendered in render, then use this ChartsRendered in outside JS function
 
-window.ChartsRendered = null;
 const errorMessageRoot = ReactDOM.createRoot(document.getElementById("error-message"));
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
