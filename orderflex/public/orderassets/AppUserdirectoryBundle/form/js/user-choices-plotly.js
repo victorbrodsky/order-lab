@@ -6,11 +6,12 @@ Window.prototype.favoriteChart = favoriteChart;
 var _totalChartCount = 0;
 var _retrievedChartCount = 0;
 
+//safari $(document).ready problem
 //$(window).load(function() {
 $(document).ready(function() {
 
     //$(window.ChartsRendered).ready(function() {
-        $('root').ready(function() {
+        //$('root').ready(function() {
             //$('charts').ready(function() {
 
 
@@ -41,7 +42,14 @@ $(document).ready(function() {
     if( chartTypesLen > 0 && chartTypesLen <= maxDisplayCharts ) {
         if (document.getElementById("filter-btn")) {
             //console.log("filter-btn auto clicked");
-            document.getElementById("filter-btn").click(); //chart-filter-btn
+
+
+            // if( jQuery.browser.safari && document.readyState != "complete" ) {
+            //     setTimeout( arguments.callee, 100 );
+            //     return;
+            // } else {
+                document.getElementById("filter-btn").click(); //chart-filter-btn
+            // }
         }
     }
 
@@ -53,7 +61,7 @@ $(document).ready(function() {
     //favoriteToggleButtonInit();
 
        //});
-    });
+    //});
 });
 
 
