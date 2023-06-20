@@ -54,7 +54,7 @@ function userPlotlyGetChartsReact(thisSitename) {
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
+    Window.ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -518,6 +518,6 @@ function dashboardClearAlertMessages() {
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
     //window.ChartsComponent.removeErrorLine();
     //window.ChartsRendered.removeErrorLine();
-    ChartsRendered.removeErrorLine();
+    Window.ChartsRendered.removeErrorLine();
 }
 
