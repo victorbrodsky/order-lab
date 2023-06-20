@@ -397,8 +397,10 @@ class RequestController extends OrderAbstractController
 
         //Notes are getting from VacReqApprovalTypeList (currently 'fellow' and 'faculty' approval group types)
         $noteForVacationDays = NULL;
+        //$noteForCarryOverDays = NULL;
         if( $routeName == "vacreq_new" ) {
             $noteForVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForVacationDays",$user,$approvalGroupType);
+            //$noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
         }
         //echo "noteForVacationDays=$noteForVacationDays <br>";
 

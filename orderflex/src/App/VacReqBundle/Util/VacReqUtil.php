@@ -4972,6 +4972,7 @@ class VacReqUtil
         //echo "nextNextStartMonth=".$nextNextStartMonth."<br>";
 
         $previousYearUnusedDaysMessage = null;
+        //$previousYearUnusedDaysMessage = 1;
 
         //if( $currentMonth == '07' || $currentMonth == '08' ) {
         if( $currentMonth == $nextStartMonth || $currentMonth == $nextNextStartMonth ) {
@@ -5053,6 +5054,7 @@ class VacReqUtil
                 }
             }
 
+            //TODO: show only on vacation request page, hide on carryover page
             //$link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
             $link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining vacation days' . $carryOverNote . '</a>';
 
