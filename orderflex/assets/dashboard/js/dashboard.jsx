@@ -89,7 +89,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
         <Router>
-            <Charts ref={(ChartsRendered) => {window.ChartsRendered = ChartsRendered}} errorMessageRoot={errorMessageRoot}/>
+            <Charts ref={(ChartsRendered) => {window.ChartsRendered = ChartsRendered}}
+                    errorMessageRoot={errorMessageRoot}/>
         </Router>
     </React.StrictMode>
 );
@@ -103,4 +104,5 @@ const REACT_VERSION = React.version;
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js. REACT_VERSION='+REACT_VERSION);
+console.log('Hello Webpack Encore! Edit me in assets/js/app.js. REACT_VERSION=' + REACT_VERSION);
+
