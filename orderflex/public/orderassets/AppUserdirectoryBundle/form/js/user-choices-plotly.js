@@ -48,13 +48,45 @@ $(document).ready(function() {
 
 });
 
+//clear alert messages
+function dashboardClearAlertMessages() {
+    //console.log("dashboard ClearAlertMessages");
+    //clear alert alert-danger
+    //$('.dashboard-alert-msg').remove();
+    //$('#error-message').empty();
+    //$('.dashboard-alert-msg').remove();
+
+    //clear charts
+    //document.getElementById("charts").innerHTML = "";
+    //$('#charts').html(null);
+
+    //It looks like the React-rendered content of this container was removed without using React.
+    // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
+    //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
+
+    if( typeof window === 'undefined' ) {
+        console.log('window undefined');
+    }
+    if( typeof ChartsRendered === 'undefined' ) {
+        console.log('ChartsRendered undefined');
+    }
+    if( typeof window.ChartsRendered === 'undefined' ) {
+        console.log('window.ChartsRendered undefined');
+    }
+    if( typeof Window.ChartsRendered === 'undefined' ) {
+        console.log('Window.ChartsRendered undefined');
+    }
+
+    ChartsRendered.removeErrorLine();
+}
+
 function userPlotlyGetChartsReact(thisSitename) {
     //console.log('userPlotlyGetChartsReact');
     //clear alert alert-danger
     dashboardClearAlertMessages();
 
     //call function from Charts.jsx
-    window.ChartsRendered.plotlyGetChartsReact(thisSitename);
+    ChartsRendered.plotlyGetChartsReact(thisSitename);
 }
 
 function plotlyGetCharts( thisSitename ) {
@@ -501,22 +533,4 @@ function dashboardClearAllCharts() {
     $("#filter_chartType").val(null).trigger('change');
 }
 
-//clear alert messages
-function dashboardClearAlertMessages() {
-    //console.log("dashboard ClearAlertMessages");
-    //clear alert alert-danger
-    //$('.dashboard-alert-msg').remove();
-    //$('#error-message').empty();
-    //$('.dashboard-alert-msg').remove();
-
-    //clear charts
-    //document.getElementById("charts").innerHTML = "";
-    //$('#charts').html(null);
-
-    //It looks like the React-rendered content of this container was removed without using React.
-    // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
-    //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-
-    window.ChartsRendered.removeErrorLine();
-}
 
