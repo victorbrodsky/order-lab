@@ -495,7 +495,7 @@ function favoriteChart(favoriteEl,chartId) {
 function dashboardClearAllCharts() {
     //console.log("dashboardClearAllCharts");
 
-    //dashboardClearAlertMessages();
+    dashboardClearAlertMessages();
 
     //var chartTypes = $("#filter_chartType").select2("val");
     $("#filter_chartType").val(null).trigger('change');
@@ -516,8 +516,7 @@ function dashboardClearAlertMessages() {
     //It looks like the React-rendered content of this container was removed without using React.
     // This is not supported and will cause errors. Instead, call ReactDOM.unmountComponentAtNode to empty a container.
     //ReactDOM.unmountComponentAtNode(document.getElementById('dashboard-alert-msg'));
-    //window.ChartsComponent.removeErrorLine();
+
     //window.ChartsRendered.removeErrorLine();
-    window.ChartsRendered.removeErrorLine();
 }
 
