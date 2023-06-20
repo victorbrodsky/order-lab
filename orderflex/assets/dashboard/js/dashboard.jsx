@@ -70,7 +70,7 @@
 console.log('Dashboard main JavaScript file dashboard.jsx');
 
 // import '/public/orderassets/AppUserdirectoryBundle/charts/plotly/plotly.js';
-import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
+//import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
 
 import React from 'react';
 import ReactDOM from "react-dom/client";
@@ -104,3 +104,6 @@ const REACT_VERSION = React.version;
 // import $ from 'jquery';
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js. REACT_VERSION='+REACT_VERSION);
+
+
+import '/public/orderassets/AppUserdirectoryBundle/form/js/user-choices-plotly.js';
