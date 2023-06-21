@@ -224,3 +224,8 @@
 .handsontable .ht-validation-dontadd {
     background-color: #F2DEDE;
 }
+
+.btn-group-with-tooltip-bottom .tooltip .tooltip-arrow {
+    top: 0% !important;
+}
+
