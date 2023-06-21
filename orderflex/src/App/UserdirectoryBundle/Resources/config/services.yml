@@ -89,6 +89,9 @@ services:
     user_utility:
         class: App\UserdirectoryBundle\Util\UserUtil
 
+    time_zone_util:
+        class: App\UserdirectoryBundle\Util\TimeZoneUtil
+
     #user generator util
     user_generator:
         class: App\UserdirectoryBundle\Util\UserGenerator

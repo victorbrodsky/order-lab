@@ -25,7 +25,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-use App\UserdirectoryBundle\Util\TimeZoneUtil;
+//use App\UserdirectoryBundle\Util\TimeZoneUtil;
 
 class PermissionType extends AbstractType
 {

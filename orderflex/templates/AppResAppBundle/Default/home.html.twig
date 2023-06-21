@@ -65,7 +65,7 @@
             <i>Last successful import:
                 {{ lastImportTimestamp|date('m/d/Y h:i A') }}
                 {{ serverTimeZone }}
-                ({{ lastImportTimestamp|ago }})
+                ({{ time_zone_util.ago(lastImportTimestamp) }})
                 {{ acceptingApplication }}
             </i>
         </p>

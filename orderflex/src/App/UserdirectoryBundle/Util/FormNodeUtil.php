@@ -2318,9 +2318,11 @@ class FormNodeUtil
 
 
     public function getTimezones() {
-        $tzUtil = new TimeZoneUtil();
+        //$tzUtil = new TimeZoneUtil();
+        $timeZoneUtil = $this->container->get('time_zone_util');
         $asValueLabel = true; //value => label
-        return $tzUtil->tz_list($asValueLabel);
+        //return $tzUtil->tz_list($asValueLabel);
+        return $timeZoneUtil->tz_list($asValueLabel);
     }
 
     public function getDropdownValue( $formNode, $outputType=null, $formNodeId=null ) {

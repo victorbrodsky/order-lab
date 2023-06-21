@@ -30,7 +30,6 @@
 
 {% block content %}
 
-
 {% if static is not defined %}
     {% set static = 0 %}
 {% endif %}
@@ -60,13 +59,13 @@
         {#<i>Last successful import:#}
             {#{{ lastImportTimestamp|date('m/d/Y h:i A') }}#}
             {#{{ serverTimeZone }}#}
-            {#({{ lastImportTimestamp|time_diff }})#}
+            {#({{ lastImportTimestamp|time_diff }}) |ago#}
             {#{{ acceptingApplication }}#}
         {#</i>#}
         <i>Last successful import:
             {{ lastImportTimestamp|date('m/d/Y h:i A') }}
             {{ serverTimeZone }}
-            ({{ lastImportTimestamp|ago }})
+            ({{ time_zone_util.ago(lastImportTimestamp) }})
             {{ acceptingApplication }}
         </i>
     </p>

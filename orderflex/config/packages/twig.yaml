@@ -62,6 +62,7 @@ twig:
         transres_formnode_util: "@transres_formnode_util"
         user_mailer_utility: "@user_mailer_utility"
         vacreq_calendar_util: "@vacreq_calendar_util"
+        time_zone_util: "@time_zone_util"
 
 when@test:
     twig:
