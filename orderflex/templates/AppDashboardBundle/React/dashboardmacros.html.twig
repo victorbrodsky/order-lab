@@ -83,8 +83,10 @@
                     <div class="col-xs-10" data-toggle="tooltip" title="Chart">
                         {{ form_widget(filterform.chartType, {'attr': {'placeholder': 'Chart'}}) }}
                     </div>
+                    {#Inspect->console->debugger->freeze#}
+                    {#class="tooltip-arrow" style="top: 33%;" => cause arrow inside the tooltip#}
                     <div class="col-xs-2">
-                        <div class="btn-group" role="group" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group">
                             <button id="filter-btn"
                                     type="button"
                                     class="btn btn-default"
