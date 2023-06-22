@@ -18,8 +18,8 @@
 namespace App\OrderformBundle\Form;
 
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\InstitutionalWrapperType;
-use App\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -162,7 +162,7 @@ class MessageObjectType extends AbstractType
         //exit("formtype after orderdate");
 
         $builder->add('provider', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => $this->labels['provider'],
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),

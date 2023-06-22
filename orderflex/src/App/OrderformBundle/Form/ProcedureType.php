@@ -17,6 +17,7 @@
 
 namespace App\OrderformBundle\Form;
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -139,7 +140,7 @@ class ProcedureType extends AbstractType
             ));
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+                'class' => User::class,
                 //'disabled' => $readonly,
                 'label' => 'Provider:',
                 'required' => false,

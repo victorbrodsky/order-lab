@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use App\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
@@ -100,13 +101,13 @@ class SiteParametersController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
-            $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            $entities = $em->getRepository(SiteParameters::class)->findAll();
         }
 
         if( count($entities) != 1 ) {
@@ -227,7 +228,7 @@ class SiteParametersController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository(SiteParameters::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -279,7 +280,7 @@ class SiteParametersController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository(SiteParameters::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -403,7 +404,7 @@ class SiteParametersController extends OrderAbstractController
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->find($id);
+        $entity = $em->getRepository(SiteParameters::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find SiteParameters entity.');
@@ -604,18 +605,18 @@ class SiteParametersController extends OrderAbstractController
 
         $administratorUser = $this->getUser();
         if( strtolower($administratorUser->getPrimaryPublicUserId()) != "administrator" ) {
-            $administratorUser = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("administrator");
+            $administratorUser = $em->getRepository(User::class)->findOneByPrimaryPublicUserId("administrator");
             if( !$administratorUser ) {
                 throw new \Exception('Initial Configuration: administrator user not found.');
             }
         }
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($entities) != 1 ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $userServiceUtil->generateSiteParameters();
-            $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            $entities = $em->getRepository(SiteParameters::class)->findAll();
         }
 
         if( count($entities) != 1 ) {

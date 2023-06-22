@@ -34,19 +34,11 @@ class UserManager { //implements UserManagerInterface {
 //        $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
 //    }
 
-    /**
-     * @var ObjectManager
-     */
+    
     protected $objectManager;
 
     private $passwordUpdater;
-
-    /**
-     * Constructor.
-     *
-     * @param ObjectManager            $om
-     * @param PasswordUpdaterInterface $passwordUpdater
-     */
+    
     public function __construct(EntityManagerInterface $om, PasswordUpdaterInterface $passwordUpdater)
     {
         $this->passwordUpdater = $passwordUpdater;
@@ -135,9 +127,7 @@ class UserManager { //implements UserManagerInterface {
     {
         return $this->getRepository()->findOneBy($criteria);
     }
-    /**
-     * @return ObjectRepository
-     */
+    
     protected function getRepository()
     {
         return $this->objectManager->getRepository($this->getClass());

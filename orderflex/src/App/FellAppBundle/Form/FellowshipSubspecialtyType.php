@@ -18,6 +18,7 @@
 namespace App\FellAppBundle\Form;
 
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,7 +34,7 @@ class FellowshipSubspecialtyType extends AbstractType
     {
 
         $builder->add('coordinators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => "Coordinator(s):",
             'required' => false,
             'multiple' => true,
@@ -53,7 +54,7 @@ class FellowshipSubspecialtyType extends AbstractType
 
 
         $builder->add('directors', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => "Director(s):",
             'required' => false,
             'multiple' => true,
@@ -71,7 +72,7 @@ class FellowshipSubspecialtyType extends AbstractType
         ));
 
         $builder->add('interviewers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => "Default Interviewer(s):",
             'required' => false,
             'multiple' => true,

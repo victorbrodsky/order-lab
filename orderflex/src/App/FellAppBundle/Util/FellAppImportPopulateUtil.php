@@ -1007,7 +1007,7 @@ class FellAppImportPopulateUtil {
 
             //exit('111');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
             $logger->error($event);
             $this->sendEmailToSystemEmail($event, $event);
@@ -1383,7 +1383,7 @@ class FellAppImportPopulateUtil {
                 }
 
                 //check if the user already exists in DB by $googleFormId
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+                $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
 
                 if (!$user) {
                     //create excel user

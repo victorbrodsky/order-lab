@@ -21,15 +21,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Interview;
-use App\FellAppBundle\Form\FellAppCreateFellowshipType;
 use App\FellAppBundle\Form\FellAppFellowshipApplicationType;
-use App\FellAppBundle\Form\FellAppManagementType;
 use App\FellAppBundle\Form\FellowshipSubspecialtyType;
 use App\FellAppBundle\Form\InterviewType;
 use App\UserdirectoryBundle\Entity\User;
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\AccessRequest;
-use App\UserdirectoryBundle\Entity\Reference;
 use App\FellAppBundle\Form\FellAppFilterType;
 use App\FellAppBundle\Form\FellowshipApplicationType;
 use App\UserdirectoryBundle\Util\EmailUtil;
@@ -674,7 +671,7 @@ class FellAppManagement extends OrderAbstractController {
             //cwidstr_@_ldap-user
             $username = $userCwid."_@_ldap-user";
 
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+            $user = $em->getRepository(User::class)->findOneByUsername($username);
             if( !$user ) {
                 exit('no user found by username='.$username);
             }
@@ -768,7 +765,7 @@ class FellAppManagement extends OrderAbstractController {
             //$users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roleArr);
 
             //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
-            $repository = $em->getRepository('AppUserdirectoryBundle:User');
+            $repository = $em->getRepository(User::class);
             $dql = $repository->createQueryBuilder("user");
             $dql->select('user');
             $dql->where("user.roles LIKE :name");

@@ -99,7 +99,7 @@ class ScanAdminController extends AdminController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -125,7 +125,7 @@ class ScanAdminController extends AdminController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -540,7 +540,7 @@ class ScanAdminController extends AdminController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 

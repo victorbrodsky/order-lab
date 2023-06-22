@@ -10,6 +10,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\CallLogBundle\Util\CallLogUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -39,7 +40,7 @@ class TestController extends TestBaseController
         //$calllogUtil = $this->container->get('calllog_util');
         $user = $this->getUser();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+        $user = $em->getRepository(User::class)->find($user->getId());
         $msg = $msg . "; user=$user";
 
         //$id = $calllogUtil->getNextEncounterGeneratedId();

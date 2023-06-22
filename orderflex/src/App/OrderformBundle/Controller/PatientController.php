@@ -18,6 +18,7 @@
 namespace App\OrderformBundle\Controller;
 
 use App\OrderformBundle\Entity\ExternalId;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -1599,7 +1600,7 @@ class PatientController extends OrderAbstractController
         $securityUtil = $this->container->get('user_security_utility');
 
         $userSecurity = $this->getUser();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
+        $user = $em->getRepository(User::class)->find($userSecurity->getId());
 
         $system = $securityUtil->getDefaultSourceSystem();
 
@@ -1835,7 +1836,7 @@ class PatientController extends OrderAbstractController
 
         $userSecurity = $this->getUser();
         //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($userSecurity->getId());
-        $user = $em->getReference('AppUserdirectoryBundle:User',$userSecurity->getId());
+        $user = $em->getReference(User::class,$userSecurity->getId());
 
         //add 2 proxyusers
         $UserWrapperTransformer = new UserWrapperTransformer($em, $this->container);
@@ -1845,7 +1846,7 @@ class PatientController extends OrderAbstractController
         $message->addProxyuser($UserWrappers[0]);
 
         //add second proxyuser
-        $userSystem = $em->getRepository('AppUserdirectoryBundle:User')->find(1);
+        $userSystem = $em->getRepository(User::class)->find(1);
         $UserWrappers = $UserWrapperTransformer->reverseTransform($userSystem."");
         $message->addProxyuser($UserWrappers[0]);
     }

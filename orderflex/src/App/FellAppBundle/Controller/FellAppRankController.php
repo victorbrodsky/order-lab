@@ -27,7 +27,6 @@ use App\FellAppBundle\Form\RankType;
 use App\UserdirectoryBundle\Entity\User;
 use App\OrderformBundle\Helper\ErrorHelper;
 use App\UserdirectoryBundle\Entity\AccessRequest;
-use App\UserdirectoryBundle\Entity\Reference;
 use App\FellAppBundle\Form\FellAppFilterType;
 use App\FellAppBundle\Form\FellowshipApplicationType;
 use App\UserdirectoryBundle\Util\UserUtil;

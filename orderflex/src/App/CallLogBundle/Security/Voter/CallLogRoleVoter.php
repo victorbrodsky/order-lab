@@ -26,6 +26,7 @@ namespace App\CallLogBundle\Security\Voter;
 
 
 use App\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 

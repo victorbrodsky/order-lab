@@ -21,7 +21,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\BaseCompositeNode;
-use App\UserdirectoryBundle\Entity\ComponentCategoryInterface;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -17,6 +17,7 @@
 
 namespace App\CallLogBundle\Form;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -150,7 +151,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         $builder->add('author', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -171,7 +172,7 @@ class CalllogFilterType extends AbstractType
         ));
 
 //        $builder->add('referringProvider', EntityType::class, array(
-//            'class' => 'AppUserdirectoryBundle:User',
+//            'class' => User::class,
 //            'label' => false,
 //            'required' => false,
 //            'choice_label' => 'getUsernameOptimal',
@@ -291,7 +292,7 @@ class CalllogFilterType extends AbstractType
 
         //Attending
         $builder->add('attending', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -372,7 +373,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
         $builder->add('taskUpdatedBy', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',
@@ -390,7 +391,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
         $builder->add('taskAddedBy', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'getUsernameOptimal',

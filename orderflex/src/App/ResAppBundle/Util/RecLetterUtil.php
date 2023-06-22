@@ -9,6 +9,7 @@
 namespace App\ResAppBundle\Util;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -870,7 +871,7 @@ class RecLetterUtil {
         $file = null;
         try {
             $file = $service->files->get($fileId);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new IOException('Google API: Unable to get file by file id='.$fileId.". An error occurred: " . $e->getMessage());
         }
 

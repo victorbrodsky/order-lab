@@ -26,7 +26,7 @@ namespace App\UserdirectoryBundle\Services;
 
 use Doctrine\ORM\EntityManagerInterface;
 //use FOS\CommentBundle\Events;
-use FOS\CommentBundle\Event\CommentEvent;
+//use FOS\CommentBundle\Event\CommentEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -61,7 +61,7 @@ class FosCommentListener implements EventSubscriberInterface {
         );
     }
 
-    public function onCommentPrePersist(CommentEvent $event)
+    public function onCommentPrePersist( $event )
     {
         if( $this->disable ) {
             return;

@@ -25,6 +25,8 @@
 
 namespace App\UserdirectoryBundle\Util;
 
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Entity\UserPosition;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use App\UserdirectoryBundle\Entity\Credentials;
@@ -40,6 +42,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -666,7 +669,7 @@ class UserUtil {
 
         $user = $this->security->getUser();
 
-        $author = $this->em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+        $author = $this->em->getRepository(User::class)->find($user->getId());
 
         //set author and roles if not set
         if( !$entity->getAuthor() ) {
@@ -838,7 +841,7 @@ class UserUtil {
             return $duser;
         }
 
-        $siteParameters = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $siteParameters = $this->em->getRepository(SiteParameters::class)->findAll();
 
         if( count($siteParameters) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($siteParameters).'object(s)' );

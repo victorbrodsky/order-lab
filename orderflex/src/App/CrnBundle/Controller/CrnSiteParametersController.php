@@ -229,7 +229,7 @@ class CrnSiteParametersController extends SiteParametersController
     //Get or Create a new CrnSiteParameter
     public function getOrCreateNewCrnParameters() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }

@@ -18,6 +18,7 @@
 namespace App\FellAppBundle\Form;
 
 
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\BoardCertificationType;
 use App\UserdirectoryBundle\Form\CitizenshipType;
 use App\UserdirectoryBundle\Form\DataTransformer\StringToBooleanTransformer;
@@ -347,7 +348,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         $builder->add('observers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => "Observer(s):",
             'required' => false,
             'multiple' => true,

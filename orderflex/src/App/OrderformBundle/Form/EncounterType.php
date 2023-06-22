@@ -20,6 +20,7 @@ namespace App\OrderformBundle\Form;
 use App\CallLogBundle\Form\CalllogEncounterNumberType;
 use App\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use App\OrderformBundle\Form\EncounterReferringProviderType;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -283,7 +284,7 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+                'class' => User::class,
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -312,7 +313,7 @@ class EncounterType extends AbstractType
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('provider', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+                'class' => User::class,
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),

@@ -22,8 +22,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
 use App\UserdirectoryBundle\Form\FormNode\FormNodeType;
-use App\UserdirectoryBundle\Form\InstitutionType;
-use App\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Entity\TelephonySiteParameter;
 use App\UserdirectoryBundle\Form\TelephonySiteParameterType;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,7 +151,7 @@ class TelephonySiteParametersController extends OrderAbstractController //SitePa
     //Get or Create a new TelephonySiteParameter getOrCreateNewVacReqParameters
     public function getOrCreateNewTelephonyParameters() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }

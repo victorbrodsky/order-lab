@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LabelType;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
@@ -102,7 +103,7 @@ class HomeController extends OrderAbstractController {
         //exit('maint controller');
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($params) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -157,7 +158,7 @@ class HomeController extends OrderAbstractController {
         $default_time_zone = null;
         $usernamePrefix = "local-user";
         //$username = "oli2002";
-        //$user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
+        //$user = $this->em->getRepository(User::class)->findOneByUsername( $username."_@_". $usernamePrefix);
 
 
         //$userSecUtil = new UserSecurityUtil($em,null);
@@ -237,7 +238,7 @@ class HomeController extends OrderAbstractController {
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($name);
+            $entity = $em->getRepository(SiteList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }

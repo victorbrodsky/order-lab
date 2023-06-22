@@ -600,7 +600,7 @@ class FellAppUtil {
 //        }
         $coordinatorFellTypeRole = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
 
-        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+        $users = $this->em->getRepository(User::class)->findUserByRole($coordinatorFellTypeRole);
 
         return $users;
     }

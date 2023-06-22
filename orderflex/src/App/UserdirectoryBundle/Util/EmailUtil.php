@@ -355,7 +355,7 @@ class EmailUtil {
         try{
             $emailRes = $mailer->send($message);
         }
-        catch( \TransportExceptionInterface $e ){
+        catch( TransportExceptionInterface $e ){
             $emailRes = $e->getMessage() ;
             $logger->error($emailRes);
         }

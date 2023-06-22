@@ -25,7 +25,6 @@
 namespace App\UserdirectoryBundle\Security\Authentication;
 
 
-use App\OrderformBundle\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -643,7 +642,7 @@ class AuthUtil {
         //"External ID":  oleg_userdirectorybundle_user_credentials_identifiers_1_field
         //Status:         oleg_userdirectorybundle_user_credentials_identifiers_1_status
         //Enabled:        oleg_userdirectorybundle_user_credentials_identifiers_1_enableAccess
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -1901,7 +1900,7 @@ class AuthUtil {
         //$yesterday = date('Y-m-d H:i:s',strtotime("-1 min"));
         //echo "yesterday=$yesterday <br>";
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");

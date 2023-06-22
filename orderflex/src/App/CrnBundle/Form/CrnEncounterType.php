@@ -28,6 +28,8 @@ use App\OrderformBundle\Form\EncounterPatsuffixType;
 use App\OrderformBundle\Form\EncounterReferringProviderType;
 use App\OrderformBundle\Form\GenericFieldType;
 
+use App\OrderformBundle\Form\MessageObjectType;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 //use App\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -284,7 +286,7 @@ class CrnEncounterType extends AbstractType
             $providerAttr['readonly'] = true;
         }
         $builder->add('provider', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             'label' => 'Provider:',
             'required' => false,
             //'disabled' => $this->params['readonlyEncounter'],

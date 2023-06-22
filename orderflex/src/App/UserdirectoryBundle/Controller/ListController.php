@@ -1058,7 +1058,6 @@ class ListController extends OrderAbstractController
 
     /**
     * Creates a form to create an entity.
-    * @param $entity The entity
     * @return \Symfony\Component\Form\Form The form
     */
     private function createCreateForm($entity,$mapper,$pathbase,$cycle=null)

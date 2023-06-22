@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -152,7 +153,7 @@ class TranslationalResearchLoggerController extends LoggerController
         $objectNamespaceArr = explode("\\",$objectNamespace);
         $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
-        $objectName = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        $objectName = $em->getRepository(EventObjectTypeList::class)->find($objectType);
         if( !$objectName ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
         }

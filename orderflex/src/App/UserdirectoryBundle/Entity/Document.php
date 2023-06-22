@@ -182,18 +182,12 @@ class Document {
     {
         return $this->id;
     }
-
-    /**
-     * @param \App\UserdirectoryBundle\Entity\File $file
-     */
+    
     public function setFile($file)
     {
         $this->file = $file;
     }
-
-    /**
-     * @return \App\UserdirectoryBundle\Entity\File
-     */
+    
     public function getFile()
     {
         return $this->file;

@@ -17,6 +17,7 @@
 
 namespace App\OrderformBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -352,7 +353,7 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $subjectuser = $em->getRepository(User::class)->find($id);
         if (!$subjectuser) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
@@ -422,7 +423,7 @@ class ScanUserController extends UserController
 
         if( !$entity ) {
 
-            $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+            $subjectuser = $em->getRepository(User::class)->find($id);
             if (!$subjectuser) {
                 throw $this->createNotFoundException('Unable to find User entity.');
             }

@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 //use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Security\Authentication\CustomUsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 //use Symfony\Bundle\SecurityBundle\Security;
@@ -235,7 +236,7 @@ class SecurityController extends OrderAbstractController
         $lastUsername = $lastUsernameArr[0];
 
         $logoPath = null;
-        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject ) {
             $logos = $siteObject->getDocuments();
             if( count($logos) > 0 ) {
@@ -585,7 +586,7 @@ class SecurityController extends OrderAbstractController
 
         //"Login Page Visit" - Object is Site name
         //echo "sitename=".$options['sitename']."<br>";
-        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($options['sitename']);
         //echo "siteObject=".$siteObject."<br>";
         //exit();
         if( $siteObject ) {

@@ -21,6 +21,7 @@ namespace App\OrderformBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use App\UserdirectoryBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use App\OrderformBundle\Util\PacsvendorUtil;
+//use App\OrderformBundle\Util\PacsvendorUtil;
 
 use App\UserdirectoryBundle\Controller\SecurityController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -144,7 +145,7 @@ class ScanSecurityController extends SecurityController
         $results = array();
         $em = $this->getDoctrine()->getManager();
 
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository(User::class)->findAll();
 
         //echo "count=".count($users)."<br>";
 

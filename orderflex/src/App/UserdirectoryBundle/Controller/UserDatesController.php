@@ -20,6 +20,7 @@
 namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\UserDatesFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -92,7 +93,7 @@ class UserDatesController extends OrderAbstractController
         $authUtil = $this->container->get('authenticator_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");
@@ -563,7 +564,7 @@ class UserDatesController extends OrderAbstractController
                 continue;
             }
 
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            $user = $em->getRepository(User::class)->find($userId);
             if( !$user ) {
                 $eventArr[] = "Ignore: user not found by user id ".$userId;
                 continue;
@@ -685,7 +686,7 @@ class UserDatesController extends OrderAbstractController
                 continue;
             }
 
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+            $user = $em->getRepository(User::class)->find($userId);
             if( !$user ) {
                 $eventArr[] = "User not found by user id ".$userId;
                 continue;

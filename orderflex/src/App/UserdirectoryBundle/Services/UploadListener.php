@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Services;
 
 
 //use Doctrine\ORM\EntityManager;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -80,13 +81,13 @@ class UploadListener {
         //echo "userid=".$userid."<br>";
         $user = null;
         if( $userid ) {
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+            $user = $this->em->getRepository(User::class)->find($userid);
         } else {
             //for new object (i.e. application) userid might not be set. Therefore, use the logged in user.
             $user = $this->security->getUser();
         }
 
-        $authUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($authUserId);
+        $authUser = $this->em->getRepository(User::class)->find($authUserId);
 
         $object = new Document($user);
         $object->setCleanOriginalname($originalfilename);

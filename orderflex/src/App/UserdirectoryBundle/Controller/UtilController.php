@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -437,7 +438,7 @@ class UtilController extends OrderAbstractController {
             $newCycle = true;
         }
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql = $repository->createQueryBuilder("user");
         $dql->leftJoin("user.infos", "infos");
 
@@ -827,7 +828,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        //$subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+        //$subjectUserDB = $em->getRepository(User::class)->find($subjectUser);
 //        $researchLabDB = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find($id);
 //        if( !$researchLabDB ) {
 //            $response = new Response();
@@ -859,7 +860,7 @@ class UtilController extends OrderAbstractController {
         foreach( $labs as $lab ) {
 
 //            if( $subjectUser && is_numeric($subjectUser) ) {
-//                $subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+//                $subjectUserDB = $em->getRepository(User::class)->find($subjectUser);
 //            } else {
 //                $subjectUserDB = null;
 //            }
@@ -903,7 +904,7 @@ class UtilController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+        $user = $em->getRepository(User::class)->find($subjectUser);
         $lab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find($id);
 
         $output = 'not ok';
@@ -982,7 +983,7 @@ class UtilController extends OrderAbstractController {
         if( $grant ) {
             
             if( $subjectUser && is_numeric($subjectUser) ) {
-                $subjectUserDB = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+                $subjectUserDB = $em->getRepository(User::class)->find($subjectUser);
             } else {
                 $subjectUserDB = null;
             }
@@ -1059,7 +1060,7 @@ class UtilController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUser);
+        $user = $em->getRepository(User::class)->find($subjectUser);
         $grant = $em->getRepository('AppUserdirectoryBundle:Grant')->find($id);
 
         $output = 'not ok';
@@ -1094,7 +1095,7 @@ class UtilController extends OrderAbstractController {
         $cwid = trim((string)$request->get('number') );
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($cwid);
+        $user = $em->getRepository(User::class)->findOneByUsername($cwid);
 
         $output = array();
         if( $user ) {
@@ -1205,7 +1206,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneBy(array('keytype'=>$userType,'primaryPublicUserId'=>$userId));
+        $user = $em->getRepository(User::class)->findOneBy(array('keytype'=>$userType,'primaryPublicUserId'=>$userId));
 
         $output = array();
         if( $user ) {
@@ -1279,7 +1280,7 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $userUtil = $this->container->get('user_utility');
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select("user.id as id, infos.displayName as text, user.username as username, keytype.id as keytypeid");
         $dql->leftJoin("user.keytype", "keytype");
@@ -1518,7 +1519,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository(User::class)->find($userid);
 
         //$encoder = $this->container->get('security.password_encoder');
         //$encodeRes = $encoder->isPasswordValid($user,$userpassword);

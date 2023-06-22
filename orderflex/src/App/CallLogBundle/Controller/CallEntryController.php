@@ -26,6 +26,7 @@ use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Entity\Procedure;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CallLogBundle\Form\CalllogFilterType;
@@ -41,7 +42,6 @@ use App\OrderformBundle\Entity\EncounterPatmiddlename;
 use App\OrderformBundle\Entity\EncounterPatsex;
 use App\OrderformBundle\Entity\EncounterPatsuffix;
 use App\OrderformBundle\Entity\EncounterReferringProvider;
-use App\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
 use App\OrderformBundle\Entity\Endpoint;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\Patient;
@@ -189,7 +189,7 @@ class CallEntryController extends OrderAbstractController
 //            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
 //        }
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Message");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -1177,7 +1177,7 @@ class CallEntryController extends OrderAbstractController
 ////            throw new \Exception( "MessageCategory type is not found by name '".$categoryStr."'" );
 ////        }
 //
-//        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+//        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Message");
 //        if( $eventObjectType ) {
 //            $eventObjectTypeId = $eventObjectType->getId();
 //        } else {
@@ -3437,7 +3437,7 @@ class CallEntryController extends OrderAbstractController
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Message");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {

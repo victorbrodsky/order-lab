@@ -384,7 +384,7 @@ class GoogleFormConfigController extends OrderAbstractController
             // Send the request to the API.
             $updatedFile = $service->files->update($fileId, $file, $additionalParams);
             return $updatedFile;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             print "An error occurred: " . $e->getMessage();
         }
     }

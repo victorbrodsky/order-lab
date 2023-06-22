@@ -28,20 +28,14 @@ namespace App\OrderformBundle\Form\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 use App\OrderformBundle\Entity\AccessionType;
 
 class AccessionTypeTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
+    
     private $em;
     private $user;
-
-    /**
-     * @param ObjectManager $om
-     */
+    
     public function __construct(EntityManagerInterface $em=null, $user=null)
     {
         $this->em = $em;

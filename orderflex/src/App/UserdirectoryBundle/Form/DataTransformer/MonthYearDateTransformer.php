@@ -28,20 +28,14 @@ namespace App\UserdirectoryBundle\Form\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class MonthYearDateTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
+    
     private $em;
     private $user;
-
-    /**
-     * @param ObjectManager $om
-     */
+    
     public function __construct(EntityManagerInterface $em=null, $user=null)
     {
         $this->em = $em;
@@ -86,7 +80,7 @@ class MonthYearDateTransformer implements DataTransformerInterface
         $year = $textArr[1];
 
         if( !$month || !$year ) {
-            throw new \TransformationFailedException( 'Month or year are empty: month=' . $month . ', year=' . $year );
+            throw new TransformationFailedException( 'Month or year are empty: month=' . $month . ', year=' . $year );
         }
 
         //construct date as mm/dd/yyy

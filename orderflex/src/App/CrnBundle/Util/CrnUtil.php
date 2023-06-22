@@ -20,6 +20,7 @@ namespace App\CrnBundle\Util;
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -1968,7 +1969,8 @@ class CrnUtil
 
         ///////////// 1) get all real users /////////////
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'list')
+            //->from('AppUserdirectoryBundle:User', 'list')
+            ->from(User::class, 'list')
             ->select("list")
             //->groupBy('list.id')
             ->leftJoin("list.infos", "infos")

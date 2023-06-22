@@ -113,7 +113,7 @@ class DashboardRoleVoter extends BaseRoleVoter {
         //Check if a $user has this role or partial role name ($attribute) with given $sitename
         //ROLE_TRANSRES_REQUESTER_USCAP has partial role ROLE_TRANSRES_REQUESTER
         //ROLE_TRANSRES_ADMIN_USCAP  has partial role ROLE_TRANSRES_ADMIN
-        $roleObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user,$sitename,$attribute);
+        $roleObjects = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user,$sitename,$attribute);
         //echo $attribute.": roleObjects count=".count($roleObjects)."<br>";
         if( count($roleObjects) > 0 ) {
             //exit($attribute.': Dummy partial rolename-site ok');

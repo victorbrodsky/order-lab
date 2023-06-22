@@ -26,6 +26,8 @@ namespace App\UserdirectoryBundle\Command;
 
 
 //use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\TranslationalResearchBundle\Entity\Invoice;
 use Symfony\Component\Console\Command\Command;
 //use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -73,7 +75,7 @@ class UtilCommand extends Command {
         if(0) {
             $oid = "APCP3296-REQ13549-V1"; //dev
             $oid = "APCP2173-REQ15079-V2"; //collage
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+            $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
             if (!$invoice) {
                 throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
             }
@@ -84,7 +86,7 @@ class UtilCommand extends Command {
         if(0) {
             ///// rec letter ////////
             $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+            $fellapp = $em->getRepository(FellowshipApplication::class)->find(1414); //8-testing, 1414-collage, 1439-live
             $references = $fellapp->getReferences();
             $reference = $references->first();
             $letters = $reference->getDocuments();

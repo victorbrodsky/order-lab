@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use App\UserdirectoryBundle\Entity\User;
 use Fabiang\Sasl\Sasl;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -476,7 +477,7 @@ class DefaultController extends OrderAbstractController
 
         //get generated users by createdby
         //$createdBy = "manual-".$sitename;
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql = $repository->createQueryBuilder("user");
         $dql->where("user.createdby LIKE '%manual-%'");
         $query = $em->createQuery($dql);
@@ -1005,7 +1006,7 @@ class DefaultController extends OrderAbstractController
         //('111');
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");
@@ -1060,7 +1061,7 @@ class DefaultController extends OrderAbstractController
 
         //s2id_oleg_userdirectorybundle_user_preferences_showToInstitutions
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");
@@ -1116,7 +1117,7 @@ class DefaultController extends OrderAbstractController
             exit('Institution root is not 1');
         }
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos","infos");

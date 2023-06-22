@@ -24,7 +24,6 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestFloating;
 use App\VacReqBundle\Form\VacReqFilterType;
-use App\VacReqBundle\Form\VacReqFloatingDayType;
 use App\VacReqBundle\Form\VacReqRequestFloatingType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;

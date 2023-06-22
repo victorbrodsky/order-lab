@@ -2,6 +2,7 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
@@ -828,7 +829,7 @@ class InvoiceController extends OrderAbstractController
             $metaTitle = $title;
         }
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Invoice");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Invoice");
         if ($eventObjectType) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {

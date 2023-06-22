@@ -29,7 +29,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\OrderformBundle\Form\PatientType;
-use App\OrderformBundle\Entity\ClinicalHistory;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use App\UserdirectoryBundle\Util\UserUtil;
 

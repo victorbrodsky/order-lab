@@ -81,7 +81,7 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         //////////// check if the $subject (className string or object) is in PermissionObjectList ////////////
-        //$permissionObjects = $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" );
+        //$permissionObjects = $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "read" );
         $className = $this->getClassName($subject);
 
         //echo "className=".$className."<br>";
@@ -214,7 +214,7 @@ abstract class BasePermissionVoter extends Voter {
         $className = $this->getClassName($subject);
 
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
-        if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+        if( $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
             //exit('can View! exxit');
             //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
@@ -283,7 +283,7 @@ abstract class BasePermissionVoter extends Voter {
 
         //If Edit => can Read: check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
         $className = $this->getClassName($subject);
-        if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "update" ) ) {
+        if( $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "update" ) ) {
             //exit('can View! exxit');
             //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
@@ -327,7 +327,7 @@ abstract class BasePermissionVoter extends Voter {
         //echo "className=".$className."<br>";
 
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "create"
-        if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
+        if( $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "create" ) ) {
             //exit('can View! exxit');
             return true;
         } else {

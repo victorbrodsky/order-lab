@@ -28,7 +28,6 @@ namespace App\UserdirectoryBundle\Form\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class StringToBooleanTransformer implements DataTransformerInterface
 {

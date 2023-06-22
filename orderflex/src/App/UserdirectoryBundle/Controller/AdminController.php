@@ -32,7 +32,6 @@ use App\FellAppBundle\Entity\LanguageProficiency;
 use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
 use App\ResAppBundle\Entity\ApplyingResidencyTrack;
-use App\ResAppBundle\Entity\FitForProgram;
 use App\ResAppBundle\Entity\LearnAreaList;
 use App\ResAppBundle\Entity\PostSophList;
 use App\ResAppBundle\Entity\ResAppFitForProgram;
@@ -63,7 +62,6 @@ use App\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
 use App\UserdirectoryBundle\Entity\CertifyingBoardOrganization;
 use App\UserdirectoryBundle\Entity\CityList;
 use App\UserdirectoryBundle\Entity\ClericalErrorList;
-use App\UserdirectoryBundle\Entity\Collaboration;
 use App\UserdirectoryBundle\Entity\CollaborationTypeList;
 use App\UserdirectoryBundle\Entity\CommentGroupType;
 use App\UserdirectoryBundle\Entity\ComplexPlateletSummaryAntibodiesList;
@@ -158,9 +156,9 @@ use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\Institution;
-use App\UserdirectoryBundle\Entity\Department;
-use App\UserdirectoryBundle\Entity\Division;
-use App\UserdirectoryBundle\Entity\Service;
+//use App\UserdirectoryBundle\Entity\Department;
+//use App\UserdirectoryBundle\Entity\Division;
+//use App\UserdirectoryBundle\Entity\Service;
 use App\UserdirectoryBundle\Entity\States;
 use App\UserdirectoryBundle\Entity\BoardCertifiedSpecialties;
 use App\UserdirectoryBundle\Entity\EmploymentTerminationType;
@@ -200,7 +198,7 @@ class AdminController extends OrderAbstractController
     {
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $users = $roles = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        $users = $roles = $em->getRepository(User::class)->findAll();
         $logger->notice('firstTimeLoginGenerationAction: users='.count($users));
 
         if (count($users) == 0) {
@@ -267,11 +265,11 @@ class AdminController extends OrderAbstractController
             //if( $channel && $channel == "https" ) {
             if( $request->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
-                $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+                $entities = $em->getRepository(SiteParameters::class)->findAll();
                 if (count($entities) != 1) {
                     $userServiceUtil = $this->container->get('user_service_utility');
                     $userServiceUtil->generateSiteParameters();
-                    $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+                    $entities = $em->getRepository(SiteParameters::class)->findAll();
                 }
                 if (count($entities) != 1) {
                     exit('Must have only one parameter object. Found ' . count($entities) . ' object(s)');
@@ -305,7 +303,7 @@ class AdminController extends OrderAbstractController
         );
 
 //        //make sure sitesettings is initialized
-//        $siteParams = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//        $siteParams = $em->getRepository(SiteParameters::class)->findAll();
 //        if( count($siteParams) != 1 ) {
 //            $userServiceUtil = $this->container->get('user_service_utility');
 //            $userServiceUtil->generateSiteParameters();
@@ -683,7 +681,7 @@ class AdminController extends OrderAbstractController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -709,7 +707,7 @@ class AdminController extends OrderAbstractController
         $environment = 'dev'; //default
 
         $em = $this->getDoctrine()->getManager();
-        $params = $roles = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $roles = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($params) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($params).'object(s)' );
@@ -1306,7 +1304,7 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //generate role can update the role too
-//        $entities = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+//        $entities = $em->getRepository(Roles::class)->findAll();
 //        if( $entities ) {
 //            //return -1;
 //        }
@@ -2267,7 +2265,7 @@ class AdminController extends OrderAbstractController
             $description = $aliasDescription[1];
             $level = $aliasDescription[2];
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim((string)$role));
+            $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$role));
 
             if( $entity ) {
                 if( !$entity->getLevel() ) {
@@ -2353,7 +2351,7 @@ class AdminController extends OrderAbstractController
             if( $role == "ROLE_PLATFORM_ADMIN" || $role == "ROLE_PLATFORM_DEPUTY_ADMIN" ) {
                 $nameAbbreviationSites = $this->getSiteList();
                 foreach( $nameAbbreviationSites as $name=>$abbreviation ) {
-                    $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+                    $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($abbreviation);
                     if( !$entity->getSites()->contains($siteObject) ) {
                         $entity->addSite($siteObject);
                     }
@@ -2392,7 +2390,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-//        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation("fellapp");
+//        $siteObject = $em->getRepository(SiteParameters::class)->findOneByAbbreviation("fellapp");
 //        if( $siteObject ) {
 //            if( !$entity->getSites()->contains($siteObject) ) {
 //                $entity->addSite($siteObject);
@@ -2654,7 +2652,7 @@ class AdminController extends OrderAbstractController
             //assign approver APPROVER
             //echo "cwid=".$cwid."<br>";
             if( $cwid && strpos((string)$role,"ROLE_VACREQ_APPROVER") !== false ) {
-                $approver = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                $approver = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
                 //echo "approver=".$approver."<br>";
                 if( $approver ) {
                     $approver->addRole($entity);
@@ -2668,7 +2666,7 @@ class AdminController extends OrderAbstractController
 
             //assign SUPERVISOR
             if( $cwid && strpos((string)$role,"ROLE_VACREQ_SUPERVISOR") !== false ) {
-                $supervisor = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                $supervisor = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
                 //echo "supervisor=".$supervisor."<br>";
                 if( $supervisor ) {
                     $supervisor->addRole($entity);
@@ -2694,7 +2692,7 @@ class AdminController extends OrderAbstractController
     public function generateDefaultOrgGroupSiteParameters() {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -2769,19 +2767,19 @@ class AdminController extends OrderAbstractController
 
         //roles
         //ROLE_SCANORDER_SUBMITTER
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_SCANORDER_SUBMITTER");
+        $role = $em->getRepository(Roles::class)->findOneByName("ROLE_SCANORDER_SUBMITTER");
         if( !$role ) {
             exit('No Role: "ROLE_SCANORDER_SUBMITTER"');
         }
         $pathDefaultGroup->addRole($role);
         //ROLE_USERDIRECTORY_OBSERVER
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_USERDIRECTORY_OBSERVER");
+        $role = $em->getRepository(Roles::class)->findOneByName("ROLE_USERDIRECTORY_OBSERVER");
         if( !$role ) {
             exit('No Role: "ROLE_USERDIRECTORY_OBSERVER"');
         }
         $pathDefaultGroup->addRole($role);
         //ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName("ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY");
+        $role = $em->getRepository(Roles::class)->findOneByName("ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY");
         if( !$role ) {
             exit('No Role: "ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY"');
         }
@@ -2897,7 +2895,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($name);
+            $entity = $em->getRepository(SiteList::class)->findOneByName($name);
             if( $entity ) {
 
                 if( !$entity->getDescription() ) {
@@ -3663,7 +3661,7 @@ class AdminController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -5111,7 +5109,7 @@ class AdminController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch( Exception $e ) {
+        } catch( \Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -5271,7 +5269,7 @@ class AdminController extends OrderAbstractController
             $user->setPrimaryPublicUserId($testusername);
 
             //echo "username=".$user->getPrimaryPublicUserId()."<br>";
-            $found_user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
+            $found_user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId( $user->getPrimaryPublicUserId() );
             if( $found_user ) {
                 //add scanorder Roles
                 foreach( $roles as $role ) {
@@ -5329,12 +5327,12 @@ class AdminController extends OrderAbstractController
             $userSettings = $user->getPerSiteSettings();
             if( !$userSettings ) {
                 //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+                $user = $em->getRepository(User::class)->find($userId);
                 //echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
 
-//                $params = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+//                $params = $em->getRepository(SiteParameters::class)->findAll();
 //                if (count($params) != 1) {
 //                    throw new \Exception('Must have only one parameter object. Found ' . count($params) . ' object(s)');
 //                }
@@ -5501,7 +5499,7 @@ class AdminController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -7139,7 +7137,7 @@ class AdminController extends OrderAbstractController
 
                 $sites = $abbreviationSiteArr[1];
                 foreach( $sites as $site ) {
-                    $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                    $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($site);
                     if( !$listEntity->getSites()->contains($siteObject) ) {
                         $listEntity->addSite($siteObject);
                         $em->persist($listEntity);
@@ -7156,7 +7154,7 @@ class AdminController extends OrderAbstractController
 
             $sites = $abbreviationSiteArr[1];
             foreach( $sites as $site ) {
-                $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($site);
+                $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($site);
                 if( !$listEntity->getSites()->contains($siteObject) ) {
                     $listEntity->addSite($siteObject);
                     //$em->persist($listEntity);
@@ -7524,7 +7522,7 @@ class AdminController extends OrderAbstractController
             }
             //echo "entityName=".$entityName."<br>";
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            $listEntity = $em->getRepository(EventObjectTypeList::class)->findOneByName($entityName);
             if( $listEntity ) {
                 continue;
             }
@@ -7568,7 +7566,7 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            $listEntity = $em->getRepository(EventObjectTypeList::class)->findOneByName($entityName);
             //echo "listEntity=".$listEntity."<br>";
             if( !$listEntity ) {
                 continue;
@@ -7581,7 +7579,7 @@ class AdminController extends OrderAbstractController
 
             if( $entityName == "Patient" ) {
                 //add SiteList scan
-                $scanSite = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan');
+                $scanSite = $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('scan');
                 $res = $listEntity->addExclusivelySite($scanSite); //get add result: true if added
                 if( $res ) {
                     $flushFlag = true;
@@ -8173,7 +8171,7 @@ class AdminController extends OrderAbstractController
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
 
-//        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+//        $repository = $em->getRepository(User::class);
 //        $dql =  $repository->createQueryBuilder("user");
 //        $dql->select('user');
 //        $dql->leftJoin("user.perSiteSettings", "perSiteSettings");
@@ -8187,7 +8185,7 @@ class AdminController extends OrderAbstractController
 //
 //        $users = $query->getResult();
 
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository(User::class)->findAll();
         echo "user count=".count($users)."<br>";
 
         $totalCount = 0;
@@ -8248,12 +8246,12 @@ class AdminController extends OrderAbstractController
 
         //map sitename to object
         $siteMap = array(
-            'employees' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('employees'),
-            'scan' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan'),
-            'fellapp' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp'),
-            'deidentifier' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('deidentifier'),
-            'vacreq' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq'),
-            'calllog' => $this->getDoctrine()->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('calllog'),
+            'employees' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('employees'),
+            'scan' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('scan'),
+            'fellapp' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('fellapp'),
+            'deidentifier' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('deidentifier'),
+            'vacreq' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('vacreq'),
+            'calllog' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('calllog'),
         );
 
         $count = 1;
@@ -8297,7 +8295,7 @@ class AdminController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository(Roles::class)->findAll();
 
         $count = 0;
 
@@ -8396,14 +8394,14 @@ class AdminController extends OrderAbstractController
     public function syncRolesDb() {
 
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+        $roles = $em->getRepository(Roles::class)->findAll();
 
         $count = 0;
 
         foreach( $roles as $role ) {
 
 //            if( strpos((string)$role, '_DEIDENTIFICATOR_') !== false ) {
-//                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName('deidentifier');
+//                $site = $em->getRepository(SiteList::class)->findOneByName('deidentifier');
 //                if( $role->getSites() && !$role->getSites()->contains($site) ) {
 //                    $role->addSite($site);
 //                    $count++;
@@ -8470,9 +8468,9 @@ class AdminController extends OrderAbstractController
         $count = 0;
         if( strpos((string)$role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
-            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            $site = $em->getRepository(SiteList::class)->findOneByName($sitename);
             if( !$site ) {
-                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+                $site = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
             }
             if( $role->getSites() && !$role->getSites()->contains($site) ) {
                 //echo "add site=".$site."<br>";
@@ -8493,9 +8491,9 @@ class AdminController extends OrderAbstractController
         $count = 0;
         if( strpos((string)$role, $roleStr) !== false ) {
             $em = $this->getDoctrine()->getManager();
-            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            $site = $em->getRepository(SiteList::class)->findOneByName($sitename);
             if( !$site ) {
-                $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+                $site = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
             }
             if( !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
@@ -8506,7 +8504,7 @@ class AdminController extends OrderAbstractController
     }
     public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
         $em = $this->getDoctrine()->getManager();
-        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);
+        $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($siteAbbreviation);
         if( $siteObject ) {
             if( !$entity->getSites()->contains($siteObject) ) {
                 $entity->addSite($siteObject);
@@ -8838,7 +8836,7 @@ class AdminController extends OrderAbstractController
 
         $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
 
-        $administrators = $em->getRepository('AppUserdirectoryBundle:User')->findBy(
+        $administrators = $em->getRepository(User::class)->findBy(
             array(
                 'primaryPublicUserId' => $primaryPublicUserId,
                 'keytype' => $localUserType->getId()
@@ -9402,7 +9400,7 @@ class AdminController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch( Exception $e ) {
+        } catch( \Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -9486,7 +9484,7 @@ class AdminController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch( Exception $e ) {
+        } catch( \Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -10742,7 +10740,7 @@ class AdminController extends OrderAbstractController
             $role = str_replace("-","_",$role);
             $role = str_replace(" ","_",$role);
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+            $entity = $em->getRepository(Roles::class)->findOneByName($role);
 
             if( $entity ) {
                 continue;
@@ -11630,7 +11628,7 @@ class AdminController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
 
         //user_trainings_0_degree
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -11873,7 +11871,7 @@ class AdminController extends OrderAbstractController
         );
 
         //1) get all users with TRANSRES roles
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roles);
+        $users = $em->getRepository(User::class)->findUsersByRoles($roles);
 
         $msg = "Found ".count($users). " transres users <br>";
 
@@ -11973,7 +11971,7 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //1) get all users with TRANSRES roles
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        $users = $em->getRepository(User::class)->findAll();
 
         $msg = "Found ".count($users). " users <br>";
         $count = 1;

@@ -27,12 +27,11 @@ namespace App\UserdirectoryBundle\Services;
 
 //use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 //use Doctrine\ORM\EntityManager;
+use App\UserdirectoryBundle\Entity\SiteList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -94,7 +93,7 @@ class MaintenanceListener {
         ) {
             $sitename = $this->getSiteName($controller);
             if( $sitename && $userSecUtil->isSiteAccessible($sitename) === false ) {
-                $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+                $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
                 if( $siteObject ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 

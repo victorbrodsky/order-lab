@@ -261,7 +261,6 @@ abstract class ListAbstract
      * Set id
      *
      * @param integer $id
-     * @return List
      */
     public function setId($id)
     {
@@ -274,7 +273,6 @@ abstract class ListAbstract
      * Set name
      *
      * @param string $name
-     * @return List
      */
     public function setName($name)
     {
@@ -344,7 +342,6 @@ abstract class ListAbstract
      * Set type
      *
      * @param string $type
-     * @return List
      */
     public function setType($type)
     {
@@ -367,7 +364,6 @@ abstract class ListAbstract
      * Set createdate
      *
      * @param \DateTime $createdate
-     * @return List
      */
     public function setCreatedate($createdate)
     {
@@ -392,7 +388,6 @@ abstract class ListAbstract
      * Set creator
      *
      * @param \App\UserdirectoryBundle\Entity\User $creator
-     * @return List
      */
     public function setCreator(\App\UserdirectoryBundle\Entity\User $creator=null)
     {

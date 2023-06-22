@@ -17,6 +17,7 @@
 
 namespace App\OrderformBundle\Repository;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
@@ -212,7 +213,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
             $newId = $entity->getId();
 
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneById($this->user->getId());
+            $user = $em->getRepository(User::class)->findOneById($this->user->getId());
 
             //clone message object by id
             $orderUtil = $this->container->get('scanorder_utility');
@@ -233,7 +234,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         //*********** record history ***********//
         //echo "before find entity=".$entity."<br>";
         $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($entity->getOid());
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneById($this->user->getId());
+        $user = $em->getRepository(User::class)->findOneById($this->user->getId());
         $history = new History();
         $history->setMessage($entity);
         $history->setCurrentid($entity->getOid());

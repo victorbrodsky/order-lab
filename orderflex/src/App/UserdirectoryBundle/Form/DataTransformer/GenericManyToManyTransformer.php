@@ -20,17 +20,13 @@ namespace App\UserdirectoryBundle\Form\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 
 
 class GenericManyToManyTransformer implements DataTransformerInterface
 {
-
-    /**
-     * @var ObjectManager
-     */
+    
     protected $em;
     protected $user;
     protected $bundleName;

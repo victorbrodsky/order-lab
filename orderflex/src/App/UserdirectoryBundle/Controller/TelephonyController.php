@@ -178,7 +178,7 @@ class TelephonyController extends OrderAbstractController {
         $mobilePhoneVerified = false;
 
         //testing
-        //$user = $em->getRepository('AppUserdirectoryBundle:User')->find(4689);
+        //$user = $em->getRepository(User::class)->find(4689);
 
         if( $user ) {
             //“visit your profile page to restart the verification process” is a link to user's profile page
@@ -419,7 +419,7 @@ class TelephonyController extends OrderAbstractController {
         //$text = random_int(1, 6);
 
         //$userid
-//        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+//        $subjectUser = $em->getRepository(User::class)->find($userId);
 //        if( !$subjectUser ) {
 //            throw new \Exception( 'User not found by id ' . $userId );
 //        }

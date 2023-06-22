@@ -18,6 +18,7 @@
 namespace App\UserdirectoryBundle\Repository;
 
 
+use App\UserdirectoryBundle\Entity\Grant;
 use Doctrine\ORM\EntityRepository;
 
 

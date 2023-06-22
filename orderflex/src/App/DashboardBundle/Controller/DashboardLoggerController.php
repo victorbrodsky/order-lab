@@ -18,6 +18,7 @@
 namespace App\DashboardBundle\Controller;
 
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -236,7 +237,7 @@ class DashboardLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
         $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($users[0]);
+        $user = $em->getRepository(User::class)->find($users[0]);
 
         $eventlogTitle = $this->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {

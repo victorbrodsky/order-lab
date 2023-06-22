@@ -106,14 +106,7 @@ class AdministrativeTitle extends BaseTitle
     {
         return $this->user;
     }
-
-
-    /**
-     * Add boss
-     *
-     * @param \App\OrderformBundle\Entity\User $boss
-     * @return User
-     */
+    
     public function addBoss($boss)
     {
         if( !$this->boss->contains($boss) ) {
@@ -126,11 +119,6 @@ class AdministrativeTitle extends BaseTitle
     {
         return $this->addBoss($boss);
     }
-    /**
-     * Remove boss
-     *
-     * @param \App\OrderformBundle\Entity\User $boss
-     */
     public function removeBoss($boss)
     {
         $this->boss->removeElement($boss);

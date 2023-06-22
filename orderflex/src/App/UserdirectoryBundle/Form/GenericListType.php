@@ -21,6 +21,7 @@ use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Entity\TopicList;
 use App\TranslationalResearchBundle\Form\PriceType;
 use App\TranslationalResearchBundle\Form\VisualInfoType;
+use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use App\VacReqBundle\Entity\VacReqApprovalTypeList;
@@ -441,7 +442,7 @@ class GenericListType extends AbstractType
         }
         if( method_exists($this->params['entity'],'getExclusivelySites') ) {
             $builder->add('exclusivelySites',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:SiteList',
+                'class' => SiteList::class,
                 'label' => 'Apply Url exclusively to Site(s):',
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -495,7 +496,7 @@ class GenericListType extends AbstractType
             ));
 
 //            $builder->add('sites',EntityType::class,array(
-//                'class' => 'AppUserdirectoryBundle:SiteList',
+//                'class' => SiteList::class,
 //                'label' => "Site(s):",
 //                'multiple' => true,
 //                'attr' => array('class'=>'combobox combobox-width'),
@@ -535,7 +536,7 @@ class GenericListType extends AbstractType
 
         if( method_exists($this->params['entity'],'getSites') ) {
             $builder->add('sites',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:SiteList',
+                'class' => SiteList::class,
                 'label' => "Site(s):",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -609,7 +610,7 @@ class GenericListType extends AbstractType
         //FormNode Holder
         if( method_exists($this->params['entity'],'getFormNodes') ) {
             $builder->add( 'formNodes', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:FormNode',
+                'class' => FormNode::class,
                 'choice_label' => 'getTreeNameObjectType',
                 'label'=>'Form Node(s):',
                 'required'=> false,

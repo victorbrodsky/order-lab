@@ -37,7 +37,6 @@ use App\UserdirectoryBundle\Entity\Institution;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
@@ -45,18 +44,12 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 class GenericTreeTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
     protected $em;
     protected $user;
     protected $className;
     protected $bundleName;
     protected $params;
-
-    /**
-     * @param ObjectManager $om
-     */
+    
     public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;

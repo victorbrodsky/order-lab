@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -132,7 +133,7 @@ class UserSecurityUtil {
 
         $user = $this->security->getUser();
 
-        $entity = $this->em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $this->em->getRepository(User::class)->find($id);
 
         if( $entity && $entity->getId() === $user->getId() ) {
             return true;
@@ -414,7 +415,7 @@ class UserSecurityUtil {
         $delay = new \DateTime();
         $delay->modify("-".$maxIdleTime." second");
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin('user.keytype','keytype');
@@ -500,7 +501,7 @@ class UserSecurityUtil {
         if( !$sitename ) {
             return null;
         }
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:SiteList');
+        $repository = $this->em->getRepository(SiteList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :sitename OR list.abbreviation = :sitename");
@@ -653,7 +654,7 @@ class UserSecurityUtil {
             return null;
         }
 
-        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roles); //supports partial role name
+        $users = $this->em->getRepository(User::class)->findUsersByRoles($roles); //supports partial role name
 
         //echo "user count=".count($users)."<br>";
 
@@ -699,11 +700,11 @@ class UserSecurityUtil {
 
         //error_reporting(E_ALL ^ E_WARNING);
 
-        $systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('system');
-        //$systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->find(1);
+        $systemusers = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('system');
+        //$systemusers = $this->em->getRepository(User::class)->find(1);
         return $systemusers;
 
-        $systemusers = $this->em->getRepository('AppUserdirectoryBundle:User')->findBy(
+        $systemusers = $this->em->getRepository(User::class)->findBy(
             array(
                 'primaryPublicUserId' => 'system'
             )
@@ -749,7 +750,7 @@ class UserSecurityUtil {
 
         if( $user ) {
             if( $user instanceof User ) {
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //to fix error "new un persisted entity found"
+                $user = $em->getRepository(User::class)->find($user->getId()); //to fix error "new un persisted entity found"
             } else {
                 $user = $this->findSystemUser();
             }
@@ -1123,12 +1124,12 @@ class UserSecurityUtil {
         //1) try first part
         if( $cwid ) {
             //echo "cwid=".$cwid."<br>";
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
         }
 
         //2) try full name
         if( !$user ) {
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($name);
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($name);
         }
 
         //3) try full name
@@ -1157,7 +1158,7 @@ class UserSecurityUtil {
 //            $user = $userManager->findUserByUsername($name);
 //        }
         if( !$user ) {
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($name);
+            $user = $this->em->getRepository(User::class)->findOneByUsername($name);
         }
 
         //5) try firstname lastname - cwid
@@ -1192,7 +1193,7 @@ class UserSecurityUtil {
                         //try first part cwid
                         if( $cwid ) {
                             //echo "cwid=".$cwid."<br>";
-                            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+                            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
                         }
                     }
 
@@ -1306,7 +1307,7 @@ class UserSecurityUtil {
         //print_r($roles);
         //exit('1');
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos", "infos");
@@ -1375,7 +1376,7 @@ class UserSecurityUtil {
     }
     //NOT working. Not used.
     public function getQueryUserBySite_SingleQuery( $sitename ) {
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos", "infos");
@@ -1548,7 +1549,7 @@ class UserSecurityUtil {
 //    }
     //return parameter specified by $parameter. If the first time login when site parameter does not exist yet, return -1.
     public function getSiteSettingParameter_ORIG( $parameter, $sitename=null ) {
-        $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $params = $this->em->getRepository(SiteParameters::class)->findAll();
 
 //        if( !$params ) {
 //            //throw new \Exception( 'Parameter object is not found' );
@@ -1680,7 +1681,7 @@ class UserSecurityUtil {
         }
 
         //find site object by sitename
-        $site = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
+        $site = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($options['sitename']);
         if( !$site ) {
             //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
         }
@@ -1721,7 +1722,7 @@ class UserSecurityUtil {
 
             $username = $request->get('_username');
 
-            $userDb = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+            $userDb = $this->em->getRepository(User::class)->findOneByUsername($username);
             $user = $userDb;
 
             $logger->setUser($userDb);
@@ -2007,7 +2008,7 @@ class UserSecurityUtil {
             } else {
             //    //exit("date object is null for datestr=".$datestr);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = 'Failed to convert string'.$datestr.'to DateTime:'.$e->getMessage();
             //throw new \UnexpectedValueException($msg);
             $logger = $this->container->get('logger');
@@ -2561,7 +2562,7 @@ class UserSecurityUtil {
         // that was not configured to cascade persist operations for entity: firstname lastname - cwid.
         // To solve this issue: Either explicitly call EntityManager#persist() on this unknown entity or configure cascade persist
         if( $user instanceof User ) {
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+            $user = $this->em->getRepository(User::class)->find($user->getId());
             if (!$user) {
                 exit("No user found by id " . $user->getId());
             }
@@ -2682,7 +2683,7 @@ class UserSecurityUtil {
     }
 
     public function isSelfSignUp( $sitename ) {
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && $siteObject->getSelfSignUp() === true ) {
             return true;
         }
@@ -2690,14 +2691,14 @@ class UserSecurityUtil {
     }
 
     public function isRequireVerifyMobilePhone( $sitename ) {
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && $siteObject->getRequireVerifyMobilePhone() === true ) {
             return true;
         }
         return false;
     }
     public function isRequireMobilePhoneToLogin( $sitename ) {
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && $siteObject->getRequireMobilePhoneToLogin() === true ) {
             return true;
         }
@@ -2710,7 +2711,7 @@ class UserSecurityUtil {
             return true;
         }
 
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && $siteObject->getAccessibility() === true ) {
             return true;
         }
@@ -2739,7 +2740,7 @@ class UserSecurityUtil {
             //always show for employees site
             return true;
         }
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowLinkHomePage() === true || $siteObject->getShowLinkHomePage() === null) ) {
             return true;
         }
@@ -2751,7 +2752,7 @@ class UserSecurityUtil {
             //always show for employees site
             return true;
         }
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowLinkNavbar() === true || $siteObject->getShowLinkNavbar() === null) ) {
             return true;
         }
@@ -2761,7 +2762,7 @@ class UserSecurityUtil {
     public function getSiteFromEmail( $sitenameAbbreviation ) {
         $fromEmail = null;
         if( $sitenameAbbreviation ) {
-            $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitenameAbbreviation);
+            $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitenameAbbreviation);
             if ($siteObject) {
                 $fromEmail = $siteObject->getFromEmail();
             }
@@ -3383,7 +3384,7 @@ class UserSecurityUtil {
         return $entity;
     }
     public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($siteAbbreviation);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($siteAbbreviation);
         if( $siteObject ) {
             if( !$entity->getSites()->contains($siteObject) ) {
                 $entity->addSite($siteObject);

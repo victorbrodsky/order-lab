@@ -29,7 +29,6 @@ use App\OrderformBundle\Entity\Educational;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
-use App\OrderformBundle\Util\PacsvendorUtil;
 use App\UserdirectoryBundle\Entity\AdminComment;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\AppointmentTitle;
@@ -66,7 +65,7 @@ class UserGenerator {
     //create template processing of the main user's fields
     public function generateUsersExcelV2($inputFileName) {
 
-        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        $users = $this->em->getRepository(User::class)->findAll();
         if( count($users) > 0 ) {
             return ' 0 users. No new users have been imported.'.count($users).' are already exist in the system.';
         }
@@ -87,7 +86,7 @@ class UserGenerator {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch( Exception $e ) {
+        } catch( \Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -185,7 +184,7 @@ class UserGenerator {
             $fillUsername = $username."_@_". $usernamePrefix;
             //echo "fillUsername=".$fillUsername."<br>";
 
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($fillUsername);
+            $user = $this->em->getRepository(User::class)->findOneByUsername($fillUsername);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
@@ -1186,7 +1185,7 @@ class UserGenerator {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch( Exception $e ) {
+        } catch( \Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -1247,7 +1246,7 @@ class UserGenerator {
             //print_r($services);
 
             //username: oli2002_@_ldap-user
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
+            $user = $this->em->getRepository(User::class)->findOneByUsername( $username."_@_". $this->usernamePrefix);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
@@ -1836,7 +1835,7 @@ class UserGenerator {
             //$user->setLocked(false);
             //$user->setExpired(false);
 
-//            $found_user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
+//            $found_user = $em->getRepository(User::class)->findOneByUsername( $user->getUsername() );
 //            if( $found_user ) {
 //                //
 //            } else {
@@ -1892,15 +1891,15 @@ class UserGenerator {
             foreach( $assistantsArr as $userid => $assistants ) {
 
                 echo "userid=".$userid."assistants=".$assistants."<br>";
-                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+                $user = $this->em->getRepository(User::class)->find($userid);
                 $assistantsStrArr = explode(";",$assistants);
 
                 foreach( $assistantsStrArr as $assistantsStr ) {
                     if( strtolower($assistantsStr) != 'null' ) {
-                        $assistant = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"AND");
+                        $assistant = $this->em->getRepository(User::class)->findOneByNameStr($assistantsStr,"AND");
                         if( !$assistant ) {
                             //try again with "last name OR first name"
-                            $assistant = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByNameStr($assistantsStr,"OR");
+                            $assistant = $this->em->getRepository(User::class)->findOneByNameStr($assistantsStr,"OR");
                         }
                         echo "found assistant=".$assistant."<br>";
                         if( $assistant ) {

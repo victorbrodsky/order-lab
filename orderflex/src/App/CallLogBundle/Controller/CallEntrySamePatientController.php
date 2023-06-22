@@ -31,7 +31,6 @@ use App\OrderformBundle\Entity\EncounterPatmiddlename;
 use App\OrderformBundle\Entity\EncounterPatsex;
 use App\OrderformBundle\Entity\EncounterPatsuffix;
 use App\OrderformBundle\Entity\EncounterReferringProvider;
-use App\OrderformBundle\Entity\EncounterReferringProviderSpecialty;
 use App\OrderformBundle\Entity\Endpoint;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\Patient;

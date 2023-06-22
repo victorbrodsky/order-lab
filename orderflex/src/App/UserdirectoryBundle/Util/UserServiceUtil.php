@@ -32,6 +32,7 @@ use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
@@ -49,8 +50,8 @@ use App\UserdirectoryBundle\Entity\Logger;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
+//use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+//use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
@@ -774,12 +775,12 @@ class UserServiceUtil {
 
     //Get single or generate SettingParameter (Singleton)
     public function getSingleSiteSettingParameter() {
-        $entities = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $this->em->getRepository(SiteParameters::class)->findAll();
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
             $this->generateSiteParameters();
-            $entities = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            $entities = $this->em->getRepository(SiteParameters::class)->findAll();
         }
 
         if( count($entities) != 1 ) {
@@ -795,7 +796,7 @@ class UserServiceUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateSiteParameters: SiteParameters has been already generated.");
@@ -1279,7 +1280,7 @@ class UserServiceUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         $siteParameters = null;
         if( count($entities) > 0 ) {
@@ -1349,7 +1350,7 @@ class UserServiceUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         $siteParameters = null;
         if( count($entities) > 0 ) {
@@ -1795,7 +1796,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function getSiteNameByAbbreviation($abbreviation) {
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($abbreviation);
         return $siteObject->getSiteName();
     }
 
@@ -3293,7 +3294,7 @@ Pathology and Laboratory Medicine",
             return null;
         }
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin('user.infos','infos');
@@ -4144,7 +4145,7 @@ Pathology and Laboratory Medicine",
         //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
 
         //$em = $this->em; //getDoctrine()->getManager();
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->em->getRepository(User::class);
         $dql = $repository->createQueryBuilder('user');
 
         //$dql->select('COUNT(DISTINCT user.id)');

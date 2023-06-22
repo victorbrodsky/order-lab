@@ -26,6 +26,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 
 use App\TranslationalResearchBundle\Form\FilterWorkQueuesType;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -693,7 +694,7 @@ class WorkQueueController extends OrderAbstractController
         $title = urldecode($title);
 
         //View associated events
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("TransResRequest");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {

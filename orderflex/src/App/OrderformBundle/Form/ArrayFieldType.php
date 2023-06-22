@@ -17,6 +17,7 @@
 
 namespace App\OrderformBundle\Form;
 
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -108,7 +109,7 @@ class ArrayFieldType extends AbstractType
                                     return $submittedData;
                                 }
                                 if ($submittedData) { //id
-                                    $submittedObject = $this->params['em']->getRepository('AppUserdirectoryBundle:User')->find($submittedData);
+                                    $submittedObject = $this->params['em']->getRepository(User::class)->find($submittedData);
                                     return $submittedObject;
                                 }
                                 return null;
@@ -180,7 +181,7 @@ class ArrayFieldType extends AbstractType
 //                        'empty_data' => $provider
 //                    ));
                     $form->add('provider', EntityType::class, array(
-                        'class'       => 'AppUserdirectoryBundle:User',    //'AppBundle:Position',
+                        'class'       => User::class,    //'AppBundle:Position',
                         'data'     => $provider->getId(),
                         'empty_data' => $provider->getId()
                     ));

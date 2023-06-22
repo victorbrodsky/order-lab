@@ -19,6 +19,8 @@ namespace App\CallLogBundle\Controller;
 
 
 use App\CallLogBundle\Form\CalllogLoggerFilterType;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -116,7 +118,7 @@ class CallLogLoggerController extends LoggerController
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "New Call Log Book Entry Submitted");
         }
 
-        //$objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Message");
+        //$objectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Message");
         $objectType = $userSecUtil->getObjectByNameTransformer($user,"Message",'UserdirectoryBundle','EventObjectTypeList');
         if( !$objectType ) {
             throw $this->createNotFoundException('EventObjectTypeList is not found by name ' . "Message");
@@ -224,8 +226,8 @@ class CallLogLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
         $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
-        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($users[0]);
+        $objectType = $em->getRepository(EventObjectTypeList::class)->find($objectTypes[0]);
+        $user = $em->getRepository(User::class)->find($users[0]);
 
         //Event Log showing 1 matching "New Call Log Book Entry Submitted" event(s) for user:
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;

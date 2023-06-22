@@ -42,13 +42,11 @@ use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Form\MessageType;
 
 use App\OrderformBundle\Entity\Patient;
-use App\OrderformBundle\Entity\ClinicalHistory;
 use App\OrderformBundle\Entity\PatientMrn;
 use App\OrderformBundle\Entity\PatientDob;
 use App\OrderformBundle\Entity\PatientClinicalHistory;
 
 use App\OrderformBundle\Entity\Procedure;
-use App\OrderformBundle\Entity\ProcedureEncounter;
 use App\OrderformBundle\Entity\ProcedureName;
 
 //use App\OrderformBundle\Entity\ProcedurePatsuffix;

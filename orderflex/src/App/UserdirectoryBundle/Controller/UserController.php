@@ -33,6 +33,7 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -558,7 +559,7 @@ class UserController extends OrderAbstractController
             }
         }
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
 
@@ -1327,7 +1328,7 @@ class UserController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         if( $subjectUserId ) {
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->find($subjectUserId);
+            $user = $em->getRepository(User::class)->find($subjectUserId);
         } else {
             $user = $this->getUser();
         }
@@ -1570,7 +1571,7 @@ class UserController extends OrderAbstractController
 //        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
 //
 //        $em = $this->getDoctrine()->getManager();
-//        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+//        $repository = $this->getDoctrine()->getRepository(User::class);
 //        $dql = $repository->createQueryBuilder('user');
 //
 //        $dql->select('COUNT(DISTINCT user.id)');
@@ -1691,7 +1692,7 @@ class UserController extends OrderAbstractController
         //clone user
         $subjectUser = null;
         if( $id && $id != "" ) {
-            $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+            $subjectUser = $em->getRepository(User::class)->find($id);
             //$userUtil = new UserUtil();
             $userUtil = $this->container->get('user_utility');
             $user = $userUtil->makeUserClone($subjectUser,$user);
@@ -2083,12 +2084,12 @@ class UserController extends OrderAbstractController
 
         //Check provided $publicUserId (cwid) that might be cwid or email if a user exists
         if( !$user && $publicUserId ) {
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
+            $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($publicUserId);
             if (!$user) {
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+                $user = $em->getRepository(User::class)->findOneByEmailCanonical($email);
             }
             if (!$user) {
-                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                $users = $em->getRepository(User::class)->findUserByUserInfoEmail($email);
                 if (count($users) > 0) {
                     $user = $users[0];
                 }
@@ -2167,12 +2168,12 @@ class UserController extends OrderAbstractController
         //echo "publicUserId=$publicUserId<br>";
 
         if( !$user && $publicUserId ) {
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
+            $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($publicUserId);
             if (!$user) {
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+                $user = $em->getRepository(User::class)->findOneByEmailCanonical($email);
             }
             if (!$user) {
-                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                $users = $em->getRepository(User::class)->findUserByUserInfoEmail($email);
                 if (count($users) > 0) {
                     $user = $users[0];
                 }
@@ -2654,8 +2655,8 @@ class UserController extends OrderAbstractController
 //
 //        $em = $this->getDoctrine()->getManager();
 //
-//        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
-//        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+//        //$entity = $em->getRepository(User::class)->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+//        $entity = $em->getRepository(User::class)->find($id);
 //
 //        if( !$entity ) {
 //            throw $this->createNotFoundException('Unable to find User entity.');
@@ -2698,8 +2699,8 @@ class UserController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository(User::class)->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -2766,10 +2767,10 @@ class UserController extends OrderAbstractController
 //            'user_id' => 1           
 //        );
         
-        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        //$entity = $em->getRepository(User::class)->find($id,\Doctrine\ORM\Query::HYDRATE_ARRAY);
                
         
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user','infos','avatar');
         $dql->leftJoin("user.infos", "infos");
@@ -2783,7 +2784,7 @@ class UserController extends OrderAbstractController
         
         $entity = $query->getSingleResult('SimpleHydrator');
         
-        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository(User::class)->find($id);
         
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -2910,7 +2911,7 @@ class UserController extends OrderAbstractController
         if( $id == 0 || $id == '' || $id == '' ) {
             $entity = new User();
         } else {
-            $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+            $entity = $em->getRepository(User::class)->find($id);
 
             //check if this subject user is visible according to the subject user's preferences
             $user = $this->getUser();
@@ -3018,7 +3019,7 @@ class UserController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -3255,7 +3256,7 @@ class UserController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $loggedUser = $this->getUser();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -4372,7 +4373,7 @@ class UserController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository(User::class)->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -4817,7 +4818,7 @@ class UserController extends OrderAbstractController
         $userAdmin = $this->getUser();
 
         //get username
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository(User::class)->find($id);
         $username = $user->getUsername();
 
         //EventLog
@@ -4853,7 +4854,7 @@ class UserController extends OrderAbstractController
         $userAdmin = $this->getUser();
 
         //get username
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $subjectUser = $em->getRepository(User::class)->find($id);
 
         $todayDate = new \DateTime();
         //$todayDateStr = $todayDate->format("m/d/Y");
@@ -4962,7 +4963,7 @@ class UserController extends OrderAbstractController
 
         //testing
 //        $em = $this->getDoctrine()->getManager();
-//        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(158);//"Melissa"
+//        $user = $em->getRepository(User::class)->find(158);//"Melissa"
 //        echo "<br>live user=".$user.":<br>";
 //        $instResArr = $user->getDeduplicatedInstitutions();
 //        foreach( $instResArr as $instRes ) {
@@ -4970,7 +4971,7 @@ class UserController extends OrderAbstractController
 //            $instName = strtoupper($instName);
 //            echo "add instName=".$instName."<br>";
 //        }
-//        $user = $em->getRepository('AppUserdirectoryBundle:User')->find(71);//"Melissa"
+//        $user = $em->getRepository(User::class)->find(71);//"Melissa"
 //        echo "<br>test user=".$user.":<br>";
 //        $instResArr = $user->getDeduplicatedInstitutions();
 //        foreach( $instResArr as $instRes ) {
@@ -5185,7 +5186,7 @@ class UserController extends OrderAbstractController
         $userDownloadUtil = $this->container->get('user_download_utility');
 
         //get user label
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $subjectUser = $em->getRepository(User::class)->find($id);
         $userElStr = $userDownloadUtil->getLabelSingleUser($subjectUser);
 
         $params = array('label'=>$userElStr,'singleUser'=>true);
@@ -5301,7 +5302,7 @@ class UserController extends OrderAbstractController
         }
 
         //get users
-        //$users = $em->getRepository('AppUserdirectoryBundle:User')->findAll();
+        //$users = $em->getRepository(User::class)->findAll();
         ////////////// WCM Pathology Employees Download Faculty //////////////
         $filterFaculty = "$inst1 Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);

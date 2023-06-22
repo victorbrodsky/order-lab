@@ -17,6 +17,10 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
+use App\UserdirectoryBundle\Entity\EventTypeList;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\SiteList;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -41,42 +45,6 @@ class LoggerFilterType extends AbstractType
     public function formConstructor( $params=null )
     {
         $this->params = $params;
-
-//        if( array_key_exists('hideObjectType', $params) ) {
-//            $this->hideObjectType = $params['hideObjectType'];
-//        } else {
-//            $this->hideObjectType = false;
-//        }
-//
-//        if( array_key_exists('hideObjectId', $params) ) {
-//            $this->hideObjectId = $params['hideObjectId'];
-//        } else {
-//            $this->hideObjectId = false;
-//        }
-//
-//        if( array_key_exists('hideUser', $params) ) {
-//            $this->hideUser = $params['hideUser'];
-//        } else {
-//            $this->hideUser = false;
-//        }
-//
-//        if( array_key_exists('hideEventType', $params) ) {
-//            $this->hideEventType = $params['hideEventType'];
-//        } else {
-//            $this->hideEventType = false;
-//        }
-//
-//        if( array_key_exists('hideIp', $params) ) {
-//            $this->hideIp = $params['hideIp'];
-//        } else {
-//            $this->hideIp = false;
-//        }
-//
-//        if( array_key_exists('hideRoles', $params) ) {
-//            $this->hideRoles = $params['hideRoles'];
-//        } else {
-//            $this->hideRoles = false;
-//        }
     }
 
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
@@ -90,7 +58,7 @@ class LoggerFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('user', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+            'class' => User::class,
             //'disabled' => $this->hideUser,
             'choice_label' => 'getUserNameStr',
             'label' => false,
@@ -102,7 +70,7 @@ class LoggerFilterType extends AbstractType
 
         //Event Type
         $builder->add('eventType', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:EventTypeList',
+            'class' => EventTypeList::class,
             //'placeholder' => 'Fellowship Type',
             //'disabled' => $this->hideEventType,
             'choice_label' => 'name',
@@ -164,7 +132,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         $builder->add('roles', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Roles',
+            'class' => Roles::class,
             'choice_label' => 'alias',
             'label' => false,
             'required' => false,
@@ -189,7 +157,7 @@ class LoggerFilterType extends AbstractType
 
         //objectType
         $builder->add('objectType', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:EventObjectTypeList',
+            'class' => EventObjectTypeList::class,
             //'disabled' => $this->hideObjectType,
             //'disabled' => true,
             //'placeholder' => 'Fellowship Type',
@@ -219,7 +187,7 @@ class LoggerFilterType extends AbstractType
 
         if( !isset($this->params['sitename']) ) {
             $builder->add('sites', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:SiteList',
+                'class' => SiteList::class,
                 'choice_label' => 'abbreviation',
                 'label' => false,
                 'required' => false,

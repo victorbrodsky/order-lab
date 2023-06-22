@@ -546,12 +546,6 @@ class Location extends ListAbstract
 //        return $this->service;
 //    }
 
-    /**
-     * Add assistant
-     *
-     * @param \App\OrderformBundle\Entity\User $assistant
-     * @return User
-     */
     public function addAssistant($assistant)
     {
         if( !$this->assistant->contains($assistant) ) {
@@ -560,11 +554,6 @@ class Location extends ListAbstract
 
         return $this;
     }
-    /**
-     * Remove assistant
-     *
-     * @param \App\OrderformBundle\Entity\User $assistant
-     */
     public function removeAssistant($assistant)
     {
         $this->assistant->removeElement($assistant);

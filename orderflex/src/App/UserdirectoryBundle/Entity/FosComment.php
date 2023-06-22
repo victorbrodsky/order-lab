@@ -53,7 +53,6 @@ class FosComment extends FosBaseComment // implements SignedCommentInterface
     /**
      * Thread of this comment
      *
-     * @var Thread
      * @ORM\ManyToOne(targetEntity="App\UserdirectoryBundle\Entity\FosThread")
      */
     protected $thread;

@@ -19,7 +19,6 @@ namespace App\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Form\AccountConfirmationType;
-use App\UserdirectoryBundle\Controller\AuthorizedUserController;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;

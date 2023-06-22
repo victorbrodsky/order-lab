@@ -33,7 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use App\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
@@ -48,10 +47,7 @@ use App\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScanCustomSelectorType extends AbstractType {
-
-    /**
-     * @var ObjectManager
-     */
+    
     private $om;
     private $serviceContainer;
 

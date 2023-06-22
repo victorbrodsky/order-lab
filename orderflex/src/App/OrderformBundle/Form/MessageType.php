@@ -17,11 +17,11 @@
 
 namespace App\OrderformBundle\Form;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use App\UserdirectoryBundle\Form\InstitutionalWrapperType;
-use App\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -192,7 +192,7 @@ class MessageType extends AbstractType
 
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
             $builder->add('provider', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+                'class' => User::class,
                 'label' => 'Submitter:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),

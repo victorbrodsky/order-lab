@@ -26,6 +26,7 @@ namespace App\TranslationalResearchBundle\Controller;
 
 
 use App\TranslationalResearchBundle\Form\FeeFilterType;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -2414,7 +2415,7 @@ class RequestController extends OrderAbstractController
 //            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
 //        }
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("TransResRequest");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("TransResRequest");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {

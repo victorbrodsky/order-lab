@@ -18,7 +18,6 @@
 namespace App\VacReqBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use App\UserdirectoryBundle\Controller\AuthorizedUserController;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

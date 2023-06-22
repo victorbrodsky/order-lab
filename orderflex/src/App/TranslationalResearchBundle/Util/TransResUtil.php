@@ -17,7 +17,9 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+use App\TranslationalResearchBundle\Form\ReviewBaseType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;

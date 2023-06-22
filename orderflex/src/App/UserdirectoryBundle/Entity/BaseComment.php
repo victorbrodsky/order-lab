@@ -152,7 +152,6 @@ abstract class BaseComment extends BaseUserAttributes {
      * Add document
      *
      * @param \App\UserdirectoryBundle\Entity\Document $document
-     * @return Comment
      */
     public function addDocument($document)
     {

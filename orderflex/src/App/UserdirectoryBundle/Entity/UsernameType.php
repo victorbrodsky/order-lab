@@ -72,13 +72,7 @@ class UsernameType extends ListAbstract
     {
         return $this->users;
     }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return List
-     */
+    
     public function setName($name)
     {
         $this->name = $name;

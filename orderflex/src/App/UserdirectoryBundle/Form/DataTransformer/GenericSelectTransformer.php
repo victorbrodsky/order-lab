@@ -28,22 +28,15 @@ namespace App\UserdirectoryBundle\Form\DataTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class GenericSelectTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
     private $em;
     private $user;
     protected $className;
     protected $bundleName;
     protected $params;
-
-    /**
-     * @param ObjectManager $om
-     */
+    
     public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;

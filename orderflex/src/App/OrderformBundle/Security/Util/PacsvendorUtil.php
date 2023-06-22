@@ -190,7 +190,7 @@ class PacsvendorUtil {
 
                 //$this->errorTest();
 
-            } catch (MongoCursorException $e) {
+            } catch (\MongoCursorException $e) {
 
                 //throw new \Exception( 'Can not connect to pacsvendor Data Server. Please try again later' );
 

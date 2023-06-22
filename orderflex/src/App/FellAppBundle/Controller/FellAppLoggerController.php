@@ -17,6 +17,7 @@
 
 namespace App\FellAppBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\UserdirectoryBundle\Controller\LoggerController;
 use Symfony\Component\HttpFoundation\Request;
@@ -97,7 +98,7 @@ class FellAppLoggerController extends LoggerController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+        $objectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("FellowshipApplication");
         if( !$objectType ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
         }
@@ -150,7 +151,7 @@ class FellAppLoggerController extends LoggerController
         }
 
         if( count($objectTypes) == 0 ) {
-            $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("FellowshipApplication");
+            $objectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("FellowshipApplication");
             if( !$objectType ) {
                 throw $this->createNotFoundException('Unable to find EventObjectTypeList by name='."FellowshipApplication");
             }
@@ -192,7 +193,7 @@ class FellAppLoggerController extends LoggerController
         $objectId = $filterform['objectId']->getData();
 
         $em = $this->getDoctrine()->getManager();
-        $objectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
+        $objectType = $em->getRepository(EventObjectTypeList::class)->find($objectTypes[0]);
 
         //Camel Case
         $objectTypeArr = preg_split('/(?=[A-Z])/',$objectType);

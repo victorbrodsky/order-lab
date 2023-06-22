@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\UserdirectoryBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +60,7 @@ class SectionUserController extends UserController
 
         //echo "userid=".$userid."<br>";
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        $user = $em->getRepository(User::class)->find($userid);
 
         return array(
             'user' => $user,

@@ -153,7 +153,6 @@ class BuildingList extends ListAbstract
      * Set name
      *
      * @param string $name
-     * @return List
      */
     public function setName($name)
     {

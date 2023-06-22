@@ -18,6 +18,7 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 //use Graphp\GraphViz\GraphViz;
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\FilterType;
@@ -1205,7 +1206,7 @@ class ProjectController extends OrderAbstractController
 
         //return array('filterError' => true,'title' => "Test Performance",); //test 18(295ms) queries vs 800(431ms)
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Project");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {
@@ -2023,7 +2024,7 @@ class ProjectController extends OrderAbstractController
 
         $transresUtil->setEventLog($project,$eventType,$msg);
 
-        $eventObjectType = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        $eventObjectType = $em->getRepository(EventObjectTypeList::class)->findOneByName("Project");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
         } else {

@@ -227,7 +227,6 @@ class UserRequest
      * Set cwid
      *
      * @param string $cwid
-     * @return Request
      */
     public function setCwid($cwid)
     {
@@ -250,7 +249,6 @@ class UserRequest
      * Set request
      *
      * @param string $request
-     * @return Request
      */
     public function setRequest($request)
     {

@@ -62,7 +62,7 @@ class PDFService
                 $return[] = str_replace('.pdf', '', basename($filename)).'_'.$i.".pdf";
                 $new_pdf->Output($new_filename, "F");
                 //echo "Page ".$i." split into ".$new_filename."<br />\n";
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 echo 'Caught exception: ',  $e->getMessage(), "\n";
             }
         }

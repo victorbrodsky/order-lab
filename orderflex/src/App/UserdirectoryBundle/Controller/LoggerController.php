@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -145,7 +146,7 @@ class LoggerController extends OrderAbstractController
 
     public function getEventStrByUserid( $userid ) {
         $em = $this->getDoctrine()->getManager();
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        $subjectUser = $em->getRepository(User::class)->find($userid);
         if( $subjectUser ) {
             $cwid = $subjectUser->getPrimaryPublicUserId();
             return $cwid;
@@ -399,7 +400,7 @@ class LoggerController extends OrderAbstractController
 
         //////////////////// get list of users with "unknown" user ////////////////////
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
@@ -674,7 +675,7 @@ class LoggerController extends OrderAbstractController
         $objectNamespaceArr = explode("\\",$objectNamespace);
         $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
-        $objectName = $em->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        $objectName = $em->getRepository(EventObjectTypeList::class)->find($objectType);
         if( !$objectName ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
         }

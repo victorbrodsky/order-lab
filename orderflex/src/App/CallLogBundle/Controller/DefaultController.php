@@ -25,6 +25,8 @@ use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\UserdirectoryBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -95,7 +97,7 @@ class DefaultController extends OrderAbstractController
 //            );
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -148,7 +150,7 @@ class DefaultController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 
@@ -247,7 +249,7 @@ class DefaultController extends OrderAbstractController
     }
     public function getUserByDisplayName( $userStr ) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        $repository = $em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos", "infos");
@@ -268,7 +270,7 @@ class DefaultController extends OrderAbstractController
         //echo "Trying to find by cwid [$cwid] <br>";
         $usernamePrefix = 'ldap-user';
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername( $cwid."_@_". $usernamePrefix);
+        $user = $em->getRepository(User::class)->findOneByUsername( $cwid."_@_". $usernamePrefix);
 
         return $user;
     }
@@ -853,7 +855,7 @@ class DefaultController extends OrderAbstractController
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
             $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
         }
 

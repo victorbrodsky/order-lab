@@ -25,6 +25,7 @@
 
 namespace App\FellAppBundle\Security\Authentication;
 
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
@@ -92,7 +93,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     public function isFellowshipInterviewerHighestRole($user) {
 
         //1) check if the user has role "Fellowship Interviewer" with permission: object="Interview", action="create"
-        $fellappRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "Interview", "create" );
+        $fellappRoles = $this->em->getRepository(User::class)->findUserRolesByObjectAction( $user, "Interview", "create" );
 
         $level = 0;
         foreach( $fellappRoles as $fellappRole ) {

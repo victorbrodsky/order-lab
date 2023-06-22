@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+use App\UserdirectoryBundle\Entity\SiteList;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
 use App\UserdirectoryBundle\Form\AccessRequestType;
@@ -108,7 +109,8 @@ class AccessRequestController extends OrderAbstractController
             if( $userSecUtil->isSiteAccessible($this->siteName) ) {
                 //echo "site is Live<br>";
 
-                $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+                //$siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+                $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($this->siteName);
                 $lowestRoles = $siteObject->getLowestRoles();
                 //1) Add Minimum Roles for this site
                 if( count($lowestRoles) == 0 ) {
@@ -253,7 +255,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $user = $em->getRepository(User::class)->find($id);
 
         if (!$user) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
@@ -360,7 +362,7 @@ class AccessRequestController extends OrderAbstractController
         $question = $this->getAccessRequestQuestion();
 
         $siteDescription = "";
-        $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject ) {
             $siteDescription = $siteObject->getDescription();
         }
@@ -486,7 +488,8 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        //$user = $em->getRepository(User::class)->find($id);
+        $user = $em->getRepository(User::class)->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException('Unable to find User.');
@@ -833,7 +836,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity.');
@@ -1017,7 +1020,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        //$entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        //$entity = $em->getRepository(User::class)->find($id);
         $accReq = $em->getRepository('AppUserdirectoryBundle:AccessRequest')->find($id);
 
         if (!$accReq) {
@@ -1225,7 +1228,7 @@ class AccessRequestController extends OrderAbstractController
     public function authorizationRemove($request,$userId) {
         $em = $this->getDoctrine()->getManager();
 
-        $subjectuser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        $subjectuser = $em->getRepository(User::class)->find($userId);
         if (!$subjectuser) {
             throw $this->createNotFoundException('Unable to find User entity.');
         }
@@ -1269,7 +1272,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Usert entity with ID ' . $id);
@@ -1325,7 +1328,7 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:User')->find($id);
+        $entity = $em->getRepository(User::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find User entity with ID ' . $id);
@@ -1404,7 +1407,7 @@ class AccessRequestController extends OrderAbstractController
         //echo "sitename=".$this->siteName."<br>";
 
         /////////// Filter ////////////
-        $siteRoles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($this->siteName,"");
+        $siteRoles = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName($this->siteName,"");
         $params = array(
             'roles'=>$siteRoles,
         );
@@ -1531,7 +1534,7 @@ class AccessRequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //find user in DB
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
+        $users = $em->getRepository(User::class)->findBy(array('keytype'=>$keytype,'primaryPublicUserId'=>$primaryPublicUserId));
 
         if( count($users) > 1 ) {
             throw $this->createNotFoundException('Unable to find a Single User. Found users ' . count($users) );
@@ -1664,7 +1667,7 @@ class AccessRequestController extends OrderAbstractController
 
         $createdby = "manual-".$this->siteName;
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin('user.infos','infos');

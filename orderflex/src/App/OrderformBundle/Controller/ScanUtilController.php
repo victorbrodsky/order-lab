@@ -18,6 +18,7 @@
 namespace App\OrderformBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\UtilController;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -665,7 +666,7 @@ class ScanUtilController extends UtilController {
 
         //2) add users with ROLE_SCANORDER_COURSE_DIRECTOR and ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'list')
+            ->from(User::class, 'list')
             //->select("list.id as id, list.username as text")
             ->select("list")
             ->where("list.roles LIKE :role")
@@ -1120,7 +1121,7 @@ class ScanUtilController extends UtilController {
 
             if( strpos((string)$providerId, '_@_') !== false ) {
                 //cwid_@_ldap-user
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
+                $user = $em->getRepository(User::class)->findOneByUsername($providerId);
             } else {
                 //$user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($providerId);
                 $userSecUtil = $this->container->get('user_security_utility');

@@ -1550,3 +1550,29 @@ symfony to 6.2.6
 "doctrine/doctrine-bundle": "^2.5",
 "doctrine/orm": "^2.9",
 
+// identify any URL that contains the string selector=size but does NOT contain details.cfm
+^(?!.*details\.cfm).*selector=size.*$
+^(?=.*selector=size)(?:(?!details\.cfm).)+$
+
+// identify contains the string User:class but does NOT contain 'use App\UserdirectoryBundle\Entity\User;'
+^(?!.*Entity\\User;).*User::class.*$
+^(?=.*User::class)(?:(?!Entity\\User;).)+$
+
+pick up the string having the word "best" and not the word "mew"
+^(?=.*best)(?:(?!mew).)*$
+
+^(?=.*User::class)(?:(?!User).)*$
+
+
+
+
+
+
+
+
+
+
+
+
+
+

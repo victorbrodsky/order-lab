@@ -25,11 +25,11 @@
 
 namespace App\UserdirectoryBundle\Form\DataTransformer;
 
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserWrapper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 //use Symfony\Component\DependencyInjection\ContainerInterface;
 
 //NOTE: userWrapper used:
@@ -43,21 +43,13 @@ use Doctrine\Common\Persistence\ObjectManager;
 //used by user type
 class UserWrapperTransformer implements DataTransformerInterface
 {
-
-    /**
-     * @var ObjectManager
-     */
+    
     private $em;
     private $serviceContainer;
     private $user;
     private $className;
     private $bundleName;
-
-    /**
-     * TODO: inject only service user_security_utility
-     *
-     * @param ObjectManager $om
-     */
+    
     public function __construct( EntityManagerInterface $em, $serviceContainer, $user=null, $className=null, $bundleName=null )
     {
         $this->em = $em;
@@ -234,7 +226,7 @@ class UserWrapperTransformer implements DataTransformerInterface
         $userWrapper = null;
 
         //find user by id
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        $user = $this->em->getRepository(User::class)->find($userid);
         //echo "found user by id=".$userid."<br>";
 
         $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);

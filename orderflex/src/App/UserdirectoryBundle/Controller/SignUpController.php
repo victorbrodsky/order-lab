@@ -18,12 +18,14 @@ use App\UserdirectoryBundle\Entity\PublicComment;
 use App\UserdirectoryBundle\Entity\ResearchLab;
 use App\UserdirectoryBundle\Entity\ResetPassword;
 use App\UserdirectoryBundle\Entity\SignUp;
+use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\StateLicense;
 use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserInfo;
 use App\UserdirectoryBundle\Form\ResetPasswordType;
 use App\UserdirectoryBundle\Form\UserSimpleType;
+use App\UserdirectoryBundle\Util\ReCaptcha;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -192,7 +194,7 @@ class SignUpController extends OrderAbstractController
 
                 //check if user with provided email existed in SignUp DB
                 if( !$emailHasError ) {
-                    $userDbs = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
+                    $userDbs = $em->getRepository(User::class)->findUserByUserInfoEmail($signUp->getEmail());
                     //echo "usersDb=".count($userDbs)."<br>";
                     if (count($userDbs) > 0) {
                         $userDb = $userDbs[0];
@@ -231,7 +233,7 @@ class SignUpController extends OrderAbstractController
                 //When the user clicks “Sign Up”, search for matching existing user names
                 // in the user table; if the user name is taken, show a red well stating
                 // “This user name appears to be taken. Please choose another one.”
-                $userDb = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
+                $userDb = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
                 if( $userDb ) {
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
                 }
@@ -269,7 +271,7 @@ class SignUpController extends OrderAbstractController
             $signUp->setRegistrationLinkID($registrationLinkId);
 
             //sitename
-            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($this->siteName);
             if( $siteObject ) {
                 $signUp->setSite($siteObject);
             }
@@ -402,7 +404,7 @@ class SignUpController extends OrderAbstractController
         $response = null;
 
         // check secret key
-        $reCaptcha = new \ReCaptcha($captchaSecretKey);
+        $reCaptcha = new ReCaptcha($captchaSecretKey);
 
         $response = $reCaptcha->verifyResponse(
             $_SERVER["REMOTE_ADDR"],
@@ -499,7 +501,7 @@ class SignUpController extends OrderAbstractController
 
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
+        $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
         //if( !$user ) { //&& !$signUp->getUser()
         if( $user && $signUp->getUser() ) {
             //user exists: don't create a new user
@@ -527,7 +529,7 @@ class SignUpController extends OrderAbstractController
             $user->setLocked(true);
 
             //add site minimum role
-            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($this->siteName);
             $lowestRoles = $siteObject->getLowestRoles();
             if( count($lowestRoles) == 0 ) {
                 $lowestRoles = $this->minimumRoles;
@@ -572,7 +574,7 @@ class SignUpController extends OrderAbstractController
             $em->flush();
             ///////////// EOF create a new user ///////////////
 
-            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId());
+            //$user = $em->getRepository(User::class)->find($user->getId());
             //$signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
 
 //            ////////////////////// auth /////////////////////////
@@ -1031,7 +1033,7 @@ class SignUpController extends OrderAbstractController
                 }
 
                 //check if user with provided email existed in resetPassword DB
-                $userDbs = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
+                $userDbs = $em->getRepository(User::class)->findUserByUserInfoEmail($resetPassword->getEmail());
                 //echo "usersDb=".count($userDbs)."<br>";
                 if( count($userDbs) > 0 ) {
                     $userDb = $userDbs[0];
@@ -1063,7 +1065,7 @@ class SignUpController extends OrderAbstractController
             $resetPassword->setRegistrationLinkID($resetPasswordLinkID);
 
             //sitename
-            $siteObject = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($this->siteName);
             if( $siteObject ) {
                 $resetPassword->setSite($siteObject);
             }
@@ -1253,7 +1255,7 @@ class SignUpController extends OrderAbstractController
         //exit('ok');s
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
-        $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
+        $users = $em->getRepository(User::class)->findUserByUserInfoEmail($resetPassword->getEmail());
         if( count($users) == 0 ) {
             $confirmation = "The email address you have entered is not associated with any active accounts."; //keep this for reset password by linkID
             //exit($confirmation);

@@ -61,14 +61,7 @@ class PartPaper extends PartArrayFieldAbstract
         parent::__construct($status,$provider,$source);
         $this->documents = new ArrayCollection();
     }
-
-
-    /**
-     * Add document
-     *
-     * @param \App\OrderformBundle\Entity\Document $document
-     * @return PartPaper
-     */
+    
     public function addDocument($document)
     {
         if( $document == null ) {

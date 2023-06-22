@@ -20,7 +20,6 @@ namespace App\OrderformBundle\Repository;
 //use Doctrine\ORM\EntityRepository;
 //use App\OrderformBundle\Helper\FormHelper;
 //use App\OrderformBundle\Entity\BlockBlockname;
-use Doctrine\Common\Reflection\StaticReflectionClass;
 use App\OrderformBundle\Entity\Block;
 
 /**
