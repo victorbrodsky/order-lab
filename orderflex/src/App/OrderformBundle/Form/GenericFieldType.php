@@ -37,7 +37,7 @@ class GenericFieldType extends AbstractType
         $this->genAttr = $genAttr;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $this->formConstructor($options['form_custom_value'],$options['form_custom_value_genAttr'],$options['form_custom_value_attr']);
 
@@ -75,7 +75,7 @@ class GenericFieldType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         if( $this->genAttr && isset($this->genAttr['class']) ) {
             //ok

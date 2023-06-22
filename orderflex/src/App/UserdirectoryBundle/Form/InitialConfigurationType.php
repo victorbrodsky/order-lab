@@ -37,6 +37,9 @@ use Symfony\Component\Form\FormEvent;
 class InitialConfigurationType extends AbstractType
 {
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -231,18 +234,11 @@ class InitialConfigurationType extends AbstractType
 
 
 
-
-
-
-
-
-
-
-
-
-
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

@@ -31,6 +31,9 @@ use Symfony\Component\Form\FormEvent;
 class DocumentType extends AbstractType
 {
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -49,6 +52,9 @@ class DocumentType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

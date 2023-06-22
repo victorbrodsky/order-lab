@@ -37,7 +37,7 @@ class ScanOrderType extends AbstractType
     }
         
     
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $this->formConstructor($options['form_custom_value']);
 
@@ -108,7 +108,7 @@ class ScanOrderType extends AbstractType
         
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\ScanOrder',

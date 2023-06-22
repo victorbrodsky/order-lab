@@ -46,28 +46,22 @@ use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericManyToManyTransformer;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+//use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CustomSelectorType extends AbstractType {
 
-    /**
-     * @var ObjectManager
-     */
     private $om;
-    //private $secTokenStorage;
     private $serviceContainer;
 
-     /**
-     * @param ObjectManager $om
-     * @param ObjectManager $om
-     */
     public function __construct(EntityManagerInterface $om, ContainerInterface $serviceContainer)
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;
-        //$this->secTokenStorage = $serviceContainer->get('security.token_storage');
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -252,6 +246,9 @@ class CustomSelectorType extends AbstractType {
         
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
@@ -269,16 +266,23 @@ class CustomSelectorType extends AbstractType {
         
     }
 
-    public function getParent() : ?string
+    /**
+     * @return string|null
+     */
+    public function getParent()
     {
         return TextType::class;
-        //return 'text';
     }
 
-    public function getBlockPrefix(): string
+    /**
+     * @return string
+     */
+    public function getBlockPrefix()
     {
         return 'employees_custom_selector';
     }
+
+
     public function getName() : string
     {
         return $this->getBlockPrefix();

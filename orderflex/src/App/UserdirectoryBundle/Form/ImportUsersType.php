@@ -29,6 +29,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ImportUsersType extends AbstractType {
 
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -45,6 +48,9 @@ class ImportUsersType extends AbstractType {
     }
 
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

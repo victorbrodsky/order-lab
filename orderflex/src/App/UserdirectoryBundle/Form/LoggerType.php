@@ -24,9 +24,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LoggerType extends AbstractType
 {
-        /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+
+    /**
+     * @return void
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -46,9 +46,10 @@ class LoggerType extends AbstractType
             ->add('serverresponse', TextareaType::class, array('attr' => array('class'=>'textarea form-control')))
         ;
     }
-    
+
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

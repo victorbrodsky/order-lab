@@ -60,9 +60,10 @@ class GenericListType extends AbstractType
 
     }
 
-        /**
+    /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array $options   
+     * @return void
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -1718,9 +1719,10 @@ class GenericListType extends AbstractType
             'attr' => array('class'=>'datepicker form-control allow-future-date'),
         ));
     }
-    
+
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

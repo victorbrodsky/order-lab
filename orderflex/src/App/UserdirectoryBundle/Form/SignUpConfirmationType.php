@@ -72,9 +72,10 @@ class SignUpConfirmationType extends AbstractType
 
         $this->titlesSections($builder);
     }
-    
+
+
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

@@ -28,7 +28,7 @@ use Doctrine\ORM\EntityRepository;
 class StainOrderType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
 
 //        //Microscopic Image container
@@ -59,7 +59,7 @@ class StainOrderType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\StainOrder',

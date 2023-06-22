@@ -28,6 +28,9 @@ use Doctrine\ORM\EntityRepository;
 class ExaminationType extends AbstractType
 {
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -185,6 +188,9 @@ class ExaminationType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

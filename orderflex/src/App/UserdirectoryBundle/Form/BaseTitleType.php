@@ -44,6 +44,9 @@ class BaseTitleType extends AbstractType
         $this->params = $params;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -430,6 +433,9 @@ class BaseTitleType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         //$fullClassName = $resolver->resolve('form_custom_value');

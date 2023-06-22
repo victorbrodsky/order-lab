@@ -1543,4 +1543,10 @@ symfony to 6.2.6
 "oneup/uploader-bundle": "^3.1", => "oneup/uploader-bundle": "^4.0",
 
 
+"doctrine/doctrine-bundle": "2.5.*",
+"doctrine/doctrine-migrations-bundle": "^3.2",
+"doctrine/orm": "2.9.6",
+        =>
+"doctrine/doctrine-bundle": "^2.5",
+"doctrine/orm": "^2.9",
 

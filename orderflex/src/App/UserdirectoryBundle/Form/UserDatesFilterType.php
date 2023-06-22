@@ -38,8 +38,10 @@ class UserDatesFilterType extends AbstractType
         $this->params = $params;
 
     }
-
-    //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
+    
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -140,6 +142,9 @@ class UserDatesFilterType extends AbstractType
         ));
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

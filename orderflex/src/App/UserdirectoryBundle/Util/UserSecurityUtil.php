@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -93,7 +94,9 @@ class UserSecurityUtil {
             //$this->initCountTest++;
             //echo "initCountTest=".$this->initCountTest."<br>";
 
-            $params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            //$params = $this->em->getRepository('AppUserdirectoryBundle:SiteParameters')->findAll();
+            //doctrine Deprecate short namespace aliases
+            $params = $this->em->getRepository(SiteParameters::class)->findAll();
             //echo "params count=".count($params)."<br>";
 
             if (count($params) == 0) {

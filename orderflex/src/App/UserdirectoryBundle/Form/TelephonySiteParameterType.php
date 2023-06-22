@@ -38,6 +38,9 @@ class TelephonySiteParameterType extends AbstractType
         $this->params = $params;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -78,6 +81,9 @@ class TelephonySiteParameterType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

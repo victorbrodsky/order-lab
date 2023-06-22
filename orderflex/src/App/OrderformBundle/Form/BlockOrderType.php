@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 class BlockOrderType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
 
         $builder->add('processedDate', DateType::class, array(
@@ -71,7 +71,7 @@ class BlockOrderType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\BlockOrder',

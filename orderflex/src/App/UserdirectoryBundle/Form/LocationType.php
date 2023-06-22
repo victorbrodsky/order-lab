@@ -67,6 +67,9 @@ class LocationType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -390,6 +393,9 @@ class LocationType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

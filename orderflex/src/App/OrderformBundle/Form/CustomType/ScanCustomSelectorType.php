@@ -55,19 +55,13 @@ class ScanCustomSelectorType extends AbstractType {
     private $om;
     private $serviceContainer;
 
-     /**
-      * "@doctrine.orm.entity_manager","@security.token_storage", "@service_container"
-      *
-     * @param ObjectManager $om
-     * @param ObjectManager $om
-     */
     public function __construct(EntityManagerInterface $om, ContainerInterface $serviceContainer = null)
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         
         $username = $this->serviceContainer->get('user_utility')->getLoggedinUser();
@@ -156,7 +150,10 @@ class ScanCustomSelectorType extends AbstractType {
         
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selection does not exist',
@@ -165,23 +162,24 @@ class ScanCustomSelectorType extends AbstractType {
         $resolver->setRequired(array(
             'classtype',
         ));
-
-//        $resolver->setAllowedTypes(array(
-//            'classtype' => 'Doctrine\Common\Persistence\ObjectManager',
-//        ));
-        
     }
 
-    public function getParent() : ?string
+    /**
+     * @return string|null
+     */
+    public function getParent()
     {
         return TextType::class;
-        //return 'text';
     }
 
+    /**
+     * @return string
+     */
     public function getBlockPrefix(): string
     {
         return 'scan_custom_selector';
     }
+    
     public function getName() : string
     {
         return $this->getBlockPrefix();

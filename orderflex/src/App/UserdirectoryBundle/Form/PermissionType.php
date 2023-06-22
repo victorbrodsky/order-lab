@@ -30,6 +30,9 @@ use Doctrine\ORM\EntityRepository;
 class PermissionType extends AbstractType
 {
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -80,8 +83,9 @@ class PermissionType extends AbstractType
 
     }
 
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

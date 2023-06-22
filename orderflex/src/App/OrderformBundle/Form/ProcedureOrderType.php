@@ -29,7 +29,7 @@ use Doctrine\ORM\EntityRepository;
 class ProcedureOrderType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
 
         $builder->add('type', ScanCustomSelectorType::class, array(
@@ -41,7 +41,7 @@ class ProcedureOrderType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\ProcedureOrder',

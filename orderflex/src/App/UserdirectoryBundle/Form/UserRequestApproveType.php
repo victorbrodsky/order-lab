@@ -38,6 +38,9 @@ class UserRequestApproveType extends AbstractType
         $this->params = $params;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
@@ -83,6 +86,9 @@ class UserRequestApproveType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

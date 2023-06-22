@@ -36,7 +36,7 @@ class EncounterNameType extends AbstractType
         $this->params = $params;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $this->formConstructor($options['form_custom_value']);
 
@@ -51,7 +51,7 @@ class EncounterNameType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\EncounterName',

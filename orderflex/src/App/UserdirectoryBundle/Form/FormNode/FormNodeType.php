@@ -39,6 +39,9 @@ class FormNodeType extends AbstractType
         if( $entity ) $this->entity = $entity;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -91,6 +94,9 @@ class FormNodeType extends AbstractType
 //    }
 
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

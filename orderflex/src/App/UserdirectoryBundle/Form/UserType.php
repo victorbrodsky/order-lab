@@ -107,6 +107,9 @@ class UserType extends AbstractType
         }
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -161,10 +164,10 @@ class UserType extends AbstractType
 
     }
 
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
-    //public function configureOptions(OptionsResolver $resolver)
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

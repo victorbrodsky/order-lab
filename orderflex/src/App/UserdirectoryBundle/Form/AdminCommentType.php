@@ -30,6 +30,9 @@ use Symfony\Component\Form\FormEvent;
 class AdminCommentType extends BaseCommentsType
 {
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
 

@@ -56,6 +56,9 @@ class UserSimpleType extends AbstractType
         $this->hasRoleSimpleView = false;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -89,10 +92,10 @@ class UserSimpleType extends AbstractType
         }
     }
 
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
-    //public function configureOptions(OptionsResolver $resolver)
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

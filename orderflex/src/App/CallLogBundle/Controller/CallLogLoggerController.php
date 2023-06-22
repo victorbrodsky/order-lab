@@ -146,9 +146,15 @@ class CallLogLoggerController extends LoggerController
         $filter = $request->query->all('filter');
 
         if( is_array($filter) && count($filter) > 0 ) {
-            $eventTypes = $filter['eventType'];
-            $users = $filter['user'];
-            $objectTypes = $filter['objectType'];
+            if( isset($filter['eventType']) ) {
+                $eventTypes = $filter['eventType'];
+            }
+            if( isset($filter['user']) ) {
+                $users = $filter['user'];
+            }
+            if( isset($filter['objectType']) ) {
+                $objectTypes = $filter['objectType'];
+            }
         }
 
 //        echo 'eventType count='.count($eventTypes).'<br>';

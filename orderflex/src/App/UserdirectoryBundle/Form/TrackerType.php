@@ -34,6 +34,9 @@ class TrackerType extends AbstractType
         $this->params = $params;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -58,6 +61,9 @@ class TrackerType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

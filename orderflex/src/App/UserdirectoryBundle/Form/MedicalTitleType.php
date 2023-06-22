@@ -30,6 +30,9 @@ use Symfony\Component\Form\FormEvent;
 class MedicalTitleType extends BaseTitleType
 {
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
 

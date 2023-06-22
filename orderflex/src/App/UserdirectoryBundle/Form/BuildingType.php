@@ -40,6 +40,9 @@ class BuildingType extends AbstractType
         $this->params = $params;
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -108,6 +111,9 @@ class BuildingType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

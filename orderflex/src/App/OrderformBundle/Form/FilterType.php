@@ -33,7 +33,7 @@ class FilterType extends AbstractType
         $this->params = $params;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
         $this->formConstructor($options['form_custom_value']);
 
@@ -63,7 +63,7 @@ class FilterType extends AbstractType
         
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
             'form_custom_value' => null,

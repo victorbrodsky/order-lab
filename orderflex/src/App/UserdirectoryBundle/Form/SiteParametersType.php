@@ -39,9 +39,9 @@ class SiteParametersType extends AbstractType
         $this->params = $params;
     }
 
-        /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+
+    /**
+     * @return void
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -1232,9 +1232,10 @@ class SiteParametersType extends AbstractType
         }
 
     }
-    
+
+
     /**
-     * @param OptionsResolver $resolver
+     * @return void
      */
     public function configureOptions(OptionsResolver $resolver)
     {

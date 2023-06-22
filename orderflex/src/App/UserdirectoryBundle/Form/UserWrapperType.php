@@ -48,6 +48,9 @@ class UserWrapperType extends AbstractType
         }
     }
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
@@ -86,6 +89,9 @@ class UserWrapperType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

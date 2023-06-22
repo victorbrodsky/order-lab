@@ -33,6 +33,9 @@ use App\UserdirectoryBundle\Entity\Location;
 class LinkType extends AbstractType
 {
 
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -61,6 +64,9 @@ class LinkType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

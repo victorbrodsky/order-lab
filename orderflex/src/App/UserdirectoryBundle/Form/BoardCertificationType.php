@@ -25,7 +25,9 @@ use Doctrine\ORM\EntityRepository;
 
 class BoardCertificationType extends AbstractType
 {
-
+    /**
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -107,6 +109,9 @@ class BoardCertificationType extends AbstractType
 
     }
 
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
