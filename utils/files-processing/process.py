@@ -60,7 +60,7 @@ def process_files( dir, startstr, endstr ):
             #content = fileObject.read()
             if startstr in content:
                 #print(startstr + "exists in ", filepath)
-                process_single_file(filepath,file,startstr,endstr)
+                process_single_file(filepath,startstr,endstr)
 
             file.close()
 
@@ -69,14 +69,27 @@ def process_files( dir, startstr, endstr ):
 
     return output
 
-def process_single_file( filepath, file, startstr, endstr ):
+def process_single_file( filepath, startstr, endstr ):
+    with open(filepath, mode='r', encoding='utf8') as file:
+        # read a list of lines into data
+        data = file.readlines()
+
+    for l_no, origline in enumerate(data):
+        print('string found in a file', filepath)
+        print('Line Number:', l_no)
+        print('startstr in:', origline)
+
+    return
+
+def process_single_file_orig(filepath, startstr, endstr):
+    count = 0
     with open(filepath, mode='r', encoding='utf8') as fp:
-        for l_no, line in enumerate(fp):
-            line = line.lstrip()
-            # search string
-            if line.count(startstr) == 1 and line.count(endstr) == 1:
+        for l_no, origline in enumerate(fp):
+            line = origline.lstrip()
+            #print("\n")
+            if startstr in line and endstr in line:
                 if line[:2] != '//':
-                    if startstr in line and endstr in line:
+                    if line.count(startstr) == 1 and line.count(endstr) == 1:
                         #print('string found in a file', filepath)
                         #print('Line Number:', l_no)
                         #print('startstr in:', line)
@@ -87,11 +100,19 @@ def process_single_file( filepath, file, startstr, endstr ):
                         x = result.split(":")
                         bundle = x[0]
                         classname = x[1]
-                        print('bundle=', bundle, ', classname=', classname, "\n")
-            else:
-                print(filepath+": skipped, start string "+startstr+" or end string "+endstr+" occured multiple times")
+                        #User::class
+                        searchstr = "'"+result+"'"
+                        replacedstr = classname+"::class"
+                        print('bundle=', bundle, ', classname=', classname, "=> searchstr="+searchstr+" replacedstr="+replacedstr+"\n")
+                        count = count + 1
+                    else:
+                        print("Skipped in filepath="+filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time"+"\n")
+                        #pass
+                else:
+                    #print(filepath + "\n" + "line="+line+"\n"+"Skipped: line commented out")
+                    pass
 
-
+    print("count=",count," filepath="+filepath)
 
 def getListOfFiles(dirName):
     # create a list of file and sub directories
@@ -217,5 +238,7 @@ def main(argv):
     print(output)
 
 if __name__ == '__main__':
-    #python fellapp.py --dir DeidentifierBundle --startstr "->getRepository('" --endstr "')"
+    #python fellapp.py --dir DeidentifierBundle --startstr "->getRepository('" --endstr "')->"
+    #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\replace-test\DeidentifierBundle
+    #python fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\replace-test\DeidentifierBundle" --startstr "->getRepository('" --endstr "')->"
     main(sys.argv[1:])
