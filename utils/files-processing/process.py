@@ -74,12 +74,49 @@ def process_single_file( filepath, startstr, endstr ):
         # read a list of lines into data
         data = file.readlines()
 
-    for l_no, origline in enumerate(data):
+    for l_no, line in enumerate(data):
         print('string found in a file', filepath)
         print('Line Number:', l_no)
-        print('startstr in:', origline)
+        print('startstr in:', line)
+        #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
+        linemodified = process_line(l_no, line, filepath, startstr, endstr)
+        data[l_no] = linemodified
+
+    # and write everything back
+    #with open(filepath, 'w', encoding='utf8') as file:
+    #    file.writelines(data)
 
     return
+
+def process_line(l_no,origline,filepath,startstr, endstr):
+    line = origline.lstrip()
+    # print("\n")
+    if startstr in line and endstr in line:
+        if line[:2] != '//':
+            if line.count(startstr) == 1 and line.count(endstr) == 1:
+                # print('string found in a file', filepath)
+                # print('Line Number:', l_no)
+                # print('startstr in:', line)
+                # result = re.search(startstr+'(.*)'+endstr, line)
+                result = find_between(line, startstr, endstr)  # AppOrderformBundle:AccessionType
+                print('result=', result)
+                # AppOrderformBundle:AccessionType
+                x = result.split(":")
+                bundle = x[0]
+                classname = x[1]
+                # User::class
+                searchstr = "'" + result + "'"
+                replacedstr = classname + "::class"
+                print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr + "\n")
+                linemodified = origline.replace(searchstr, replacedstr)
+                return linemodified;
+            else:
+                print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
+                # pass
+        else:
+            # print(filepath + "\n" + "line="+line+"\n"+"Skipped: line commented out")
+            pass
+    return None
 
 def process_single_file_orig(filepath, startstr, endstr):
     count = 0
@@ -240,5 +277,5 @@ def main(argv):
 if __name__ == '__main__':
     #python fellapp.py --dir DeidentifierBundle --startstr "->getRepository('" --endstr "')->"
     #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\replace-test\DeidentifierBundle
-    #python fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\replace-test\DeidentifierBundle" --startstr "->getRepository('" --endstr "')->"
+    #python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "')->"
     main(sys.argv[1:])
