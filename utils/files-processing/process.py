@@ -41,14 +41,24 @@ def process_files( dir, findstr ):
         return output
 
     dir_path = os.path.abspath(dir)
+    print("dir_path=", dir_path)
 
-    #1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
+    #0) get all files
+    pattern = "*.php"
+    #files = glob.glob("/home/adam/*/*.php")
+    files = glob.iglob(os.path.join(dir_path, pattern))
+    for file in files:
+        content = file.read()
+        if findstr in content:
+            print(findstr + "exists in ", file)
+
+        #1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
 
 
-    # 2) Create new folder, for example “MyFellowshipApplication”
-    #Final destination path is currentfolder/scripts/dest_dir_name
-    #dest_dir = "scripts/"+dest_dir_name
-    #print("dest_dir="+dest_dir)
+        # 2) Create new folder, for example “MyFellowshipApplication”
+        #Final destination path is currentfolder/scripts/dest_dir_name
+        #dest_dir = "scripts/"+dest_dir_name
+        #print("dest_dir="+dest_dir)
 
 
 
@@ -65,14 +75,10 @@ def process_files( dir, findstr ):
     #Switch to dest_dir
     #os.chdir(dest_dir)
 
-
-
-
-
     # 7) Using that version number, you can deploy instances of your project: $ clasp deploy -V 1
-    command = clasppath + " deploy -V 1"
-    res = runCommand(command.strip())
-    
+    #command = clasppath + " deploy -V 1"
+    #res = runCommand(command.strip())
+
     #output.append(res)
 
 
@@ -104,15 +110,11 @@ def runCommand(command):
 
 def help():
     print(
-        "Usage: python fellapp.py [OPTIONS]\n" \
-        "Example: python fellapp.py --dir MyFellApp --title MyFellApp --clasp C:/Users/ch3/AppData/Roaming/npm/clasp \n" \
+        "Usage: python process.py [OPTIONS]\n" \
+        "Example: python process.py --dir DeidentifierBundle --findstr \"getRepository('\" \n" \
         "\n" \
-        "-d, --dir              folder name where to install the local copies of the Google scripts. New folder will be created to ./script/\n" \
-        "-t, --title            title of a new Google script\n" \
-        "-c, --clasp            path to clasp\n" \
-        "-s, --source           path to the original source script\n" \
-        " \n" \
-        "-e, --env              environment info (optional)\n" \
+        "-d, --dir              subject directory to process files\n" \
+        "-f, --findstr          string to replace\n" \
         "-H, --help             this help"
     )
 
@@ -133,11 +135,11 @@ def main(argv):
         sys.exit(2)
 
     for opt, arg in opts:
-        print('opt=' + opt + ", arg="+arg)
+        #print('opt=' + opt + ", arg="+arg)
         if opt in ("-d", "--dir"):
             dir = arg
         elif opt in ("-f", "--findstr"):
-            title = arg
+            findstr = arg
         elif opt in ("-h", "--help"):
            help()
            #sys.exit()
