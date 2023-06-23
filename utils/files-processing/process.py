@@ -127,7 +127,7 @@ def process_single_file( filepath, startstr, endstr ):
                # use App\OrderformBundle\Entity\EventTypeList;
                 bundledirname = os.path.dirname(classpath)
                 subfolder = os.path.basename(bundledirname)
-                useline = r'use App\{}\{}\{}'.format(bundlefoldername,subfolder,classname)  # +  r"\" + bundlefoldername + r"\" + subfolder + r"\" + classname
+                useline = r'use App\{}\{}\{};'.format(bundlefoldername,subfolder,classname)  # +  r"\" + bundlefoldername + r"\" + subfolder + r"\" + classname
                 print("useline="+useline)
 
                 if useline not in content:
