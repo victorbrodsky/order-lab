@@ -2,8 +2,9 @@
 # Created by Oleg Ivanov
 
 #Modify files
-#1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
-#2) get string 'AppUserdirectoryBundle' and string 'EventObjectTypeList'
+#1) find something like "->getRepository('"
+#->getRepository('AppUserdirectoryBundle:EventObjectTypeList')->
+#2) from tha line in 1 get the string 'AppUserdirectoryBundle' and string 'EventObjectTypeList'
 #3) replace 'AppUserdirectoryBundle:EventObjectTypeList' by 'EventObjectTypeList::class'
 #4) use string 'AppUserdirectoryBundle' to get the location of the file EventObjectTypeList
 #5) construct the namespace according to the file location: 'use App\UserdirectoryBundle\Entity;'
@@ -12,6 +13,8 @@
 import os, sys, getopt
 from subprocess import check_output
 import glob, shutil
+from os import walk
+
 
 DIR = ""
 FINDSTR = ""
@@ -44,45 +47,71 @@ def process_files( dir, findstr ):
     print("dir_path=", dir_path)
 
     #0) get all files
-    pattern = "*.php"
-    #files = glob.glob("/home/adam/*/*.php")
-    files = glob.iglob(os.path.join(dir_path, pattern))
-    for file in files:
-        content = file.read()
-        if findstr in content:
-            print(findstr + "exists in ", file)
+    files = getListOfFiles(dir_path)
+    print("files=", len(list(files)))
+
+    for filepath in files:
+        if ".php" in filepath:
+            #print("filepath=", filepath)
+            file = open(filepath, mode='r', encoding='utf8')
+            content = file.read()
+            #fileObject = glob.glob(file)
+            #content = fileObject.read()
+            if findstr in content:
+                #print(findstr + "exists in ", filepath)
+                process_single_file(filepath,file,findstr)
+
+            file.close()
 
         #1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
 
 
-        # 2) Create new folder, for example “MyFellowshipApplication”
-        #Final destination path is currentfolder/scripts/dest_dir_name
-        #dest_dir = "scripts/"+dest_dir_name
-        #print("dest_dir="+dest_dir)
-
-
-
-    #test
-    # projectid = "1qOC476n4UCg2lfWzAUSbdg7uRGX3reTCHK9PcNDBDogqGpYw969kmBSO"
-    # command = "clasp open "+projectid
-    # res = runCommand(command.strip())
-    # #output.append(res)
-    # return output
-
-
-
-    # 5) Push all files from local folder to Google Drive: $ clasp push
-    #Switch to dest_dir
-    #os.chdir(dest_dir)
-
-    # 7) Using that version number, you can deploy instances of your project: $ clasp deploy -V 1
-    #command = clasppath + " deploy -V 1"
-    #res = runCommand(command.strip())
-
-    #output.append(res)
-
-
     return output
+
+def process_single_file( filepath, file, findstr ):
+    with open(filepath, mode='r', encoding='utf8') as fp:
+        for l_no, line in enumerate(file):
+            # search string
+            if findstr in line:
+                print('string found in a file', filepath)
+                print('Line Number:', l_no)
+                print('Line:', line)
+                # don't look for next lines
+                # break
+
+
+    # lines = file.readlines()
+    # print("lines",len(lines))
+    # for line in lines:
+    #     print(line)
+    #     if line.find(findstr) != -1:
+    #         print(findstr, 'string exists in file')
+
+    # while True:
+    #     line = file.readline()
+    #     print("search for " + findstr)
+    #     if findstr in line:
+    #         print(findstr + "exists in " + line)
+    #     if line == '':
+    #         break
+
+
+def getListOfFiles(dirName):
+    # create a list of file and sub directories
+    # names in the given directory
+    listOfFile = os.listdir(dirName)
+    allFiles = list()
+    # Iterate over all the entries
+    for entry in listOfFile:
+        # Create full path
+        fullPath = os.path.join(dirName, entry)
+        # If entry is a directory then get the list of files in this directory
+        if os.path.isdir(fullPath):
+            allFiles = allFiles + getListOfFiles(fullPath)
+        else:
+            allFiles.append(fullPath)
+
+    return allFiles
 
 def copyfiles( source_dir, dest_dir, pattern ):
     files = glob.iglob(os.path.join(source_dir,pattern))
@@ -175,6 +204,5 @@ def main(argv):
     print(output)
 
 if __name__ == '__main__':
-    #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\venv\Scripts\python.exe fellapp.py --dir "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\utils\google-integration\scripts\MyScriptFellApp" --title “MyScript” --clasp C:/Users/ch3/AppData/Roaming/npm/clasp
-    #--source C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\GoogleForm\FellowshipRecLetters\script
+    #python fellapp.py --dir DeidentifierBundle --findstr "->getRepository('"
     main(sys.argv[1:])
