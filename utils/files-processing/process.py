@@ -75,16 +75,19 @@ def process_single_file( filepath, startstr, endstr ):
         data = file.readlines()
 
     for l_no, line in enumerate(data):
-        print('string found in a file', filepath)
-        print('Line Number:', l_no)
-        print('startstr in:', line)
+        # print('string found in a file', filepath)
+        # print('Line Number:', l_no)
+        # print('startstr in:', line)
         #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
         linemodified = process_line(l_no, line, filepath, startstr, endstr)
-        data[l_no] = linemodified
+        if linemodified != None:
+            data[l_no] = linemodified
+            print('Replaced: l_no=', l_no, " in " + filepath + "\n")
+            print("Replaced line=",linemodified,"\n")
 
     # and write everything back
-    #with open(filepath, 'w', encoding='utf8') as file:
-    #    file.writelines(data)
+    with open(filepath, 'w', encoding='utf8') as file:
+        file.writelines(data)
 
     return
 
@@ -99,7 +102,7 @@ def process_line(l_no,origline,filepath,startstr, endstr):
                 # print('startstr in:', line)
                 # result = re.search(startstr+'(.*)'+endstr, line)
                 result = find_between(line, startstr, endstr)  # AppOrderformBundle:AccessionType
-                print('result=', result)
+                #print('result=', result)
                 # AppOrderformBundle:AccessionType
                 x = result.split(":")
                 bundle = x[0]
@@ -107,9 +110,9 @@ def process_line(l_no,origline,filepath,startstr, endstr):
                 # User::class
                 searchstr = "'" + result + "'"
                 replacedstr = classname + "::class"
-                print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr + "\n")
+                print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
                 linemodified = origline.replace(searchstr, replacedstr)
-                return linemodified;
+                return linemodified
             else:
                 print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
                 # pass
