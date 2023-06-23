@@ -63,6 +63,7 @@ def process_files( dir, startstr, endstr ):
                 process_single_file(filepath,startstr,endstr)
 
             file.close()
+            #return #testing
 
         #1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
 
@@ -74,24 +75,77 @@ def process_single_file( filepath, startstr, endstr ):
         # read a list of lines into data
         data = file.readlines()
 
+    namespaceline = None
+    addLines = []
+
     for l_no, line in enumerate(data):
         # print('string found in a file', filepath)
         # print('Line Number:', l_no)
         # print('startstr in:', line)
+
+        # get line with 'namespace App\DeidentifierBundle\Controller;'
+        if 'namespace App' in line:
+            namespaceline = l_no
+
         #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
-        linemodified = process_line(l_no, line, filepath, startstr, endstr)
+        linemodified, bundle, classname = process_line(l_no, line, filepath, startstr, endstr)
         if linemodified != None:
             data[l_no] = linemodified
             print('Replaced: l_no=', l_no, " in " + filepath + "\n")
             print("Replaced line=",linemodified,"\n")
 
+            #Now make sure class exists in the file's header "use class..."
+            if [bundle,classname] not in addLines:
+                addLines.append([bundle,classname])
+
+    # Now make sure class exists in the file's header "use class..."
+    if 1:
+        print("\n\n Adding 'use ...'")
+        file = open(filepath, mode='r', encoding='utf8')
+        content = file.read()
+        print("### addLines:", addLines, " for " + filepath)
+        for bundle, classname in addLines:
+            print("bundle=" + bundle + ", classname=" + classname)
+            #AppOrderformBundle:Accession => use App\OrderformBundle\Entity\Accession;
+            bundlefoldername = find_between(bundle+":", "App", ":")
+            bundlefoldername_path = "../../orderflex/src/App/"+bundlefoldername
+            bundlefiles = getListOfFiles(bundlefoldername_path)
+            print("!!! "+bundlefoldername_path+": bundlefiles=", len(list(bundlefiles)))
+            foundcount = 0
+            foundclass = None
+            classpath = None
+            for bundlefile in bundlefiles:
+                #print("bundlefile="+bundlefile)
+                if os.path.basename(bundlefile) == classname+".php":
+                    print("Found "+bundlefile)
+                    foundclass = bundlefile
+                    classpath = bundlefile
+                    foundcount = foundcount + 1
+
+            if foundcount == 1:
+               #../../orderflex/src/App/UserdirectoryBundle\Entity\EventTypeList.php =>
+               # use App\OrderformBundle\Entity\EventTypeList;
+                bundledirname = os.path.dirname(classpath)
+                subfolder = os.path.basename(bundledirname)
+                useline = r'use App\{}\{}\{}'.format(bundlefoldername,subfolder,classname)  # +  r"\" + bundlefoldername + r"\" + subfolder + r"\" + classname
+                print("useline="+useline)
+
+                if useline not in content:
+                    print("Add: " + useline + " in ", filepath)
+                    #add after namespace App\DeidentifierBundle\Controller;
+                    #print(data)
+                    print("namespaceline=",namespaceline)
+                    data[namespaceline] = data[namespaceline] + "\n\n\n" + useline
+
+
     # and write everything back
-    with open(filepath, 'w', encoding='utf8') as file:
-        file.writelines(data)
+    if 1:
+        with open(filepath, 'w', encoding='utf8') as file:
+            file.writelines(data)
 
     return
 
-def process_line(l_no,origline,filepath,startstr, endstr):
+def process_line( l_no, origline, filepath, startstr, endstr ):
     line = origline.lstrip()
     # print("\n")
     if startstr in line and endstr in line:
@@ -112,14 +166,14 @@ def process_line(l_no,origline,filepath,startstr, endstr):
                 replacedstr = classname + "::class"
                 print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
                 linemodified = origline.replace(searchstr, replacedstr)
-                return linemodified
+                return linemodified, bundle, classname
             else:
                 print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
                 # pass
         else:
             # print(filepath + "\n" + "line="+line+"\n"+"Skipped: line commented out")
             pass
-    return None
+    return None, None, None
 
 def process_single_file_orig(filepath, startstr, endstr):
     count = 0
