@@ -13,13 +13,13 @@
 import os, sys, getopt
 from subprocess import check_output
 import glob, shutil
-from os import walk
+import re
 
 
 DIR = ""
 FINDSTR = ""
 
-def process_files( dir, findstr ):
+def process_files( dir, startstr, endstr ):
     output = []
 
     if dir == '':
@@ -28,14 +28,15 @@ def process_files( dir, findstr ):
         print(res)
         return output
 
-    if findstr == '':
+    if startstr == '':
         res = "String to find and process is empty"
         output.append(res)
         print(res)
         return output
 
     dir = dir.strip()
-    findstr = findstr.strip()
+    startstr = startstr.strip()
+    endstr = endstr.strip()
 
     if not os.path.exists(dir):
         res = "Folder does not exist: " + dir
@@ -57,9 +58,9 @@ def process_files( dir, findstr ):
             content = file.read()
             #fileObject = glob.glob(file)
             #content = fileObject.read()
-            if findstr in content:
-                #print(findstr + "exists in ", filepath)
-                process_single_file(filepath,file,findstr)
+            if startstr in content:
+                #print(startstr + "exists in ", filepath)
+                process_single_file(filepath,file,startstr,endstr)
 
             file.close()
 
@@ -68,32 +69,28 @@ def process_files( dir, findstr ):
 
     return output
 
-def process_single_file( filepath, file, findstr ):
+def process_single_file( filepath, file, startstr, endstr ):
     with open(filepath, mode='r', encoding='utf8') as fp:
-        for l_no, line in enumerate(file):
+        for l_no, line in enumerate(fp):
+            line = line.lstrip()
             # search string
-            if findstr in line:
-                print('string found in a file', filepath)
-                print('Line Number:', l_no)
-                print('Line:', line)
-                # don't look for next lines
-                # break
+            if line.count(startstr) == 1 and line.count(endstr) == 1:
+                if line[:2] != '//':
+                    if startstr in line and endstr in line:
+                        #print('string found in a file', filepath)
+                        #print('Line Number:', l_no)
+                        #print('startstr in:', line)
+                        #result = re.search(startstr+'(.*)'+endstr, line)
+                        result = find_between(line,startstr,endstr) #AppOrderformBundle:AccessionType
+                        print('result=', result)
+                        #AppOrderformBundle:AccessionType
+                        x = result.split(":")
+                        bundle = x[0]
+                        classname = x[1]
+                        print('bundle=', bundle, ', classname=', classname, "\n")
+            else:
+                print(filepath+": skipped, start string "+startstr+" or end string "+endstr+" occured multiple times")
 
-
-    # lines = file.readlines()
-    # print("lines",len(lines))
-    # for line in lines:
-    #     print(line)
-    #     if line.find(findstr) != -1:
-    #         print(findstr, 'string exists in file')
-
-    # while True:
-    #     line = file.readline()
-    #     print("search for " + findstr)
-    #     if findstr in line:
-    #         print(findstr + "exists in " + line)
-    #     if line == '':
-    #         break
 
 
 def getListOfFiles(dirName):
@@ -112,6 +109,14 @@ def getListOfFiles(dirName):
             allFiles.append(fullPath)
 
     return allFiles
+
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
 
 def copyfiles( source_dir, dest_dir, pattern ):
     files = glob.iglob(os.path.join(source_dir,pattern))
@@ -140,24 +145,26 @@ def runCommand(command):
 def help():
     print(
         "Usage: python process.py [OPTIONS]\n" \
-        "Example: python process.py --dir DeidentifierBundle --findstr \"getRepository('\" \n" \
+        "Example: python process.py --dir DeidentifierBundle --startstr \"getRepository('\" --endstr \"')\" \n" \
         "\n" \
         "-d, --dir              subject directory to process files\n" \
-        "-f, --findstr          string to replace\n" \
+        "-s, --startstr         start string to replace\n" \
+        "-e, --endstr           end string to replace\n" \
         "-H, --help             this help"
     )
 
 def main(argv):
     print("\n### process.py "+"###")
 
-    dir = ''            # -d
-    findstr = ''        # -t
+    dir = ''
+    startstr = ''
+    endstr = ''
 
     try:
         opts, args = getopt.getopt(
             argv,
-            "d:f:h",
-            ["dir=", "findstr=", "help"]
+            "d:s:e:h",
+            ["dir=", "startstr=", "endstr=", "help"]
         )
     except getopt.GetoptError:
         print('Parameters error')
@@ -167,8 +174,10 @@ def main(argv):
         #print('opt=' + opt + ", arg="+arg)
         if opt in ("-d", "--dir"):
             dir = arg
-        elif opt in ("-f", "--findstr"):
-            findstr = arg
+        elif opt in ("-s", "--startstr"):
+            startstr = arg
+        elif opt in ("-e", "--endstr"):
+            endstr = arg
         elif opt in ("-h", "--help"):
            help()
            #sys.exit()
@@ -183,26 +192,30 @@ def main(argv):
         global DIR
         DIR = dir
 
-    if findstr:
+    if startstr:
         global FINDSTR
-        FINDSTR = findstr
+        FINDSTR = startstr
 
-    print('dir=' + dir + ', findstr=' + findstr)
+    print('dir=' + dir + ', startstr=' + startstr + ', endstr=' + endstr)
 
     if dir == '':
         print('Nothing to do: subject directory are not provided')
         return
 
-    if findstr == '':
-        print('Nothing to do: string to find and process is not provided')
+    if startstr == '':
+        print('Nothing to do: startstr is not provided')
+        return
+
+    if endstr == '':
+        print('Nothing to do: endstr is not provided')
         return
 
     runCommand('whoami') #testing runCommand
 
-    output = process_files(dir,findstr)
+    output = process_files(dir,startstr,endstr)
 
     print(output)
 
 if __name__ == '__main__':
-    #python fellapp.py --dir DeidentifierBundle --findstr "->getRepository('"
+    #python fellapp.py --dir DeidentifierBundle --startstr "->getRepository('" --endstr "')"
     main(sys.argv[1:])
