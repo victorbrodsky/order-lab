@@ -895,7 +895,7 @@ class CrnEntryController extends OrderAbstractController
         //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
         // (with an "OR" - a match in either one should list the entry).
         if( $entryBodySearchFilter ) {
-            echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
+            //echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
             //UNSIGNED is not defined in SQL server version used in pacsvendor => use INTEGER
             //use custom CastFunction
             $castAs = "INTEGER";
