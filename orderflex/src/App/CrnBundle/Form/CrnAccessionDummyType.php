@@ -17,6 +17,7 @@
 
 namespace App\CrnBundle\Form;
 
+use App\OrderformBundle\Entity\AccessionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;

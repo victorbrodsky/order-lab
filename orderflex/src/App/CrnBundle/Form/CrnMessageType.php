@@ -19,6 +19,16 @@ namespace App\CrnBundle\Form;
 
 
 
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\Encounter; //process.py script: replaced namespace by ::class: added use line for classname=Encounter
+
+
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
+
+
+use App\OrderformBundle\Entity\MessageTagsList; //process.py script: replaced namespace by ::class: added use line for classname=MessageTagsList
+
+
 use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
@@ -161,7 +171,8 @@ class CrnMessageType extends AbstractType
         if( $this->params['showAccession'] ) {
             //As not-mapped accession type and number
             $builder->add( 'accessionType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+                'class' => AccessionType::class,
                 //'choice_label' => 'name',
                 'label' => 'Accession Type:',
                 'required' => false,
@@ -222,7 +233,8 @@ class CrnMessageType extends AbstractType
                     'attr' => array('class' => 'form-control'),
                 ));
                 $builder->add('previousEncounters', EntityType::class, array(
-                    'class' => 'AppOrderformBundle:Encounter',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                    'class' => Encounter::class,
                     'label' => 'Encounter ID:',
                     'required' => true,
                     'mapped' => false,
@@ -352,7 +364,8 @@ class CrnMessageType extends AbstractType
 
         if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageStatusList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+                'class' => MessageStatusList::class,
                 //'choice_label' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
@@ -373,7 +386,8 @@ class CrnMessageType extends AbstractType
 
         if( $this->params['defaultTagType'] ) {
             $builder->add('entryTags', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageTagsList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagsList'] by [MessageTagsList::class]
+                'class' => MessageTagsList::class,
                 'label' => 'Critical Result Notification Entry Tag(s):',
                 'required' => false,
                 'multiple' => true,
@@ -393,7 +407,8 @@ class CrnMessageType extends AbstractType
             ));
         } else {
             $builder->add('entryTags', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageTagsList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagsList'] by [MessageTagsList::class]
+                'class' => MessageTagsList::class,
                 'label' => 'Critical Result Notification Entry Tag(s):',
                 'required' => false,
                 'multiple' => true,

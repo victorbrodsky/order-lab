@@ -1573,6 +1573,16 @@ For: 'class' => 'AppOrderformBundle:AccessionType',
 python process.py -d ../../orderflex/src/App/TestBundle -s "'class' => '" -e "'," > res.log
 
 
+Test: crn search on home page with filter "Entry Text":
+http://127.0.0.1/order/index_dev.php/critical-result-notifications/?filter%5BsortBy%5D=sort-by-creation-date&filter%5BstartDate%5D=&filter%5BendDate%5D=&filter%5BmessageCategory%5D=&filter%5Bmrntype%5D=&filter%5Bsearch%5D=&filter%5BaccessionType%5D=&filter%5BaccessionNumber%5D=&filter%5BinitialCommunication%5D=&filter%5Bauthor%5D=&filter%5BreferringProvider%5D=&filter%5BreferringProviderSpecialty%5D=&filter%5BencounterLocation%5D=&filter%5Binstitution%5D=&filter%5BmessageStatus%5D=All+except+deleted&filter%5BpatientListTitle%5D=&filter%5Battending%5D=&filter%5BentryBodySearch%5D=sss&filter%5Btask%5D=&filter%5BtaskType%5D=&filter%5BtaskUpdatedBy%5D=&filter%5BtaskAddedBy%5D=&filter%5BpatientPhone%5D=&filter%5BpatientEmail%5D=&filter%5BattachmentType%5D=
+$fromEntity = "AppUserdirectoryBundle:ObjectTypeText";
+            $entryBodySearchStr =
+                //"SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+                "SELECT s FROM user_objecttypetext s WHERE " .
+                "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND " .
+                "( (LOWER(s.value) LIKE LOWER(:entryBodySearch)) OR (LOWER(s.secondaryValue) LIKE LOWER(:entryBodySearch))  )" .
+                ")";
+
 
 
 

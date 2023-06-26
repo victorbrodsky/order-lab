@@ -17,6 +17,28 @@
 
 namespace App\CrnBundle\Form;
 
+
+
+use App\CrnBundle\Entity\CrnEntryTagsList; //process.py script: replaced namespace by ::class: added use line for classname=CrnEntryTagsList
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\HealthcareProviderSpecialtiesList; //process.py script: replaced namespace by ::class: added use line for classname=HealthcareProviderSpecialtiesList
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
+
+
+use App\OrderformBundle\Entity\CalllogTaskTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CalllogTaskTypeList
+
+
+use App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList; //process.py script: replaced namespace by ::class: added use line for classname=HealthcareProviderCommunicationList
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -61,7 +83,8 @@ class CrnFilterType extends AbstractType
         ));
 
         $builder->add('entryTags', EntityType::class, array(
-            'class' => 'AppCrnBundle:CrnEntryTagsList',
+        //process.py script: replaced namespace by ::class: ['AppCrnBundle:CrnEntryTagsList'] by [CrnEntryTagsList::class]
+            'class' => CrnEntryTagsList::class,
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -199,7 +222,8 @@ class CrnFilterType extends AbstractType
         ));
 
         $builder->add('referringProviderSpecialty', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:HealthcareProviderSpecialtiesList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HealthcareProviderSpecialtiesList'] by [HealthcareProviderSpecialtiesList::class]
+            'class' => HealthcareProviderSpecialtiesList::class,
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Specialty"),
@@ -210,7 +234,8 @@ class CrnFilterType extends AbstractType
         ));
 
         $builder->add('encounterLocation', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Location',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            'class' => Location::class,
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Location"),
@@ -224,7 +249,8 @@ class CrnFilterType extends AbstractType
 
         //Institution or Collaboration
         $builder->add('institution', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'getNameShortName',
@@ -249,7 +275,8 @@ class CrnFilterType extends AbstractType
 
         //Patient List
         $builder->add('patientListTitle', EntityType::class, array(
-            'class' => 'AppOrderformBundle:PatientListHierarchy',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+            'class' => PatientListHierarchy::class,
             'label' => false,
             'required' => false,
             'choice_label' => 'name',    //'getNodeNameWithParent',
@@ -343,7 +370,8 @@ class CrnFilterType extends AbstractType
             //'choices_as_values' => true,
         ));
         $builder->add('taskType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:CalllogTaskTypeList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogTaskTypeList'] by [CalllogTaskTypeList::class]
+            'class' => CalllogTaskTypeList::class,
             'label' => false,
             'required' => false,
             //'choice_label' => 'name',
@@ -419,7 +447,8 @@ class CrnFilterType extends AbstractType
         //Accession's Initial Communication (referringProviderCommunicationFilter)
         //echo "defaultCommunication=".$this->params['defaultCommunication']."<br>";
         $builder->add('initialCommunication', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HealthcareProviderCommunicationList'] by [HealthcareProviderCommunicationList::class]
+            'class' => HealthcareProviderCommunicationList::class,
             'label' => false,
             'required' => false,
             //'mapped' => false,
@@ -441,7 +470,8 @@ class CrnFilterType extends AbstractType
 //        ));
         
         $builder->add( 'accessionType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            'class' => AccessionType::class,
             //'choice_label' => 'name',
             'label' => false,
             'required' => false,

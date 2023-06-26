@@ -17,6 +17,7 @@
 
 namespace App\CrnBundle\Form;
 
+use App\OrderformBundle\Entity\AccessionType;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

@@ -172,11 +172,14 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                             bundle = x[0]
                             classname = x[1]
                         else:
-                            print("Warning: Skipped: the string to replace is not splitted by [:]; result" + result + "\n")
+                            #print("Warning: Skipped: the string to replace is not splitted by [:]; result" + result + "\n")
+                            pass
                     else:
-                        print("Warning: Skipped: the string to replace does not have [:]; result" + result + "\n")
+                        #print("Warning: Skipped: the string to replace does not have [:]; result" + result + "\n")
+                        pass
                 else:
-                    print("Warning: Skipped: the string to replace is not valid; result" + result + "\n")
+                    #print("Warning: Skipped: the string to replace is not valid; result" + result + "\n")
+                    pass
 
                 if bundle is None or classname is None:
                     print("Warning: Skipped: the string to replace is not valid namespace alias; result" + result + "\n")

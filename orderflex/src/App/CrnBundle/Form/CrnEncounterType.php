@@ -17,6 +17,12 @@
 
 namespace App\CrnBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\Encounter; //process.py script: replaced namespace by ::class: added use line for classname=Encounter
+
+
+use App\OrderformBundle\Entity\EncounterStatusList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterStatusList
 use App\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use App\OrderformBundle\Form\EncounterInfoTypeType;
 use App\OrderformBundle\Form\EncounterLocationType;
@@ -229,7 +235,8 @@ class CrnEncounterType extends AbstractType
 //        ));
         if(0) {
             $builder->add('previousEncounters', EntityType::class, array(
-                'class' => 'AppOrderformBundle:Encounter',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                'class' => Encounter::class,
                 'label' => 'New or Previous Encounter:',
                 'required' => false,
                 'mapped' => false,
@@ -430,7 +437,8 @@ class CrnEncounterType extends AbstractType
 //        });
 
         $builder->add( 'encounterStatus', EntityType::class, array(
-            'class' => 'AppOrderformBundle:EncounterStatusList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterStatusList'] by [EncounterStatusList::class]
+            'class' => EncounterStatusList::class,
             //'choice_label' => 'name',
             'label'=>'Encounter Status:',
             'required'=> false,

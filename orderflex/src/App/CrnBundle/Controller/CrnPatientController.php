@@ -1390,31 +1390,31 @@ class CrnPatientController extends PatientController {
         }
         exit('testing');
     }
-    //NOT USED
-    public function testSelectMessagesWithMaxVersion_OLD($patientid) {
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQuery('
-            SELECT message, message.version AS HIDDEN
-            FROM AppOrderformBundle:Message message
-            INNER JOIN message.patient patient'.
-            ' LEFT OUTER JOIN AppOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
-            ' WHERE patient.id = :patient
-            ORDER BY message.oid ASC'
-        )->setParameter('patient', $patientid);
-
-        echo "query=".$query->getSql()."<br>";
-
-        $messages = $query->getResult();
-
-        echo "messages count=".count($messages)."<br>";
-
-        foreach( $messages as $message ) {
-            echo "Message=".$message->getMessageOidVersion()."<br>";
-        }
-
-        exit("testing");
-    }
+//    //NOT USED
+//    public function testSelectMessagesWithMaxVersion_OLD($patientid) {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $query = $em->createQuery('
+//            SELECT message, message.version AS HIDDEN
+//            FROM AppOrderformBundle:Message message
+//            INNER JOIN message.patient patient'.
+//            ' LEFT OUTER JOIN AppOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
+//            ' WHERE patient.id = :patient
+//            ORDER BY message.oid ASC'
+//        )->setParameter('patient', $patientid);
+//
+//        echo "query=".$query->getSql()."<br>";
+//
+//        $messages = $query->getResult();
+//
+//        echo "messages count=".count($messages)."<br>";
+//
+//        foreach( $messages as $message ) {
+//            echo "Message=".$message->getMessageOidVersion()."<br>";
+//        }
+//
+//        exit("testing");
+//    }
 
     /**
      * @Route("/patient/list-previous-tasks/", name="crn-list-previous-tasks", methods={"GET","POST"}, options={"expose"=true})

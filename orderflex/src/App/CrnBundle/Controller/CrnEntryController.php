@@ -895,14 +895,17 @@ class CrnEntryController extends OrderAbstractController
         //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
         // (with an "OR" - a match in either one should list the entry).
         if( $entryBodySearchFilter ) {
-            //echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
+            echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
             //UNSIGNED is not defined in SQL server version used in pacsvendor => use INTEGER
             //use custom CastFunction
             $castAs = "INTEGER";
             if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
                 $castAs = "UNSIGNED";
             }
-            $entryBodySearchStr = "SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+            $fromEntity = "App\\UserdirectoryBundle\\Entity\\ObjectTypeText"; //"AppUserdirectoryBundle:ObjectTypeText";
+            $entryBodySearchStr =
+                //"SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+                "SELECT s FROM $fromEntity s WHERE " .
                 "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND " .
                 "( (LOWER(s.value) LIKE LOWER(:entryBodySearch)) OR (LOWER(s.secondaryValue) LIKE LOWER(:entryBodySearch))  )" .
                 ")";

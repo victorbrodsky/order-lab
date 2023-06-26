@@ -55,6 +55,7 @@ use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -2045,7 +2046,8 @@ class CrnUtil
         ///////////// 2) default user wrappers for this source ///////////////
         ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+            //->from('AppUserdirectoryBundle:UserWrapper', 'list')
+            ->from(UserWrapper::class, 'list')
             ->select("list")
             ->leftJoin("list.user", "user")
             ->leftJoin("user.infos", "infos")
@@ -3137,7 +3139,8 @@ class CrnUtil
         $subquery = $em->createQueryBuilder()
             ->select('COUNT(html.id)')
             //->select('html.id')
-            ->from('AppUserdirectoryBundle:ObjectTypeText', 'html')
+            //->from('AppUserdirectoryBundle:ObjectTypeText', 'html')
+            ->from(ObjectTypeText::class, 'html')
             ->leftJoin('html.formNode','formNodeHtml')
             ->where("formNodeHtml.id = " . $destinationFormNodeId)
             //->andWhere("html.value IS NOT NULL")
