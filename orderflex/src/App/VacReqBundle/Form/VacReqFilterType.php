@@ -17,6 +17,12 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -52,7 +58,8 @@ class VacReqFilterType extends AbstractType
             $this->params['approverRole']
         ) {
             $builder->add('requestType', EntityType::class, array(
-                'class' => 'AppVacReqBundle:VacReqRequestTypeList',
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+                'class' => VacReqRequestTypeList::class,
                 'choice_label' => 'name',
                 'label' => false,
                 'required' => true,
@@ -64,7 +71,8 @@ class VacReqFilterType extends AbstractType
 
         if ($this->params['filterShowUser']) {
             $builder->add('user', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
@@ -74,7 +82,8 @@ class VacReqFilterType extends AbstractType
             ));
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
@@ -236,7 +245,8 @@ class VacReqFilterType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                                $institutionObject = $this->params['em']->getRepository(Institution::class)->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;

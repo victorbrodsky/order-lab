@@ -17,6 +17,12 @@
 
 namespace App\VacReqBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
 use App\UserdirectoryBundle\Entity\User;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Form\VacReqFilterType;
@@ -132,7 +138,8 @@ class RequestIndexController extends OrderAbstractController
 
         $routeName = $request->get('_route');
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
         $dql = $repository->createQueryBuilder("request");
 
         $dql->select('request as object');
@@ -164,7 +171,8 @@ class RequestIndexController extends OrderAbstractController
             if( $approver ) {
                 //echo "Yes approver <br>";
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
-                $vacreqRoles = $em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $vacreqRoles = $em->getRepository(User::class)->
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
                 //select all requests with institution is equal or under vacreqRole institution.
@@ -177,10 +185,12 @@ class RequestIndexController extends OrderAbstractController
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
                             //regular institution
-                            $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $instCriterionArr[] = $em->getRepository(Institution::class)->
                                 selectNodesUnderParentNode($roleInst,"institution",false);
                             //regular tentativeInstitution
-                            $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $instCriterionArr[] = $em->getRepository(Institution::class)->
                                 selectNodesUnderParentNode($roleInst,"tentativeInstitution",false);
                         }
                     }
@@ -429,7 +439,8 @@ class RequestIndexController extends OrderAbstractController
 
         //////////////////// get list of users with "unknown" user ////////////////////
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
@@ -467,7 +478,8 @@ class RequestIndexController extends OrderAbstractController
         //echo "requestTypeId=".$requestTypeId."<br>";
         $requestTypeAbbreviation = null;
         if( $requestTypeId ) {
-            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+            $requestType = $em->getRepository(VacReqRequestTypeList::class)->find($requestTypeId);
             if (!$requestType) {
                 throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
             }
@@ -530,7 +542,8 @@ class RequestIndexController extends OrderAbstractController
                     " Once they are set up, this page will show cumulative summary data.";
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -726,7 +739,8 @@ class RequestIndexController extends OrderAbstractController
                     //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
                     //$where .= "institution=".$groups->getId();
                     //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                    $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $where .= $em->getRepository(Institution::class)->getCriterionStrForCollaborationsByNode(
                         $groups,
                         "institution",
                         array("Union", "Intersection", "Untrusted Intersection"),

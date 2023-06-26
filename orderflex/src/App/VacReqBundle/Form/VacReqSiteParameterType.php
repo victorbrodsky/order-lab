@@ -17,6 +17,9 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
 //use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 //use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -112,7 +115,8 @@ class VacReqSiteParameterType extends AbstractType
 //        ));
 
         $builder->add('institutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'getNameAndId', //name
             'label'=>'Instance maintained for the following institutions (Holiday\'s default institutions):',
             'required'=> false,

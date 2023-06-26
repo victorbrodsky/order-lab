@@ -17,6 +17,21 @@
 
 namespace App\VacReqBundle\Controller;
 
+
+
+use App\VacReqBundle\Entity\VacReqRequest; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequest
+
+
+use App\VacReqBundle\Entity\VacReqCarryOver; //process.py script: replaced namespace by ::class: added use line for classname=VacReqCarryOver
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
+
+
+use App\VacReqBundle\Entity\VacReqObservedHolidayList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqObservedHolidayList
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -408,7 +423,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $em->getRepository(User::class)->find($userId);
 
         $yearRangeStr = $request->request->get('year');
 
@@ -464,7 +480,8 @@ class DefaultController extends OrderAbstractController
         $status = 'approved';
 
         //1) get carry-over VacReqRequest with the same year and user
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request');
@@ -581,7 +598,8 @@ class DefaultController extends OrderAbstractController
         //2) find approved carry over request for this user and year
         //3) compare days
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqCarryOver');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqCarryOver'] by [VacReqCarryOver::class]
+        $repository = $em->getRepository(VacReqCarryOver::class);
         $dql =  $repository->createQueryBuilder("carryover");
 
         $dql->select('carryover');
@@ -658,7 +676,8 @@ class DefaultController extends OrderAbstractController
         $params = array();
         $changeStatusTo = 'rejected';
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request');
@@ -763,7 +782,8 @@ class DefaultController extends OrderAbstractController
         $params = array();
         $changeStatusTo = 'rejected';
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request');
@@ -832,7 +852,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $defaultApprovalType = 'Faculty';
-        $facultyApprovalType = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findOneByName($defaultApprovalType);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+        $facultyApprovalType = $em->getRepository(VacReqApprovalTypeList::class)->findOneByName($defaultApprovalType);
         echo "facultyApprovalType=$facultyApprovalType <br><br>";
 
         $settings = $vacreqUtil->getInstitutionSettingArray();
@@ -902,7 +923,8 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $holidays = $em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqObservedHolidayList'] by [VacReqObservedHolidayList::class]
+        $holidays = $em->getRepository(VacReqObservedHolidayList::class)->findAll();
         echo "observed holidays=".count($holidays)."<br>";
 
         foreach($holidays as $holiday) {

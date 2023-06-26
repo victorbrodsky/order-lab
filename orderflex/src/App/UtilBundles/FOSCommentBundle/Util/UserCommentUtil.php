@@ -47,7 +47,8 @@ class UserCommentUtil {
 
 
     public function findThreadById( $id ) {
-        $thread = $this->em->getRepository('AppUserdirectoryBundle:FosThread')->find($id);
+        //$thread = $this->em->getRepository('AppUserdirectoryBundle:FosThread')->find($id);
+        $thread = $this->em->getRepository(FosThread::class)->find($id);
 
         return $thread;
     }
@@ -106,7 +107,8 @@ class UserCommentUtil {
 
         //return $this->em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        //$repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        $repository = $this->em->getRepository(FosComment::class);
 
         $dql =  $repository->createQueryBuilder("comment");
         $dql->select('comment');
@@ -134,7 +136,8 @@ class UserCommentUtil {
 
         //echo "threadId=".$thread->getId()."<br>";
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        //$repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        $repository = $this->em->getRepository(FosComment::class);
 
 //        $dql =  $repository->createQueryBuilder("comment");
 //        $dql->select('comment');
@@ -194,7 +197,8 @@ class UserCommentUtil {
         if( !$commentId ) {
             return null;
         }
-        return $this->em->getRepository('AppUserdirectoryBundle:FosComment')->find($commentId);
+        //return $this->em->getRepository('AppUserdirectoryBundle:FosComment')->find($commentId);
+        return $this->em->getRepository(FosComment::class)->find($commentId);
     }
 
 }

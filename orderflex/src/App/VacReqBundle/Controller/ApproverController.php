@@ -17,6 +17,18 @@
 
 namespace App\VacReqBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\SiteList; //process.py script: replaced namespace by ::class: added use line for classname=SiteList
+
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
 use App\VacReqBundle\Form\VacReqApprovalGroupType;
 use App\VacReqBundle\Form\VacReqGroupManageApprovaltypesType;
 use App\VacReqBundle\Form\VacReqSummaryFilterType;
@@ -128,7 +140,8 @@ class ApproverController extends OrderAbstractController
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleApprovers = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUPERVISOR', $groupId);
         //echo "roleApprovers=".count($roleApprovers)."<br>";
         //exit();
 
@@ -139,7 +152,8 @@ class ApproverController extends OrderAbstractController
 
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -151,9 +165,11 @@ class ApproverController extends OrderAbstractController
 //        if( $roleSubmitter ) {
 //            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
 //        }s
-        $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $submitters = $em->getRepository(User::class)->findUsersBySitePermissionObjectActionInstitution("vacreq","VacReqRequest","create",$groupId,$onlyWorking);
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($groupId);
 
         //vacreq_util
         //$vacreqUtil = $this->container->get('vacreq_util');
@@ -193,7 +209,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->vacreqUtil;
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($institutionId);
         //echo "organizationalGroupInstitution=$organizationalGroupInstitution <br>";
         //Create proxyapprover and other new roles for existing org group
         $vacreqUtil->checkAndCreateVacReqRoles($organizationalGroupInstitution, $request);
@@ -218,34 +235,40 @@ class ApproverController extends OrderAbstractController
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleApprovers = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
         //find role submitters by institution
         $submitters = array();
-        $roleSubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "submitters=".count($submitters)."<br>";
 
         //find role proxy submitters by institution
         $roleProxySubmitter = NULL;
         $proxySubmitters = array();
-        $roleProxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleProxySubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
         if( count($roleProxySubmitters) > 0 ) {
             $roleProxySubmitter = $roleProxySubmitters[0];
         }
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleProxySubmitter ) {
-            $proxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $proxySubmitters = $em->getRepository(User::class)->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "proxySubmitters=".count($proxySubmitters)."<br>";
 
@@ -309,11 +332,13 @@ class ApproverController extends OrderAbstractController
 
         //find role approvers by institution
         $approvers = array();
-        $roleApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleApprovers = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-            $approvers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
 
@@ -325,26 +350,31 @@ class ApproverController extends OrderAbstractController
 
         //find role submitters by institution
         $submitters = array();
-        $roleSubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
         $roleSubmitter = $roleSubmitters[0];
         //echo "roleSubmitter=".$roleSubmitter."<br>";
         if( $roleSubmitter ) {
-            $submitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
         }
 
         //find role proxy submitters by institution
         $proxySubmitters = array();
         $roleProxySubmitter = NULL;
-        $roleProxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleProxySubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_PROXYSUBMITTER', $institutionId);
         if( count($roleProxySubmitters) > 0 ) {
             $roleProxySubmitter = $roleProxySubmitters[0];
         }
         //echo "roleProxySubmitter=".$roleProxySubmitter."<br>";
         if( $roleProxySubmitter ) {
-            $proxySubmitters = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $proxySubmitters = $em->getRepository(User::class)->findUserByRole($roleProxySubmitter->getName(),"infos.lastName",$onlyWorking);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($institutionId);
 
         //get approval group type (Faculty, Fellows)
         $approvalGroupType = $vacreqUtil->getVacReqApprovalGroupType($organizationalGroupInstitution);
@@ -410,13 +440,15 @@ class ApproverController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $em->getRepository(User::class)->find($userid);
 
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($instid);
 
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
@@ -430,7 +462,8 @@ class ApproverController extends OrderAbstractController
         //$securityUtil = $this->container->get('user_security_utility');
         //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
 
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findById($roleId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findById($roleId);
         $rolesArr = array();
         foreach( $roles as $role ) {
             //$rolesArr[$role->getName()] = $role->getAlias();
@@ -489,12 +522,14 @@ class ApproverController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $em->getRepository(User::class)->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($instid);
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -569,18 +604,21 @@ class ApproverController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $em->getRepository(User::class)->find($userid);
         if( !$subjectUser ) {
             throw $this->createNotFoundException('Unable to find Vacation Request user by id='.$userid);
         }
 
-        $organizationalGroupInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $organizationalGroupInstitution = $em->getRepository(Institution::class)->find($instid);
         if( !$organizationalGroupInstitution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
 
         //get role by roletype
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find( $roleId );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->find( $roleId );
         if( $role ) {
 //            echo "subjectUser=".$subjectUser."<br>";
 //            echo "role=".$role."<br><br>";
@@ -643,7 +681,8 @@ class ApproverController extends OrderAbstractController
             return $this->redirect($this->generateUrl('vacreq-nopermission'));
         }
 
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->find($roleId);
 
         if( !$role ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
@@ -692,12 +731,14 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->find($roleId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->find($roleId);
         if( !$role ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
         }
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -793,7 +834,8 @@ class ApproverController extends OrderAbstractController
         if( $form->isSubmitted() && $form->isValid() ) {
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+            $site = $em->getRepository(SiteList::class)->findOneByAbbreviation('vacreq');
 
             //add group
             //$instid = null;
@@ -824,7 +866,8 @@ class ApproverController extends OrderAbstractController
 
             //create approver role
             $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-            $approverRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $approverRole = $em->getRepository(Roles::class)->findOneByName($roleName);
             if( !$approverRole ) {
                 $approverRole = new Roles();
                 $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
@@ -853,7 +896,8 @@ class ApproverController extends OrderAbstractController
 
             //create submitter role
             $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
-            $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $submitterRole = $em->getRepository(Roles::class)->findOneByName($roleName);
             if( !$submitterRole ) {
                 $submitterRole = new Roles();
                 $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -882,7 +926,8 @@ class ApproverController extends OrderAbstractController
 
             //create submitter role
             $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
-            $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $submitterRole = $em->getRepository(Roles::class)->findOneByName($roleName);
             if( !$submitterRole ) {
                 $submitterRole = new Roles();
                 $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -955,7 +1000,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -997,7 +1043,8 @@ class ApproverController extends OrderAbstractController
 
         //1) find approver roles with institution
         $role = null;
-        $roles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roles = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName("vacreq",$rolePartialName,$instid);
         if( count($roles)>0 ) {
             $role = $roles[0];
             $roleName = $role->getName();
@@ -1019,7 +1066,8 @@ class ApproverController extends OrderAbstractController
 
         //2) remove approver role from all users
         if( $role ) {
-            $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleName,"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $users = $em->getRepository(User::class)->findUserByRole($roleName,"infos.lastName",$onlyWorking);
             foreach( $users as $user ) {
                 $user->removeRole($roleName);
                 $userNamesArr[] = $user."";
@@ -1033,7 +1081,8 @@ class ApproverController extends OrderAbstractController
 
         //Event Log
         if( $role && count($userNamesArr) > 0 ) {
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->find($instid);
             $institutionTreeName = null;
             if( $institution ) {
                 $institutionTreeName = $institution->getTreeName();
@@ -1074,7 +1123,8 @@ class ApproverController extends OrderAbstractController
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1121,7 +1171,8 @@ class ApproverController extends OrderAbstractController
 //        $keytype = $request->query->get('keytype');
 //        $keytype = trim((string)$keytype);
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1190,7 +1241,8 @@ class ApproverController extends OrderAbstractController
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1252,7 +1304,8 @@ class ApproverController extends OrderAbstractController
             return $response;
         }
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1317,7 +1370,8 @@ class ApproverController extends OrderAbstractController
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1362,7 +1416,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1456,7 +1511,8 @@ class ApproverController extends OrderAbstractController
 
         $entity = $this->vacreqUtil->getSettingsByInstitution($instid);
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1501,7 +1557,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1558,7 +1615,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1623,7 +1681,8 @@ class ApproverController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($instid);
         if( !$institution ) {
             throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
         }
@@ -1634,7 +1693,8 @@ class ApproverController extends OrderAbstractController
         if( $institution ) {
 
             $originalApprovalGroupType = $vacreqUtil->getVacReqApprovalGroupType($institution);
-            $approvalGroupType = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvalgrouptypeid);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            $approvalGroupType = $em->getRepository(VacReqApprovalTypeList::class)->find($approvalgrouptypeid);
 
             $typeUpdated = false;
             $originalApprovalGroupTypeId = NULL;
@@ -1859,7 +1919,8 @@ class ApproverController extends OrderAbstractController
             $submitters = $newSubmitters;
         }
 
-        $group = $em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $group = $em->getRepository(Institution::class)->find($groupId);
 
         //$approvalGroupType
 //        $approvalGroupTypeStr = $vacreqUtil->getVacReqApprovalGroupType($group,true);
@@ -1949,8 +2010,10 @@ class ApproverController extends OrderAbstractController
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $institution = $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             $defaultInstName,
             $wcmc,
             $mapper
@@ -1974,7 +2037,8 @@ class ApproverController extends OrderAbstractController
 
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $site = $em->getRepository(SiteList::class)->findOneByAbbreviation('vacreq');
 
         $count = 0;
 
@@ -1984,7 +2048,8 @@ class ApproverController extends OrderAbstractController
 
         //create approver role
         $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-        $approverRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $approverRole = $em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$approverRole ) {
             $approverRole = new Roles();
             $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
@@ -2013,7 +2078,8 @@ class ApproverController extends OrderAbstractController
 
         //create submitter role
         $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
-        $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $submitterRole = $em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$submitterRole ) {
             $submitterRole = new Roles();
             $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -2042,7 +2108,8 @@ class ApproverController extends OrderAbstractController
 
         //create submitter role
         $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
-        $submitterRole = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $submitterRole = $em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$submitterRole ) {
             $submitterRole = new Roles();
             $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);

@@ -9,6 +9,12 @@
 namespace App\VacReqBundle\Util;
 
 
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\VacReqBundle\Entity\VacReqHolidayList;
 use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,9 +68,11 @@ class VacReqCalendarUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
-        $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByAbbreviation($country);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+        $countryEntity = $this->em->getRepository(Countries::class)->findOneByAbbreviation($country);
         if( !$countryEntity ) {
-            $countryEntity = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            $countryEntity = $this->em->getRepository(Countries::class)->findOneByName("United States");
         }
         if( !$countryEntity ) {
             throw new \Exception( 'Countries is not found by abbreviation=' . $country );
@@ -320,7 +328,8 @@ class VacReqCalendarUtil
             $uniqueNameStr = $year."-".$holidayName; //year-holidayName
             //exit("uniqueNameStr=$uniqueNameStr");
 
-            $thisHoliday = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList')->findOneByName($uniqueNameStr);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+            $thisHoliday = $this->em->getRepository(VacReqHolidayList::class)->findOneByName($uniqueNameStr);
             if( $thisHoliday ) {
                 //echo "Already exists by $uniqueNameStr <br>";
                 //exit('111');
@@ -362,7 +371,8 @@ class VacReqCalendarUtil
     }
 
     public function findHolidayDay( $name, $date, $country, $sameStr=NULL ) {
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $this->em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder('holidays');
 
         $dql->leftJoin("holidays.country", "country");
@@ -492,7 +502,8 @@ class VacReqCalendarUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $this->em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder('holidays');
 
         $dql->andWhere("holidays.holidayDate >= :startDate AND holidays.holidayDate <= :endDate");
@@ -591,7 +602,8 @@ class VacReqCalendarUtil
     }
 
     public function getObservedHolidaysByInstitution($institutionId) {
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqObservedHolidayList'] by [VacReqObservedHolidayList::class]
+        $repository = $this->em->getRepository(VacReqObservedHolidayList::class);
 
         $dql = $repository->createQueryBuilder('list');
         $dql->select('list');
@@ -608,10 +620,12 @@ class VacReqCalendarUtil
         if( $institutionId && filter_var($institutionId, FILTER_VALIDATE_INT) !== false ) {
             $dql->leftJoin("list.institutions", "institutions");
 
-            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $this->em->getRepository(Institution::class)->find($institutionId);
             //$parentNode, $field, $default=true
             $instStr =
-                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $this->em->getRepository(Institution::class)->
                 selectNodesUnderParentNode($institution,"institutions",$default);
             $dql->andWhere($instStr);
         }
@@ -641,7 +655,8 @@ class VacReqCalendarUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $this->em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder('holidays');
 
         $dql->where('holidays.observed = true');
@@ -663,10 +678,12 @@ class VacReqCalendarUtil
             //$dql->andWhere("institutions.id IS NOT NULL AND institutions.id = :institutions");
             //$parameters['institutions'] = $institutionId;
 
-            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $this->em->getRepository(Institution::class)->find($institutionId);
             //$parentNode, $field, $default=true
             $instStr =
-                $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $this->em->getRepository(Institution::class)->
                 selectNodesUnderParentNode($institution,"institutions",$default);
 
             //If holiday does not have institution => don't select this holiday
@@ -722,7 +739,8 @@ class VacReqCalendarUtil
         }
 
         //find already exited by $holidayName
-        $observedHoliday = $this->em->getRepository('AppVacReqBundle:VacReqObservedHolidayList')->findOneByName($holidayName);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqObservedHolidayList'] by [VacReqObservedHolidayList::class]
+        $observedHoliday = $this->em->getRepository(VacReqObservedHolidayList::class)->findOneByName($holidayName);
         if( $observedHoliday ) {
             return $observedHoliday;
         }
@@ -782,7 +800,8 @@ class VacReqCalendarUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $this->em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder('holidays');
 
         $dql->where('holidays.holidayName = :holidayName');

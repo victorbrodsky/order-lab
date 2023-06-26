@@ -17,6 +17,12 @@
 
 namespace App\VacReqBundle\Controller;
 
+
+
+use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Util\ErrorHelperUser;
 use App\VacReqBundle\Entity\VacReqRequest;
@@ -114,7 +120,8 @@ class RequestController extends OrderAbstractController
         //set request type
         if( $routeName == "vacreq_carryoverrequest" ) {
             //carryover request
-            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+            $requestType = $em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("carryover");
             $title = "Request carry over of vacation days";
             $eventType = "Carry Over Request Created";
 
@@ -149,7 +156,8 @@ class RequestController extends OrderAbstractController
 
         } else {
             //business/vacation request
-            $requestType = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+            $requestType = $em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("business-vacation");
             $title = "Vacation/Business Travel Request";
             $eventType = "Business/Vacation Request Created";
 
@@ -418,7 +426,8 @@ class RequestController extends OrderAbstractController
         if( is_array($carryoverPendingRequests) ) {
             $carryoverPendingRequestsCount = count($carryoverPendingRequests);
         }
-        $requestTypeCarryOver = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("carryover");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+        $requestTypeCarryOver = $em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("carryover");
         if( $requestTypeCarryOver ) {
             $requestTypeCarryOverId = $requestTypeCarryOver->getId();
         } else {
@@ -468,7 +477,8 @@ class RequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
@@ -522,7 +532,8 @@ class RequestController extends OrderAbstractController
         $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Vacation Request by id='.$id);
@@ -955,7 +966,8 @@ class RequestController extends OrderAbstractController
         $user = $this->getUser();
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
@@ -1278,7 +1290,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -1393,7 +1406,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser();
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
@@ -1476,7 +1490,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Request by id=' . $id);
@@ -1617,7 +1632,8 @@ class RequestController extends OrderAbstractController
                 );
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -1835,7 +1851,8 @@ class RequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -1896,7 +1913,8 @@ class RequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -1987,7 +2005,8 @@ class RequestController extends OrderAbstractController
     }
     public function findUniqueUserRequests() {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
@@ -2015,7 +2034,8 @@ class RequestController extends OrderAbstractController
         $vacreqUtil = $this->container->get('vacreq_util');
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $em->getRepository(User::class)->find($userId);
         $overlapRequests = $vacreqUtil->getOverlappedUserRequests($user,true,true);
         //$overlapRequests = $vacreqUtil->getNotOverlapNumberOfWorkingDays($user,'requestVacation');
 
@@ -2044,7 +2064,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //find pending carryover request
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->leftJoin("request.institution", "institution");
         $dql->leftJoin("request.requestType", "requestType");

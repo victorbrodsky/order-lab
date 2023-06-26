@@ -17,6 +17,9 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -79,7 +82,8 @@ class VacReqCalendarFilterType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=" . $submittedInstitutionObject . "<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                                $institutionObject = $this->params['em']->getRepository(Institution::class)->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;

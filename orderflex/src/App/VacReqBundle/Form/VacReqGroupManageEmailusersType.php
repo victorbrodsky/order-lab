@@ -18,6 +18,9 @@
 namespace App\VacReqBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -46,7 +49,8 @@ class VacReqGroupManageEmailusersType extends AbstractType
 
         //'emailUsers'
         $builder->add($this->params['userFieldName'], EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => $this->params['userLabel'],  //"E-Mail all requests and responses to:",
             'required' => false,
             'multiple' => true,

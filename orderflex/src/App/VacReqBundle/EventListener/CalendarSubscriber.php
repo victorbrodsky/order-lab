@@ -10,6 +10,15 @@ namespace App\VacReqBundle\EventListener;
 
 
 
+use App\VacReqBundle\Entity\VacReqRequest; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequest
+
+
+use App\VacReqBundle\Entity\VacReqRequestFloating; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestFloating
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
 use CalendarBundle\CalendarEvents;
 use CalendarBundle\Entity\Event;
 use CalendarBundle\Event\CalendarEvent;
@@ -84,7 +93,8 @@ class CalendarSubscriber implements EventSubscriberInterface
             $groupId = NULL;
         }
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql = $repository->createQueryBuilder('request');
 
         $dql->select('request');
@@ -108,8 +118,10 @@ class CalendarSubscriber implements EventSubscriberInterface
         //$dql->andWhere('request.institution = :groupId');
         if( $groupId ) {
             $dql->leftJoin("request.institution","institution");
-            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
-            $instStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $this->em->getRepository(Institution::class)->find($groupId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $instStr = $this->em->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
             //echo "instStr=".$instStr."<br>";
             $dql->andWhere($instStr);
         }
@@ -285,7 +297,8 @@ class CalendarSubscriber implements EventSubscriberInterface
             $groupId = NULL;
         }
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $this->em->getRepository(VacReqRequestFloating::class);
         $dql = $repository->createQueryBuilder('request');
 
         $dql->select('request');
@@ -296,8 +309,10 @@ class CalendarSubscriber implements EventSubscriberInterface
         //$dql->andWhere('request.institution = :groupId');
         if( $groupId ) {
             $dql->leftJoin("request.institution","institution");
-            $institution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($groupId);
-            $instStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $this->em->getRepository(Institution::class)->find($groupId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $instStr = $this->em->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
             //echo "instStr=".$instStr."<br>";
             $dql->andWhere($instStr);
         }

@@ -18,6 +18,12 @@
 namespace App\VacReqBundle\Form;
 
 
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -54,11 +60,13 @@ class VacReqGroupType extends AbstractType
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 
@@ -78,7 +86,8 @@ class VacReqGroupType extends AbstractType
         ///////////////////////// EOF tree node /////////////////////////
 
         $builder->add('approvaltype', EntityType::class, array(
-            'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            'class' => VacReqApprovalTypeList::class,
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
             'required' => true,

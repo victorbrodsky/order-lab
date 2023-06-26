@@ -17,6 +17,9 @@
 
 namespace App\VacReqBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Form\SimpleUserType;
 use App\UserdirectoryBundle\Util\UserUtil;
@@ -122,9 +125,11 @@ class CarryOverController extends OrderAbstractController
         $user = $this->getUser();
         //$vacreqUtil = $this->container->get('vacreq_util');
 
-        $subjectUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $em->getRepository(User::class)->find($userId);
 
-        $userCarryOver = $em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($userId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqUserCarryOver'] by [VacReqUserCarryOver::class]
+        $userCarryOver = $em->getRepository(VacReqUserCarryOver::class)->findOneByUser($userId);
 
         if( !$userCarryOver ) {
             $userCarryOver = new VacReqUserCarryOver($subjectUser);
@@ -279,7 +284,8 @@ class CarryOverController extends OrderAbstractController
             throw $this->createNotFoundException('Status is not supported (supported statuses: approved, rejected): status='.$status);
         }
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $entity = $em->getRepository(VacReqRequest::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);

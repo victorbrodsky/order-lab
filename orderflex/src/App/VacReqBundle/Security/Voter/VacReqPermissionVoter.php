@@ -201,7 +201,8 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
             $user = $token->getUser();
             //ROLE_VACREQ_SUPERVISOR_WCM_PATHOLOGY
             $roleName = "ROLE_VACREQ_SUPERVISOR";
-            $hasSupervisorRole = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $hasSupervisorRole = $this->em->getRepository(User::class)->
                 isUserHasSiteAndPartialRoleName($user, $this->getSitename(), $roleName);
             if( $hasSupervisorRole ) {
                 return true;

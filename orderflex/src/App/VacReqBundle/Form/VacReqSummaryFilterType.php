@@ -17,6 +17,12 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -41,7 +47,8 @@ class VacReqSummaryFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -60,7 +67,8 @@ class VacReqSummaryFilterType extends AbstractType
         ));
 
         $builder->add('types', EntityType::class, array(
-            'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            'class' => VacReqApprovalTypeList::class,
             'label' => false,
             'required' => false,
             'multiple' => true,

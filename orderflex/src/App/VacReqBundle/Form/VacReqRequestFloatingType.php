@@ -18,6 +18,15 @@
 namespace App\VacReqBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\VacReqBundle\Entity\VacReqFloatingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqFloatingTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -100,7 +109,8 @@ class VacReqRequestFloatingType extends AbstractType
         if( $this->params['cycle'] == 'show' ) {
             //approver
             $builder->add('approver', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Approver:",
                 'required' => false,
                 //'disabled' => true,
@@ -114,7 +124,8 @@ class VacReqRequestFloatingType extends AbstractType
             //    $userAttr['readonly'] = true;
             //}
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
@@ -138,7 +149,8 @@ class VacReqRequestFloatingType extends AbstractType
                 $userAttr['readonly'] = true;
             }
             $builder->add('user', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Person Away:",
                 //'required' => true,
                 'multiple' => false,
@@ -196,7 +208,8 @@ class VacReqRequestFloatingType extends AbstractType
                     function($submittedInstitutionObject) {
                         //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                         if( $submittedInstitutionObject ) { //id
-                            $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $institutionObject = $this->params['em']->getRepository(Institution::class)->find($submittedInstitutionObject);
                             return $institutionObject;
                         }
                         return null;
@@ -238,7 +251,8 @@ class VacReqRequestFloatingType extends AbstractType
         ));
 
         $builder->add('floatingType', EntityType::class, array(
-            'class' => 'AppVacReqBundle:VacReqFloatingTypeList',
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTypeList'] by [VacReqFloatingTypeList::class]
+            'class' => VacReqFloatingTypeList::class,
             'label' => "Floating Day:",
             'required' => false,
             'multiple' => false,

@@ -25,6 +25,12 @@
 namespace App\VacReqBundle\Util;
 
 
+
+use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\VacReqBundle\Entity\VacReqRequest;
 use App\VacReqBundle\Entity\VacReqRequestBusiness;
@@ -87,7 +93,8 @@ class VacReqImportData
 //        $phoneAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('phone');
 //        $otherAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('other');
 //        $noneAvailable = $this->em->getRepository('AppVacReqBundle:VacReqAvailabilityList')->findOneByAbbreviation('none');
-        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+        $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("business-vacation");
         if( !$requestType ) {
             exit('No request type found with abbreviation "business-vacation"');
         }
@@ -137,7 +144,8 @@ class VacReqImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
-            $request = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $request = $this->em->getRepository(VacReqRequest::class)->findOneByExportId($exportId);
             if( $request ) {
                 continue; //ignore existing request to prevent overwrite
             }
@@ -166,7 +174,8 @@ class VacReqImportData
             $VAC_FIRST_DAY_AWAY_Date = $this->transformDatestrToDate($VAC_FIRST_DAY_AWAY);
 
             $username = $cwid."_@_". $this->usernamePrefix;
-            $submitter = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $submitter = $this->em->getRepository(User::class)->findOneByUsername($username);
             if( !$submitter ) {
 
                 //get newest date
@@ -321,7 +330,8 @@ class VacReqImportData
 
                 //set organizational group
                 $institution = null;
-                $roles = $em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $roles = $em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($approver,"vacreq","ROLE_VACREQ_APPROVER");
                 if( count($roles) > 0 ) {
                     $role = $roles[0];
                     //$note = 'ROLE_VACREQ_APPROVER role='.$role;
@@ -335,7 +345,8 @@ class VacReqImportData
                     $request->setInstitution($institution);
 
                     //assign submitter organizational group the same as approver
-                    $roles = $em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER",$institution);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    $roles = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName("vacreq","ROLE_VACREQ_SUBMITTER",$institution);
                     if( count($roles) > 0 ) {
                         $role = $roles[0];
                         $roleName = $role->getName();
@@ -495,7 +506,8 @@ class VacReqImportData
     public function getApproverByUserId($userId) {
         $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
-        $approver = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $approver = $this->em->getRepository(User::class)->findOneByUsername($username);
         if( !$approver ) {
             $logger = $this->container->get('logger');
             $logger->error("Can not find user by username=".$username);

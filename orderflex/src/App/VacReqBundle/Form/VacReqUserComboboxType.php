@@ -18,6 +18,9 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\UserType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -42,7 +45,8 @@ class VacReqUserComboboxType extends UserType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => $this->params['btnName'].":",    //"New Submitters:",
             'required' => false,
             'multiple' => true,

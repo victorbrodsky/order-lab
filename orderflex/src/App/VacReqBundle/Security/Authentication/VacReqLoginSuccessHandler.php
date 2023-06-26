@@ -25,6 +25,9 @@
 
 namespace App\VacReqBundle\Security\Authentication;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
@@ -74,7 +77,8 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
         //check other user's vacreq roles
         //$user, $sitename, $rolePartialName, $institutionId=null
         $institutionId = null;
-        $roles = $em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roles = $em->getRepository(User::class)->
             findUserRolesBySiteAndPartialRoleName($user,'vacreq',"ROLE_VACREQ",$institutionId);
         //echo "roles count=".count($roles)."<br>";
 

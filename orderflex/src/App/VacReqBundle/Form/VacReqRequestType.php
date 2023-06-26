@@ -18,6 +18,12 @@
 namespace App\VacReqBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -193,7 +199,8 @@ class VacReqRequestType extends AbstractType
 //            }
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
@@ -321,7 +328,8 @@ class VacReqRequestType extends AbstractType
         if( $this->params['cycle'] == 'show' ) {
             //approver
             $builder->add('approver', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Approver:",
                 'required' => false,
                 //'disabled' => true,
@@ -358,7 +366,8 @@ class VacReqRequestType extends AbstractType
             }
 
             $builder->add('user', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Person Away:",
                 'required' => true,
                 'multiple' => false,
@@ -427,7 +436,8 @@ class VacReqRequestType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                                $institutionObject = $this->params['em']->getRepository(Institution::class)->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;
@@ -480,7 +490,8 @@ class VacReqRequestType extends AbstractType
                         function ($submittedInstitutionObject) {
                             //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
                             if ($submittedInstitutionObject) { //id
-                                $institutionObject = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                                $institutionObject = $this->params['em']->getRepository(Institution::class)->find($submittedInstitutionObject);
                                 return $institutionObject;
                             }
                             return null;
@@ -495,7 +506,8 @@ class VacReqRequestType extends AbstractType
             $informUsersAttr['readonly'] = true;
         }
         $builder->add('informUsers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Send notifications about this request to the following individuals as well:", //"Send a notification to the following individuals on service:",
             'required' => false,
             'multiple' => true,

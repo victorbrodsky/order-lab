@@ -18,6 +18,15 @@
 namespace App\VacReqBundle\Controller;
 
 
+
+use App\VacReqBundle\Entity\VacReqFloatingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqFloatingTypeList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -157,7 +166,8 @@ class FloatingDayController extends OrderAbstractController
         }
         $params['supervisor'] = $supervisorRole;
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $em->getRepository(VacReqRequestFloating::class);
         $dql = $repository->createQueryBuilder("request");
 
         $dql->select('request');
@@ -180,7 +190,8 @@ class FloatingDayController extends OrderAbstractController
         if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
-                $vacreqRoles = $em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $vacreqRoles = $em->getRepository(User::class)->
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
                 //select all requests with institution is equal or under vacreqRole institution.
@@ -193,7 +204,8 @@ class FloatingDayController extends OrderAbstractController
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
                             //regular institution
-                            $instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $instCriterionArr[] = $em->getRepository(Institution::class)->
                                 selectNodesUnderParentNode($roleInst,"institution",false);
                             //regular tentativeInstitution
                             //$instCriterionArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->
@@ -264,7 +276,8 @@ class FloatingDayController extends OrderAbstractController
 
         //////////////////// get list of users with "unknown" user ////////////////////
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:User');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $repository = $this->getDoctrine()->getRepository(User::class);
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
         $dqlFilterUser->leftJoin("user.infos","infos");
@@ -341,7 +354,8 @@ class FloatingDayController extends OrderAbstractController
                     " Once they are set up, this page will show cumulative summary data.";
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -539,7 +553,8 @@ class FloatingDayController extends OrderAbstractController
                     //add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCM-NYP Collaboration" institution.
                     //$where .= "institution=".$groups->getId();
                     //$where .= $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                    $where .= $em->getRepository('AppUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $where .= $em->getRepository(Institution::class)->getCriterionStrForCollaborationsByNode(
                         $groups,
                         "institution",
                         array("Union", "Intersection", "Untrusted Intersection"),
@@ -869,7 +884,8 @@ class FloatingDayController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Floating Day Request by id='.$id);
@@ -915,7 +931,8 @@ class FloatingDayController extends OrderAbstractController
         $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Floating Day Request by id='.$id);
@@ -1123,7 +1140,8 @@ class FloatingDayController extends OrderAbstractController
         $user = $this->getUser();
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -1247,7 +1265,8 @@ class FloatingDayController extends OrderAbstractController
         $id = $request->get('id');
         $status = $request->get('status'); //format: floatingDay=02/23/2022
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             //throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -1424,7 +1443,8 @@ class FloatingDayController extends OrderAbstractController
         $user = $this->getUser();
         //$routeName = $request->get('_route');
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Floating Request by id='.$id);
@@ -1489,7 +1509,8 @@ class FloatingDayController extends OrderAbstractController
             $statusStr = $status;
         }
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if( !$entity ) {
             //throw $this->createNotFoundException('Unable to find Request by id='.$id);
@@ -1655,7 +1676,8 @@ class FloatingDayController extends OrderAbstractController
         $routeName = $request->get('_route');
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Floating Request by id=' . $id);
@@ -1737,7 +1759,8 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppVacReqBundle:VacReqRequestFloating')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Floating Request by id=' . $id);
@@ -1920,7 +1943,8 @@ class FloatingDayController extends OrderAbstractController
                     ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';
             } else {
                 //regular user
-                $adminUsers = $em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
                 $emails = array();
                 foreach ($adminUsers as $adminUser) {
                     $singleEmail = $adminUser->getSingleEmail();
@@ -2004,7 +2028,8 @@ class FloatingDayController extends OrderAbstractController
         //set default floating day
         $floatingDayType = NULL;
         $parameters = array();
-        $repository = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTypeList'] by [VacReqFloatingTypeList::class]
+        $repository = $em->getRepository(VacReqFloatingTypeList::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->andWhere("(list.type = :typedef OR list.type = :typeadd)");
         $dql->orderBy("list.orderinlist","ASC");
@@ -2140,7 +2165,8 @@ class FloatingDayController extends OrderAbstractController
         //get all user approved vacation requests
         //$requestTypeStr = "requestVacation";
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $em->getRepository(VacReqRequestFloating::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');

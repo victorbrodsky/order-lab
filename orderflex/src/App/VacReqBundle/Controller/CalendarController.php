@@ -18,6 +18,9 @@
 namespace App\VacReqBundle\Controller;
 
 
+
+use App\VacReqBundle\Entity\VacReqHolidayList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqHolidayList
+
 use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use App\VacReqBundle\Form\VacReqCalendarFilterType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -232,7 +235,8 @@ class CalendarController extends OrderAbstractController
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder("holiday");
 
         //process filter
@@ -364,7 +368,8 @@ class CalendarController extends OrderAbstractController
         //echo "years=$years <br>";
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder("holiday");
 
         if( $years ) {
@@ -424,7 +429,8 @@ class CalendarController extends OrderAbstractController
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder("holiday");
 
         //process filter
@@ -516,7 +522,8 @@ class CalendarController extends OrderAbstractController
                 ));
             }
 
-            $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+            $repository = $em->getRepository(VacReqHolidayList::class);
             $dql = $repository->createQueryBuilder("holiday");
 
             //process and get years from url modified by filter
@@ -741,7 +748,8 @@ class CalendarController extends OrderAbstractController
         //echo "holidays count=".count($holidays)."<br>";
 
         ////////// get holidays /////////////
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder("holiday");
 
         //process filter
@@ -873,7 +881,8 @@ class CalendarController extends OrderAbstractController
         //$holidays = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->findAll();
         //echo "holidays count=".count($holidays)."<br>";
 
-        $repository = $em->getRepository('AppVacReqBundle:VacReqHolidayList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+        $repository = $em->getRepository(VacReqHolidayList::class);
         $dql = $repository->createQueryBuilder("holiday");
 
         //process and get years from url modified by filter
@@ -1208,7 +1217,8 @@ class CalendarController extends OrderAbstractController
 
         foreach($checkedHolidays as $checkedHolidayId) {
             //echo $count . ": checkedHoliday=" . $checkedHoliday . "<br>";
-            $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($checkedHolidayId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+            $holiday = $em->getRepository(VacReqHolidayList::class)->find($checkedHolidayId);
             if( !$holiday ) {
                 $errorArr[] = "VacReqHolidayList not found by checked ID $checkedHolidayId";
                 continue;
@@ -1248,7 +1258,8 @@ class CalendarController extends OrderAbstractController
         }
 
         foreach($unCheckedHolidays as $unCheckedHolidayId) {
-            $holiday = $em->getRepository('AppVacReqBundle:VacReqHolidayList')->find($unCheckedHolidayId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqHolidayList'] by [VacReqHolidayList::class]
+            $holiday = $em->getRepository(VacReqHolidayList::class)->find($unCheckedHolidayId);
             if( !$holiday ) {
                 $errorArr[] = "VacReqHolidayList not found by unchecked ID $unCheckedHolidayId";
                 continue;

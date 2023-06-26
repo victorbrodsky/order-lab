@@ -18,6 +18,9 @@
 namespace App\VacReqBundle\Form;
 
 
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -45,7 +48,8 @@ class VacReqGroupManageApprovaltypesType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
         
         $builder->add('approvaltypes', EntityType::class, array(
-            'class' => 'AppVacReqBundle:VacReqApprovalTypeList',
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            'class' => VacReqApprovalTypeList::class,
             'label' => "Time Away Approval Group Type:",
             'choice_label' => 'name',
             'required' => true,

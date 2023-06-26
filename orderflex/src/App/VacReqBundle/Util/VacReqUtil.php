@@ -17,6 +17,30 @@
 
 namespace App\VacReqBundle\Util;
 
+
+
+use App\VacReqBundle\Entity\VacReqSettings; //process.py script: replaced namespace by ::class: added use line for classname=VacReqSettings
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\VacReqBundle\Entity\VacReqApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqApprovalTypeList
+
+
+use App\UserdirectoryBundle\Entity\SiteList; //process.py script: replaced namespace by ::class: added use line for classname=SiteList
+
+
+use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\VacReqBundle\Entity\VacReqRequest; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequest
+
+
+use App\VacReqBundle\Entity\VacReqFloatingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqFloatingTypeList
 use App\UserdirectoryBundle\Entity\Roles;
 use App\VacReqBundle\Entity\VacReqRequestFloating;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -75,12 +99,14 @@ class VacReqUtil
 
 
     public function getSettingsByInstitution($instid) {
-        $setting = $this->em->getRepository('AppVacReqBundle:VacReqSettings')->findOneByInstitution($instid);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqSettings'] by [VacReqSettings::class]
+        $setting = $this->em->getRepository(VacReqSettings::class)->findOneByInstitution($instid);
         return $setting;
     }
 
     public function getInstitutionSettingArray() {
-        $settings = $this->em->getRepository('AppVacReqBundle:VacReqSettings')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqSettings'] by [VacReqSettings::class]
+        $settings = $this->em->getRepository(VacReqSettings::class)->findAll();
 
         $arraySettings = array();
 
@@ -218,7 +244,8 @@ class VacReqUtil
         $newUsers = new ArrayCollection();
         foreach( explode(",",$userIds) as $userId ) {
             //echo "userId=" . $userId . "<br>";
-            $emailUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $emailUser = $this->em->getRepository(User::class)->find($userId);
             if( $emailUser ) {
                 $newUsers->add($emailUser);
             }
@@ -266,7 +293,8 @@ class VacReqUtil
 //        );
         
         if( $approvaltypeid ) {
-            $newApprovalType = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->find($approvaltypeid);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            $newApprovalType = $this->em->getRepository(VacReqApprovalTypeList::class)->find($approvaltypeid);
         }
 
         $originalApprovalTypeId = NULL;
@@ -310,7 +338,8 @@ class VacReqUtil
         $newUsers = new ArrayCollection();
         foreach( explode(",",$userIds) as $userId ) {
             //echo "userId=" . $userId . "<br>";
-            $defaultInformUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $defaultInformUser = $this->em->getRepository(User::class)->find($userId);
             if( $defaultInformUser ) {
                 $newUsers->add($defaultInformUser);
             }
@@ -346,7 +375,8 @@ class VacReqUtil
         $newUsers = new ArrayCollection();
         foreach( explode(",",$userIds) as $userId ) {
             //echo "userId=" . $userId . "<br>";
-            $proxySubmitterUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $proxySubmitterUser = $this->em->getRepository(User::class)->find($userId);
             if( $proxySubmitterUser ) {
                 $newUsers->add($proxySubmitterUser);
             }
@@ -439,7 +469,8 @@ class VacReqUtil
 
         $approvers = array();
 
-        $roleApprovers = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleApprovers = $this->em->getRepository(User::class)->
             findRolesBySiteAndPartialRoleName( "vacreq", $approverRole, $institution->getId());
         //echo "roleApprovers count=".count($roleApprovers)."<br>";
 
@@ -450,7 +481,8 @@ class VacReqUtil
 
         if( $roleApprover ) {
             //echo "roleApprover=".$roleApprover."<br>";
-            $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $approvers = $this->em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
 
 //        if( $entity->getRequestTypeAbbreviation() == "carryover" ) {
@@ -470,13 +502,15 @@ class VacReqUtil
         $users = array();
         
         if( !$groupId || filter_var($groupId, FILTER_VALIDATE_INT) === false  ) { //|| is_int($groupId) === false
-            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $users = $this->em->getRepository(User::class)->findUserByRole($rolePartialName,"infos.lastName",$onlyWorking);
             //echo "0user count=".count($users)."<br>";
             //exit('111');
             return $users;
         }
 
-        $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roles = $this->em->getRepository(User::class)->
                             findRolesBySiteAndPartialRoleName( "vacreq", $rolePartialName, $groupId);
 
         if( count($roles) == 0 ) {
@@ -491,7 +525,8 @@ class VacReqUtil
 
         //echo "role=".$role."<br>";
         if( $role ) {
-            $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($role->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $users = $this->em->getRepository(User::class)->findUserByRole($role->getName(),"infos.lastName",$onlyWorking);
         }
 
         return $users;
@@ -516,7 +551,8 @@ class VacReqUtil
 
         $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-        $site = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $site = $this->em->getRepository(SiteList::class)->findOneByAbbreviation('vacreq');
 
         $count = 0;
         $addedRoles = array();
@@ -540,7 +576,8 @@ class VacReqUtil
 
         //create approver role
         $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-        $approverRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $approverRole = $this->em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$approverRole ) {
             $approverRole = new Roles();
             $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
@@ -572,7 +609,8 @@ class VacReqUtil
 
         //create submitter role
         $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
-        $submitterRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $submitterRole = $this->em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$submitterRole ) {
             $submitterRole = new Roles();
             $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -604,7 +642,8 @@ class VacReqUtil
 
         //create submitter role
         $roleName = "ROLE_VACREQ_PROXYSUBMITTER_".$roleNameBase;
-        $submitterRole = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $submitterRole = $this->em->getRepository(Roles::class)->findOneByName($roleName);
         if( !$submitterRole ) {
             $submitterRole = new Roles();
             $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
@@ -1024,7 +1063,8 @@ class VacReqUtil
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
     public function getApprovedDaysString( $user ) { //$bruteForce=false
 
-        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("business-vacation");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+        $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("business-vacation");
 
         $yearRange = $this->getCurrentAcademicYearRange();
 
@@ -1143,7 +1183,8 @@ class VacReqUtil
 
         //echo "startYear=[$startYear]<br>";
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqCarryOver');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqCarryOver'] by [VacReqCarryOver::class]
+        $repository = $this->em->getRepository(VacReqCarryOver::class);
         $dql = $repository->createQueryBuilder('carryOver');
 
         $dql->leftJoin("carryOver.userCarryOver", "userCarryOver");
@@ -1190,7 +1231,8 @@ class VacReqUtil
 
         //get userCarryOver. This does not distinguish between approved, rejected or pending requests.
         //Each user has only one VacReqUserCarryOver. VacReqUserCarryOver has multiple carryOvers(VacReqCarryOver: year, days)
-        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqUserCarryOver'] by [VacReqUserCarryOver::class]
+        $userCarryOver = $this->em->getRepository(VacReqUserCarryOver::class)->findOneByUser($subjectUser->getId());
         //echo "found userCarryOverID=".$userCarryOver->getId()."<br>";
 
         if( !$userCarryOver ) {
@@ -1330,7 +1372,8 @@ class VacReqUtil
         $carryOverYear = $entity->getDestinationYear();
 
         //find CarryOver entity by destination year $carryOverYear
-        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqUserCarryOver'] by [VacReqUserCarryOver::class]
+        $userCarryOver = $this->em->getRepository(VacReqUserCarryOver::class)->findOneByUser($subjectUser->getId());
         if( !$userCarryOver ) {
             //exit("VacReqUserCarryOver container not found for $subjectUser");
             return "VacReqUserCarryOver container not found for $subjectUser";
@@ -1501,7 +1544,8 @@ class VacReqUtil
         $subjectUser = $entity->getUser();
 
         //get userCarryOver
-        $userCarryOver = $this->em->getRepository('AppVacReqBundle:VacReqUserCarryOver')->findOneByUser($subjectUser->getId());
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqUserCarryOver'] by [VacReqUserCarryOver::class]
+        $userCarryOver = $this->em->getRepository(VacReqUserCarryOver::class)->findOneByUser($subjectUser->getId());
 
         if (!$userCarryOver) {
             //$logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
@@ -1960,269 +2004,271 @@ class VacReqUtil
         return $days;
     }
 
-    //NOT USED
-    //http://stackoverflow.com/questions/7224792/sql-to-find-time-elapsed-from-multiple-overlapping-intervals
-    public function getApprovedYearDays_SingleQuery( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
-
-        echo $user.": ".$type.": requestTypeStr=".$requestTypeStr."; status=".$status."<br>";
-        echo "date range=".$startStr."<=>".$endStr."<br>";
-        $numberOfDays = 0;
-
-        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
-            $joinStr = " LEFT JOIN request2.requestBusiness requestType2 ";
-        }
-
-        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
-            $joinStr = " LEFT JOIN request2.requestVacation requestType2 ";
-        }
-
-        //WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='".$status."'
-        //AND requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'
-        $query = $this->em->createQuery(
-            "SELECT
-              SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount
-            FROM AppVacReqBundle:VacReqRequest request
-            INNER JOIN request.user user
-            INNER JOIN request.requestVacation requestType
-            INNER JOIN AppVacReqBundle:VacReqRequest request2
-              WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='$status'
-                    AND request.firstDayAway < request2.firstDayAway AND request.firstDayBackInOffice < request2.firstDayBackInOffice
-            WHERE requestType.startDate > '$startStr' AND requestType.endDate < '$endStr'
-            HAVING COUNT(request2.id) = 0
-            "
-        );
-
-        $query = $this->em->createQuery(
-            "SELECT request1
-            FROM AppVacReqBundle:VacReqRequest request1
-            INNER JOIN request1.user user
-            INNER JOIN request1.requestVacation requestType
-            INNER JOIN AppVacReqBundle:VacReqRequest request2
-              WITH
-              (request1.id <> request2.id)
-              AND ( request1.firstDayAway <> request2.firstDayAway )
-            WHERE
-            requestType.startDate > '$startStr'
-            AND requestType.endDate < '$endStr'
-            AND request1.user = request2.user
-            AND user.id = ".$user->getId()."
-            AND requestType.status='$status'
-            "
-        );
-
-        $requests = $query->getResult();
-        echo "requests count=".count($requests)."<br>";
-
-        foreach( $requests as $request ) {
-            //echo $request->getId()." days=".$request->getTotalDays($status,$requestTypeStr);
-            echo $request->getId()." days=".$request->getRequestVacation()->getNumberOfDays()."<br>";
-        }
-        exit();
-
-
-        //INNER JOIN request2.requestVacation requestType2
-        //WHERE user.id = ".$user->getId()." AND requestType.status='".$status."'"
-        //." AND request.firstDayAway > request2.firstDayAway AND request.firstDayAway > request2.firstDayBackInOffice "
-        //."GROUP BY request.user,requestType.startDate,requestType.endDate"
-        //.""
-
-//        $requests = $query->getResult();
-//        foreach( $requests as $request ) {
-//            $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
-//            $finalStartEndDatesArr = $request->getFinalStartEndDates();
-//            $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
-//            echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
-//            $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+//    //NOT USED
+//    //http://stackoverflow.com/questions/7224792/sql-to-find-time-elapsed-from-multiple-overlapping-intervals
+//    public function getApprovedYearDays_SingleQuery( $user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved' ) {
+//
+//        echo $user.": ".$type.": requestTypeStr=".$requestTypeStr."; status=".$status."<br>";
+//        echo "date range=".$startStr."<=>".$endStr."<br>";
+//        $numberOfDays = 0;
+//
+//        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+//            $joinStr = " LEFT JOIN request2.requestBusiness requestType2 ";
 //        }
-//        echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-
-        $numberOfDaysItems = $query->getResult();
-        echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
-
-        if( $numberOfDaysItems ) {
-            //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
-            if( count($numberOfDaysItems) > 1 ) {
-                //$logger = $this->container->get('logger');
-                //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
-            }
-            foreach( $numberOfDaysItems as $numberOfDaysItem ) {
-                echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
-                $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
-            }
-            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-        }
-
-        return $numberOfDays;
-
-
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
-        $dql =  $repository->createQueryBuilder("request");
-
-        if( $asObject ) {
-            $dql->select('request');
-        } else {
-            //$dql->select('request');
-            $dql->select('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
-            //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
-        }
-
-//        $dql->innerJoin(
-//            "AppVacReqBundle:VacReqRequest",
-//            "request2",
-//            "WITH",
-//            "request2.id <> request.id AND request2.user = request.user"
+//
+//        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+//            $joinStr = " LEFT JOIN request2.requestVacation requestType2 ";
+//        }
+//
+//        //WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='".$status."'
+//        //AND requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'
+//        $query = $this->em->createQuery(
+//            "SELECT
+//              SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount
+//            FROM AppVacReqBundle:VacReqRequest request
+//            INNER JOIN request.user user
+//            INNER JOIN request.requestVacation requestType
+//            INNER JOIN AppVacReqBundle:VacReqRequest request2
+//              WITH  request.id <> request2.id AND request.user = request2.user AND user.id = ".$user->getId()." AND requestType.status='$status'
+//                    AND request.firstDayAway < request2.firstDayAway AND request.firstDayBackInOffice < request2.firstDayBackInOffice
+//            WHERE requestType.startDate > '$startStr' AND requestType.endDate < '$endStr'
+//            HAVING COUNT(request2.id) = 0
+//            "
 //        );
-
-        $dql->leftJoin("request.user", "user");
-
-        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
-            $dql->leftJoin("request.requestBusiness", "requestType");
-            //$dql->leftJoin("request2.requestBusiness", "requestType2");
-            //$joinStr = " LEFT JOIN request2.requestBusiness requestType2";
-        }
-
-        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
-            $dql->leftJoin("request.requestVacation", "requestType");
-            //$dql->leftJoin("request2.requestVacation", "requestType2");
-            //$joinStr = " LEFT JOIN request2.requestVacation requestType2";
-        }
-
-        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
-
-        // |----|year|-----start-----end-----|year+1|----|
-        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
-        if( $type == "inside" && $startStr && $endStr ) {
-            $dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
-        }
-
-        // |-----start-----|year|-----end-----|year+1|----|
-        // |-----rstart-----|2015-07-01|-----rend-----|2016-06-30|----|
-        if( $type == "before" && $startStr ) {
-            //echo "startStr=".$startStr."<br>";
-            $dql->andWhere("requestType.startDate < '" . $startStr . "'" . " AND requestType.endDate > '".$startStr."'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
-        }
-
-        // |----|year|-----start-----|year+1|-----end-----|
-        // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
-        if( $type == "after" && $startStr && $endStr ) {
-            //echo "sql endStr=".$endStr."<br>";
-            //$dql->andWhere("requestType.endDate > '" . $endStr . "'" . " AND requestType.startDate < '".$endStr."'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
-            //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
-            $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
-        }
-
-
-        //if( !$asObject ) {
-//                $dql->innerJoin(
-//                    "AppVacReqBundle:VacReqRequest",
-//                    "request2",
-//                    "WITH",
-//                    //"request2.firstDayAway > request.firstDayAway AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
-//                    "request2.firstDayAway > request.firstDayAway".
-//                    " AND request2.firstDayBackInOffice > request.firstDayBackInOffice".
-//                    " AND request2.user = request.user".
-//                    " AND request2.id <> request.id"
-//                );
-
-//            $dql->innerJoin(
-//                "AppVacReqBundle:VacReqRequest",
-//                "request2",
-//                "WITH",
-//                "request2.id <> request.id AND request2.user = request.user"
-//            );
-//            $dql->andWhere(
-//                "request2.firstDayAway > request.firstDayAway"
-//                ." AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
-//                ." AND request2.firstDayAway > request.firstDayBackInOffice"
-//                //." AND request2.user = request.user"
-//                //." AND request2.id <> request.id"
-//            );
-
-//        $dql->andWhere(
-//            "requestType2.startDate > requestType.startDate"
-//            ." AND requestType2.endDate > requestType.endDate"
-//            ." AND requestType2.startDate > requestType.endDate"
-//            ." AND request2.user = request.user"
-//            ." AND request2.id <> request.id"
+//
+//        $query = $this->em->createQuery(
+//            "SELECT request1
+//            FROM AppVacReqBundle:VacReqRequest request1
+//            INNER JOIN request1.user user
+//            INNER JOIN request1.requestVacation requestType
+//            INNER JOIN AppVacReqBundle:VacReqRequest request2
+//              WITH
+//              (request1.id <> request2.id)
+//              AND ( request1.firstDayAway <> request2.firstDayAway )
+//            WHERE
+//            requestType.startDate > '$startStr'
+//            AND requestType.endDate < '$endStr'
+//            AND request1.user = request2.user
+//            AND user.id = ".$user->getId()."
+//            AND requestType.status='$status'
+//            "
 //        );
+//
+//        $requests = $query->getResult();
+//        echo "requests count=".count($requests)."<br>";
+//
+//        foreach( $requests as $request ) {
+//            //echo $request->getId()." days=".$request->getTotalDays($status,$requestTypeStr);
+//            echo $request->getId()." days=".$request->getRequestVacation()->getNumberOfDays()."<br>";
+//        }
+//        exit();
+//
+//
+//        //INNER JOIN request2.requestVacation requestType2
+//        //WHERE user.id = ".$user->getId()." AND requestType.status='".$status."'"
+//        //." AND request.firstDayAway > request2.firstDayAway AND request.firstDayAway > request2.firstDayBackInOffice "
+//        //."GROUP BY request.user,requestType.startDate,requestType.endDate"
+//        //.""
+//
+////        $requests = $query->getResult();
+////        foreach( $requests as $request ) {
+////            $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+////            $finalStartEndDatesArr = $request->getFinalStartEndDates();
+////            $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+////            echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+////            $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+////        }
+////        echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//
+//        $numberOfDaysItems = $query->getResult();
+//        echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+//
+//        if( $numberOfDaysItems ) {
+//            //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+//            if( count($numberOfDaysItems) > 1 ) {
+//                //$logger = $this->container->get('logger');
+//                //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+//            }
+//            foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+//                echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+//                $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+//            }
+//            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//        }
+//
+//        return $numberOfDays;
+//
+//
+//        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+//        $repository = $this->em->getRepository(VacReqRequest::class);
+//        $dql =  $repository->createQueryBuilder("request");
+//
+//        if( $asObject ) {
+//            $dql->select('request');
+//        } else {
+//            //$dql->select('request');
+//            $dql->select('SUM(requestType.numberOfDays) as numberOfDays, COUNT(request) as totalCount');
+//            //$dql->select('DISTINCT request.id, user.id, SUM(requestType.numberOfDays) as numberOfDays');
+//        }
+//
+////        $dql->innerJoin(
+////            "AppVacReqBundle:VacReqRequest",
+////            "request2",
+////            "WITH",
+////            "request2.id <> request.id AND request2.user = request.user"
+////        );
+//
+//        $dql->leftJoin("request.user", "user");
+//
+//        if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
+//            $dql->leftJoin("request.requestBusiness", "requestType");
+//            //$dql->leftJoin("request2.requestBusiness", "requestType2");
+//            //$joinStr = " LEFT JOIN request2.requestBusiness requestType2";
+//        }
+//
+//        if( $requestTypeStr == 'vacation' || $requestTypeStr == 'requestVacation' ) {
+//            $dql->leftJoin("request.requestVacation", "requestType");
+//            //$dql->leftJoin("request2.requestVacation", "requestType2");
+//            //$joinStr = " LEFT JOIN request2.requestVacation requestType2";
+//        }
+//
+//        $dql->where("requestType.id IS NOT NULL AND user.id = :userId AND requestType.status = :status");
+//
+//        // |----|year|-----start-----end-----|year+1|----|
+//        // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
+//        if( $type == "inside" && $startStr && $endStr ) {
+//            $dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate < " . "'" . $endStr . "'");
+//        }
+//
+//        // |-----start-----|year|-----end-----|year+1|----|
+//        // |-----rstart-----|2015-07-01|-----rend-----|2016-06-30|----|
+//        if( $type == "before" && $startStr ) {
+//            //echo "startStr=".$startStr."<br>";
+//            $dql->andWhere("requestType.startDate < '" . $startStr . "'" . " AND requestType.endDate > '".$startStr."'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
+//        }
+//
+//        // |----|year|-----start-----|year+1|-----end-----|
+//        // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
+//        if( $type == "after" && $startStr && $endStr ) {
+//            //echo "sql endStr=".$endStr."<br>";
+//            //$dql->andWhere("requestType.endDate > '" . $endStr . "'" . " AND requestType.startDate < '".$endStr."'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
+//            //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
+//            $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
+//        }
+//
+//
+//        //if( !$asObject ) {
+////                $dql->innerJoin(
+////                    "AppVacReqBundle:VacReqRequest",
+////                    "request2",
+////                    "WITH",
+////                    //"request2.firstDayAway > request.firstDayAway AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+////                    "request2.firstDayAway > request.firstDayAway".
+////                    " AND request2.firstDayBackInOffice > request.firstDayBackInOffice".
+////                    " AND request2.user = request.user".
+////                    " AND request2.id <> request.id"
+////                );
+//
+////            $dql->innerJoin(
+////                "AppVacReqBundle:VacReqRequest",
+////                "request2",
+////                "WITH",
+////                "request2.id <> request.id AND request2.user = request.user"
+////            );
+////            $dql->andWhere(
+////                "request2.firstDayAway > request.firstDayAway"
+////                ." AND request2.firstDayBackInOffice > request.firstDayBackInOffice"
+////                ." AND request2.firstDayAway > request.firstDayBackInOffice"
+////                //." AND request2.user = request.user"
+////                //." AND request2.id <> request.id"
+////            );
+//
+////        $dql->andWhere(
+////            "requestType2.startDate > requestType.startDate"
+////            ." AND requestType2.endDate > requestType.endDate"
+////            ." AND requestType2.startDate > requestType.endDate"
+////            ." AND request2.user = request.user"
+////            ." AND request2.id <> request.id"
+////        );
+//
+////        $dql->andWhere(
+////            "requestType.startDate > requestType2.startDate"
+////            ." AND requestType.endDate > requestType2.endDate"
+////            ." AND requestType.startDate > requestType2.endDate"
+////            ." AND request2.user = request.user"
+////            ." AND request2.id <> request.id"
+////        );
+//
+////        $dql->andWhere( "EXISTS (SELECT 1".
+////            " FROM AppVacReqBundle:VacReqRequest as request2 ".$joinStr
+////            ." WHERE request2.user = request.user AND request2.id <> request.id"
+////            //." AND NOT (requestType.startDate >= requestType2.endDate OR requestType.endDate <= requestType2.startDate)"  //detect overlap
+////            ." AND (requestType.startDate < requestType2.startDate AND requestType.endDate < requestType2.startDate)"     //no overlap
+////            .")"
+////        );
+//
+//        //select user, distinct start, end dates
+//        //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
+//        //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+//        //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
+//        //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
+//        //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
+//        //$dql->groupBy('request.id');
+//        //}
+//
+//        $query = $this->em->createQuery($dql);
+//
+//        //echo "query=".$query->getSql()."<br>";
+//        //echo "dql=".$dql."<br>";
+//
+//        $query->setParameters( array(
+//            'userId' => $user->getId(),
+//            'status' => $status
+//        ));
+//
+//        if( $asObject ) {
+//            $requests = $query->getResult();
+//            return $requests;
+//        } else {
+//
+//            //testing
+//            $requests = $query->getResult();
+//            foreach( $requests as $request ) {
+//                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
+//                $finalStartEndDatesArr = $request->getFinalStartEndDates();
+//                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
+//                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
+//                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
+//            }
+//            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//            return $numberOfDays;
+//            //EOF testing
+//
+//            if(0) {
+//                $numberOfDaysRes = $query->getSingleResult();
+//                $numberOfDays = $numberOfDaysRes['numberOfDays'];
+//            } else {
+//                //$numberOfDaysRes = $query->getOneOrNullResult();
+//                $numberOfDaysItems = $query->getResult();
+//                if( $numberOfDaysItems ) {
+//                    echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
+//                    //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
+//                    if( count($numberOfDaysItems) > 1 ) {
+//                        //$logger = $this->container->get('logger');
+//                        //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
+//                    }
+//                    foreach( $numberOfDaysItems as $numberOfDaysItem ) {
+//                        echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
+//                        $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
+//                    }
+//                    echo "### get numberOfDays = ".$numberOfDays."<br><br>";
+//                }
+//            }
+//        }
+//
+//        return $numberOfDays;
+//    }
 
-//        $dql->andWhere(
-//            "requestType.startDate > requestType2.startDate"
-//            ." AND requestType.endDate > requestType2.endDate"
-//            ." AND requestType.startDate > requestType2.endDate"
-//            ." AND request2.user = request.user"
-//            ." AND request2.id <> request.id"
-//        );
-
-//        $dql->andWhere( "EXISTS (SELECT 1".
-//            " FROM AppVacReqBundle:VacReqRequest as request2 ".$joinStr
-//            ." WHERE request2.user = request.user AND request2.id <> request.id"
-//            //." AND NOT (requestType.startDate >= requestType2.endDate OR requestType.endDate <= requestType2.startDate)"  //detect overlap
-//            ." AND (requestType.startDate < requestType2.startDate AND requestType.endDate < requestType2.startDate)"     //no overlap
-//            .")"
-//        );
-
-        //select user, distinct start, end dates
-        //$dql->addSelect("DISTINCT (requestBusiness.startDate) as startDate ");
-        //$dql->groupBy('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-        //$dql->groupBy('request.user,requestBusiness.startDate,requestBusiness.endDate,requestVacation.startDate,requestVacation.endDate');
-        //$dql->distinct('requestBusiness.startDate','requestBusiness.endDate','requestVacation.startDate','requestVacation.endDate');
-        //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
-        //$dql->groupBy('request.id');
-        //}
-
-        $query = $this->em->createQuery($dql);
-
-        //echo "query=".$query->getSql()."<br>";
-        //echo "dql=".$dql."<br>";
-
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'status' => $status
-        ));
-
-        if( $asObject ) {
-            $requests = $query->getResult();
-            return $requests;
-        } else {
-
-            //testing
-            $requests = $query->getResult();
-            foreach( $requests as $request ) {
-                $thisNumberOfDays = $request->getTotalDays($status,$requestTypeStr);
-                $finalStartEndDatesArr = $request->getFinalStartEndDates();
-                $startendStr = $finalStartEndDatesArr['startDate']->format('Y/m/d')."-".$finalStartEndDatesArr['endDate']->format('Y/m/d');
-                echo "request = ".$request->getId()." ".$startendStr.": days=".$thisNumberOfDays."<br>";
-                $numberOfDays = $numberOfDays + (int)$thisNumberOfDays;
-            }
-            echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-            return $numberOfDays;
-            //EOF testing
-
-            if(0) {
-                $numberOfDaysRes = $query->getSingleResult();
-                $numberOfDays = $numberOfDaysRes['numberOfDays'];
-            } else {
-                //$numberOfDaysRes = $query->getOneOrNullResult();
-                $numberOfDaysItems = $query->getResult();
-                if( $numberOfDaysItems ) {
-                    echo "numberOfDaysItems count=".count($numberOfDaysItems)."<br>";
-                    //$numberOfDaysItems = $numberOfDaysRes['numberOfDays'];
-                    if( count($numberOfDaysItems) > 1 ) {
-                        //$logger = $this->container->get('logger');
-                        //$logger->warning('Logical error: found more than one SUM: count='.count($numberOfDaysItems));
-                    }
-                    foreach( $numberOfDaysItems as $numberOfDaysItem ) {
-                        echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
-                        $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
-                    }
-                    echo "### get numberOfDays = ".$numberOfDays."<br><br>";
-                }
-            }
-        }
-
-        return $numberOfDays;
-    }
     //$asObject=false => Return number of days or
     //$asObject=true => Return specific requests.
     // If $requestTypeStr=business/requestBusiness => return business requests
@@ -2247,7 +2293,8 @@ class VacReqUtil
         //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         $numberOfDays = 0;
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
 //        if( $bruteForce == true ) {
@@ -2491,7 +2538,8 @@ class VacReqUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -2542,7 +2590,8 @@ class VacReqUtil
     public function getOverlappedUserRequests( $user, $currentYear=true, $log=false ) {
 
         //1) get all user approved vacation requests
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -2648,7 +2697,8 @@ class VacReqUtil
         //get all user approved vacation requests
         $requestTypeStr = "requestVacation";
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
 
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
@@ -3192,7 +3242,8 @@ class VacReqUtil
 
     public function getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate ) {
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql = $repository->createQueryBuilder('request');
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
@@ -3288,7 +3339,8 @@ class VacReqUtil
         $today = new \DateTime();
         $todayStr = $today->format('Y-m-d');
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql = $repository->createQueryBuilder('request');
         $dql->leftJoin("request.user", "user");
 
@@ -3334,7 +3386,8 @@ class VacReqUtil
         foreach( $supervisorRoles as $supervisorRole ) {
             //echo "supervisorRole=".$supervisorRole."<br>";
 //            //find users with this role
-            $supervisors = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($supervisorRole->getName(),"infos.lastName",$onlyWorking);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $supervisors = $this->em->getRepository(User::class)->findUserByRole($supervisorRole->getName(),"infos.lastName",$onlyWorking);
             foreach( $supervisors as $supervisor ) {
                 $supervisorsArr[] = $supervisor;
             }
@@ -3467,7 +3520,8 @@ class VacReqUtil
 
             if( !$user ) {
                 if( !$asUser ) {
-                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    $roles = $this->em->getRepository(User::class)->
                         findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
                 }
             }
@@ -3475,7 +3529,8 @@ class VacReqUtil
             if( count($roles)==0 && $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
                 if( !$asUser ) {
-                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    $roles = $this->em->getRepository(User::class)->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
                 }
             }
@@ -3483,13 +3538,15 @@ class VacReqUtil
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 if( !$asUser ) {
-                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    $roles = $this->em->getRepository(User::class)->
                     findUserChildRolesBySitePermissionObjectAction($user, 'vacreq', $objectStr, $actionStr);
                 }
             }
             if( count($roles)==0 ) {
                 //echo "roles try 3<br>";
-                $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $roles = $this->em->getRepository(User::class)->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
 
@@ -3499,14 +3556,16 @@ class VacReqUtil
                 //get all changestatus-carryover roles: changestatus-carryover and create
                 $childObjectStr = $objectStr;
                 $childActionStr = "create";
-                $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $roles = $this->em->getRepository(User::class)->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 //echo "1 role count=".count($roles)."<br>"; //testing this role count is 1 for wcmc pathology
 
                 if( count($roles)==0 ) {
                     //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCM_PATHOLOGY<br>";
                     $childActionStr = "view-away-calendar";
-                    $roles = $this->em->getRepository('AppUserdirectoryBundle:User')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    $roles = $this->em->getRepository(User::class)->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 }
                 //echo "2 role count=".count($roles)."<br>";
@@ -3632,7 +3691,8 @@ class VacReqUtil
 
         //get this user institutions associated with this site
         $partialRoleName = "ROLE_VACREQ_";
-        $userRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName, null, false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $userRoles = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $partialRoleName, null, false);
         $userInsts = new ArrayCollection();
         foreach( $userRoles as $userRole ) {
             $roleInst = $userRole->getInstitution();
@@ -3647,10 +3707,12 @@ class VacReqUtil
         foreach( $roleSubStrArr as $roleSubStr ) {
             if( $this->security->isGranted('ROLE_VACREQ_ADMIN') || $this->security->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
-                $submitterSubRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $submitterSubRoles = $this->em->getRepository(User::class)->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
                 //echo "roleSubStr=".$roleSubStr."<br>";
-                $submitterSubRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $submitterSubRoles = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user, "vacreq", $roleSubStr, null, false);
             }
 
             foreach( $submitterSubRoles as $submitterSubRole ) {
@@ -3683,7 +3745,8 @@ class VacReqUtil
                 //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
                 //check if this institution is equal or under user's site institution
                 if( $this->security->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-                    if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes($userInsts, $institution) == false ) {
                         //echo "remove institution=".$institution."<br>";
                         continue;
                     }
@@ -3721,7 +3784,8 @@ class VacReqUtil
     //$role - string; for example "ROLE_VACREQ_APPROVER_CYTOPATHOLOGY"
     public function getApproversBySubmitterRole( $role ) {
         $roleApprover = str_replace("SUBMITTER","APPROVER",$role);
-        $approvers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($roleApprover,"infos.lastName",true);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $approvers = $this->em->getRepository(User::class)->findUserByRole($roleApprover,"infos.lastName",true);
 
         $approversArr = array();
         foreach( $approvers as $approver ) {
@@ -3734,7 +3798,8 @@ class VacReqUtil
     //not used. use getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER")
     public function getSubmittersFromSubmittedRequestsByGroup( $groupId ) {
         //TODO: this might optimized to get user objects in one query. groupBy does not work in MSSQL.
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         //$dql->select('request');
         $dql->select('DISTINCT (user) as submitter');
@@ -3768,7 +3833,8 @@ class VacReqUtil
         $submitters = array();
         foreach( $results as $result ) {
             //$submitters[] = $result->getUser();
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($result['submitter']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $user = $this->em->getRepository(User::class)->find($result['submitter']);
             if( $user ) {
                 $submitters[] = $user;
             } else {
@@ -3842,7 +3908,8 @@ class VacReqUtil
 
         //(b) prepopulate from previous approved request (if there is one) for this user (person away)
         //$requests = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findByUser($user,array('ORDER'=>'approvedRejectDate'));
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -3928,7 +3995,8 @@ class VacReqUtil
 
         //(2a) prepopulate mobile from previous approved request (if there is one) for this user (person away)
         if( $res['mobile'] == null ) {
-            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $repository = $this->em->getRepository(VacReqRequest::class);
             $dql = $repository->createQueryBuilder("request");
             $dql->select('request');
             $dql->leftJoin("request.user", "user");
@@ -3953,7 +4021,8 @@ class VacReqUtil
         }
         //(2b) prepopulate email from previous approved request (if there is one) for this user (person away)
         if( $res['email'] == null ) {
-            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $repository = $this->em->getRepository(VacReqRequest::class);
             $dql = $repository->createQueryBuilder("request");
             $dql->select('request');
             $dql->leftJoin("request.user", "user");
@@ -4462,7 +4531,8 @@ class VacReqUtil
             $idArr[] = $group->getId();
         }
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->leftJoin("request.institution", "institution");
         $dql->leftJoin("request.requestType", "requestType");
@@ -4492,7 +4562,8 @@ class VacReqUtil
 
         $params = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->leftJoin("request.user", "user");
@@ -4833,7 +4904,8 @@ class VacReqUtil
     }
     //get approval types (VacReqApprovalTypeList) with the lowest orderinlist
     public function getApprovalGroupTypes() {
-        $approverTypes = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+        $approverTypes = $this->em->getRepository(VacReqApprovalTypeList::class)->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC') //first with lower orderinlist
         );
@@ -4854,7 +4926,8 @@ class VacReqUtil
     public function getApprovalGroupTypeByInstitution( $instituionId ) {
         $params = array();
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqApprovalTypeList');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+        $repository = $this->em->getRepository(VacReqApprovalTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin("list.vacreqSettings", "vacreqSettings");
         $dql->leftJoin("vacreqSettings.institution", "institution");
@@ -5194,7 +5267,8 @@ class VacReqUtil
     //$yearOffset: 0=>current year, -1=>previous year
     public function getCarryOverRequests( $user, $yearOffset=null, $finalStatus=null, $tentativeStatus=null ) {
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql = $repository->createQueryBuilder('request');
 
         $dql->leftJoin("request.user", "user");
@@ -5300,7 +5374,8 @@ class VacReqUtil
     }
     public function getTotalStatusTypeRequests( $approver, $requestTypeStr, $groupId=null, $asObject=true, $status = "pending" ) {
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+        $repository = $this->em->getRepository(VacReqRequest::class);
         $dql =  $repository->createQueryBuilder("request");
 
         if( $asObject ) {
@@ -5365,7 +5440,8 @@ class VacReqUtil
     //Get pending (non-approved, non-rejected) floating requests for the logged in approver
     public function getTotalFloatingPendingRequests( $approver, $groupId=null, $status = "pending" ) {
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $this->em->getRepository(VacReqRequestFloating::class);
         $dql =  $repository->createQueryBuilder("request");
 
         $dql->select('request');
@@ -5408,7 +5484,8 @@ class VacReqUtil
     }
 
     public function getFloatingRequestTypeId() {
-        $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation("floatingday");
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+        $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation("floatingday");
         if( $requestType ) {
             return $requestType->getId();
         }
@@ -6115,7 +6192,8 @@ class VacReqUtil
         $row = 2;
         foreach( explode("-",$ids) as $vacreqId ) {
 
-            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $vacreq = $this->em->getRepository(VacReqRequest::class)->find($vacreqId);
             if( !$vacreq ) {
                 continue;
             }
@@ -6202,7 +6280,6 @@ class VacReqUtil
             $sheet = $ea->getActiveSheet();
             $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
@@ -6360,7 +6437,8 @@ class VacReqUtil
         $row = 2;
         foreach( explode("-",$ids) as $vacreqId ) {
 
-            $vacreq = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->find($vacreqId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $vacreq = $this->em->getRepository(VacReqRequest::class)->find($vacreqId);
             if( !$vacreq ) {
                 continue;
             }
@@ -6514,7 +6592,8 @@ class VacReqUtil
     public function getVacReqUsers() {
 
         if(0) {
-            $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequest');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+            $repository = $this->em->getRepository(VacReqRequest::class);
             $dql = $repository->createQueryBuilder("request");
 
             //$dql->select('request, DISTINCT user as users');
@@ -6563,9 +6642,10 @@ class VacReqUtil
 //        ;
 
         //When you include fields from the joined entity in the SELECT clause you get a fetch join
+        //" FROM AppVacReqBundle:VacReqRequest request".
         $str =
             "SELECT DISTINCT user.id as id".
-            " FROM AppVacReqBundle:VacReqRequest request".
+            " FROM App\\VacReqBundle\\Entity\\VacReqRequest request".
             " INNER JOIN request.user user"
             //." ON request.user = fosuser.id"
             ." WHERE user IS NOT NULL"
@@ -6704,7 +6784,8 @@ class VacReqUtil
         $row = 2;
         foreach( $userIds as $userId ) {
 
-            $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $subjectUser = $this->em->getRepository(User::class)->find($userId);
             if( !$subjectUser ) {
                 continue;
             }
@@ -6845,7 +6926,8 @@ class VacReqUtil
     //TODO: switch to https://packagist.org/packages/wilsonglasser/spout or https://packagist.org/packages/exment-git/spout
     public function createtSummaryMultiYears( $userId, $fileName, $yearRangeStr ) {
 
-        $subjectUser = $this->em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $subjectUser = $this->em->getRepository(User::class)->find($userId);
         if( !$subjectUser ) {
             return null;
         }
@@ -7181,7 +7263,8 @@ class VacReqUtil
                 $requestTypeOriginal = true;
                 $requestTypeId = $requestParams["filter"]["requestType"];
                 if( $requestTypeId ) {
-                    $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->find($requestTypeId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+                    $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->find($requestTypeId);
                     if (!$requestType) {
                         throw $this->createNotFoundException('Unable to find Request Type by id=' . $requestTypeId);
                     }
@@ -7193,11 +7276,13 @@ class VacReqUtil
 
             //return NULL;
             if( $routeName == "vacreq_incomingrequests" || $routeName == "vacreq_myrequests" ) {
-                $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation('business-vacation');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+                $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation('business-vacation');
             }
 
             if( $routeName == "vacreq_floatingrequests" || $routeName == "vacreq_myfloatingrequests" ) {
-                $requestType = $this->em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByAbbreviation('floatingday');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+                $requestType = $this->em->getRepository(VacReqRequestTypeList::class)->findOneByAbbreviation('floatingday');
             }
         }
         //echo $routeName.": RequestType=".$requestType."<br>";
@@ -7315,7 +7400,8 @@ class VacReqUtil
         }
 
         $parameters = array();
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $this->em->getRepository(VacReqRequestFloating::class);
         $dql = $repository->createQueryBuilder('floating');
 
         $dql->where("floating.user = :userId AND floating.floatingType=:floatingType");
@@ -7341,7 +7427,8 @@ class VacReqUtil
 
         if( count($floatingRequests) > 0 ) {
 
-            $floatingType = $this->em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTypeList'] by [VacReqFloatingTypeList::class]
+            $floatingType = $this->em->getRepository(VacReqFloatingTypeList::class)->find($floatingTypeId);
 
             //getRequestAcademicYears
             //getAcademicYearEdgeDateBetweenRequestStartEnd
@@ -7441,8 +7528,10 @@ class VacReqUtil
         $resArr['error'] = false;
         $resArr['errorMsg'] = "";
 
-        $floatingType = $this->em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->find($floatingTypeId);
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->find($subjectUserId);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTypeList'] by [VacReqFloatingTypeList::class]
+        $floatingType = $this->em->getRepository(VacReqFloatingTypeList::class)->find($floatingTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $this->em->getRepository(User::class)->find($subjectUserId);
 
         //startDate=2021-07-01
         //endDate=2022-06-30
@@ -7849,7 +7938,8 @@ class VacReqUtil
         //echo $type.": requestTypeStr=".$requestTypeStr."<br>";
         //$numberOfDays = 0;
 
-        $repository = $this->em->getRepository('AppVacReqBundle:VacReqRequestFloating');
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
+        $repository = $this->em->getRepository(VacReqRequestFloating::class);
         $dql =  $repository->createQueryBuilder("request");
 
         //if( $asObject ) {

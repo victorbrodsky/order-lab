@@ -17,6 +17,9 @@
 
 namespace App\VacReqBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\VacReqBundle\Entity\VacReqHolidayList;
 use App\VacReqBundle\Entity\VacReqObservedHolidayList;
 use Doctrine\ORM\EntityRepository;
@@ -80,7 +83,8 @@ class VacReqSingleHolidayType extends AbstractType
         //echo "organizationalInstitutions type=".count($this->params['organizationalInstitutions'])."<br>";
 
         $builder->add('institutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'getNameAndId', //'name',
             'label' => false,
             'required' => false,
