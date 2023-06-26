@@ -90,6 +90,7 @@ def process_single_file( filepath, startstr, endstr ):
 
         #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
         linemodified, bundle, classname = process_line(l_no, line, filepath, startstr, endstr)
+
         if linemodified != None:
             data[l_no] = linemodified
             print('Replaced: l_no=', l_no, " in " + filepath)
@@ -137,6 +138,8 @@ def process_single_file( filepath, startstr, endstr ):
                     #print(data)
                     #print("namespaceline=",namespaceline)
                     data[namespaceline] = data[namespaceline] + "\n\n\n" + useline
+            else:
+                print("Not added use: because none or multiple class definition found for classname="+classname+"; foundcount="+foundcount+"!= 1; " + useline + " in ", filepath)
 
 
     # and write everything back
