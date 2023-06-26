@@ -50,6 +50,7 @@ def process_files( dir, startstr, endstr ):
     #0) get all files
     files = getListOfFiles(dir_path)
     print("files=", len(list(files)))
+    print("\n")
 
     for filepath in files:
         if ".php" in filepath:
@@ -91,7 +92,7 @@ def process_single_file( filepath, startstr, endstr ):
         linemodified, bundle, classname = process_line(l_no, line, filepath, startstr, endstr)
         if linemodified != None:
             data[l_no] = linemodified
-            print('Replaced: l_no=', l_no, " in " + filepath + "\n")
+            print('Replaced: l_no=', l_no, " in " + filepath)
             print("Replaced line=",linemodified,"\n")
 
             #Now make sure class exists in the file's header "use class..."
@@ -128,13 +129,14 @@ def process_single_file( filepath, startstr, endstr ):
                 bundledirname = os.path.dirname(classpath)
                 subfolder = os.path.basename(bundledirname)
                 useline = r'use App\{}\{}\{};'.format(bundlefoldername,subfolder,classname)  # +  r"\" + bundlefoldername + r"\" + subfolder + r"\" + classname
+                useline = useline + " //Added use line for replacing namespace by ::class"
                 print("useline="+useline)
 
                 if useline not in content:
-                    print("Add: " + useline + " in ", filepath)
+                    print("Added use: " + useline + " in ", filepath)
                     #add after namespace App\DeidentifierBundle\Controller;
                     #print(data)
-                    print("namespaceline=",namespaceline)
+                    #print("namespaceline=",namespaceline)
                     data[namespaceline] = data[namespaceline] + "\n\n\n" + useline
 
 
@@ -161,20 +163,39 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                 x = result.split(":")
                 bundle = x[0]
                 classname = x[1]
+
+                #get single ' or double quote " from line and result
+                #line: $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+                #subline (startstr + result + endstr): ->getRepository(' + result + ')->
+                #result: AccessionType::class
+                #get: '
+                quote = "'"
+                firstChar = endstr[0]
+                lastChar = startstr[-1]
+                if firstChar == lastChar:
+                    quote = lastChar
+                    #print("quote=" + quote)
+                else:
+                    print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: quote char is not defined" + "\n")
+
                 # User::class
-                searchstr = "'" + result + "'"
+                searchstr = quote + result + quote
                 replacedstr = classname + "::class"
-                print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
-                linemodified = origline.replace(searchstr, replacedstr)
-                return linemodified, bundle, classname
+                if searchstr in origline:
+                    print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
+                    linemodified = origline.replace(searchstr, replacedstr)
+                    linemodified = "    //Replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
+                    return linemodified, bundle, classname
+                else:
+                    print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: searchstr [" + searchstr + "] is not in the line" + "\n")
             else:
                 print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
-                # pass
         else:
             # print(filepath + "\n" + "line="+line+"\n"+"Skipped: line commented out")
             pass
     return None, None, None
 
+#NOT USED
 def process_single_file_orig(filepath, startstr, endstr):
     count = 0
     with open(filepath, mode='r', encoding='utf8') as fp:
@@ -229,23 +250,6 @@ def find_between( s, first, last ):
     try:
         start = s.index( first ) + len( first )
         end = s.index( last, start )
-        return s[start:end]
-    except ValueError:
-        return ""
-
-def copyfiles( source_dir, dest_dir, pattern ):
-    files = glob.iglob(os.path.join(source_dir,pattern))
-    # print("files=", len(list(files)))
-    for file in files:
-        # print(file)
-        if os.path.isfile(file):
-            print(file)
-            shutil.copy2(file, dest_dir)
-
-def find_between_r( s, first, last ):
-    try:
-        start = s.rindex( first ) + len( first )
-        end = s.rindex( last, start )
         return s[start:end]
     except ValueError:
         return ""
@@ -334,5 +338,5 @@ def main(argv):
 if __name__ == '__main__':
     #python fellapp.py --dir DeidentifierBundle --startstr "->getRepository('" --endstr "')->"
     #C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\replace-test\DeidentifierBundle
-    #python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "')->"
+    #python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "')->" > res.log
     main(sys.argv[1:])
