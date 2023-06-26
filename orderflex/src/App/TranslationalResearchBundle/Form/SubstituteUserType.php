@@ -2,6 +2,12 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -40,7 +46,8 @@ class SubstituteUserType extends AbstractType
 //        }
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            'class' => SpecialtyList::class,
             'choice_label' => 'name',
             'label'=>'Project Specialty:',
             'required'=> false,
@@ -58,7 +65,8 @@ class SubstituteUserType extends AbstractType
         ));
 
         $builder->add( 'substituteUser', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "The user name to be substituted:",
             'required'=> false,
             'multiple' => false,
@@ -72,7 +80,8 @@ class SubstituteUserType extends AbstractType
         $otherUserParam = "'hematopathology_ap-cp_covid19_misi'";
         $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         $builder->add( 'replaceUser', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             //'label'=> "Replace with the following user name (Add New):",
             'label'=> "Replace with the following user name$addUserOnFly:",
             //'label'=> "Replace with the following user name:",

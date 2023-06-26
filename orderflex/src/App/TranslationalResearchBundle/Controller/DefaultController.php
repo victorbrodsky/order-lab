@@ -2,6 +2,14 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+
+use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
 use App\TranslationalResearchBundle\Entity\Product;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
@@ -333,7 +341,8 @@ class DefaultController extends OrderAbstractController
         if(1) {
 
             $em = $this->getDoctrine()->getManager();
-            $projectSpecialtyObject = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            $projectSpecialtyObject = $em->getRepository(SpecialtyList::class)->find($specialtyId);
 
             $transresUtil = $this->container->get('transres_util');
             $transresIntakeForm = $transresUtil->getTransresSiteParameterFile("transresIntakeForms",NULL,$projectSpecialtyObject);
@@ -376,7 +385,8 @@ class DefaultController extends OrderAbstractController
 
         ///////////////// add not existed item code for invoiceItems without product /////////////////
         if( $invoiceId ) {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find($invoiceId);
             if ($invoice) {
                 foreach ($invoice->getInvoiceItems() as $invoiceItem) {
                     $product = $invoiceItem->getProduct();
@@ -424,14 +434,16 @@ class DefaultController extends OrderAbstractController
         if( $pricelistId == 'trp-default-pricelist' ) {
             $priceList = NULL;
         } else {
-            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+            $priceList = $em->getRepository(PriceTypeList::class)->find($pricelistId);
         }
         //////////////// EOF get price list ////////////////
 
         ///////////// get default fee schedules (product/services) for specialty ////////////////
         $projectSpecialty = NULL;
         if( $transresRequestId ) {
-            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($transresRequestId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $em->getRepository(TransResRequest::class)->find($transresRequestId);
             $projectSpecialty = $transresRequest->getProjectSpecialty();
         }
 
@@ -518,7 +530,8 @@ class DefaultController extends OrderAbstractController
         $transresRequestId = $request->query->get('transresRequestId');
 
         $query = $em->createQueryBuilder()
-            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            //->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            ->from(RequestCategoryTypeList::class, 'list')
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
@@ -532,7 +545,8 @@ class DefaultController extends OrderAbstractController
             $abbreviation = '';
             $priceList = NULL;
         } else {
-            $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+            $priceList = $em->getRepository(PriceTypeList::class)->find($pricelistId);
 
             if( $priceList ) {
                 $abbreviation = $priceList->getAbbreviation();
@@ -550,7 +564,8 @@ class DefaultController extends OrderAbstractController
 
         //add not existed item code for invoiceItems without product
         if( $invoiceId ) {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find($invoiceId);
             if ($invoice) {
                 foreach ($invoice->getInvoiceItems() as $invoiceItem) {
                     $product = $invoiceItem->getProduct();
@@ -641,7 +656,8 @@ class DefaultController extends OrderAbstractController
             return $response;
         }
 
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
         if( !$project ) {
             $output = NULL;
             $response = new Response();
@@ -653,7 +669,8 @@ class DefaultController extends OrderAbstractController
         $transresRequestProducts = array();
         $transresRequest = NULL;
         if( $workrequestId ) {
-            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($workrequestId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $em->getRepository(TransResRequest::class)->find($workrequestId);
             $transresRequestProducts = $transresRequest->getProducts();
         }
         if( !$transresRequest ) {
@@ -683,7 +700,8 @@ class DefaultController extends OrderAbstractController
             //echo "quantity=$quantity, productId=$productId, categoryId=$categoryId <br>";
 
             if( $categoryId ) {
-                $category = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->find($categoryId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+                $category = $em->getRepository(RequestCategoryTypeList::class)->find($categoryId);
             }
             
             if( $category && $quantity ) {
@@ -713,7 +731,8 @@ class DefaultController extends OrderAbstractController
             if( $productId ) {
                 $processedProducts[] = $productId;
 
-                $productDb = $em->getRepository('AppTranslationalResearchBundle:Product')->find($productId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+                $productDb = $em->getRepository(Product::class)->find($productId);
 
                 if( $productDb ) {
                     $total = $this->calculateProductTotal($transresRequest, $productDb, $priceList, $quantity, $category);
@@ -935,7 +954,8 @@ class DefaultController extends OrderAbstractController
         ///////////////////// AUX Functions ///////////////////////
         //edit requests without oid
         if(0) {
-            $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $repository = $em->getRepository(TransResRequest::class);
             $dql =  $repository->createQueryBuilder("request");
             $dql->select('request');
 
@@ -1150,7 +1170,8 @@ class DefaultController extends OrderAbstractController
         exit("End of update invoice's paid and due: ".$count);
 
         $em = $this->getDoctrine()->getManager();
-        $projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $projects = $em->getRepository(Project::class)->findAll();
 
         //$project = $em->getRepository('AppTranslationalResearchBundle:Project')->find(3294);
         //$projects = array($project);
@@ -1191,7 +1212,8 @@ class DefaultController extends OrderAbstractController
         exit("updateInvoicePaidDue: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
-        $invoices = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoices = $em->getRepository(Invoice::class)->findByStatus('Paid in Full');
         echo "Found invoices=".count($invoices)."<br>";
 
         $i = 1;
@@ -1219,7 +1241,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppUserdirectoryBundle:FosComment');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+        $repository = $em->getRepository(FosComment::class);
         $dql =  $repository->createQueryBuilder("foscomment");
         $dql->select('foscomment');
 
@@ -1249,7 +1272,8 @@ class DefaultController extends OrderAbstractController
                             $threadEntityName = "TransResRequest";
                         }
 
-                        $entity = $em->getRepository('AppTranslationalResearchBundle:'.$threadEntityName)->find($requestId);
+                        //$entity = $em->getRepository('AppTranslationalResearchBundle:'.$threadEntityName)->find($requestId);
+                        $entity = $em->getRepository('App\\TranslationalResearchBundle\\Entity\\'.$threadEntityName)->find($requestId);
                         if( $entity ) {
                             $comment->setObject($entity);
                             echo $comment->getEntityId()." ";
@@ -1377,7 +1401,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
 
-        $projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $projects = $em->getRepository(Project::class)->findAll();
         echo "projects=".count($projects)."<br>";
 
         $newline = "\n";
@@ -1504,7 +1529,8 @@ class DefaultController extends OrderAbstractController
         );
 
         $priceListName = "Internal Pricing";
-        $internalPriceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+        $internalPriceList = $em->getRepository(PriceTypeList::class)->findOneByName($priceListName);
         if( !$internalPriceList ) {
             exit("$priceListName list does not exist");
         }
@@ -1512,7 +1538,8 @@ class DefaultController extends OrderAbstractController
 
         $count = 0;
         foreach($projectIds as $projectOid) {
-            $project = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $em->getRepository(Project::class)->findOneByOid($projectOid);
             echo "project=".$project."<br>";
             if( $project ) {
                 $priceList = $project->getPriceList();
@@ -1546,14 +1573,16 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $priceListName = "External Pricing";
-        $externalPriceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($priceListName);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+        $externalPriceList = $em->getRepository(PriceTypeList::class)->findOneByName($priceListName);
         if( !$externalPriceList ) {
             exit("$externalPriceList list does not exist");
         }
         echo "externalPriceList=".$externalPriceList."<br>";
 
         //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->leftJoin('project.priceList','priceList');
@@ -1602,7 +1631,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->where("project.noBudgetLimit IS NULL");
@@ -1646,7 +1676,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectOid);
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->orderBy("project.id","DESC");
@@ -1874,7 +1905,8 @@ class DefaultController extends OrderAbstractController
         $params = array();
 
         //$invoices = $transresRequestUtil->getOverdueInvoices();
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $em->getRepository(Invoice::class);
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -1940,7 +1972,8 @@ class DefaultController extends OrderAbstractController
         //echo "invoiceId=$invoiceId<br>";
 
         if( $invoiceId ) {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find($invoiceId);
         }
 
         if( $invoice ) {
@@ -2040,7 +2073,8 @@ class DefaultController extends OrderAbstractController
         $projectSpecialty = NULL;
 
         if( $specialtyId && $specialtyId != 'default' ) {
-            $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($specialtyId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            $projectSpecialty = $em->getRepository(SpecialtyList::class)->find($specialtyId);
             $useDefault = false;
         } else {
             $useDefault = true;
@@ -2095,10 +2129,12 @@ class DefaultController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
-        $projectSpecialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName("AP/CP");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneByName("AP/CP");
 
         //$invoices = $transresRequestUtil->getOverdueInvoices();
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -2207,7 +2243,8 @@ class DefaultController extends OrderAbstractController
 
 
         $query = $em->createQueryBuilder()
-            ->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            //->from('AppTranslationalResearchBundle:RequestCategoryTypeList', 'list')
+            ->from(RequestCategoryTypeList::class, 'list')
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
@@ -2335,22 +2372,26 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $totalWorkRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $totalWorkRequests = $em->getRepository(TransResRequest::class)->findAll();
         echo "totalWorkRequests=".count($totalWorkRequests)."<br>";
 
-        $totalproducts = $em->getRepository('AppTranslationalResearchBundle:Product')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $totalproducts = $em->getRepository(Product::class)->findAll();
         echo "totalproducts=".count($totalproducts)."<br>";
 
         $this->notCompletedWorkRequests();
         $this->productsWithStatus();
 
-        $completedProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Completed");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $completedProductStatus = $em->getRepository(OrderableStatusList::class)->findOneByName("Completed");
         if( !$completedProductStatus ) {
             exit("OrderableStatusList not found by name 'Completed'");
         }
 
         //find all products with work completed requests
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $em->getRepository(Product::class);
         $dql =  $repository->createQueryBuilder("product");
         $dql->select('product');
 
@@ -2431,7 +2472,8 @@ class DefaultController extends OrderAbstractController
     }
     public function notCompletedWorkRequests() {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -2446,7 +2488,8 @@ class DefaultController extends OrderAbstractController
     }
     public function productsWithStatus() {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $em->getRepository(Product::class);
         $dql =  $repository->createQueryBuilder("product");
         $dql->select('product');
 
@@ -2483,29 +2526,34 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$transresUtil = $this->container->get('transres_util');
 
-        $totalWorkRequests = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $totalWorkRequests = $em->getRepository(TransResRequest::class)->findAll();
         echo "totalWorkRequests=".count($totalWorkRequests)."<br>";
 
-        $totalproducts = $em->getRepository('AppTranslationalResearchBundle:Product')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $totalproducts = $em->getRepository(Product::class)->findAll();
         echo "totalproducts=".count($totalproducts)."<br>";
 
         $this->notCompletedWorkRequests();
         $this->productsWithStatus();
 
         //Canceled by Performer
-        $canceledProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Canceled by Performer");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $canceledProductStatus = $em->getRepository(OrderableStatusList::class)->findOneByName("Canceled by Performer");
         if( !$canceledProductStatus ) {
             exit("OrderableStatusList not found by name 'Canceled by Performer'");
         }
 
         //Requested
-        $requestedProductStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Requested");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $requestedProductStatus = $em->getRepository(OrderableStatusList::class)->findOneByName("Requested");
         if( !$requestedProductStatus ) {
             exit("OrderableStatusList not found by name 'Requested'");
         }
 
         //find all products with work completed requests
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $em->getRepository(Product::class);
         $dql =  $repository->createQueryBuilder("product");
         $dql->select('product');
 
@@ -2638,7 +2686,8 @@ class DefaultController extends OrderAbstractController
         $updatedProjects = array();
 
         //find all projects without expiration date
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->where("project.expectedExpirationDate IS NULL");
@@ -2728,7 +2777,8 @@ class DefaultController extends OrderAbstractController
         $updatedProjects = array();
 
         //find all projects without expiration date
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -2863,7 +2913,8 @@ class DefaultController extends OrderAbstractController
         $updatedProjects = array();
 
         //find all projects without expiration date
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -2987,7 +3038,8 @@ class DefaultController extends OrderAbstractController
         $updatedProjects = array();
 
         //find all projects without expiration date
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 

@@ -17,6 +17,45 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+
+
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
+
+
+use App\TranslationalResearchBundle\Entity\Product; //process.py script: replaced namespace by ::class: added use line for classname=Product
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+
+
+use App\TranslationalResearchBundle\Entity\Prices; //process.py script: replaced namespace by ::class: added use line for classname=Prices
+
+
+use App\TranslationalResearchBundle\Entity\DefaultReviewer; //process.py script: replaced namespace by ::class: added use line for classname=DefaultReviewer
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\CollDivList; //process.py script: replaced namespace by ::class: added use line for classname=CollDivList
+
+
+use App\TranslationalResearchBundle\Entity\RequesterGroupList; //process.py script: replaced namespace by ::class: added use line for classname=RequesterGroupList
+
+
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
+
+
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
 use App\TranslationalResearchBundle\Form\ReviewBaseType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Exception\LogicException;
@@ -1332,7 +1371,7 @@ class TransResUtil
                     );
                 }
                 return true;
-            } catch (\LogicException $e) {
+            } catch (LogicException $e) {
                 //event log
 
                 $logger = $this->container->get('logger');
@@ -1359,7 +1398,8 @@ class TransResUtil
 
         $irbReviewState = "irb_review";
         if( $currentState == $irbReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
-            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+            $defaultReviewers = $this->em->getRepository(DefaultReviewer::class)->findBy(
                 array(
                     "state" => $irbReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -1387,7 +1427,8 @@ class TransResUtil
         $adminReviewState = "admin_review";
         if( $currentState == $adminReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
             //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
-            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+            $defaultReviewers = $this->em->getRepository(DefaultReviewer::class)->findBy(
                 array(
                     "state" => $adminReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -1418,7 +1459,8 @@ class TransResUtil
         if( $currentState == $committeeReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
             //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
-            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+            $defaultReviewers = $this->em->getRepository(DefaultReviewer::class)->findBy(
                 array(
                     "state" => $committeeReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -1450,7 +1492,8 @@ class TransResUtil
         if( $currentState == $finalReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
             //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
-            $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+            $defaultReviewers = $this->em->getRepository(DefaultReviewer::class)->findBy(
                 array(
                     "state" => $finalReviewState,
                     "projectSpecialty" => $project->getProjectSpecialty()
@@ -1487,7 +1530,8 @@ class TransResUtil
         }
 
         //$defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
-        $defaultReviewers = $this->em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+        $defaultReviewers = $this->em->getRepository(DefaultReviewer::class)->findBy(
             array(
                 'state'=>$state,
                 'projectSpecialty'=>$specialty->getId()
@@ -2277,7 +2321,8 @@ class TransResUtil
         }
         //echo "reviewEntityName=".$reviewEntityName."<br>";
 
-        $reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        //$reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        $reviewObject = $this->em->getRepository('App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName)->find($reviewId);
         if( !$reviewObject ) {
             throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
@@ -2421,7 +2466,8 @@ class TransResUtil
     }
     //$reviewObjectClassName - review entity class name (i.e. "IrbReview")
     public function findReviewObjectsByProjectAndAnyReviewers( $reviewObjectClassName, $project, $reviewer=null, $reviewId=null ) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName);
+        //$repository = $this->em->getRepository('AppTranslationalResearchBundle:' . $reviewObjectClassName);
+        $repository = $this->em->getRepository('App\\TranslationalResearchBundle\\Entity\\' . $reviewObjectClassName);
         $dql =  $repository->createQueryBuilder("review");
         $dql->select('review');
         $dql->GroupBy('review');
@@ -2489,7 +2535,8 @@ class TransResUtil
             $role = "_FINAL_REVIEW_";
         }
 
-        if( $role && $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$role) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        if( $role && $this->em->getRepository(User::class)->isUserHasSiteAndPartialRoleName($user,$sitename,$role) ) {
             return true;
         }
 
@@ -3339,7 +3386,8 @@ class TransResUtil
 
         //2) get admins from DB
         if( count($admins) == 0 ) {
-            $admins = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN" . $specialtyPostfix));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $admins = $this->em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_ADMIN" . $specialtyPostfix));
             //echo "admins2=".count($admins)."<br>";
         }
 
@@ -3362,7 +3410,8 @@ class TransResUtil
             return $users;
         }
 
-        $primarys = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyPostfix));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $primarys = $this->em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyPostfix));
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {
@@ -3607,7 +3656,8 @@ class TransResUtil
     }
 
     public function getTransResCollaborationDivs() {
-        $collDivs = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
+        $collDivs = $this->em->getRepository(CollDivList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -3618,10 +3668,12 @@ class TransResUtil
     }
     public function getCollaborationDivObject( $collDivStr ) {
         //echo "requesterGroupStr=".$requesterGroupStr."<br>";
-        $collDiv = $this->em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByUrlSlug($collDivStr);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
+        $collDiv = $this->em->getRepository(CollDivList::class)->findOneByUrlSlug($collDivStr);
 
         if( !$collDiv ) {
-            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+            $repository = $this->em->getRepository(RequesterGroupList::class);
             $dql =  $repository->createQueryBuilder("list");
 
             $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
@@ -3647,7 +3699,8 @@ class TransResUtil
 
         $user = $this->security->getUser();
 
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -3704,7 +3757,8 @@ class TransResUtil
 
         //$user = $this->security->getUser();
 
-        $groups = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+        $groups = $this->em->getRepository(RequesterGroupList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -3716,10 +3770,12 @@ class TransResUtil
 
     public function getRequesterGroupObject( $requesterGroupStr ) {
         //echo "requesterGroupStr=".$requesterGroupStr."<br>";
-        $requesterGroup = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByUrlSlug($requesterGroupStr);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+        $requesterGroup = $this->em->getRepository(RequesterGroupList::class)->findOneByUrlSlug($requesterGroupStr);
 
         if( !$requesterGroup ) {
-            $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequesterGroupList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+            $repository = $this->em->getRepository(RequesterGroupList::class);
             $dql =  $repository->createQueryBuilder("list");
 
             $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
@@ -4147,11 +4203,13 @@ class TransResUtil
     public function getSpecialtyObject($specialtyAbbreviation) {
         //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
 
-        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation($specialtyAbbreviation);
 
         if( !$specialty ) {
             $specialtyAbbreviationLower = strtolower($specialtyAbbreviation);
-            $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviationLower);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation($specialtyAbbreviationLower);
         }
 
         if( !$specialty ) {
@@ -4172,7 +4230,8 @@ class TransResUtil
         //echo "specialtyStr=".$specialtyStr."<br>";
         //$specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $repository = $this->em->getRepository(SpecialtyList::class);
         $dql =  $repository->createQueryBuilder("specialty");
 
         $dql->andWhere("specialty.type = :typedef OR specialty.type = :typeadd");
@@ -4228,7 +4287,8 @@ class TransResUtil
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $user = $this->security->getUser();
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -4369,7 +4429,8 @@ class TransResUtil
     //logged in user requester or reviewer or submitter
     public function getAvailableRequesterOrReviewerProjects( $type=null, $limit=null, $search=null ) {
         $user = $this->security->getUser();
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
 
         //$dql->select('project');
@@ -5228,7 +5289,8 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -5486,7 +5548,8 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -5650,7 +5713,6 @@ class TransResUtil
         if( $autosize ) {
             $cellIterator = $ews->getRowIterator()->current()->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
                 $ews->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
@@ -5799,7 +5861,8 @@ class TransResUtil
                 break;
             }
 
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->find($projectId);
             if( !$project ) {
                 continue;
             }
@@ -5980,7 +6043,6 @@ class TransResUtil
                 $sheet = $ea->getActiveSheet();
                 $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
                 $cellIterator->setIterateOnlyExistingCells(true);
-                /** @var PHPExcel_Cell $cell */
                 foreach ($cellIterator as $cell) {
                     $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
                 }
@@ -6248,7 +6310,8 @@ class TransResUtil
         $projectSpecialtyDeniedArr = new ArrayCollection();
 
         //get all enabled project specialties
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -6461,7 +6524,8 @@ class TransResUtil
     }
 
     public function getNumberOfFundedRequests( $project ) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
         $dql->leftJoin("request.project", "project");
@@ -6535,7 +6599,8 @@ class TransResUtil
     }
 
     public function getTotalProjectCount() {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql = $repository->createQueryBuilder("project");
         $dql->select('COUNT(project)');
 
@@ -6569,7 +6634,8 @@ class TransResUtil
     }
 
     public function getTotalRequests() {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql = $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -6580,7 +6646,8 @@ class TransResUtil
         return $requests;
     }
     public function getTotalRequestCount() {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql = $repository->createQueryBuilder("transresRequest");
         $dql->select('COUNT(transresRequest)');
 
@@ -6645,7 +6712,8 @@ class TransResUtil
 
     //filter products by work queue type ($workQueues as array: MISI or CTP)
     public function getTotalProductsCount( $workQueues=array() ) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $this->em->getRepository(Product::class);
         $dql = $repository->createQueryBuilder("product");
         $dql->select('COUNT(product)');
 
@@ -6724,7 +6792,8 @@ class TransResUtil
         //return $users;
     
         //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $repository = $this->em->getRepository(User::class);
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
     
@@ -6782,7 +6851,8 @@ class TransResUtil
         //return $users;
 
         //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:User');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $repository = $this->em->getRepository(User::class);
         $dql = $repository->createQueryBuilder("list");
         //$dql->select('list.id as id, list.username as username');
         $dql->select('list');
@@ -6856,7 +6926,8 @@ class TransResUtil
 
     //Use to return array name-id for select box
     public function getDbPriceLists() {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+        $repository = $this->em->getRepository(PriceTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -7018,7 +7089,8 @@ class TransResUtil
 
         //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResSiteParameters'] by [TransResSiteParameters::class]
+        $repository = $em->getRepository(TransResSiteParameters::class);
         $dql = $repository->createQueryBuilder("siteParameter");
         $dql->select('siteParameter');
         $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
@@ -7046,7 +7118,8 @@ class TransResUtil
         }
 
         //Create New
-        $specialty = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $em->getRepository(SpecialtyList::class)->findOneByAbbreviation($specialtyStr);
 
         $user = $this->security->getUser();
         $entity = new TransResSiteParameters($user);
@@ -7094,7 +7167,8 @@ class TransResUtil
             } else {
                 if(0) {
                     //use the first project specialty as default
-                    $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+                    $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
                         array(
                             'type' => array("default", "user-added")
                         ),
@@ -7233,7 +7307,8 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -7288,7 +7363,8 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -7342,7 +7418,8 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -7402,7 +7479,8 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("user.id");
@@ -7455,7 +7533,8 @@ class TransResUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         //$dql->select("logger");
         //$dql->select("logger.user as user");
@@ -7583,7 +7662,8 @@ class TransResUtil
     public function orderableProjectSpecialties( $fee, $asObject=true ) {
 
         //1) get all specialties
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default", "user-added")
             ),
@@ -7610,7 +7690,8 @@ class TransResUtil
 
     public function orderableProjectReverseSpecialties( $hideSpecialtiesArr, $asObject=true ) {
         //1) get all specialties
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default", "user-added")
             ),
@@ -7716,7 +7797,8 @@ class TransResUtil
 
             $role = $transresRoleBase."_".$rolename; //ROLE_TRANSRES_TECHNICIAN_MISI
 
-            $entity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $entity = $this->em->getRepository(Roles::class)->findOneByName($role);
 
             if( $entity ) {
                 continue;
@@ -7820,7 +7902,8 @@ class TransResUtil
         //$rolePartialName = "ROLE_TRANSRES_TECHNICIAN";
         //get only enabled roles
         $statusArr = array("default","user-added");
-        $trpRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $trpRoles = $this->em->getRepository(User::class)->findRolesBySiteAndPartialRoleName(
             $sitenameAbbreviation,  //$sitename
             $rolePartialName,       //$rolePartialName
             null,                   //$institutionId
@@ -7852,7 +7935,8 @@ class TransResUtil
                 $workQueueRoleName = $trpRole . "_" . $workQueueAbbreviation;
 
                 //echo "workQueueRoleName=[$workQueueRoleName] <br>";
-                $workQueueRoleEntity = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName(trim((string)$workQueueRoleName));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                $workQueueRoleEntity = $this->em->getRepository(Roles::class)->findOneByName(trim((string)$workQueueRoleName));
                 if( $workQueueRoleEntity ) {
                     continue; //skip: already exists
                 }
@@ -7919,7 +8003,8 @@ class TransResUtil
 
     }
     public function getWorkQueues() {
-        $workQueues = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+        $workQueues = $this->em->getRepository(WorkQueueList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -7932,19 +8017,23 @@ class TransResUtil
     public function getWorkQueueObject($name) {
         //echo "specialtyAbbreviation=".$specialtyAbbreviation."<br>";
 
-        $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByname($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+        $entity = $this->em->getRepository(WorkQueueList::class)->findOneByname($name);
 
         if( !$entity ) {
-            $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            $entity = $this->em->getRepository(WorkQueueList::class)->findOneByAbbreviation($name);
         }
 
         if( !$entity ) {
             $name = strtolower($name);
-            $entity = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByAbbreviation($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            $entity = $this->em->getRepository(WorkQueueList::class)->findOneByAbbreviation($name);
         }
 
         if( !$entity ) {
-            $repository = $this->em->getRepository('AppTranslationalResearchBundle:WorkQueueList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            $repository = $this->em->getRepository(WorkQueueList::class);
             $dql =  $repository->createQueryBuilder("workQueue");
             $dql->select('workQueue');
 
@@ -8032,7 +8121,8 @@ class TransResUtil
 
         $dqlParameters = array();
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -8244,7 +8334,8 @@ class TransResUtil
 
         $user = $this->security->getUser();
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
 
         //$dql->select('project');
@@ -8317,7 +8408,8 @@ class TransResUtil
 
                 if( $asPriceTypeList ) {
                     if( $priceListId ) {
-                        $priceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($priceListId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+                        $priceList = $this->em->getRepository(PriceTypeList::class)->find($priceListId);
                         if ($priceList) {
                             $priceListArr[] = $priceList;
                         }
@@ -8405,7 +8497,8 @@ class TransResUtil
     }
     
     public function findSpecificPriceByFeePriceType($fee, $priceTypeListIds) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Prices');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Prices'] by [Prices::class]
+        $repository = $this->em->getRepository(Prices::class);
         $dql =  $repository->createQueryBuilder("prices");
         $dql->select('prices');
 
@@ -8537,7 +8630,8 @@ class TransResUtil
         $specialtiesStr = implode(",", $specialties);
         echo "specialties=".$specialtiesStr." <br>";
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
         //$dql->select("DISTINCT(list.id) as id, list.name");
         $dql->select("list");
@@ -8588,20 +8682,20 @@ LEFT JOIN public.transres_requestcategory_specialty j
 WHERE
     j.requestcategorytypelist_id IS NULL;
 */
-        if(0) {
-            //FROM transres_requestcategory_specialty b
-            $dql = "
-                SELECT list
-                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
-                WHERE NOT EXISTS (
-                  SELECT 1
-                  FROM transres_requestcategory_specialty b
-                  WHERE list.id = b.requestcategorytypelist_id
-                  AND b.specialtylist_id IN (7, 8)
-                )
-            ";
-            //$query = $this->em->createQuery($sql1); //->setParameter('ids', $specialtiesStr);
-        }
+//        if(0) {
+//            //FROM transres_requestcategory_specialty b
+//            $dql = "
+//                SELECT list
+//                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
+//                WHERE NOT EXISTS (
+//                  SELECT 1
+//                  FROM transres_requestcategory_specialty b
+//                  WHERE list.id = b.requestcategorytypelist_id
+//                  AND b.specialtylist_id IN (7, 8)
+//                )
+//            ";
+//            //$query = $this->em->createQuery($sql1); //->setParameter('ids', $specialtiesStr);
+//        }
         //Working
         if(1) {
             $conn = $this->em->getConnection();
@@ -8625,7 +8719,8 @@ WHERE
             //https://stackoverflow.com/questions/31536137/doctrine-not-exists-subquery
             $sub = $this->em->createQueryBuilder();
             $sub->select("t");
-            $sub->from("AppTranslationalResearchBundle:SpecialtyList","t");
+            //$sub->from("AppTranslationalResearchBundle:SpecialtyList","t");
+            $sub->from(SpecialtyList::class,"t");
             $sub->leftJoin("t.requestCategories","requestCategories");
             $sub->andWhere('projectSpecialties = list.id');
             $sub->andWhere("projectSpecialties IN ($specialtiesStr)");
@@ -8669,25 +8764,25 @@ WHERE
             //$dql->andWhere($specialtyStr);
         }
 
-        if(0) {
-            $query = $this->em->createQuery(
-                'SELECT list,specialty
-                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
-                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty 
-                WHERE list.id = :id
-                '
-            )->setParameter('id', $specialtiesStr);
-        }
+//        if(0) {
+//            $query = $this->em->createQuery(
+//                'SELECT list,specialty
+//                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list 
+//                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty 
+//                WHERE list.id = :id
+//                '
+//            )->setParameter('id', $specialtiesStr);
+//        }
 
-        if(0) {
-            $sql = "
-                SELECT list
-                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
-                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty
-                WHERE list.id = :id
-            ";
-            $query = $this->em->createQuery($sql)->setParameter('id', $specialtiesStr);
-        }
+//        if(0) {
+//            $sql = "
+//                SELECT list
+//                FROM AppTranslationalResearchBundle:RequestCategoryTypeList list
+//                INNER JOIN AppTranslationalResearchBundle:SpecialtyList specialty
+//                WHERE list.id = :id
+//            ";
+//            $query = $this->em->createQuery($sql)->setParameter('id', $specialtiesStr);
+//        }
 
         $query = $this->em->createQuery($dql);
         echo "query=" . $query->getSql() . "<br>";

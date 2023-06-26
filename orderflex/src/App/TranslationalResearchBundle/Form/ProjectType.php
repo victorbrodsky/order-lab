@@ -2,6 +2,45 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
+
+
+use App\TranslationalResearchBundle\Entity\ProjectTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProjectTypeList
+
+
+use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IrbApprovalTypeList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\TissueProcessingServiceList; //process.py script: replaced namespace by ::class: added use line for classname=TissueProcessingServiceList
+
+
+use App\TranslationalResearchBundle\Entity\CollLabList; //process.py script: replaced namespace by ::class: added use line for classname=CollLabList
+
+
+use App\TranslationalResearchBundle\Entity\CollDivList; //process.py script: replaced namespace by ::class: added use line for classname=CollDivList
+
+
+use App\TranslationalResearchBundle\Entity\IrbStatusList; //process.py script: replaced namespace by ::class: added use line for classname=IrbStatusList
+
+
+use App\TranslationalResearchBundle\Entity\RequesterGroupList; //process.py script: replaced namespace by ::class: added use line for classname=RequesterGroupList
+
+
+use App\TranslationalResearchBundle\Entity\CompCategoryList; //process.py script: replaced namespace by ::class: added use line for classname=CompCategoryList
+
+
+use App\TranslationalResearchBundle\Entity\OtherRequestedServiceList; //process.py script: replaced namespace by ::class: added use line for classname=OtherRequestedServiceList
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
@@ -115,7 +154,8 @@ class ProjectType extends AbstractType
 
 
             $builder->add('projectSpecialty', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+                'class' => SpecialtyList::class,
                 'choice_label' => 'name',
                 'label' => 'Project Specialty:',
                 'disabled' => ($this->params['admin'] ? false : true),
@@ -146,7 +186,8 @@ class ProjectType extends AbstractType
                 //if( $this->params['cycle'] == "new" ) {
                 if (1) {
                     $builder->add('priceList', EntityType::class, array(
-                        'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+                        'class' => PriceTypeList::class,
                         'choice_label' => 'name',
                         'label' => 'Utilize the following specific price list:',
                         'disabled' => ($this->params['admin'] ? false : true),
@@ -166,7 +207,8 @@ class ProjectType extends AbstractType
                     ));
                 } else {
                     $builder->add('priceList', EntityType::class, array(
-                        'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+                        'class' => PriceTypeList::class,
                         'choice_label' => 'name',
                         'label' => 'Utilize the following specific price list:',
                         'disabled' => ($this->params['admin'] ? false : true),
@@ -337,7 +379,8 @@ class ProjectType extends AbstractType
 
         if( $this->params['cycle'] == "show" || $this->params['cycle'] == "review" || $this->params['cycle'] == "pdf" ) {
             $builder->add('projectType', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:ProjectTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
+                'class' => ProjectTypeList::class,
                 'label' => 'Project Type:',
                 'required' => false,
                 'attr' => array('class' => 'combobox transres-project-projectType'),
@@ -371,7 +414,8 @@ class ProjectType extends AbstractType
         }
 
         $builder->add('exemptIrbApproval', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+            'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getHumanName() . ' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
@@ -388,7 +432,8 @@ class ProjectType extends AbstractType
 
 
         $builder->add('exemptIACUCApproval', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:IrbApprovalTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+            'class' => IrbApprovalTypeList::class,
             'label' => 'Is this project exempt from ' . $this->params['transresUtil']->getAnimalName() . ' approval?:',
             'required' => true,
             'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
@@ -440,7 +485,8 @@ class ProjectType extends AbstractType
         }
 
         $builder->add('principalInvestigators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Principal Investigator(s) for the project$addUserOnFly:",
             'required' => true,
             'multiple' => true,
@@ -449,7 +495,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('principalIrbInvestigator', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
             'required' => false,
             'multiple' => false,
@@ -459,7 +506,8 @@ class ProjectType extends AbstractType
 
         //Add submitInvestigators similar to coInvestigators
         $builder->add('submitInvestigators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
             'required' => false,
             'multiple' => true,
@@ -468,7 +516,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('coInvestigators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Co-Investigator(s)$addUserOnFly:",
             'required' => false,
             'multiple' => true,
@@ -477,7 +526,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('pathologists', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => $this->params['institutionName'] . " Pathologist(s) Involved$addUserOnFly:",
             'required' => false,
             'multiple' => true,
@@ -486,7 +536,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('contacts', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Contact(s)$addUserOnFly:",
             'required' => true,
             'multiple' => true,
@@ -495,7 +546,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('billingContact', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Billing Contact$addUserOnFly:",
             'required' => false,
             'multiple' => false,
@@ -603,11 +655,13 @@ class ProjectType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                        $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                    $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -737,7 +791,8 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
         $builder->add( 'tissueProcessingServices', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:TissueProcessingServiceList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TissueProcessingServiceList'] by [TissueProcessingServiceList::class]
+            'class' => TissueProcessingServiceList::class,
             'label'=>'Services:',
             'required'=>false,
             'multiple' => true,
@@ -759,7 +814,8 @@ class ProjectType extends AbstractType
         //echo "specialExtraProjectSpecialty=".$this->params['specialExtraProjectSpecialty']."<br>";
 //        if( $this->params['specialExtraProjectSpecialty'] == true ) {
             $builder->add('collLabs', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:CollLabList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollLabList'] by [CollLabList::class]
+                'class' => CollLabList::class,
                 'label' => 'Which labs within Clinical Pathology are you collaborating with, if any?:',
                 'required' => false,
                 'multiple' => true,
@@ -779,7 +835,8 @@ class ProjectType extends AbstractType
 
         //For ALL “New Project Request Forms” (not just for CP)
         $builder->add('collDivs', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:CollDivList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
+            'class' => CollDivList::class,
             'label' => 'Which division(s) are you collaborating with?:',
             'required' => false,
             'multiple' => true,
@@ -802,7 +859,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('irbStatusList', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:IrbStatusList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbStatusList'] by [IrbStatusList::class]
+            'class' => IrbStatusList::class,
             'label' => 'IRB Approval Status:',
             'required' => false,
             'attr' => array('class' => 'combobox transres-project-irbStatusList'),
@@ -976,7 +1034,8 @@ class ProjectType extends AbstractType
         ////////////// EOF Additional fields from #294 //////////////
 
         $builder->add('requesterGroup', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:RequesterGroupList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+            'class' => RequesterGroupList::class,
             'label' => 'Requester group:',
             'required' => false,
             'attr' => array('class' => 'combobox transres-project-requesterGroup'),
@@ -992,7 +1051,8 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('compTypes', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:CompCategoryList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CompCategoryList'] by [CompCategoryList::class]
+            'class' => CompCategoryList::class,
             'label' => 'Computational study category:',
             'required' => false,
             'multiple' => true,
@@ -1085,7 +1145,8 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
         $builder->add( 'restrictedServices', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:OtherRequestedServiceList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OtherRequestedServiceList'] by [OtherRequestedServiceList::class]
+            'class' => OtherRequestedServiceList::class,
             'label'=>'Other Requested Services:',
             'required'=>false,
             'multiple' => true,

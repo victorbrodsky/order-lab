@@ -2,6 +2,12 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -55,7 +61,8 @@ class PriceType extends AbstractType
 
 
         $builder->add('priceList', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+            'class' => PriceTypeList::class,
             'choice_label' => 'name',
             'label' => 'Utilize the following specific price list:',
             //'disabled' => ($this->params['admin'] ? false : true),
@@ -77,7 +84,8 @@ class PriceType extends AbstractType
         //Don't use workQueues for specific price list
         if( 0 ) {
             $builder->add('workQueues', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+                'class' => WorkQueueList::class,
                 'label' => 'Work Queue(s):',
                 'required' => false,
                 'multiple' => true,

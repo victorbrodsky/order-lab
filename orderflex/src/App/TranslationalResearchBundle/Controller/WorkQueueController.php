@@ -25,6 +25,12 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+
+use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
+
 use App\TranslationalResearchBundle\Form\FilterWorkQueuesType;
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -256,17 +262,20 @@ class WorkQueueController extends OrderAbstractController
                         'title' => urlencode("Pending " . $title)
                     );
 
-                    $requestedStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('requested');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                    $requestedStatusEntity = $em->getRepository(OrderableStatusList::class)->findOneByAbbreviation('requested');
                     if( $requestedStatusEntity ) {
                         $incompleteFilter['filter[orderableStatus][1]'] = $requestedStatusEntity->getId();
                     }
 
-                    $inprogressStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('in-progress');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                    $inprogressStatusEntity = $em->getRepository(OrderableStatusList::class)->findOneByAbbreviation('in-progress');
                     if( $inprogressStatusEntity ) {
                         $incompleteFilter['filter[orderableStatus][2]'] = $inprogressStatusEntity->getId();
                     }
 
-                    $pendingStatusEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByAbbreviation('pending-additional-info');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                    $pendingStatusEntity = $em->getRepository(OrderableStatusList::class)->findOneByAbbreviation('pending-additional-info');
                     if( $pendingStatusEntity ) {
                         $incompleteFilter['filter[orderableStatus][3]'] = $pendingStatusEntity->getId();
                     }
@@ -328,7 +337,8 @@ class WorkQueueController extends OrderAbstractController
 //        $dql->select('transresRequest');
 //        $dql->leftJoin('transresRequest.products','products');
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $em->getRepository(Product::class);
         $dql =  $repository->createQueryBuilder("product");
         $dql->select('product');
 
@@ -782,7 +792,8 @@ class WorkQueueController extends OrderAbstractController
         //echo "workqueue=$workqueue<br>";
         $set = false;
 
-        $orderableStatus = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($orderableStatusName);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $orderableStatus = $em->getRepository(OrderableStatusList::class)->findOneByName($orderableStatusName);
         if( !$orderableStatus ) {
             $set = false;
         }
@@ -815,7 +826,8 @@ class WorkQueueController extends OrderAbstractController
         //translationalresearch_work_queue_index_filter
         $lowercaseName = NULL;
         if( $workqueueId ) {
-            $workQueue = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->find($workqueueId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            $workQueue = $em->getRepository(WorkQueueList::class)->find($workqueueId);
             if ($workQueue) {
                 $lowercaseName = strtolower($workQueue->getName()); //ctp lab
                 $lowercaseName = str_replace(' ', '-', $lowercaseName);

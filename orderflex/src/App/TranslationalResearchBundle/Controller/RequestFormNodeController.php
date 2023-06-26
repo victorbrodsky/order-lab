@@ -25,6 +25,12 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\FilterRequestType;
@@ -427,7 +433,8 @@ class RequestFormNodeController extends OrderAbstractController
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -562,7 +569,8 @@ class RequestFormNodeController extends OrderAbstractController
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -652,7 +660,8 @@ class RequestFormNodeController extends OrderAbstractController
         }
 
         if( !$transresRequest->getInstitution() ) {
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
             $transresRequest->setInstitution($institution);
         }
 
@@ -660,7 +669,8 @@ class RequestFormNodeController extends OrderAbstractController
         if( !$transresRequest->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Request";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategory = $em->getRepository(MessageCategory::class)->findOneByName($categoryStr);
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
             }
@@ -858,7 +868,8 @@ class RequestFormNodeController extends OrderAbstractController
         $res = "NotOK";
 
         $projectId = trim((string)$request->get('projectId') );
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||

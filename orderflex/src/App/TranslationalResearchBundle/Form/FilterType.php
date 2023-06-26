@@ -17,6 +17,18 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\ProjectTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProjectTypeList
+
+
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -58,7 +70,8 @@ class FilterType extends AbstractType
         }
 
         $builder->add('projectSpecialty', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            'class' => SpecialtyList::class,
             //'choice_label' => 'name',
             'label' => false,
             'disabled' => $disabled,
@@ -89,7 +102,8 @@ class FilterType extends AbstractType
         
         if(1) { //testing
             $builder->add('principalInvestigators', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,    //"Principal Investigator(s):",
                 'required' => false,
                 'multiple' => true,
@@ -111,7 +125,8 @@ class FilterType extends AbstractType
 
         if(1) { //testing
             $builder->add('associatedUsers', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,
                 'required' => false,
                 'multiple' => true,
@@ -120,7 +135,8 @@ class FilterType extends AbstractType
             ));
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
@@ -129,7 +145,8 @@ class FilterType extends AbstractType
             ));
 
             $builder->add('reviewers', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,    //"Principal Investigator(s):",
                 'required' => false,
                 'multiple' => true,
@@ -191,7 +208,8 @@ class FilterType extends AbstractType
         ));
 
         $builder->add('searchProjectType', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:ProjectTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
+            'class' => ProjectTypeList::class,
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -287,7 +305,8 @@ class FilterType extends AbstractType
         ) {
             if(0) {
                 $builder->add('priceList', EntityType::class, array(
-                    'class' => 'AppTranslationalResearchBundle:PriceTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+                    'class' => PriceTypeList::class,
                     'label' => false,
                     'required' => false,
                     'multiple' => true,

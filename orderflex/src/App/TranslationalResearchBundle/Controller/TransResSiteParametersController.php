@@ -2,6 +2,9 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
 
 use App\TranslationalResearchBundle\Form\SiteParameterType;
@@ -192,11 +195,14 @@ class TransResSiteParametersController extends OrderAbstractController
 
             //process document
             //$em->getRepository('AppUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresLogo");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($siteParameter,"transresLogo");
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresPackingSlipLogo");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($siteParameter,"transresPackingSlipLogo");
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresIntakeForm");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($siteParameter,"transresIntakeForm");
 
             $em->flush();
 

@@ -17,6 +17,15 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+
+
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -165,7 +174,8 @@ class ReminderUtil
         //3. (invoiceReminderCount < maxReminderCount)
         //When email sent, set invoiceLastReminderSentDate=currentDate, invoiceReminderCount++
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -500,7 +510,8 @@ class ReminderUtil
 
         $reminderEmail = $transresUtil->getTransresSiteProjectParameter('invoiceReminderEmail',null,$projectSpecialty);
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -657,7 +668,8 @@ class ReminderUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -829,7 +841,8 @@ class ReminderUtil
 
         $params = array();
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -955,7 +968,8 @@ class ReminderUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -1048,7 +1062,8 @@ class ReminderUtil
         //if( $upcomingDeadline > $expirationDate ) => send email
         //echo $projectSpecialty.": projectExprDurationEmail=$projectExprDurationEmail, upcomingDeadline=".$upcomingDeadline->format('Y-m-d H:i:s')."<br>";
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1226,7 +1241,8 @@ class ReminderUtil
         $expirationDurationStr = $expirationDuration->format('Y-m-d');
         //echo "expirationDurationStr=$expirationDurationStr <br>";
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1433,7 +1449,8 @@ class ReminderUtil
         $autoCloseDateStr = $autoCloseDate->format('Y-m-d');
         //echo "autoCloseDateStr=$autoCloseDateStr <br>";
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 

@@ -29,7 +29,8 @@ class ReviewBaseController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $irbReviews = $em->getRepository('AppTranslationalResearchBundle:IrbReview')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbReview'] by [IrbReview::class]
+        $irbReviews = $em->getRepository(IrbReview::class)->findAll();
 
         return array(
             'irbReviews' => $irbReviews,
@@ -80,7 +81,8 @@ class ReviewBaseController extends OrderAbstractController
         if( !$reviewEntityName ) {
             throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
         }
-        $review = $em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        //$review = $em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        $review = $em->getRepository('App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName)->find($reviewId);
         if( !$review ) {
             throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }

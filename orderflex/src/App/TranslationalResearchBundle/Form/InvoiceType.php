@@ -2,6 +2,9 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -56,7 +59,8 @@ class InvoiceType extends AbstractType
         if( $this->params['principalInvestigators'] && count($this->params['principalInvestigators']) > 0 ) {
             //show only request's the first PI user
             $builder->add('principalInvestigator', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
@@ -66,7 +70,8 @@ class InvoiceType extends AbstractType
         } else {
             //show all users with set invoice's PI
             $builder->add('principalInvestigator', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Principal Investigator for the project:",
                 'required' => true,
                 'multiple' => false,
@@ -84,7 +89,8 @@ class InvoiceType extends AbstractType
         }
 
         $builder->add('billingContact', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "PI's Billing Contact:",
             'required'=> false,
             'multiple' => false,
@@ -101,7 +107,8 @@ class InvoiceType extends AbstractType
         ));
 
         $builder->add('salesperson', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Salesperson:",
             //'disabled' => true,
             'required' => false,
@@ -120,7 +127,8 @@ class InvoiceType extends AbstractType
 
         if(1) {
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 //'label' => "Submitter (will be shown in the invoice PDF as Requester):",
                 'label' => "Invoice's Submitter:",
                 'disabled' => true,

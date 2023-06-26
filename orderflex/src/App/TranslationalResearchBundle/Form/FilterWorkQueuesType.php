@@ -17,6 +17,18 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
+
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+
+
+use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -59,7 +71,8 @@ class FilterWorkQueuesType extends AbstractType
 //            },
 //        ));
         $builder->add('workQueues', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            'class' => WorkQueueList::class,
             'label' => false,
             'required'=> false,
             'multiple' => true,
@@ -70,7 +83,8 @@ class FilterWorkQueuesType extends AbstractType
 
         $categoriesChoiceLabel = "getOptimalAbbreviationName";
         $builder->add('categories', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+            'class' => RequestCategoryTypeList::class,
             'label' => false,
             'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
             'required' => false,
@@ -97,7 +111,8 @@ class FilterWorkQueuesType extends AbstractType
             ));
         } else {
             $builder->add('orderableStatus', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                'class' => OrderableStatusList::class,
                 'label' => false,
                 //'choice_label' => "getOptimalAbbreviationName",
                 'required' => false,
@@ -165,7 +180,8 @@ class FilterWorkQueuesType extends AbstractType
         }
 
         $builder->add('projectSpecialty', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            'class' => SpecialtyList::class,
             'label' => false,   //'Project Specialty',
             'required'=> false,
             'multiple' => true,

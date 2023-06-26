@@ -2,6 +2,15 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+
+
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+
+
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
+
+
+use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
 use App\TranslationalResearchBundle\Entity\DefaultReviewer;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -78,7 +87,8 @@ class DefaultReviewerController extends OrderAbstractController
 
         //$defaultReviewers = $em->getRepository('AppTranslationalResearchBundle:DefaultReviewer')->findAll();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:DefaultReviewer');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DefaultReviewer'] by [DefaultReviewer::class]
+        $repository = $em->getRepository(DefaultReviewer::class);
         $dql =  $repository->createQueryBuilder("defaultReviewer");
         $dql->select('defaultReviewer');
 
@@ -520,7 +530,8 @@ class DefaultReviewerController extends OrderAbstractController
 
 
         ///////////// Filter Projects //////////////////
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -921,7 +932,8 @@ class DefaultReviewerController extends OrderAbstractController
         $requestBillingContact = $form->get('requestBillingContact')->getData();
 
         ///////////// Filter Requests //////////////////
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql = $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1093,7 +1105,8 @@ class DefaultReviewerController extends OrderAbstractController
         $invoiceSalesperson = $form->get('invoiceSalesperson')->getData();
 
         ///////////// Filter Invoices //////////////////
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $em->getRepository(Invoice::class);
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 

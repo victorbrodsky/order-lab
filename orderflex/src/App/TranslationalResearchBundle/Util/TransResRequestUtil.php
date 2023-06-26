@@ -19,6 +19,27 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
+
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
+
+
+use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
+
+
 
 
 use App\TranslationalResearchBundle\Entity\Product;
@@ -91,7 +112,8 @@ class TransResRequestUtil
     public function getTransResRequestTotalFeeHtml( $project ) {
 
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -1531,7 +1553,8 @@ class TransResRequestUtil
         $emails = array_merge($emails,$admins);
 
         // 2) Technicians
-        $technicians = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $technicians = $this->em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
@@ -1559,7 +1582,8 @@ class TransResRequestUtil
         }
 
         //Technicians
-        $technicians = $this->em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $technicians = $this->em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
         foreach( $technicians as $technician ) {
             if( $technician ) {
                 if( $asEmail ) {
@@ -1642,7 +1666,8 @@ class TransResRequestUtil
         $emails = $this->getRequestAdminTechEmails($transresRequest); //admins, technicians
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        $billingUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $billingUsers = $this->em->getRepository(User::class)->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail(false);
@@ -2549,7 +2574,8 @@ class TransResRequestUtil
     //return version if exists, null if not exists
     public function getLatestInvoiceVersion( $transresRequest ) {
         //1) Find all invoices for the given $transresRequest
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','transresRequest');
@@ -2886,7 +2912,8 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
 
         //get all enabled project specialties
-        $specialties = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -3166,7 +3193,8 @@ class TransResRequestUtil
         if( $version > 1 ) {
             $dqlParameters = array();
 
-            $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+            $repository = $this->em->getRepository(Logger::class);
             $dql = $repository->createQueryBuilder("logger");
             $dql->innerJoin('logger.eventType', 'eventType');
 
@@ -3267,7 +3295,8 @@ class TransResRequestUtil
 
         //Billing Admin as CC
         $ccs = array();
-        $billingUsers = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $billingUsers = $this->em->getRepository(User::class)->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $billingUser ) {
             if( $billingUser ) {
                 $ccs[] = $billingUser->getSingleEmail(false);
@@ -3483,7 +3512,8 @@ class TransResRequestUtil
     }
 
     public function getLatestInvoice( $transresRequest, $transresRequestId=null ) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -3764,7 +3794,8 @@ class TransResRequestUtil
 
     //search fos bundle comments user_fosComment: 'thread_id = transres-Request-13541-billing'
     public function getRequestIdsByFosComment( $searchStr ) {
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+        $repository = $this->em->getRepository(FosComment::class);
         $dql =  $repository->createQueryBuilder("foscomment");
         $dql->select('foscomment');
 
@@ -3810,7 +3841,8 @@ class TransResRequestUtil
 
     //Not Used. Where used in DashboardUtil
     public function getOverdueInvoices($projectSpecialty=null) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -4049,7 +4081,8 @@ class TransResRequestUtil
 
     //NOT USED
     public function getTotalStrInvoice() {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql = $repository->createQueryBuilder("invoice");
         //$dql->select('COUNT(invoice)');
         $dql->select('invoice.total');
@@ -4078,7 +4111,8 @@ class TransResRequestUtil
     }
 
     public function getLatestInvoiceLists( $projectSpecialty ) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -4106,7 +4140,8 @@ class TransResRequestUtil
     }
 
     public function getProjectMiniRequests($projectId) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest.id,transresRequest.oid,transresRequest.fundedAccountNumber,transresRequest.progressState');
 
@@ -4214,7 +4249,8 @@ class TransResRequestUtil
                 break;
             }
 
-            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $this->em->getRepository(Invoice::class)->find($invoiceId);
             if( !$invoice ) {
                 continue;
             }
@@ -4388,7 +4424,8 @@ class TransResRequestUtil
                 break;
             }
 
-            $transResRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($requestId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if( !$transResRequest ) {
                 continue;
             }
@@ -4679,7 +4716,8 @@ class TransResRequestUtil
                 break;
             }
 
-            $transResRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($requestId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if( !$transResRequest ) {
                 continue;
             }
@@ -4924,7 +4962,8 @@ class TransResRequestUtil
                 break;
             }
 
-            $transResRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($requestId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transResRequest = $this->em->getRepository(TransResRequest::class)->find($requestId);
             if (!$transResRequest) {
                 continue;
             }
@@ -4953,7 +4992,8 @@ class TransResRequestUtil
 
     public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null ) {
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -5014,7 +5054,8 @@ class TransResRequestUtil
     }
     public function getProductServiceByProjectSpecialty_ORIG($projectSpecialty,$asCombobox=true,$max=3) {
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -5190,7 +5231,8 @@ class TransResRequestUtil
 
     public function getFeeSchedule( $transresRequest ) {
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -5259,7 +5301,8 @@ class TransResRequestUtil
 
     public function getOneValidFeeScheduleByProductId( $productId ) {
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -5963,7 +6006,8 @@ class TransResRequestUtil
                 continue;
             }
 
-            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $this->em->getRepository(Invoice::class)->find($invoiceId);
             if( !$invoice ) {
                 continue;
             }
@@ -6570,7 +6614,8 @@ class TransResRequestUtil
 
         $invoiceItem = NULL;
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:InvoiceItem');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:InvoiceItem'] by [InvoiceItem::class]
+        $repository = $this->em->getRepository(InvoiceItem::class);
         $dql =  $repository->createQueryBuilder("invoiceItem");
         $dql->select('invoiceItem');
 
@@ -6635,7 +6680,8 @@ class TransResRequestUtil
 
         //$invoiceItem = NULL;
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Product');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Product'] by [Product::class]
+        $repository = $this->em->getRepository(Product::class);
         $dql =  $repository->createQueryBuilder("product");
         $dql->select('product');
 
@@ -6859,7 +6905,8 @@ class TransResRequestUtil
             return false;
         }
 
-        $requestedStatus = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($orderableStatus);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $requestedStatus = $this->em->getRepository(OrderableStatusList::class)->findOneByName($orderableStatus);
         if( !$requestedStatus ) {
             return false;
         }
@@ -6875,7 +6922,8 @@ class TransResRequestUtil
     }
 
     public function getOrderableStatuses() {
-        $statuses = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+        $statuses = $this->em->getRepository(OrderableStatusList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -6987,7 +7035,8 @@ class TransResRequestUtil
             if( $fromStatus && $fromStatus != $currentStatus ) {
                 //set all product's status to 'completed's
 
-                $completedProductStatus = $this->em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName("Completed");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                $completedProductStatus = $this->em->getRepository(OrderableStatusList::class)->findOneByName("Completed");
                 if( !$completedProductStatus ) {
                     return NULL;
                 }

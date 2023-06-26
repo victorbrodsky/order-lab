@@ -2,6 +2,9 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -105,7 +108,8 @@ class ReviewBaseType extends AbstractType
 //                ));
 
                 $form->add( 'reviewer', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    'class' => User::class,
                     'label'=> "Reviewer:",
                     'required'=> false,
                     'multiple' => false,
@@ -123,7 +127,8 @@ class ReviewBaseType extends AbstractType
                 ));
 
                 $form->add( 'reviewerDelegate', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    'class' => User::class,
                     'label'=> "Reviewer Delegate:",
                     'required'=> false,
                     'multiple' => false,

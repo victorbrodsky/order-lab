@@ -17,6 +17,9 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\TranslationalResearchBundle\Form\ProjectChangeStatusConfirmationType;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
@@ -108,7 +111,8 @@ class ProjectChangeStatusController extends OrderAbstractController
         $project = NULL;
         $projectId = trim((string)$request->get('projectId') );
         if( $projectId ) {
-            $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $em->getRepository(Project::class)->find($projectId);
         }
 
         if( false === $transresPermissionUtil->hasProjectPermission("close",$project) ) {
@@ -383,7 +387,8 @@ class ProjectChangeStatusController extends OrderAbstractController
         //$reactivationApproverEmail = 'Project reactivation approver';
         //Find user with role 'Project reactivation approver'
         $reactivationApproverEmail = NULL;
-        $reactivationApprovers = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER"));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $reactivationApprovers = $em->getRepository(User::class)->findUsersByRoles(array("ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER"));
         if( count($reactivationApprovers) > 0 ) {
             $reactivationApprover = $reactivationApprovers[0];
             $reactivationApproverEmail = $reactivationApprover->getSingleEmail(false);
@@ -858,7 +863,8 @@ class ProjectChangeStatusController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 

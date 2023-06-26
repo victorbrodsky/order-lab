@@ -25,6 +25,30 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+
+
+use App\TranslationalResearchBundle\Entity\BusinessPurposeList; //process.py script: replaced namespace by ::class: added use line for classname=BusinessPurposeList
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\TranslationalResearchBundle\Entity\PriceTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PriceTypeList
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
+
 use App\TranslationalResearchBundle\Form\FeeFilterType;
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -112,7 +136,8 @@ class RequestController extends OrderAbstractController
         if( $routeName == "translationalresearch_new_standalone_request" ) {
             $projectId = $request->query->get('id');
             if( $projectId ) {
-                $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                $project = $em->getRepository(Project::class)->find($projectId);
             }
 
             if( !$project ) {
@@ -174,7 +199,8 @@ class RequestController extends OrderAbstractController
             //pre-populate "Business Purpose(s)" by Project's Type:
             //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
             if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
-                $businessPurpose = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:BusinessPurposeList'] by [BusinessPurposeList::class]
+                $businessPurpose = $em->getRepository(BusinessPurposeList::class)->findOneByName("USCAP-related");
                 //echo "businessPurpose=".$businessPurpose."<br>";
                 if( $businessPurpose ) {
                     $transresRequest->addBusinessPurpose($businessPurpose);
@@ -240,9 +266,12 @@ class RequestController extends OrderAbstractController
 
             $transresUtil->assignMinimumRequestRoles($transresRequest);
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"packingSlipPdf");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $this->processTableData($transresRequest,$form,$user); //new
 
@@ -503,9 +532,12 @@ class RequestController extends OrderAbstractController
 
             $transresUtil->assignMinimumRequestRoles($transresRequest);
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"packingSlipPdf");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $updatedDataResults = $this->processTableData($transresRequest,$form,$user); //edit
 
@@ -836,7 +868,8 @@ class RequestController extends OrderAbstractController
                 }
 
                 if( $objectId ) {
-                    $dataResult = $em->getRepository('AppTranslationalResearchBundle:DataResult')->find($objectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:DataResult'] by [DataResult::class]
+                    $dataResult = $em->getRepository(DataResult::class)->find($objectId);
                     //echo "dataResult found=".$dataResult->getSystem()."<br>";
                 }
                 //exit();
@@ -1983,7 +2016,8 @@ class RequestController extends OrderAbstractController
 //            $stopwatch->start('createQueryBuilder');
 //        }
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
 
@@ -2563,7 +2597,8 @@ class RequestController extends OrderAbstractController
         if( !$transresRequest->getInstitution() ) {
             $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
             if( !$autoAssignInstitution ) {
-                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $autoAssignInstitution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
             }
             $transresRequest->setInstitution($autoAssignInstitution);
         }
@@ -2572,7 +2607,8 @@ class RequestController extends OrderAbstractController
         if( $formnode && !$transresRequest->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Request";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategory = $em->getRepository(MessageCategory::class)->findOneByName($categoryStr);
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
             }
@@ -2881,7 +2917,8 @@ class RequestController extends OrderAbstractController
 
         $updatePdf = trim((string)$request->get('updatePdf'));
         $projectId = trim((string)$request->get('projectId'));
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         $permission = true;
 
@@ -2988,7 +3025,8 @@ class RequestController extends OrderAbstractController
 
         $updatePdf = trim((string)$request->get('updatePdf'));
         $projectId = trim((string)$request->get('projectId'));
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         $permission = true;
         $res = "NotOK";
@@ -3032,7 +3070,8 @@ class RequestController extends OrderAbstractController
 
                 $priceList = NULL;
                 if ($pricelistid) {
-                    $priceList = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->find($pricelistid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+                    $priceList = $em->getRepository(PriceTypeList::class)->find($pricelistid);
                 }
 
                 //if( $priceList ) {
@@ -3096,7 +3135,8 @@ class RequestController extends OrderAbstractController
 
         $updatePdf = trim((string)$request->get('updatePdf'));
         $projectId = trim((string)$request->get('projectId'));
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         $permission = true;
         $res = "NotOK";
@@ -3175,7 +3215,8 @@ class RequestController extends OrderAbstractController
 
         $updatePdf = trim((string)$request->get('updatePdf'));
         $projectId = trim((string)$request->get('projectId'));
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         $permission = true;
         $res = "NotOK";
@@ -3277,7 +3318,8 @@ class RequestController extends OrderAbstractController
         //$transresUtil = $this->container->get('transres_util');
         //$specialties = $transresUtil->getTransResProjectSpecialties(false);
 
-        $specialties = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialties = $em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default","user-added")
             ),
@@ -3299,7 +3341,8 @@ class RequestController extends OrderAbstractController
         $search = $filterform['search']->getData();
         $specialties = $filterform['specialties']->getData();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList'); //fee schedule list
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        $repository = $em->getRepository(RequestCategoryTypeList::class); //fee schedule list
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
@@ -3423,7 +3466,8 @@ class RequestController extends OrderAbstractController
 
         //get linkToListId by RequestCategoryTypeList from user_platformlistmanagerrootlist (PlatformListManagerRootList)
         $linkToListId = NULL;
-        $linkToList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName('RequestCategoryTypeList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $linkToList = $em->getRepository(PlatformListManagerRootList::class)->findOneByListName('RequestCategoryTypeList');
         if( $linkToList ) {
             $linkToListId = $linkToList->getId();
         }
@@ -3456,7 +3500,8 @@ class RequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 

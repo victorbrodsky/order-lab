@@ -2,6 +2,9 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use App\TranslationalResearchBundle\Util\TransResUtil;
 use Doctrine\ORM\EntityRepository;
@@ -194,7 +197,8 @@ class ProductType extends AbstractType
         //dynamically get label and price according to the priceList
         if(0) {
             $builder->add('category', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+                'class' => RequestCategoryTypeList::class,
                 //'choice_label' => 'getOptimalAbbreviationName',
                 //            'choice_value' => function ($entity) {
                 //                //return "111";
@@ -220,7 +224,8 @@ class ProductType extends AbstractType
         } else {
 
             $builder->add('category', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+                'class' => RequestCategoryTypeList::class,
                 'choice_label' => function (RequestCategoryTypeList $entity) {
                     if ($entity) {
                         return $entity->getOptimalAbbreviationName($this->priceList);
@@ -283,7 +288,8 @@ class ProductType extends AbstractType
 //                'attr' => array('class' => 'textarea form-control product-note')
 //            ));
             $builder->add('orderableStatus', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:OrderableStatusList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+                'class' => OrderableStatusList::class,
                 'label' => "Orderable Status:",
                 'required' => false,
                 'multiple' => false,

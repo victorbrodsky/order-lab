@@ -2,6 +2,10 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -81,7 +85,8 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('invoiceSalesperson', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Invoice Salesperson:",
             //'disabled' => true,
             'required' => false,
@@ -150,7 +155,8 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('accessionType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            'class' => AccessionType::class,
             'label' => "Default Source System for Work Request Deliverables:",
             'required' => false,
             'multiple' => false,

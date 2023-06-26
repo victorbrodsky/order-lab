@@ -17,6 +17,21 @@
 
 namespace App\TranslationalResearchBundle\Controller;
 
+
+
+use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IrbApprovalTypeList
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\TranslationalResearchBundle\Entity\BusinessPurposeList; //process.py script: replaced namespace by ::class: added use line for classname=BusinessPurposeList
 //use Graphp\GraphViz\GraphViz;
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -179,7 +194,8 @@ class ProjectController extends OrderAbstractController
 
         //$projects = $em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1429,9 +1445,11 @@ class ProjectController extends OrderAbstractController
         }
 
         //set default exempt
-        $exemptIrbApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+        $exemptIrbApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Not Exempt");
         $project->setExemptIrbApproval($exemptIrbApproval);
-        $exemptIACUCApproval = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Exempt");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+        $exemptIACUCApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Exempt");
         $project->setExemptIACUCApproval($exemptIACUCApproval);
 
         //new: add all default reviewers
@@ -1489,9 +1507,12 @@ class ProjectController extends OrderAbstractController
             //set ExpectedExprDate only when project is final approved
             //$transresUtil->calculateAndSetProjectExpectedExprDate($project); //new
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"irbApprovalLetter");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);
@@ -1754,9 +1775,12 @@ class ProjectController extends OrderAbstractController
 
             //$project->autoPopulateApprovedProjectBudget(); //edit
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project, "humanTissueForm");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project, "document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project, "irbApprovalLetter");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project, "humanTissueForm");
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;
@@ -2278,7 +2302,8 @@ class ProjectController extends OrderAbstractController
         if( !$project->getInstitution() ) {
             $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
             if( !$autoAssignInstitution ) {
-                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $autoAssignInstitution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
             }
             $project->setInstitution($autoAssignInstitution);
         }
@@ -2287,7 +2312,8 @@ class ProjectController extends OrderAbstractController
         if( $formnode && !$project->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategory = $em->getRepository(MessageCategory::class)->findOneByName($categoryStr);
 
             if (!$messageCategory) {
                 throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
@@ -2581,7 +2607,8 @@ class ProjectController extends OrderAbstractController
         //if project type = "USCAP Submission", set the default value for the Business Purpose of the new Work Request as "USCAP-related"
         $businessPurposesArr = array();
         if( $project->getProjectType() && $project->getProjectType()->getName() == "USCAP Submission" ) {
-            $businessPurpose = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName("USCAP-related");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:BusinessPurposeList'] by [BusinessPurposeList::class]
+            $businessPurpose = $em->getRepository(BusinessPurposeList::class)->findOneByName("USCAP-related");
             //echo "businessPurpose=".$businessPurpose."<br>";
             if( $businessPurpose ) {
                 $businessPurposesArr[] = $businessPurpose->getId();
@@ -2744,7 +2771,8 @@ class ProjectController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($id);
 
         if( !$project ) {
             exit("Project not found by id $id");
@@ -2822,7 +2850,8 @@ class ProjectController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
 
         $projectId = trim((string)$request->get('projectId') );
-        $project = $em->getRepository('AppTranslationalResearchBundle:Project')->find($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $em->getRepository(Project::class)->find($projectId);
 
         $permission = true;
         $res = "NotOK";

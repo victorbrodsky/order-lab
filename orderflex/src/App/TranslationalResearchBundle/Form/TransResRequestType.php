@@ -17,6 +17,18 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\BusinessPurposeList; //process.py script: replaced namespace by ::class: added use line for classname=BusinessPurposeList
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
@@ -138,7 +150,8 @@ class TransResRequestType extends AbstractType
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             //echo "2 project=".$this->params['project']."<br>";
             $builder->add('project', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:Project',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                'class' => Project::class,
                 'choice_label' => 'getProjectInfoNameWithPIsChoice',
                 'choices' => $this->params['availableProjects'],
                 'data' => $this->params['project'],
@@ -169,11 +182,13 @@ class TransResRequestType extends AbstractType
                     if ($message) {
                         $messageCategory = $message->getMessageCategory();
                         if ($messageCategory) {
-                            $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                            $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                         }
                     }
                     if (!$label) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                        $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
                     }
 
                     if ($label) {
@@ -251,7 +266,8 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('contact', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Billing Contact:",
             'required'=> false,
             'multiple' => false,
@@ -282,7 +298,8 @@ class TransResRequestType extends AbstractType
         //print_r($attrArr);
 
         $builder->add('principalInvestigators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Principal Investigator(s) for the project:",
             'required' => false,
             //'disabled' => $disabledPi,
@@ -370,7 +387,8 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('businessPurposes', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:BusinessPurposeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:BusinessPurposeList'] by [BusinessPurposeList::class]
+            'class' => BusinessPurposeList::class,
             'label'=> "Business Purpose(s):",
             'required'=> true,
             'multiple' => true,

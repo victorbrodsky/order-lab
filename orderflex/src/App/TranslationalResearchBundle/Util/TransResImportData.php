@@ -24,6 +24,21 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\SiteList; //process.py script: replaced namespace by ::class: added use line for classname=SiteList
+
+
+use App\TranslationalResearchBundle\Entity\ProjectTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProjectTypeList
 use App\TranslationalResearchBundle\Entity\Prices;
 use App\TranslationalResearchBundle\Entity\PriceTypeList;
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
@@ -100,11 +115,13 @@ class TransResImportData
 
         $institution = $userSecUtil->getAutoAssignInstitution();
         if( !$institution ) {
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
         }
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -233,7 +250,8 @@ class TransResImportData
             //echo $count." [".$exportId."]: ";
             //exit("exit");
 
-            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $em->getRepository(TransResRequest::class)->findOneByExportId($requestID);
             //echo "transresRequest=".$transresRequest->getExportId()."<br>";
             if (!$transresRequest) {
                 $transresRequest = new TransResRequest();
@@ -241,7 +259,8 @@ class TransResImportData
                 $transresRequest->setInstitution($institution);
                 $transresRequest->setVersion(1);
 
-                $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
                 if (!$project) {
                     exit("Project wit external ID '$exportId' does not exist.");
                 }
@@ -800,7 +819,8 @@ class TransResImportData
         //}
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -852,7 +872,8 @@ class TransResImportData
             //$requestID = $requestID."0000000"; //test
             echo "<br>" . $count . ": RS ID " . $requestID . "<br>";
 
-            $transresRequest = $em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $em->getRepository(TransResRequest::class)->findOneByExportId($requestID);
             if( !$transresRequest ) {
                 exit("Request not found by External ID ".$requestID);
             }
@@ -943,7 +964,8 @@ class TransResImportData
 
         $cwid = $emailParts[0];
         //$username = $cwid."_@_". $this->usernamePrefix;
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
 
         return $user;
     }
@@ -1008,7 +1030,8 @@ class TransResImportData
                 $reviewerUser = $userMapper[$userId];
                 if( !$reviewerUser ) {
                     //////// get default committee reviewer ///////////
-                    $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+                    $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation("ap-cp");
                     if( !$specialty ) {
                         exit("Project specialty not found by abbreviation=ap-cp");
                     }
@@ -1020,7 +1043,8 @@ class TransResImportData
                 }
 
                 if( $reviewerUser ) {
-                    $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                    $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
                     if( !$project ) {
                         exit("Project wit external ID '$exportId' does not exist.");
                     }
@@ -1079,7 +1103,8 @@ class TransResImportData
             FALSE);
 
         //////// Admin user ///////////
-        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -1104,7 +1129,8 @@ class TransResImportData
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim((string)$exportId);
 
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
             if( !$project ) {
                 exit("Project wit external ID '$exportId' does not exist.");
             }
@@ -1200,7 +1226,8 @@ class TransResImportData
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $specialty = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+        $specialty = $this->em->getRepository(SpecialtyList::class)->findOneByAbbreviation("ap-cp");
         if( !$specialty ) {
             exit("Project specialty not found by abbreviation=ap-cp");
         }
@@ -1343,7 +1370,8 @@ class TransResImportData
 
         $thisNotExistingUsers = array(); //only for required users
 
-        $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
         if( $project ) {
             if( !$testing ) {
                 //ignore existing request to prevent overwrite
@@ -1365,7 +1393,8 @@ class TransResImportData
         if( !$project->getInstitution() ) {
             $institution = $userSecUtil->getAutoAssignInstitution();
             if( !$institution ) {
-                $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $institution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
             }
             $project->setInstitution($institution);
         }
@@ -1422,7 +1451,8 @@ class TransResImportData
         //SUBMITTED_BY
         $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
         $requestersStrArr[] = "SUBMITTED_BY: ".$submitterCwid;
-        $submitterUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $submitterUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($submitterCwid);
         if( $submitterUser ) {
             $project->setSubmitter($submitterUser);
         } else {
@@ -1480,7 +1510,8 @@ class TransResImportData
             $piFound = false;
             foreach($priInvestigatorsArr as $pi) {
                 //assume "amy chadburn": second if family name
-                $thisUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $thisUser = $this->em->getRepository(User::class)->findOneByAnyNameStr($pi);
                 if( $thisUser ) {
                     $project->addPrincipalInvestigator($thisUser);
                     $requestersArr[] = $thisUser;
@@ -1526,7 +1557,8 @@ class TransResImportData
         foreach($coInvestigatorsArr as $coInvestigator) {
             //echo "coInvestigator=".$coInvestigator."<br>";
             //assume "amy chadburn": second if family name
-            $thisUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $thisUser = $this->em->getRepository(User::class)->findOneByAnyNameStr($coInvestigator);
             if( $thisUser ) {
                 $project->addCoInvestigator($thisUser);
                 $requestersArr[] = $thisUser;
@@ -1778,7 +1810,8 @@ class TransResImportData
 
         //$testing = true;
 
-        $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
         if( $project ) {
             //ok
         } else {
@@ -1869,7 +1902,8 @@ class TransResImportData
         $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
         if( $adminComment ) {
 
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->findOneByExportId($exportId);
             if( !$project ) {
                 exit("Project wit external ID '$exportId' does not exist.");
             }
@@ -2061,20 +2095,23 @@ class TransResImportData
 
             $cwid = $emailParts[0];
             //$username = $cwid."_@_". $this->usernamePrefix;
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
             if( $user ) {
                 $users[] = $user;
             }
 
             if( !$user ) {
-                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByEmail($email);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $user = $this->em->getRepository(User::class)->findOneByEmail($email);
                 if( $user ) {
                     $users[] = $user;
                 }
             }
 
             if( !$user ) {
-                $userArr = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $userArr = $this->em->getRepository(User::class)->findUserByUserInfoEmail($email);
                 if( count($userArr) == 1 ) {
                     $users[] = $userArr[0];
                 }
@@ -2125,7 +2162,8 @@ class TransResImportData
         }
 
         //check if the user already exists in DB $cwid
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
         if( $user ) {
             return $user;
         }
@@ -2164,7 +2202,8 @@ class TransResImportData
         }
 
         //assign minimum roles
-        $siteObject = $this->em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation("translationalresearch");
         $lowestRoles = $siteObject->getLowestRoles();
         foreach($lowestRoles as $role) {
             $user->addRole($role);
@@ -2329,7 +2368,8 @@ class TransResImportData
     public function getApproverByUserId($userId) {
         $cwid = $this->userMapper($userId);
         $username = $cwid."_@_". $this->usernamePrefix;
-        $approver = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $approver = $this->em->getRepository(User::class)->findOneByUsername($username);
         if( !$approver ) {
             $logger = $this->container->get('logger');
             $logger->error("Can not find user by username=".$username);
@@ -2516,7 +2556,8 @@ class TransResImportData
         }
 
         if( $statusNewSystem ) {
-            $listEntity = $this->em->getRepository('AppTranslationalResearchBundle:ProjectTypeList')->findOneByName($statusNewSystem);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
+            $listEntity = $this->em->getRepository(ProjectTypeList::class)->findOneByName($statusNewSystem);
             return $listEntity;
         }
 
@@ -2573,7 +2614,8 @@ class TransResImportData
             $exportId = trim((string)$exportId);
             //echo "<br>########## Request exportId=" . $exportId . "#############<br>";
 
-            $transresRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->findOneByExportId($exportId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $transresRequest = $this->em->getRepository(TransResRequest::class)->findOneByExportId($exportId);
             if( !$transresRequest ) {
                 //exit("Request not found by External ID ".$exportId);
                 continue;
@@ -2688,7 +2730,8 @@ class TransResImportData
         //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
         //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
 
-        $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:AntibodyList'] by [AntibodyList::class]
+        $lists = $this->em->getRepository(AntibodyList::class)->findAll();
         if( count($lists) > 0 ) {
             return "AntibodyList is already exists.";
         }
@@ -2740,7 +2783,8 @@ class TransResImportData
         $userSecUtil = $this->container->get('user_security_utility');
         $systemuser = $userSecUtil->findSystemUser();
 
-        $lists = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:AntibodyList'] by [AntibodyList::class]
+        $lists = $this->em->getRepository(AntibodyList::class)->findAll();
 
         //set creator, createdate, type, orderinlist and creation time
         $orderinlist = 1;
@@ -2834,7 +2878,8 @@ class TransResImportData
             $antibodyId = trim((string)$antibodyId);
             //echo "<br>########## antibodyId=" . $antibodyId . "#############<br>";
 
-            $antibody = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->find($antibodyId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:AntibodyList'] by [AntibodyList::class]
+            $antibody = $this->em->getRepository(AntibodyList::class)->find($antibodyId);
 
 //            if( !$antibody ) {
 //                $antibody = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findOneByExportId($antibodyId);
@@ -3025,7 +3070,8 @@ class TransResImportData
     //run: http://127.0.0.1/order/translational-research/sync-id-antibody-list
     public function syncIdAntibodyList() {
         //$antibodies = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList')->findAll();
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:AntibodyList');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:AntibodyList'] by [AntibodyList::class]
+        $repository = $this->em->getRepository(AntibodyList::class);
         $dql =  $repository->createQueryBuilder("antibody");
         $dql->select('antibody');
         $dql->where("antibody.exportId IS NOT NULL");
@@ -3126,7 +3172,8 @@ class TransResImportData
             echo "; unit=[$unit] <br>";
 
             //Check if already exists by $code
-            $feeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+            $feeDb = $this->em->getRepository(RequestCategoryTypeList::class)->findOneByProductId($code);
             if( $feeDb ) {
                 echo "Fee already exists $feeDb <br>";
                 continue;
@@ -3253,7 +3300,8 @@ class TransResImportData
         $count = 0;
         $updateCount = 0;
 
-        $internalPriceList = $this->em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName("Internal Pricing");
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+        $internalPriceList = $this->em->getRepository(PriceTypeList::class)->findOneByName("Internal Pricing");
         if( !$internalPriceList ) {
             exit("Internal price list does not exist");
         }
@@ -3304,7 +3352,8 @@ class TransResImportData
             }
 
             //Check if already exists by $code
-            $priceFeeDb = $this->em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($code);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+            $priceFeeDb = $this->em->getRepository(RequestCategoryTypeList::class)->findOneByProductId($code);
             if( $priceFeeDb ) {
                 //echo "Fee already exists $feeDb <br>";
                 //continue;
@@ -3538,7 +3587,8 @@ class TransResImportData
             }
 
             echo "projectId=[$projectId] <br>";
-            $project = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findOneByOid($projectId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+            $project = $this->em->getRepository(Project::class)->findOneByOid($projectId);
 
             if( $project ) {
 

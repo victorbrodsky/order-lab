@@ -17,6 +17,9 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -63,7 +66,8 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('submitter', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'multiple' => false,
@@ -80,7 +84,8 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('principalInvestigator', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -97,7 +102,8 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('billingContact', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> false,
             'required'=> false,
             'multiple' => false,
@@ -114,7 +120,8 @@ class FilterInvoiceType extends AbstractType
         ));
 
         $builder->add('salesperson', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => false,
             //'disabled' => true,
             'required' => false,

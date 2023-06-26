@@ -25,6 +25,9 @@
 namespace App\TranslationalResearchBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
 use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
@@ -162,9 +165,12 @@ class ProjectFormNodeController extends ProjectController
                 $startProjectReview = true;
             }
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"irbApprovalLetter");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);
@@ -406,9 +412,12 @@ class ProjectFormNodeController extends ProjectController
                 }
             }
 
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"document");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"irbApprovalLetter");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($project,"humanTissueForm");
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;

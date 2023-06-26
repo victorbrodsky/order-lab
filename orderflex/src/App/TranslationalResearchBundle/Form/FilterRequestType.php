@@ -17,6 +17,21 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -54,7 +69,8 @@ class FilterRequestType extends AbstractType
         if (count($this->params['transresUsers']) > 0) {
 
             $builder->add('submitter', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Reviewer Delegate:",
                 'required' => false,
                 'multiple' => false,
@@ -64,7 +80,8 @@ class FilterRequestType extends AbstractType
             ));
 
             $builder->add('billingContact', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
@@ -74,7 +91,8 @@ class FilterRequestType extends AbstractType
             ));
 
             $builder->add('principalInvestigators', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => false,
                 'required' => false,
                 'multiple' => true,
@@ -135,7 +153,8 @@ class FilterRequestType extends AbstractType
         if(1) {
             //Sort the RequestCategoryTypeList->prices (Prices) according to the displayorder
             $builder->add('categories', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+                'class' => RequestCategoryTypeList::class,
                 'label' => false,
                 'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
                 'required' => false,
@@ -209,7 +228,8 @@ class FilterRequestType extends AbstractType
         }
 
         $builder->add('projectSpecialty', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            'class' => SpecialtyList::class,
             'label' => false,   //'Project Specialty',
             'required'=> false,
             'multiple' => true,
@@ -270,7 +290,8 @@ class FilterRequestType extends AbstractType
                 //echo "Use data projects <br>";
                 //echo "Use data project=".$this->params['project']."<br>";
                 $builder->add('project', EntityType::class, array(
-                    'class' => 'AppTranslationalResearchBundle:Project',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                    'class' => Project::class,
                     //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
                     'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",     //With PIs
                     'required' => false,
@@ -288,7 +309,8 @@ class FilterRequestType extends AbstractType
 //            ));
                 //echo "Use all projects <br>";
                 $builder->add('project', EntityType::class, array(
-                    'class' => 'AppTranslationalResearchBundle:Project',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+                    'class' => Project::class,
                     //'choice_label' => "getProjectInfoNameChoice",        //Without PIs
                     'choice_label' => $projectChoiceLabel, //"getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
                     'choices' => $this->params['availableProjects'],
@@ -322,7 +344,8 @@ class FilterRequestType extends AbstractType
         }
         
         $builder->add('workQueues', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            'class' => WorkQueueList::class,
             'label' => false,
             //'choice_label' => $categoriesChoiceLabel, //"getOptimalAbbreviationName",
             'required' => false,

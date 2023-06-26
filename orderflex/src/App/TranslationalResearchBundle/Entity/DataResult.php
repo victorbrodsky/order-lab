@@ -70,7 +70,6 @@ class DataResult {
     private $barcode;
 
     /**
-     * @var text
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;

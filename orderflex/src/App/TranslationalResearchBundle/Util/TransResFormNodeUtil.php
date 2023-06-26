@@ -24,6 +24,9 @@
 
 namespace App\TranslationalResearchBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\FormNode; //process.py script: replaced namespace by ::class: added use line for classname=FormNode
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -68,7 +71,8 @@ class TransResFormNodeUtil
         );
         echo "addNestedsetNodeRecursevely: count=".$count."<br>";
 
-        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $em->getRepository(FormNode::class)->findOneByName('HemePath Translational Research');
         echo "rootNode=".$parentNode."<br>";
 
         $this->createProjectFormNode($parentNode);
@@ -247,7 +251,8 @@ class TransResFormNodeUtil
         );
         echo "addNestedsetNodeRecursevely: count=".$count."<br>";
 
-        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $em->getRepository(FormNode::class)->findOneByName('HemePath Translational Research');
         echo "rootNode=".$parentNode."<br>";
 
         $this->createRequestFormNode($parentNode);
@@ -566,24 +571,28 @@ class TransResFormNodeUtil
 
         //1) get FormNode by fieldName
         //$parentNameStr = "HemePath Translational Research"; //must be unique name
-        $parentNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($parentNameStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $this->em->getRepository(FormNode::class)->findOneByName($parentNameStr);
         if( !$parentNode ) {
             throw new \Exception( "FormNode parent not found by '".$parentNameStr."'" );
         }
 
         //$formNameStr = "HemePath Translational Research Project"; //Project's form
-        $entityFormNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($formNameStr,$parentNode,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $entityFormNode = $this->em->getRepository(FormNode::class)->findByChildnameAndParent($formNameStr,$parentNode,$mapper);
         if( !$entityFormNode ) {
             throw new \Exception( "FormNode project's form not found by '".$formNameStr."'" );
         }
 
         //$projectFormNodeSectionStr = "Project"; //Project's form section
-        $entityFormNodeSection = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($entityFormNodeSectionStr,$entityFormNode,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $entityFormNodeSection = $this->em->getRepository(FormNode::class)->findByChildnameAndParent($entityFormNodeSectionStr,$entityFormNode,$mapper);
         if( !$entityFormNodeSection ) {
             throw new \Exception( "FormNode project's form section not found by '".$entityFormNodeSectionStr."'" );
         }
 
-        $fieldFormNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($fieldName,$entityFormNodeSection,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $fieldFormNode = $this->em->getRepository(FormNode::class)->findByChildnameAndParent($fieldName,$entityFormNodeSection,$mapper);
         if( !$fieldFormNode ) {
             throw new \Exception( "FormNode field form not found by '".$fieldName."'" );
         }

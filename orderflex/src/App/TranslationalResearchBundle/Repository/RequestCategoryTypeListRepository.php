@@ -33,9 +33,11 @@ class RequestCategoryTypeListRepository extends EntityRepository {
     {
         $entityManager = $this->getEntityManager();
 
+        //" FROM AppTranslationalResearchBundle:RequestCategoryTypeList list".
+        //" INNER JOIN AppTranslationalResearchBundle:SpecialtyList s"
         $sql = "SELECT list".
-                " FROM AppTranslationalResearchBundle:RequestCategoryTypeList list".
-                " INNER JOIN AppTranslationalResearchBundle:SpecialtyList s"
+                " FROM App\\TranslationalResearchBundle\\Entity\\RequestCategoryTypeList list".
+                " INNER JOIN App\\TranslationalResearchBundle\\Entity\\SpecialtyList s"
                 ." ON list.projectSpecialties.id = s.id"
             ;
         echo "sql=$sql <br>";

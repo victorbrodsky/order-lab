@@ -75,7 +75,8 @@ class InvoiceController extends OrderAbstractController
         $endDate = NULL;
         $priceList = NULL;
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $em->getRepository(Invoice::class);
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
 
@@ -1003,11 +1004,13 @@ class InvoiceController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //1) try to find by oid
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
 
         if( !$invoice ) {
             //2) try to find by id
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($oid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find($oid);
         }
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
@@ -1073,7 +1076,8 @@ class InvoiceController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -1336,7 +1340,8 @@ class InvoiceController extends OrderAbstractController
         $user = $this->getUser();
 
         //$invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->find($id);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (id) '" . $id . "'");
         }
@@ -1645,7 +1650,8 @@ class InvoiceController extends OrderAbstractController
         $res = "NotOK";
 
         $userId = trim((string)$request->get('userId') );
-        $billToUser = $em->getRepository('AppUserdirectoryBundle:User')->find($userId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $billToUser = $em->getRepository(User::class)->find($userId);
 
         if( $billToUser ) {
             $res = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
@@ -1664,7 +1670,8 @@ class InvoiceController extends OrderAbstractController
         //$transresPermissionUtil = $this->container->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
 
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -1787,7 +1794,8 @@ class InvoiceController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
@@ -1879,7 +1887,8 @@ class InvoiceController extends OrderAbstractController
         $comment = trim((string)$request->get('comment') );
         $status = trim((string)$request->get('status') );
 
-        $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find($invoiceId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $em->getRepository(Invoice::class)->find($invoiceId);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice id '" . $invoiceId . "'");
         }

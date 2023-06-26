@@ -2,6 +2,12 @@
 
 namespace App\TranslationalResearchBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -41,7 +47,8 @@ class DefaultReviewerType extends AbstractType
 
 
         $builder->add( 'reviewer', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Reviewer:",
             'required'=> false,
             'multiple' => false,
@@ -50,7 +57,8 @@ class DefaultReviewerType extends AbstractType
         ));
 
         $builder->add( 'reviewerDelegate', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Reviewer Delegate:",
             'required'=> false,
             'multiple' => false,
@@ -59,7 +67,8 @@ class DefaultReviewerType extends AbstractType
         ));
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
-            'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            'class' => SpecialtyList::class,
             'choice_label' => 'name',
             'label'=>'Project Specialty:',
             'disabled' => true, //($this->params['admin'] ? false : true),
