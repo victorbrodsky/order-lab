@@ -18,6 +18,15 @@
 namespace App\UserdirectoryBundle\Repository;
 
 
+
+use App\UserdirectoryBundle\Entity\GrantEffort; //process.py script: replaced namespace by ::class: added use line for classname=GrantEffort
+
+
+use App\UserdirectoryBundle\Entity\GrantComment; //process.py script: replaced namespace by ::class: added use line for classname=GrantComment
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
 use App\UserdirectoryBundle\Entity\Grant;
 use Doctrine\ORM\EntityRepository;
 
@@ -42,7 +51,8 @@ class GrantRepository extends EntityRepository {
             //echo "Process Grant: ".$grant."<br>";
 
             //get grant from DB if exists
-            $grantDb = $em->getRepository('AppUserdirectoryBundle:Grant')->findOneByName($grant->getName());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+            $grantDb = $em->getRepository(Grant::class)->findOneByName($grant->getName());
 
             //echo "grantDb: ".$grantDb."<br>";
             //exit('1');
@@ -69,7 +79,8 @@ class GrantRepository extends EntityRepository {
 
             //check if effort already exists
             if( $user->getId() ) {
-                $grantEffortDb = $em->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantEffort'] by [GrantEffort::class]
+                $grantEffortDb = $em->getRepository(GrantEffort::class)->findOneBy( array( 'author'=>$user, 'grant'=>$grantFinal->getId() ) );
             } else {
                 $grantEffortDb = null;
             }
@@ -98,7 +109,8 @@ class GrantRepository extends EntityRepository {
 
             //check if comment authored by $user for this grant already exists
             if( $user->getId() ) {
-                $commentDb = $em->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantComment'] by [GrantComment::class]
+                $commentDb = $em->getRepository(GrantComment::class)->findOneBy( array( 'author' => $user, 'grant'=>$grantFinal->getId() ) );
             } else {
                 $commentDb = null;
             } 
@@ -130,7 +142,8 @@ class GrantRepository extends EntityRepository {
             if( $grantFinal->getAttachmentContainer() ) {
                 foreach( $grantFinal->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
                     //echo "Doc Container ID=".$documentContainer->getId()."<br>";
-                    $res = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer, null, null, $grantFinal );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $res = $em->getRepository(Document::class)->processDocuments( $documentContainer, null, null, $grantFinal );
                     if( $res === null ) {
                         //if res is null (no documents and attachmentContainer is empty), check for empty again.
                         if( $grant->isEmpty() ) {
@@ -169,14 +182,16 @@ class GrantRepository extends EntityRepository {
 
         $em = $this->_em;
 
-        $commentDb = $em->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'grant'=>$grant->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantComment'] by [GrantComment::class]
+        $commentDb = $em->getRepository(GrantComment::class)->findOneBy( array( 'author' => $subjectUser->getId(), 'grant'=>$grant->getId() ) );
         if( $commentDb ) {
             //echo "remove comment=".$commentDb."<br>";
             $em->remove($commentDb);
             $em->flush();
         }
 
-        $effortDb = $em->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUser->getId(), 'grant'=>$grant->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantEffort'] by [GrantEffort::class]
+        $effortDb = $em->getRepository(GrantEffort::class)->findOneBy( array( 'author'=>$subjectUser->getId(), 'grant'=>$grant->getId() ) );
         if( $effortDb ) {
             //echo "remove effort=".$effortDb."<br>";
             $em->remove($effortDb);

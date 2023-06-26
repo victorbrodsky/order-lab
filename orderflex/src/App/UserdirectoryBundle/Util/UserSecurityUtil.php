@@ -27,6 +27,43 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\AccessRequest; //process.py script: replaced namespace by ::class: added use line for classname=AccessRequest
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
+
+use App\UserdirectoryBundle\Entity\InstitutionType; //process.py script: replaced namespace by ::class: added use line for classname=InstitutionType
+
+
+use App\UserdirectoryBundle\Entity\OrganizationalGroupType; //process.py script: replaced namespace by ::class: added use line for classname=OrganizationalGroupType
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
+
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
+
+
+use App\UserdirectoryBundle\Entity\PermissionList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionList
+
+
+use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
+
+
+use App\UserdirectoryBundle\Entity\PermissionActionList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionActionList
+
+
+use App\OrderformBundle\Entity\AccessionAccession; //process.py script: replaced namespace by ::class: added use line for classname=AccessionAccession
+
+
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
@@ -187,7 +224,8 @@ class UserSecurityUtil {
             //echo "currentUserInstitutions count=".count($currentUserInstitutions)."<br>";
             foreach( $currentUserInstitutions as $currentUserInstitution ) {
                 //echo "currentUserInstitution=".$currentUserInstitution."<br>";
-                if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserInstitution) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes($showToInstitutions, $currentUserInstitution) ) {
                     $hideInstitution = false;
                     break;
                 }
@@ -201,7 +239,8 @@ class UserSecurityUtil {
             //echo "currentUserPermittedInstitutions count=".count($currentUserPermittedInstitutions)."<br>";
             foreach( $currentUserPermittedInstitutions as $currentUserPermittedInstitution ) {
                 //echo "currentUserPermittedInstitution=".$currentUserPermittedInstitution."<br>";
-                if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($showToInstitutions, $currentUserPermittedInstitution) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes($showToInstitutions, $currentUserPermittedInstitution) ) {
                     $hideInstitution = false;
                     break;
                 }
@@ -263,7 +302,8 @@ class UserSecurityUtil {
 
     //used by login success handler to get user has access request
     public function getUserAccessRequest($user,$sitename) {
-        $accessRequest = $this->em->getRepository('AppUserdirectoryBundle:AccessRequest')->findOneBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $accessRequest = $this->em->getRepository(AccessRequest::class)->findOneBy(
             array('user' => $user, 'siteName' => $sitename)
         );
 
@@ -274,7 +314,8 @@ class UserSecurityUtil {
     }
 
     public function getUserAccessRequestsByStatus($sitename, $status) {
-        $accessRequests = $this->em->getRepository('AppUserdirectoryBundle:AccessRequest')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $accessRequests = $this->em->getRepository(AccessRequest::class)->findBy(
             array('siteName' => $sitename, 'status' => $status)
         );
 
@@ -542,7 +583,8 @@ class UserSecurityUtil {
 //    }
     public function getDefaultUsernameType() {
         $userkeytype = null;
-        $userkeytypes = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $userkeytypes = $this->em->getRepository(UsernameType::class)->findBy(array(),array('orderinlist' => 'ASC'),1);   //limit result by 1
         //echo "userkeytypes=".$userkeytypes."<br>";
         //print_r($userkeytypes);
         if( $userkeytypes && count($userkeytypes) > 0 ) {
@@ -555,7 +597,8 @@ class UserSecurityUtil {
     public function getUsernameType($abbreviation=null) {
         $userkeytype = null;
         if( $abbreviation ) {
-            $userkeytype = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $userkeytype = $this->em->getRepository(UsernameType::class)->findOneBy(
                 array(
                     'type' => array('default', 'user-added'),
                     'abbreviation' => array($abbreviation)
@@ -565,7 +608,8 @@ class UserSecurityUtil {
 
             return $userkeytype;
         } else {
-            $userkeytypes = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $userkeytypes = $this->em->getRepository(UsernameType::class)->findBy(
                 array('type' => array('default', 'user-added')),
                 array('orderinlist' => 'ASC')
             );
@@ -866,11 +910,13 @@ class UserSecurityUtil {
         //add institutional type
         if( $className == "Institution" ) {
             if( array_key_exists('type',$params) && $params['type'] ) {
-                $type = $this->em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName($params['type']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+                $type = $this->em->getRepository(InstitutionType::class)->findOneByName($params['type']);
                 $entity->addType($type);
             }
             if( array_key_exists('organizationalGroupType',$params) && $params['organizationalGroupType'] ) {
-                $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName($params['organizationalGroupType']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+                $organizationalGroupType = $this->em->getRepository(OrganizationalGroupType::class)->findOneByName($params['organizationalGroupType']);
                 $entity->setOrganizationalGroupType($organizationalGroupType);
             }
         }
@@ -902,7 +948,8 @@ class UserSecurityUtil {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
 
-        $source = $this->em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+        $source = $this->em->getRepository(SourceSystemList::class)->findOneByName($defaultSourceSystemName);
 
         if( !$source ) {
             if( $this->container ) {
@@ -966,7 +1013,8 @@ class UserSecurityUtil {
             return null;
         }
 
-        $source = $this->em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($defaultSourceSystemName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+        $source = $this->em->getRepository(SourceSystemList::class)->findOneByName($defaultSourceSystemName);
 
         if( !$source ) {
             if( $this->container ) {
@@ -1078,7 +1126,7 @@ class UserSecurityUtil {
         }
 
         $query = $this->em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user")
             ->leftJoin("user.infos", "infos")
             ->where("infos.email LIKE :cwid OR infos.displayName LIKE :cwid")
@@ -1136,7 +1184,7 @@ class UserSecurityUtil {
         if( !$user ) {
 
             $query = $this->em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:User', 'user')
+                ->from(User::class, 'user')
                 ->select("user")
                 ->leftJoin("user.infos", "infos")
                 ->where("infos.email=:name OR infos.displayName=:name")
@@ -1169,7 +1217,7 @@ class UserSecurityUtil {
                 $displayName = trim((string)$strArr[0]);
 
                 $query = $this->em->createQueryBuilder()
-                    ->from('AppUserdirectoryBundle:User', 'user')
+                    ->from(User::class, 'user')
                     ->select("user")
                     ->leftJoin("user.infos", "infos")
                     ->where("infos.displayName=:name")
@@ -1285,7 +1333,8 @@ class UserSecurityUtil {
     public function getRolesByRoleNames( $roles, $glueStr=", " ) {
         $strRoles = array();
         foreach( $roles as $roleName ) {
-            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $role = $this->em->getRepository(Roles::class)->findOneByName($roleName);
             if($role) {
                 $strRoles[] = $role->getAlias();
             }
@@ -1341,7 +1390,8 @@ class UserSecurityUtil {
         return $dql;
     }
     public function getRolesBySite( $sitename, $associated=true, $levelOnly=false ) {
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Roles');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $repository = $this->em->getRepository(Roles::class);
         $dql =  $repository->createQueryBuilder("roles");
         $dql->select('roles');
         $dql->leftJoin("roles.sites", "sites");
@@ -1382,8 +1432,8 @@ class UserSecurityUtil {
         $dql->leftJoin("user.infos", "infos");
 
         //$dql->leftJoin('AppUserdirectoryBundle:Roles', 'roles');
-        $dql->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
-        //$dql->leftJoin("AppUserdirectoryBundle:SiteList", "sitelist", "WITH", "sitelist.id = sites.id");
+        //$dql->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
+        $dql->leftJoin(Roles::class, "roles", "WITH", "user.roles LIKE '%roles.name%'");
         $dql->leftJoin("roles.sites", "sites");
 
         $dql->where("sites.name LIKE :sitename");
@@ -1478,7 +1528,8 @@ class UserSecurityUtil {
         //echo "beforeDate=".$beforeDate."<br>";
 
         //get spreadsheets older than X year
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Document');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $repository = $this->em->getRepository(Document::class);
         $dql =  $repository->createQueryBuilder("document");
         $dql->select('document');
         $dql->leftJoin('document.type','documentType');
@@ -1761,7 +1812,8 @@ class UserSecurityUtil {
         $logger->setUseragent($userAgent);
 
         //set Event Type
-        $eventtype = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventtype = $this->em->getRepository(EventTypeList::class)->findOneByName($options['eventtype']);
         $logger->setEventType($eventtype);
 
         //set eventEntity
@@ -1909,7 +1961,8 @@ class UserSecurityUtil {
 
         $count = 0;
         $em = $this->em;
-        $permission = $em->getRepository('AppUserdirectoryBundle:PermissionList')->findOneByName($permissionListStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionList'] by [PermissionList::class]
+        $permission = $em->getRepository(PermissionList::class)->findOneByName($permissionListStr);
         if( !$permission ) {
             exit("Permission is not found by name=".$permissionListStr);
         }
@@ -1933,7 +1986,8 @@ class UserSecurityUtil {
 
         //make sure object is set
         if( !$permission->getPermissionObjectList() ) {
-            $permissionObject = $em->getRepository('AppUserdirectoryBundle:PermissionObjectList')->findOneByName($permissionObjectListStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
+            $permissionObject = $em->getRepository(PermissionObjectList::class)->findOneByName($permissionObjectListStr);
             if( $permissionObject ) {
                 $permission->setPermissionObjectList($permissionObject);
                 $count++;
@@ -1945,7 +1999,8 @@ class UserSecurityUtil {
 
         //make sure action is set
         if( !$permission->getPermissionActionList() ) {
-            $permissionAction = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findOneByName($permissionActionListStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionActionList'] by [PermissionActionList::class]
+            $permissionAction = $em->getRepository(PermissionActionList::class)->findOneByName($permissionActionListStr);
             if( $permissionAction ) {
                 $permission->setPermissionActionList($permissionAction);
                 $count++;
@@ -2060,11 +2115,13 @@ class UserSecurityUtil {
         if( $logger->getObjectType() == 'Accession' ) {
             ///re-identify/?accessionType=WHATEVER-YOU-NEED-TO-SET-THIS-TO&accessionNumber=
 
-            $accessionType = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByName('Deidentifier ID');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $accessionType = $this->em->getRepository(AccessionType::class)->findOneByName('Deidentifier ID');
             //echo "accessionType=".$accessionType."<br>";
 
             //find one valid accession
-            $accessionAccession = $this->em->getRepository('AppOrderformBundle:AccessionAccession')->findOneBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionAccession'] by [AccessionAccession::class]
+            $accessionAccession = $this->em->getRepository(AccessionAccession::class)->findOneBy(
                 array(
                     'accession' => $logger->getEntityId(),
                     'status' => 'deidentified-valid'
@@ -2175,7 +2232,8 @@ class UserSecurityUtil {
             }
         }
         if (!$institution) {
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         }
 
         return $institution;
@@ -2675,7 +2733,8 @@ class UserSecurityUtil {
     }
 
     public function getRoleAliasByName( $name ) {
-        $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $this->em->getRepository(Roles::class)->findOneByName($name);
         if( $role ) {
             return $role->getAlias();
         }
@@ -2940,7 +2999,8 @@ class UserSecurityUtil {
         $permittedInstitutions = $this->getUserPermittedInstitutions($user);
 
         //a) check permitted institutions
-        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($permittedInstitutions,$entity->getInstitution()) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes($permittedInstitutions,$entity->getInstitution()) ) {
             return true;
         }
 
@@ -2953,7 +3013,8 @@ class UserSecurityUtil {
         //echo "collaborationInstitution=".$collaborationInstitution."<br>";
         //}
 
-        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
             return true;
         }
         //exit("no collaboration institutions");
@@ -3026,7 +3087,8 @@ class UserSecurityUtil {
 
         //service chief can perform any actions for all orders under his/her service scope
         foreach( $userChiefServices as $userChiefService ) {
-            if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            if( $this->em->getRepository(Institution::class)->isNodeUnderParentnode($userChiefService, $orderInstitution) ) {
                 return true;
             }
         }
@@ -3181,7 +3243,8 @@ class UserSecurityUtil {
 //    }
 
     public function addInstitutionalPhiScopeWCMC($user,$creator) {
-        $inst = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation('WCM');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $inst = $this->em->getRepository(Institution::class)->findOneByAbbreviation('WCM');
         $persitesettings = $this->getUserPerSiteSettings($user);
         if( !$persitesettings ) {
             //set institution to per site settings
@@ -3344,7 +3407,8 @@ class UserSecurityUtil {
 //    }
     public function createNewRole( $roleName, $sitenameAbbreviation=NULL, $alias=NULL, $description=NULL, $level=NULL ) {
 
-        $roleObject = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roleObject = $this->em->getRepository(Roles::class)->findOneByName($roleName);
         if( $roleObject ) {
             return NULL;
         }

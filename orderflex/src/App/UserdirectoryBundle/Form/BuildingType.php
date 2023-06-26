@@ -19,6 +19,9 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -84,7 +87,8 @@ class BuildingType extends AbstractType
         ));
 
         $builder->add( 'institutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'name',
             'label'=>'Institution(s):',
             'required'=> false,

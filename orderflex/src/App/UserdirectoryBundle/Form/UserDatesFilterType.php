@@ -17,6 +17,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -48,7 +51,8 @@ class UserDatesFilterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -97,7 +101,8 @@ class UserDatesFilterType extends AbstractType
         ));
 
         $builder->add('roles', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Roles',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            'class' => Roles::class,
             'choice_label' => 'alias',
             'label' => false,
             'required' => false,

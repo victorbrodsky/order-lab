@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\PositionTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PositionTypeList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -107,7 +113,8 @@ class UserPositionType extends AbstractType
 //            'data' => $this->params['user']
 //        ));
         $builder->add( 'user', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => false,
             'required'=> true,
             'multiple' => false,
@@ -128,7 +135,8 @@ class UserPositionType extends AbstractType
 
         //visible as positionType combobox attached to an institution node
         $builder->add( 'positionTypes', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:PositionTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTypeList'] by [PositionTypeList::class]
+            'class' => PositionTypeList::class,
             'choice_label' => 'name',
             'label' => false,
             'required'=> false,

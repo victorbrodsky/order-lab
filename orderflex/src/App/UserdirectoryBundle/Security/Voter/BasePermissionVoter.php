@@ -25,6 +25,9 @@
 namespace App\UserdirectoryBundle\Security\Voter;
 
 
+
+use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
+
 use Doctrine\ORM\EntityManagerInterface;
 //use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -87,7 +90,8 @@ abstract class BasePermissionVoter extends Voter {
         //echo "className=".$className."<br>";
         //echo "sitename=".$sitename."<br>";
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
+        $repository = $this->em->getRepository(PermissionObjectList::class);
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin('list.sites', 'sites');

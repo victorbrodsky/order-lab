@@ -17,6 +17,9 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\LoggerFilterType;
@@ -179,7 +182,8 @@ class LoggerController extends OrderAbstractController
             $sitenameFull = "All Sites";
         }
 
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findAll();
         $rolesArr = array();
         //if( $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
@@ -187,7 +191,8 @@ class LoggerController extends OrderAbstractController
             }
         //}
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->getDoctrine()->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
@@ -800,7 +805,8 @@ class LoggerController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $entity = $em->getRepository(Logger::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -824,7 +830,8 @@ class LoggerController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $entity = $em->getRepository(Logger::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -868,7 +875,8 @@ class LoggerController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $entity = $em->getRepository(Logger::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Logger entity.');
@@ -902,7 +910,8 @@ class LoggerController extends OrderAbstractController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppUserdirectoryBundle:Logger')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+            $entity = $em->getRepository(Logger::class)->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Logger entity.');

@@ -18,6 +18,27 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
+
+use App\UserdirectoryBundle\Entity\LanguageList; //process.py script: replaced namespace by ::class: added use line for classname=LanguageList
+
+
+use App\UserdirectoryBundle\Entity\LocaleList; //process.py script: replaced namespace by ::class: added use line for classname=LocaleList
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -52,7 +73,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         $builder->add('id',HiddenType::class,array('label'=>false));
 
         $builder->add('primaryPublicUserIdType', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:UsernameType',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            'class' => UsernameType::class,
             'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",
             'required' => false,
@@ -96,7 +118,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'languages', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:LanguageList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LanguageList'] by [LanguageList::class]
+            'class' => LanguageList::class,
             'label'=> "Language(s):",
             'required'=> false,
             'multiple' => true,
@@ -114,7 +137,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'locale', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:LocaleList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocaleList'] by [LocaleList::class]
+            'class' => LocaleList::class,
             'label'=> "Locale:",
             'required'=> false,
             'multiple' => false,
@@ -132,7 +156,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'showToInstitutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
             'label'=>'Only show this profile to members of the following institution(s):',
@@ -159,7 +184,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
             'label'=>'Order data visible to members of (Institutional PHI Scope):',
@@ -187,7 +213,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add('locationTypes',EntityType::class,array(
-            'class' => 'AppUserdirectoryBundle:LocationTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+            'class' => LocationTypeList::class,
             'label' => "Location Type:",
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -210,12 +237,14 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //state
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+            'class' => States::class,
             //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York'),
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+            'data' => $this->params['em']->getRepository(States::class)->findOneByName('New York'),
             'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -235,13 +264,16 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //country
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'class' => Countries::class,
             'choice_label' => 'name',
             'label'=>'Location Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States'),
-            'preferred_choices' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States')),
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'data' => $this->params['em']->getRepository(Countries::class)->findOneByName('United States'),
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'preferred_choices' => $this->params['em']->getRepository(Countries::class)->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -255,7 +287,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+            'class' => States::class,
             //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
@@ -274,13 +307,16 @@ class OrganizationalGroupDefaultType extends AbstractType
 
 
         $builder->add( 'medicalLicenseCountry', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'class' => Countries::class,
             'choice_label' => 'name',
             'label'=>'Medical License Country:',
             'required'=> false,
             'multiple' => false,
-            'data' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States'),
-            'preferred_choices' => $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States')),
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'data' => $this->params['em']->getRepository(Countries::class)->findOneByName('United States'),
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'preferred_choices' => $this->params['em']->getRepository(Countries::class)->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -294,7 +330,8 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         $builder->add( 'medicalLicenseState', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+            'class' => States::class,
             //'choice_label' => 'name',
             'label'=>'Medical License State:',
             'required'=> false,
@@ -321,11 +358,13 @@ class OrganizationalGroupDefaultType extends AbstractType
             if( $title ) {
                 $institution = $title->getInstitution();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
 
             $targetPrefix = "Organizational Group for new user's default values in Employee Directory - ";

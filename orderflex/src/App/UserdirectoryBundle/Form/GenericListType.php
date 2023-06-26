@@ -17,6 +17,66 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\CollaborationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CollaborationTypeList
+
+
+use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
+
+
+use App\UserdirectoryBundle\Entity\PermissionActionList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionActionList
+
+
+use App\UserdirectoryBundle\Entity\RoleAttributeList; //process.py script: replaced namespace by ::class: added use line for classname=RoleAttributeList
+
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
+
+use App\UserdirectoryBundle\Entity\ResidencySpecialty; //process.py script: replaced namespace by ::class: added use line for classname=ResidencySpecialty
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+
+
+use App\TranslationalResearchBundle\Entity\WorkQueueList; //process.py script: replaced namespace by ::class: added use line for classname=WorkQueueList
+
+
+use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
+
+
+use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
+
+
+use App\UserdirectoryBundle\Entity\BuildingList; //process.py script: replaced namespace by ::class: added use line for classname=BuildingList
+
+
+use App\UserdirectoryBundle\Entity\FloorList; //process.py script: replaced namespace by ::class: added use line for classname=FloorList
+
+
+use App\OrderformBundle\Entity\MessageTagTypesList; //process.py script: replaced namespace by ::class: added use line for classname=MessageTagTypesList
+
+
+use App\DashboardBundle\Entity\VisualizationList; //process.py script: replaced namespace by ::class: added use line for classname=VisualizationList
+
+
+use App\DashboardBundle\Entity\ChartTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ChartTypeList
+
+
+use App\DashboardBundle\Entity\DataSourceList; //process.py script: replaced namespace by ::class: added use line for classname=DataSourceList
+
+
+use App\DashboardBundle\Entity\UpdateFrequencyList; //process.py script: replaced namespace by ::class: added use line for classname=UpdateFrequencyList
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Entity\TopicList;
 use App\TranslationalResearchBundle\Form\PriceType;
@@ -204,7 +264,8 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add( 'institution', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 'choice_label' => 'getTreeName',
                 'label'=>'Institution:',
                 'required'=> false,
@@ -292,7 +353,8 @@ class GenericListType extends AbstractType
         if( method_exists($this->params['entity'],'getInstitutions') ) {
             //echo "add institutions <br>";
             $builder->add( 'institutions', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 'choice_label' => 'getTreeName',
                 'label'=>'Institutions:',
                 'required'=> false,
@@ -321,7 +383,8 @@ class GenericListType extends AbstractType
                 $form = $event->getForm();
 
                 //check if this Institution is under "All Collaborations" tree
-                $allCollaborationInst = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $allCollaborationInst = $this->params['em']->getRepository(Institution::class)->findOneByAbbreviation("All Collaborations");
                 if( $title->getRoot() != $allCollaborationInst->getRoot() ) {
                     return;
                 }
@@ -329,7 +392,8 @@ class GenericListType extends AbstractType
                 //echo "show Collaboration institutions<br>";
 
                 $form->add( 'collaborationInstitutions', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    'class' => Institution::class,
                     'choice_label' => 'getTreeName',
                     'label'=>'Institutions:',
                     'required'=> false,
@@ -348,7 +412,8 @@ class GenericListType extends AbstractType
                 ));
 
                 $form->add( 'collaborationType', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:CollaborationTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CollaborationTypeList'] by [CollaborationTypeList::class]
+                    'class' => CollaborationTypeList::class,
                     'choice_label' => 'name',
                     'label'=>'Collaboration Type:',
                     'required'=> false,
@@ -453,14 +518,16 @@ class GenericListType extends AbstractType
         //PermissionList
         if( strtolower($this->mapper['className']) == strtolower("PermissionList") ) {
             $builder->add('permissionObjectList',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:PermissionObjectList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
+                'class' => PermissionObjectList::class,
                 'label' => "Object:",
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox'),
             ));
             $builder->add('permissionActionList',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:PermissionActionList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionActionList'] by [PermissionActionList::class]
+                'class' => PermissionActionList::class,
                 'label' => "Action:",
                 'multiple' => false,
                 'required' => false,
@@ -476,7 +543,8 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
             $builder->add('attributes',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:RoleAttributeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoleAttributeList'] by [RoleAttributeList::class]
+                'class' => RoleAttributeList::class,
                 'label' => "Attribute(s):",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -510,7 +578,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('fellowshipSubspecialty',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+                'class' => FellowshipSubspecialty::class,
                 'label' => "Fellowship Subspecialty:",
                 'multiple' => false,
                 'required' => false,
@@ -518,7 +587,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('residencySubspecialty',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+                'class' => ResidencySpecialty::class,
                 'label' => "Residency Specialty (Old, To be removed):",
                 'multiple' => false,
                 'required' => false,
@@ -526,7 +596,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('residencyTrack',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+                'class' => ResidencyTrackList::class,
                 'label' => "Residency Track:",
                 'multiple' => false,
                 'required' => false,
@@ -673,7 +744,8 @@ class GenericListType extends AbstractType
 
         if( strtolower($this->mapper['className']) == strtolower("UserWrapper") ) {
             $builder->add( 'user', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label'=>'Linked User:',
                 'required'=> false,
                 'multiple' => false,
@@ -774,7 +846,8 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
             $builder->add( 'projectSpecialties', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:SpecialtyList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+                'class' => SpecialtyList::class,
                 //'choice_label' => 'FullName',
                 //'label'=>'Project Specialty(s):',
                 'label'=>'Hide this orderable for the work requests that belong to project requests of this type:',
@@ -794,7 +867,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'workQueues', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:WorkQueueList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+                'class' => WorkQueueList::class,
                 'label'=>'Work Queues:',
                 'required'=> false,
                 'multiple' => true,
@@ -876,7 +950,8 @@ class GenericListType extends AbstractType
         //not editable: suites, rooms
         if( strtolower($this->mapper['className']) == strtolower("Department") ) {
             $builder->add('suites', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:SuiteList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SuiteList'] by [SuiteList::class]
+                'class' => SuiteList::class,
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -886,7 +961,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('rooms', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:RoomList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoomList'] by [RoomList::class]
+                'class' => RoomList::class,
                 'choice_label' => 'FullName',
                 'label'=>'Room(s):',
                 'required'=> false,
@@ -900,7 +976,8 @@ class GenericListType extends AbstractType
         //not editable: suites, rooms
         if( strtolower($this->mapper['className']) == strtolower("FloorList") ) {
             $builder->add('suites', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:SuiteList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SuiteList'] by [SuiteList::class]
+                'class' => SuiteList::class,
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -910,7 +987,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('rooms', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:RoomList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoomList'] by [RoomList::class]
+                'class' => RoomList::class,
                 'choice_label' => 'FullName',
                 'label'=>'Room(s):',
                 'required'=> false,
@@ -924,7 +1002,8 @@ class GenericListType extends AbstractType
         //Suite: buildings, floors
         if( strtolower($this->mapper['className']) == strtolower("SuiteList") ) {
             $builder->add('buildings', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:BuildingList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+                'class' => BuildingList::class,
                 'label'=>'Building(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -941,7 +1020,8 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add('floors', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:FloorList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FloorList'] by [FloorList::class]
+                'class' => FloorList::class,
                 'label'=>'Floor(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -952,7 +1032,8 @@ class GenericListType extends AbstractType
         //Room: buildings, suite
         if( strtolower($this->mapper['className']) == strtolower("RoomList") ) {
             $builder->add('buildings', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:BuildingList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+                'class' => BuildingList::class,
                 'label'=>'Building(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -969,7 +1050,8 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add('suites', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:SuiteList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SuiteList'] by [SuiteList::class]
+                'class' => SuiteList::class,
                 'choice_label' => 'FullName',
                 'label'=>'Suite(s):',
                 'required'=> false,
@@ -978,7 +1060,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('floors', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:FloorList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FloorList'] by [FloorList::class]
+                'class' => FloorList::class,
                 'label'=>'Floor(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -1145,7 +1228,8 @@ class GenericListType extends AbstractType
 
         if( method_exists($this->params['entity'],'getTagTypes') ) {
             $builder->add('tagTypes', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageTagTypesList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagTypesList'] by [MessageTagTypesList::class]
+                'class' => MessageTagTypesList::class,
                 'label'=>'Tag Type(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -1309,7 +1393,8 @@ class GenericListType extends AbstractType
 //            ));
 
             $builder->add( 'topics', EntityType::class, array(
-                'class' => 'AppDashboardBundle:TopicList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+                'class' => TopicList::class,
                 'choice_label' => 'getTreeName',
                 'label'=>'Associated Dashboard Topics:',
                 'required'=> false,
@@ -1328,7 +1413,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'visualization', EntityType::class, array(
-                'class' => 'AppDashboardBundle:VisualizationList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:VisualizationList'] by [VisualizationList::class]
+                'class' => VisualizationList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Visualization Method:',
                 'required'=> false,
@@ -1346,7 +1432,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'chartTypes', EntityType::class, array(
-                'class' => 'AppDashboardBundle:ChartTypeList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+                'class' => ChartTypeList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Chart Types:',
                 'required'=> false,
@@ -1364,7 +1451,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'dataSource', EntityType::class, array(
-                'class' => 'AppDashboardBundle:DataSourceList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:DataSourceList'] by [DataSourceList::class]
+                'class' => DataSourceList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Data Source:',
                 'required'=> false,
@@ -1382,7 +1470,8 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add( 'updateFrequency', EntityType::class, array(
-                'class' => 'AppDashboardBundle:UpdateFrequencyList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:UpdateFrequencyList'] by [UpdateFrequencyList::class]
+                'class' => UpdateFrequencyList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Dashboard Update Frequency:',
                 'required'=> false,
@@ -1451,7 +1540,8 @@ class GenericListType extends AbstractType
 
         if( $this->params['entity'] instanceof TopicList ) {
             $builder->add( 'charts', EntityType::class, array(
-                'class' => 'AppDashboardBundle:ChartList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+                'class' => ChartList::class,
                 //'choice_label' => 'getTreeName',
                 'label'=>'Associated Dashboard Charts:',
                 'required'=> false,
@@ -1565,7 +1655,8 @@ class GenericListType extends AbstractType
 
     public function commonChartFields($builder) {
         $builder->add('favoriteUsers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Favorited by the following users:",
             'required'=> false,
             'multiple' => true,
@@ -1582,7 +1673,8 @@ class GenericListType extends AbstractType
         ));
 
         $builder->add('institutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'getTreeName',
             'label'=>'Associated with the following organizational groups:',
             'required'=> false,
@@ -1604,7 +1696,8 @@ class GenericListType extends AbstractType
         //accessRoles
         //$rolesWhere = "(list.type = :typedef OR list.type = :typeadd)";
         $builder->add('accessRoles', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Roles',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            'class' => Roles::class,
             //'choice_label' => 'getTreeName',
             'label'=>'Accessible to users with the following roles:',
             'choice_label' => 'getAlias',
@@ -1627,7 +1720,8 @@ class GenericListType extends AbstractType
         ));
 
         $builder->add('denyRoles', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Roles',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            'class' => Roles::class,
             //'choice_label' => 'getTreeName',
             'label'=>'Deny access to users with the following roles:',
             'choice_label' => 'getAlias',
@@ -1657,7 +1751,8 @@ class GenericListType extends AbstractType
 //                'query_builder' => $this->params['transresUtil']->userQueryBuilder()
 //            ));
         $builder->add('denyUsers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Deny access to the following users:",
             'required'=> false,
             'multiple' => true,
@@ -1674,7 +1769,8 @@ class GenericListType extends AbstractType
         ));
 
         $builder->add('downloadRoles', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Roles',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            'class' => Roles::class,
             //'choice_label' => 'getTreeName',
             'label'=>'Data can be downloaded by users with the following roles:',
             'choice_label' => 'getAlias',
@@ -1696,7 +1792,8 @@ class GenericListType extends AbstractType
         ));
 
         $builder->add('requester', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label'=> "Requested by:",
             'required'=> false,
             'multiple' => false,

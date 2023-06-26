@@ -25,6 +25,9 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
 use App\UserdirectoryBundle\Form\ImportUsersType;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -75,7 +78,8 @@ class UploadController extends OrderAbstractController {
         $document = NULL;
 
         if( $documentid ) {
-            $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $document = $em->getRepository(Document::class)->find($documentid);
             //echo "document=".$document." => ";
             //$logger->notice("deleteFileMethod: documentDob=".$document);
         }
@@ -219,7 +223,8 @@ class UploadController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         //$logger = $this->container->get('logger');
 
-        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $document = $em->getRepository(Document::class)->find($id);
 
         //exit("id=".$document->getId());
         //$response = new Response();
@@ -293,7 +298,8 @@ class UploadController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $document = $em->getRepository('AppUserdirectoryBundle:Document')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $document = $em->getRepository(Document::class)->find($id);
 
         $originalname = null;
         $size = null;

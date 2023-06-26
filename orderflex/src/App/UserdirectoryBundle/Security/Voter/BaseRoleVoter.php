@@ -25,6 +25,9 @@
 namespace App\UserdirectoryBundle\Security\Voter;
 
 
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -200,7 +203,8 @@ abstract class BaseRoleVoter extends Voter {
                 continue;
             }
 
-            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $role = $this->em->getRepository(Roles::class)->findOneByName($roleStr);
             if( $role ) {
                 foreach( $role->getSites() as $site ) {
                     //echo 'role='.$role.", site=".$site->getName()."<br>";

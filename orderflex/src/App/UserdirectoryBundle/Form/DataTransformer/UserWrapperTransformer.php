@@ -183,7 +183,8 @@ class UserWrapperTransformer implements DataTransformerInterface
             //echo "principal=".$username." => numeric => most probably it is a UserWrapper id<br>";
 
             if( $usernameType == 'UserWrapper' ) {
-                $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->find($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+                $userWrapper = $this->em->getRepository(UserWrapper::class)->find($username);
             } else {
                 $userWrapper = null;
             }
@@ -229,7 +230,8 @@ class UserWrapperTransformer implements DataTransformerInterface
         $user = $this->em->getRepository(User::class)->find($userid);
         //echo "found user by id=".$userid."<br>";
 
-        $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,null);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+        $userWrapper = $this->em->getRepository(UserWrapper::class)->findSimilarEntity($user,null);
         //echo "found userWrapper by wrapper id=".$userWrapper."<br>";
 
         if( $userWrapper ) {
@@ -262,7 +264,8 @@ class UserWrapperTransformer implements DataTransformerInterface
         $user = $userSecUtil->getUserByUserstr( $userStr );
         //echo "found user=".$user."<br>";
 
-        $userWrapper = $this->em->getRepository('AppUserdirectoryBundle:UserWrapper')->findSimilarEntity($user,$userStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+        $userWrapper = $this->em->getRepository(UserWrapper::class)->findSimilarEntity($user,$userStr);
         //echo "found userWrapper=".$userWrapper."<br>";
 
         //exit('1');

@@ -17,6 +17,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -99,7 +102,8 @@ class AccessRequestType extends AbstractType
             'required' => false,
             'multiple' => false,
             'choice_label' => 'getNodeNameWithRoot',
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choices' => $requestedScanOrderInstitutionScope,
             'invalid_message' => 'organizationalGroup invalid value',
             'attr' => array('class' => 'combobox combobox-width combobox-institution')

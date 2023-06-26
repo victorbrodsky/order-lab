@@ -18,6 +18,9 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\CommentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CommentTypeList
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
@@ -127,11 +130,13 @@ class BaseCommentsType extends AbstractType
             if( $title ) {
                 $commentType = $title->getCommentType();
                 if( $commentType ) {                  
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:CommentTypeList')->getLevelLabels($commentType,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CommentTypeList'] by [CommentTypeList::class]
+                    $label = $this->params['em']->getRepository(CommentTypeList::class)->getLevelLabels($commentType,$mapper) . ":";
                 }
             }
 			if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:CommentTypeList')->getLevelLabels(null,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CommentTypeList'] by [CommentTypeList::class]
+                $label = $this->params['em']->getRepository(CommentTypeList::class)->getLevelLabels(null,$mapper) . ":";
             }
 
             $form->add('commentType', CustomSelectorType::class, array( //'employees_custom_selector'

@@ -24,6 +24,12 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
+
+
+use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use App\UserdirectoryBundle\Entity\User;
@@ -99,10 +105,12 @@ class SectionUserController extends UserController
         //echo "userid=".$userid."<br>";
 
         if( strpos((string)$cycle, 'show') !== false ) {
-            $userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findByUser($userid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+            $userWrappers = $em->getRepository(UserWrapper::class)->findByUser($userid);
 
             //find patients by patient's encounter's provider: patient->encounters->provider
-            $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $repository = $em->getRepository(Patient::class);
             $dql = $repository->createQueryBuilder("patient");
             $dql->leftJoin("patient.encounter", "encounter");
             $dql->where("encounter.provider = :userId");
@@ -117,7 +125,8 @@ class SectionUserController extends UserController
         } else {
             //show all wrappers where user is this user or null
             //$userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findAll();
-            $repository = $em->getRepository('AppUserdirectoryBundle:UserWrapper');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+            $repository = $em->getRepository(UserWrapper::class);
             $dql = $repository->createQueryBuilder("wrapper");
             $dql->leftJoin("wrapper.user", "user");
             $dql->where("user = :userId OR user.id IS NULL");

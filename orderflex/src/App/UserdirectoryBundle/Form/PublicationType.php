@@ -18,6 +18,9 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\ImportanceList; //process.py script: replaced namespace by ::class: added use line for classname=ImportanceList
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -92,7 +95,8 @@ class PublicationType extends AbstractType
         ));
 
         $builder->add( 'importance', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ImportanceList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ImportanceList'] by [ImportanceList::class]
+            'class' => ImportanceList::class,
             'label'=> "Importance:",
             'required'=> false,
             'multiple' => false,

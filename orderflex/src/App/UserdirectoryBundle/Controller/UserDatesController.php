@@ -19,6 +19,9 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\UserDatesFilterType;
@@ -497,7 +500,8 @@ class UserDatesController extends OrderAbstractController
         //dump($modifiedData);
         //exit('111');
 
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Full Time");
         if( !$employmentType ) {
             $results = 'Unable to find EmploymentType entity by name='."Full Time";
             //throw new EntityNotFoundException('Unable to find entity by name='."Full Time");

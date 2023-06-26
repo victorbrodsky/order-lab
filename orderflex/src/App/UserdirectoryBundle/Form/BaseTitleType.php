@@ -18,6 +18,24 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\PositionTrackTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PositionTrackTypeList
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\PositionTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PositionTypeList
+
+
+use App\UserdirectoryBundle\Entity\MedicalSpecialties; //process.py script: replaced namespace by ::class: added use line for classname=MedicalSpecialties
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -137,11 +155,13 @@ class BaseTitleType extends AbstractType
                 $institution = $title->getInstitution();
                 //echo "inst=".$institution."<br>";
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 
@@ -168,14 +188,16 @@ class BaseTitleType extends AbstractType
                 $userSecUtil = $this->params['container']->get('user_security_utility');
                 $newInstitution = $userSecUtil->getAutoAssignInstitution();
                 if( !$newInstitution ) {
-                    $wcmc = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $wcmc = $this->params['em']->getRepository(Institution::class)->findOneByAbbreviation("WCM");
                     if( $wcmc ) {
                         $mapper = array(
                             'prefix' => "App",
                             'className' => "Institution",
                             'bundleName' => "UserdirectoryBundle"
                         );
-                        $newInstitution = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $newInstitution = $this->params['em']->getRepository(Institution::class)->findByChildnameAndParent(
                             "Pathology and Laboratory Medicine",
                             $wcmc,
                             $mapper
@@ -223,7 +245,8 @@ class BaseTitleType extends AbstractType
 
                 if( $newInstitution ) {
                     $treeFieldArray['data'] = $newInstitution->getId();
-                    $treeFieldArray['label'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($newInstitution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $treeFieldArray['label'] = $this->params['em']->getRepository(Institution::class)->getLevelLabels($newInstitution) . ":";
                 }
                 //if( $treeParams ) {
                     //$attrArray['data-compositetree-params'] = $treeParams;
@@ -270,7 +293,8 @@ class BaseTitleType extends AbstractType
 //                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
 //            ));
             $builder->add( 'positions', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:PositionTrackTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTrackTypeList'] by [PositionTrackTypeList::class]
+                'class' => PositionTrackTypeList::class,
                 'choice_label' => 'name',
                 'label'=>'Position Track Type(s):',
                 'required'=> false,
@@ -288,7 +312,8 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add( 'residencyTrack', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+                'class' => ResidencyTrackList::class,
                 'choice_label' => 'name',
                 'label'=>'Residency Track:',
                 'required'=> false,
@@ -349,7 +374,8 @@ class BaseTitleType extends AbstractType
 //                'required' => false
 //            ));
             $builder->add( 'boss', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label'=>'Reports to:',
                 'required'=> false,
                 'multiple' => true,
@@ -366,7 +392,8 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add('userPositions',EntityType::class,array(
-                'class' => 'AppUserdirectoryBundle:PositionTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTypeList'] by [PositionTypeList::class]
+                'class' => PositionTypeList::class,
                 'label' => "Position Type:",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
@@ -404,7 +431,8 @@ class BaseTitleType extends AbstractType
         if( $this->params['fullClassName'] == "App\UserdirectoryBundle\Entity\MedicalTitle" ) {
 
             $builder->add( 'specialties', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:MedicalSpecialties',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:MedicalSpecialties'] by [MedicalSpecialties::class]
+                'class' => MedicalSpecialties::class,
                 'choice_label' => 'name',
                 'label'=>'Specialty(s):',
                 'required'=> false,
@@ -422,7 +450,8 @@ class BaseTitleType extends AbstractType
             ));
 
             $builder->add('userPositions', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:PositionTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTypeList'] by [PositionTypeList::class]
+                'class' => PositionTypeList::class,
                 'label' => "Position Type:",
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),

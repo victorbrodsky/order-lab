@@ -18,6 +18,12 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\FellAppBundle\Form\FellowshipApplicationType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -197,7 +203,8 @@ class UserType extends AbstractType
     public function cloneUser($builder) {
 
         $options = array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Clone:",
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width user-userclone-field'),
@@ -341,7 +348,8 @@ class UserType extends AbstractType
         //print_r($attr);
 
         $paramArr = array(
-            'class' => 'AppUserdirectoryBundle:UsernameType',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            'class' => UsernameType::class,
             //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
             'label' => $label,

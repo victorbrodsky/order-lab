@@ -17,6 +17,18 @@
 
 namespace App\UserdirectoryBundle\Util;
 
+
+
+use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
+
+
+use App\FellAppBundle\Entity\FellowshipApplication; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipApplication
+
+
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
+
+
+use App\FellAppBundle\Entity\Interview; //process.py script: replaced namespace by ::class: added use line for classname=Interview
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -810,13 +822,16 @@ class EmailUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if ($environment == "dev") {
-            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $this->em->getRepository(Invoice::class)->find(4760); //dev
         }
         if ($environment == "test") {
-            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $this->em->getRepository(Invoice::class)->find(4730); //test
         }
         if ($environment == "live") {
-            $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $this->em->getRepository(Invoice::class)->find(7323); //prod
         }
         if (!$invoice) {
             return "Invoice not defined for environment=$environment";
@@ -884,7 +899,8 @@ class EmailUtil {
         if(0) {
             ///// Test 1) new reference letter ////////
             $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellapp = $this->em->getRepository(FellowshipApplication::class)->find(1414); //8-testing, 1414-collage, 1439-live
             $references = $fellapp->getReferences();
             $reference = $references->first();
             $letters = $reference->getDocuments();
@@ -901,7 +917,8 @@ class EmailUtil {
         ////// Test 2) send invoice sendInvoicePDFByEmail /////////
         $transresRequestUtil = $this->container->get('transres_request_util');
         $oid = "APCP2173-REQ15079-V2"; //collage
-        $invoice = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $invoice = $this->em->getRepository(Invoice::class)->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
         if( !$invoice ) {
             exit("Invoice not found by oid=$oid");
         }
@@ -914,7 +931,8 @@ class EmailUtil {
         $subject = "Test packing slip pdf by email";
         $body = "Test packing slip pdf by email";
         $id = "15079";
-        $transresRequest = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $transresRequest = $this->em->getRepository(TransResRequest::class)->find($id);
         if( !$transresRequest ) {
             exit("TransResRequest not found by id=$id");
         }
@@ -937,7 +955,8 @@ class EmailUtil {
             /////// Test 5) /invite-interviewer-to-rate/{interviewId} //////////////
             $fellAppApplicantController = new FellAppApplicantController();
             $interviewId = 1414;
-            $interview = $this->em->getRepository('AppFellAppBundle:Interview')->find($interviewId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Interview'] by [Interview::class]
+            $interview = $this->em->getRepository(Interview::class)->find($interviewId);
             if (!$interviewId) {
                 exit('Interviewer can not be found: interviewId=' . $interviewId);
             }

@@ -24,6 +24,9 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\FormNode; //process.py script: replaced namespace by ::class: added use line for classname=FormNode
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -557,7 +560,8 @@ class FormNodeController extends OrderAbstractController {
             'bundleName' => "UserdirectoryBundle"
         );
 
-        $repo = $em->getRepository('AppUserdirectoryBundle:FormNode');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $repo = $em->getRepository(FormNode::class);
 
         //verify
         $verify = $repo->verify(); // can return TRUE if tree is valid, or array of errors found on tree

@@ -18,6 +18,9 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\AuthorshipRoles; //process.py script: replaced namespace by ::class: added use line for classname=AuthorshipRoles
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -98,7 +101,8 @@ class BookType extends AbstractType
         ));
 
         $builder->add( 'authorshipRole', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:AuthorshipRoles',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AuthorshipRoles'] by [AuthorshipRoles::class]
+            'class' => AuthorshipRoles::class,
             'label'=> "Authorship Role:",
             'required'=> false,
             'multiple' => false,

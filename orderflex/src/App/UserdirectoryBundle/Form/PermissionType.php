@@ -18,6 +18,12 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\PermissionList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -42,7 +48,8 @@ class PermissionType extends AbstractType
         ));
 
         $builder->add( 'permission', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:PermissionList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionList'] by [PermissionList::class]
+            'class' => PermissionList::class,
             'label'=> "Permission:",
             'required'=> false,
             'multiple' => false,
@@ -61,7 +68,8 @@ class PermissionType extends AbstractType
 
 
         $builder->add( 'institutions', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'getTreeName',
             'label'=>'Institution(s):',
             'required'=> false,

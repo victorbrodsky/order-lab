@@ -230,7 +230,8 @@ class TreeRepository extends NestedTreeRepository {
             return array();
         }
 
-        $repository = $this->_em->getRepository('AppUserdirectoryBundle:Institution');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $repository = $this->_em->getRepository(Institution::class);
         $dql = $repository->createQueryBuilder("institution");
         $dql->select("institution");
         $dql->leftJoin("institution.collaborationInstitutions","collaborationInstitutions");
@@ -567,7 +568,7 @@ class TreeRepository extends NestedTreeRepository {
         //print_r($searchArr);
         //echo "<br>";
 
-        $foundCategory = $this->_em->getRepository('AppUserdirectoryBundle:'.$className)->findOneBy($searchArr);
+        $foundCategory = $this->_em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$className)->findOneBy($searchArr);
 
         return $foundCategory;
     }

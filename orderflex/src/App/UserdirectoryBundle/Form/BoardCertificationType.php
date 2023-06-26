@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\CertifyingBoardOrganization; //process.py script: replaced namespace by ::class: added use line for classname=CertifyingBoardOrganization
+
+
+use App\UserdirectoryBundle\Entity\BoardCertifiedSpecialties; //process.py script: replaced namespace by ::class: added use line for classname=BoardCertifiedSpecialties
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,7 +38,8 @@ class BoardCertificationType extends AbstractType
     {
 
         $builder->add( 'certifyingBoardOrganization', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:CertifyingBoardOrganization',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CertifyingBoardOrganization'] by [CertifyingBoardOrganization::class]
+            'class' => CertifyingBoardOrganization::class,
             'choice_label' => 'name',
             'label'=>'Certifying Board Organization:',
             'required'=> false,
@@ -51,7 +58,8 @@ class BoardCertificationType extends AbstractType
 
 
         $builder->add( 'specialty', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:BoardCertifiedSpecialties',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BoardCertifiedSpecialties'] by [BoardCertifiedSpecialties::class]
+            'class' => BoardCertifiedSpecialties::class,
             'choice_label' => 'name',
             'label'=>'Specialty:',
             'required'=> false,

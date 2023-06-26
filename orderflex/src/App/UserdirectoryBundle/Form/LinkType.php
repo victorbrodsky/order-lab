@@ -19,6 +19,9 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\LinkTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LinkTypeList
+
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -45,7 +48,8 @@ class LinkType extends AbstractType
         ));
 
         $builder->add( 'linktype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:LinkTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+            'class' => LinkTypeList::class,
             'choice_label' => 'name',
             'label'=>'Image Link Type:',
             'required'=> false,

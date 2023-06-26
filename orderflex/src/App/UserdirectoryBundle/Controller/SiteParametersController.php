@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
@@ -299,7 +305,8 @@ class SiteParametersController extends OrderAbstractController
             $updatedParam = $entity->$getMethod();
 
             if( $param == 'platformLogos' ) {
-                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity,"platformLogo");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $em->getRepository(Document::class)->processDocuments($entity,"platformLogo");
                 if( $originalParam && count($originalParam)>0 ) {
                     $platformLogo = $originalParam->first();
                     $originalParam = $platformLogo->getAbsoluteUploadFullPath();
@@ -572,7 +579,8 @@ class SiteParametersController extends OrderAbstractController
     public function getUserRoles() {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );  //findAll();

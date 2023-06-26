@@ -17,6 +17,19 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\OrderformBundle\Entity\OrderDelivery; //process.py script: replaced namespace by ::class: added use line for classname=OrderDelivery
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -342,10 +355,12 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
                 }
 
                 $form->add('autoAssignInstitution', CustomSelectorType::class, array(
@@ -791,7 +806,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultDeidentifierAccessionType' ) {
             $builder->add('defaultDeidentifierAccessionType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+                'class' => AccessionType::class,
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Deidentifier Accession Type:',
@@ -813,7 +829,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanAccessionType' ) {
             $builder->add('defaultScanAccessionType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+                'class' => AccessionType::class,
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Scan Order Accession Type:',
@@ -835,7 +852,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanMrnType' ) {
             $builder->add('defaultScanMrnType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MrnType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                'class' => MrnType::class,
                 //'choice_label' => 'name',
                 //'choice_label' => 'getTreeName',
                 'label' => 'Default Scan Order Mrn Type:',
@@ -857,7 +875,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanDelivery' ) {
             $builder->add('defaultScanDelivery', EntityType::class, array(
-                'class' => 'AppOrderformBundle:OrderDelivery',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:OrderDelivery'] by [OrderDelivery::class]
+                'class' => OrderDelivery::class,
                 'label' => 'Default Slide Delivery:',
                 'required' => true,
                 'multiple' => false,
@@ -908,10 +927,12 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
                 }
 
                 $form->add('defaultOrganizationRecipient', CustomSelectorType::class, array(
@@ -1014,7 +1035,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution1' ) {
             $builder->add('navbarFilterInstitution1', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label' => 'Navbar Employee List Filter Institution #1:',
@@ -1039,7 +1061,8 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution2' ) {
             $builder->add('navbarFilterInstitution2', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label' => 'Navbar Employee List Filter Institution #2:',
@@ -1118,10 +1141,12 @@ class SiteParametersType extends AbstractType
 
                 $label = null;
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
                 }
 
                 $form->add('transresDashboardInstitution', CustomSelectorType::class, array(
@@ -1210,7 +1235,8 @@ class SiteParametersType extends AbstractType
 //            ));
 
             $builder->add( 'emailCriticalErrorExceptionUsers', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label'=>'Do not send critical error notifications to the following users:',
                 'required'=> false,
                 'multiple' => true,

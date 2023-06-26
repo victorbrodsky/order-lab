@@ -18,6 +18,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -180,7 +183,8 @@ class UserSimpleType extends AbstractType
         $attr = array('class'=>$class);
 
         $paramArr = array(
-            'class' => 'AppUserdirectoryBundle:UsernameType',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            'class' => UsernameType::class,
             'choice_label' => 'name',
             'label' => $label,
             'required' => false,

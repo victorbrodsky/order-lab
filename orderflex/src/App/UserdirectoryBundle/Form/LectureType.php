@@ -18,6 +18,15 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\ImportanceList; //process.py script: replaced namespace by ::class: added use line for classname=ImportanceList
+
+
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -65,7 +74,8 @@ class LectureType extends AbstractType
 
 
         $builder->add( 'importance', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ImportanceList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ImportanceList'] by [ImportanceList::class]
+            'class' => ImportanceList::class,
             'label'=> "Importance:",
             'required'=> false,
             'multiple' => false,
@@ -105,7 +115,8 @@ class LectureType extends AbstractType
         //$defaultState = null;
         //$defaultState = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
         $builder->add( 'state', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+            'class' => States::class,
             //'choice_label' => 'name',
             'label'=>'Lecture State:',
             'required'=> false,
@@ -126,9 +137,11 @@ class LectureType extends AbstractType
         //country
         //$defaultCountry = null;
         //$defaultCountry = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
-        $preferredCountries = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+        $preferredCountries = $this->params['em']->getRepository(Countries::class)->findByName(array('United States'));
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'class' => Countries::class,
             'choice_label' => 'name',
             'label'=>'Lecture Country:',
             'required'=> false,

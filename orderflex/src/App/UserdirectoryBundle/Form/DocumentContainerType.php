@@ -19,6 +19,9 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\Equipment; //process.py script: replaced namespace by ::class: added use line for classname=Equipment
+
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -163,7 +166,8 @@ class DocumentContainerType extends AbstractType
             if( $this->params['document.device'] ) {
                 if( array_key_exists('device.types', $this->params) && is_array($this->params['device.types']) && $this->params['device.types'] != false ) {
                     $builder->add( 'device', EntityType::class, array(
-                        'class' => 'AppUserdirectoryBundle:Equipment',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Equipment'] by [Equipment::class]
+                        'class' => Equipment::class,
                         'choice_label' => 'name',
                         'label' => $this->params['document.device.label'],
                         'required'=> true,

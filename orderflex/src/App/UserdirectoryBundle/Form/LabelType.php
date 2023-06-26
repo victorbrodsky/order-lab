@@ -74,7 +74,8 @@ class LabelType extends AbstractType
             //echo "user count=".count($this->params['users'])."<br>";
 
             $builder->add('users', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                'class' => User::class,
                 'label' => "Users:",
                 'choice_label' => "getUsernameOptimal",
                 'multiple' => true,

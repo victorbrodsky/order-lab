@@ -18,6 +18,18 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\LanguageList; //process.py script: replaced namespace by ::class: added use line for classname=LanguageList
+
+
+use App\UserdirectoryBundle\Entity\LocaleList; //process.py script: replaced namespace by ::class: added use line for classname=LocaleList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\LifeFormList; //process.py script: replaced namespace by ::class: added use line for classname=LifeFormList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -83,7 +95,8 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('languages', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:LanguageList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LanguageList'] by [LanguageList::class]
+                'class' => LanguageList::class,
                 'label' => "Language(s):",
                 'required' => false,
                 'multiple' => true,
@@ -101,7 +114,8 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('locale', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:LocaleList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocaleList'] by [LocaleList::class]
+                'class' => LocaleList::class,
                 'label' => "Locale:",
                 'required' => false,
                 'multiple' => false,
@@ -119,7 +133,8 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add( 'showToInstitutions', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Only show this profile to members of the following institution(s):',
@@ -161,7 +176,8 @@ class UserPreferencesType extends AbstractType
             ));
 
             $builder->add('lifeForm', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:LifeFormList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LifeFormList'] by [LifeFormList::class]
+                'class' => LifeFormList::class,
                 'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,

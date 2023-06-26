@@ -17,6 +17,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 //use App\UserdirectoryBundle\Form\InstitutionType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -55,7 +58,8 @@ class PerSiteSettingsType extends AbstractType
         if( $this->roleAdmin ) {
 
             $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Order data visible to members of (Institutional PHI Scope):',
@@ -90,7 +94,8 @@ class PerSiteSettingsType extends AbstractType
 
             //ScanOrdersServicesScope
             $builder->add( 'scanOrdersServicesScope', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Service(s) Scope:',
@@ -114,7 +119,8 @@ class PerSiteSettingsType extends AbstractType
 
             //chiefServices
             $builder->add( 'chiefServices', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
                 'label'=>'Chief of the following Service(s) for Scope:',
@@ -146,11 +152,13 @@ class PerSiteSettingsType extends AbstractType
                     if( $title ) {
                         $institution = $title->getDefaultInstitution();
                         if( $institution ) {
-                            $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution);
                         }
                     }
                     if( !$label ) {
-                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null);
                     }
 
                     //echo "show defaultInstitution label=".$label."<br>";

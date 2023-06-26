@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -122,7 +128,8 @@ class StateLicenseType extends AbstractType
 
             //state
             $stateParams = array(
-                'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                'class' => States::class,
                 //'choice_label' => 'name',
                 'label'=>'State:',
                 'required'=> false,
@@ -141,7 +148,8 @@ class StateLicenseType extends AbstractType
 
             if( $stateLicense && !$stateLicense->getState() ) {
                 if( $createCycle ) {
-                    $stateParams['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                    $stateParams['data'] = $this->params['em']->getRepository(States::class)->findOneByName("New York");
                 }
             }
 
@@ -149,11 +157,13 @@ class StateLicenseType extends AbstractType
 
             //country
             //$preferredCountries = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
-            $defaultCountry = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            $defaultCountry = $this->params['em']->getRepository(Countries::class)->findOneByName("United States");
             $preferredCountries = array($defaultCountry);
 
             $countryParams = array(
-                'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+                'class' => Countries::class,
                 'choice_label' => 'name',
                 'label'=>'Country:',
                 'required'=> false,

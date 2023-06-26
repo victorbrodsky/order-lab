@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Repository;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\UserdirectoryBundle\Entity\Permission;
+use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -36,7 +42,8 @@ class UserRepository extends EntityRepository {
     public function findAllByInstitutionNode( $nodeid, $onlyWorking=false ) {
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            //->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user")
             ->groupBy('user');
 
@@ -112,7 +119,7 @@ class UserRepository extends EntityRepository {
         $firstName = trim((string)$nameStrArr[1]);
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user");
 
         $query->leftJoin("user.infos", "infos");
@@ -159,7 +166,7 @@ class UserRepository extends EntityRepository {
         $user = null;
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user");
 
         $query->leftJoin("user.infos", "infos");
@@ -180,7 +187,7 @@ class UserRepository extends EntityRepository {
     public function findUserByUserInfoEmail( $email ) {
         //echo "email=".$email."<br>";
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user")
             ->leftJoin("user.infos","infos")
             ->where("infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail")
@@ -212,7 +219,7 @@ class UserRepository extends EntityRepository {
         //echo "role=".$role."<br>";
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'user')
+            ->from(User::class, 'user')
             ->select("user")
             ->leftJoin("user.infos","infos")
             ->where("user.roles LIKE :role")
@@ -241,7 +248,7 @@ class UserRepository extends EntityRepository {
 
         $qb = $this->_em->createQueryBuilder();
         $qb->select('u')
-            ->from('AppUserdirectoryBundle:User', 'u')
+            ->from(User::class, 'u')
             ->where( implode(' OR ',$whereArr) );
 
         //echo "query=".$qb."<br>";
@@ -275,7 +282,8 @@ class UserRepository extends EntityRepository {
     public function isUserHasDirectPermissionObjectAction( $user, $object, $action ) {
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Permission', 'permissions')
+            //->from('AppUserdirectoryBundle:Permission', 'permissions')
+            ->from(Permission::class, 'permissions')
             ->select("permissions")
             ->leftJoin("permissions.user","user")
             ->leftJoin("permissions.permission","permission")
@@ -330,7 +338,8 @@ class UserRepository extends EntityRepository {
 
         //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Roles', 'list')
+            //->from('AppUserdirectoryBundle:Roles', 'list')
+            ->from(Roles::class, 'list')
             ->select("list")
             ->leftJoin("list.permissions","permissions")
             ->leftJoin("permissions.permission","permission")
@@ -357,7 +366,8 @@ class UserRepository extends EntityRepository {
     public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null) {
 
         //check if user's roles have permission
-        $query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
+        //$query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
+        $query = $this->_em->createQueryBuilder()->from(Roles::class, 'list');
         $query->select("list");
 
         $query->leftJoin("list.permissions","permissions");
@@ -375,13 +385,15 @@ class UserRepository extends EntityRepository {
 
         if( $institutionId ) {
             $query->leftJoin("list.institution","institution");
-            $institution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $this->_em->getRepository(Institution::class)->find($institutionId);
             //echo "institution=".$institution->getNodeNameWithRoot()."<br>";
             //get inst criterion string tree with collaboration
             //$instStr = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
             //        getCriterionStrForCollaborationsByNode($institution,"institution",array("Intersection"),false,false);
             //get simple inst criterion string tree (without collaboration)
-            $instStr = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $instStr = $this->_em->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
             //echo "instStr=".$instStr."<br>";
             $query->andWhere($instStr);
 
@@ -530,7 +542,8 @@ class UserRepository extends EntityRepository {
             foreach( $userRoles as $userRole ) {
                 //echo "parentRole=".$parentRole."; userRole=".$userRole."<br>";
                 //$nodeUnderParent = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution());
-                $nodeUnderParent = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderCollaborationParentnode($parentRole->getInstitution(), $userRole->getInstitution());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $nodeUnderParent = $this->_em->getRepository(Institution::class)->isNodeUnderCollaborationParentnode($parentRole->getInstitution(), $userRole->getInstitution());
                 if( $nodeUnderParent ) {
                     if( $parentRole && !$userParentRoles->contains($parentRole) ) {
                         $userParentRoles->add($parentRole);
@@ -555,7 +568,8 @@ class UserRepository extends EntityRepository {
 
         //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Roles', 'list')
+            //->from('AppUserdirectoryBundle:Roles', 'list')
+            ->from(Roles::class, 'list')
             ->select("list")
             ->leftJoin("list.sites","sites");
 
@@ -600,7 +614,7 @@ class UserRepository extends EntityRepository {
         $withLikesStr = implode(" OR ", $withLikes);
         //echo "withLikesStr=".$withLikesStr."<br>";
 
-        $query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:User', 'user');
+        $query = $this->_em->createQueryBuilder()->from(User::class, 'user');
         $query->select("user");
 
         //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY%'");
@@ -632,7 +646,7 @@ class UserRepository extends EntityRepository {
         }
         //echo "permission=".$permission."<br>";
 
-        $query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:User', 'user');
+        $query = $this->_em->createQueryBuilder()->from(User::class, 'user');
         $query->select("user");
 
         //$whereStr = "administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid";
@@ -656,16 +670,20 @@ class UserRepository extends EntityRepository {
 
         //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_%'");
         //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CYTOPATHOLOGY%'");
-        $query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
         //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles IS NOT NULL");
         //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_%'");
+
+        //$query->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
+        $query->leftJoin(Roles::class, "roles", "WITH", "user.roles LIKE '%roles.name%'");
 
         $query->leftJoin("roles.sites", "sites");
         $query->leftJoin("roles.permissions", "permissions");
 
         $query->leftJoin("roles.institution","institution");
-        $institution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
-        $instStr = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode($institution,"institution",false);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $this->_em->getRepository(Institution::class)->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $instStr = $this->_em->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
         //echo "instStr=".$instStr."<br>";
         $query->andWhere($instStr);
 
@@ -694,7 +712,8 @@ class UserRepository extends EntityRepository {
     public function findPermissionByObjectAction( $objectStr, $actionStr, $single=true ) {
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Permission', 'permissions')
+            //->from('AppUserdirectoryBundle:Permission', 'permissions')
+            ->from(Permission::class, 'permissions')
             ->select("permissions")
             ->leftJoin("permissions.permission","permission")
             ->leftJoin("permission.permissionObjectList","permissionObjectList")
@@ -724,7 +743,7 @@ class UserRepository extends EntityRepository {
 
     public function findNotFellowshipUsers() {
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'list')
+            ->from(User::class, 'list')
             ->select("list")
             ->leftJoin("list.infos", "infos")
             ->where("list.createdby != 'googleapi'")

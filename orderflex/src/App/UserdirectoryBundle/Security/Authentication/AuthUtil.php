@@ -25,6 +25,13 @@
 namespace App\UserdirectoryBundle\Security\Authentication;
 
 
+
+use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\UserdirectoryBundle\Entity\IdentifierTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IdentifierTypeList
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -587,10 +594,12 @@ class AuthUtil {
 
         //try all matching identifier with primary user identifier type
         //1) get identifier types from Identifier Types (IdentifierTypeList)
-        $identifiers = $this->em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findBy(array('type' => array('default','user-added')));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
+        $identifiers = $this->em->getRepository(IdentifierTypeList::class)->findBy(array('type' => array('default','user-added')));
 
         //2) get current Primary Public User ID Type (i.e. "Local User")
-        $identifierKeytype = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation($identifierKeytype);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $identifierKeytype = $this->em->getRepository(UsernameType::class)->findOneByAbbreviation($identifierKeytype);
         if( !$identifierKeytype ) {
             $this->logger->warning("Identifier not found by abbreviation=".$identifierKeytype);
             return NULL;
@@ -626,7 +635,8 @@ class AuthUtil {
     //find a user by user's identifier
     public function authenticateUserByIdentifierType( $username, $credentials, $identifierKeytypeName ) {
 
-        $identifierKeytype = $this->em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
+        $identifierKeytype = $this->em->getRepository(IdentifierTypeList::class)->findOneByName($identifierKeytypeName);
         if( !$identifierKeytype ) {
             $this->logger->notice('identifierKeytype not found by name='.$identifierKeytypeName);
             return NULL;
@@ -1886,11 +1896,13 @@ class AuthUtil {
         $ldapKeyType1Id = null;
         $ldapKeyType2Id = null;
 
-        $ldapKeyType1 = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneBy(array('abbreviation'=>'ldap-user'));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $ldapKeyType1 = $this->em->getRepository(UsernameType::class)->findOneBy(array('abbreviation'=>'ldap-user'));
         if( $ldapKeyType1 ) {
             $ldapKeyType1Id = $ldapKeyType1->getId();
         }
-        $ldapKeyType2 = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneBy(array('abbreviation'=>'ldap2-user'));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $ldapKeyType2 = $this->em->getRepository(UsernameType::class)->findOneBy(array('abbreviation'=>'ldap2-user'));
         if( $ldapKeyType2 ) {
             $ldapKeyType2Id = $ldapKeyType2->getId();
         }

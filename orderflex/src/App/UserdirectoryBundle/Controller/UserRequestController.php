@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
@@ -67,7 +73,8 @@ class UserRequestController extends OrderAbstractController
 
         //$entities = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findAll();
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:UserRequest');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+        $repository = $this->getDoctrine()->getRepository(UserRequest::class);
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin("accreq.systemAccountRequest", "systemAccountRequest");
@@ -135,7 +142,8 @@ class UserRequestController extends OrderAbstractController
         $entity->setSiteName($this->siteName);
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $usernametypes = $em->getRepository(UsernameType::class)->findBy(
             array(
                 'type' => array('default', 'user-added'),
                 'abbreviation' => array('ldap-user','local-user')
@@ -219,7 +227,8 @@ class UserRequestController extends OrderAbstractController
         $entity->setSiteName($this->siteName);
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $usernametypes = $em->getRepository(UsernameType::class)->findBy(
             array(
                 'type' => array('default', 'user-added'),
                 'abbreviation' => array('ldap-user','local-user')
@@ -255,7 +264,8 @@ class UserRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+        $entity = $em->getRepository(UserRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -286,7 +296,8 @@ class UserRequestController extends OrderAbstractController
         
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+        $entity = $em->getRepository(UserRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -335,7 +346,8 @@ class UserRequestController extends OrderAbstractController
 //            echo "getRequestedScanOrderInstitutionScope=".$entity->getRequestedScanOrderInstitutionScope();
 //            exit();
 
-                $entityDb = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+                $entityDb = $em->getRepository(UserRequest::class)->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
                 }
@@ -386,7 +398,8 @@ class UserRequestController extends OrderAbstractController
             ) {
                 //exit('Approve ');
 
-                $entityDb = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+                $entityDb = $em->getRepository(UserRequest::class)->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
                 }
@@ -448,7 +461,8 @@ class UserRequestController extends OrderAbstractController
         //departments
         $department = $userSecUtil->getAutoAssignInstitution();
         if( !$department ) {
-            $department = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $department = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
         }
 
         $params['institution'] = $department;
@@ -456,7 +470,8 @@ class UserRequestController extends OrderAbstractController
 
         //Institution
         //$requestedScanOrderInstitutionScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
-        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $repository = $em->getRepository(Institution::class);
         $dql =  $repository->createQueryBuilder("institution");
         $dql->select('institution');
         $dql->leftJoin("institution.types", "types");
@@ -543,7 +558,8 @@ class UserRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+        $entity = $em->getRepository(UserRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -578,7 +594,8 @@ class UserRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+        $entity = $em->getRepository(UserRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -626,7 +643,8 @@ class UserRequestController extends OrderAbstractController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+            $entity = $em->getRepository(UserRequest::class)->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserRequest entity.');

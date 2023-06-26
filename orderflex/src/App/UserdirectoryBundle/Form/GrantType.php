@@ -18,6 +18,12 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\GrantComment; //process.py script: replaced namespace by ::class: added use line for classname=GrantComment
+
+
+use App\UserdirectoryBundle\Entity\GrantEffort; //process.py script: replaced namespace by ::class: added use line for classname=GrantEffort
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -201,7 +207,8 @@ class GrantType extends AbstractType
                 if( $grant && $grant->getId() && $this->params['subjectUser'] ) {
 
                     //comment
-                    $comment = $this->params['em']->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantComment'] by [GrantComment::class]
+                    $comment = $this->params['em']->getRepository(GrantComment::class)->findOneBy(
                         array(
                             'grant' => $grant,
                             'author' => $this->params['subjectUser']
@@ -214,7 +221,8 @@ class GrantType extends AbstractType
                     }
 
                     //effort
-                    $effort = $this->params['em']->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantEffort'] by [GrantEffort::class]
+                    $effort = $this->params['em']->getRepository(GrantEffort::class)->findOneBy(
                         array(
                             'grant' => $grant,
                             'author' => $this->params['subjectUser']

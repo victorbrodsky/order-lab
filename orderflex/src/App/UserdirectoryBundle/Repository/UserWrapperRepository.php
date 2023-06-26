@@ -17,6 +17,7 @@
 
 namespace App\UserdirectoryBundle\Repository;
 
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Doctrine\ORM\EntityRepository;
 
 
@@ -29,7 +30,8 @@ class UserWrapperRepository extends EntityRepository {
         $userWrapper = null;
 
         $query = $this->_em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+            //->from('AppUserdirectoryBundle:UserWrapper', 'list')
+            ->from(UserWrapper::class, 'list')
             ->select("list");
             //->leftJoin("list.user", "user")
 

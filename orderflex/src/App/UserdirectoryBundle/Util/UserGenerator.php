@@ -25,6 +25,14 @@
 namespace App\UserdirectoryBundle\Util;
 
 
+
+use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+use App\UserdirectoryBundle\Entity\InstitutionType; //process.py script: replaced namespace by ::class: added use line for classname=InstitutionType
+use App\UserdirectoryBundle\Entity\OrganizationalGroupType; //process.py script: replaced namespace by ::class: added use line for classname=OrganizationalGroupType
+use App\UserdirectoryBundle\Entity\CommentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CommentTypeList
+
 use App\OrderformBundle\Entity\Educational;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Entity\Institution;
@@ -161,7 +169,8 @@ class UserGenerator {
             $usernamePrefix = null;
             $userTypeName = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
             //echo "userTypeName=".$userTypeName."<br>";
-            $userType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByName($userTypeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $userType = $em->getRepository(UsernameType::class)->findOneByName($userTypeName);
             if( $userType ) {
                 $usernamePrefix = $userType->getAbbreviation();
             }
@@ -632,7 +641,8 @@ class UserGenerator {
             ) {
 
                 //find reseach lab by name $researchLabOtherTitle
-                $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($researchLabOtherTitle);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+                $researchLab = $em->getRepository(ResearchLab::class)->findOneByName($researchLabOtherTitle);
                 if( !$researchLab ) {
                     $researchLab = new ResearchLab($systemuser);
                     $user->addResearchLab($researchLab);
@@ -1345,7 +1355,8 @@ class UserGenerator {
                 $location->setStatus($location::STATUS_VERIFIED);
                 $location->setRemovable(true);
                 $location->setName('Other Location');
-                $otherLocType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+                $otherLocType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Employee Office");
                 $location->addLocationType($otherLocType);
                 $location->setPhone($BusinessPhone);
                 $user->addLocation($location);
@@ -1473,25 +1484,30 @@ class UserGenerator {
                 if( !$researchLab->getInstitution() ) {
                     //$params = array('type'=>'Medical','organizationalGroupType'=>'Research Lab');
                     //$researchLabInstitutionObj = $this->getObjectByNameTransformer('Institution',$researchLabTitleStr,$systemuser,$params);
-                    $researchWcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $researchWcmc = $this->em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
                     $researchMapper = array(
                         'prefix' => 'App',
                         'bundleName' => 'UserdirectoryBundle',
                         'className' => 'Institution'
                     );
-                    $researchPathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $researchPathology = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
                         "Pathology and Laboratory Medicine",
                         $researchWcmc,
                         $researchMapper
                     );
-                    $researchInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $researchInstitution = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
                         $researchLabTitleStr,
                         $researchPathology,
                         $researchMapper
                     );
                     if (!$researchInstitution) {
-                        $medicalType = $this->em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
-                        $researchLabOrgGroup = $this->em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+                        $medicalType = $this->em->getRepository(InstitutionType::class)->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+                        $researchLabOrgGroup = $this->em->getRepository(OrganizationalGroupType::class)->findOneByName("Research Lab");
                         $researchInstitution = new Institution();
                         $userSecUtil->setDefaultList($researchInstitution, null, $user, $researchLabTitleStr);
                         $researchInstitution->setOrganizationalGroupType($researchLabOrgGroup);
@@ -1579,7 +1595,8 @@ class UserGenerator {
 
                 $AdministrativeCommentNameObj = null;
                 if( $AdministrativeCommentCategoryObj ) {
-                    $AdministrativeCommentNameObj = $this->em->getRepository('AppUserdirectoryBundle:CommentTypeList')->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CommentTypeList'] by [CommentTypeList::class]
+                    $AdministrativeCommentNameObj = $this->em->getRepository(CommentTypeList::class)->findByChildnameAndParent($AdministrativeCommentName,$AdministrativeCommentCategoryObj,$mapper);
                 }
 
                 if( !$AdministrativeCommentNameObj ) {
@@ -1587,7 +1604,8 @@ class UserGenerator {
 
                     if( !$AdministrativeCommentNameObj->getParent() ) {
                         $AdministrativeCommentCategoryObj->addChild($AdministrativeCommentNameObj);
-                        $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $organizationalGroupType = $this->em->getRepository(Institution::class)->getDefaultLevelEntity($mapper, 1);
                         $AdministrativeCommentNameObj->setOrganizationalGroupType($organizationalGroupType);
                         $this->em->persist($AdministrativeCommentNameObj);
                     } else {
@@ -2068,7 +2086,8 @@ class UserGenerator {
         $mainLocation = new Location($creator);
         $mainLocation->setName('Main Office');
         $mainLocation->setRemovable(false);
-        $mainLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $mainLocType = $em->getRepository(LocationTypeList::class)->findOneByName("Employee Office");
         $mainLocation->addLocationType($mainLocType);
         $subjectUser->addLocation($mainLocation);
 
@@ -2076,7 +2095,8 @@ class UserGenerator {
         $homeLocation = new Location($creator);
         $homeLocation->setName('Home');
         $homeLocation->setRemovable(false);
-        $homeLocType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Home");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $homeLocType = $em->getRepository(LocationTypeList::class)->findOneByName("Employee Home");
         $homeLocation->addLocationType($homeLocType);
         $subjectUser->addLocation($homeLocation);
 
@@ -2333,14 +2353,16 @@ class UserGenerator {
         //department
         if( $Institution && $Department && strtolower($Department) != 'null' && $InstitutionObj ) {
 
-            $DepartmentObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $DepartmentObj = $this->em->getRepository(Institution::class)->findByChildnameAndParent($Department,$InstitutionObj,$mapper);
             if( !$DepartmentObj ) {
                 //$DepartmentObj = $this->getObjectByNameTransformer('Institution',$Department,$systemuser,$params);
                 $DepartmentObj = $transformer->createNewEntity($Department,$mapper['className'],$systemuser);
 
                 if( !$DepartmentObj->getParent() ) {
                     $InstitutionObj->addChild($DepartmentObj);
-                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 1);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $organizationalGroupType = $this->em->getRepository(Institution::class)->getDefaultLevelEntity($mapper, 1);
                     $DepartmentObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DepartmentObj);
                 } else {
@@ -2365,14 +2387,16 @@ class UserGenerator {
         //division
         if( $Institution && $Department && $Division && strtolower($Division) != 'null' && $DepartmentObj ) {
 
-            $DivisionObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $DivisionObj = $this->em->getRepository(Institution::class)->findByChildnameAndParent($Division,$DepartmentObj,$mapper);
             if( !$DivisionObj ) {
                 //$DivisionObj = $this->getObjectByNameTransformer('Institution',$Division,$systemuser,$params);
                 $DivisionObj = $transformer->createNewEntity($Division,$mapper['className'],$systemuser);
 
                 if( !$DivisionObj->getParent() ) {
                     $DepartmentObj->addChild($DivisionObj);
-                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 2);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $organizationalGroupType = $this->em->getRepository(Institution::class)->getDefaultLevelEntity($mapper, 2);
                     $DivisionObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($DivisionObj);
                 } else {
@@ -2397,14 +2421,16 @@ class UserGenerator {
         //service
         if( $Institution && $Department && $Division && $Service && strtolower($Service) != 'null' && $DivisionObj ) {
 
-            $ServiceObj = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent($Service,$DivisionObj,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $ServiceObj = $this->em->getRepository(Institution::class)->findByChildnameAndParent($Service,$DivisionObj,$mapper);
             if( !$ServiceObj ) {
                 //$ServiceObj = $this->getObjectByNameTransformer('Institution',$Service,$systemuser,$params);
                 $ServiceObj = $transformer->createNewEntity($Service,$mapper['className'],$systemuser);
 
                 if( !$ServiceObj->getParent() ) {
                     $DivisionObj->addChild($ServiceObj);
-                    $organizationalGroupType = $this->em->getRepository('AppUserdirectoryBundle:Institution')->getDefaultLevelEntity($mapper, 3);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $organizationalGroupType = $this->em->getRepository(Institution::class)->getDefaultLevelEntity($mapper, 3);
                     $ServiceObj->setOrganizationalGroupType($organizationalGroupType);
                     $this->em->persist($ServiceObj);
                 } else {

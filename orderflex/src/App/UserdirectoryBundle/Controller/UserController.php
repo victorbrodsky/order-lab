@@ -18,6 +18,27 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
+
+use App\UserdirectoryBundle\Entity\IdentifierTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IdentifierTypeList
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\UserdirectoryBundle\Entity\InstitutionType; //process.py script: replaced namespace by ::class: added use line for classname=InstitutionType
+
+
+use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
+
+
+use App\UserdirectoryBundle\Entity\DocumentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DocumentTypeList
+
 use App\UserdirectoryBundle\Entity\Book;
 use App\UserdirectoryBundle\Entity\Lecture;
 use App\UserdirectoryBundle\Entity\Logger;
@@ -332,7 +353,8 @@ class UserController extends OrderAbstractController
 //        }
 
         if( $tablename == "Institution" ) {
-            $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($objectid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $node = $em->getRepository(Institution::class)->find($objectid);
             if( $node ) {
                 $title = $title . " (".$node->getRootName($node).")";
             }
@@ -878,7 +900,8 @@ class UserController extends OrderAbstractController
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmcpathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -890,7 +913,8 @@ class UserController extends OrderAbstractController
         //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $nyppathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper
@@ -1039,7 +1063,8 @@ class UserController extends OrderAbstractController
 
         //Academic Appointment Title exists + division=Anatomic Pathology
         if( $filter && $inst1 && $filter == $inst1." Anatomic Pathology Faculty" ) {
-            $wcmcAnatomicPathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmcAnatomicPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Anatomic Pathology",
                 $wcmcpathology,
                 $mapper
@@ -1051,7 +1076,8 @@ class UserController extends OrderAbstractController
 
         //Academic Appointment Title exists + division=Laboratory Medicine
         if( $filter && $inst1 && $filter == $inst1." Laboratory Medicine Faculty" ) {
-            $wcmcLaboratoryMedicinePathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmcLaboratoryMedicinePathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Laboratory Medicine",
                 $wcmcpathology,
                 $mapper
@@ -1343,7 +1369,8 @@ class UserController extends OrderAbstractController
 //                $criteriastr .= " OR ";
 //                $criteriastr .= "medicalInstitution.id = " . $objectid;
               
-                $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($objectid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $node = $em->getRepository(Institution::class)->find($objectid);
 
                 //administrativeInstitution
                 $criteriastr .= " ( ";
@@ -1670,7 +1697,8 @@ class UserController extends OrderAbstractController
         //set optional user-type and user-name
         $userType = $request->query->get('user-type');
         if( $userType ) {
-            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($userType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $keytypeObj = $em->getRepository(UsernameType::class)->find($userType);
             $user->setKeytype($keytypeObj);
         }
 
@@ -1680,8 +1708,10 @@ class UserController extends OrderAbstractController
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
         $user->getPreferences()->addShowToInstitution($nyp);
@@ -1706,7 +1736,8 @@ class UserController extends OrderAbstractController
 
         //add EIN identifier to credentials
         $identEin = new Identifier();
-        $identKeytypeEin = $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName("Employee Identification Number (EIN)");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
+        $identKeytypeEin = $em->getRepository(IdentifierTypeList::class)->findOneByName("Employee Identification Number (EIN)");
         if( $identKeytypeEin ) {
             $identEin->setKeytype($identKeytypeEin);
         }
@@ -1714,7 +1745,8 @@ class UserController extends OrderAbstractController
 
         //add NPI identifier to credentials
         $identNpi = new Identifier();
-        $identKeytypeNpi = $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
+        $identKeytypeNpi = $em->getRepository(IdentifierTypeList::class)->findOneByName("National Provider Identifier (NPI)");
         if( $identKeytypeNpi ) {
             $identNpi->setKeytype($identKeytypeNpi);
         }
@@ -1808,7 +1840,8 @@ class UserController extends OrderAbstractController
         //set optional user-type and user-name
         $userType = $request->query->get('user-type');
         if( $userType ) {
-            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($userType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $keytypeObj = $em->getRepository(UsernameType::class)->find($userType);
             $user->setKeytype($keytypeObj);
         }
 
@@ -1818,8 +1851,10 @@ class UserController extends OrderAbstractController
         }
 
         //Only show this profile to members of the following institution(s): default preset choices WCM, NYP
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
         //echo "add inst:".$wcmc."; ".$nyp."<br>";
         $user->getPreferences()->addShowToInstitution($wcmc);
         $user->getPreferences()->addShowToInstitution($nyp);
@@ -1851,7 +1886,8 @@ class UserController extends OrderAbstractController
         $primaryPublicUserIdLabel = $userSecUtil->getSiteSettingParameter('noticeLdapName');
 
         //set default to local user AppUserdirectoryBundle:UsernameType
-        $defaultPrimaryPublicUserIdType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation("local-user");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $defaultPrimaryPublicUserIdType = $em->getRepository(UsernameType::class)->findOneByAbbreviation("local-user");
 
         $params = array(
             'cycle' => 'create',
@@ -2270,7 +2306,8 @@ class UserController extends OrderAbstractController
         //Additional check if the user email extension corresponds to the keytype (Authentication field)
         //check only for two ldap settings (ldapMapperEmail and ldapMapperEmail2)
         if( $keytype ) {
-            $keytypeEntity = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($keytype);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $keytypeEntity = $em->getRepository(UsernameType::class)->find($keytype);
             if( $keytypeEntity ) {
                 $authError = null;
                 //ldapMapperPrimaryPublicUserIdType and ldapMapperPrimaryPublicUserIdType2
@@ -2585,10 +2622,12 @@ class UserController extends OrderAbstractController
             //set avatar
             $this->processSetAvatar($user);
 
-            $user = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->processResearchLab( $user );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $user = $em->getRepository(ResearchLab::class)->processResearchLab( $user );
 
             //process grants
-            $em->getRepository('AppUserdirectoryBundle:Grant')->processGrant($user);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+            $em->getRepository(Grant::class)->processGrant($user);
 
             //process employmentstatus attachments
             $this->processEmploymentStatus($user);
@@ -2607,7 +2646,8 @@ class UserController extends OrderAbstractController
             foreach( $user->getRoles() as $role ) {
                 if( $role ) {
                     //echo "check role=".$role."<br>";
-                    $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                    $roleEntity = $em->getRepository(Roles::class)->findOneByName($role);
                     if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
@@ -2967,7 +3007,8 @@ class UserController extends OrderAbstractController
         //get roles objects for this user
         $roleobjects = array();
         foreach( $entity->getRoles() as $role ) {
-            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleEntity = $em->getRepository(Roles::class)->findOneByName($role);
             if( $roleEntity ) {
                 $roleobjects[] = $roleEntity;
             }
@@ -3139,7 +3180,8 @@ class UserController extends OrderAbstractController
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 //exit('No Institution: "WCM"');
                 throw $this->createNotFoundException('No Institution: "WCM"');
@@ -3149,7 +3191,8 @@ class UserController extends OrderAbstractController
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -3602,10 +3645,12 @@ class UserController extends OrderAbstractController
             $this->processSetAvatar($entity);
 
             //process research labs
-            $entity = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $entity = $em->getRepository(ResearchLab::class)->processResearchLab( $entity );
 
             //process grants
-            $em->getRepository('AppUserdirectoryBundle:Grant')->processGrant($entity); //update user
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+            $em->getRepository(Grant::class)->processGrant($entity); //update user
 
             //process employmentstatus attachments
             $this->processEmploymentStatus($entity);
@@ -3774,7 +3819,8 @@ class UserController extends OrderAbstractController
             foreach( $resultRoles as $role ) {
                 if( $role ) {
                     //echo "check role=".$role."<br>";
-                    $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                    $roleEntity = $em->getRepository(Roles::class)->findOneByName($role);
                     if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
@@ -3873,7 +3919,8 @@ class UserController extends OrderAbstractController
             //set Educational type for training Institution
             $institution = $training->getInstitution();
             if( $institution && $educationalType == null ) {
-                $educationalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName("Educational");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+                $educationalType = $em->getRepository(InstitutionType::class)->findOneByName("Educational");
             }
             if( $institution && $educationalType) {
                 $institution->addType($educationalType);
@@ -3916,7 +3963,8 @@ class UserController extends OrderAbstractController
         $userUtil = $this->container->get('user_utility');
 
         // process documents
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $comment );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $comment );
 
         if( $comment == null ) {
             return;
@@ -3936,7 +3984,8 @@ class UserController extends OrderAbstractController
 
             foreach( $employmentStatus->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
 
-                $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $documentContainer = $em->getRepository(Document::class)->processDocuments( $documentContainer );
 
                 if( $documentContainer ) {
                     //$userUtil = new UserUtil();
@@ -3968,7 +4017,8 @@ class UserController extends OrderAbstractController
         }
         $documentCoqType = $userSecUtil->getObjectByNameTransformer($user,"Certificate of Qualification Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $coqAttachmentContainer->getDocumentContainers() as $documentContainer) {
-            $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCoqType );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $documentContainer = $em->getRepository(Document::class)->processDocuments( $documentContainer,null,$documentCoqType );
         }
 
         //Credentials's cliaAttachmentContainer
@@ -3978,7 +4028,8 @@ class UserController extends OrderAbstractController
         }
         $documentCliaType = $userSecUtil->getObjectByNameTransformer($user,"CLIA Document",'UserdirectoryBundle','DocumentTypeList');
         foreach( $cliaAttachmentContainer->getDocumentContainers() as $documentContainer) {
-            $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer,null,$documentCliaType );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $documentContainer = $em->getRepository(Document::class)->processDocuments( $documentContainer,null,$documentCliaType );
         }
 
         //StateLicense's attachmentContainer
@@ -3987,7 +4038,8 @@ class UserController extends OrderAbstractController
             $attachmentContainer = $stateLicense->getAttachmentContainer();
             if( $attachmentContainer ) {
                 foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
-                    $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentCredType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $documentContainer = $em->getRepository(Document::class)->processDocuments($documentContainer,null,$documentCredType);
                 }
             }
         }
@@ -3998,7 +4050,8 @@ class UserController extends OrderAbstractController
             $attachmentContainer = $boardCertification->getAttachmentContainer();
             if( $attachmentContainer ) {
                 foreach( $attachmentContainer->getDocumentContainers() as $documentContainer ) {
-                    $documentContainer = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($documentContainer,null,$documentBoardcertType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $documentContainer = $em->getRepository(Document::class)->processDocuments($documentContainer,null,$documentBoardcertType);
                 }
             }
         }
@@ -4041,7 +4094,8 @@ class UserController extends OrderAbstractController
         if( $userwrappers && count($userwrappers) > 0 ) {
 
             //1) get all wrappers with this user
-            $userWrappers = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->findByUser($user->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+            $userWrappers = $em->getRepository(UserWrapper::class)->findByUser($user->getId());
 
             //2) remove this user from all wrappers except in $userwrappers array.
             foreach( $userWrappers as $userWrapper ) {
@@ -4059,7 +4113,8 @@ class UserController extends OrderAbstractController
 
             //3) add user to the wrappers in array $userwrappers
             foreach( $userwrappers as $userWrapperId ) {
-                $userWrapper = $em->getRepository('AppUserdirectoryBundle:UserWrapper')->find($userWrapperId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+                $userWrapper = $em->getRepository(UserWrapper::class)->find($userWrapperId);
                 if( $userWrapper ) {
                     if( !$userWrapper->getUser() ) {
                         $userWrapper->setUser($user);
@@ -4149,7 +4204,8 @@ class UserController extends OrderAbstractController
             if( $avatarid && $avatarid != "" ) {
                 //echo "avatarid=".$avatarid."<br>";
                 $em = $this->getDoctrine()->getManager();
-                $avatar = $em->getRepository('AppUserdirectoryBundle:Document')->find($avatarid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $avatar = $em->getRepository(Document::class)->find($avatarid);
                 $subjectUser->setAvatar($avatar);
             } else {
                 //echo "null avatarid=".$avatarid."<br>";
@@ -4176,7 +4232,8 @@ class UserController extends OrderAbstractController
         $em->clear();
 
         //echo "1 oldAvatarId=".$oldAvatarId."<br>";
-        $oldAvatar = $em->getRepository('AppUserdirectoryBundle:Document')->find($oldAvatarId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $oldAvatar = $em->getRepository(Document::class)->find($oldAvatarId);
 
         if( $oldAvatar ) {
 
@@ -4238,10 +4295,12 @@ class UserController extends OrderAbstractController
 
                         if( $title instanceof ResearchLab ) {
                             //remove dependents: remove comments and id from lab
-                            $em->getRepository('AppUserdirectoryBundle:ResearchLab')->removeDependents( $subjectUser, $title );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+                            $em->getRepository(ResearchLab::class)->removeDependents( $subjectUser, $title );
                         } elseif ( $title instanceof Grant ) {
                             //remove dependents: remove documents
-                            $em->getRepository('AppUserdirectoryBundle:Grant')->removeDependents( $subjectUser, $title );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+                            $em->getRepository(Grant::class)->removeDependents( $subjectUser, $title );
                         } else {
                             if( method_exists($title,'removeUser') ) {
                                 $title->removeUser($subjectUser);
@@ -4339,7 +4398,8 @@ class UserController extends OrderAbstractController
     public function getUserRoles( $asLabelValue=true ) {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );  //findAll();
@@ -4772,7 +4832,8 @@ class UserController extends OrderAbstractController
             $object->setSize($size);
 
             //document's type
-            $documentType = $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName('Avatar Image');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:DocumentTypeList'] by [DocumentTypeList::class]
+            $documentType = $em->getRepository(DocumentTypeList::class)->findOneByName('Avatar Image');
             $object->setType($documentType);
 
             $em->persist($object);
@@ -5001,7 +5062,8 @@ class UserController extends OrderAbstractController
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmcpathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -5013,7 +5075,8 @@ class UserController extends OrderAbstractController
         //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $nyppathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper
@@ -5281,7 +5344,8 @@ class UserController extends OrderAbstractController
         //navbarFilterInstitution1
         $wcmc = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution1');
         if( $wcmc ) {
-            $wcmcpathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmcpathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -5293,7 +5357,8 @@ class UserController extends OrderAbstractController
         //$nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
         $nyp = $userSecUtil->getSiteSettingParameter('navbarFilterInstitution2');
         if( $nyp ) {
-            $nyppathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $nyppathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $nyp,
                 $mapper

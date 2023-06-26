@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Repository;
 
+
+
+use App\UserdirectoryBundle\Entity\ResearchLabPI; //process.py script: replaced namespace by ::class: added use line for classname=ResearchLabPI
+
+
+use App\UserdirectoryBundle\Entity\ResearchLabComment; //process.py script: replaced namespace by ::class: added use line for classname=ResearchLabComment
 use Doctrine\ORM\EntityRepository;
 use App\OrderformBundle\Entity\Research;
 use App\UserdirectoryBundle\Entity\ResearchLab;
@@ -45,7 +51,8 @@ class ResearchLabRepository extends EntityRepository {
             //$formLabId = $lab->getId();
 
             //get lab from DB if exists
-            $labDb = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($lab->getName()."");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $labDb = $em->getRepository(ResearchLab::class)->findOneByName($lab->getName()."");
 
             if( $labDb ) {
 
@@ -73,7 +80,8 @@ class ResearchLabRepository extends EntityRepository {
 
             //check if pi=$user for this lab already exists
             if( $user->getId() ) {
-                $piDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLabPI'] by [ResearchLabPI::class]
+                $piDb = $em->getRepository(ResearchLabPI::class)->findOneBy( array( 'pi'=>$user, 'researchLab'=>$labFinal->getId() ) );
             } else {
                 $piDb = null;
             }
@@ -105,7 +113,8 @@ class ResearchLabRepository extends EntityRepository {
 
             //check if comment authored by $user for this lab already exists
             if( $user->getId() ) {
-                $commentDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLabComment'] by [ResearchLabComment::class]
+                $commentDb = $em->getRepository(ResearchLabComment::class)->findOneBy( array( 'author' => $user, 'researchLab'=>$labFinal->getId() ) );
             } else {
                 $commentDb = null;
             }
@@ -159,14 +168,16 @@ class ResearchLabRepository extends EntityRepository {
 
         $em = $this->_em;
 
-        $commentDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabComment')->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLabComment'] by [ResearchLabComment::class]
+        $commentDb = $em->getRepository(ResearchLabComment::class)->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
         if( $commentDb ) {
             //echo "remove comment=".$commentDb."<br>";
             $em->remove($commentDb);
             $em->flush();
         }
 
-        $piDb = $em->getRepository('AppUserdirectoryBundle:ResearchLabPI')->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLabPI'] by [ResearchLabPI::class]
+        $piDb = $em->getRepository(ResearchLabPI::class)->findOneBy( array( 'pi'=>$subjectUser->getId(), 'researchLab'=>$lab->getId() ) );
         if( $piDb ) {
             //echo "remove pi=".$piDb."<br>";
             $em->remove($piDb);

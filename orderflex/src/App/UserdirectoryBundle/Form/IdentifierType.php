@@ -17,6 +17,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
 use App\UserdirectoryBundle\Entity\Identifier;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -106,7 +109,8 @@ class IdentifierType extends AbstractType
 
         //keytypemrn
         $builder->add('keytypemrn', EntityType::class, array(
-            'class' => 'AppOrderformBundle:MrnType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            'class' => MrnType::class,
             'choice_label' => 'name',
             'label'=>'MRN Type:',
             'required'=> false,

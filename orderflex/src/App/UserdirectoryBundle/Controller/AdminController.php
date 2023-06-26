@@ -18,6 +18,16 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+
+use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+use App\UserdirectoryBundle\Entity\RoomList; //process.py script: replaced namespace by ::class: added use line for classname=RoomList
+use App\UserdirectoryBundle\Entity\SuiteList; //process.py script: replaced namespace by ::class: added use line for classname=SuiteList
+use App\UserdirectoryBundle\Entity\FloorList; //process.py script: replaced namespace by ::class: added use line for classname=FloorList
+//use App\ResAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
+//use App\ResAppBundle\Entity\LanguageProficiency; //process.py script: replaced namespace by ::class: added use line for classname=LanguageProficiency
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
 use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Entity\ChartTypeList;
 use App\DashboardBundle\Entity\DataSourceList;
@@ -28,8 +38,8 @@ use App\DashboardBundle\Entity\VisualizationList;
 use App\DashboardBundle\Util\DashboardUtil;
 use App\FellAppBundle\Entity\FellAppRank;
 use App\FellAppBundle\Entity\FellAppStatus;
-use App\FellAppBundle\Entity\LanguageProficiency;
-use App\FellAppBundle\Entity\VisaStatus;
+//use App\FellAppBundle\Entity\LanguageProficiency;
+//use App\FellAppBundle\Entity\VisaStatus;
 use App\OrderformBundle\Controller\ScanListController;
 use App\ResAppBundle\Entity\ApplyingResidencyTrack;
 use App\ResAppBundle\Entity\LearnAreaList;
@@ -2328,7 +2338,8 @@ class AdminController extends OrderAbstractController
             //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
             if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
                 $attrValue = "(111) 111-1111";
-                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoleAttributeList'] by [RoleAttributeList::class]
+                $attrs = $em->getRepository(RoleAttributeList::class)->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
                     $this->setDefaultList($attr,1,$username,$attrName);
@@ -2339,7 +2350,8 @@ class AdminController extends OrderAbstractController
             //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
             if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
                 $attrValue = "(222) 222-2222";
-                $attrs = $em->getRepository('AppUserdirectoryBundle:RoleAttributeList')->findBy(array("name"=>$attrName,"value"=>$attrValue));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoleAttributeList'] by [RoleAttributeList::class]
+                $attrs = $em->getRepository(RoleAttributeList::class)->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
                     $this->setDefaultList($attr,10,$username,$attrName);
@@ -2397,47 +2409,55 @@ class AdminController extends OrderAbstractController
 //            }
 //        }
         
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
         if( strpos((string)$role,'BREASTPATHOLOGY') !== false ) {
-            $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $BREASTPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Breast Pathology");
             $entity->setFellowshipSubspecialty($BREASTPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'CYTOPATHOLOGY') !== false ) {
-            $CYTOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $CYTOPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
             $entity->setFellowshipSubspecialty($CYTOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'GYNECOLOGICPATHOLOGY') !== false ) {
-            $GYNECOLOGICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $GYNECOLOGICPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gynecologic Pathology");
             $entity->setFellowshipSubspecialty($GYNECOLOGICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'GASTROINTESTINALPATHOLOGY') !== false ) {
-            $GASTROINTESTINALPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $GASTROINTESTINALPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gastrointestinal Pathology");
             $entity->setFellowshipSubspecialty($GASTROINTESTINALPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'GENITOURINARYPATHOLOGY') !== false ) {
-            $GENITOURINARYPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $GENITOURINARYPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Genitourinary Pathology");
             $entity->setFellowshipSubspecialty($GENITOURINARYPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'HEMATOPATHOLOGY') !== false ) {
-            $HEMATOPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $HEMATOPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Hematopathology");
             $entity->setFellowshipSubspecialty($HEMATOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
         if( strpos((string)$role,'MOLECULARGENETICPATHOLOGY') !== false ) {
-            $MOLECULARGENETICPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $MOLECULARGENETICPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Molecular Genetic Pathology");
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
@@ -2458,11 +2478,13 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
         if( strpos((string)$role,'AP') !== false ) {
-            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP");
             $entity->setResidencyTrack($residencyAP);
 
             $this->addSingleSiteToEntity($entity,"resapp");
@@ -2470,7 +2492,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'CP') !== false ) {
-            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyCP = $em->getRepository(ResidencyTrackList::class)->findOneByName("CP");
             $entity->setResidencyTrack($residencyCP);
 
             $this->addSingleSiteToEntity($entity,"resapp");
@@ -2478,7 +2501,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'APCP') !== false ) {
-            $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAPCP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP/CP");
             $entity->setResidencyTrack($residencyAPCP);
 
             $this->addSingleSiteToEntity($entity,"resapp");
@@ -2486,7 +2510,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'APEXP') !== false ) {
-            $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAPEXP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP/EXP");
             $entity->setResidencyTrack($residencyAPEXP);
 
             $this->addSingleSiteToEntity($entity,"resapp");
@@ -2494,7 +2519,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'CPEXP') !== false ) {
-            $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyCPEXP = $em->getRepository(ResidencyTrackList::class)->findOneByName("CP/EXP");
             $entity->setResidencyTrack($residencyCPEXP);
 
             $this->addSingleSiteToEntity($entity,"resapp");
@@ -2530,7 +2556,8 @@ class AdminController extends OrderAbstractController
         //exit('111');
 
         if( strpos((string)$role,'_APCP') !== false ) {
-            $residencyAPCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/CP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAPCP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP/CP");
             if( !$residencyAPCP ) {
                 exit("ResidencyTrackList not found: AP/CP");
             }
@@ -2540,7 +2567,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'_APEXP') !== false ) {
-            $residencyAPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP/EXP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAPEXP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP/EXP");
             if( !$residencyAPEXP ) {
                 exit("ResidencyTrackList not found: AP/EXP");
             }
@@ -2549,7 +2577,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'_CPEXP') !== false ) {
-            $residencyCPEXP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP/EXP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyCPEXP = $em->getRepository(ResidencyTrackList::class)->findOneByName("CP/EXP");
             if( !$residencyCPEXP ) {
                 exit("ResidencyTrackList not found: CP/EXP");
             }
@@ -2558,7 +2587,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'_AP') !== false ) {
-            $residencyAP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("AP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyAP = $em->getRepository(ResidencyTrackList::class)->findOneByName("AP");
             if( !$residencyAP ) {
                 exit("ResidencyTrackList not found: AP");
             }
@@ -2567,7 +2597,8 @@ class AdminController extends OrderAbstractController
         }
 
         if( strpos((string)$role,'_CP') !== false ) {
-            $residencyCP = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName("CP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyCP = $em->getRepository(ResidencyTrackList::class)->findOneByName("CP");
             if( !$residencyCP ) {
                 exit("ResidencyTrackList not found: CP");
             }
@@ -2589,7 +2620,8 @@ class AdminController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
 
         //should be 8:
 
@@ -2641,7 +2673,8 @@ class AdminController extends OrderAbstractController
         //echo "role=".$role."<br>";
         //DERMATOPATHOLOGY: ?
         if( strpos((string)$role,$VacReqGroupStr) !== false ) {
-            $groupObject = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $groupObject = $em->getRepository(Institution::class)->findNodeByNameAndRoot($root->getId(),$instName);
             if( !$groupObject ) {
                 echo "vacreqRoleSetSingleUserInstitution: ".$root." (ID ".$root->getId()."): no child found with name=".$instName."<br>";
                 exit();
@@ -2700,7 +2733,8 @@ class AdminController extends OrderAbstractController
 
         $entity = $entities[0];
 
-        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
         if( !$nyp ) {
             exit('No Institution: "NYP"');
         }
@@ -2708,7 +2742,8 @@ class AdminController extends OrderAbstractController
         $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
 
         if( !$autoAssignInstitution ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
             }
@@ -2718,7 +2753,8 @@ class AdminController extends OrderAbstractController
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $autoAssignInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -2750,9 +2786,11 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setInstitution($autoAssignInstitution);
 
         //primaryPublicUserIdType (WCM CWID)
-        $primaryPublicUserIdType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByName("Active Directory (LDAP)");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $primaryPublicUserIdType = $em->getRepository(UsernameType::class)->findOneByName("Active Directory (LDAP)");
         if( !$primaryPublicUserIdType ) {
-            $primaryPublicUserIdTypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $primaryPublicUserIdTypes = $em->getRepository(UsernameType::class)->findAll();
             if( count($primaryPublicUserIdTypes) > 0 ) {
                 $primaryPublicUserIdType = $primaryPublicUserIdTypes[0];
             }
@@ -2803,23 +2841,27 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->addPermittedInstitutionalPHIScope($autoAssignInstitution);
 
         //employmentType
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Full Time");
         if( !$employmentType ) {
             exit('No object EmploymentType: "Full Time"');
         }
         $pathDefaultGroup->setEmploymentType($employmentType);
 
         //locale: en_US - English (United States)
-        $locale = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findOneByName("en_US");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocaleList'] by [LocaleList::class]
+        $locale = $em->getRepository(LocaleList::class)->findOneByName("en_US");
         if( !$locale ) {
             exit('No object LocaleList: "en_US"');
         }
         $pathDefaultGroup->setLocale($locale);
 
         //languages
-        $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("American English");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LanguageList'] by [LanguageList::class]
+        $language = $em->getRepository(LanguageList::class)->findOneByName("American English");
         if( !$language ) {
-            $language = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findOneByName("English");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LanguageList'] by [LanguageList::class]
+            $language = $em->getRepository(LanguageList::class)->findOneByName("English");
         }
         if( !$language ) {
             exit('No object LanguageList: "American English or English"');
@@ -2836,7 +2878,8 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setMedicalTitleInstitution($autoAssignInstitution);
 
         //locationTypes
-        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $locationType = $em->getRepository(LocationTypeList::class)->findOneByName("Employee Office");
         if( !$locationType ) {
             exit('No object LocationTypeList: "Employee Office"');
         }
@@ -2846,14 +2889,16 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setLocationInstitution($autoAssignInstitution);
 
         //city
-        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+        $city = $em->getRepository(CityList::class)->findOneByName("New York");
         if( !$city ) {
             exit('No object CityList: "New York"');
         }
         $pathDefaultGroup->setCity($city);
 
         //state
-        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+        $state = $em->getRepository(States::class)->findOneByName("New York");
         if( !$state ) {
             exit('No object States: "New York"');
         }
@@ -2863,7 +2908,8 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setZip("10065");
 
         //country
-        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+        $country = $em->getRepository(Countries::class)->findOneByName("United States");
         if( !$country ) {
             exit('No object Countries: "United States"');
         }
@@ -3013,7 +3059,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+            $entity = $em->getRepository(InstitutionType::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -3035,7 +3082,8 @@ class AdminController extends OrderAbstractController
     public function generateOrganizationalGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $entities = $em->getRepository(OrganizationalGroupType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -3078,7 +3126,8 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:Institution')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $entities = $em->getRepository(Institution::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -3291,18 +3340,24 @@ class AdminController extends OrderAbstractController
         );
 
 
-        $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+        $medicalType = $em->getRepository(InstitutionType::class)->findOneByName('Medical');
 
-        $levelInstitution = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Institution');
-        $levelDepartment = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Department');
-        $levelDivision = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Division');
-        $levelService = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName('Service');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $levelInstitution = $em->getRepository(OrganizationalGroupType::class)->findOneByName('Institution');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $levelDepartment = $em->getRepository(OrganizationalGroupType::class)->findOneByName('Department');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $levelDivision = $em->getRepository(OrganizationalGroupType::class)->findOneByName('Division');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $levelService = $em->getRepository(OrganizationalGroupType::class)->findOneByName('Service');
 
         $treeCount = 10;
 
         foreach( $institutions as $institutionname=>$infos ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($institutionname) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            if( $em->getRepository(Institution::class)->findOneByName($institutionname) ) {
                 continue;
             }
 
@@ -3322,7 +3377,8 @@ class AdminController extends OrderAbstractController
                         $departmentname = $infos['departments'][$departmentname];
                     }
 
-                    if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($departmentname) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    if( $em->getRepository(Institution::class)->findOneByName($departmentname) ) {
                         continue;
                     }
 
@@ -3348,7 +3404,8 @@ class AdminController extends OrderAbstractController
                                 $divisionname = $divisions[$divisionname];
                             }
 
-                            if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($divisionname) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            if( $em->getRepository(Institution::class)->findOneByName($divisionname) ) {
                                 continue;
                             }
 
@@ -3366,7 +3423,8 @@ class AdminController extends OrderAbstractController
                                         $servicename = $services[$servicename];
                                     }
 
-                                    if( $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($servicename) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                                    if( $em->getRepository(Institution::class)->findOneByName($servicename) ) {
                                         continue;
                                     }
 
@@ -3405,12 +3463,14 @@ class AdminController extends OrderAbstractController
 
         //All Institutions
         //echo 'All Institutions <br>';
-        $allInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Institutions");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $allInst = $em->getRepository(Institution::class)->findOneByAbbreviation("All Institutions");
         if( !$allInst ) {
             $allInst = new Institution();
             $this->setDefaultList($allInst,1,$username,"All Institutions");
             $allInst->setAbbreviation("All Institutions");
-            $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+            $medicalType = $em->getRepository(InstitutionType::class)->findOneByName('Medical');
             $allInst->addType($medicalType);
             //$allInst->setOrganizationalGroupType($levelInstitution);
 
@@ -3421,9 +3481,11 @@ class AdminController extends OrderAbstractController
         }
 
         //All Collaborations
-        $collaborationType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Collaboration');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+        $collaborationType = $em->getRepository(InstitutionType::class)->findOneByName('Collaboration');
         //echo 'All Collaborations <br>';
-        $allCollaborationInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("All Collaborations");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $allCollaborationInst = $em->getRepository(Institution::class)->findOneByAbbreviation("All Collaborations");
         if( !$allCollaborationInst ) {
             $allCollaborationInst = new Institution();
             $this->setDefaultList($allCollaborationInst,2,$username,"All Collaborations");
@@ -3437,7 +3499,8 @@ class AdminController extends OrderAbstractController
         }
 
         //add 'WCM-NYP Collaboration'
-        $wcmcnypCollaborationInst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName('WCM-NYP Collaboration');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmcnypCollaborationInst = $em->getRepository(Institution::class)->findOneByName('WCM-NYP Collaboration');
         if( !$wcmcnypCollaborationInst ) {
             $wcmcnypCollaborationInst = new Institution();
             $this->setDefaultList($wcmcnypCollaborationInst,3,$username,"WCM-NYP Collaboration");
@@ -3445,13 +3508,16 @@ class AdminController extends OrderAbstractController
 
             $wcmcnypCollaborationInst->addType($collaborationType);
 
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             $wcmcnypCollaborationInst->addCollaborationInstitution($wcmc);
 
-            $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
             $wcmcnypCollaborationInst->addCollaborationInstitution($nyp);
 
-            $unionCollaborationType = $em->getRepository('AppUserdirectoryBundle:CollaborationTypeList')->findOneByName("Union");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CollaborationTypeList'] by [CollaborationTypeList::class]
+            $unionCollaborationType = $em->getRepository(CollaborationTypeList::class)->findOneByName("Union");
             $wcmcnypCollaborationInst->setCollaborationType($unionCollaborationType);
 
             $allCollaborationInst->addChild($wcmcnypCollaborationInst);
@@ -3502,7 +3568,8 @@ class AdminController extends OrderAbstractController
     public function generateStates() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:States')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+        $entities = $em->getRepository(States::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -3697,7 +3764,8 @@ class AdminController extends OrderAbstractController
 
             //country
             //echo "country=".$country."<br>";
-            $countryDb = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName($country);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            $countryDb = $em->getRepository(Countries::class)->findOneByName($country);
 
             if( !$countryDb ) {
                 //echo "add country=".$country."<br>";
@@ -3715,7 +3783,8 @@ class AdminController extends OrderAbstractController
 
             //city
             //echo "city=".$city."<br>";
-            $cityDb = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName($city);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+            $cityDb = $em->getRepository(CityList::class)->findOneByName($city);
 
             if( !$cityDb ) {
                 //echo "add city=".$city."<br>";
@@ -3754,7 +3823,8 @@ class AdminController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:LanguageList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LanguageList'] by [LanguageList::class]
+        $entities = $em->getRepository(LanguageList::class)->findAll();
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateLanguages. LanguageList already generated. count=".count($entities));
             return -1;
@@ -3830,7 +3900,8 @@ class AdminController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:LocaleList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocaleList'] by [LocaleList::class]
+        $entities = $em->getRepository(LocaleList::class)->findAll();
         if( count($entities) > 0 ) {
             $logger->notice("Exit generateLocales. LocaleList already generated. count=".count($entities));
             return -1;
@@ -3885,7 +3956,8 @@ class AdminController extends OrderAbstractController
     public function generateBoardSpecialties() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:BoardCertifiedSpecialties')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BoardCertifiedSpecialties'] by [BoardCertifiedSpecialties::class]
+        $entities = $em->getRepository(BoardCertifiedSpecialties::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -3961,7 +4033,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+            if( $em->getRepository(SourceSystemList::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -3993,7 +4066,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:ViewModeList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ViewModeList'] by [ViewModeList::class]
+            if( $em->getRepository(ViewModeList::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4062,7 +4136,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:DocumentTypeList'] by [DocumentTypeList::class]
+            if( $em->getRepository(DocumentTypeList::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4084,7 +4159,8 @@ class AdminController extends OrderAbstractController
     public function generateLinkTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $entities = $em->getRepository(LinkTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4138,7 +4214,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+            if( $em->getRepository(EmploymentType::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4160,7 +4237,8 @@ class AdminController extends OrderAbstractController
     public function generateTerminationTypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:EmploymentTerminationType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentTerminationType'] by [EmploymentTerminationType::class]
+        $entities = $em->getRepository(EmploymentTerminationType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4254,7 +4332,8 @@ class AdminController extends OrderAbstractController
 
         $count = 10;
         foreach( $elements as $value ) {
-            if( $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            if( $em->getRepository(EventTypeList::class)->findOneByName($value) ) {
                 continue;
             }
             //echo 'AppUserdirectoryBundle:EventTypeList' . " name=" . $value . "<br>";
@@ -4296,7 +4375,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:IdentifierTypeList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
+            if( $em->getRepository(IdentifierTypeList::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4317,7 +4397,8 @@ class AdminController extends OrderAbstractController
 
     public function generateFellowshipTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:FellowshipTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipTypeList'] by [FellowshipTypeList::class]
+        $entities = $em->getRepository(FellowshipTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4391,7 +4472,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $value=>$duration ) {
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($value);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $entity = $em->getRepository(ResidencyTrackList::class)->findOneByName($value);
             if( $entity ) {
 
                 //update $entity->setDuration($duration);
@@ -4438,7 +4520,8 @@ class AdminController extends OrderAbstractController
 
             $value = trim((string)$value);
 
-            if( $em->getRepository('AppUserdirectoryBundle:MedicalTitleList')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:MedicalTitleList'] by [MedicalTitleList::class]
+            if( $em->getRepository(MedicalTitleList::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4490,7 +4573,8 @@ class AdminController extends OrderAbstractController
 
             $value = trim((string)$value);
 
-            if( $em->getRepository('AppUserdirectoryBundle:MedicalSpecialties')->findOneByName($value) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:MedicalSpecialties'] by [MedicalSpecialties::class]
+            if( $em->getRepository(MedicalSpecialties::class)->findOneByName($value) ) {
                 continue;
             }
 
@@ -4509,7 +4593,8 @@ class AdminController extends OrderAbstractController
 
     public function generateLocationTypeList() {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $entities = $em->getRepository(LocationTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4593,7 +4678,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $type ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:EquipmentType')->findOneByName($type) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EquipmentType'] by [EquipmentType::class]
+            if( $em->getRepository(EquipmentType::class)->findOneByName($type) ) {
                 continue;
             }
 
@@ -4639,11 +4725,13 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $device => $keytype ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:Equipment')->findOneByName($device) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Equipment'] by [Equipment::class]
+            if( $em->getRepository(Equipment::class)->findOneByName($device) ) {
                 continue;
             }
 
-            $keytype = $em->getRepository('AppUserdirectoryBundle:EquipmentType')->findOneByName($keytype);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EquipmentType'] by [EquipmentType::class]
+            $keytype = $em->getRepository(EquipmentType::class)->findOneByName($keytype);
 
             if( !$keytype ) {
                 //continue;
@@ -4671,7 +4759,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+        $entities = $em->getRepository(LocationPrivacyList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4706,7 +4795,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+        $entities = $em->getRepository(ResearchLab::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4754,7 +4844,8 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $researchLabOrgGroup = $em->getRepository('AppUserdirectoryBundle:OrganizationalGroupType')->findOneByName("Research Lab");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:OrganizationalGroupType'] by [OrganizationalGroupType::class]
+        $researchLabOrgGroup = $em->getRepository(OrganizationalGroupType::class)->findOneByName("Research Lab");
         if( !$researchLabOrgGroup ) {
             exit('No OrganizationalGroupType: "Research Lab"');
         }
@@ -4770,18 +4861,21 @@ class AdminController extends OrderAbstractController
         $pathology = $userSecUtil->getAutoAssignInstitution();
 
         if( !$pathology ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('generateResLabs: No Institution: "WCM"');
             }
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
             );
         }
 
-        $medicalType = $em->getRepository('AppUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:InstitutionType'] by [InstitutionType::class]
+        $medicalType = $em->getRepository(InstitutionType::class)->findOneByName('Medical');
 
         $labs = array(
             "Prostate Cancer Research Group" => "Laboratory of Prostate Cancer Research Group",
@@ -4829,7 +4923,8 @@ class AdminController extends OrderAbstractController
         foreach( $labs as $labName => $pageName ) {
 
             //1) create a new Research Institution with "Research Lab" OrganizationalGroupType under "WCM-Pathology"
-            $researchInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $researchInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 $labName,
                 $pathology,
                 $mapper
@@ -4837,7 +4932,8 @@ class AdminController extends OrderAbstractController
             if( $researchInstitution ) {
                 continue;
             }
-            $researchInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $researchInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 $pageName,
                 $pathology,
                 $mapper
@@ -4860,7 +4956,8 @@ class AdminController extends OrderAbstractController
 
 
             //2) create Research Lab object
-            $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($labName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $researchLab = $em->getRepository(ResearchLab::class)->findOneByName($labName);
             if( $researchLab ) {
                 if( !$researchLab->getInstitution() ) {
                     $researchLab->setInstitution($researchInstitution);
@@ -4869,7 +4966,8 @@ class AdminController extends OrderAbstractController
                 }
                 continue;
             }
-            $researchLab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findOneByName($pageName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $researchLab = $em->getRepository(ResearchLab::class)->findOneByName($pageName);
             if( $researchLab ) {
                 if( !$researchLab->getInstitution() ) {
                     $researchLab->setInstitution($researchInstitution);
@@ -4903,7 +5001,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+        $entities = $em->getRepository(BuildingList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -4943,9 +5042,12 @@ class AdminController extends OrderAbstractController
             array('name'=>"Greenberg Pavilion",'street1'=>'525 East 68th Street','abbr'=>null,'inst'=>'NYP'),
         );
 
-        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
-        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
-        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+        $city = $em->getRepository(CityList::class)->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+        $state = $em->getRepository(States::class)->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+        $country = $em->getRepository(Countries::class)->findOneByName("United States");
         if( !$country ) {
             //exit('ERROR: country null');
             $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
@@ -4963,7 +5065,8 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            if( $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName($name) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+            if( $em->getRepository(BuildingList::class)->findOneByName($name) ) {
                 continue;
             }
 
@@ -4984,7 +5087,8 @@ class AdminController extends OrderAbstractController
             $listEntity->setAbbreviation($buildingAbbr);
 
             $instAbbr = $building['inst'];
-            $inst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $inst = $em->getRepository(Institution::class)->findOneByAbbreviation($instAbbr);
             if( $inst ) {
                 $listEntity->addInstitution($inst);
             }
@@ -5017,12 +5121,18 @@ class AdminController extends OrderAbstractController
             "Surgical Pathology Filing Room" => array('street1'=>'520 East 70th Street','phone'=>'222-0059','room'=>'ST-1012','inst'=>'NYP'),
         );
 
-        $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName("New York");
-        $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName("New York");
-        $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName("United States");
-        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Filing Room");
-        $locationPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
-        $building = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName("Starr Pavilion");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+        $city = $em->getRepository(CityList::class)->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+        $state = $em->getRepository(States::class)->findOneByName("New York");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+        $country = $em->getRepository(Countries::class)->findOneByName("United States");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $locationType = $em->getRepository(LocationTypeList::class)->findOneByName("Filing Room");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+        $locationPrivacy = $em->getRepository(LocationPrivacyList::class)->findOneByName("Anyone can see this contact information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+        $building = $em->getRepository(BuildingList::class)->findOneByName("Starr Pavilion");
 
         if( !$country ) {
             $errorMsg = 'Failed to create Building List. Country is not found by name=' . 'United States.'.
@@ -5034,7 +5144,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $locations as $location => $attr ) {
 
-            if( $em->getRepository('AppUserdirectoryBundle:Location')->findOneByName($location) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            if( $em->getRepository(Location::class)->findOneByName($location) ) {
                 continue;
             }
 
@@ -5047,7 +5158,8 @@ class AdminController extends OrderAbstractController
             $room = $attr['room'];
             $instAbbr = $attr['inst'];
 
-            $inst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($instAbbr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $inst = $em->getRepository(Institution::class)->findOneByAbbreviation($instAbbr);
             if( $inst ) {
                 $listEntity->setInstitution($inst);
             }
@@ -5097,7 +5209,8 @@ class AdminController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $locationPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+        $locationPrivacy = $em->getRepository(LocationPrivacyList::class)->findOneByName("Anyone can see this contact information");
         if( !$locationPrivacy ) {
             exit("Location privacy is not found by name "."'Anyone can see this contact information'");
         }
@@ -5145,7 +5258,8 @@ class AdminController extends OrderAbstractController
                 exit("Location name is empty");
             }
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:Location')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            $listEntity = $em->getRepository(Location::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -5157,7 +5271,8 @@ class AdminController extends OrderAbstractController
             $listEntity->setPrivacy($locationPrivacy);
 
             if( $locationTypeName ) {
-                $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName($locationTypeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+                $locationType = $em->getRepository(LocationTypeList::class)->findOneByName($locationTypeName);
                 if (!$locationType) {
                     exit("No location found by name " . $locationTypeName);
                 }
@@ -5169,7 +5284,8 @@ class AdminController extends OrderAbstractController
             }
 
             if( $locationRoom ) {
-                $room = $em->getRepository('AppUserdirectoryBundle:RoomList')->findOneByName($locationRoom);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoomList'] by [RoomList::class]
+                $room = $em->getRepository(RoomList::class)->findOneByName($locationRoom);
                 if (!$room) {
                     exit("No room found by name " . $locationRoom);
                 }
@@ -5177,7 +5293,8 @@ class AdminController extends OrderAbstractController
             }
 
             if( $locationSuite ) {
-                $suite = $em->getRepository('AppUserdirectoryBundle:SuiteList')->findOneByName($locationSuite);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SuiteList'] by [SuiteList::class]
+                $suite = $em->getRepository(SuiteList::class)->findOneByName($locationSuite);
                 if (!$suite) {
                     exit("No suite found by name " . $locationSuite);
                 }
@@ -5185,7 +5302,8 @@ class AdminController extends OrderAbstractController
             }
 
             if( $locationFloor ) {
-                $floor = $em->getRepository('AppUserdirectoryBundle:FloorList')->findOneByName($locationFloor);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FloorList'] by [FloorList::class]
+                $floor = $em->getRepository(FloorList::class)->findOneByName($locationFloor);
                 if( !$floor ) {
                     //exit("No floor found by name " . $locationFloor);
                     $floor = $userSecUtil->getObjectByNameTransformer($username,$locationFloor,"UserdirectoryBundle","FloorList");
@@ -5208,7 +5326,8 @@ class AdminController extends OrderAbstractController
                 if( $locationBuildingName == "Greenberg Pavillion" ) {
                     $locationBuildingName = "Greenberg Pavilion";
                 }
-                $building = $em->getRepository('AppUserdirectoryBundle:BuildingList')->findOneByName($locationBuildingName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BuildingList'] by [BuildingList::class]
+                $building = $em->getRepository(BuildingList::class)->findOneByName($locationBuildingName);
                 if (!$building) {
                     continue;
                     exit("No building type found by name " . $locationBuildingName);
@@ -5359,7 +5478,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:CompletionReasonList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CompletionReasonList'] by [CompletionReasonList::class]
+        $entities = $em->getRepository(CompletionReasonList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5390,7 +5510,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:TrainingDegreeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingDegreeList'] by [TrainingDegreeList::class]
+        $entities = $em->getRepository(TrainingDegreeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5415,7 +5536,8 @@ class AdminController extends OrderAbstractController
 
             //set "MBBS" and "DO" to be synonyms of "MD" in the List Manager for Degrees
             if( $type == "DO" || $type == "MBBS" ) {
-                $mdOriginal = $em->getRepository('AppUserdirectoryBundle:TrainingDegreeList')->findOneByName("MD");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingDegreeList'] by [TrainingDegreeList::class]
+                $mdOriginal = $em->getRepository(TrainingDegreeList::class)->findOneByName("MD");
                 $listEntity->setOriginal($mdOriginal);
             }
 
@@ -5432,7 +5554,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
         }
@@ -5442,7 +5565,8 @@ class AdminController extends OrderAbstractController
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $pathologyInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathologyInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
@@ -5459,7 +5583,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $residencies as $residency ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residency);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+            $listEntity = $em->getRepository(ResidencySpecialty::class)->findOneByName($residency);
             if( $listEntity ) {
                 if( !$listEntity->getInstitution() ) {
                     $listEntity->setInstitution($pathologyInstitution);
@@ -5488,7 +5613,8 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+        $entities = $em->getRepository(ResidencySpecialty::class)->findAll();
         if( count($entities) > 0 ) {
             return -1;
         }
@@ -5539,7 +5665,8 @@ class AdminController extends OrderAbstractController
                 $residencySpecialty = trim((string)$residencySpecialty);
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
-                $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+                $residencySpecialtyEntity = $em->getRepository(ResidencySpecialty::class)->findOneByName($residencySpecialty."");
 
                 //if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
                 //    continue;
@@ -5566,7 +5693,8 @@ class AdminController extends OrderAbstractController
 
                 $fellowshipSubspecialty = trim((string)$fellowshipSubspecialty);
                 //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
-                $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+                $fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
 
                 //if( $fellowshipSubspecialtyEntity ) {
                 //    continue;
@@ -5617,7 +5745,8 @@ class AdminController extends OrderAbstractController
         //$residencySpecialty = "AP/CP";
         $order = 0;
         $newResidencySpecialtyEntity = false;
-        $residencySpecialtyEntity = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+        $residencySpecialtyEntity = $em->getRepository(ResidencySpecialty::class)->findOneByName($residencySpecialty."");
         if( !$residencySpecialtyEntity ) {
             $residencySpecialtyEntity = new ResidencySpecialty();
             $this->setDefaultList($residencySpecialtyEntity,$order,$username,$residencySpecialty);
@@ -5630,7 +5759,8 @@ class AdminController extends OrderAbstractController
         $fellowshipSubspecialty = "Clinical Informatics";
         $order = 0;
         $newFellowshipSubspecialtyEntity = false;
-        $fellowshipSubspecialtyEntity = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialty."");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
         if( !$fellowshipSubspecialtyEntity ) {
             $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
             $this->setDefaultList($fellowshipSubspecialtyEntity,$order,$username,$fellowshipSubspecialty);
@@ -5653,7 +5783,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:HonorTrainingList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HonorTrainingList'] by [HonorTrainingList::class]
+        $entities = $em->getRepository(HonorTrainingList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5684,7 +5815,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:FellowshipTitleList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipTitleList'] by [FellowshipTitleList::class]
+        $entities = $em->getRepository(FellowshipTitleList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5734,7 +5866,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SourceOrganization')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceOrganization'] by [SourceOrganization::class]
+        $entities = $em->getRepository(SourceOrganization::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5767,7 +5900,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:ImportanceList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ImportanceList'] by [ImportanceList::class]
+        $entities = $em->getRepository(ImportanceList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5803,7 +5937,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:AuthorshipRoles')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AuthorshipRoles'] by [AuthorshipRoles::class]
+        $entities = $em->getRepository(AuthorshipRoles::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5888,7 +6023,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SexList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+        $entities = $em->getRepository(SexList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5923,7 +6059,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:PositionTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTypeList'] by [PositionTypeList::class]
+        $entities = $em->getRepository(PositionTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -5970,7 +6107,8 @@ class AdminController extends OrderAbstractController
     public function generateCommentGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:CommentGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CommentGroupType'] by [CommentGroupType::class]
+        $entities = $em->getRepository(CommentGroupType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6005,7 +6143,8 @@ class AdminController extends OrderAbstractController
     public function generateSpotPurpose() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:SpotPurpose')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SpotPurpose'] by [SpotPurpose::class]
+        $entities = $em->getRepository(SpotPurpose::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6043,7 +6182,8 @@ class AdminController extends OrderAbstractController
     public function generateMedicalLicenseStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:MedicalLicenseStatus')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:MedicalLicenseStatus'] by [MedicalLicenseStatus::class]
+        $entities = $em->getRepository(MedicalLicenseStatus::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6077,7 +6217,8 @@ class AdminController extends OrderAbstractController
     public function generateCertifyingBoardOrganization() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:CertifyingBoardOrganization')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CertifyingBoardOrganization'] by [CertifyingBoardOrganization::class]
+        $entities = $em->getRepository(CertifyingBoardOrganization::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6130,7 +6271,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $entity = $em->getRepository(TrainingTypeList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -6173,7 +6315,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PositionTrackTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PositionTrackTypeList'] by [PositionTrackTypeList::class]
+            $listEntity = $em->getRepository(PositionTrackTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6223,7 +6366,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name=>$action ) {
 
-            $listEntity = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+            $listEntity = $em->getRepository(FellAppStatus::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6246,7 +6390,8 @@ class AdminController extends OrderAbstractController
     public function generateFellAppRank() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppFellAppBundle:FellAppRank')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppRank'] by [FellAppRank::class]
+        $entities = $em->getRepository(FellAppRank::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6283,7 +6428,8 @@ class AdminController extends OrderAbstractController
     public function generateFellAppVisaStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppFellAppBundle:VisaStatus')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:VisaStatus'] by [VisaStatus::class]
+        $entities = $em->getRepository(App\FellAppBundle\Entity\VisaStatus::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6303,7 +6449,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = new VisaStatus();
+            $entity = new App\FellAppBundle\Entity\VisaStatus();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);
@@ -6320,7 +6466,8 @@ class AdminController extends OrderAbstractController
     public function generateLanguageProficiency() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppFellAppBundle:LanguageProficiency')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
+        $entities = $em->getRepository(\App\FellAppBundle\Entity\LanguageProficiency::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6338,7 +6485,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = new LanguageProficiency();
+            $entity = new \App\FellAppBundle\Entity\LanguageProficiency();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);
@@ -6378,7 +6525,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name=>$action ) {
 
-            $listEntity = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $listEntity = $em->getRepository(ResAppStatus::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6401,7 +6549,8 @@ class AdminController extends OrderAbstractController
     public function generateResAppRank() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppResAppBundle:ResAppRank')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppRank'] by [ResAppRank::class]
+        $entities = $em->getRepository(ResAppRank::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6438,7 +6587,8 @@ class AdminController extends OrderAbstractController
     public function generateResAppVisaStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppResAppBundle:VisaStatus')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:VisaStatus'] by [VisaStatus::class]
+        $entities = $em->getRepository(App\ResAppBundle\Entity\VisaStatus::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6491,7 +6641,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $listEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:PostSophList'] by [PostSophList::class]
+            $listEntity = $em->getRepository(PostSophList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6513,7 +6664,8 @@ class AdminController extends OrderAbstractController
     public function generateResAppLanguageProficiency() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppResAppBundle:LanguageProficiency')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
+        $entities = $em->getRepository(\App\ResAppBundle\Entity\LanguageProficiency::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6548,7 +6700,8 @@ class AdminController extends OrderAbstractController
     public function generateResAppFitForProgram() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppResAppBundle:ResAppFitForProgram')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppFitForProgram'] by [ResAppFitForProgram::class]
+        $entities = $em->getRepository(ResAppFitForProgram::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -6596,7 +6749,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppResAppBundle:ApplyingResidencyTrack')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ApplyingResidencyTrack'] by [ApplyingResidencyTrack::class]
+            $entity = $em->getRepository(ApplyingResidencyTrack::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -6646,7 +6800,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppResAppBundle:LearnAreaList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:LearnAreaList'] by [LearnAreaList::class]
+            $entity = $em->getRepository(LearnAreaList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -6675,7 +6830,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppResAppBundle:SpecificIndividualList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:SpecificIndividualList'] by [SpecificIndividualList::class]
+            $entity = $em->getRepository(SpecificIndividualList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -6731,7 +6887,8 @@ class AdminController extends OrderAbstractController
             $noteForCarryOverDays = $type["noteForCarryOverDays"];
             $allowCarryOver = $type["allowCarryOver"];
 
-            $listEntity = $em->getRepository('AppVacReqBundle:VacReqApprovalTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqApprovalTypeList'] by [VacReqApprovalTypeList::class]
+            $listEntity = $em->getRepository(VacReqApprovalTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6769,7 +6926,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name => $abbreviation ) {
 
-            $listEntity = $em->getRepository('AppVacReqBundle:VacReqRequestTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestTypeList'] by [VacReqRequestTypeList::class]
+            $listEntity = $em->getRepository(VacReqRequestTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6801,7 +6959,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppVacReqBundle:VacReqFloatingTextList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTextList'] by [VacReqFloatingTextList::class]
+            $listEntity = $em->getRepository(VacReqFloatingTextList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6830,7 +6989,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppVacReqBundle:VacReqFloatingTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqFloatingTypeList'] by [VacReqFloatingTypeList::class]
+            $listEntity = $em->getRepository(VacReqFloatingTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6887,7 +7047,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderSpecialtiesList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HealthcareProviderSpecialtiesList'] by [HealthcareProviderSpecialtiesList::class]
+            $listEntity = $em->getRepository(HealthcareProviderSpecialtiesList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6918,7 +7079,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:HealthcareProviderCommunicationList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HealthcareProviderCommunicationList'] by [HealthcareProviderCommunicationList::class]
+            $listEntity = $em->getRepository(HealthcareProviderCommunicationList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -6938,7 +7100,8 @@ class AdminController extends OrderAbstractController
     public function generateCollaborationtypes() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppUserdirectoryBundle:CollaborationTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CollaborationTypeList'] by [CollaborationTypeList::class]
+        $entities = $em->getRepository(CollaborationTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -7054,7 +7217,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $type ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionList')->findOneByName($type);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionList'] by [PermissionList::class]
+            $listEntity = $em->getRepository(PermissionList::class)->findOneByName($type);
             if( $listEntity ) {
                 continue;
             }
@@ -7123,7 +7287,8 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionObjectList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
+            $listEntity = $em->getRepository(PermissionObjectList::class)->findOneByName($name);
             if( $listEntity ) {
 
                 $abbreviation = $abbreviationSiteArr[0];
@@ -7202,7 +7367,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $type ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PermissionActionList')->findOneByName($type);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionActionList'] by [PermissionActionList::class]
+            $listEntity = $em->getRepository(PermissionActionList::class)->findOneByName($type);
             if( $listEntity ) {
                 continue;
             }
@@ -7412,7 +7578,8 @@ class AdminController extends OrderAbstractController
 
             //echo "name=".$name."<br>";
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:ObjectTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeList'] by [ObjectTypeList::class]
+            $listEntity = $em->getRepository(ObjectTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 $updated = false;
                 if( !$listEntity->getReceivedValueEntityNamespace() && $receivedValueEntityNamespace ) {
@@ -7490,7 +7657,8 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->getDoctrine()->getRepository(Logger::class);
         $query = $repository->createQueryBuilder('logger')
             ->select('logger.entityName')
             ->distinct()
@@ -7550,7 +7718,8 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->getDoctrine()->getRepository(Logger::class);
         $query = $repository->createQueryBuilder('logger')
             ->select('logger.entityName')
             ->distinct()
@@ -7983,14 +8152,16 @@ class AdminController extends OrderAbstractController
 //                continue;
 //            }
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($listRootName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+            $listEntity = $em->getRepository(PlatformListManagerRootList::class)->findOneByListRootName($listRootName);
             if( $listEntity ) {
                 //exit('exists listRootName='.$listRootName);
                 continue;
             }
 
             //We can have two identical class names (i.e. VisaStatus in FellApp and ResApp bundles)
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+            $listEntity = $em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
             if( $listEntity ) {
                 //exit('exists listName='.$listName);
                 $listEntityNamespace = $listEntity->getEntityNamespace();
@@ -8110,7 +8281,8 @@ class AdminController extends OrderAbstractController
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( !$wcmc ) {
                 exit('setInstitutionEmploymentPeriodAction: No Institution: "WCM"');
             }
@@ -8119,7 +8291,8 @@ class AdminController extends OrderAbstractController
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -8130,7 +8303,8 @@ class AdminController extends OrderAbstractController
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
 
-        $query = $em->createQuery('UPDATE AppUserdirectoryBundle:EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
+        //$query = $em->createQuery('UPDATE AppUserdirectoryBundle:EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
+        $query = $em->createQuery('UPDATE App\\UserdirectoryBundle\\Entity\\EmploymentStatus p SET p.institution = '.$pathology->getId().' WHERE p.institution IS NULL');
         $numUpdated = $query->execute();
 
         exit("set-institution-employment-period; numUpdated=".$numUpdated);
@@ -8152,7 +8326,8 @@ class AdminController extends OrderAbstractController
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if (!$wcmc) {
                 exit('setDefaultOrgGroupAction: No Institution: "WCM"');
             }
@@ -8161,7 +8336,8 @@ class AdminController extends OrderAbstractController
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -8242,7 +8418,8 @@ class AdminController extends OrderAbstractController
 
         //$logger = $em->getRepository('AppUserdirectoryBundle:Logger')->find(7789);
         //$loggers = array($logger);
-        $loggers = $em->getRepository('AppUserdirectoryBundle:Logger')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $loggers = $em->getRepository(Logger::class)->findAll();
 
         //map sitename to object
         $siteMap = array(
@@ -8357,22 +8534,23 @@ class AdminController extends OrderAbstractController
         $count = 0;
 
         //User Created -> New user record added
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"User Created","New user record added");
+        //$count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"User Created","New user record added");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"User Created","New user record added");
 
         //User Updated -> User record updated
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"User Updated","User record updated");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"User Updated","User record updated");
 
         //Populate of Fellowship Applications -> Import of Fellowship Application data to DB
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"Populate of Fellowship Applications","Import of Fellowship Application data to DB");
 
         //Import of Fellowship Applications -> Import of Fellowship Applications Spreadsheet
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"Import of Fellowship Applications","Import of Fellowship Applications Spreadsheet");
 
         //Fellowship Application Resend Emails -> Fellowship Application Rating Invitation Emails Resent
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"Fellowship Application Resend Emails","Fellowship Application Rating Invitation Emails Resent");
 
         //Fellowship Applicant Page Viewed -> Fellowship Application Page Viewed
-        $count = $count + $this->singleSyncDb('AppUserdirectoryBundle:EventTypeList',"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
+        $count = $count + $this->singleSyncDb(EventTypeList::class,"Fellowship Applicant Page Viewed","Fellowship Application Page Viewed");
 
         return $count;
     }
@@ -8611,7 +8789,8 @@ class AdminController extends OrderAbstractController
 
         //check
         $em = $this->getDoctrine()->getManager();
-        $researchLabs = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findBy(array(),array('name'=>'asc','id'=>'asc'));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+        $researchLabs = $em->getRepository(ResearchLab::class)->findBy(array(),array('name'=>'asc','id'=>'asc'));
         //echo "researchLab count=".count($researchLabs)."<br>";
 
         $count = 0;
@@ -8834,7 +9013,8 @@ class AdminController extends OrderAbstractController
         $primaryPublicUserId = 'administrator';
         //$primaryPublicUserId = 'Administrator1';
 
-        $localUserType = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findOneByAbbreviation('local-user');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $localUserType = $em->getRepository(UsernameType::class)->findOneByAbbreviation('local-user');
 
         $administrators = $em->getRepository(User::class)->findBy(
             array(
@@ -8906,7 +9086,8 @@ class AdminController extends OrderAbstractController
             if( $administrator->getPerSiteSettings() ) {
                 $phis =  $administrator->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 if( count($phis) == 0 ) {
-                    $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
                     if( $wcmc ) {
                         $administrator->getPerSiteSettings()->addPermittedInstitutionalPHIScope($wcmc);
                         $flush = true;
@@ -9330,7 +9511,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:BloodProductTransfusedList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BloodProductTransfusedList'] by [BloodProductTransfusedList::class]
+            $listEntity = $em->getRepository(BloodProductTransfusedList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9362,7 +9544,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:ClericalErrorList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ClericalErrorList'] by [ClericalErrorList::class]
+            $listEntity = $em->getRepository(ClericalErrorList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9385,7 +9568,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:LabResultNameList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LabResultNameList'] by [LabResultNameList::class]
+        $entities = $em->getRepository(LabResultNameList::class)->findAll();
         if( count($entities) > 3 ) {
             //return -1;
         }
@@ -9430,7 +9614,8 @@ class AdminController extends OrderAbstractController
             //echo "name=$name, shortname=$shortname, abbreviation=$abbreviation <br>";
             //exit('1');
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultNameList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LabResultNameList'] by [LabResultNameList::class]
+            $listEntity = $em->getRepository(LabResultNameList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9473,7 +9658,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LabResultUnitsMeasureList'] by [LabResultUnitsMeasureList::class]
+        $entities = $em->getRepository(LabResultUnitsMeasureList::class)->findAll();
         if( count($entities) > 3 ) {
             return -1;
         }
@@ -9515,7 +9701,8 @@ class AdminController extends OrderAbstractController
 //            print "</pre>";
 //            echo "name=$name, abbreviation=$abbreviation <br>";
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultUnitsMeasureList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LabResultUnitsMeasureList'] by [LabResultUnitsMeasureList::class]
+            $listEntity = $em->getRepository(LabResultUnitsMeasureList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9565,7 +9752,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name=>$abbreviation ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:LabResultFlagList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LabResultFlagList'] by [LabResultFlagList::class]
+            $listEntity = $em->getRepository(LabResultFlagList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9598,7 +9786,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PathologyResultSignatoriesList'] by [PathologyResultSignatoriesList::class]
+            $listEntity = $em->getRepository(PathologyResultSignatoriesList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9639,7 +9828,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionReactionTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionReactionTypeList'] by [TransfusionReactionTypeList::class]
+            $listEntity = $em->getRepository(TransfusionReactionTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9677,7 +9867,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:BloodTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:BloodTypeList'] by [BloodTypeList::class]
+            $listEntity = $em->getRepository(BloodTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9709,7 +9900,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:AdditionalCommunicationList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
+            $listEntity = $em->getRepository(AdditionalCommunicationList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9740,7 +9932,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionAntibodyScreenResultsList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionAntibodyScreenResultsList'] by [TransfusionAntibodyScreenResultsList::class]
+            $listEntity = $em->getRepository(TransfusionAntibodyScreenResultsList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9771,7 +9964,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionDATResultsList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionDATResultsList'] by [TransfusionDATResultsList::class]
+            $listEntity = $em->getRepository(TransfusionDATResultsList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9802,7 +9996,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionCrossmatchResultsList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionCrossmatchResultsList'] by [TransfusionCrossmatchResultsList::class]
+            $listEntity = $em->getRepository(TransfusionCrossmatchResultsList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9833,7 +10028,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionHemolysisCheckResultsList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionHemolysisCheckResultsList'] by [TransfusionHemolysisCheckResultsList::class]
+            $listEntity = $em->getRepository(TransfusionHemolysisCheckResultsList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9866,7 +10062,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:ComplexPlateletSummaryAntibodiesList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ComplexPlateletSummaryAntibodiesList'] by [ComplexPlateletSummaryAntibodiesList::class]
+            $listEntity = $em->getRepository(ComplexPlateletSummaryAntibodiesList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9897,7 +10094,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList'] by [CCIUnitPlateletCountDefaultValueList::class]
+            $listEntity = $em->getRepository(CCIUnitPlateletCountDefaultValueList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9930,7 +10128,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:CCIPlateletTypeTransfusedList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CCIPlateletTypeTransfusedList'] by [CCIPlateletTypeTransfusedList::class]
+            $listEntity = $em->getRepository(CCIPlateletTypeTransfusedList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9963,7 +10162,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PlateletTransfusionProductReceivingList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlateletTransfusionProductReceivingList'] by [PlateletTransfusionProductReceivingList::class]
+            $listEntity = $em->getRepository(PlateletTransfusionProductReceivingList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -9996,7 +10196,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:TransfusionProductStatusList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TransfusionProductStatusList'] by [TransfusionProductStatusList::class]
+            $listEntity = $em->getRepository(TransfusionProductStatusList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10033,7 +10234,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:WeekDaysList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:WeekDaysList'] by [WeekDaysList::class]
+            $listEntity = $em->getRepository(WeekDaysList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10074,7 +10276,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:MonthsList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:MonthsList'] by [MonthsList::class]
+            $listEntity = $em->getRepository(MonthsList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10105,7 +10308,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:LifeFormList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LifeFormList'] by [LifeFormList::class]
+            $listEntity = $em->getRepository(LifeFormList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10154,7 +10358,8 @@ class AdminController extends OrderAbstractController
             $shortname =    $nameArr[2];
             $friendlyname = $nameArr[3];
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            $listEntity = $em->getRepository(SpecialtyList::class)->findOneByName($name);
             if( $listEntity ) {
 
                 if( !$listEntity->getAbbreviation() ) {
@@ -10230,7 +10435,8 @@ class AdminController extends OrderAbstractController
             //echo "name=$name<br>";
             //echo "abbreviation=$abbreviation<br>";
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:WorkQueueList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
+            $listEntity = $em->getRepository(WorkQueueList::class)->findOneByName($name);
             //echo "name=".$listEntity->getName()."; abbreviation=".$listEntity->getAbbreviation()."<br>";
             if( $listEntity ) {
                 continue;
@@ -10275,7 +10481,8 @@ class AdminController extends OrderAbstractController
             //echo "name=$name<br>";
             //echo "abbreviation=$abbreviation<br>";
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:OrderableStatusList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
+            $listEntity = $em->getRepository(OrderableStatusList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10307,7 +10514,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name=>$abbreviation ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:PriceTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
+            $listEntity = $em->getRepository(PriceTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10345,7 +10553,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:ProjectTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:ProjectTypeList'] by [ProjectTypeList::class]
+            $listEntity = $em->getRepository(ProjectTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10375,7 +10584,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
+            $listEntity = $em->getRepository(IrbApprovalTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10406,7 +10616,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:TissueProcessingServiceList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TissueProcessingServiceList'] by [TissueProcessingServiceList::class]
+            $listEntity = $em->getRepository(TissueProcessingServiceList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10441,7 +10652,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollLabList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollLabList'] by [CollLabList::class]
+            $listEntity = $em->getRepository(CollLabList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10475,7 +10687,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name => $urlSlug ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CollDivList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CollDivList'] by [CollDivList::class]
+            $listEntity = $em->getRepository(CollDivList::class)->findOneByName($name);
             if( $listEntity ) {
 
                 //$listEntity->setUrlSlug($urlSlug);
@@ -10512,7 +10725,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:IrbStatusList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbStatusList'] by [IrbStatusList::class]
+            $listEntity = $em->getRepository(IrbStatusList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10544,7 +10758,8 @@ class AdminController extends OrderAbstractController
 
             //exit("name=$name, abbreviation=$abbreviation");
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:RequesterGroupList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
+            $listEntity = $em->getRepository(RequesterGroupList::class)->findOneByName($name);
             if( $listEntity ) {
 
                 //temp
@@ -10591,7 +10806,8 @@ class AdminController extends OrderAbstractController
 
             //exit("name=$name, abbreviation=$abbreviation");
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:CompCategoryList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:CompCategoryList'] by [CompCategoryList::class]
+            $listEntity = $em->getRepository(CompCategoryList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10624,7 +10840,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:OtherRequestedServiceList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OtherRequestedServiceList'] by [OtherRequestedServiceList::class]
+            $listEntity = $em->getRepository(OtherRequestedServiceList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10696,7 +10913,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:BusinessPurposeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:BusinessPurposeList'] by [BusinessPurposeList::class]
+            $listEntity = $em->getRepository(BusinessPurposeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10831,7 +11049,8 @@ class AdminController extends OrderAbstractController
         $count = 20;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+            $listEntity = $em->getRepository(ChartTypeList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -10856,7 +11075,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $listEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+        $listEntity = $em->getRepository(ChartTypeList::class)->findOneByName($name);
         if( $listEntity ) {
             return $listEntity;
         }
@@ -11194,7 +11414,8 @@ class AdminController extends OrderAbstractController
         }
         //echo "adding $level-".$name."<br>";
         //findByChildnameAndParent
-        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent($name, $parentEntity, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $listEntity = $em->getRepository(TopicList::class)->findByChildnameAndParent($name, $parentEntity, $mapper);
         if( $listEntity ) {
             //echo "already exists:".$name."<br>";
         } else {
@@ -11246,7 +11467,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $listEntity = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $listEntity = $em->getRepository(TopicList::class)->findOneByName($name);
         if( $listEntity ) {
             return $listEntity;
         }
@@ -11281,7 +11503,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:FilterList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:FilterList'] by [FilterList::class]
+            $listEntity = $em->getRepository(FilterList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -11315,7 +11538,8 @@ class AdminController extends OrderAbstractController
         //dump($types);
         //exit("exit generateChartsList");
 
-        $listCharts = $em->getRepository('AppDashboardBundle:ChartList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $listCharts = $em->getRepository(ChartList::class)->findAll();
         if( count($listCharts) > 0 ) {
             $newList = false;
         } else {
@@ -11330,11 +11554,13 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $listEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $listEntity = $em->getRepository(ChartList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
-            $listEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($abbreviation);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $listEntity = $em->getRepository(ChartList::class)->findOneByAbbreviation($abbreviation);
             if( $listEntity ) {
                 continue;
             }
@@ -11379,7 +11605,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:DataSourceList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:DataSourceList'] by [DataSourceList::class]
+            $listEntity = $em->getRepository(DataSourceList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -11411,7 +11638,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:UpdateFrequencyList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:UpdateFrequencyList'] by [UpdateFrequencyList::class]
+            $listEntity = $em->getRepository(UpdateFrequencyList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -11440,7 +11668,8 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            $listEntity = $em->getRepository('AppDashboardBundle:VisualizationList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:VisualizationList'] by [VisualizationList::class]
+            $listEntity = $em->getRepository(VisualizationList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -11466,7 +11695,8 @@ class AdminController extends OrderAbstractController
 
 
         //disable all where productId is NULL
-        $query = $em->createQuery("UPDATE AppTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
+        //$query = $em->createQuery("UPDATE AppTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
+        $query = $em->createQuery("UPDATE App\\TranslationalResearchBundle\\Entity\\RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
         $numUpdated = $query->execute();
         //echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
 
@@ -11558,7 +11788,8 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            $listEntity = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($productId);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+            $listEntity = $em->getRepository(RequestCategoryTypeList::class)->findOneByProductId($productId);
             if( $listEntity ) {
                 continue;
             }
@@ -11660,7 +11891,8 @@ class AdminController extends OrderAbstractController
             $name = $user->getUsernameOptimal();
             //echo "<br> $count User: ".$name."<br>";
 
-            $listEntity = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PathologyResultSignatoriesList'] by [PathologyResultSignatoriesList::class]
+            $listEntity = $em->getRepository(PathologyResultSignatoriesList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
@@ -11707,7 +11939,8 @@ class AdminController extends OrderAbstractController
      */
     public function removeFellappMDUsersToPathologyResultSignatoriesList(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $pathologists = $em->getRepository('AppUserdirectoryBundle:PathologyResultSignatoriesList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PathologyResultSignatoriesList'] by [PathologyResultSignatoriesList::class]
+        $pathologists = $em->getRepository(PathologyResultSignatoriesList::class)->findAll();
         $count = 0;
 
         foreach( $pathologists as $pathologist ) {
@@ -11752,7 +11985,8 @@ class AdminController extends OrderAbstractController
 
     public function setFormNodeVersion() {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery("UPDATE AppUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version IS NULL");
+        //$query = $em->createQuery("UPDATE AppUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version IS NULL");
+        $query = $em->createQuery("UPDATE App\\UserdirectoryBundle\\Entity\\FormNode node SET node.version = '1' WHERE node.version IS NULL");
         $numUpdated = $query->execute();
         return "set formnode versions count ".$numUpdated;
     }
@@ -11770,7 +12004,8 @@ class AdminController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->select("patient");
         $dql->leftJoin('patient.lastname','lastname');

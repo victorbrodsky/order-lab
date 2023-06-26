@@ -18,6 +18,9 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
+
 //use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\SiteList;
@@ -133,7 +136,8 @@ class SecurityController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $usernametypes = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $usernametypes = $em->getRepository(UsernameType::class)->findBy(
             array(
                 'type' => array('default', 'user-added'),
                 //'abbreviation' => array('ldap-user','local-user')

@@ -17,6 +17,13 @@
 
 namespace App\UserdirectoryBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\CCIUnitPlateletCountDefaultValueList;
+use App\UserdirectoryBundle\Entity\ObjectTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ObjectTypeList
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -128,7 +135,8 @@ class FormNodeUtil
                     echo "<br>############ formNodeId=" . $formNodeId . ": " . $formValue . " ############<br>";
                 }
                 // do whatever you need to with $formNodeId...
-                $thisFormNode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($formNodeId);
+                //$thisFormNode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($formNodeId);
+                $thisFormNode = $this->em->getRepository(FormNode::class)->find($formNodeId);
                 if( !$thisFormNode ) {
                     //exit("No Root of the node id=".$formNodeId."<br>");
                     continue;
@@ -220,7 +228,8 @@ class FormNodeUtil
                     'arraySectionIndex' => $arraysectioncount,
                     'arraySectionId' => $formNode->getId(),
                 );
-                $sectionFormnode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
+                //$sectionFormnode = $this->em->getRepository("AppUserdirectoryBundle:FormNode")->find($sectionFormnodeId);
+                $sectionFormnode = $this->em->getRepository(FormNode::class)->find($sectionFormnodeId);
                 $this->createFormNodeListRecord($sectionFormnode, $thisThisFormValue, $holderEntity, $testing, $params);
             }
         }
@@ -2039,10 +2048,12 @@ class FormNodeUtil
                 'className' => "FormNode",
                 'bundleName' => "UserdirectoryBundle"
             );
-            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parent,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+            $node = $em->getRepository(FormNode::class)->findByChildnameAndParent($name,$parent,$mapper);
         } else {
             exit("Parent must exist!");
-            $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+            $node = $em->getRepository(FormNode::class)->findOneByName($name);
         }
 
         if( $node ) {
@@ -2184,9 +2195,11 @@ class FormNodeUtil
                     'className' => "FormNode",
                     'bundleName' => "UserdirectoryBundle"
                 );
-                $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent($name,$parentCategory,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+                $node = $em->getRepository(FormNode::class)->findByChildnameAndParent($name,$parentCategory,$mapper);
             } else {
-                $node = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+                $node = $em->getRepository(FormNode::class)->findOneByName($name);
             }
 
             if( !$node ) {
@@ -2252,7 +2265,8 @@ class FormNodeUtil
     }
     public function getObjectTypeByName($objectTypeName) {
         $em = $this->em;
-        $objectType = $em->getRepository('AppUserdirectoryBundle:ObjectTypeList')->findOneByName($objectTypeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeList'] by [ObjectTypeList::class]
+        $objectType = $em->getRepository(ObjectTypeList::class)->findOneByName($objectTypeName);
         if( !$objectType ) {
             throw new \Exception( "ObjectType not found by ".$objectTypeName );
         }
@@ -2265,7 +2279,8 @@ class FormNodeUtil
         $messageCategory = null;
 
         //$messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
-        $messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $messageCategories = $em->getRepository(MessageCategory::class)->findBy(
             array(
                 'type' => array('default','user-added'),
                 'name' => $messageCategoryName
@@ -2709,7 +2724,8 @@ class FormNodeUtil
         $count = 10;
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $em->getRepository(FormNode::class)->findOneByName('Pathology Call Log Book');
         //echo "rootNode=".$parentNode."<br>";
 
         //create Pathology Call Log Book
@@ -2780,7 +2796,8 @@ class FormNodeUtil
             }
 
             if( array_key_exists('sectionParentName', $section) ) {
-                $thisParentForm = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName($section['sectionParentName']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+                $thisParentForm = $this->em->getRepository(FormNode::class)->findOneByName($section['sectionParentName']);
                 if( !$thisParentForm ) {
                     exit('Parent form not found by name='.$section['sectionParentName']);
                 }
@@ -3154,15 +3171,18 @@ class FormNodeUtil
             'bundleName' => "UserdirectoryBundle"
         );
         //CCI (Corrected Count Increment) Calculations
-        $CCISection = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent("CCI (Corrected Count Increment) Calculations",$ComplexplateletsummaryForm,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $CCISection = $this->em->getRepository(FormNode::class)->findByChildnameAndParent("CCI (Corrected Count Increment) Calculations",$ComplexplateletsummaryForm,$mapper);
         if( !$CCISection ) {
             exit('FormNode not found by name "CCI (Corrected Count Increment) Calculations"');
         }
-        $UnitPlateletCount = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findByChildnameAndParent("Unit Platelet Count",$CCISection,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $UnitPlateletCount = $this->em->getRepository(FormNode::class)->findByChildnameAndParent("Unit Platelet Count",$CCISection,$mapper);
         if( !$UnitPlateletCount ) {
             exit('FormNode not found by name "Unit Platelet Count"');
         }
-        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
+        //$CCIUnitPlateletCountDefaultValueList = $this->em->getRepository("AppUserdirectoryBundle:CCIUnitPlateletCountDefaultValueList")->findOneByName("3");
+        $CCIUnitPlateletCountDefaultValueList = $this->em->getRepository(CCIUnitPlateletCountDefaultValueList::class)->findOneByName("3");
         if( !$CCIUnitPlateletCountDefaultValueList ) {
             exit('CCIUnitPlateletCountDefaultValueList not found by name "3"');
         }
@@ -3540,7 +3560,8 @@ class FormNodeUtil
         $count = 10;
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
-        $parentNode = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Critical Result Notification');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $em->getRepository(FormNode::class)->findOneByName('Critical Result Notification');
         //echo "rootNode=".$parentNode."<br>";
 
         //Create separate "Form" node for each Message Category.
@@ -3633,7 +3654,8 @@ class FormNodeUtil
 //        );
 //        $testFormSection = $this->addFormToHolder($parent,"Test",$sections);
 
-        $parentNode = $this->em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName('Pathology Call Log Book');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $parentNode = $this->em->getRepository(FormNode::class)->findOneByName('Pathology Call Log Book');
 
         //Test Section 1 (Form Section)
         //Test Field 01: Form Field - Free Text, Single Line

@@ -2,6 +2,9 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\UserdirectoryBundle\Entity\AdminComment;
 use App\UserdirectoryBundle\Entity\AdministrativeTitle;
 use App\UserdirectoryBundle\Entity\AppointmentTitle;
@@ -67,7 +70,8 @@ class SignUpController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $signUps = $em->getRepository('AppUserdirectoryBundle:SignUp')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SignUp'] by [SignUp::class]
+        $signUps = $em->getRepository(SignUp::class)->findAll();
 
         return $this->render('AppUserdirectoryBundle/SignUp/index.html.twig', array(
             'signUps' => $signUps,
@@ -154,7 +158,8 @@ class SignUpController extends OrderAbstractController
 
                 //check if still active request and email or username existed in SignUp DB
                 if( !$emailHasError ) {
-                    $signUpDbs = $em->getRepository('AppUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SignUp'] by [SignUp::class]
+                    $signUpDbs = $em->getRepository(SignUp::class)->findByEmail($signUp->getEmail());
                     if (count($signUpDbs) > 0) {
                         $signUpDb = $signUpDbs[0];
                         if ($signUpDb->getRegistrationStatus() == "Activation Email Sent") {
@@ -428,7 +433,8 @@ class SignUpController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $signUp = $em->getRepository('AppUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SignUp'] by [SignUp::class]
+        $signUp = $em->getRepository(SignUp::class)->findOneByRegistrationLinkID($registrationLinkID);
         if( !$signUp ) {
             $confirmation = "This activation link is invalid. Please make sure you have copied it from your email message correctly.";
 //            $this->addFlash(
@@ -854,7 +860,8 @@ class SignUpController extends OrderAbstractController
 
         $pathology = $userSecUtil->getAutoAssignInstitution();
         if( !$pathology ) {
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if (!$wcmc) {
                 //exit('No Institution: "WCM"');
                 throw $this->createNotFoundException('No Institution: "WCM"');
@@ -864,7 +871,8 @@ class SignUpController extends OrderAbstractController
                 'bundleName' => 'UserdirectoryBundle',
                 'className' => 'Institution'
             );
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -996,7 +1004,8 @@ class SignUpController extends OrderAbstractController
                 }
 
                 //check if still active request and email or username existed in ResetPassword DB
-                $resetPasswordDbs = $em->getRepository('AppUserdirectoryBundle:ResetPassword')->findByEmail($resetPassword->getEmail());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResetPassword'] by [ResetPassword::class]
+                $resetPasswordDbs = $em->getRepository(ResetPassword::class)->findByEmail($resetPassword->getEmail());
                 if( count($resetPasswordDbs) > 0 ) {
                     $resetPasswordDb = $resetPasswordDbs[0];
                     if ($resetPasswordDb->getRegistrationStatus() == "Password Reset Email Sent") {
@@ -1195,7 +1204,8 @@ class SignUpController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $resetPassword = $em->getRepository('AppUserdirectoryBundle:ResetPassword')->findOneByRegistrationLinkID($resetPasswordLinkID);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResetPassword'] by [ResetPassword::class]
+        $resetPassword = $em->getRepository(ResetPassword::class)->findOneByRegistrationLinkID($resetPasswordLinkID);
         if( !$resetPassword ) {
             $confirmation = "This reset password link is invalid. Please make sure you have copied it from your email message correctly.";
             //exit($confirmation);

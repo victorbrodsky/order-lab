@@ -19,6 +19,12 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\EmploymentTerminationType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentTerminationType
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -87,7 +93,8 @@ class EmploymentStatusType extends AbstractType
         }
         $builder->add( 'terminationType', EntityType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
-            'class' => 'AppUserdirectoryBundle:EmploymentTerminationType',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentTerminationType'] by [EmploymentTerminationType::class]
+            'class' => EmploymentTerminationType::class,
             'choice_label' => 'name',
             'label'=>'Type of End of Employment:',
             'required'=> false,
@@ -149,11 +156,13 @@ class EmploymentStatusType extends AbstractType
                 $institution = $emplStatus->getInstitution();
                 //echo "emplStatus Inst=".$institution."<br>";
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
             //echo "label=".$label."<br>";
 

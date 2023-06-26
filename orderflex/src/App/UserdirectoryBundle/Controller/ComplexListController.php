@@ -18,6 +18,12 @@
 namespace App\UserdirectoryBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\LocationPrivacyList; //process.py script: replaced namespace by ::class: added use line for classname=LocationPrivacyList
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
 use App\UserdirectoryBundle\Form\ListFilterType;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -372,7 +378,8 @@ class ComplexListController extends OrderAbstractController
                 $entity->setStatus($entity::STATUS_VERIFIED);
 
                 //set Location Privacy
-                $locPrivacy = $em->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+                $locPrivacy = $em->getRepository(LocationPrivacyList::class)->findOneByName("Anyone can see this contact information");
                 $entity->setPrivacy($locPrivacy);
             }
 
@@ -393,7 +400,8 @@ class ComplexListController extends OrderAbstractController
                 //process attachment documents
                 if( $entity->getAttachmentContainer() ) {
                     foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-                        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                        $em->getRepository(Document::class)->processDocuments( $documentContainer );
                     }
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }
@@ -494,7 +502,8 @@ class ComplexListController extends OrderAbstractController
                 //process attachment documents
                 if( $entity->getAttachmentContainer() ) {
                     foreach( $entity->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-                        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                        $em->getRepository(Document::class)->processDocuments( $documentContainer );
                     }
                     //echo "grant's documents count:".count($entity->getAttachmentContainer()->getDocumentContainers()->first()->getDocuments())."<br>";
                 }

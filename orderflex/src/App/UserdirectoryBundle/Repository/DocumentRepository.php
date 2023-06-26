@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Repository;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\DocumentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DocumentTypeList
 use Doctrine\ORM\EntityRepository;
 
 
@@ -91,7 +97,8 @@ class DocumentRepository extends EntityRepository {
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
             if( $documentId && is_numeric($documentId) ) {
 
-                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
                 //$docDb = $doc;
 
                 //echo "docDb: [".$docDb."]<br>";
@@ -195,7 +202,8 @@ class DocumentRepository extends EntityRepository {
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
             if( $documentId && is_numeric($documentId) ) {
 
-                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
                 //$docDb = $doc;
 
                 echo "docDb: [".$docDb."]<br>";
@@ -276,7 +284,8 @@ class DocumentRepository extends EntityRepository {
 
             if( $documentId ) {
 
-                $docDb = $this->_em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
                 if ($docDb) {
 
                     //echo "docDb id=".$docDb->getId()."<br>";
@@ -350,7 +359,8 @@ class DocumentRepository extends EntityRepository {
         }
 
         if( $doctypeStr ) {
-            $documentType = $this->_em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($doctypeStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:DocumentTypeList'] by [DocumentTypeList::class]
+            $documentType = $this->_em->getRepository(DocumentTypeList::class)->findOneByName($doctypeStr);
         }
 
         //echo "documentType=".$documentType."<br>";

@@ -56,12 +56,13 @@ class ResearchLabTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->find($entity);
+            //'AppUserdirectoryBundle:'
+            $entity = $this->em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$this->className)->find($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
         else {
             //echo "transform by name=".$entity." ????????????????<br>";
-            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->findOneByName($entity);
+            $entity = $this->em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$this->className)->findOneByName($entity);
         }
 
         if( null === $entity ) {
@@ -89,7 +90,7 @@ class ResearchLabTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
             //echo 'text is id <br>';
-            $entity = $this->em->getRepository('AppUserdirectoryBundle:'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$this->className)->findOneById($text);
 
             if( $entity ) {
                 return $entity->getName();

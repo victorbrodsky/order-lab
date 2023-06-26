@@ -25,6 +25,9 @@
 namespace App\UserdirectoryBundle\Services;
 
 
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
 //use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -300,7 +303,8 @@ class ExceptionListener {
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         $dql->innerJoin('logger.eventType', 'eventType');
 

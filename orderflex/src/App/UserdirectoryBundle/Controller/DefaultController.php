@@ -19,6 +19,21 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use App\UserdirectoryBundle\Entity\User;
@@ -503,7 +518,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get the date from event log
-        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
 
@@ -555,12 +571,14 @@ class DefaultController extends OrderAbstractController
 
         if(0) {
             echo "############### <br>";
-            $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+            $comments = $em->getRepository(FosComment::class)->findAll();
             echo "Count comments=" . count($comments) . "<br>";
             echo "############### <br><br>";
 
             echo "<br> ######## Get single comment by find() ####### <br>";
-            $comment = $em->getRepository('AppUserdirectoryBundle:FosComment')->find(14576);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+            $comment = $em->getRepository(FosComment::class)->find(14576);
             echo $comment->getId() . ": body=[" . $comment->getBody() . "], comment=[" . $comment->getCommentShort() . "], threadId=[" . $comment->getThread()->getId() . "]" .
                 ", entityId=" . $comment->getEntityId() .
                 "<br>";
@@ -609,7 +627,8 @@ class DefaultController extends OrderAbstractController
         exit("EOF Test manager comments, COUNT=".$count);
 
         echo "############### <br>";
-        $comments = $em->getRepository('AppUserdirectoryBundle:FosComment')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+        $comments = $em->getRepository(FosComment::class)->findAll();
         echo "comments=".count($comments)."<br>";
         $count = 0;
         foreach($comments as $comment) {
@@ -621,9 +640,11 @@ class DefaultController extends OrderAbstractController
         //Test 1
         $em = $this->getDoctrine()->getManager();
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $letterOne = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById(877);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $letterOne = $em->getRepository(Document::class)->findOneById(877);
         $letterOnePath = $letterOne->getServerPath();
-        $letterTwo = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById(875);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $letterTwo = $em->getRepository(Document::class)->findOneById(875);
         $letterTwoPath = $letterTwo->getServerPath();
         $identical = $fellappRecLetterUtil->checkIfFilesIdentical($letterOnePath,$letterTwoPath,$fileTwoHash=null);
         if( $identical ) {
@@ -900,13 +921,16 @@ class DefaultController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if ($environment == "dev") {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4760); //dev
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find(4760); //dev
         }
         if ($environment == "test") {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(4730); //test
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find(4730); //test
         }
         if ($environment == "live") {
-            $invoice = $em->getRepository('AppTranslationalResearchBundle:Invoice')->find(7323); //prod
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+            $invoice = $em->getRepository(Invoice::class)->find(7323); //prod
         }
         if (!$invoice) {
             exit("Invoice not defined for environment=$environment");
@@ -1106,7 +1130,8 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('Institution not found by abbreviation WCM');
         }

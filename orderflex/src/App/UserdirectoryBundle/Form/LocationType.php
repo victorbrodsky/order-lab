@@ -19,6 +19,15 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\LocationPrivacyList; //process.py script: replaced namespace by ::class: added use line for classname=LocationPrivacyList
+
+
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -145,7 +154,8 @@ class LocationType extends AbstractType
             $locationTypesAttr['readonly'] = true;
         }
         $builder->add('locationTypes', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:LocationTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+            'class' => LocationTypeList::class,
             'label' => "Location Type:",
             //'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
@@ -263,7 +273,8 @@ class LocationType extends AbstractType
             //assistant
             if( $this->params['cycle'] != "new_standalone" ) {
                 $builder->add( 'assistant', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    'class' => User::class,
                     'label'=> "Assistant(s):",
                     'required'=> false,
                     'multiple' => true,
@@ -299,11 +310,13 @@ class LocationType extends AbstractType
                 if( $title ) {
                     $institution = $title->getInstitution();
                     if( $institution ) {
-                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                     }
                 }
 				if( !$label ) {
-					$label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+					$label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
 				}
 
                 $form->add('institution', CustomSelectorType::class, array(
@@ -324,7 +337,8 @@ class LocationType extends AbstractType
 
         //Privacy
         $arrayOptions = array(
-            'class' => 'AppUserdirectoryBundle:LocationPrivacyList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+            'class' => LocationPrivacyList::class,
             'label' => "Location Privacy (who can see this contact info):",
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -333,7 +347,8 @@ class LocationType extends AbstractType
 
         //get default privacy
         if( $this->params['cycle'] == "new_standalone" ) {
-            $defaultPrivacy = $this->params['em']->getRepository('AppUserdirectoryBundle:LocationPrivacyList')->findOneByName("Anyone can see this contact information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationPrivacyList'] by [LocationPrivacyList::class]
+            $defaultPrivacy = $this->params['em']->getRepository(LocationPrivacyList::class)->findOneByName("Anyone can see this contact information");
             $arrayOptions['data'] = $defaultPrivacy;
         }
 

@@ -25,6 +25,10 @@
 
 namespace App\UserdirectoryBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\UserdirectoryBundle\Entity\PositionTypeList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Entity\UserPosition;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -133,7 +137,8 @@ class UserUtil {
             $user = $this->createSystemUser(null,null);
         }
 
-        $entities = $this->em->getRepository('AppUserdirectoryBundle:UsernameType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $entities = $this->em->getRepository(UsernameType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -335,7 +340,8 @@ class UserUtil {
     //done
     public function indexLocation( $search, $request ) {
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+        $repository = $this->em->getRepository(Location::class);
         $dql =  $repository->createQueryBuilder("location");
         $dql->addSelect('location');
         //$dql->addSelect('COUNT(administrativeTitles) as administrativeTitlesCount');
@@ -476,7 +482,8 @@ class UserUtil {
         $user = $this->security->getUser();
 
         //use Institution tree set parent method for residency specialty-subspecialty because it's the same logic
-        $fellowshipSubspecialty = $this->em->getRepository('AppUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $fellowshipSubspecialty = $this->em->getRepository(Institution::class)->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
 
         //set author if not set
         $userUtil = $this->container->get('user_utility');
@@ -504,7 +511,8 @@ class UserUtil {
             echo "echo orig=".$institution."<br>";
             echo "echo orig parent=".$institution->getParent()."<br>";
             //$institutionDb = $this->em->getReference('AppUserdirectoryBundle:Institution', $institution->getId());
-            $institutionDb = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($institution->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institutionDb = $this->em->getRepository(Institution::class)->find($institution->getId());
             echo "echo id=".$institutionDb->getId()."<br>";
             echo "echo parent=".$institutionDb->getParent()."<br>";
 
@@ -556,7 +564,8 @@ class UserUtil {
 
         foreach( $instArr as $instId => $newPositions ) {
 
-            $nodeUserPositions = $this->em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserPosition'] by [UserPosition::class]
+            $nodeUserPositions = $this->em->getRepository(UserPosition::class)->findBy(
                 array(
                     'user' => $subjectUser->getId(),
                     'institution' => $instId
@@ -577,14 +586,16 @@ class UserUtil {
                 //echo 'create new UserPosition<br>';
                 $nodeUserPosition = new UserPosition();
                 $nodeUserPosition->setUser($subjectUser);
-                $instRef = $this->em->getReference('AppUserdirectoryBundle:Institution', $instId);
+                //$instRef = $this->em->getReference('AppUserdirectoryBundle:Institution', $instId);
+                $instRef = $this->em->getReference(Institution::class, $instId);
                 $nodeUserPosition->setInstitution($instRef);
             }
 
             $nodeUserPosition->clearPositionTypes();
 
             foreach( $newPositions as $positionId ) {
-                $positionRef = $this->em->getReference('AppUserdirectoryBundle:PositionTypeList', $positionId);
+                //$positionRef = $this->em->getReference('AppUserdirectoryBundle:PositionTypeList', $positionId);
+                $positionRef = $this->em->getReference(PositionTypeList::class, $positionId);
                 $nodeUserPosition->addPositionType($positionRef);
             }
 
@@ -595,7 +606,8 @@ class UserUtil {
         $newIdBreadcrumbs = $institutionDb->getIdBreadcrumbs();
 
         $originalInstitutionId = $treeholder->getInstitution()->getId();
-        $originalInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($originalInstitutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $originalInstitution = $this->em->getRepository(Institution::class)->find($originalInstitutionId);
         $originalIdBreadcrumbs = $originalInstitution->getIdBreadcrumbs();
 
         $this->removeUserPositionFromInstitution($subjectUser->getId(),$originalIdBreadcrumbs,$newIdBreadcrumbs);
@@ -635,9 +647,11 @@ class UserUtil {
     //done
     public function removeUserPositionFromSingleInstitution( $userid, $instid ) {
 
-        $originalInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->find($instid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $originalInstitution = $this->em->getRepository(Institution::class)->find($instid);
 
-        $originalUserPositions = $this->em->getRepository('AppUserdirectoryBundle:UserPosition')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserPosition'] by [UserPosition::class]
+        $originalUserPositions = $this->em->getRepository(UserPosition::class)->findBy(
             array(
                 'user' => $userid,
                 'institution' => $instid

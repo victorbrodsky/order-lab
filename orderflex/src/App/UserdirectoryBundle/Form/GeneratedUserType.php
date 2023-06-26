@@ -18,6 +18,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -115,7 +118,8 @@ class GeneratedUserType extends AbstractType
         ));
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:UsernameType',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            'class' => UsernameType::class,
             //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",

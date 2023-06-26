@@ -27,6 +27,21 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
+
+
+use App\UserdirectoryBundle\Entity\UserInfo; //process.py script: replaced namespace by ::class: added use line for classname=UserInfo
+
+
+use App\OrderformBundle\Entity\PatientLastName; //process.py script: replaced namespace by ::class: added use line for classname=PatientLastName
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
+
+
 
 use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
@@ -562,7 +577,7 @@ class UserServiceUtil {
         //echo "registrationLinkId=$registrationLinkId<br>";
         $registrationLinkId = md5($registrationLinkId);
         //find if already exists
-        $existedSignup = $this->em->getRepository('AppUserdirectoryBundle:'.$className)->findByRegistrationLinkID($registrationLinkId);
+        $existedSignup = $this->em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$className)->findByRegistrationLinkID($registrationLinkId);
         if( $existedSignup ) {
             $count++;
             //echo "try gen: existedLinkId=$registrationLinkId; count=$count<br>";
@@ -574,7 +589,8 @@ class UserServiceUtil {
 
     public function findOneCommentByThreadBodyAuthor($thread, $bodyText, $author)
     {
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:FosComment');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FosComment'] by [FosComment::class]
+        $repository = $this->em->getRepository(FosComment::class);
         $dql =  $repository->createQueryBuilder("comment");
         $dql->select('comment');
 
@@ -1225,14 +1241,16 @@ class UserServiceUtil {
 //            } else {
 //                $params->setAutoAssignInstitution($institution);
 //            }
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             if( $wcmc ) {
                 $mapper = array(
                     'prefix' => 'App',
                     'bundleName' => 'UserdirectoryBundle',
                     'className' => 'Institution'
                 );
-                $autoAssignInstitution = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $autoAssignInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
                     "Pathology and Laboratory Medicine",
                     $wcmc,
                     $mapper
@@ -3027,7 +3045,8 @@ Pathology and Laboratory Medicine",
         // "Site Settings parameter [maintenance] has been updated by" and
         // "updated value: 1"
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->leftJoin('logger.eventType', 'eventType');
@@ -3165,7 +3184,8 @@ Pathology and Laboratory Medicine",
         $code = random_int(100000, 999999);
         //$code = 111;
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:UserInfo');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserInfo'] by [UserInfo::class]
+        $repository = $this->em->getRepository(UserInfo::class);
         $dql =  $repository->createQueryBuilder("userinfo");
         $dql->select('userinfo');
 
@@ -3335,7 +3355,7 @@ Pathology and Laboratory Medicine",
     public function generateAccountRequestVerificationCode($objectName,$counter=0) {
         $code = random_int(100000, 999999);
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:'.$objectName);
+        $repository = $this->em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$objectName);
         $dql =  $repository->createQueryBuilder("userrequest");
         $dql->select('userrequest');
 
@@ -3917,7 +3937,8 @@ Pathology and Laboratory Medicine",
     }
     
     public function getLinkToListIdByClassName($listName) {
-        $listEntity = $this->em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($listName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
         if( !$listEntity ) {
             return NULL;
         }
@@ -4258,9 +4279,10 @@ Pathology and Laboratory Medicine",
         //$dql->leftJoin("user.employmentStatus", "employmentStatus");
         //$dql->leftJoin("employmentStatus.employmentType", "employmentType");
 
+        //FROM AppUserdirectoryBundle:User u
         $query = $this->em->createQuery(
             'SELECT u 
-            FROM AppUserdirectoryBundle:User u
+            FROM App\\UserdirectoryBundle\\Entity\\User u
             JOIN u.administrativeTitles administrativeTitles
             JOIN u.appointmentTitles appointmentTitles
             JOIN u.medicalTitles medicalTitles
@@ -4326,7 +4348,8 @@ Pathology and Laboratory Medicine",
         }
 
         if(1) {
-            $repository = $em->getRepository('AppOrderformBundle:PatientLastName');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientLastName'] by [PatientLastName::class]
+            $repository = $em->getRepository(PatientLastName::class);
             $dql = $repository->createQueryBuilder("list");
             $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
             $dql->orderBy("d","ASC");

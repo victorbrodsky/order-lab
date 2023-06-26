@@ -17,6 +17,12 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
 use App\OrderformBundle\Controller\ScanListController;
 use App\TranslationalResearchBundle\Entity\VisualInfo;
 use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
@@ -1024,12 +1030,14 @@ class ListController extends OrderAbstractController
             }
 
             if( method_exists($entity, "getDocuments") ) {
-                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $em->getRepository(Document::class)->processDocuments($entity, "document");
             }
 
             if( method_exists($entity, "getVisualInfos") ) {
                 foreach( $entity->getVisualInfos() as $visualInfo) {
-                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $em->getRepository(Document::class)->processDocuments( $visualInfo, "document" );
                 }
             }
             
@@ -2516,13 +2524,15 @@ class ListController extends OrderAbstractController
             $entity->setVersion($newVersion);
 
             if( method_exists($entity, "getDocuments") ) {
-                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($entity, "document");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $em->getRepository(Document::class)->processDocuments($entity, "document");
             }
 
             if( method_exists($entity, "getVisualInfos") ) {
                 foreach( $entity->getVisualInfos() as $visualInfo) {
                     //echo "<br><br>getVisualInfos ID=".$visualInfo->getId().": <br>";
-                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $visualInfo, "document" );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $em->getRepository(Document::class)->processDocuments( $visualInfo, "document" );
                     //$em->getRepository('AppUserdirectoryBundle:Document')->processDocumentsTest( $visualInfo, "document" );
                 }
                 //exit('exit visualinfo');
@@ -3849,7 +3859,8 @@ class ListController extends OrderAbstractController
             $em = $this->getDoctrine()->getManager();
             //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
             //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListRootName($routeName);
-            $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListName($className);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+            $rootList = $em->getRepository(PlatformListManagerRootList::class)->findOneByListName($className);
 //            if( !$rootList ) {
 //                throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by listName=' . $className);
 //            }
@@ -4191,7 +4202,8 @@ class ListController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-        $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($listId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $rootList = $em->getRepository(PlatformListManagerRootList::class)->findOneByLinkToListId($listId);
         if( !$rootList ) {
             throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$listId);
         }
@@ -4232,7 +4244,8 @@ class ListController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //$rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
-        $rootList = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByLinkToListId($linkToListId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $rootList = $em->getRepository(PlatformListManagerRootList::class)->findOneByLinkToListId($linkToListId);
         if( !$rootList ) {
             throw $this->createNotFoundException('Unable to find PlatformListManagerRootList by linkToListId='.$linkToListId);
         }

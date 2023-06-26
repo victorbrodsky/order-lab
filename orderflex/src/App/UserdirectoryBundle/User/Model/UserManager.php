@@ -137,13 +137,8 @@ class UserManager { //implements UserManagerInterface {
      */
     public function getClass()
     {
-        return "AppUserdirectoryBundle:User";
-//        if (false !== strpos((string)$this->class, ':')) {
-//            $metadata = $this->objectManager->getClassMetadata($this->class);
-//            $this->class = $metadata->getName();
-//        }
-//
-//        return $this->class;
+        //return "AppUserdirectoryBundle:User";
+        return User::class;
     }
 
 

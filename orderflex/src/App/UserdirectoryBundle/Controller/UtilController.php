@@ -19,7 +19,28 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\OrderformBundle\Entity\Patient;
+use App\UserdirectoryBundle\Entity\BuildingList;
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
+
+
+use App\UserdirectoryBundle\Entity\ResearchLab; //process.py script: replaced namespace by ::class: added use line for classname=ResearchLab
+
+
+use App\UserdirectoryBundle\Entity\GrantComment; //process.py script: replaced namespace by ::class: added use line for classname=GrantComment
+
+
+use App\UserdirectoryBundle\Entity\GrantEffort; //process.py script: replaced namespace by ::class: added use line for classname=GrantEffort
+
+
+use App\UserdirectoryBundle\Entity\Grant; //process.py script: replaced namespace by ::class: added use line for classname=Grant
+
+
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -201,7 +222,8 @@ class UtilController extends OrderAbstractController {
         //echo "cycle=".$cycle." => newCycle=".$newCycle."<br>";
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Institution', 'list')
+            //->from('AppUserdirectoryBundle:Institution', 'list')
+            ->from(Institution::class, 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
             ->groupBy("list")
@@ -243,7 +265,7 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Institution', 'list')
+            ->from(Institution::class, 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -266,7 +288,7 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Institution', 'list')
+            ->from(Institution::class, 'list')
             ->select("list.id as id, list.name as text")
             //->select("list.name as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
@@ -277,7 +299,8 @@ class UtilController extends OrderAbstractController {
 
         //add current element by id
         if( $id ) {
-            $entity = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Institution')->findOneById($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $entity = $this->getDoctrine()->getRepository(Institution::class)->findOneById($id);
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");
@@ -390,7 +413,7 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:User', 'list')
+            ->from(User::class, 'list')
             ->select("list")
             //->select("list.id as id, infos.displayName as text")
             ->leftJoin("list.infos", "infos")
@@ -496,7 +519,8 @@ class UtilController extends OrderAbstractController {
         }
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:BuildingList', 'list')
+            //->from('AppUserdirectoryBundle:BuildingList', 'list')
+            ->from(BuildingList::class, 'list')
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
@@ -555,7 +579,8 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Location', 'list')
+            //->from('AppUserdirectoryBundle:Location', 'list')
+            ->from(Location::class, 'list')
             ->select("list")
             ->orderBy("list.id","ASC");
 
@@ -609,7 +634,8 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Location', 'list')
+            //->from('AppUserdirectoryBundle:Location', 'list')
+            ->from(Location::class, 'list')
             ->select("list")
             ->orderBy("list.id","ASC");
 
@@ -657,7 +683,8 @@ class UtilController extends OrderAbstractController {
 
         if( strval($locationId) == strval(intval($locationId)) ) {
             //echo "locationId is integer<br>";
-            $location = $em->getRepository('AppUserdirectoryBundle:Location')->find($locationId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            $location = $em->getRepository(Location::class)->find($locationId);
         } else {
             //echo "locationId is string<br>";
             $location = null;
@@ -786,8 +813,10 @@ class UtilController extends OrderAbstractController {
      */
     public function getLocationCheckDeleteAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $location = $em->getRepository('AppUserdirectoryBundle:Location')->find($id);
-        $resLabs = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->findByLocation($location);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+        $location = $em->getRepository(Location::class)->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+        $resLabs = $em->getRepository(ResearchLab::class)->findByLocation($location);
         if( count($resLabs) > 0 ) {
             $output = 'not ok';
         } else {
@@ -838,7 +867,8 @@ class UtilController extends OrderAbstractController {
 //        }
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:ResearchLab', 'list')
+            //->from('AppUserdirectoryBundle:ResearchLab', 'list')
+            ->from(ResearchLab::class, 'list')
             ->leftJoin('list.institution','institution')
             ->leftJoin('list.location','location')
             ->leftJoin('list.comments','comments')
@@ -905,14 +935,16 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->find($subjectUser);
-        $lab = $em->getRepository('AppUserdirectoryBundle:ResearchLab')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+        $lab = $em->getRepository(ResearchLab::class)->find($id);
 
         $output = 'not ok';
 
         //more effificient than looping (?)
         if( $user && $lab ) {
 
-            $em->getRepository('AppUserdirectoryBundle:ResearchLab')->removeDependents( $user, $lab );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLab'] by [ResearchLab::class]
+            $em->getRepository(ResearchLab::class)->removeDependents( $user, $lab );
 
             $user->removeResearchLab($lab);
             $em->persist($user);
@@ -954,7 +986,8 @@ class UtilController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();       
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Grant', 'list')
+            //->from('AppUserdirectoryBundle:Grant', 'list')
+            ->from(Grant::class, 'list')
             ->leftJoin('list.sourceOrganization','sourceOrganization')
             ->leftJoin('list.attachmentContainer','attachmentContainer')
             ->leftJoin('list.comments','comments')
@@ -988,8 +1021,10 @@ class UtilController extends OrderAbstractController {
                 $subjectUserDB = null;
             }
 
-            $userComment = $em->getRepository('AppUserdirectoryBundle:GrantComment')->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
-            $userEffort = $em->getRepository('AppUserdirectoryBundle:GrantEffort')->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantComment'] by [GrantComment::class]
+            $userComment = $em->getRepository(GrantComment::class)->findOneBy( array( 'author' => $subjectUserDB, 'grant'=>$grant ) );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantEffort'] by [GrantEffort::class]
+            $userEffort = $em->getRepository(GrantEffort::class)->findOneBy( array( 'author'=>$subjectUserDB, 'grant'=>$grant ) );
 
             $transformer = new DateTimeToStringTransformer(null,null,'MM/dd/yyyy');
 
@@ -1061,14 +1096,16 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->find($subjectUser);
-        $grant = $em->getRepository('AppUserdirectoryBundle:Grant')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+        $grant = $em->getRepository(Grant::class)->find($id);
 
         $output = 'not ok';
 
         //more effificient than looping (?)
         if( $user && $grant ) {
 
-            $em->getRepository('AppUserdirectoryBundle:Grant')->removeDependents( $user, $grant );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Grant'] by [Grant::class]
+            $em->getRepository(Grant::class)->removeDependents( $user, $grant );
 
             $user->removeGrant($grant);
             $em->persist($user);
@@ -1127,7 +1164,8 @@ class UtilController extends OrderAbstractController {
 
         if( $ssn != "" ) {
             $query = $em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:User', 'user')
+                //->from('AppUserdirectoryBundle:User', 'user')
+                ->from(User::class, 'user')
                 ->select("user")
                 ->leftJoin("user.credentials", "credentials")
                 ->where("credentials.ssn = :ssn")
@@ -1168,7 +1206,8 @@ class UtilController extends OrderAbstractController {
 
         if( $ein != "" ) {
             $query = $em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:User', 'user')
+                //->from('AppUserdirectoryBundle:User', 'user')
+                ->from(User::class, 'user')
                 ->select("user")
                 ->leftJoin("user.credentials", "credentials")
                 ->where("credentials.employeeId = :employeeId")
@@ -1476,7 +1515,8 @@ class UtilController extends OrderAbstractController {
 
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Patient', 'patient')
+            //->from('AppOrderformBundle:Patient', 'patient')
+            ->from(Patient::class, 'patient')
             ->select("patient")
             ->leftJoin("patient.mrn", "mrn")
             ->where("mrn.keytype = :keytype AND mrn.field = :field")
@@ -1562,7 +1602,7 @@ class UtilController extends OrderAbstractController {
         ///////////// 1) get all real users /////////////
         if(0) {
             $query = $em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:User', 'list')
+                ->from(User::class, 'list')
                 ->select("list")
                 //->groupBy('list.id')
                 ->leftJoin("list.infos", "infos")
@@ -1589,7 +1629,8 @@ class UtilController extends OrderAbstractController {
             //Optimising (lighter) version without loop.
             // Using infos.displayName - "displayName" instead of user's toString (getUserNameStr) - "displayName - cwid (keytype)"
             $query = $em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:User', 'list')
+                //->from('AppUserdirectoryBundle:User', 'list')
+                ->from(User::class, 'list')
                 ->select("infos.displayName as id, infos.displayName as text")
                 //->groupBy('list.id')
                 ->leftJoin("list.infos", "infos")
@@ -1614,7 +1655,8 @@ class UtilController extends OrderAbstractController {
         ///////////// 3) user-added user wrappers created by logged in user for this source ///////////////
         if(1) {
             $query = $em->createQueryBuilder()
-                ->from('AppUserdirectoryBundle:UserWrapper', 'list')
+                //->from('AppUserdirectoryBundle:UserWrapper', 'list')
+                ->from(UserWrapper::class, 'list')
                 ->select("list")
                 ->leftJoin("list.user", "user")
                 ->leftJoin("user.infos", "infos")

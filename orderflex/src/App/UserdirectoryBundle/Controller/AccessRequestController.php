@@ -17,6 +17,15 @@
 
 namespace App\UserdirectoryBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\SiteList;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\PerSiteSettings;
@@ -426,7 +435,8 @@ class AccessRequestController extends OrderAbstractController
 
     public function getOrganizationalGroup() {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppUserdirectoryBundle:Institution');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $repository = $em->getRepository(Institution::class);
         $dql =  $repository->createQueryBuilder("institution");
         $dql->select('institution');
         $dql->leftJoin("institution.types", "types");
@@ -767,13 +777,15 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findAll();
         $rolesArr = array();
         foreach( $roles as $role ) {
             $rolesArr[$role->getName()] = $role->getAlias();
         }
 
-        $repository = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:AccessRequest');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $repository = $this->getDoctrine()->getRepository(AccessRequest::class);
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         $dql->leftJoin('accreq.user','user');
@@ -877,7 +889,8 @@ class AccessRequestController extends OrderAbstractController
             $entity->removeRole($this->roleUnapproved);
             $entity->removeRole($this->roleBanned);
 
-            if( $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($this->roleUser) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            if( $em->getRepository(Roles::class)->findOneByName($this->roleUser) ) {
                 $entity->addRole($this->roleUser);
             }
 
@@ -1021,7 +1034,8 @@ class AccessRequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //$entity = $em->getRepository(User::class)->find($id);
-        $accReq = $em->getRepository('AppUserdirectoryBundle:AccessRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $accReq = $em->getRepository(AccessRequest::class)->find($id);
 
         if (!$accReq) {
             throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
@@ -1090,7 +1104,8 @@ class AccessRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $accReq = $em->getRepository('AppUserdirectoryBundle:AccessRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AccessRequest'] by [AccessRequest::class]
+        $accReq = $em->getRepository(AccessRequest::class)->find($id);
 
         if (!$accReq) {
             throw $this->createNotFoundException('Unable to find Access Request entity with ID ' . $id);
@@ -1428,7 +1443,8 @@ class AccessRequestController extends OrderAbstractController
         if( $defaultPrimaryPublicUserIdType ) {
             $defaultPrimaryPublicUserIdTypeId = $defaultPrimaryPublicUserIdType->getId();
         }
-        $keytypeChoicesArr = $em->getRepository('AppUserdirectoryBundle:UsernameType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+        $keytypeChoicesArr = $em->getRepository(UsernameType::class)->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
         );
@@ -1545,7 +1561,8 @@ class AccessRequestController extends OrderAbstractController
         }
 
         if( count($users) == 0 ) {
-            $keytypeObj = $em->getRepository('AppUserdirectoryBundle:UsernameType')->find($keytype);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
+            $keytypeObj = $em->getRepository(UsernameType::class)->find($keytype);
             $request->getSession()->getFlashBag()->set(
                 'notice',
                 'User ' . $primaryPublicUserId . ' (' . $keytypeObj . ')' . ' not found.'." ".

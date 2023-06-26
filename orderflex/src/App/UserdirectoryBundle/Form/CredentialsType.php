@@ -18,6 +18,9 @@
 
 namespace App\UserdirectoryBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -60,7 +63,8 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('sex', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:SexList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+            'class' => SexList::class,
             'choice_label' => 'name',
             'label' => "Gender:",
             'required'=> false,

@@ -601,7 +601,8 @@ class TelephonyController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         if( $objectName && $id ) {
-            $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($id);
+            //$requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($id);
+            $requestObject = $em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$objectName)->find($id);
         } else {
             throw new \Exception("Logical Error: object name and id are not specified");
         }
@@ -644,7 +645,8 @@ class TelephonyController extends OrderAbstractController {
         if( $userRequestId ) {
             //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
             if( $objectName && $userRequestId ) {
-                $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+                //$requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+                $requestObject = $em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$objectName)->find($userRequestId);
             } else {
                 throw new \Exception("Logical Error: object name and id are not specified");
             }
@@ -714,7 +716,8 @@ class TelephonyController extends OrderAbstractController {
         if( $userRequestId ) {
             //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
             if( $objectName && $userRequestId ) {
-                $requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+                //$requestObject = $em->getRepository('AppUserdirectoryBundle:'.$objectName)->find($userRequestId);
+                $requestObject = $em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$objectName)->find($userRequestId);
             } else {
                 throw new \Exception("Logical Error: object name and id are not specified");
             }
