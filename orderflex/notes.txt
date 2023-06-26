@@ -1563,9 +1563,14 @@ pick up the string having the word "best" and not the word "mew"
 
 ^(?=.*User::class)(?:(?!User).)*$
 
+For: ->getRepository('AppOrderformBundle:AccessionListHierarchy')->
+python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "')->" > res.log
 
+$repository = $em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+python process.py -d ../../orderflex/src/App/TestBundle -s "->getRepository('" -e "');" > res.log
 
-
+For: 'class' => 'AppOrderformBundle:AccessionType',
+python process.py -d ../../orderflex/src/App/TestBundle -s "'class' => '" -e "'," > res.log
 
 
 

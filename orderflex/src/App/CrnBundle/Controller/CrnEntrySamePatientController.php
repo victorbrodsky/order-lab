@@ -18,6 +18,21 @@
 
 namespace App\CrnBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\OrderformBundle\Entity\EncounterStatusList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterStatusList
+
+
+use App\OrderformBundle\Entity\EncounterInfoTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterInfoTypeList
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
 use Doctrine\Common\Collections\ArrayCollection;
 use App\CrnBundle\Form\CrnFilterType;
 use App\CrnBundle\Form\CrnMessageType;
@@ -114,7 +129,8 @@ class CrnEntrySamePatientController extends CrnEntryController
             $extra = array();
             $extra["keytype"] = $mrntype;
 
-            $patient = $em->getRepository('AppOrderformBundle:Patient')->createElement(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patient = $em->getRepository(Patient::class)->createElement(
                 $institution,
                 'valid',            //status
                 $user,              //provider
@@ -137,7 +153,8 @@ class CrnEntrySamePatientController extends CrnEntryController
             $readonlyPatient = true;
         }
 
-        $encounter2 = $em->getRepository('AppOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $encounter2 = $em->getRepository(Encounter::class)->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
         //echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
         //exit();
 
@@ -146,10 +163,12 @@ class CrnEntrySamePatientController extends CrnEntryController
         // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
         if( $mrn && $mrntype && $encounter2 ) {
 
-            if( !$em->getRepository('AppOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+            if( !$em->getRepository(Encounter::class)->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
 
                 $mrntypeStr = "";
-                $mrntypeEntity = $em->getRepository('AppOrderformBundle:MrnType')->find($mrntype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                $mrntypeEntity = $em->getRepository(MrnType::class)->find($mrntype);
                 if( $mrntypeEntity ) {
                     $mrntypeStr = $mrntypeEntity->getName()."";
                 }
@@ -189,7 +208,8 @@ class CrnEntrySamePatientController extends CrnEntryController
 
             //set encounter generated id
             $key = $encounter2->obtainAllKeyfield()->first();
-            $encounter2 = $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+            $encounter2 = $em->getRepository(Encounter::class)->setEncounterKey($key, $encounter2, $user);
 
             //set encounter date and time
             $date = $encounter2->getDate()->first();
@@ -199,13 +219,15 @@ class CrnEntrySamePatientController extends CrnEntryController
             $date->setTime($nowDate);
 
             //set encounter status "Open"
-            $encounterOpenStatus = $em->getRepository('AppOrderformBundle:EncounterStatusList')->findOneByName("Open");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterStatusList'] by [EncounterStatusList::class]
+            $encounterOpenStatus = $em->getRepository(EncounterStatusList::class)->findOneByName("Open");
             if ($encounterOpenStatus) {
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
             //set encounter info type to "Critical Result Notification"
-            $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Critical Result Notification");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterInfoTypeList'] by [EncounterInfoTypeList::class]
+            $encounterInfoType = $em->getRepository(EncounterInfoTypeList::class)->findOneByName("Critical Result Notification");
             if ($encounterInfoType) {
                 if (count($encounter2->getEncounterInfoTypes()) > 0) {
                     $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
@@ -373,7 +395,8 @@ class CrnEntrySamePatientController extends CrnEntryController
             //it should work for mysql, mssql, but in postgres DB's id is already pre-genarated even when object is in the pre-persisting stage with "new" (new Patient)
             if( $patient->getId() ) {
                 //get existing patient from DB to prevent creating a new one
-                $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+                $patient = $em->getRepository(Patient::class)->find($patient->getId());
                 if( $patient ) {
                     $existingPatientDB = true;
                 }
@@ -398,7 +421,8 @@ class CrnEntrySamePatientController extends CrnEntryController
             $existingEncounterDB = false;
             if( $newEncounter->getId() ) {
                 //get existing encounter from DB to prevent creating a new one
-                $encounterDB = $em->getRepository('AppOrderformBundle:Encounter')->find($newEncounter->getId());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                $encounterDB = $em->getRepository(Encounter::class)->find($newEncounter->getId());
                 if( $encounterDB ) {
                     $existingEncounterDB = $encounterDB;
                     $newEncounter = $encounterDB;
@@ -409,7 +433,8 @@ class CrnEntrySamePatientController extends CrnEntryController
             $taskUpdateStr = $crnUtil->processCrnTask($message,$originalTasks); //Save New Critical Result Notification Entry
 
             //process Attached Documents
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCrnEntryMessage()); //Save Critical Result Notification Entry Same Patient
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($message->getCrnEntryMessage()); //Save Critical Result Notification Entry Same Patient
 
             //set system source and user's default institution
             if( $newEncounter ) {
@@ -422,7 +447,8 @@ class CrnEntrySamePatientController extends CrnEntryController
 
                     //assign generated encounter number ID
                     $key = $newEncounter->obtainAllKeyfield()->first();
-                    $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                    $em->getRepository(Encounter::class)->setEncounterKey($key, $newEncounter, $user);
 
                     //Remove tracker if spots/location is empty
                     $tracker = $newEncounter->getTracker();
@@ -464,7 +490,8 @@ class CrnEntrySamePatientController extends CrnEntryController
                 $messageStatusForm = $data['messageStatusJs'];
                 //echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
-                    $messageStatusObj = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+                    $messageStatusObj = $em->getRepository(MessageStatusList::class)->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
                         //echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);

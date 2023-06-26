@@ -17,6 +17,40 @@
 
 namespace App\CrnBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\UserdirectoryBundle\Entity\FormNode; //process.py script: replaced namespace by ::class: added use line for classname=FormNode
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\PatientListHierarchyGroupType; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchyGroupType
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\CityList; //process.py script: replaced namespace by ::class: added use line for classname=CityList
+
+
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
+
+
+use App\OrderformBundle\Entity\AccessionListType; //process.py script: replaced namespace by ::class: added use line for classname=AccessionListType
 use App\OrderformBundle\Entity\AccessionAccession;
 use App\OrderformBundle\Entity\AccessionAccessionDate;
 use App\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
@@ -94,7 +128,8 @@ class CrnUtil
     //auto-generating a unique MRN on Scan Order, but prepend a prefix "MERGE"
     public function autoGenerateMergeMrn( $patient ) {
 
-        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keyTypeMergeID = $this->em->getRepository(MrnType::class)->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             throw new \Exception($msg);
@@ -103,7 +138,8 @@ class CrnUtil
         $extra = array( "keytype" => $keyTypeMergeID->getId() );
         //$extra = null;
 
-        $nextKey = $this->em->getRepository('AppOrderformBundle:Patient')->getNextNonProvided($patient,$extra,null,"MERGE-ID");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $nextKey = $this->em->getRepository(Patient::class)->getNextNonProvided($patient,$extra,null,"MERGE-ID");
 
         //convert NOMRNPROVIDED-0000000002 to MERGE-ID-0000000002
         //$nextKey = str_replace("NOMRNPROVIDED","",$nextKey);
@@ -135,7 +171,8 @@ class CrnUtil
             return $msg;
         }
 
-        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keyTypeMergeID = $this->em->getRepository(MrnType::class)->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             //throw new \Exception($msg);
@@ -166,7 +203,8 @@ class CrnUtil
             return $msg;
         }
 
-        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keyTypeMergeID = $this->em->getRepository(MrnType::class)->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             //throw new \Exception($msg);
@@ -225,7 +263,8 @@ class CrnUtil
 
     public function getMergedPatients( $mergeId, $mergedPatients=null, $existingPatientIds=null ) {
 
-        $keyTypeMergeID = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Merge ID");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keyTypeMergeID = $this->em->getRepository(MrnType::class)->findOneByName("Merge ID");
         if( !$keyTypeMergeID ) {
             $msg = 'MrnType not found by name Merge ID';
             throw new \Exception($msg);
@@ -234,7 +273,8 @@ class CrnUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $this->em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
 
@@ -929,7 +969,8 @@ class CrnUtil
         }
         //echo "mrntypeId=".$mrntypeId."<br>";
 
-        $mrntype = $this->em->getRepository('AppOrderformBundle:MrnType')->find($mrntypeId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $mrntype = $this->em->getRepository(MrnType::class)->find($mrntypeId);
         if( !$mrntype ) {
             //exit("MrnType not found");
             //$msg = 'MrnType not found by ID ' . $mrntypeId;
@@ -980,7 +1021,8 @@ class CrnUtil
         }
 //        echo "accessiontypeId=".$accessiontypeId."<br>";
 
-        $accessiontype = $this->em->getRepository('AppOrderformBundle:AccessionType')->find($accessiontypeId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessiontype = $this->em->getRepository(AccessionType::class)->find($accessiontypeId);
         if( !$accessiontype ) {
             //exit("accessiontype not found");
             //$msg = 'accessiontype not found by ID ' . $accessiontypeId;
@@ -998,7 +1040,8 @@ class CrnUtil
         $institution = $userSecUtil->getCurrentUserInstitution($user);
         $encounter = new Encounter();
         $encounter->setInstitution($institution);
-        $nextKey = $this->em->getRepository('AppOrderformBundle:Encounter')->getNextNonProvided($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $nextKey = $this->em->getRepository(Encounter::class)->getNextNonProvided($encounter);
         return $nextKey;
     }
 
@@ -1246,9 +1289,11 @@ class CrnUtil
         //patient list currently is level=3
         $level = 3;
 
-        $parent = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Critical Result Notification Lists");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $parent = $this->em->getRepository(PatientListHierarchy::class)->findOneByName("Critical Result Notification Lists");
 
-        $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $patientLists = $this->em->getRepository(PatientListHierarchy::class)->findBy(
             array(
                 'type' => array('default','user-added'),
                 'level' => $level,
@@ -1276,7 +1321,8 @@ class CrnUtil
                 
                 if( $location->getId() ) {
                     //echo "find location by ID=".$location->getId()."<br>";
-                    $locationDb = $this->em->getRepository('AppUserdirectoryBundle:Location')->find($location->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+                    $locationDb = $this->em->getRepository(Location::class)->find($location->getId());
                     if ($locationDb) {
                         //echo "set found location by ID=".$location->getId()."<br>";
                         $spot->setCurrentLocation($locationDb);
@@ -1309,7 +1355,8 @@ class CrnUtil
                     $parameters = array();
 
                     //if id is not provided, then find location by the fields (except prefilled locationTypes="Encounter Location" and name="New York Hospital Location")
-                    $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+                    $repository = $this->em->getRepository(Location::class);
                     $dql = $repository->createQueryBuilder("list");
 
                     if( $location->getName() ) {
@@ -1767,7 +1814,8 @@ class CrnUtil
         //echo " (+1)=> $level <br>";
         $newListElement->setLevel($level);
         //set group
-        $group = $this->em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchyGroupType'] by [PatientListHierarchyGroupType::class]
+        $group = $this->em->getRepository(PatientListHierarchyGroupType::class)->findOneByName('Patient');
         $newListElement->setOrganizationalGroupType($group);
 
         $patientList->addChild($newListElement);
@@ -1787,7 +1835,8 @@ class CrnUtil
         } else {
             return null;
         }
-        $repository = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $repository = $this->em->getRepository(PatientListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->where("list.parent = :parentId AND list.patient = :patientId");
@@ -1871,7 +1920,8 @@ class CrnUtil
             //$patientList = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
             $patientList = null;
 
-            $patientLists = $this->em->getRepository('AppOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+            $patientLists = $this->em->getRepository(PatientListHierarchy::class)->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
             if( count($patientLists) > 0 ) {
                 $patientList = $patientLists[0];
             }
@@ -2084,7 +2134,8 @@ class CrnUtil
         if( strpos((string)$messageCategoryIdStr, '_') !== false ) {
             list($messageCategoryStr, $messageCategoryId) = explode('_', $messageCategoryIdStr);
             //echo "search messageCategoryId=".$messageCategoryId."<br>";
-            $messageCategoryEntity = $this->em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategoryEntity = $this->em->getRepository(MessageCategory::class)->find($messageCategoryId);
         } else {
             $mapper = array(
                 'prefix' => "App",
@@ -2092,7 +2143,8 @@ class CrnUtil
                 'bundleName' => "OrderformBundle"
             );
             //$messageCategoryEntity = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($messageCategory);
-            $messageCategoryEntity = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findNodeByPartialName($messageCategoryIdStr,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategoryEntity = $this->em->getRepository(MessageCategory::class)->findNodeByPartialName($messageCategoryIdStr,$mapper);
         }
 
         return $messageCategoryEntity;
@@ -2193,7 +2245,8 @@ class CrnUtil
         }
 
         if( $newStatusStr ) {
-            $newMessageStatusObj = $this->em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($newStatusStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+            $newMessageStatusObj = $this->em->getRepository(MessageStatusList::class)->findOneByName($newStatusStr);
         }
         //exit("newMessageStatusObj=".$newMessageStatusObj);
 
@@ -2204,7 +2257,8 @@ class CrnUtil
     public function hadMessageStatus( $oid, $statusName="Signed" ) {
         $sitename = "crn";
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
@@ -2243,7 +2297,8 @@ class CrnUtil
         $maxVersion = 0;
 
         //get encounters found by provided encounter's key (keytype and number)
-        $otherEncounters = $this->em->getRepository('AppOrderformBundle:Encounter')->findAllEncountersByEncounter($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $otherEncounters = $this->em->getRepository(Encounter::class)->findAllEncountersByEncounter($encounter);
 
         foreach( $otherEncounters as $otherEncounter ) {
             $otherEncounter->setStatus('invalid');
@@ -2266,7 +2321,8 @@ class CrnUtil
     }
 
     public function incrementVersionEncounterFamily( $encounter ) {
-        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $maxVersion = $this->em->getRepository(Encounter::class)->getMaxEncounterVersion($encounter);
         //increment encounter version for current encounter
         $encounterIncrementedVersion = $maxVersion + 1;
         //echo "encounterIncrementedVersion=".$encounterIncrementedVersion."<br>";
@@ -2274,7 +2330,8 @@ class CrnUtil
     }
 
     public function isMessageVersionMatch( $message, $latestNextMessageVersion ) {
-        $maxVersion = $this->em->getRepository('AppOrderformBundle:Message')->getMaxMessageVersion($message);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $maxVersion = $this->em->getRepository(Message::class)->getMaxMessageVersion($message);
 
         //$maxVersion = $maxVersion + 1; //test
         //echo "$maxVersion < $latestNextMessageVersion<br>";
@@ -2286,7 +2343,8 @@ class CrnUtil
     }
 
     public function isEncounterVersionMatch( $encounter, $latestNextEncounterVersion ) {
-        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $maxVersion = $this->em->getRepository(Encounter::class)->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion < $latestNextEncounterVersion<br>";
         if( $maxVersion < $latestNextEncounterVersion ) {
@@ -2297,7 +2355,8 @@ class CrnUtil
     }
 
     public function isLatestEncounterVersion( $encounter ) {
-        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $maxVersion = $this->em->getRepository(Encounter::class)->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion < $latestNextEncounterVersion<br>";
         if( $maxVersion == $encounter->getVersion() ) {
@@ -2316,7 +2375,8 @@ class CrnUtil
         }
         //echo "encounter=".$encounter->getId()."<br>";
 
-        $maxVersion = $this->em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $maxVersion = $this->em->getRepository(Encounter::class)->getMaxEncounterVersion($encounter);
 
         //echo "$maxVersion == ".$encounter->getVersion()."<br>";
         if( $maxVersion != $encounter->getVersion() ) {
@@ -2455,7 +2515,8 @@ class CrnUtil
         //echo "sundayDBStr=".$sundayDBStr."<br>";
 
         //get the sum of timeSpentMinutes from CrnEntryMessage for Message's provider for this week by orderdate
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
         $dql->leftJoin("message.provider","provider");
@@ -2536,7 +2597,8 @@ class CrnUtil
     //get the date of last entry for this patient
     public function getLastEntryDate( $patient ) {
         //get the sum of timeSpentMinutes from CrnEntryMessage for Message's provider for this week by orderdate
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
         $dql->leftJoin("message.messageStatus","messageStatus");
@@ -2581,7 +2643,8 @@ class CrnUtil
 
     public function getLastEntryDateByAccession( $accession ) {
         //get the sum of timeSpentMinutes from CrnEntryMessage for Message's provider for this week by orderdate
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
         $dql->leftJoin("message.messageStatus","messageStatus");
@@ -2625,7 +2688,8 @@ class CrnUtil
     }
 
     public function getUndeletedMessages() {
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder('message');
         $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
 
@@ -2680,7 +2744,8 @@ class CrnUtil
         //$info = "Testaaa authors";
 
         $messageOid = $message->getOid();
-        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $messages = $this->em->getRepository(Message::class)->findAllMessagesByOid($messageOid);
 
         if( $message->getProvider() ) {
             $providerId = $message->getProvider()->getId();
@@ -2722,7 +2787,8 @@ class CrnUtil
         $oid = $message->getOid();
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -2742,7 +2808,8 @@ class CrnUtil
     }
 
     public function getAllMessagesByOid($messageOid,$asCommaSeparetedString=true) {
-        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $messages = $this->em->getRepository(Message::class)->findAllMessagesByOid($messageOid);
 
         if( !$asCommaSeparetedString ) {
             return $messages;
@@ -2771,12 +2838,14 @@ class CrnUtil
             return false;
         }
 
-        $messageStatusDeleted = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+        $messageStatusDeleted = $em->getRepository(MessageStatusList::class)->findOneByName("Deleted");
         if( !$messageStatusDeleted ) {
             throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
         }
 
-        $messages = $em->getRepository('AppOrderformBundle:Message')->findByOid($message->getOid());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $messages = $em->getRepository(Message::class)->findByOid($message->getOid());
 
         $deletedMessageInfos = array();
 
@@ -2819,7 +2888,8 @@ class CrnUtil
 
         $messageCategory = $userSecUtil->getSiteSettingParameter('messageCategory',$sitename);
         if( !$messageCategory ) {
-            $messageCategory = $this->em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Critical Result Notification Entry");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategory = $this->em->getRepository(MessageCategory::class)->findOneByName("Critical Result Notification Entry");
         }
 
         return $messageCategory;
@@ -2829,7 +2899,8 @@ class CrnUtil
         //retrieving the MRN Type with the lowest “Display Order” value instead of the “default MRN Type”…
         // So Default MRN Type = MRN Type with the lowest Display order value...
         $myLimit = 1;
-        $keytypemrns = $this->em->getRepository('AppOrderformBundle:MrnType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keytypemrns = $this->em->getRepository(MrnType::class)->findBy(
             array(),                        //All
             array('orderinlist' => 'ASC'),  //ASC - lowest firts
             $myLimit                        //limit
@@ -2845,11 +2916,13 @@ class CrnUtil
 
         $keytypemrn = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
         if( !$keytypemrn ) {
-            $keytypemrn = $this->em->getRepository('AppOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $keytypemrn = $this->em->getRepository(MrnType::class)->findOneByName("New York Hospital MRN");
         }
 
         if( !$keytypemrn ) {
-            $keytypemrns = $this->em->getRepository('AppOrderformBundle:MrnType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $keytypemrns = $this->em->getRepository(MrnType::class)->findAll();
             if( count($keytypemrns) > 0 ) {
                 $keytypemrn = $keytypemrns[0];
             }
@@ -2877,7 +2950,8 @@ class CrnUtil
 
         $withdummyfields = true;
         //$locationTypePrimary = null;
-        $locationType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $locationType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Encounter Location");
         if (!$locationType) {
             throw new \Exception('Location type is not found by name Encounter Location');
         }
@@ -2919,14 +2993,16 @@ class CrnUtil
             //city
             $city = $userSecUtil->getSiteSettingParameter('city',$sitename);
             if( !$city ) {
-                $city = $this->em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+                $city = $this->em->getRepository(CityList::class)->findOneByName('New York');
             }
             $geoLocation->setCity($city);
 
             //state
             $state = $userSecUtil->getSiteSettingParameter('state',$sitename);
             if( !$state ) {
-                $state = $this->em->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                $state = $this->em->getRepository(States::class)->findOneByName('New York');
             }
             $geoLocation->setState($state);
 
@@ -2940,7 +3016,8 @@ class CrnUtil
             //country
             $country = $userSecUtil->getSiteSettingParameter('country',$sitename);
             if( !$country ) {
-                $country = $this->em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+                $country = $this->em->getRepository(Countries::class)->findOneByName('New York');
             }
             $geoLocation->setCountry($country);
 
@@ -3071,7 +3148,8 @@ class CrnUtil
         $subquery = '('.$subquery.')';
 
         //query
-        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeText'] by [ObjectTypeText::class]
+        $repository = $em->getRepository(ObjectTypeText::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3116,7 +3194,8 @@ class CrnUtil
         }
         $impressionDestinationFormNodeId = $impressionDestinationFormNode->getId();
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeText'] by [ObjectTypeText::class]
+        $repository = $em->getRepository(ObjectTypeText::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3357,7 +3436,8 @@ class CrnUtil
                 if( $updateCache ) {
                     $message = null;
                     if ($entityId) {
-                        $message = $em->getRepository('AppOrderformBundle:Message')->find($entityId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                        $message = $em->getRepository(Message::class)->find($entityId);
                         if (!$message) {
                             throw new \Exception("Message is not found by id " . $entityId);
                         }
@@ -3466,7 +3546,8 @@ class CrnUtil
         //$formNodeHtml = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText')->findAll();
 
         //$sourceTextObjects = $em->getRepository('AppUserdirectoryBundle:FormNode')->findOneByName("History/Findings");
-        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeText'] by [ObjectTypeText::class]
+        $repository = $em->getRepository(ObjectTypeText::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3669,7 +3750,8 @@ class CrnUtil
                 if( $updateCache ) {
                     $message = null;
                     if ($entityId) {
-                        $message = $em->getRepository('AppOrderformBundle:Message')->find($entityId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                        $message = $em->getRepository(Message::class)->find($entityId);
                         if (!$message) {
                             throw new \Exception("Message is not found by id " . $entityId);
                         }
@@ -3718,7 +3800,8 @@ class CrnUtil
 
         $em = $this->em;
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeText'] by [ObjectTypeText::class]
+        $repository = $em->getRepository(ObjectTypeText::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3757,7 +3840,8 @@ class CrnUtil
 
         $em = $this->em;
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:ObjectTypeText');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ObjectTypeText'] by [ObjectTypeText::class]
+        $repository = $em->getRepository(ObjectTypeText::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.formNode", "formNode");
@@ -3796,7 +3880,8 @@ class CrnUtil
 
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $repository = $em->getRepository(FormNode::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
@@ -3821,7 +3906,8 @@ class CrnUtil
 
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, HTML');
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:FormNode');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
+        $repository = $em->getRepository(FormNode::class);
         $dql = $repository->createQueryBuilder("list");;
         $dql->select('list');
         $dql->leftJoin("list.objectType", "objectType");
@@ -3865,7 +3951,8 @@ class CrnUtil
 
             //set encounter generated id
             $key = $encounter2->obtainAllKeyfield()->first();
-            $encounter2 = $this->em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+            $encounter2 = $this->em->getRepository(Encounter::class)->setEncounterKey($key, $encounter2, $user);
             $this->em->persist($encounter2);
             $previousEncounters[] = $encounter2;
             //$previousEncounters[$encounter2->obtainEncounterNumberOnlyAndDate()] = $encounter2->getId();
@@ -3926,7 +4013,8 @@ class CrnUtil
             //if patient exists
             //$encounters = "";
             //$encounters = $patient->getEncounter();
-            $encounters = $this->em->getRepository('AppOrderformBundle:Encounter')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+            $encounters = $this->em->getRepository(Encounter::class)->findBy(
                 array('patient'=> $patient->getId()),
                 //array('id' => 'ASC')
                 array('id' => 'DESC')
@@ -4357,7 +4445,8 @@ class CrnUtil
 
         //if accession 
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
@@ -4618,7 +4707,8 @@ class CrnUtil
 
         $parameters = array();
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
@@ -4935,7 +5025,8 @@ class CrnUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppOrderformBundle:Accession');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $repository = $this->em->getRepository(Accession::class);
         $dql = $repository->createQueryBuilder("accession");
         $dql->leftJoin("accession.accession", "accessionaccession");
 
@@ -5067,7 +5158,8 @@ class CrnUtil
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppOrderformBundle:Accession');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $repository = $this->em->getRepository(Accession::class);
         $dql = $repository->createQueryBuilder("accession");
         $dql->leftJoin("accession.procedure", "procedure");
         $dql->leftJoin("procedure.encounter", "encounter");
@@ -5098,7 +5190,8 @@ class CrnUtil
 
     public function getCrnAccessionListType() {
         $accessionListTypeName = "Critical Result Notifications";
-        $accessionListType = $this->em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($accessionListTypeName);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListType'] by [AccessionListType::class]
+        $accessionListType = $this->em->getRepository(AccessionListType::class)->findOneByName($accessionListTypeName);
         if( !$accessionListType ) {
             throw new \Exception( "CRN AccessionListType not found by name ".$accessionListTypeName );
         }

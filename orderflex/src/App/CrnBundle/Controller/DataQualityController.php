@@ -17,6 +17,9 @@
 
 namespace App\CrnBundle\Controller;
 
+
+
+use App\CrnBundle\Entity\CrnTask; //process.py script: replaced namespace by ::class: added use line for classname=CrnTask
 use App\CrnBundle\Form\CrnPatientType;
 use App\CrnBundle\Util\CrnUtil;
 use App\OrderformBundle\Entity\Encounter;
@@ -138,7 +141,8 @@ class DataQualityController extends CrnEntryController
         $status = 'valid';
 
         if( $id1 ) {
-            $patient1 = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($id1);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patient1 = $this->getDoctrine()->getRepository(Patient::class)->find($id1);
             if( !$patient1 ) {
                 $msg .= "Patient 1 not found by id=".$id1;
                 $error = true;
@@ -150,7 +154,8 @@ class DataQualityController extends CrnEntryController
         }
 
         if( $id2 ) {
-            $patient2 = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($id2);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patient2 = $this->getDoctrine()->getRepository(Patient::class)->find($id2);
             if( !$patient2 ) {
                 $msg .= "Patient 2 not found by id=".$id2;
                 $error = true;
@@ -286,7 +291,8 @@ class DataQualityController extends CrnEntryController
                 //testing
                 $patientInfoArr = array();
                 foreach( $ids as $patientId ) {
-                    $thisPatient = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+                    $thisPatient = $this->getDoctrine()->getRepository(Patient::class)->find($patientId);
                     //foreach( $patient->getMrn() as $mrn ) {
                         //$msg .= $patient->getId().": after MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
                     //}
@@ -426,7 +432,8 @@ class DataQualityController extends CrnEntryController
 
         //set master patient
         if( $patientId ) {
-            $patientObject = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patientObject = $this->getDoctrine()->getRepository(Patient::class)->find($patientId);
             $patients = $crnUtil->getAllMergedPatients(array($patientObject));
             $ids = $crnUtil->setMasterPatientRecord($patients, $patientId, $user);
             $em->flush();
@@ -485,7 +492,8 @@ class DataQualityController extends CrnEntryController
             //continue;
 
             //find patient object
-            $patient = $this->getDoctrine()->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patient = $this->getDoctrine()->getRepository(Patient::class)->find($patientId);
             if( !$patient ) {
                 $error = true;
                 $msg .= ' Patient not found by ID# '.$patientId.'<br>';
@@ -760,7 +768,8 @@ class DataQualityController extends CrnEntryController
         //exit("status=".$status);
 
         if( $taskId && $status ) {
-            $task = $this->getDoctrine()->getRepository('AppCrnBundle:CrnTask')->find($taskId);
+        //process.py script: replaced namespace by ::class: ['AppCrnBundle:CrnTask'] by [CrnTask::class]
+            $task = $this->getDoctrine()->getRepository(CrnTask::class)->find($taskId);
             //echo "$task=".$task."<br>";
 
             //Convert status to boolean

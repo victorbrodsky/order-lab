@@ -90,7 +90,7 @@ def process_single_file( filepath, startstr, endstr ):
 
         if linemodified is not None:
             data[l_no] = linemodified
-            print('Replaced: l_no=', l_no, " in " + filepath)
+            print('"\n"Replaced: l_no=', l_no, " in " + filepath)
             print("Replaced line=",linemodified,"\n")
 
             #Now make sure class exists in the file's header "use class..."
@@ -99,7 +99,7 @@ def process_single_file( filepath, startstr, endstr ):
 
     # Now make sure class exists in the file's header "use class..."
     if 1:
-        print("\n\n Adding 'use' for " + filepath)
+        print("Adding 'use' for " + filepath)
         file = open(filepath, mode='r', encoding='utf8')
         content = file.read()
         print("addLines:", addLines)
@@ -163,9 +163,15 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                 result = find_between(line, startstr, endstr)  # AppOrderformBundle:AccessionType
                 #print('result=', result)
                 # AppOrderformBundle:AccessionType
-                x = result.split(":")
-                bundle = x[0]
-                classname = x[1]
+                if "," not in result and " " not in result and "-" not in result and "_" not in result:
+                    if ":" in result:
+                        x = result.split(":")
+                        bundle = x[0]
+                        classname = x[1]
+                    else:
+                        print("Warning: Skipped: the string to replace does not have [:]; result" + result + "\n")
+                else:
+                    print("Warning: Skipped: the string to replace is not valid; result" + result + "\n")
 
                 #get single ' or double quote " from line and result
                 #line: $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );

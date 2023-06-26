@@ -17,6 +17,12 @@
 
 namespace App\CrnBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -304,11 +310,13 @@ class CrnSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                        $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                    $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -378,11 +386,13 @@ class CrnSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                        $label = $this->params['em']->getRepository(PatientListHierarchy::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                    $label = $this->params['em']->getRepository(PatientListHierarchy::class)->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {

@@ -17,6 +17,9 @@
 
 namespace App\CrnBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -279,11 +282,13 @@ class CrnMessageType extends AbstractType
             if ($message) {
                 $messageCategory = $message->getMessageCategory();
                 if ($messageCategory) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                    $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                 }
             }
             if (!$label) {
-                $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
             }
 
             if( $label ) {

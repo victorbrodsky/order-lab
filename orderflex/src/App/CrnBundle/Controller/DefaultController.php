@@ -17,6 +17,12 @@
 
 namespace App\CrnBundle\Controller;
 
+
+
+use App\CrnBundle\Entity\CrnSiteParameter; //process.py script: replaced namespace by ::class: added use line for classname=CrnSiteParameter
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\CrnBundle\Form\CrnMessageCacheType;
 use App\OrderformBundle\Entity\Message;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
@@ -90,7 +96,8 @@ class DefaultController extends OrderAbstractController
 //            );
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppCrnBundle:CrnSiteParameter')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppCrnBundle:CrnSiteParameter'] by [CrnSiteParameter::class]
+        $entities = $em->getRepository(CrnSiteParameter::class)->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
@@ -206,7 +213,8 @@ class DefaultController extends OrderAbstractController
 
             if( $attendingUser ) {
                 $em = $this->getDoctrine()->getManager();
-                $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                $role = $em->getRepository(Roles::class)->findOneByName($roleStr);
                 if ($role) {
                     if (!$attendingUser->hasRole($roleStr)) {
                         $attendingUser->addRole($roleStr);
@@ -293,7 +301,8 @@ class DefaultController extends OrderAbstractController
         $forceUpdate = true;
         //$forceUpdate = false;
 
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
 
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');

@@ -17,6 +17,8 @@
 
 namespace App\DeidentifierBundle\Form;
 
+use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,7 +49,7 @@ class DeidentifierSearchType extends AbstractType
 
         //echo "acctype=".$this->params['defaultAccessionType']."<br>";
         $builder->add('accessionType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+            'class' => AccessionType::class,
             'label'=> "Accession Type:",
             'mapped' => false,
             'required'=> true,
@@ -90,7 +92,7 @@ class DeidentifierSearchType extends AbstractType
 
         $builder->add('institution', EntityType::class, array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
-            'class' => 'AppUserdirectoryBundle:Institution',
+            'class' => Institution::class,
             'choices' => $this->params['permittedInstitutions'],
             'data' => $this->params['defaultInstitution'],
             //'disabled' => $readOnly,

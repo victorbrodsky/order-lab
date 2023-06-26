@@ -528,7 +528,8 @@ class DefaultController extends OrderAbstractController
         //echo "accession count=".count($accessions)."<br>";
         //echo "accessionTypeId=".$accessionTypeId."<br>";
 
-        $repository = $em->getRepository('AppOrderformBundle:AccessionAccession');
+        //$repository = $em->getRepository('AppOrderformBundle:AccessionAccession');
+        $repository = $em->getRepository(AccessionAccession::class);
         $dql =  $repository->createQueryBuilder("accessionAccession");
         $dql->select('accessionAccession');
         $dql->leftJoin("accessionAccession.accession", "accession");
@@ -626,7 +627,7 @@ class DefaultController extends OrderAbstractController
         }
 
         /////////////////////// get maxDeidentifier /////////////////////////
-        $repository = $em->getRepository('AppOrderformBundle:AccessionAccession');
+        $repository = $em->getRepository(AccessionAccession::class);
         $dql =  $repository->createQueryBuilder("accessionAccession");
 
         //use something like: SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))

@@ -25,6 +25,27 @@
 namespace App\CrnBundle\Controller;
 
 
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\CrnBundle\Entity\CrnTask; //process.py script: replaced namespace by ::class: added use line for classname=CrnTask
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
+
+
+use App\OrderformBundle\Entity\PatientListHierarchyGroupType; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchyGroupType
+
+
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
+
+
+use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
+
 use App\CrnBundle\Entity\SinglePatient;
 use App\CrnBundle\Form\CrnListPreviousEntriesFilterType;
 use App\CrnBundle\Form\CrnPatientType;
@@ -119,7 +140,8 @@ class CrnPatientController extends PatientController {
         $institutions = array();
         $institutions[] = $institution->getId();
 
-        $patients = $em->getRepository('AppOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patients = $em->getRepository(Patient::class)->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
 
         if( count($patients) > 1 ) {
             $patient = null;
@@ -239,7 +261,8 @@ class CrnPatientController extends PatientController {
         $institutions = array();
         $institutions[] = $institution->getId();
 
-        $patients = $em->getRepository('AppOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patients = $em->getRepository(Patient::class)->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
         //echo "found patient=".$entity."<br>";
         //exit("edit patient by mrn $mrn $mrntype");
         //$patients = $em->getRepository('AppOrderformBundle:Patient')->findAll(); //testing
@@ -430,7 +453,8 @@ class CrnPatientController extends PatientController {
                 //check mrn type
                 if( $newMrntype ) {
                     if( $newMrntype != $mrnTypeId ) {
-                        $mrntypeObject = $em->getRepository('AppOrderformBundle:MrnType')->find($newMrntype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                        $mrntypeObject = $em->getRepository(MrnType::class)->find($newMrntype);
                         if ($mrntypeObject) {
                             //$newMrnObject->setKeytype($mrntypeObject);
                             $createNewMrn = true;
@@ -471,7 +495,8 @@ class CrnPatientController extends PatientController {
                     //echo "create new sex <br>";
                     $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
                     $newSexObject = new PatientSex('valid', $user, null);
-                    $sexObject = $em->getRepository('AppUserdirectoryBundle:SexList')->find($newGender);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+                    $sexObject = $em->getRepository(SexList::class)->find($newGender);
                     $newSexObject->setField($sexObject);
                     $patient->addSex($newSexObject, true);
                 }
@@ -554,7 +579,8 @@ class CrnPatientController extends PatientController {
             //$formNodeUtil = $this->container->get('user_formnode_utility');
             $em = $this->getDoctrine()->getManager();
 
-            $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $repository = $em->getRepository(Message::class);
 
             $dql =  $repository->createQueryBuilder("message");
             $dql->select('message');
@@ -704,7 +730,8 @@ class CrnPatientController extends PatientController {
 
         //get mrntypes
         $mrntypeChoices = array();
-        $mrntypeChoicesArr = $em->getRepository('AppOrderformBundle:MrnType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $mrntypeChoicesArr = $em->getRepository(MrnType::class)->findBy(
             array(
                 'type'=>array('default','user-added')
             ),
@@ -716,7 +743,8 @@ class CrnPatientController extends PatientController {
 
         //get genders
         $genderChoices = array();
-        $genderChoicesArr = $em->getRepository('AppUserdirectoryBundle:SexList')->findBy(array('type'=>array('default','user-added')));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+        $genderChoicesArr = $em->getRepository(SexList::class)->findBy(array('type'=>array('default','user-added')));
         foreach( $genderChoicesArr as $thisGender ) {
             $genderChoices[$thisGender->getName()] = $thisGender->getId();
         }
@@ -756,7 +784,8 @@ class CrnPatientController extends PatientController {
 
         //perform search
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder('message');
         $dql->leftJoin("message.patient","patient");
         $dql->leftJoin("message.messageStatus","messageStatus");
@@ -806,11 +835,13 @@ class CrnPatientController extends PatientController {
         //$patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($listid);
         //$patients = $patientList->getChildren();
 
-        $patientGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByName('Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchyGroupType'] by [PatientListHierarchyGroupType::class]
+        $patientGroup = $em->getRepository(PatientListHierarchyGroupType::class)->findOneByName('Patient');
 
         $parameters = array();
 
-        $repository = $em->getRepository('AppOrderformBundle:PatientListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $repository = $em->getRepository(PatientListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.patient", "patient");
@@ -850,7 +881,8 @@ class CrnPatientController extends PatientController {
 
         //echo "patients=".count($patients)."<br>";
 
-        $patientListHierarchyObject = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Patient List Hierarchy');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $patientListHierarchyObject = $em->getRepository(PlatformListManagerRootList::class)->findOneByName('Patient List Hierarchy');
 
         //create patient form for "Add Patient" section
         $status = 'invalid';
@@ -895,7 +927,8 @@ class CrnPatientController extends PatientController {
 
         $parameters = array();
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
 
         $dql->leftJoin("patient.message", "message");
@@ -977,13 +1010,15 @@ class CrnPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $patientList = $em->getRepository(PatientListHierarchy::class)->find($patientListId);
         if( !$patientList ) {
             throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
         }
 
         //remove patient from the list
-        $repository = $em->getRepository('AppOrderformBundle:PatientListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $repository = $em->getRepository(PatientListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.patient", "patient");
@@ -1037,13 +1072,15 @@ class CrnPatientController extends PatientController {
         $crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
-        $patientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->find($patientListId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $patientList = $em->getRepository(PatientListHierarchy::class)->find($patientListId);
         if( !$patientList ) {
             throw new \Exception( "PatientListHierarchy not found by id $patientListId" );
         }
 
         //add patient from the list
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->find($patientId);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientId" );
         }
@@ -1104,7 +1141,8 @@ class CrnPatientController extends PatientController {
         $patientid = $request->query->get('patientid');
         //echo "patientid=".$patientid."<br>";
 
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->find($patientid);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientid" );
         }
@@ -1187,7 +1225,8 @@ class CrnPatientController extends PatientController {
         //$this->testSelectMessagesWithMaxVersion($patientid);
 
         $queryParameters = array();
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder('message');
         $dql->select('message');
 
@@ -1327,7 +1366,8 @@ class CrnPatientController extends PatientController {
     //NOT USED
     public function testSelectMessagesWithMaxVersion( $patientid ) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
         $query = $repository->createQueryBuilder('s');
         $query->select('s, MAX(s.version)');
         $query->leftJoin("s.patient","patient");
@@ -1399,7 +1439,8 @@ class CrnPatientController extends PatientController {
 
         $cycle = $request->query->get('cycle');
 
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->find($patientid);
         if( !$patient ) {
             throw new \Exception( "Patient not found by id $patientid" );
         }
@@ -1466,7 +1507,8 @@ class CrnPatientController extends PatientController {
         //////////////// find previous pending tasks ////////////////
 
         $queryParameters = array();
-        $repository = $em->getRepository('AppCrnBundle:CrnTask');
+        //process.py script: replaced namespace by ::class: ['AppCrnBundle:CrnTask'] by [CrnTask::class]
+        $repository = $em->getRepository(CrnTask::class);
         $dql = $repository->createQueryBuilder('task');
         $dql->select('task');
 
@@ -1632,7 +1674,8 @@ class CrnPatientController extends PatientController {
         $patientId = trim((string)$request->get('patientId'));
         //echo "patientId=$patientId<br>";
 
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->find($patientId);
         if( !$patient ) {
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -1671,7 +1714,8 @@ class CrnPatientController extends PatientController {
         $encounterId = trim((string)$request->get('encounterId'));
         //echo "encounterId=$encounterId<br>";
 
-        $encounter = $em->getRepository('AppOrderformBundle:Encounter')->find($encounterId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $encounter = $em->getRepository(Encounter::class)->find($encounterId);
         if( !$encounter ) {
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');

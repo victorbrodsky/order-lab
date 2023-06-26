@@ -17,6 +17,21 @@
 
 namespace App\CrnBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
+
+
+use App\OrderformBundle\Entity\Encounter; //process.py script: replaced namespace by ::class: added use line for classname=Encounter
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Entity\EncounterAttendingPhysician;
 use App\OrderformBundle\Entity\EncounterReferringProvider;
@@ -55,7 +70,8 @@ class CrnEditController extends CrnEntryController
         //$crnUtil = $this->container->get('crn_util');
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -86,7 +102,8 @@ class CrnEditController extends CrnEntryController
         $user = $this->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -139,7 +156,8 @@ class CrnEditController extends CrnEntryController
             $message->setMessageStatusPrior($message->getMessageStatus());
         }
 
-        $messageStatus = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+        $messageStatus = $em->getRepository(MessageStatusList::class)->findOneByName("Deleted");
         if( !$messageStatus ) {
             throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
         }
@@ -212,11 +230,13 @@ class CrnEditController extends CrnEntryController
         //$messageId = 142; //154; //testing
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
-            $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $messageLatest = $em->getRepository(Message::class)->findByOidAndVersion($messageOid);
 
             if( !$messageLatest && !$messageVersion ) {
                 //handle case with th real DB id: http://localhost/order/crn-book/entry/view/267
-                $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                $messageLatest = $em->getRepository(Message::class)->find($messageOid);
             }
 
             if( $messageLatest ) {
@@ -229,7 +249,8 @@ class CrnEditController extends CrnEntryController
             throw new \Exception( "Latest Message is not found by oid ".$messageOid );
         }
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -239,7 +260,8 @@ class CrnEditController extends CrnEntryController
         if( strpos((string)$route, "_latest_encounter") !== false ) {
             $encounter = $message->getEncounter()->first();
             if( !$crnUtil->isLatestEncounterVersion($encounter) ) {
-                $latestEncounter = $em->getRepository('AppOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                $latestEncounter = $em->getRepository(Encounter::class)->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
                     //echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
                     //clear encounter
@@ -386,12 +408,14 @@ class CrnEditController extends CrnEntryController
         }
 
         //View Previous Version(s)
-        $allMessages = $em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid); //$messageVersion=null => all messages ordered by latest version first
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $allMessages = $em->getRepository(Message::class)->findAllMessagesByOid($messageOid); //$messageVersion=null => all messages ordered by latest version first
 
         //find current (latest) message status
         $latestMessageStatus = null;
         $latestMessageLabel = null;
-        $latestMessage = $em->getRepository('AppOrderformBundle:Message')->findLatestMessageByOid(null,$allMessages);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $latestMessage = $em->getRepository(Message::class)->findLatestMessageByOid(null,$allMessages);
         $latestNextMessageVersion = intval($latestMessage->getVersion()) + 1;
         //echo "latestNextMessageVersion=".$latestNextMessageVersion."<br>";
         if( $latestMessage && intval($messageVersion) != intval($latestMessage->getVersion()) ) {
@@ -407,7 +431,8 @@ class CrnEditController extends CrnEntryController
             UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
 
-        $maxEncounterVersion = $em->getRepository('AppOrderformBundle:Encounter')->getMaxEncounterVersion($existingEncounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $maxEncounterVersion = $em->getRepository(Encounter::class)->getMaxEncounterVersion($existingEncounter);
         $latestNextEncounterVersion = intval($maxEncounterVersion) + 1;
 
         //Event Log - User accessing “Edit Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Edit Accessed”)
@@ -482,7 +507,8 @@ class CrnEditController extends CrnEntryController
             return $this->redirect( $this->generateUrl('crn_home') );
         }
 
-        $originalMessage = $em->getRepository('AppOrderformBundle:Message')->find($messageId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $originalMessage = $em->getRepository(Message::class)->find($messageId);
         if (!$originalMessage) {
             throw new \Exception('Original Message not found by ID ' . $messageId);
         }
@@ -572,7 +598,8 @@ class CrnEditController extends CrnEntryController
                 //echo "2document: ID=".$document->getId()."; Size==".$document->getSizeStr()."; abspath=".$document->getAbsoluteUploadFullPath()."<br>";
                 $documentId = $document->getId();
                 if( $documentId ) {
-                    $documentEntity = $em->getRepository('AppUserdirectoryBundle:Document')->find($documentId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $documentEntity = $em->getRepository(Document::class)->find($documentId);
                     //echo "documentEntity: ID=".$documentEntity->getId()."; Size=".$documentEntity->getSizeStr()."; abspath=".$documentEntity->getAbsoluteUploadFullPath()."<br>";
                     if( $documentEntity ) {
                         //Create a new document (clone)
@@ -688,7 +715,8 @@ class CrnEditController extends CrnEntryController
                 $buttonStatusForm = $data['messageStatusJs'];
                 //echo "buttonStatusForm=".$buttonStatusForm."<br>";
                 if( $buttonStatusForm ) {
-                    $buttonStatusObj = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($buttonStatusForm);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+                    $buttonStatusObj = $em->getRepository(MessageStatusList::class)->findOneByName($buttonStatusForm);
                     if( $buttonStatusObj ) {
 
                         //if "Signed" set signed User, datetime, roles by signeeInfo
@@ -733,7 +761,8 @@ class CrnEditController extends CrnEntryController
                 //set OID from original message
                 $message->setOid($originalMessage->getOid());
                 //increment version: latest message + 1
-                $latestMessage = $em->getRepository('AppOrderformBundle:Message')->findLatestMessageByOid($originalMessage->getOid());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                $latestMessage = $em->getRepository(Message::class)->findLatestMessageByOid($originalMessage->getOid());
                 $incrementedVersion = intval($latestMessage->getVersion()) + 1;
                 //echo "incrementedVersion=".$incrementedVersion."<br>";
                 $message->setVersion($incrementedVersion);
@@ -757,7 +786,8 @@ class CrnEditController extends CrnEntryController
                     //                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
                     //                }
 
-                    $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+                    $patient = $em->getRepository(Patient::class)->find($patient->getId());
                     $message->clearPatient();
                     $message->addPatient($patient);
 
@@ -947,7 +977,8 @@ class CrnEditController extends CrnEntryController
         $encounterVersionOk = true;
         $result = "Not OK";
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->find($messageId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->find($messageId);
         if( !$message ) {
             throw new \Exception( "Message is not found by id ".$messageId );
         }

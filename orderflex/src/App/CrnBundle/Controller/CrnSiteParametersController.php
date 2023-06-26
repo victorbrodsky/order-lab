@@ -100,7 +100,8 @@ class CrnSiteParametersController extends SiteParametersController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppCrnBundle:CrnSiteParameter')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppCrnBundle:CrnSiteParameter'] by [CrnSiteParameter::class]
+        $entities = $em->getRepository(CrnSiteParameter::class)->findAll();
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
