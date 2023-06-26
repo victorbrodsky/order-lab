@@ -162,16 +162,26 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                 # result = re.search(startstr+'(.*)'+endstr, line)
                 result = find_between(line, startstr, endstr)  # AppOrderformBundle:AccessionType
                 #print('result=', result)
+                bundle = None
+                classname = None
                 # AppOrderformBundle:AccessionType
                 if "," not in result and " " not in result and "-" not in result and "_" not in result:
                     if ":" in result:
                         x = result.split(":")
-                        bundle = x[0]
-                        classname = x[1]
+                        if len(x) == 2:
+                            bundle = x[0]
+                            classname = x[1]
+                        else:
+                            print("Warning: Skipped: the string to replace is not splitted by [:]; result" + result + "\n")
                     else:
                         print("Warning: Skipped: the string to replace does not have [:]; result" + result + "\n")
                 else:
                     print("Warning: Skipped: the string to replace is not valid; result" + result + "\n")
+
+                if bundle is None or classname is None:
+                    print("Warning: Skipped: the string to replace is not valid namespace alias; result" + result + "\n")
+                    return None, None, None
+
 
                 #get single ' or double quote " from line and result
                 #line: $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
