@@ -183,7 +183,7 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                 if searchstr in origline:
                     print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
                     linemodified = origline.replace(searchstr, replacedstr)
-                    linemodified = "    //process.py script: replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
+                    linemodified = "        //process.py script: replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
                     return linemodified, bundle, classname
                 else:
                     print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: searchstr [" + searchstr + "] is not in the line" + "\n")

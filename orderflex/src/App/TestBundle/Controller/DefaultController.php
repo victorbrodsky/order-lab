@@ -31,7 +31,7 @@ namespace App\DeidentifierBundle\Controller;
 
 
 
-use App\UserdirectoryBundle\Entity\Institution; //Added use line for replacing namespace by ::class: classname=Institution
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\DeidentifierBundle\Form\DeidentifierSearchType;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
@@ -68,7 +68,7 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $accessionTypes = $em->getRepository(AccessionType::class)->findBy( array('type'=>array('default','user-added')) );
 
 
@@ -251,7 +251,7 @@ class DefaultController extends OrderAbstractController
 
         //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionType);
 
         //Event Log
@@ -280,7 +280,7 @@ class DefaultController extends OrderAbstractController
         //$institutions[] = $inst->getId();
 
         //findOneByIdJoinedToField already include collaboration based on the provided permitted $institutions
-    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
         $accessions = $em->getRepository(Accession::class)->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
 
         return $accessions;
@@ -320,7 +320,7 @@ class DefaultController extends OrderAbstractController
         //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
 
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionTypeId);
 
         if( !$accessionNumber ) {
@@ -413,9 +413,9 @@ class DefaultController extends OrderAbstractController
         //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         //Event Log
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionTypeId);
-    //Replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $institutionObj = $em->getRepository(Institution::class)->find($institution);
         //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
         $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
@@ -463,7 +463,7 @@ class DefaultController extends OrderAbstractController
 
         //create a new accession object
         //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
         $accession = $em->getRepository(Accession::class)->createElement(
             $institution,       //institution
             "valid",            //status. if null => STATUS_RESERVED
@@ -618,7 +618,7 @@ class DefaultController extends OrderAbstractController
 
         $deidentifier = null;
 
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $deidentifierType = $em->getRepository(AccessionType::class)->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
@@ -691,7 +691,7 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
         $accession = $em->getRepository(Accession::class)->find($accessionId);
 
         if( !$accession ) {
@@ -709,7 +709,7 @@ class DefaultController extends OrderAbstractController
 
         $accessionAccession = new AccessionAccession($status,$user,$source);
 
-    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $deidentifierType = $em->getRepository(AccessionType::class)->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
