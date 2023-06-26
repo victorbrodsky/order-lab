@@ -21,6 +21,7 @@ namespace App\OrderformBundle\Controller;
 
 use App\OrderformBundle\Entity\AccessionType;
 use App\OrderformBundle\Entity\Account;
+use App\OrderformBundle\Entity\CourseTitleTree;
 use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
 
 
@@ -29,6 +30,7 @@ use App\OrderformBundle\Entity\MrnType;
 use App\OrderformBundle\Entity\OrderDelivery;
 use App\OrderformBundle\Entity\OrganList;
 use App\OrderformBundle\Entity\ProcedureList;
+use App\OrderformBundle\Entity\ProjectTitleTree;
 use App\OrderformBundle\Entity\RegionToScan;
 use App\OrderformBundle\Entity\SlideType;
 use App\OrderformBundle\Entity\StainList;
@@ -656,21 +658,24 @@ class ScanUtilController extends UtilController {
 
         if( $routeName == "get-optionalusereducational" ) {
             $role = "ROLE_SCANORDER_COURSE_DIRECTOR";
-            $prefix = 'App';
-            $bundleName = 'OrderformBundle';
-            $className = 'CourseTitleTree';
+            //$prefix = 'App';
+            //$bundleName = 'OrderformBundle';
+            //$className = 'CourseTitleTree';
+            $fromClass = CourseTitleTree::class;
         }
         if( $routeName == "get-optionaluserresearch" ) {
             $role = "ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR";
-            $prefix = 'App';
-            $bundleName = 'OrderformBundle';
-            $className = 'ProjectTitleTree';
+            //$prefix = 'App';
+            //$bundleName = 'OrderformBundle';
+            //$className = 'ProjectTitleTree';
+            $fromClass = ProjectTitleTree::class;
         }
 
         //1) ProjectTitleTree id => get research => get principalWrappers
         if( $holderId && $holderId != "undefined" ) {
             $query = $em->createQueryBuilder()
-                ->from($prefix.$bundleName.':'.$className, 'list')
+                //->from($prefix.$bundleName.':'.$className, 'list')
+                ->from($fromClass, 'list')
                 //->select("userWrappers.id as id, CONCAT(userWrappers.name,CONCAT(' - ',userWrappersUserInfos.displayName)) as text")
                 ->select("userWrappers.id as id, (CASE WHEN userWrappersUser.id IS NULL THEN userWrappers.name ELSE userWrappers.name+' - '+userWrappersUserInfos.displayName END) as text")
                 //->select("userWrappers.id as id, userWrappers.name as text")
