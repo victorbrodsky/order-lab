@@ -2,6 +2,7 @@
 
 namespace Tests\App\TestBundle;
 
+use App\FellAppBundle\Entity\FellowshipApplication;
 use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -271,7 +272,8 @@ class FellappTest extends WebTestBase
     public function testShowApplication() {
         $this->logIn();
 
-        $fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        //$fellapps = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findAll();
+        $fellapps = $this->em->getRepository(FellowshipApplication::class)->findAll();
 
         if( count($fellapps) > 0 ) {
             $fellapp = end($fellapps);

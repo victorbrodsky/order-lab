@@ -2,6 +2,8 @@
 
 namespace Tests\App\TestBundle;
 
+use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\Project;
 use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -105,7 +107,7 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        $projects = $this->em->getRepository(Project::class)->findAll();
         //$transresUtil = $this->container->get('transres_util');
         //$projects = $transresUtil->getAvailableProjects();
 
@@ -323,7 +325,7 @@ class TrpTest extends WebTestBase
         $this->logIn();
 
         //$invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
-        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findBy(array(), array('id' => 'ASC'));
+        $invoices = $this->em->getRepository(Invoice::class)->findBy(array(), array('id' => 'ASC'));
 
         if( count($invoices) > 0 ) {
             $invoice = end($invoices);
@@ -397,7 +399,7 @@ class TrpTest extends WebTestBase
     public function testInvoicePdfSlip() {
         $this->logIn();
 
-        $invoices = $this->em->getRepository('AppTranslationalResearchBundle:Invoice')->findAll();
+        $invoices = $this->em->getRepository(Invoice::class)->findAll();
         if( count($invoices) > 0 ) {
 
             $invoice = end($invoices);
@@ -677,7 +679,7 @@ class TrpTest extends WebTestBase
 
         $this->logIn();
 
-        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        $projects = $this->em->getRepository(Project::class)->findAll();
         if( count($projects) == 0 ) {
             echo "No projects found";
             return null;
@@ -751,7 +753,7 @@ class TrpTest extends WebTestBase
     public function testReviewAction() {
         $this->logIn();
 
-        $projects = $this->em->getRepository('AppTranslationalResearchBundle:Project')->findAll();
+        $projects = $this->em->getRepository(Project::class)->findAll();
         if( count($projects) > 0 ) {
             $project = end($projects);
             $projectId = $project->getId();

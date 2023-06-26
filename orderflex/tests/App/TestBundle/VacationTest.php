@@ -2,6 +2,7 @@
 
 namespace Tests\App\TestBundle;
 
+use App\VacReqBundle\Entity\VacReqRequest;
 use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -303,7 +304,7 @@ class VacationTest extends WebTestBase
     public function testShowEditRequest() {
         $this->logIn();
 
-        $requests = $this->em->getRepository('AppVacReqBundle:VacReqRequest')->findAll();
+        $requests = $this->em->getRepository(VacReqRequest::class)->findAll();
         if( count($requests) > 0 ) {
 
             $request = end($requests);

@@ -12,6 +12,7 @@ namespace Tests\App\TestBundle;
 
 //use PHPUnit\Framework\TestCase;
 //use App\UserdirectoryBundle\Util\UserSecurityUtil;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -210,11 +211,11 @@ class WebTestBase extends WebTestCase
         $systemUser = $userSecUtil->findSystemUser();
 
         if( !$systemUser ) {
-            $systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('Administrator');
+            $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('Administrator');
         }
 
         if( !$systemUser ) {
-            $systemUser = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId('administrator');
+            $systemUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('administrator');
         }
 
         return $systemUser;

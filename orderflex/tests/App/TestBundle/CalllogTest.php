@@ -2,6 +2,7 @@
 
 namespace Tests\App\TestBundle;
 
+use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -81,7 +82,8 @@ class CalllogTest extends WebTestBase
         );
 
         //get non empty formnode and use getFormNodeValueByFormnodeAndReceivingmapper to find value
-        $treeRepository = $this->em->getRepository("AppUserdirectoryBundle:ObjectTypeText");
+        //$treeRepository = $this->em->getRepository("AppUserdirectoryBundle:ObjectTypeText");
+        $treeRepository = $this->em->getRepository(ObjectTypeText::class);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace");

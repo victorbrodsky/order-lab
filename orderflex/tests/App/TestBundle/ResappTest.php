@@ -2,6 +2,7 @@
 
 namespace Tests\App\TestBundle;
 
+use App\ResAppBundle\Entity\ResidencyApplication;
 use Tests\App\TestBundle\WebTestBase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -261,7 +262,7 @@ class ResappTest extends WebTestBase
     public function testShowApplication() {
         $this->logIn();
 
-        $resapps = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findAll();
+        $resapps = $this->em->getRepository(ResidencyApplication::class)->findAll();
 
         if( count($resapps) > 0 ) {
             $resapp = end($resapps);
