@@ -140,7 +140,7 @@ def process_single_file( filepath, startstr, endstr ):
                         print("Warning: line use not added: namespaceline line not found in " + filepath)
             else:
                 print("Warning: line use not added: none or multiple class definition found for classname="+
-                      classname+"; foundcount="+str(foundcount)+"!= 1; " + useline + " in ", filepath)
+                      classname+"; foundcount="+str(foundcount)+"!= 1; " + ", filepath=", filepath)
 
 
     # and write everything back
