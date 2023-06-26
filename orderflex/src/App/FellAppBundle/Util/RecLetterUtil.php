@@ -387,15 +387,15 @@ class RecLetterUtil {
             . "<br>" . "Please use the link below to submit your recommendation letter as soon as possible:"
             . "<br><br>" . $uploadFormLink
             . "<br><br>" . "If you have any issues with submitting your letter, please contact"
-            . " Elizabeth Hammerschmidt (our fellowship program coordinator) at eah2006@med.cornell.edu for alternative methods of submitting your recommendation letter."
-            . "<br><br>" . "If you believe you have received this email in error please let Elizabeth Hammerschmidt know."
+            . " Jessica Misner (our fellowship program coordinator) at jep2018@med.cornell.edu for alternative methods of submitting your recommendation letter."
+            . "<br><br>" . "If you believe you have received this email in error please let Jessica Misner know."
             . "<br><br><br>" . "Sincerely,"
-            . "<br><br>" . "Elizabeth Hammerschmidt"
+            . "<br><br>" . "Jessica Misner"
             . "<br>" . "Fellowship Program Coordinator"
             . "<br>" . "Weill Cornell Medicine Pathology and Laboratory Medicine"
             . "<br>" . "1300 York Avenue, Room C-302"
             . "<br>" . "New York, NY 10065  "
-            . "<br>" . "T 212.746.7365"
+            . "<br>" . "T 212.746.6464"
             . "<br>" . "F 212.746.8192"
         ;
 
