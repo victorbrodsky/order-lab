@@ -66,9 +66,6 @@ def process_files( dir, startstr, endstr ):
             file.close()
             #return #testing
 
-        #1) find something like getRepository('AppUserdirectoryBundle:EventObjectTypeList')
-
-
     return output
 
 def process_single_file( filepath, startstr, endstr ):
@@ -91,7 +88,7 @@ def process_single_file( filepath, startstr, endstr ):
         #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
         linemodified, bundle, classname = process_line(l_no, line, filepath, startstr, endstr)
 
-        if linemodified != None:
+        if linemodified is not None:
             data[l_no] = linemodified
             print('Replaced: l_no=', l_no, " in " + filepath)
             print("Replaced line=",linemodified,"\n")
@@ -102,10 +99,10 @@ def process_single_file( filepath, startstr, endstr ):
 
     # Now make sure class exists in the file's header "use class..."
     if 1:
-        print("\n\n Adding 'use ...'")
+        print("\n\n Adding 'use' for " + filepath)
         file = open(filepath, mode='r', encoding='utf8')
         content = file.read()
-        print("### addLines:", addLines, " for " + filepath)
+        print("addLines:", addLines)
         for bundle, classname in addLines:
             print("bundle=" + bundle + ", classname=" + classname)
             #AppOrderformBundle:Accession => use App\OrderformBundle\Entity\Accession;
@@ -133,13 +130,16 @@ def process_single_file( filepath, startstr, endstr ):
                 if useline not in content:
                     useline = useline + " //process.py script: replaced namespace by ::class: added use line for classname=" + classname
                     #print("useline=" + useline)
-                    print("Added use: " + useline + " in ", filepath)
                     #add after namespace App\DeidentifierBundle\Controller;
                     #print(data)
                     #print("namespaceline=",namespaceline)
-                    data[namespaceline] = data[namespaceline] + "\n\n\n" + useline
+                    if namespaceline is not None:
+                        data[namespaceline] = data[namespaceline] + "\n\n\n" + useline
+                        print("Added use: " + useline + " in ", filepath)
+                    else:
+                        print("Warning: line use not added: namespaceline line not found in " + filepath)
             else:
-                print("Not added use: because none or multiple class definition found for classname="+classname+"; foundcount="+foundcount+"!= 1; " + useline + " in ", filepath)
+                print("Warning: line use not added: none or multiple class definition found for classname="+classname+"; foundcount="+foundcount+"!= 1; " + useline + " in ", filepath)
 
 
     # and write everything back
@@ -178,7 +178,7 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                     quote = lastChar
                     #print("quote=" + quote)
                 else:
-                    print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: quote char is not defined" + "\n")
+                    print("Warning: Use default single quote; quote char is not defined; quote=" + quote + "\n")
 
                 # User::class
                 searchstr = quote + result + quote
@@ -189,9 +189,9 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                     linemodified = "        //process.py script: replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
                     return linemodified, bundle, classname
                 else:
-                    print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: searchstr [" + searchstr + "] is not in the line" + "\n")
+                    print("Warning: Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: searchstr [" + searchstr + "] is not in the line" + "\n")
             else:
-                print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
+                print("Warning: Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: start/end strings occurred more than 1 time" + "\n")
         else:
             # print(filepath + "\n" + "line="+line+"\n"+"Skipped: line commented out")
             pass
