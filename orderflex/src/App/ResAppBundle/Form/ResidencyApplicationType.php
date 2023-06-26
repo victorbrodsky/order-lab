@@ -18,6 +18,12 @@
 namespace App\ResAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
 use App\UserdirectoryBundle\Form\BoardCertificationType;
 use App\UserdirectoryBundle\Form\CitizenshipType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -112,7 +118,8 @@ class ResidencyApplicationType extends AbstractType
         }
 
         $builder->add('residencyTrack', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            'class' => ResidencyTrackList::class,
             'label' => "Residency Track:",
             //'required' => true,
             'required' => false,
@@ -394,7 +401,8 @@ class ResidencyApplicationType extends AbstractType
         ));
 
         $builder->add('observers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Observer(s):",
             'required' => false,
             'multiple' => true,

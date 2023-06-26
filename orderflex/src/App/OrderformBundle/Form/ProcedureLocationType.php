@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -39,7 +45,8 @@ class ProcedureLocationType extends AbstractType
 
         //Location Source System - array field location source
         $builder->add('source', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:SourceSystemList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+            'class' => SourceSystemList::class,
             'label' => 'Location Source System:',
             'required' => false,
             'data' => null,
@@ -55,7 +62,8 @@ class ProcedureLocationType extends AbstractType
         //Location Role - property of location object (use as a filter)
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Location',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            'class' => Location::class,
             'label' => 'Procedure Location',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),

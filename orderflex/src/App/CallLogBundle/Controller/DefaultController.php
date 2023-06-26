@@ -17,6 +17,24 @@
 
 namespace App\CallLogBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\CalllogEntryMessage; //process.py script: replaced namespace by ::class: added use line for classname=CalllogEntryMessage
+
+
+use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
+
+
+use App\OrderformBundle\Entity\Encounter; //process.py script: replaced namespace by ::class: added use line for classname=Encounter
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
 use App\CallLogBundle\Form\CalllogMessageCacheType;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\MessageTagsList;
@@ -215,7 +233,8 @@ class DefaultController extends OrderAbstractController
 
             if( $attendingUser ) {
                 $em = $this->getDoctrine()->getManager();
-                $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                $role = $em->getRepository(Roles::class)->findOneByName($roleStr);
                 if ($role) {
                     if (!$attendingUser->hasRole($roleStr)) {
                         $attendingUser->addRole($roleStr);
@@ -302,7 +321,8 @@ class DefaultController extends OrderAbstractController
         $forceUpdate = true;
         //$forceUpdate = false;
 
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
 
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
@@ -749,7 +769,8 @@ class DefaultController extends OrderAbstractController
         //Copy entry tags from CalllogEntryMessage->entryTags => Message->entryTags
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('AppOrderformBundle:CalllogEntryMessage');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogEntryMessage'] by [CalllogEntryMessage::class]
+        $repository = $em->getRepository(CalllogEntryMessage::class);
         $dql =  $repository->createQueryBuilder("calllogMessage");
         $dql->select('calllogMessage');
         $dql->leftJoin("calllogMessage.entryTags", "entryTag");
@@ -767,7 +788,7 @@ class DefaultController extends OrderAbstractController
             foreach($tags as $tag) {
                 echo $message->getId().": tags=" . $tag . "<br>";
 
-                $messageEntryTag = $em->getRepository("AppOrderformBundle:MessageTagsList")->findOneByName($tag->getName());
+                $messageEntryTag = $em->getRepository(MessageTagsList::class)->findOneByName($tag->getName());
                 echo $message->getId().": messageEntryTag=" . $messageEntryTag . "<br>";
 
                 $message->addEntryTag($messageEntryTag);
@@ -802,12 +823,14 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $oldMrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $oldMrnType = $em->getRepository(MrnType::class)->findOneByName("New York Hospital MRN");
         if( !$oldMrnType ) {
             exit("oldMrnType not found");
         }
 
-        $newMrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName("NYH EMPI");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $newMrnType = $em->getRepository(MrnType::class)->findOneByName("NYH EMPI");
         if( !$newMrnType ) {
             exit("newMrnType not found");
         }
@@ -935,7 +958,8 @@ class DefaultController extends OrderAbstractController
         //print_r($rowData);
         //dump($rowData);
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
@@ -1052,7 +1076,8 @@ class DefaultController extends OrderAbstractController
             exit("$mrnNumber is not an integer");
         }
 
-        $repository = $em->getRepository('AppOrderformBundle:Patient');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $repository = $em->getRepository(Patient::class);
         $dql = $repository->createQueryBuilder("patient");
         $dql->leftJoin("patient.mrn", "mrn");
         $dql->leftJoin("patient.dob", "dob");
@@ -1102,7 +1127,8 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+        $repository = $em->getRepository(Location::class);
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
 
@@ -1212,7 +1238,8 @@ class DefaultController extends OrderAbstractController
 //        echo "disabled locations=".count($disabledLocations)."<br>";
 
         //Step 1: find default encounters (default or user-added)
-        $repository = $em->getRepository('AppUserdirectoryBundle:Location');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+        $repository = $em->getRepository(Location::class);
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
         $dql->leftJoin("location.locationTypes", "locationTypes");
@@ -1258,7 +1285,8 @@ class DefaultController extends OrderAbstractController
 //        }
 
         //Step 2: find all encounters with disabled location
-        $repository = $em->getRepository('AppOrderformBundle:Encounter');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+        $repository = $em->getRepository(Encounter::class);
         $dql = $repository->createQueryBuilder("encounter");
         $dql->select('encounter');
         $dql->leftJoin("encounter.tracker","tracker");

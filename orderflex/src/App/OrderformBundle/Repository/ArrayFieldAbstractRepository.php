@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Repository;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 //use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use App\UserdirectoryBundle\Util\UserSecurityUtil;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,7 +85,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //check and remove duplication objects such as two Part 'A'.
-        $entity = $em->getRepository('AppOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $message );
+        //$entity = $em->getRepository('AppOrderformBundle:'.$className)->replaceDuplicateEntities( $entity, $message );
+        $entity = $em->getRepository('App\\OrderformBundle\\Entity\\'.$className)->replaceDuplicateEntities( $entity, $message );
 
         //Accession only: process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
 //        if( $className == 'Accession' ) {
@@ -201,7 +208,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $validPaper = $formEntity->obtainValidField('paper');
 
-            $validPaper = $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $validPaper );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $validPaper = $em->getRepository(Document::class)->processDocuments( $validPaper );
 
             //add new paper to $entity
             if( $validPaper != null ) {
@@ -288,7 +296,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
             $parentClass = new \ReflectionClass($parent);
             $parentClassName = $parentClass->getShortName();
-            $processedParent = $em->getRepository('AppOrderformBundle:'.$parentClassName)->processEntity( $parent, $message, $originalParent );
+            //$processedParent = $em->getRepository('AppOrderformBundle:'.$parentClassName)->processEntity( $parent, $message, $originalParent );
+            $processedParent = $em->getRepository('App\\OrderformBundle\\Entity\\'.$parentClassName)->processEntity( $parent, $message, $originalParent );
             //echo "processed parent:".$processedParent;
 
             $entity->setParent($processedParent);
@@ -769,7 +778,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //if field has id, check if the value is not the same. If the values are different, then create a new valid field and make status of DB existed field as invalid
         if( $field->getId() && $field->getId() != "" ) {
-            $found = $em->getRepository('AppOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+            //$found = $em->getRepository('AppOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+            $found = $em->getRepository('App\\OrderformBundle\\Entity\\'.$className.$methodName)->findOneById($field->getId());
             //echo "found field=".$found." compare to field=".$field."<br>";
             if( $found && $found->getField() != $field->getField() ) {
                 //echo "different with found by id=".$field->getId()."<br>";
@@ -825,7 +835,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo $className.$methodName.": find field =".$field.", id=".$field->getId()."<br>";
         //adding field
-        $found = $em->getRepository('AppOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+        //$found = $em->getRepository('AppOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
+        $found = $em->getRepository('App\\OrderformBundle\\Entity\\'.$className.$methodName)->findOneById($field->getId());
         //echo "found id=".$found."<br>";
 
         if( !$found ) {
@@ -944,8 +955,10 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 if( !in_array($inst, $addedInst) ) {
                     //echo "not in array<br>";
                     //$instStr .= "c.institution=".$inst."";
-                    $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($inst);
-                    $instStrNew = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $permittedInstitution = $this->_em->getRepository(Institution::class)->find($inst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $instStrNew = $this->_em->getRepository(Institution::class)->
                         getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                     //echo "instStrNew=".$instStrNew."<br>";
                     $instStr .= $instStrNew;
@@ -962,7 +975,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
         //echo "instStr=".$instStr." ==> <br>";
 
-        $dql = 'SELECT c FROM AppOrderformBundle:'.$className.' c
+//        $dql = 'SELECT c FROM AppOrderformBundle:'.$className.' c
+//                JOIN c.'.$fieldName.' cfield
+//                JOIN c.institution institution
+//                WHERE cfield.field = :field'.$validityStr.$extraStr.$instStr;
+        $dql = 'SELECT c FROM App\\OrderformBundle\\Entity\\'.$className.' c
                 JOIN c.'.$fieldName.' cfield
                 JOIN c.institution institution
                 WHERE cfield.field = :field'.$validityStr.$extraStr.$instStr;
@@ -1077,7 +1094,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $entityClass = "App\\OrderformBundle\\Entity\\".$className;
         $entity = new $entityClass($withfields,'valid',$provider);
 
-        $inst = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneById($institution);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $inst = $em->getRepository(Institution::class)->findOneById($institution);
         $entity->setInstitution($inst);
         $institutions = array();
         $institutions[] = $institution;
@@ -1240,16 +1258,19 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //TODO: change institution hierarchy and add collaboration
         //$inst = " AND c.institution=".$entity->getInstitution()->getId();
         $inst = " AND (" .
-                $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $this->_em->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($entity->getInstitution(),"institution",array("Union","Intersection")) .
                 ")";
 
         //Here and in Block and Part repository: watch for string max: '9' is greater than '10'? However, max works correctly.
-        $queryStr = 'SELECT MAX(cfield.field) as max'.$fieldName.' FROM AppOrderformBundle:'.$className.
-                    ' c'.
-                    ' JOIN c.'.$fieldName.' cfield'.
-                    ' JOIN c.institution institution'.
-                    ' WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
+        $queryStr =
+            //'SELECT MAX(cfield.field) as max'.$fieldName.' FROM AppOrderformBundle:'.$className.
+            'SELECT MAX(cfield.field) as max'.$fieldName.' FROM App\\OrderformBundle\\Entity\\'.$className.
+            ' c'.
+            ' JOIN c.'.$fieldName.' cfield'.
+            ' JOIN c.institution institution'.
+            ' WHERE '.$extraStr.'cfield.field LIKE :field'.$inst;
 
         //echo "queryStr=".$queryStr."<br>";
 
@@ -1284,7 +1305,8 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         /////// check if maxKey does not exists ///////
         $queryCheckStr =
-            'SELECT cfield.field FROM AppOrderformBundle:'.$className.
+            //'SELECT cfield.field FROM AppOrderformBundle:'.$className.
+            'SELECT cfield.field FROM App\\OrderformBundle\\Entity\\'.$className.
             ' c'.
             ' JOIN c.'.$fieldName.' cfield'.
             ' JOIN c.institution institution'.
@@ -1406,7 +1428,11 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $em = $this->_em;
             $validity = array(self::STATUS_VALID,self::STATUS_RESERVED); //false; //accept reserved also
             $institutions = array($entity->getInstitution()->getId());
-            $newEntity = $em->getRepository('AppOrderformBundle:'.$className)->findOneByIdJoinedToField($institutions, $validKeyField->getField()."",$className,$fieldName,$validity,true, $extra);
+            $newEntity =
+                //$em->getRepository('AppOrderformBundle:'.$className)->
+                $em->getRepository('App\\OrderformBundle\\Entity\\'.$className)->
+                findOneByIdJoinedToField($institutions, $validKeyField->getField().
+                "",$className,$fieldName,$validity,true, $extra);
         } else {
             //echo "This entity does not have a valid key field<br>";
             $newEntity = null;

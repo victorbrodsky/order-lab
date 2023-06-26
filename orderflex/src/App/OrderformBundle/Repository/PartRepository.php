@@ -16,7 +16,15 @@
  */
 
 namespace App\OrderformBundle\Repository;
+
+
+
+use App\OrderformBundle\Entity\AccessionType;
 use App\OrderformBundle\Entity\Part;
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accessionuse App\OrderformBundle\Entity\Part;
 
 /**
  * PartRepository
@@ -145,15 +153,18 @@ class PartRepository extends ArrayFieldAbstractRepository
         //institution
         //TODO: change institution hierarchy and add collaboration
         //$inst = " AND p.institution=".$institution;
-        $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($institution);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $permittedInstitution = $this->_em->getRepository(Institution::class)->find($institution);
         $inst = " AND (" .
-                $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $this->_em->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
                 ")";
 
+        //SELECT MAX(ppartname.field) as max'.'partname'.' FROM AppOrderformBundle:Part p
         $query = $this->getEntityManager()
             ->createQuery('
-            SELECT MAX(ppartname.field) as max'.'partname'.' FROM AppOrderformBundle:Part p
+            SELECT MAX(ppartname.field) as max'.'partname'.' FROM App\\OrderformBundle\\Entity\\Part p
             JOIN p.institution institution
             JOIN p.partname ppartname
             JOIN p.accession a
@@ -213,17 +224,20 @@ class PartRepository extends ArrayFieldAbstractRepository
         $em = $this->_em;
 
         //1a) Check accession
-        $accession = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",$validity,true,$extra); //find multi: all accessions with given $accessionNumber
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $em->getRepository(Accession::class)->findOneByIdJoinedToField($institutions, $accessionNumber,"Accession","accession",$validity,true,$extra); //find multi: all accessions with given $accessionNumber
 
         if( !$accession ) {
             //echo "accession is not found in DB, accessionNumber=".$accessionNumber."<br>";
             //1) create Accession if not existed. We must create parent (accession), because we will create part object which must be linked to its parent
             //                                                                         $status, $provider, $className, $fieldName, $parent, $fieldValue
-            $accession = $em->getRepository('AppOrderformBundle:Accession')->createElement($institution, null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+            $accession = $em->getRepository(Accession::class)->createElement($institution, null,$provider,"Accession","accession",null,$accessionNumber,$extra,$withfields);
         }
 
         //2) find next available part name by accession number
-        $partname = $em->getRepository('AppOrderformBundle:Part')->findNextPartnameByAccession($institution,$accessionNumber,$keytype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $partname = $em->getRepository(Part::class)->findNextPartnameByAccession($institution,$accessionNumber,$keytype);
 
         //3) before part create: check if part with $partname does not exists in DB
         $partFound = $this->findOnePartByJoinedToField( $institutions, $accessionNumber, $keytype, $partname, null );    //validity=null - it was called by check button
@@ -237,7 +251,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "create part <br>";
         //4) create part object by partname and link it to the parent
-        $part = $em->getRepository('AppOrderformBundle:Part')->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $part = $em->getRepository(Part::class)->createElement($institution,null,$provider,"Part","partname",$accession,$partname,$extra,$withfields);
 
         return $part;
     }
@@ -319,8 +334,10 @@ class PartRepository extends ArrayFieldAbstractRepository
             $count = 1;
             foreach( $institutions as $inst ) {
                 //$instStr .= "p.institution=".$inst."";
-                $permittedInstitution = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->find($inst);
-                $instStr .= $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $permittedInstitution = $this->_em->getRepository(Institution::class)->find($inst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $instStr .= $this->_em->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
@@ -331,8 +348,9 @@ class PartRepository extends ArrayFieldAbstractRepository
         }
         //echo "instStr=".$instStr." <br> ";
 
+        //SELECT p FROM AppOrderformBundle:Part p
         $dql = '
-                SELECT p FROM AppOrderformBundle:Part p
+                SELECT p FROM App\\OrderformBundle\\Entity\\Part p
                 JOIN p.institution institution
                 JOIN p.partname pfield
                 JOIN p.accession a
@@ -368,7 +386,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
     public function findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr) {
 
-        $accessiontype = $this->_em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessiontype = $this->_em->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
 
         $institutions = array();
         $institutions[] = $institution;
@@ -376,7 +395,8 @@ class PartRepository extends ArrayFieldAbstractRepository
         $single = true;
 
         //$institutions, $accession, $keytype, $partname, $validities=null, $single=true
-        $part = $this->_em->getRepository('AppOrderformBundle:Part')->findOnePartByJoinedToField(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $part = $this->_em->getRepository(Part::class)->findOnePartByJoinedToField(
             $institutions,
             $accessionStr,
             $accessiontype->getId(),

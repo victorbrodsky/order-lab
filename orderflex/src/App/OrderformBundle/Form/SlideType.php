@@ -114,7 +114,8 @@ class SlideType extends AbstractType
 
         $attr = array('class' => 'combobox combobox-width slidetype-combobox');
         $builder->add('slidetype', EntityType::class, array(
-            'class' => 'AppOrderformBundle:SlideType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideType'] by [SlideType::class]
+            'class' => \App\OrderformBundle\Entity\SlideType::class,
             'label'=>'Slide Type:',
             'required' => true,
             'attr' => $attr,

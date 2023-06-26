@@ -56,7 +56,8 @@ class StainTransformer implements DataTransformerInterface
 
         if( is_int($stain) ) {
             //echo "transform stain by id=".$stain->getId()."<br>";
-            $stain = $this->em->getRepository('AppOrderformBundle:StainList')->findOneById($stain);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+            $stain = $this->em->getRepository(StainList::class)->findOneById($stain);
             //echo "findOneById stain=".$stain."<br>";
         }
         
@@ -85,7 +86,8 @@ class StainTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('AppOrderformBundle:StainList')->findOneById($text);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+            $entity = $this->em->getRepository(StainList::class)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -109,7 +111,8 @@ class StainTransformer implements DataTransformerInterface
     public function createNewStain($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('AppOrderformBundle:StainList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+        $entity = $this->em->getRepository(StainList::class)->findOneByName($name);
         //echo "db entity=".$entity."<br>";
         if( null === $entity ) {
 
@@ -120,7 +123,8 @@ class StainTransformer implements DataTransformerInterface
             $stain->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:StainList c');           
+            //$query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:StainList c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App\\OrderformBundle\\Entity\\StainList c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $stain->setOrderinlist($nextorder);
             

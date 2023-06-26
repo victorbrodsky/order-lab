@@ -165,8 +165,6 @@ class CourseTitleTree extends BaseCompositeNode {
 
     /**
      * Remove userWrappers
-     *
-     * @param userWrappers $userWrappers
      */
     public function removeUserWrapper($userWrappers)
     {

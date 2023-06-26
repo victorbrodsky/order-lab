@@ -53,7 +53,7 @@ class GoogleFormConfigController extends OrderAbstractController
             $cycle = "edit";
         }
 
-        $configs = $em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {
@@ -170,7 +170,7 @@ class GoogleFormConfigController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $configs = $em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {

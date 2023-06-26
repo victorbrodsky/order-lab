@@ -19,6 +19,12 @@ namespace App\ResAppBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
+
+
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -71,7 +77,8 @@ class ResAppGeoLocationType extends AbstractType
 
             //state
             $stateArray = array(
-                'class' => 'AppUserdirectoryBundle:States',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                'class' => States::class,
                 //'choice_label' => 'name',
                 'label'=>'State:',
                 'required'=> false,
@@ -88,13 +95,15 @@ class ResAppGeoLocationType extends AbstractType
                 },
             );
             if( $this->params['cycle'] == 'new_standalone' ) {
-                $stateArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                $stateArray['data'] = $this->params['em']->getRepository(States::class)->findOneByName('New York');
             }
             $builder->add( 'state', EntityType::class, $stateArray);
 
             //country
             $countryArray = array(
-                'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+                'class' => Countries::class,
                 'choice_label' => 'name',
                 'label'=>'Country:',
                 'required'=> false,
@@ -111,9 +120,11 @@ class ResAppGeoLocationType extends AbstractType
                         ));
                 },
             );
-            $countryArray['preferred_choices'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findByName(array('United States'));
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            $countryArray['preferred_choices'] = $this->params['em']->getRepository(Countries::class)->findByName(array('United States'));
             if( $this->params['cycle'] == 'new_standalone' ) {
-                $countryArray['data'] = $this->params['em']->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+                $countryArray['data'] = $this->params['em']->getRepository(Countries::class)->findOneByName('United States');
             }
             $builder->add( 'country', EntityType::class, $countryArray);
 

@@ -56,7 +56,8 @@ class MessageController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         
         //findAll();
-        $entities = $em->getRepository('AppOrderformBundle:Message')->
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entities = $em->getRepository(Message::class)->
                     findBy(array(), array('orderdate'=>'desc')); 
         
 //        echo "count=".count($entities);     
@@ -81,7 +82,8 @@ class MessageController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -200,7 +202,8 @@ class MessageController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -226,7 +229,8 @@ class MessageController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Message entity.');
@@ -261,7 +265,8 @@ class MessageController extends OrderAbstractController {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppOrderformBundle:Message')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $entity = $em->getRepository(Message::class)->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Message entity.');

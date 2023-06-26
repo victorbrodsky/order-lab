@@ -17,6 +17,9 @@
 
 namespace App\FellAppBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
 use App\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -41,7 +44,8 @@ class FellAppCitizenshipType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add( 'country', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Countries',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+            'class' => Countries::class,
             'choice_label' => 'name',
             'label'=>'Country of Citizenship:',
             'required'=> false,

@@ -17,6 +17,7 @@
 
 namespace App\CallLogBundle\Form;
 
+use App\OrderformBundle\Entity\EncounterType;
 use App\OrderformBundle\Form\ArrayFieldType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +40,8 @@ class CalllogEncounterNumberType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'AppOrderformBundle:EncounterType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
+            'class' => EncounterType::class,
             'label' => 'Encounter Type:',
             'required' => true,
             //'disabled' => true,

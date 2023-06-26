@@ -19,6 +19,19 @@
 
 namespace App\OrderformBundle\Repository;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\Slide; //process.py script: replaced namespace by ::class: added use line for classname=Slide
+
+
+use App\OrderformBundle\Entity\Block; //process.py script: replaced namespace by ::class: added use line for classname=Block
+
+
+use App\OrderformBundle\Entity\Part; //process.py script: replaced namespace by ::class: added use line for classname=Part
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 
@@ -55,12 +68,14 @@ class SlideRepository extends ArrayFieldAbstractRepository {
             $slide->setProvider($message->getProvider());
         }
 
-        $slide = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($slide,$message,$original);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+        $slide = $em->getRepository(Slide::class)->processFieldArrays($slide,$message,$original);
 
         $scans = $slide->getScan();
         foreach( $scans as $scan ) {
             $scan->setProvider($message->getProvider());
-            $scan = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($scan,$message,$original);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+            $scan = $em->getRepository(Slide::class)->processFieldArrays($scan,$message,$original);
             $scan->setInstitution($message->getInstitution());
             $message->addImaging($scan);
         } //scan
@@ -68,7 +83,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $stains = $slide->getStain();
         foreach( $stains as $stain ) {
             $stain->setProvider($message->getProvider());
-            $stain = $em->getRepository('AppOrderformBundle:Slide')->processFieldArrays($stain,$message,$original);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+            $stain = $em->getRepository(Slide::class)->processFieldArrays($stain,$message,$original);
         } //stain
 
         unset($original);
@@ -111,7 +127,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $parent = $slide->getParent();
         $class = new \ReflectionClass($parent);
         $className = $class->getShortName();
-        $processedParent = $em->getRepository('AppOrderformBundle:'.$className)->processEntity($parent, $message, null);
+        //$processedParent = $em->getRepository('AppOrderformBundle:'.$className)->processEntity($parent, $message, null);
+        $processedParent = $em->getRepository('App\\OrderformBundle\\Entity\\'.$className)->processEntity($parent, $message, null);
         $slide->setParent($processedParent);
         ////////////// EOF process parent //////////////
 
@@ -123,7 +140,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         $slides = new ArrayCollection();
 
-        $block = $this->_em->getRepository('AppOrderformBundle:Block')->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
+        $block = $this->_em->getRepository(Block::class)->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
 
         if( $block ) {
             foreach( $block->getSlide() as $slide ) {
@@ -135,7 +153,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         //echo "bloc's slide count=".count($slides)."<br>";
 
-        $part = $this->_em->getRepository('AppOrderformBundle:Part')->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $part = $this->_em->getRepository(Part::class)->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
 
         if( $part ) {
             foreach( $part->getSlide() as $slide ) {
@@ -154,7 +173,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         $slides = new ArrayCollection();
 
-        $accessiontype = $this->_em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($accessionTypeStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessiontype = $this->_em->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
 
         $extra = array();
         $extra["keytype"] = $accessiontype->getId();
@@ -164,7 +184,8 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $validity = array(self::STATUS_VALID,self::STATUS_RESERVED);
         $single = true;
 
-        $accession = $this->_em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $this->_em->getRepository(Accession::class)->findOneByIdJoinedToField(
             $institutions,
             $accessionStr,
             "Accession",

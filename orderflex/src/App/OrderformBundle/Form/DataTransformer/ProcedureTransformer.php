@@ -88,7 +88,8 @@ class ProcedureTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('AppOrderformBundle:ProcedureList')->findOneById($text);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureList'] by [ProcedureList::class]
+            $entity = $this->em->getRepository(ProcedureList::class)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -111,7 +112,8 @@ class ProcedureTransformer implements DataTransformerInterface
     public function createNew($name) {
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('AppOrderformBundle:ProcedureList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureList'] by [ProcedureList::class]
+        $entity = $this->em->getRepository(ProcedureList::class)->findOneByName($name);
         
         if( null === $entity ) {
 
@@ -122,7 +124,8 @@ class ProcedureTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
 
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:ProcedureList c');           
+            //$query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:ProcedureList c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App\\OrderformBundle\\Entity\\ProcedureList c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
             

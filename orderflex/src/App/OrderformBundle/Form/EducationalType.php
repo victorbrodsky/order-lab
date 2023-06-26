@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
+
+
+use App\OrderformBundle\Entity\CourseTitleTree; //process.py script: replaced namespace by ::class: added use line for classname=CourseTitleTree
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -106,7 +112,8 @@ class EducationalType extends AbstractType
                 }
 
                 $form->add( 'primaryPrincipal', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:UserWrapper',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+                    'class' => UserWrapper::class,
                     'label'=>'Primary Course Director (as entered by user'.$comment.'):',
                     'required'=> false,
                     'multiple' => false,
@@ -135,11 +142,13 @@ class EducationalType extends AbstractType
                 if( $title ) {
                     $educationalTitle = $title->getCourseTitle();
                     if( $educationalTitle ) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:CourseTitleTree')->getLevelLabels($educationalTitle,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CourseTitleTree'] by [CourseTitleTree::class]
+                        $label = $this->params['em']->getRepository(CourseTitleTree::class)->getLevelLabels($educationalTitle,$mapper) . ":";
                     }
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:CourseTitleTree')->getLevelLabels(null,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CourseTitleTree'] by [CourseTitleTree::class]
+                    $label = $this->params['em']->getRepository(CourseTitleTree::class)->getLevelLabels(null,$mapper) . ":";
                 }
                 //echo "label=".$label."<br>";
 

@@ -25,6 +25,9 @@
 
 namespace App\OrderformBundle\Security\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\UserRequest; //process.py script: replaced namespace by ::class: added use line for classname=UserRequest
 use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -110,7 +113,8 @@ class PacsvendorUtil {
                 ////////// EOF assign Institution //////////
 
                 ////////// check if pacsvendor username was set in UserRequest for this user (identification by email). //////////
-                $userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+                $userRequest = $em->getRepository(UserRequest::class)->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {
                         throw new AuthenticationException('The pacsvendor authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());

@@ -18,6 +18,12 @@
 namespace App\ResAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\ResidencySpecialty; //process.py script: replaced namespace by ::class: added use line for classname=ResidencySpecialty
+
+
+use App\ResAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -70,7 +76,8 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('residencySubspecialties', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencySpecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
+            'class' => ResidencySpecialty::class,
             'label' => "Residency Track".$this->params['resappTypesListLink'].":",
             'required' => false,
             'multiple' => true,
@@ -131,7 +138,8 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('residencyVisaStatuses', EntityType::class, array(
-            'class' => 'AppResAppBundle:VisaStatus',
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:VisaStatus'] by [VisaStatus::class]
+            'class' => VisaStatus::class,
             'label' => "Residency Visa Status".$this->params['resappVisaStatusesListLink'].":",
             'required' => false,
             'multiple' => true,

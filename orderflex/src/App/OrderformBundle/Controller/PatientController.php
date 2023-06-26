@@ -17,6 +17,22 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\SlideType;
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
+use App\OrderformBundle\Entity\StainList; //process.py script: replaced namespace by ::class: added use line for classname=StainList
+use App\OrderformBundle\Entity\OrganList; //process.py script: replaced namespace by ::class: added use line for classname=OrganList
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
+use App\OrderformBundle\Entity\Magnification; //process.py script: replaced namespace by ::class: added use line for classname=Magnification
+use App\OrderformBundle\Entity\DiseaseTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseTypeList
+use App\OrderformBundle\Entity\DiseaseOriginList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseOriginList
+use App\UserdirectoryBundle\Entity\SpotPurpose; //process.py script: replaced namespace by ::class: added use line for classname=SpotPurpose
+use App\UserdirectoryBundle\Entity\Spot; //process.py script: replaced namespace by ::class: added use line for classname=Spot
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
+use App\UserdirectoryBundle\Entity\LinkTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LinkTypeList
 use App\OrderformBundle\Entity\ExternalId;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -240,7 +256,8 @@ class PatientController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $entity = $em->getRepository(Patient::class)->find($id);
 
 //        $encounter = $entity->getEncounter()->first();
 //        $procedure = $encounter->getProcedure()->first();
@@ -384,7 +401,8 @@ class PatientController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $entity = $em->getRepository(Patient::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
@@ -521,7 +539,8 @@ class PatientController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Patient')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $entity = $em->getRepository(Patient::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Patient entity.');
@@ -677,7 +696,8 @@ class PatientController extends OrderAbstractController
 
             //DO IT AFTER UPDATE DB: set patient's common fields (names, suffix and gender) for the latest modified encounter.
             // The latest encounter fields will be copy to the patient object. They can come from different encounters
-            $em->getRepository('AppOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $em->getRepository(Patient::class)->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
             $em->persist($entity); //entity is a patient object
             $em->flush();
 
@@ -786,7 +806,8 @@ class PatientController extends OrderAbstractController
 
         ///////////////////// populate patient with mrn, mrntype, name etc. /////////////////////
         $mrntypeStr = 'Test Patient MRN';
-        $testpatients = $em->getRepository('AppOrderformBundle:Patient')->findByMrntypeString($mrntypeStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $testpatients = $em->getRepository(Patient::class)->findByMrntypeString($mrntypeStr);
         $testpatientmrnIndex = count($testpatients)+1;
 
         //mrn
@@ -814,7 +835,8 @@ class PatientController extends OrderAbstractController
 
         //sex
         $patientSex = new PatientSex($status,$user,$system);
-        $sex = $em->getRepository('AppUserdirectoryBundle:SexList')->findOneByName('Female');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+        $sex = $em->getRepository(SexList::class)->findOneByName('Female');
         $patientSex->setField($sex);
         $patient->addSex($patientSex);
 
@@ -855,7 +877,8 @@ class PatientController extends OrderAbstractController
             $accession = $encounter->getProcedure()->first()->getAccession()->first();
             //echo $accession;
 
-            $testaccessions = $em->getRepository('AppOrderformBundle:Accession')->findByAccessiontypeString($accessiontypeStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+            $testaccessions = $em->getRepository(Accession::class)->findByAccessiontypeString($accessiontypeStr);
             $testaccessionIndex = count($testaccessions)+$encounterCount;
 
             //$accessionNumber = new AccessionAccession($status,$user,$system);
@@ -883,7 +906,8 @@ class PatientController extends OrderAbstractController
         //echo "multi-scan message count=".count($messageMultiSlideScanOrder)."<br>";
 
         //create scan order first; patient hierarchy will be created as well.
-        $MultiSlideScanOrder = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->container->get('router'), $this->container );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $MultiSlideScanOrder = $em->getRepository(Message::class)->processMessageEntity( $MultiSlideScanOrder, $user, null, $this->container->get('router'), $this->container );
 
         if( $patient->getId() ) {
             return $this->redirect( $this->generateUrl('scan-patient-show',array('id'=>$patient->getId())) );
@@ -1071,7 +1095,8 @@ class PatientController extends OrderAbstractController
 
         //////////////////////////// get lists ////////////////////////////////////
         $uniqueName = 'testimage_5522979c2e736.jpg';
-        $document = $em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniquename($uniqueName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $document = $em->getRepository(Document::class)->findOneByUniquename($uniqueName);
         //echo "document=".$document."<br>";
 
         if( !$document ) {
@@ -1111,17 +1136,24 @@ class PatientController extends OrderAbstractController
             }
         }
 
-        $staintype = $em->getRepository('AppOrderformBundle:StainList')->find(1);
-        $organList = $em->getRepository('AppOrderformBundle:OrganList')->findOneByName('Breast');
-        $slidetype = $em->getRepository('AppOrderformBundle:SlideType')->findOneByName('Frozen Section');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+        $staintype = $em->getRepository(StainList::class)->find(1);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:OrganList'] by [OrganList::class]
+        $organList = $em->getRepository(OrganList::class)->findOneByName('Breast');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideType'] by [SlideType::class]
+        $slidetype = $em->getRepository(SlideType::class)->findOneByName('Frozen Section');
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemPacsvendor = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+        $sourceSystemPacsvendor = $em->getRepository(SourceSystemList::class)->findOneByName($sourceSystemName);
 
-        $maginification = $em->getRepository('AppOrderformBundle:Magnification')->findOneByName('20X');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Magnification'] by [Magnification::class]
+        $maginification = $em->getRepository(Magnification::class)->findOneByName('20X');
 
-        $neoplasticType = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findOneByName('Neoplastic');
-        $metastaticOrigin = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findOneByName('Metastatic');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
+        $neoplasticType = $em->getRepository(DiseaseTypeList::class)->findOneByName('Neoplastic');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
+        $metastaticOrigin = $em->getRepository(DiseaseOriginList::class)->findOneByName('Metastatic');
 
         //Input: Slide Id from c.med: 42814
         $slideId = 42814;
@@ -1131,11 +1163,15 @@ class PatientController extends OrderAbstractController
         $patient->addExtraFields($status,$user,$system);
 
         //add two contactinfo: "Test Patient's Primary Residence" and "Test Patient's Secondary Residence"
-        $patientSpotPurpose = $em->getRepository('AppUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
-        $spotEntityPatient = $em->getRepository('AppUserdirectoryBundle:Spot')->findOneBySpotPurpose($patientSpotPurpose);
-        $locationTypePrimary = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Primary Contact Information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SpotPurpose'] by [SpotPurpose::class]
+        $patientSpotPurpose = $em->getRepository(SpotPurpose::class)->findOneByName("Initial Patient Encounter - Address Entry");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Spot'] by [Spot::class]
+        $spotEntityPatient = $em->getRepository(Spot::class)->findOneBySpotPurpose($patientSpotPurpose);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $locationTypePrimary = $em->getRepository(LocationTypeList::class)->findOneByName("Patient's Primary Contact Information");
         $patient->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Test Patient's Primary Residence",$spotEntityPatient,true,$em);
-        $locationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Patient's Contact Information");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $locationType = $em->getRepository(LocationTypeList::class)->findOneByName("Patient's Contact Information");
         $patient->addContactinfoByTypeAndName($user,$system,$locationType,"Test Patient's Secondary Residence",$spotEntityPatient,true,$em);
 
         if( $withscanorder ) {
@@ -1633,7 +1669,8 @@ class PatientController extends OrderAbstractController
         $message->addExternalId($externalId);
 
         //type
-        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($messageCategoryStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $category = $em->getRepository(MessageCategory::class)->findOneByName($messageCategoryStr);
         //echo "category=".$category."<br>";
         if( !$category ) {
             throw $this->createNotFoundException('Unable to find MessageCategory bt name "' . $messageCategoryStr . '"');
@@ -1662,7 +1699,8 @@ class PatientController extends OrderAbstractController
 //        $division = $defaultsDepDiv['division'];
 
         //set message status
-        $orderStatus = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+        $orderStatus = $em->getRepository(Status::class)->findOneByName('Submitted');
         $message->setStatus($orderStatus);
 
 
@@ -1705,7 +1743,8 @@ class PatientController extends OrderAbstractController
             $message->addReportRecipient($UserWrappers[0]);
 
             //add a field for the "Recipient Organization" with a title "Laboratory:"
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("Molecular diagnostics");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->findOneByName("Molecular diagnostics");
             $organizationRecipient = new InstitutionWrapper();
             $organizationRecipient->setInstitution($institution);
             $message->addOrganizationRecipient($organizationRecipient);
@@ -1751,11 +1790,13 @@ class PatientController extends OrderAbstractController
             $imageAnalysisOrder->setInstruction($instruction);
 
             //Image Analysis Software: Indica HALO (destination(endpoint) -> SourceSystemList "Indica HALO")
-            $indicaHALOSystem = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName('Indica HALO');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+            $indicaHALOSystem = $em->getRepository(SourceSystemList::class)->findOneByName('Indica HALO');
             $destination->setSystem($indicaHALOSystem);
 
             //Image Analysis Algorithm:
-            $imageAnalysisAlgorithm = $em->getRepository('AppOrderformBundle:ImageAnalysisAlgorithmList')->findOneByName('Break-Apart & Fusion FISH');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ImageAnalysisAlgorithmList'] by [ImageAnalysisAlgorithmList::class]
+            $imageAnalysisAlgorithm = $em->getRepository(ImageAnalysisAlgorithmList::class)->findOneByName('Break-Apart & Fusion FISH');
             $imageAnalysisOrder->setImageAnalysisAlgorithm($imageAnalysisAlgorithm);
 
             //Message Source: source(endpoint) -> SourceSystemList "ScanOrder": already set as default system
@@ -1812,7 +1853,8 @@ class PatientController extends OrderAbstractController
             $message->addOrderRecipient($UserWrappers[0]);
 
             //add a field for the "Recipient Organization" with a title "Refer to Organization:"
-            $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName("New York Hospital");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $institution = $em->getRepository(Institution::class)->findOneByName("New York Hospital");
             $organizationRecipient = new InstitutionWrapper();
             $organizationRecipient->setInstitution($institution);
             $message->addOrganizationRecipient($organizationRecipient);
@@ -1857,22 +1899,28 @@ class PatientController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemPacsvendor = $em->getRepository('AppUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+        $sourceSystemPacsvendor = $em->getRepository(SourceSystemList::class)->findOneByName($sourceSystemName);
         $sourceSystemPacsvendorClean = $sourceSystemPacsvendor->getName();
 
-        $linkTypeWebScope = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $linkTypeWebScope = $em->getRepository(LinkTypeList::class)->findOneByName("Via WebScope");
         $linkTypeWebScopeClean = $linkTypeWebScope->getName();
 
-        $linkTypeImageScope = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Via ImageScope");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $linkTypeImageScope = $em->getRepository(LinkTypeList::class)->findOneByName("Via ImageScope");
         $linkTypeImageScopeClean = $linkTypeImageScope->getName();
 
-        $linkTypeThumbnail = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Thumbnail");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $linkTypeThumbnail = $em->getRepository(LinkTypeList::class)->findOneByName("Thumbnail");
         $linkTypeThumbnailClean = $linkTypeThumbnail->getName();
 
-        $linkTypeLabel = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Label");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $linkTypeLabel = $em->getRepository(LinkTypeList::class)->findOneByName("Label");
         $linkTypeLabelClean = $linkTypeLabel->getName();
 
-        $linkTypeDownload = $em->getRepository('AppUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LinkTypeList'] by [LinkTypeList::class]
+        $linkTypeDownload = $em->getRepository(LinkTypeList::class)->findOneByName("Download");
         $linkTypeDownloadClean = $linkTypeDownload->getName();
 
         //$docContainer->setTitle('Image from ' . $sourceSystemPacsvendor);

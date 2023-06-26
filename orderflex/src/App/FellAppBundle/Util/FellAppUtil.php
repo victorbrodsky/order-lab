@@ -24,6 +24,30 @@
 
 namespace App\FellAppBundle\Util;
 
+
+
+use App\FellAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
+
+use App\UserdirectoryBundle\Entity\SiteList; //process.py script: replaced namespace by ::class: added use line for classname=SiteList
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -93,7 +117,8 @@ class FellAppUtil {
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         //echo "year=$year<br>";
-        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $repository = $this->em->getRepository(FellowshipApplication::class);
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.appStatus", "appStatus");
@@ -264,7 +289,8 @@ class FellAppUtil {
         $currentYear = $this->getDefaultAcademicStartYear();
         $startDates = array();
         foreach($fellowshipTypes as $fellowshipId=>$fellowshipName) {
-            $fellowshipType = $this->em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellowshipId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $fellowshipType = $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipId);
             $startDate = $fellowshipType->getSeasonYearStart();
             if( $startDate ) {
                 //echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
@@ -327,7 +353,8 @@ class FellAppUtil {
         //$filterTypeIds = array();
 
         foreach( $user->getRoles() as $rolename ) {
-            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
@@ -356,16 +383,19 @@ class FellAppUtil {
             'className' => 'Institution'
         );
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         //exit("wcm=".$wcmc);
-        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
         );
 
         //get list of fellowship type with extra "ALL"
-        $repository = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $repository = $em->getRepository(FellowshipSubspecialty::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
         $dql->where("institution.id = ".$pathology->getId());
@@ -394,7 +424,8 @@ class FellAppUtil {
     public function getFellowshipVisaStatuses( $asEntities=false, $idName = true ) {
         $em = $this->em;
 
-        $repository = $em->getRepository('AppFellAppBundle:VisaStatus');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:VisaStatus'] by [VisaStatus::class]
+        $repository = $em->getRepository(VisaStatus::class);
         $dql = $repository->createQueryBuilder('list');
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
@@ -518,13 +549,15 @@ class FellAppUtil {
         //echo "felltypeid=".$felltypeid."<br>";
 
         foreach( $user->getRoles() as $rolename ) {
-            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
-                        if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        if( $em->getRepository(Institution::class)->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
                             return true;
                         }
                     }
@@ -605,7 +638,8 @@ class FellAppUtil {
         return $users;
     }
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
-        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
             if( strpos((string)$role,$roleName) !== false ) {
                 return $role;
@@ -773,7 +807,8 @@ class FellAppUtil {
         $author = $this->security->getUser();
 
         //Pathology Fellowship Applicant in EmploymentStatus
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
         }
@@ -912,7 +947,8 @@ class FellAppUtil {
 
         if( !$specificLocation ) {
 
-            $locationType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName($typeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+            $locationType = $this->em->getRepository(LocationTypeList::class)->findOneByName($typeName);
             if( !$locationType ) {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
@@ -976,7 +1012,8 @@ class FellAppUtil {
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
-        $trainingType = $this->em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName($typeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+        $trainingType = $this->em->getRepository(TrainingTypeList::class)->findOneByName($typeName);
         $training->setTrainingType($trainingType);
 
         //s2id_oleg_fellappbundle_fellowshipapplication_trainings_1_jobTitle
@@ -1046,7 +1083,8 @@ class FellAppUtil {
         $row = 2;
         foreach( explode("-",$fellappids) as $fellappId ) {
         
-            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1155,7 +1193,6 @@ class FellAppUtil {
             $sheet = $ea->getActiveSheet();
             $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
@@ -1270,7 +1307,8 @@ class FellAppUtil {
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
-            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1455,7 +1493,8 @@ class FellAppUtil {
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
-            $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
             if( !$fellapp ) {
                 continue;
             }
@@ -1491,7 +1530,8 @@ class FellAppUtil {
         $em = $this->em;
         $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $site = $em->getRepository(SiteList::class)->findOneByAbbreviation('fellapp');
 
         $count = 0;
 
@@ -1504,7 +1544,8 @@ class FellAppUtil {
         //create Director role
         $roleName = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase;
         //echo "roleName=$roleName<br>";
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1870,7 +1911,8 @@ class FellAppUtil {
     public function getFellappAcceptanceRejectionEmailSent( $fellapp, $fullNonHtmlInfo=false ) {
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         //$fellappIdInteger = $fellapp->getId()."";
@@ -2122,7 +2164,8 @@ class FellAppUtil {
         return $last;
     }
     public function getFellappBySubspecialty($fellowshipTypeId) {
-        return $this->em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellowshipTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
 
     public function getEmbedPdf( $pdfDocument ) {
@@ -2184,7 +2227,8 @@ class FellAppUtil {
 
     public function isInterviewInvitationEmailSent($fellapp) {
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');

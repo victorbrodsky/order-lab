@@ -25,6 +25,15 @@
 
 namespace App\OrderformBundle\Entity;
 
+
+
+use App\UserdirectoryBundle\Entity\CityList; //process.py script: replaced namespace by ::class: added use line for classname=CityList
+
+
+use App\UserdirectoryBundle\Entity\States; //process.py script: replaced namespace by ::class: added use line for classname=States
+
+
+use App\UserdirectoryBundle\Entity\Countries; //process.py script: replaced namespace by ::class: added use line for classname=Countries
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\GeoLocation;
@@ -959,13 +968,16 @@ abstract class ObjectAbstract
             $geoLocation->setCounty('New York County');
 
             if( $em ) {
-                $city = $em->getRepository('AppUserdirectoryBundle:CityList')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:CityList'] by [CityList::class]
+                $city = $em->getRepository(CityList::class)->findOneByName('New York');
                 $geoLocation->setCity($city);
 
-                $state = $em->getRepository('AppUserdirectoryBundle:States')->findOneByName('New York');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
+                $state = $em->getRepository(States::class)->findOneByName('New York');
                 $geoLocation->setState($state);
 
-                $country = $em->getRepository('AppUserdirectoryBundle:Countries')->findOneByName('United States');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
+                $country = $em->getRepository(Countries::class)->findOneByName('United States');
                 $geoLocation->setCountry($country);
             }
         }

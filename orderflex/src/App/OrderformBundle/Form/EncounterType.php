@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\EncounterStatusList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterStatusList
 use App\CallLogBundle\Form\CalllogEncounterNumberType;
 use App\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use App\OrderformBundle\Form\EncounterReferringProviderType;
@@ -334,7 +337,8 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add( 'encounterStatus', EntityType::class, array(
-                'class' => 'AppOrderformBundle:EncounterStatusList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterStatusList'] by [EncounterStatusList::class]
+                'class' => EncounterStatusList::class,
                 //'choice_label' => 'name',
                 'label'=>'Encounter Status:',
                 'required'=> false,

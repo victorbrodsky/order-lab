@@ -17,6 +17,12 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\ResAppBundle\Form\ResidencyTrackListType;
 use App\UserdirectoryBundle\Entity\ResidencyTrackList;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -162,8 +168,10 @@ class ResAppManagement extends OrderAbstractController {
                     'className' => 'Institution'
                 );
 
-                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-                $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                     "Pathology and Laboratory Medicine",
                     $wcmc,
                     $mapper
@@ -273,7 +281,8 @@ class ResAppManagement extends OrderAbstractController {
         $user = $security->getUser();
 
         //$subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($resaptypeid);
-        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackListType')->find($resaptypeid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackListType'] by [ResidencyTrackListType::class]
+        $subspecialtyType = $em->getRepository(ResidencyTrackListType::class)->find($resaptypeid);
         if( !$subspecialtyType ) {
             throw $this->createNotFoundException('Unable to find ResidencyTrackListType by id='.$resaptypeid);
         }
@@ -289,7 +298,8 @@ class ResAppManagement extends OrderAbstractController {
         //2) set roles to disabled
         $removedRoles = array();
         //$roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($subspecialtyType);
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($subspecialtyType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findByResidencyTrack($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
             $em->persist($role);
@@ -330,7 +340,8 @@ class ResAppManagement extends OrderAbstractController {
         $cycle = "show";
 
         //$restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+        $restype = $em->getRepository(ResidencyTrackList::class)->find($id);
 
         if( !$restype ) {
             throw $this->createNotFoundException('Unable to find Residency Track Type by id='.$id);
@@ -368,7 +379,8 @@ class ResAppManagement extends OrderAbstractController {
         $cycle = "edit";
 
         //$restype = $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->find($id);
-        $restype = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+        $restype = $em->getRepository(ResidencyTrackList::class)->find($id);
 
         if( !$restype ) {
             throw $this->createNotFoundException('Unable to find Residency Track Type by id='.$id);
@@ -483,7 +495,8 @@ class ResAppManagement extends OrderAbstractController {
 
         $interviewerRoleResType = null;
         //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $interviewerResTypeRoles = $em->getRepository(Roles::class)->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
             //echo "assignResAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
@@ -685,7 +698,8 @@ class ResAppManagement extends OrderAbstractController {
         //$roleStr = ROLE_RESAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
         $roleStr = "ROLE_RESAPP_".$bossType."_WCM_".$roleName;
 
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->findOneByName($roleStr);
         if( !$role ) {
             exit('no role found by name='.$roleStr);
         }
@@ -697,7 +711,8 @@ class ResAppManagement extends OrderAbstractController {
             //cwidstr_@_ldap-user
             $username = $userCwid."_@_ldap-user";
 
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByUsername($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $user = $em->getRepository(User::class)->findOneByUsername($username);
             if( !$user ) {
                 exit('no user found by username='.$username);
             }
@@ -756,7 +771,8 @@ class ResAppManagement extends OrderAbstractController {
 
         //1) Change roles
         if(1) {
-            $repository = $em->getRepository('AppUserdirectoryBundle:Roles');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $repository = $em->getRepository(Roles::class);
             $dql = $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->where("list.name LIKE :name");
@@ -791,7 +807,8 @@ class ResAppManagement extends OrderAbstractController {
             //$users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roleArr);
 
             //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
-            $repository = $em->getRepository('AppUserdirectoryBundle:User');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $repository = $em->getRepository(User::class);
             $dql = $repository->createQueryBuilder("user");
             $dql->select('user');
             $dql->where("user.roles LIKE :name");

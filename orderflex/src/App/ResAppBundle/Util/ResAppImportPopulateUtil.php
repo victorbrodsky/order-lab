@@ -25,6 +25,21 @@
 namespace App\ResAppBundle\Util;
 
 
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -185,7 +200,8 @@ class ResAppImportPopulateUtil {
         }
 
         //get not completed DataFile
-        $repository = $this->em->getRepository('AppResAppBundle:DataFile');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:DataFile'] by [DataFile::class]
+        $repository = $this->em->getRepository(DataFile::class);
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.resapp", "resapp");
@@ -249,7 +265,8 @@ class ResAppImportPopulateUtil {
         }
 
         //get completed DataFile
-        $repository = $this->em->getRepository('AppResAppBundle:DataFile');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:DataFile'] by [DataFile::class]
+        $repository = $this->em->getRepository(DataFile::class);
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.resapp", "resapp");
@@ -468,7 +485,8 @@ class ResAppImportPopulateUtil {
 
         $logger = $this->container->get('logger');
 
-        $dataFile = $this->em->getRepository('AppResAppBundle:DataFile')->findOneByDocument($document->getId());
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:DataFile'] by [DataFile::class]
+        $dataFile = $this->em->getRepository(DataFile::class)->findOneByDocument($document->getId());
         if( $dataFile ) {
             //$event = "DataFile already exists with document ID=".$document->getId();
             //$logger->notice($event);
@@ -636,24 +654,29 @@ class ResAppImportPopulateUtil {
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Residency Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
         }
-        $presentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $presentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
         if( !$presentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Present Address");
         }
-        $permanentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $permanentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Permanent Address");
         if( !$permanentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Permanent Address");
         }
-        $workLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $workLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Work Address");
         if( !$workLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Work Address");
         }
 
-        $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $activeStatus = $em->getRepository(ResAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
@@ -831,7 +854,8 @@ class ResAppImportPopulateUtil {
 
                 //echo "row=".$row.": id=".$googleFormId."<br>";
 
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($googleFormId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByGoogleFormId($googleFormId);
                 if( $residencyApplicationDb ) {
                     $logger->notice('Skip this res application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this res application, because it already exists in DB
@@ -874,7 +898,8 @@ class ResAppImportPopulateUtil {
 
 
                 //check if the user already exists in DB by $googleFormId
-                $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
 
                 if (!$user) {
                     //create excel user
@@ -948,23 +973,28 @@ class ResAppImportPopulateUtil {
                         $rootInst = str_replace("(", "", $rootInst);
                         $rootInst = str_replace(")", "", $rootInst);
                         //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
-                        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation($rootInst);
                         if( !$wcmc ) {
-                            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($rootInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $wcmc = $em->getRepository(Institution::class)->findOneByName($rootInst);
                             if( !$wcmc ) {
                                 throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
                             }
                         }
-                        $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findNodeByNameAndRoot($wcmc->getId(), $localInst);
                         if( !$instPathologyResidencyProgram ) {
                             throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
                         }
                     }
                 } else {
                     //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
-                    $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionResApp);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findOneByAbbreviation($localInstitutionResApp);
                     if( !$instPathologyResidencyProgram ) {
-                        $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($localInstitutionResApp);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findOneByName($localInstitutionResApp);
                     }
                 }
 
@@ -1721,32 +1751,39 @@ class ResAppImportPopulateUtil {
 
         //set TrainingType
         if( $typeStr == 'undergraduateSchool' ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Undergraduate');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Undergraduate');
             $training->setTrainingType($trainingType);
         }
         if( $typeStr == 'graduateSchool' ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Graduate');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Graduate');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'medical') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Medical');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'residency') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Residency');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'gme1') !== false ) {
             //Post-Residency Residency
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Post-Residency Residency');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Post-Residency Residency');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'gme2') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('GME');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'other') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Other');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Other');
             $training->setTrainingType($trainingType);
         }
 
@@ -1974,7 +2011,8 @@ class ResAppImportPopulateUtil {
     function createNewResappUser($username,$userkeytype) {
 
         //check if the user already exists in DB by $googleFormId
-        $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
 
         if( $user ) {
             return $user;

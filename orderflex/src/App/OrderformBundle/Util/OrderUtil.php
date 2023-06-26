@@ -25,6 +25,35 @@
 
 namespace App\OrderformBundle\Util;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\PatientType;
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
+
+
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProgressCommentsEventTypeList
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\OrderformBundle\Entity\StainList; //process.py script: replaced namespace by ::class: added use line for classname=StainList
+
+
+use App\OrderformBundle\Entity\AccessionListHierarchyGroupType; //process.py script: replaced namespace by ::class: added use line for classname=AccessionListHierarchyGroupType
 use App\OrderformBundle\Entity\AccessionListHierarchy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -107,7 +136,8 @@ class OrderUtil {
 
         $em = $this->em;
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->findOneByOid($id);
 
         if (!$entity) {
             throw new \Exception( 'Unable to find Message entity by id'.$id );
@@ -127,7 +157,8 @@ class OrderUtil {
         }
 
         //echo "status=".$status."<br>";
-        $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByAction($statusSearch);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+        $status_entity = $em->getRepository(Status::class)->findOneByAction($statusSearch);
         //echo "status_entity=".$status_entity->getName()."<br>";
         //exit();
 
@@ -137,7 +168,8 @@ class OrderUtil {
 
         //record history
         $history = new History();
-        $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Status Changed');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+        $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Status Changed');
         $history->setEventtype($eventtype);
         $history->setMessage($entity);
         $history->setCurrentid($entity->getOid());
@@ -155,12 +187,15 @@ class OrderUtil {
             $fieldStatusStr = "deleted-by-canceled-order";
 
             if( $entity->getProvider() == $user || $this->security->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
-                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status_entity = $em->getRepository(Status::class)->findOneByName("Canceled by Submitter");
             } else
             if( $this->security->isGranted("ROLE_SCANORDER_ADMIN") || $this->security->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
-                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Processor");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status_entity = $em->getRepository(Status::class)->findOneByName("Canceled by Processor");
             } else {
-                $status_entity = $em->getRepository('AppOrderformBundle:Status')->findOneByName("Canceled by Submitter");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status_entity = $em->getRepository(Status::class)->findOneByName("Canceled by Submitter");
             }
 
             if( $status_entity == null ) {
@@ -245,7 +280,8 @@ class OrderUtil {
                 }
 
                 //echo "accessionKey=".$accessionKey."<br>";
-                $accessionDb = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",$validity, true); //validity was true
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+                $accessionDb = $em->getRepository(Accession::class)->findOneByIdJoinedToField(array($accession->getInstitution()->getId()),$accessionKey,"Accession","accession",$validity, true); //validity was true
 
                 $mrn = $patientKey; //mrn
                 $mrnTypeId = $patientKey->getKeytype()->getId();
@@ -430,7 +466,8 @@ class OrderUtil {
             if( $noOtherMessage ) {
                 //echo "change status to (".$statusStr.") <br>";
                 $child->setStatus($statusStr);
-                $em->getRepository('AppOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
+                //$em->getRepository('AppOrderformBundle:'.$className)->processFieldArrays($child,null,null,$statusStr);
+                $em->getRepository('App\\OrderformBundle\\Entity\\'.$className)->processFieldArrays($child,null,null,$statusStr);
                 $count++;
             } else {
                 //this entity (i.e. accession object) is used by another order
@@ -448,7 +485,8 @@ class OrderUtil {
     //$flag = 'admin'-show only comments from users to admin or null-show only comments to the orders belonging to admin
     public function getNotViewedComments($flag=null)
     {
-        $repository = $this->em->getRepository('AppOrderformBundle:History');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+        $repository = $this->em->getRepository(History::class);
         $dql =  $repository->createQueryBuilder('history');
         //$dql->select('COUNT(history) as historycount');
         $dql->select('history');
@@ -567,7 +605,8 @@ class OrderUtil {
 
             foreach( $permittedInstitutions as $permittedInstitution ) {
 
-                $institutionAndCollaborationStr = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $institutionAndCollaborationStr = $this->em->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",$collaborationTypesStrArr, $instComparatorDefault, $collComparatorDefault );
 
                 if( $instStr != "" ) {
@@ -676,10 +715,12 @@ class OrderUtil {
 //            echo "dataquality mrntype= ".$dataquality['mrntype']."<br>";
 
             //set correct mrntype (convert text keytype to the object)
-            $mrntype = $em->getRepository('AppOrderformBundle:MrnType')->findOneById( $dataquality['mrntype'] );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $mrntype = $em->getRepository(MrnType::class)->findOneById( $dataquality['mrntype'] );
 
             //set correct accessiontype
-            $accessiontype = $em->getRepository('AppOrderformBundle:AccessionType')->findOneById( $dataquality['accessiontype'] );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $accessiontype = $em->getRepository(AccessionType::class)->findOneById( $dataquality['accessiontype'] );
 
             $dataqualityObj = new DataQualityMrnAcc();
             $dataqualityObj->setDescription($dataquality['description']);
@@ -853,7 +894,8 @@ class OrderUtil {
             $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
             foreach( $permittedInstitutions as $permittedInstitution ) {
 
-                $collaborations = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $collaborations = $this->em->getRepository(Institution::class)->
                     findCollaborationsByNode( $permittedInstitution, array("Union","Intersection") );
 
                 foreach( $collaborations as $collaborationInstitution ) {
@@ -895,7 +937,8 @@ class OrderUtil {
 //            1                                   //limit to one result
 //        );
 
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->leftJoin('message.provider','provider');
         $dql->leftJoin('message.messageCategory','category');
@@ -937,10 +980,12 @@ class OrderUtil {
             }
         } else {
             if( $providerid && $providerid != "" ) {
-                $provider = $this->em->getRepository('AppUserdirectoryBundle:User')->find($providerid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $provider = $this->em->getRepository(User::class)->find($providerid);
             }
             if( $proxyid && $proxyid != "" && $proxyid != $providerid ) {
-                $proxy = $this->em->getRepository('AppUserdirectoryBundle:User')->find($proxyid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $proxy = $this->em->getRepository(User::class)->find($proxyid);
             }
         }
 
@@ -959,7 +1004,8 @@ class OrderUtil {
         }
 
         //2) get "Filing Room" location
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Location');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+        $repository = $this->em->getRepository(Location::class);
         $dql =  $repository->createQueryBuilder("location");
         $dql->select('location');
         $dql->leftJoin("location.locationTypes", "locationTypes");
@@ -1012,7 +1058,8 @@ class OrderUtil {
 
     //get ordering provider from the most recent order
     public function setLastOrderWithProxyuser($user,$message=null) {
-        $repository = $this->em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->em->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->select('message');
         $dql->innerJoin("message.provider", "provider");
@@ -1074,14 +1121,16 @@ class OrderUtil {
 //        $messages = $query->getResult();
 
         if(1) {
-            $patientTypes = $this->em->getRepository('AppOrderformBundle:PatientType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientType'] by [PatientType::class]
+            $patientTypes = $this->em->getRepository(PatientType::class)->findAll();
             foreach( $patientTypes as $patientType ) {
                 $em->remove($patientType);
             }
             $em->flush();
         }
 
-        $messages = $this->em->getRepository('AppOrderformBundle:Message')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $messages = $this->em->getRepository(Message::class)->findAll();
 
         foreach( $messages as $message ) {
 
@@ -1195,7 +1244,8 @@ class OrderUtil {
     public function removeAllStains() {
 
         $em = $this->em;
-        $stains = $em->getRepository('AppOrderformBundle:StainList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+        $stains = $em->getRepository(StainList::class)->findAll();
 
         $count = 0;
 
@@ -1292,7 +1342,8 @@ class OrderUtil {
             //echo "### permittedInstitution=".$originalPermittedInstitution->getId().":".$originalPermittedInstitution->getName()."<br>";
 
             //get all collaboration to show them in the Order's Institutional PHI Scope
-            $collaborationInstitutions = $this->em->getRepository('AppUserdirectoryBundle:Institution')->
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $collaborationInstitutions = $this->em->getRepository(Institution::class)->
                                 findCollaborationsByNode( $originalPermittedInstitution, $collaborationTypesStrArr );
 
             foreach( $collaborationInstitutions as $collaborationInstitution ) {
@@ -1364,10 +1415,12 @@ class OrderUtil {
         //Accession list currently is level=1
         //$level = 1;
 
-        $parent = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName("Accession Lists");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $parent = $this->em->getRepository(AccessionListHierarchy::class)->findOneByName("Accession Lists");
 
         if( $accessionListType ) {
-            $repository = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+            $repository = $this->em->getRepository(AccessionListHierarchy::class);
             $dql = $repository->createQueryBuilder("list");
 
             $dql->where("list.parent = :parentId AND list.level = :level");
@@ -1388,7 +1441,8 @@ class OrderUtil {
 
 
         } else {
-            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+            $accessionLists = $this->em->getRepository(AccessionListHierarchy::class)->findBy(
                 array(
                     'type' => array('default','user-added'),
                     'level' => $level,
@@ -1413,7 +1467,8 @@ class OrderUtil {
 
             $accessionList = null;
 
-            $accessionLists = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+            $accessionLists = $this->em->getRepository(AccessionListHierarchy::class)->findBy(
                 array(
                     'name'=>$accessionListName,
                     'type'=>array('default','user-added')
@@ -1560,7 +1615,8 @@ class OrderUtil {
         //echo " (+1)=> $level <br>";
         $newListElement->setLevel($level);
         //set group
-        $group = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findOneByName('Accession');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchyGroupType'] by [AccessionListHierarchyGroupType::class]
+        $group = $this->em->getRepository(AccessionListHierarchyGroupType::class)->findOneByName('Accession');
         $newListElement->setOrganizationalGroupType($group);
 
         $accessionList->addChild($newListElement);
@@ -1579,7 +1635,8 @@ class OrderUtil {
         } else {
             return null;
         }
-        $repository = $this->em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $repository = $this->em->getRepository(AccessionListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->where("list.parent = :parentId AND list.accession = :accessionId");

@@ -53,7 +53,8 @@ class GoogleFormConfigController extends OrderAbstractController
             $cycle = "edit";
         }
 
-        $configs = $em->getRepository("AppResAppBundle:GoogleFormConfig")->findAll();
+        //$configs = $em->getRepository("AppResAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {
@@ -171,7 +172,8 @@ class GoogleFormConfigController extends OrderAbstractController
         $user = $this->getUser();
         $configFileName = "residency-config.json";
 
-        $configs = $em->getRepository("AppResAppBundle:GoogleFormConfig")->findAll();
+        //$configs = $em->getRepository("AppResAppBundle:GoogleFormConfig")->findAll();
+        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
         if( count($configs) > 0 ) {
             $entity = $configs[0];
         } else {

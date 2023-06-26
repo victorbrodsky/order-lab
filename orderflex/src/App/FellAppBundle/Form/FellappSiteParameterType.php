@@ -17,6 +17,9 @@
 
 namespace App\FellAppBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
 //use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -98,7 +101,8 @@ class FellappSiteParameterType extends AbstractType
 //            'required' => false
 //        ));
         $builder->add( 'localInstitutionFellApp', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choice_label' => 'getTreeName',
             'label' => 'Local organizational group for imported fellowship applications (WCM => Pathology Fellowship Programs):',
             'required'=> false,

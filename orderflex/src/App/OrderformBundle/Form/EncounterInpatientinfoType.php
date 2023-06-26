@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -40,7 +43,8 @@ class EncounterInpatientinfoType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('source', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:SourceSystemList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+            'class' => SourceSystemList::class,
             'label' => 'Inpatient Info Source System:',
             'required' => false,
             'data'  => null,

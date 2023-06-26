@@ -17,6 +17,9 @@
 
 namespace App\ResAppBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
 //use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -120,7 +123,8 @@ class ResappSiteParameterType extends AbstractType
 //            )
 //        ));
         $builder->add('defaultResidencyTrack', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            'class' => ResidencyTrackList::class,
             'choice_label' => 'name',
             'label' => 'Default Residency Track for Bulk Import:',
             'required'=> false,

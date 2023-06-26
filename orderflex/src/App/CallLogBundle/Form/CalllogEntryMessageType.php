@@ -17,6 +17,9 @@
 
 namespace App\CallLogBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\CalllogAttachmentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CalllogAttachmentTypeList
 use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentType;
@@ -162,7 +165,8 @@ class CalllogEntryMessageType extends AbstractType
 //            'attr' => array('class' => 'combobox', 'placeholder' => "Attachment Type"),
 //        ));
             $builder->add('calllogAttachmentType', EntityType::class, array(
-                'class' => 'AppOrderformBundle:CalllogAttachmentTypeList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogAttachmentTypeList'] by [CalllogAttachmentTypeList::class]
+                'class' => CalllogAttachmentTypeList::class,
                 //'choice_label' => 'name',
                 'label' => 'Attachment Type:',
                 'required' => false,

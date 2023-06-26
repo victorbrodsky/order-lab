@@ -17,6 +17,10 @@
 
 namespace App\DashboardBundle\Form;
 
+
+
+use App\DashboardBundle\Entity\ChartList; //process.py script: replaced namespace by ::class: added use line for classname=ChartList
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
 //use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
 //use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -50,7 +54,8 @@ class DashboardSiteParameterType extends AbstractType
 
         
         $builder->add('charts', EntityType::class, array(
-            'class' => 'AppDashboardBundle:ChartList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            'class' => ChartList::class,
             'choice_label' => 'name',
             'label' => 'Default Dashboard Charts:',
             'required'=> false,
@@ -68,7 +73,8 @@ class DashboardSiteParameterType extends AbstractType
         ));
 
         $builder->add('topic', EntityType::class, array(
-            'class' => 'AppDashboardBundle:TopicList',
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+            'class' => TopicList::class,
             'choice_label' => 'getTreeName', //'getNodeNameWithRoot',
             'label' => 'Default Dashboard Topic:',
             'required'=> false,

@@ -25,6 +25,9 @@
 namespace App\FellAppBundle\Util;
 
 
+
+use App\FellAppBundle\Entity\FellowshipApplication; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipApplication
+
 //use Clegginabox\PDFMerger\PDFMerger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -95,7 +98,8 @@ class ReportGenerator {
         $this->resetQueue($queue);
 
         //remove all waiting processes
-        $query = $this->em->createQuery('DELETE FROM AppFellAppBundle:Process p');
+        //$query = $this->em->createQuery('DELETE FROM AppFellAppBundle:Process p');
+        $query = $this->em->createQuery('DELETE FROM App\FellAppBundle\Entity\Process p');
         $numDeleted = $query->execute();
 
         //add all reports generation to queue
@@ -112,7 +116,8 @@ class ReportGenerator {
 
         $fellappUtil = $this->container->get('fellapp_util');
         
-        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $repository = $this->em->getRepository(FellowshipApplication::class);
         $dql = $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
 
@@ -185,7 +190,8 @@ class ReportGenerator {
         $processesDb = null;
         if( $argument != 'overwrite' ) {
             //$argument == asap
-            $processesDb = $this->em->getRepository('AppFellAppBundle:Process')->findOneByFellappId($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
+            $processesDb = $this->em->getRepository(Process::class)->findOneByFellappId($id);
         }
 
         //add as a new process only if argument is 'overwrite' or process is not created yet
@@ -199,7 +205,8 @@ class ReportGenerator {
         }
 
         //move all reports to OldReports
-        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($id);
         foreach( $fellapp->getReports() as $report ) {
             $fellapp->removeReport($report);
             $fellapp->addOldReport($report);
@@ -293,7 +300,8 @@ class ReportGenerator {
         }
 
         //get processes with asap flag
-        $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
+        $processes = $this->em->getRepository(Process::class)->findBy(
             array(
                 'startTimestamp' => NULL,
                 'argument' => 'asap'
@@ -303,7 +311,8 @@ class ReportGenerator {
 
         //get processes with NULL timestamp
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
+            $processes = $this->em->getRepository(Process::class)->findBy(
                 array('startTimestamp' => NULL),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -311,7 +320,8 @@ class ReportGenerator {
 
         //get all other processes in queue
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('AppFellAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
+            $processes = $this->em->getRepository(Process::class)->findBy(
                 array(),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -465,7 +475,8 @@ class ReportGenerator {
 
         $queue = null;
 
-        $queues = $this->em->getRepository('AppFellAppBundle:ReportQueue')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:ReportQueue'] by [ReportQueue::class]
+        $queues = $this->em->getRepository(ReportQueue::class)->findAll();
         //$logger->notice("Current queue count=".count($queues));
 
         //must be only one
@@ -496,7 +507,8 @@ class ReportGenerator {
         $this->runningGenerationReport = false;
 
         //clear start timestamp for all processes
-        $query = $this->em->createQuery('UPDATE AppFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        //$query = $this->em->createQuery('UPDATE AppFellAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        $query = $this->em->createQuery('UPDATE App\FellAppBundle\Entity\Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
         $numUpdated = $query->execute();
 
         return $numUpdated;
@@ -516,7 +528,8 @@ class ReportGenerator {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
-        $entity = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $this->em->getRepository(FellowshipApplication::class)->find($id);
         if( !$entity ) {
             throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
@@ -1768,7 +1781,8 @@ class ReportGenerator {
             $fellappId = 1507;
         }
 
-        $fellapp = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
         $avatar = $fellapp->getAvatars()->last();
 
         //$serverPath = $avatar->getFullServerPath();

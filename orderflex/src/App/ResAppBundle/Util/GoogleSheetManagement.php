@@ -307,7 +307,8 @@ class GoogleSheetManagement {
             $documentType = trim((string)$documentType);
 
             //check if file already exists by file id
-            $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $documentDb = $this->em->getRepository(Document::class)->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Residency Application Backup Spreadsheet' ) {
                 //$event = "Document already exists with uniqueid=".$file->getId()."; fileId=".$fileId;
                 //$logger->notice($event);

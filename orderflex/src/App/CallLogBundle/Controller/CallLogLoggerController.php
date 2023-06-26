@@ -18,6 +18,9 @@
 namespace App\CallLogBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
+
 use App\CallLogBundle\Form\CalllogLoggerFilterType;
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use App\UserdirectoryBundle\Entity\User;
@@ -113,7 +116,8 @@ class CallLogLoggerController extends LoggerController
         $user = $this->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventType = $em->getRepository(EventTypeList::class)->findOneByName("New Call Log Book Entry Submitted");
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "New Call Log Book Entry Submitted");
         }
@@ -225,7 +229,8 @@ class CallLogLoggerController extends LoggerController
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventType = $em->getRepository(EventTypeList::class)->find($eventTypes[0]);
         $objectType = $em->getRepository(EventObjectTypeList::class)->find($objectTypes[0]);
         $user = $em->getRepository(User::class)->find($users[0]);
 

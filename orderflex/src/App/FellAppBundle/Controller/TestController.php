@@ -218,7 +218,8 @@ class TestController extends OrderAbstractController
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellapId); //8-testing, 1414-collage, 1439-live
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellapId); //8-testing, 1414-collage, 1439-live
         $references = $fellapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();

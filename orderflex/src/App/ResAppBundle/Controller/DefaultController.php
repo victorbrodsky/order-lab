@@ -17,10 +17,14 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use App\UserdirectoryBundle\Entity\ResidencyTrackList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -178,7 +182,8 @@ class DefaultController extends OrderAbstractController
 
         //test 1) sendRefLetterReceivedNotificationEmail
         $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
-        $resapp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find(1414); //8-testing, 1414-collage, 1439-live
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resapp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find(1414); //8-testing, 1414-collage, 1439-live
         $references = $resapp->getReferences();
         $reference = $references->first();
         $letters = $reference->getDocuments();
@@ -227,7 +232,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
 
-        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->getDoctrine()->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin("resapp.references", "references");
@@ -282,7 +288,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('AppUserdirectoryBundle:Document');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $repository = $em->getRepository(Document::class);
         $dql =  $repository->createQueryBuilder("document");
         $dql->select('document');
         $dql->leftJoin('document.type','documentType');
@@ -428,7 +435,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $em->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("application");
         $dql->select('application');
 
@@ -512,7 +520,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $em->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("application");
         $dql->select('application');
 
@@ -567,7 +576,8 @@ class DefaultController extends OrderAbstractController
                 exit("No Residency Track name is NULL");
             }
 
-            $residencyTrack = $em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findOneByName($name);
+            //$residencyTrack = $em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findOneByName($name);
+            $residencyTrack = $em->getRepository(ResidencyTrackList::class)->findOneByName($name);
             if( !$residencyTrack ) {
                 exit("Residency Track entity not found by name=[".$name."]");
             }
@@ -598,7 +608,8 @@ class DefaultController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $resapp = $em->getRepository("AppResAppBundle:ResidencyApplication")->find(824);
+        //$resapp = $em->getRepository("AppResAppBundle:ResidencyApplication")->find(824);
+        $resapp = $em->getRepository(ResidencyApplication::class)->find(824);
 
         foreach($resapp->getFormReports() as $file) {
             echo "form report file=".$file."<br>";
@@ -640,7 +651,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $em->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("application");
         $dql->select('application');
 

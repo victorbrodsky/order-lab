@@ -44,7 +44,8 @@ class ProcedureNumberType extends AbstractType
         ));
 
         $builder->add('keytype', EntityType::class, array(
-            'class' => 'AppOrderformBundle:ProcedureType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
+            'class' => ProcedureType::class,
             'label'=>false,
             'required' => true,
             //'data' => 1,

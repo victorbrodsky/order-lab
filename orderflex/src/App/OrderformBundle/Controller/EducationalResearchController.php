@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProgressCommentsEventTypeList
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -52,10 +55,14 @@ class EducationalResearchController extends OrderAbstractController {
 
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
+        $type = ucfirst($type);
         //echo "type=".$type."<br>";
         //exit();
 
-        $entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        //use App\OrderformBundle\Entity\Research;
+        //new Research()
+        //$entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        $entity = $em->getRepository("App\\OrderformBundle\\Entity\\".$type)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
@@ -84,15 +91,17 @@ class EducationalResearchController extends OrderAbstractController {
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
+        $type = ucfirst($type);
 
         //$entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
-        $entity = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        $entity = $em->getRepository("App\\OrderformBundle\\Entity\\".$type)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$type.' entity.');
         }
 
-        $entityHolder = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        //$entityHolder = $em->getRepository('AppOrderformBundle:'.$type)->find($id);
+        $entityHolder = $em->getRepository("App\\OrderformBundle\\Entity\\".$type)->find($id);
         $editForm = $this->createEditForm($entityHolder);
 
         $editForm->handleRequest($request);
@@ -163,7 +172,8 @@ class EducationalResearchController extends OrderAbstractController {
             $user = $this->getUser();
             $history = new History();
 
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Data Reviewed');
             $history->setEventtype($eventtype);
 
             $history->setMessage($entity->getMessage());

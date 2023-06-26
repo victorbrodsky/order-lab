@@ -9,6 +9,16 @@
 namespace App\DashboardBundle\Util;
 
 
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+use App\TranslationalResearchBundle\Entity\Project; //process.py script: replaced namespace by ::class: added use line for classname=Project
+use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
+use App\TranslationalResearchBundle\Entity\Invoice; //process.py script: replaced namespace by ::class: added use line for classname=Invoice
+use App\DashboardBundle\Entity\ChartList; //process.py script: replaced namespace by ::class: added use line for classname=ChartList
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -62,7 +72,8 @@ class DashboardUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("logger");
@@ -110,7 +121,8 @@ class DashboardUtil
         $dqlParameters = array();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("DISTINCT(logger.entityId) as chartId");
@@ -141,7 +153,8 @@ class DashboardUtil
 
         $charts = array();
         foreach($chartIds as $chartId) {
-            $charts[] = $this->em->getRepository('AppDashboardBundle:ChartList')->find($chartId['chartId']);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $charts[] = $this->em->getRepository(ChartList::class)->find($chartId['chartId']);
         }
 
         return $charts;
@@ -149,9 +162,11 @@ class DashboardUtil
 
     //get topics
     public function getFilterTopics() {
-        $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $root = $this->em->getRepository(TopicList::class)->findOneByName("All Charts");
         if( !$root ) {
-            $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByLevel(0);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+            $root = $this->em->getRepository(TopicList::class)->findOneByLevel(0);
         }
 
         //show only public topics
@@ -167,9 +182,11 @@ class DashboardUtil
     }
 
     public function printTreeSelectList() {
-        $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $root = $this->em->getRepository(TopicList::class)->findOneByName("All Charts");
         if( !$root ) {
-            $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByLevel(0);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+            $root = $this->em->getRepository(TopicList::class)->findOneByLevel(0);
         }
 
         $topicsArr = array();
@@ -184,7 +201,8 @@ class DashboardUtil
 
     public function getFilterServices() {
         //get all services presented in the dashboard charts
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.institutions", "institutions");
@@ -223,7 +241,8 @@ class DashboardUtil
 
     public function getFilterTypes() {
         //get all chart types (Line, Pie, Bar ...) presented in the dashboard charts
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.chartTypes", "chartTypes");
@@ -308,7 +327,8 @@ class DashboardUtil
         }
 
         //get charts with this user in favoriteUsers
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -335,7 +355,8 @@ class DashboardUtil
     }
 
     public function getChartByPartialName( $partialName ) {
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -364,7 +385,8 @@ class DashboardUtil
     }
 
     public function getPublicChartTypes( $asObject=false ) {
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -401,7 +423,8 @@ class DashboardUtil
     }
 
     public function isChartPublic( $chart ) {
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -443,7 +466,8 @@ class DashboardUtil
 //            array('orderinlist' => 'ASC')
 //        );
 
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 
@@ -614,7 +638,8 @@ class DashboardUtil
         //echo "getChartsByTopic: topic=".$topic."<br>";
         //exit("topic=".$topic);
 
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
@@ -661,7 +686,8 @@ class DashboardUtil
         }
         //dump($topicsArr);exit('111');
         
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
@@ -698,7 +724,8 @@ class DashboardUtil
         //echo "getChartsByInstitution: institution=".$institution."<br>";
         //exit("institution=".$institution);
 
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.institutions','institutions');
 
@@ -728,7 +755,8 @@ class DashboardUtil
         //echo "getChartsByChartType: chartType=".$chartType."<br>";
         //exit("chartType=".$chartType);
 
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.chartTypes','chartTypes');
 
@@ -770,7 +798,8 @@ class DashboardUtil
 
         foreach($institutions as $institution) {
             //echo $user.": parentNode:".$parentInstitution."(".$parentInstitution->getId().") and node:".$institution."(".$institution->getId().") are the same? <br>";
-            if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            if( $this->em->getRepository(Institution::class)->isNodeUnderParentnode($parentInstitution,$institution) ) {
                 //echo $user.": isUserBelongsToInstitution Yes! <br>";
                 return true;
             }
@@ -1697,7 +1726,8 @@ class DashboardUtil
 
     public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $states=null, $addOneEndDay=true) {
 
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Project');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
+        $repository = $this->em->getRepository(Project::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
@@ -1757,7 +1787,8 @@ class DashboardUtil
     }
 
     public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $this->em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1813,7 +1844,8 @@ class DashboardUtil
         $em = $this->em;
         //$transresUtil = $this->container->get('transres_util');
 
-        $repository = $em->getRepository('AppTranslationalResearchBundle:TransResRequest');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+        $repository = $em->getRepository(TransResRequest::class);
         $dql =  $repository->createQueryBuilder("request");
         $dql->select('request');
 
@@ -1880,7 +1912,8 @@ class DashboardUtil
     }
 
     public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $states=null, $overdue=false, $addOneEndDay=true, $compareType='last invoice generation date',$filterRequest=true) {
-        $repository = $this->em->getRepository('AppTranslationalResearchBundle:Invoice');
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
+        $repository = $this->em->getRepository(Invoice::class);
         $dql =  $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
         $dql->leftJoin('invoice.transresRequest','request');
@@ -2218,7 +2251,8 @@ class DashboardUtil
         $request = $invoice->getTransresRequest();
 
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
         //$dql->innerJoin('logger.eventType', 'eventType');
         //$dql->leftJoin('logger.objectType', 'objectType');
@@ -2652,7 +2686,8 @@ class DashboardUtil
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->security->getUser();
 
-        $chartObject = $this->em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $chartObject = $this->em->getRepository(ChartList::class)->findOneByAbbreviation($chartType);
         //$chartObject = $this->getChartsByChartType($chartType,true);
         if( !$chartObject ) {
             $error = "Logical error: chart not found by abbreviation [$chartType]";
@@ -2739,7 +2774,8 @@ class DashboardUtil
         //echo "projectSpecialty=".$projectSpecialty."<br>";
         if( $projectSpecialty != 0 ) {
             //echo "projectSpecialty=".$projectSpecialty."<br>";
-            $projectSpecialtyObject = $this->em->getRepository('AppTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
+            $projectSpecialtyObject = $this->em->getRepository(SpecialtyList::class)->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
         //exit('1');
@@ -6976,15 +7012,18 @@ class DashboardUtil
             $ProjectReminderEventTypeId = null;
             $RequestReminderEventTypeId = null;
             $InvoiceReminderEventTypeId = null;
-            $ProjectReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Project Reminder Email");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            $ProjectReminderEventType = $this->em->getRepository(EventTypeList::class)->findOneByName("Project Reminder Email");
             if( $ProjectReminderEventType ) {
                 $ProjectReminderEventTypeId = $ProjectReminderEventType->getId();
             }
-            $RequestReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Work Request Reminder Email");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            $RequestReminderEventType = $this->em->getRepository(EventTypeList::class)->findOneByName("Work Request Reminder Email");
             if( $RequestReminderEventType ) {
                 $RequestReminderEventTypeId = $RequestReminderEventType->getId();
             }
-            $InvoiceReminderEventType = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Unpaid Invoice Reminder Email");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            $InvoiceReminderEventType = $this->em->getRepository(EventTypeList::class)->findOneByName("Unpaid Invoice Reminder Email");
             if( $InvoiceReminderEventType ) {
                 $InvoiceReminderEventTypeId = $InvoiceReminderEventType->getId();
             }

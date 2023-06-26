@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\PatientTypeList; //process.py script: replaced namespace by ::class: added use line for classname=PatientTypeList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +41,8 @@ class PatientTypeType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'AppOrderformBundle:PatientTypeList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientTypeList'] by [PatientTypeList::class]
+            'class' => PatientTypeList::class,
             'label' => 'Patient Type',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),

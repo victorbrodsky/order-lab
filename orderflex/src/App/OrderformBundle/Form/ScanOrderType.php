@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
@@ -70,11 +73,13 @@ class ScanOrderType extends AbstractType
             if( $title ) {
                 $institution = $title->getScanOrderInstitutionScope();
                 if( $institution ) {
-                    $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
 			if( !$label ) {
-                $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
 
             $form->add('scanOrderInstitutionScope', CustomSelectorType::class, array(

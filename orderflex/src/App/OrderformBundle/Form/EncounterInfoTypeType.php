@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\EncounterInfoTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterInfoTypeList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +41,8 @@ class EncounterInfoTypeType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add( 'field', EntityType::class, array(
-            'class' => 'AppOrderformBundle:EncounterInfoTypeList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterInfoTypeList'] by [EncounterInfoTypeList::class]
+            'class' => EncounterInfoTypeList::class,
             'choice_label' => 'name',
             'label' => "Encounter Type:",
             'required'=> false,

@@ -17,6 +17,14 @@
 
 namespace App\CallLogBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+use App\UserdirectoryBundle\Entity\HealthcareProviderCommunicationList; //process.py script: replaced namespace by ::class: added use line for classname=HealthcareProviderCommunicationList
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -47,7 +55,8 @@ class CalllogSiteParameterType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('institution', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'label' => "Institution or Collaboration:",
             'required' => false,
             'attr' => array('class' => 'combobox'),
@@ -63,7 +72,8 @@ class CalllogSiteParameterType extends AbstractType
         if(0) {
             //keytypemrn
             $builder->add('keytypemrn', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MrnType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                'class' => MrnType::class,
                 'choice_label' => 'name',
                 'label' => 'MRN Type:',
                 'required' => false,
@@ -87,7 +97,8 @@ class CalllogSiteParameterType extends AbstractType
         ));
 
         $builder->add('defaultAccessionType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            'class' => AccessionType::class,
             'choice_label' => 'name',
             'label' => 'Default Accession Type:',
             'required'=> false,
@@ -110,7 +121,8 @@ class CalllogSiteParameterType extends AbstractType
         ));
 
         $builder->add('defaultInitialCommunication', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:HealthcareProviderCommunicationList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:HealthcareProviderCommunicationList'] by [HealthcareProviderCommunicationList::class]
+            'class' => HealthcareProviderCommunicationList::class,
             'choice_label' => 'name',
             'label' => 'Default Initial Communication:',
             'required'=> false,
@@ -314,11 +326,13 @@ class CalllogSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                        $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                    $label = $this->params['em']->getRepository(MessageCategory::class)->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {
@@ -388,11 +402,13 @@ class CalllogSiteParameterType extends AbstractType
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
                     if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                        $label = $this->params['em']->getRepository(PatientListHierarchy::class)->getLevelLabels($messageCategory, $mapper);
                     }
                 }
                 if (!$label) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                    $label = $this->params['em']->getRepository(PatientListHierarchy::class)->getLevelLabels(null, $mapper);
                 }
 
                 if ($label) {

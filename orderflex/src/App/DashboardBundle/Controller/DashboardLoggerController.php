@@ -18,6 +18,8 @@
 namespace App\DashboardBundle\Controller;
 
 
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -101,7 +103,8 @@ class DashboardLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Dashboard ID");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventType = $em->getRepository(EventTypeList::class)->findOneByName("Generate Accession Dashboard ID");
 
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Dashboard ID");
@@ -163,7 +166,8 @@ class DashboardLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Generate Accession Dashboard ID");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventType = $em->getRepository(EventTypeList::class)->findOneByName("Generate Accession Dashboard ID");
 
         if( !$eventType ) {
             throw $this->createNotFoundException('EventTypeList is not found by name ' . "Generate Accession Dashboard ID");
@@ -236,7 +240,8 @@ class DashboardLoggerController extends LoggerController
         $users = $filterform['user']->getData();
 
         $em = $this->getDoctrine()->getManager();
-        $eventType = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventType = $em->getRepository(EventTypeList::class)->find($eventTypes[0]);
         $user = $em->getRepository(User::class)->find($users[0]);
 
         $eventlogTitle = $this->getParameter('eventlog_title');

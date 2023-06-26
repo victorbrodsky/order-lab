@@ -58,7 +58,8 @@ class ResAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $resApp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($resappid);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resApp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappid);
         if( !$resApp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }
@@ -102,7 +103,8 @@ class ResAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $resApp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($resappid);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resApp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappid);
         if( !$resApp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }
@@ -165,7 +167,8 @@ class ResAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $resApp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($resappid);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resApp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappid);
         if( !$resApp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappid);
         }

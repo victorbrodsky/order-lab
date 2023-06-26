@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +41,8 @@ class EncounterLocationType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Location',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+            'class' => Location::class,
             'label' => 'Encounter Location:',
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width'),

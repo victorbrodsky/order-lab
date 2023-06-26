@@ -59,7 +59,8 @@ class AccessionTypeTransformer implements DataTransformerInterface
         //echo "data transformer type=".$type."<br>";
 
         if( is_int($type) ) {
-            $type = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneById($type);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $type = $this->em->getRepository(AccessionType::class)->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }
         
@@ -88,7 +89,8 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
 
-            $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneById($text);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $entity = $this->em->getRepository(AccessionType::class)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -114,10 +116,12 @@ class AccessionTypeTransformer implements DataTransformerInterface
         //echo "accession type name=".$name."<br>";
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $entity = $this->em->getRepository(AccessionType::class)->findOneByName($name);
 
         if( !$entity ) {
-            $entity = $this->em->getRepository('AppOrderformBundle:AccessionType')->findOneByAbbreviation($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $entity = $this->em->getRepository(AccessionType::class)->findOneByAbbreviation($name);
         }
         
         if( null === $entity ) {
@@ -129,7 +133,8 @@ class AccessionTypeTransformer implements DataTransformerInterface
             $newEntity->setCreator($this->user);
             
             //get max orderinlist
-            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');           
+            //$query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM AppOrderformBundle:AccessionType c');
+            $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App\\OrderformBundle\\Entity\\AccessionType c');
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 

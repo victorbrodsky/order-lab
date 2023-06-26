@@ -18,6 +18,9 @@
 namespace App\ResAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -53,7 +56,8 @@ class InterviewType extends AbstractType
 
             if(1) {
                 $builder->add('interviewer', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                    'class' => User::class,
                     'label' => "Interviewer:",
                     'required' => false,
                     'attr' => array('class' => 'combobox combobox-width'),

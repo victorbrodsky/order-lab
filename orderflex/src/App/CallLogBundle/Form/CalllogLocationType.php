@@ -19,6 +19,12 @@ namespace App\CallLogBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use App\UserdirectoryBundle\Form\GeoLocationType;
@@ -118,7 +124,8 @@ class CalllogLocationType extends AbstractType
         $locationTypesAttr['readonly'] = true;
 
         $builder->add('locationTypes', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:LocationTypeList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+            'class' => LocationTypeList::class,
             'label' => "Location Type:",
             //'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
@@ -153,11 +160,13 @@ class CalllogLocationType extends AbstractType
                     if ($title) {
                         $institution = $title->getInstitution();
                         if ($institution) {
-                            $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                         }
                     }
                     if (!$label) {
-                        $label = $this->params['em']->getRepository('AppUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
                     }
 
                     $form->add('institution', CustomSelectorType::class, array(
@@ -180,7 +189,8 @@ class CalllogLocationType extends AbstractType
         //Institution or Collaboration
         if( 0 && $this->params['defaultInstitution'] ) {
             $builder->add('institution', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 'label' => "Institution or Collaboration:",
                 'required' => false,
                 'data' => $this->params['defaultInstitution'],
@@ -194,7 +204,8 @@ class CalllogLocationType extends AbstractType
             ));
         } else {
             $builder->add('institution', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
                 'label' => "Institution or Collaboration:",
                 'required' => false,
                 'choice_label' => 'getNameShortName',

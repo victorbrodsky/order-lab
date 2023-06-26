@@ -19,6 +19,20 @@ namespace App\OrderformBundle\Controller;
 
 
 
+use App\OrderformBundle\Entity\History; //process.py script: replaced namespace by ::class: added use line for classname=History
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\OrderformBundle\Entity\OrderDelivery;
+use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\UserdirectoryBundle\Entity\Equipment;
 use App\UserdirectoryBundle\Entity\InstitutionWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,7 +131,8 @@ class MultiScanOrderController extends OrderAbstractController {
         }
 
         //set order category
-        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $category = $em->getRepository(MessageCategory::class)->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //$scanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
@@ -228,19 +243,22 @@ class MultiScanOrderController extends OrderAbstractController {
 
             if( isset($_POST['btnSubmit']) ) {
                 $cycle = 'new';
-                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status = $em->getRepository(Status::class)->findOneByName('Submitted');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnAmend']) ) {
                 $cycle = 'amend';
-                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Amended');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status = $em->getRepository(Status::class)->findOneByName('Amended');
                 $entity->setStatus($status);
             }
 
             if( isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
                 $cycle = 'edit';
-                $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Not Submitted');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+                $status = $em->getRepository(Status::class)->findOneByName('Not Submitted');
                 $entity->setStatus($status);
             }
 
@@ -254,7 +272,8 @@ class MultiScanOrderController extends OrderAbstractController {
 
 
             /////////////////// process and save form //////////////////////////////
-            $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $entity = $em->getRepository(Message::class)->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
 
             if( isset($_POST['btnSubmit']) || isset($_POST['btnAmend']) || isset($_POST['btnSave']) || isset($_POST['btnSaveOnIdleTimeout']) ) {
 
@@ -428,7 +447,8 @@ class MultiScanOrderController extends OrderAbstractController {
         }
 
         //set order category
-        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $category = $em->getRepository(MessageCategory::class)->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //set the default service (now institution)
@@ -469,11 +489,13 @@ class MultiScanOrderController extends OrderAbstractController {
         $orderUtil->setDefaultPerformingOrganization($entity);
 
         //set "Slide Delivery"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
+        //$defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery',OrderDelivery::class);
         $scanOrder->setDelivery($defaultDelivery);
 
         //set "Scanner"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
+        //$defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner',Equipment::class);
         $entity->setEquipment($defaultDelivery);
 
         //set default department and division
@@ -563,9 +585,15 @@ class MultiScanOrderController extends OrderAbstractController {
 //        INNER JOIN message.accession accession
 //        INNER JOIN message.part part
 //        INNER JOIN message.slide slide
+        
+//        $query = $em->createQuery('
+//            SELECT message
+//            FROM AppOrderformBundle:Message message
+//            WHERE message.oid = :oid'
+//        )->setParameter('oid', $id);
         $query = $em->createQuery('
             SELECT message
-            FROM AppOrderformBundle:Message message
+            FROM App\\OrderformBundle\\Entity\\Message message
             WHERE message.oid = :oid'
         )->setParameter('oid', $id);
 
@@ -860,7 +888,8 @@ class MultiScanOrderController extends OrderAbstractController {
         if( $routeName == "multy_show") {
 
             //$history = $em->getRepository('AppOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
-            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+            $repository = $this->getDoctrine()->getRepository(History::class);
             $dql = $repository->createQueryBuilder("h");
             $dql->innerJoin("h.message", "message");
             $dql->innerJoin("h.eventtype", "eventtype");
@@ -903,7 +932,8 @@ class MultiScanOrderController extends OrderAbstractController {
     public function downloadAction($id) {
 
         $em = $this->getDoctrine()->getManager();
-        $file = $em->getRepository('AppUserdirectoryBundle:Document')->findOneById($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $file = $em->getRepository(Document::class)->findOneById($id);
 
         $html =     //"header('Content-type: application/pdf');".
                     "header('Content-Disposition: attachment; filename=".$file->getName()."');".

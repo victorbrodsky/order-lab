@@ -32,7 +32,7 @@ use Symfony\Component\Process\Process;
 class ReportGeneratorManagerTODEL {
 
     /**
-     * @var Singleton The reference to *Singleton* instance of this class
+     * Singleton The reference to *Singleton* instance of this class
      */
     private static $instance;
 
@@ -55,8 +55,6 @@ class ReportGeneratorManagerTODEL {
 
     /**
      * Returns the *Singleton* instance of this class.
-     *
-     * @return Singleton The *Singleton* instance.
      */
     public static function getInstance( $container=null )
     {

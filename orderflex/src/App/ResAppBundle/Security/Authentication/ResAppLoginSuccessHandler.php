@@ -25,6 +25,12 @@
 
 namespace App\ResAppBundle\Security\Authentication;
 
+
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
@@ -93,7 +99,8 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
     {
 
         //1) check if the user has role "Residency Interviewer" with permission: object="Interview", action="create"
-        $resappRoles = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserRolesByObjectAction( $user, "Interview", "create" );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $resappRoles = $this->em->getRepository(User::class)->findUserRolesByObjectAction( $user, "Interview", "create" );
 
         $level = 0;
         foreach( $resappRoles as $resappRole ) {
@@ -116,7 +123,8 @@ class ResAppLoginSuccessHandler extends LoginSuccessHandler {
     {
         $level = 0;
         foreach( $user->getRoles() as $roleName ) {
-            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $role = $this->em->getRepository(Roles::class)->findOneByName($roleName);
             //echo "role=".$role."<br>";
             if( $role && $role->getLevel() > $level ) {
                 $level = $role->getLevel();

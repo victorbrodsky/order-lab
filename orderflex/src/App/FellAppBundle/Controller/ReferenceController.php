@@ -129,7 +129,8 @@ class ReferenceController extends OrderAbstractController
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
 
-        $reference = $this->getDoctrine()->getRepository('AppFellAppBundle:Reference')->find($referenceid);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Reference'] by [Reference::class]
+        $reference = $this->getDoctrine()->getRepository(Reference::class)->find($referenceid);
         if( !$reference ) {
             throw new \Exception("No reference found by ID ".$referenceid);
         }

@@ -121,7 +121,7 @@ class GoogleSheetManagementV2 {
     /**
      * Retrieve a list of File resources.
      *
-     * @return Array List of Google_Service_Drive_DriveFile resources.
+     * return Array List of Google_Service_Drive_DriveFile resources.
      */
     function retrieveAllFiles($service=null) {
         if( !$service ) {

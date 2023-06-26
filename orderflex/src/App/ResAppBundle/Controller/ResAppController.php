@@ -17,6 +17,27 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\ResAppBundle\Entity\Process; //process.py script: replaced namespace by ::class: added use line for classname=Process
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
 use App\ResAppBundle\Entity\LearnAreaList;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
@@ -327,7 +348,8 @@ class ResAppController extends OrderAbstractController {
         }
 
         //$resApps = $em->getRepository('AppUserdirectoryBundle:ResidencyApplication')->findAll();
-        $repository = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->getDoctrine()->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         //$dql->groupBy('resapp');
@@ -555,8 +577,10 @@ class ResAppController extends OrderAbstractController {
         );
 
 
-        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Import of Residency Applications Spreadsheet");
-        $lastImportTimestamps = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventtype = $em->getRepository(EventTypeList::class)->findOneByName("Import of Residency Applications Spreadsheet");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $lastImportTimestamps = $this->getDoctrine()->getRepository(Logger::class)->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
         } else {
@@ -796,7 +820,8 @@ class ResAppController extends OrderAbstractController {
         
         //echo "resapp download!!!!!!!!!!!!!!! <br>";       
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -1695,7 +1720,8 @@ class ResAppController extends OrderAbstractController {
 
         $residencyApplication = new ResidencyApplication($user);
 
-        $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $activeStatus = $em->getRepository(ResAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find ResAppStatus by name='."active");
         }
@@ -1897,7 +1923,8 @@ class ResAppController extends OrderAbstractController {
         //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleResType = null;
         //$interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
-        $interviewerResTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $interviewerResTypeRoles = $em->getRepository(Roles::class)->findByResidencyTrack($residencyTrack);
         foreach( $interviewerResTypeRoles as $role ) {
             if( strpos((string)$role,'INTERVIEWER') !== false ) {
                 $interviewerRoleResType = $role;
@@ -1946,36 +1973,49 @@ class ResAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //Avatar
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'avatar' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'avatar' );
 
         //CurriculumVitae
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'cv' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'cv' );
 
         //ResidencyApplication(coverLetters)
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'lawsuitDocument');
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'coverLetter' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'lawsuitDocument');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'reprimandDocument' );
 
         //Examination
         foreach( $application->getExaminations() as $examination ) {
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $examination );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments( $examination );
         }
 
         //Reference .documents
         foreach( $application->getReferences() as $reference ) {
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $reference );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments( $reference );
         }
 
         //Other .documents
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application );
 
         //.itinerarys
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'itinerary' );
 
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'manualReport' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'report' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'formReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'manualReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'oldReport' );
     }
 
 
@@ -1988,7 +2028,8 @@ class ResAppController extends OrderAbstractController {
         //$logger = $this->container->get('logger');
         //$logger->notice('statusAction: status='.$status);
 
-        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -2036,7 +2077,8 @@ class ResAppController extends OrderAbstractController {
         }
 
         //get status object
-        $statusObj = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName($status);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $statusObj = $em->getRepository(ResAppStatus::class)->findOneByName($status);
         if( !$statusObj ) {
             $logger->error('statusAction: Unable to find ResAppStatus by name='.$status);
             throw new EntityNotFoundException('Unable to find ResAppStatus by name='.$status);           
@@ -2148,7 +2190,8 @@ class ResAppController extends OrderAbstractController {
         //$user = $this->getUser();
         $user = $this->getUser();
 
-        $entity = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -2332,7 +2375,8 @@ class ResAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
 
-        $interview = $em->getRepository('AppResAppBundle:Interview')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($id);
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Residency Application Interview by id='.$id);
@@ -2430,7 +2474,8 @@ class ResAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $interview = $em->getRepository('AppResAppBundle:Interview')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($id);
 
         //$user = $this->getUser();
         $user = $this->getUser();
@@ -2862,7 +2907,8 @@ class ResAppController extends OrderAbstractController {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -2929,7 +2975,8 @@ class ResAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -3054,7 +3101,8 @@ class ResAppController extends OrderAbstractController {
         $numUpdated = $resappRepGen->resetQueueRun();
 
         $em = $this->getDoctrine()->getManager();
-        $processes = $em->getRepository('AppResAppBundle:Process')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+        $processes = $em->getRepository(Process::class)->findAll();
         $processInfoArr = array();
         foreach($processes as $processe) {
             $processInfoArr[] = $processe->getResappId();
@@ -3096,7 +3144,8 @@ class ResAppController extends OrderAbstractController {
         $institutionNameResappName = "";
         
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyTrack = $em->getRepository(ResidencyTrackList::class)->find($resappTypeId);
         }
         
         if( $residencyTrack ) {
@@ -3168,7 +3217,8 @@ class ResAppController extends OrderAbstractController {
 
         foreach($ids as $id) {
             //$logger->notice("Rejection id=".$id);
-            $resapp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $resapp = $em->getRepository(ResidencyApplication::class)->find($id);
             if( $resapp ) {
                 $logger->notice("Rejection email id=".$id);
                 //set status to Rejected and Notified

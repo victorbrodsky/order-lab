@@ -17,6 +17,15 @@
 
 namespace App\FellAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use App\FellAppBundle\Entity\FellowshipApplication;
@@ -153,8 +162,10 @@ class FellAppManagement extends OrderAbstractController {
                 'className' => 'Institution'
             );
 
-            $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-            $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -260,7 +271,8 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $subspecialtyType = $em->getRepository(FellowshipSubspecialty::class)->find($fellaptypeid);
         if( !$subspecialtyType ) {
             throw $this->createNotFoundException('Unable to find FellowshipSubspecialty by id='.$fellaptypeid);
         }
@@ -275,7 +287,8 @@ class FellAppManagement extends OrderAbstractController {
 
         //2) set roles to disabled
         $removedRoles = array();
-        $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($subspecialtyType);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
             $em->persist($role);
@@ -315,7 +328,8 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "show";
 
-        $felltype = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
 
         if( !$felltype ) {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
@@ -352,7 +366,8 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "edit";
 
-        $felltype = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
 
         if( !$felltype ) {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
@@ -464,7 +479,8 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
-        $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
@@ -514,7 +530,8 @@ class FellAppManagement extends OrderAbstractController {
         //populate default directors, coordinators, interviewers
 
         //BREASTPATHOLOGY
-        $BREASTPATHOLOGY = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Breast Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $BREASTPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Breast Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -530,7 +547,8 @@ class FellAppManagement extends OrderAbstractController {
 
 
         //CYTOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Cytopathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -548,7 +566,8 @@ class FellAppManagement extends OrderAbstractController {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "CYTOPATHOLOGY", "DIRECTOR" );
 
         //GASTROINTESTINALPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gastrointestinal Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gastrointestinal Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -565,7 +584,8 @@ class FellAppManagement extends OrderAbstractController {
 
 
         //GENITOURINARYPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Genitourinary Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Genitourinary Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -583,7 +603,8 @@ class FellAppManagement extends OrderAbstractController {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GENITOURINARYPATHOLOGY", "DIRECTOR" );
 
         //GYNECOLOGICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Gynecologic Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gynecologic Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -598,7 +619,8 @@ class FellAppManagement extends OrderAbstractController {
         $this->addUsersToFellowshipSubspecialty( $Cytopathology, array('cwid'), "GYNECOLOGICPATHOLOGY", "DIRECTOR" );
 
         //HEMATOPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Hematopathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Hematopathology");
         $users = array(
             'cwid',
             'cwid',
@@ -619,7 +641,8 @@ class FellAppManagement extends OrderAbstractController {
 
 
         //MOLECULARGENETICPATHOLOGY
-        $Cytopathology = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName("Molecular Genetic Pathology");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $Cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Molecular Genetic Pathology");
         $users = array(
             'cwid',
             'cwid',
@@ -659,7 +682,8 @@ class FellAppManagement extends OrderAbstractController {
         //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
         $roleStr = "ROLE_FELLAPP_".$bossType."_WCM_".$roleName;
 
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleStr);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->findOneByName($roleStr);
         if( !$role ) {
             exit('no role found by name='.$roleStr);
         }
@@ -730,7 +754,8 @@ class FellAppManagement extends OrderAbstractController {
 
         //1) Change roles
         if(1) {
-            $repository = $em->getRepository('AppUserdirectoryBundle:Roles');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $repository = $em->getRepository(Roles::class);
             $dql = $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->where("list.name LIKE :name");
@@ -850,7 +875,8 @@ class FellAppManagement extends OrderAbstractController {
 
         //1) Create default FellowshipSubspecialty
         $fellowshipSubspecialtyName = "Clinical Informatics";
-        $subspecialtyType = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->findOneByName($fellowshipSubspecialtyName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        $subspecialtyType = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialtyName);
         if( !$subspecialtyType ) {
             $request->getSession()->getFlashBag()->add(
                 'warning',
@@ -870,8 +896,10 @@ class FellAppManagement extends OrderAbstractController {
             'className' => 'Institution'
         );
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
-        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper

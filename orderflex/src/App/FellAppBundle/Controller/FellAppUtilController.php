@@ -44,7 +44,8 @@ class FellAppUtilController extends OrderAbstractController
         $fellappId = trim((string)$request->get('id'));
         $emailType = trim((string)$request->get('emailType')); //accepted, rejected
         
-        $fellapp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappId);
         if( !$fellapp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappId);
         }

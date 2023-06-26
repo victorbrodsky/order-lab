@@ -17,6 +17,27 @@
 
 namespace App\FellAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\FellAppBundle\Entity\FellAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=FellAppStatus
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\FellAppBundle\Entity\Process; //process.py script: replaced namespace by ::class: added use line for classname=Process
+
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use App\FellAppBundle\Entity\FellowshipApplication;
@@ -307,7 +328,8 @@ class FellAppController extends OrderAbstractController {
         }
 
         //$fellApps = $em->getRepository('AppUserdirectoryBundle:FellowshipApplication')->findAll();
-        $repository = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $repository = $this->getDoctrine()->getRepository(FellowshipApplication::class);
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
         //$dql->groupBy('fellapp');
@@ -501,8 +523,10 @@ class FellAppController extends OrderAbstractController {
         );
 
 
-        $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
-        $lastImportTimestamps = $this->getDoctrine()->getRepository('AppUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventtype = $em->getRepository(EventTypeList::class)->findOneByName("Import of Fellowship Applications Spreadsheet");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $lastImportTimestamps = $this->getDoctrine()->getRepository(Logger::class)->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
         } else {
@@ -749,7 +773,8 @@ class FellAppController extends OrderAbstractController {
         
         //echo "fellapp download!!!!!!!!!!!!!!! <br>";       
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -1584,7 +1609,8 @@ class FellAppController extends OrderAbstractController {
 
         $fellowshipApplication = new FellowshipApplication($user);
 
-        $activeStatus = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+        $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find FellAppStatus by name='."active");
         }
@@ -1742,7 +1768,8 @@ class FellAppController extends OrderAbstractController {
 
         //////////////////////// INTERVIEWER ///////////////////////////
         $interviewerRoleFellType = null;
-        $interviewerFellTypeRoles = $em->getRepository('AppUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             if( strpos((string)$role,'INTERVIEWER') !== false ) {
                 $interviewerRoleFellType = $role;
@@ -1791,36 +1818,49 @@ class FellAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //Avatar
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'avatar' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'avatar' );
 
         //CurriculumVitae
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'cv' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'cv' );
 
         //FellowshipApplication(coverLetters)
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'coverLetter' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'lawsuitDocument');
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'reprimandDocument' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'coverLetter' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'lawsuitDocument');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'reprimandDocument' );
 
         //Examination
         foreach( $application->getExaminations() as $examination ) {
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $examination );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments( $examination );
         }
 
         //Reference .documents
         foreach( $application->getReferences() as $reference ) {
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $reference );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments( $reference );
         }
 
         //Other .documents
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application );
 
         //.itinerarys
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'itinerary' );
 
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'manualReport' );
-        $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'report' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'formReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'manualReport' );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $em->getRepository(Document::class)->processDocuments( $application, 'oldReport' );
     }
 
 
@@ -1833,7 +1873,8 @@ class FellAppController extends OrderAbstractController {
         //$logger = $this->container->get('logger');
         //$logger->notice('statusAction: status='.$status);
 
-        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -1880,7 +1921,8 @@ class FellAppController extends OrderAbstractController {
         }
 
         //get status object
-        $statusObj = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName($status);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+        $statusObj = $em->getRepository(FellAppStatus::class)->findOneByName($status);
         if( !$statusObj ) {
             $logger->error('statusAction: Unable to find FellAppStatus by name='.$status);
             throw new EntityNotFoundException('Unable to find FellAppStatus by name='.$status);           
@@ -1964,7 +2006,8 @@ class FellAppController extends OrderAbstractController {
         //$user = $this->getUser();
         $user = $this->getUser();
 
-        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2131,7 +2174,8 @@ class FellAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
 
-        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($id);
 
         if( !$interview ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
@@ -2229,7 +2273,8 @@ class FellAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($id);
 
         //$user = $this->getUser();
         $user = $this->getUser();
@@ -2613,7 +2658,8 @@ class FellAppController extends OrderAbstractController {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2680,7 +2726,8 @@ class FellAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -2764,7 +2811,8 @@ class FellAppController extends OrderAbstractController {
         $numUpdated = $fellappRepGen->resetQueueRun();
 
         $em = $this->getDoctrine()->getManager();
-        $processes = $em->getRepository('AppFellAppBundle:Process')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
+        $processes = $em->getRepository(Process::class)->findAll();
         $processInfoArr = array();
         foreach($processes as $processe) {
             $processInfoArr[] = $processe->getFellappId();
@@ -2809,7 +2857,8 @@ class FellAppController extends OrderAbstractController {
         $institutionNameFellappName = "";
         
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $fellowshipSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->find($fellappTypeId);
         }
         
         if( $fellowshipSubspecialty ) {
@@ -2881,7 +2930,8 @@ class FellAppController extends OrderAbstractController {
 
         foreach($ids as $id) {
             //$logger->notice("Rejection id=".$id);
-            $fellapp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellapp = $em->getRepository(FellowshipApplication::class)->find($id);
             if( $fellapp ) {
                 $logger->notice("Rejection email id=".$id);
                 //set status to Rejected and Notified

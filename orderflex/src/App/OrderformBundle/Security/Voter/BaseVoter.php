@@ -25,6 +25,9 @@
 namespace App\OrderformBundle\Security\Voter;
 
 
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 use App\OrderformBundle\Entity\Message;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -112,7 +115,8 @@ abstract class BaseVoter extends Voter {
             //TODO: we need to define what is "Order", "Patient" and "Patient Data" permissions. Patient has a Procedure, Encounter, Accession etc.
 
             //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
-            if( $this->em->getRepository('AppUserdirectoryBundle:User')->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            if( $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
                 //exit('can View! exit');
                 return true;
             } else {
@@ -170,7 +174,8 @@ abstract class BaseVoter extends Voter {
         //service chief can perform any actions if the objects under his/her service scope
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         $userChiefServices = $userSiteSettings->getChiefServices();
-        if( $this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes( $userChiefServices, $subjectInstitution ) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        if( $this->em->getRepository(Institution::class)->isNodeUnderParentnodes( $userChiefServices, $subjectInstitution ) ) {
             return true;
         }
 

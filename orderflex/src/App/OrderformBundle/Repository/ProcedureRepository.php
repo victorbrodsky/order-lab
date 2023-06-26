@@ -18,6 +18,10 @@
 namespace App\OrderformBundle\Repository;
 
 
+
+use App\OrderformBundle\Entity\Accession;
+use App\OrderformBundle\Entity\ProcedureType; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
 /**
  * ProcedureRepository
  *
@@ -37,7 +41,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         }
 
         $em = $this->_em;
-        $foundAccession = $em->getRepository('AppOrderformBundle:Accession')->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $foundAccession = $em->getRepository(Accession::class)->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
 
         if( $foundAccession ) {
             //echo "This entity alsready exists in DB ".$foundAccession."<br>";
@@ -57,13 +62,15 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
             //throw new \Exception( 'Procedure does not have a valid keytype. keytype=' . $key->getKeytype() );
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
+            $newkeytypeEntity = $em->getRepository(ProcedureType::class)->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
         if( $key == "" || $key->getField() != "Auto-generated Procedure Number" ) {
             $em = $this->_em;
-            $newkeytypeEntity = $em->getRepository('AppOrderformBundle:ProcedureType')->findOneByName("Auto-generated Procedure Number");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
+            $newkeytypeEntity = $em->getRepository(ProcedureType::class)->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
@@ -101,7 +108,8 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         $procedure->removeChildren($accession);
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
-        $accession = $this->_em->getRepository('AppOrderformBundle:Accession')->processDuplicationKeyField($accession,$message);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $this->_em->getRepository(Accession::class)->processDuplicationKeyField($accession,$message);
 
         $procedure->addChildren($accession);
 

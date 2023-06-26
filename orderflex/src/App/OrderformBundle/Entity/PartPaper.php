@@ -77,8 +77,6 @@ class PartPaper extends PartArrayFieldAbstract
     }
     /**
      * Remove document
-     *
-     * @param \App\OrderformBundle\Entity\Document $document
      */
     public function removeDocument($document)
     {

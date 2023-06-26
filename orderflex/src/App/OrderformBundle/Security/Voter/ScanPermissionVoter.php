@@ -25,6 +25,9 @@
 namespace App\OrderformBundle\Security\Voter;
 
 
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
 //use App\OrderformBundle\Entity\Accession;
 //use App\OrderformBundle\Entity\Block;
 //use App\OrderformBundle\Entity\Encounter;
@@ -115,7 +118,8 @@ class ScanPermissionVoter extends BasePermissionVoter {
             $securityUtil = $this->container->get('user_security_utility');
             $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
             $userChiefServices = $userSiteSettings->getChiefServices();
-            if ($this->em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userChiefServices, $subjectInstitution)) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            if ($this->em->getRepository(Institution::class)->isNodeUnderParentnodes($userChiefServices, $subjectInstitution)) {
                 return true;
             }
         }

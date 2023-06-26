@@ -17,6 +17,7 @@
 
 namespace App\CallLogBundle\Form;
 
+use App\OrderformBundle\Entity\AccessionType;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -60,7 +61,8 @@ class CalllogAccessionNumberType extends AbstractType
 //            'attr' => array('class' => 'ajax-combobox combobox', 'placeholder' => "Accession Type"),
 //        ));
         $builder->add( 'keytype', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            'class' => AccessionType::class,
             //'choice_label' => 'name',
             'label' => 'Accession Type:',
             'required' => true,

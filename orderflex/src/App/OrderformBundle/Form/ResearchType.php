@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
+
+
+use App\OrderformBundle\Entity\ProjectTitleTree; //process.py script: replaced namespace by ::class: added use line for classname=ProjectTitleTree
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -106,7 +112,8 @@ class ResearchType extends AbstractType
                 }
 
                 $form->add( 'primaryPrincipal', EntityType::class, array(
-                    'class' => 'AppUserdirectoryBundle:UserWrapper',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+                    'class' => UserWrapper::class,
                     'label'=>'Primary Principal Investigator (as entered by user'.$comment.'):',
                     'required'=> false,
                     'multiple' => false,
@@ -135,11 +142,13 @@ class ResearchType extends AbstractType
                 if( $title ) {
                     $projectTitle = $title->getProjectTitle();
                     if( $projectTitle ) {
-                        $label = $this->params['em']->getRepository('AppOrderformBundle:ProjectTitleTree')->getLevelLabels($projectTitle,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProjectTitleTree'] by [ProjectTitleTree::class]
+                        $label = $this->params['em']->getRepository(ProjectTitleTree::class)->getLevelLabels($projectTitle,$mapper) . ":";
                     }
                 }
                 if( !$label ) {
-                    $label = $this->params['em']->getRepository('AppOrderformBundle:ProjectTitleTree')->getLevelLabels(null,$mapper) . ":";
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProjectTitleTree'] by [ProjectTitleTree::class]
+                    $label = $this->params['em']->getRepository(ProjectTitleTree::class)->getLevelLabels(null,$mapper) . ":";
                 }
                 //echo "label=".$label."<br>";
 

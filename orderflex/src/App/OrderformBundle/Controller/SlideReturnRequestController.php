@@ -17,6 +17,15 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Slide; //process.py script: replaced namespace by ::class: added use line for classname=Slide
+
+
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProgressCommentsEventTypeList
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
 use App\OrderformBundle\Entity\Endpoint;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Form\MessageType;
@@ -152,9 +161,11 @@ class SlideReturnRequestController extends OrderAbstractController
 
 
                 if( $slideReturnRequest->getReturnoption() ) {
-                    $slides = $em->getRepository('AppOrderformBundle:Slide')->findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+                    $slides = $em->getRepository(Slide::class)->findSlidesByInstAccession($institution,$accessionTypeStr,$accessionStr);
                 } else {
-                    $slides = $em->getRepository('AppOrderformBundle:Slide')->findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+                    $slides = $em->getRepository(Slide::class)->findSlidesByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
                 }
 
                 //echo "slides count=".count($slides)."<br>";
@@ -245,7 +256,8 @@ class SlideReturnRequestController extends OrderAbstractController
             $em = $this->getDoctrine()->getManager();
 
             //add message with specified id to associated objects to message
-            $associationMessage = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $associationMessage = $em->getRepository(Message::class)->findOneByOid($id);
             $slideReturnRequest->getMessage()->addAssociation($associationMessage);
 
             $slides = $associationMessage->getSlide();
@@ -256,7 +268,8 @@ class SlideReturnRequestController extends OrderAbstractController
 
                 //add slide to slide return request order (however, we have these slides in $associationMessage)
                 $slideReturnRequest->getMessage()->removeSlide($slide);
-                $slideDb =  $em->getRepository('AppOrderformBundle:Slide')->findOneById($slide->getId());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+                $slideDb =  $em->getRepository(Slide::class)->findOneById($slide->getId());
                 $slideReturnRequest->getMessage()->addSlide($slideDb);
 
                 //set this slide as order input
@@ -271,7 +284,8 @@ class SlideReturnRequestController extends OrderAbstractController
             }
 
             //record history
-            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $em->getRepository(Message::class)->findOneByOid($id);
             $history = new History();
             $history->setMessage($message);
             $history->setCurrentid($message->getOid());
@@ -282,7 +296,8 @@ class SlideReturnRequestController extends OrderAbstractController
             $notemsg = 'Slide Return Request has been made for '.count($slides) . ' slide(s):<br>'.implode("<br>",$slideReturnRequest->getSlideDescription($user));
             $history->setNote($notemsg);
 
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Slide Return Request Submission');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Initial Slide Return Request Submission');
             $history->setEventtype($eventtype);
 
             $em->persist($history);
@@ -307,7 +322,8 @@ class SlideReturnRequestController extends OrderAbstractController
 
         if( $scanorderId ) {
 
-            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($scanorderId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $em->getRepository(Message::class)->findOneByOid($scanorderId);
 
             if( !$message ) {
                 throw $this->createNotFoundException('Unable to find Message (Scan Order) entity with id='.$scanorderId);
@@ -321,7 +337,8 @@ class SlideReturnRequestController extends OrderAbstractController
             $message = new Message();
 
             //set category
-            $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName("Slide Return Request");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $category = $em->getRepository(MessageCategory::class)->findOneByName("Slide Return Request");
             $message->setMessageCategory($category);
 
             //set destination
@@ -382,7 +399,8 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideReturnRequest'] by [SlideReturnRequest::class]
+        $repository = $this->getDoctrine()->getRepository(SlideReturnRequest::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
@@ -505,7 +523,8 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $user = $this->getUser();
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideReturnRequest'] by [SlideReturnRequest::class]
+        $repository = $this->getDoctrine()->getRepository(SlideReturnRequest::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
@@ -591,7 +610,8 @@ class SlideReturnRequestController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideReturnRequest'] by [SlideReturnRequest::class]
+        $entity = $em->getRepository(SlideReturnRequest::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
@@ -624,7 +644,8 @@ class SlideReturnRequestController extends OrderAbstractController
                         $entity->getId() . ' for '.count($slides) . ' slide(s):<br>'.
                         implode("<br>", $entity->getSlideDescription($user));
             $history->setNote($notemsg);
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Status Changed');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Slide Return Request Status Changed');
             $history->setEventtype($eventtype);
             $em->persist($history);
             $em->flush();
@@ -730,7 +751,8 @@ class SlideReturnRequestController extends OrderAbstractController
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
 
-            $slideReturnRequest = $em->getRepository('AppOrderformBundle:SlideReturnRequest')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideReturnRequest'] by [SlideReturnRequest::class]
+            $slideReturnRequest = $em->getRepository(SlideReturnRequest::class)->find($id);
 
             $slideReturnRequest->addComment($text_value, $user);
 
@@ -758,7 +780,8 @@ class SlideReturnRequestController extends OrderAbstractController
                             ' slide(s):<br>'.implode("<br>", $slideReturnRequest->getSlideDescription($user));
                 $history->setNote($notemsg."<br>".$commentFull);
 
-                $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Slide Return Request Comment Added');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+                $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Slide Return Request Comment Added');
                 $history->setEventtype($eventtype);
 
                 $em->persist($history);

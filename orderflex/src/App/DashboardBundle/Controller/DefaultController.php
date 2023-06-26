@@ -18,6 +18,13 @@
 
 namespace App\DashboardBundle\Controller;
 
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\DashboardBundle\Entity\ChartList; //process.py script: replaced namespace by ::class: added use line for classname=ChartList
+use App\DashboardBundle\Entity\ChartTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ChartTypeList
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -260,7 +267,8 @@ class DefaultController extends OrderAbstractController
 
         $rolesArr = array();
         foreach($roles as $role) {
-            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleEntity = $em->getRepository(Roles::class)->findOneByAbbreviation($role);
             if( !$roleEntity ) {
                 exit("Can not find role by abbreviation '$role'");
             }
@@ -268,7 +276,8 @@ class DefaultController extends OrderAbstractController
             $rolesArr[] = $roleEntity;
         }
 
-        $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteUtilizationTopic = $em->getRepository(TopicList::class)->findOneByName("Site Utilization");
         if( !$siteUtilizationTopic ) {
             exit("TopicList not found by name 'Site Utilization'");
         }
@@ -278,14 +287,16 @@ class DefaultController extends OrderAbstractController
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('No Institution: "WCM"');
         }
         if( $wcmc->getLevel() != 0 ) {
             exit('Institution "WCM" level is not 0');
         }
-        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
@@ -294,7 +305,8 @@ class DefaultController extends OrderAbstractController
         //55, 56, 57, 58, 59, 60, 61, 62, 63
         $names = array(55, 56, 57, 58, 59, 62, 63);
 
-        $repository = $em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->leftJoin('list.topics','topics');
 
@@ -401,7 +413,8 @@ class DefaultController extends OrderAbstractController
             }
 
             //find ChartList by $chartType
-            $chartEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $chartEntity = $em->getRepository(ChartList::class)->findOneByAbbreviation($chartType);
             if( !$chartEntity ) {
                 exit("ChartList not find by abbreviation $chartType");
             }
@@ -414,7 +427,8 @@ class DefaultController extends OrderAbstractController
 
             //echo "type=$type <br>";
             //find ChartTypeList by $chartType
-            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+            $chartTypeEntity = $em->getRepository(ChartTypeList::class)->findOneByName($type);
             if( !$chartTypeEntity ) {
                 exit("ChartTypeList not find by name $type");
             }
@@ -528,7 +542,8 @@ class DefaultController extends OrderAbstractController
         $startDate = $now->modify('-1 year');
 
         //get the date from event log
-        $repository = $em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->select("logger");

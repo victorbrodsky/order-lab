@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\ProjectTitleTree; //process.py script: replaced namespace by ::class: added use line for classname=ProjectTitleTree
+
+
+use App\OrderformBundle\Entity\CourseTitleTree; //process.py script: replaced namespace by ::class: added use line for classname=CourseTitleTree
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -480,7 +486,8 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:ProjectTitleTree');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProjectTitleTree'] by [ProjectTitleTree::class]
+        $repository = $this->getDoctrine()->getRepository(ProjectTitleTree::class);
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->groupBy("project");
@@ -503,7 +510,8 @@ class ScanUserController extends UserController
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:CourseTitleTree');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CourseTitleTree'] by [CourseTitleTree::class]
+        $repository = $this->getDoctrine()->getRepository(CourseTitleTree::class);
         $dql =  $repository->createQueryBuilder("course");
         $dql->select('course');
         $dql->groupBy("course");

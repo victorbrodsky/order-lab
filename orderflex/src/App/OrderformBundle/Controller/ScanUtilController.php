@@ -17,7 +17,24 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\Account;
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\EncounterReferringProvider; //process.py script: replaced namespace by ::class: added use line for classname=EncounterReferringProvider
+use App\OrderformBundle\Entity\MrnType;
+use App\OrderformBundle\Entity\OrderDelivery;
+use App\OrderformBundle\Entity\OrganList;
+use App\OrderformBundle\Entity\ProcedureList;
+use App\OrderformBundle\Entity\RegionToScan;
+use App\OrderformBundle\Entity\SlideType;
+use App\OrderformBundle\Entity\StainList;
+use App\OrderformBundle\Entity\Urgency;
 use App\UserdirectoryBundle\Controller\UtilController;
+use App\UserdirectoryBundle\Entity\Location;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,7 +119,8 @@ class ScanUtilController extends UtilController {
 //        }
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:StainList', 'list')
+            //->from('AppOrderformBundle:StainList', 'list')
+            ->from(StainList::class, 'list')
             ->select("list.id as id, list.fulltitle as text")
             ->leftJoin("list.original","original")
             ->where("original.id IS NULL")
@@ -148,7 +166,8 @@ class ScanUtilController extends UtilController {
         $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:ProcedureList', 'list')
+            //->from('AppOrderformBundle:ProcedureList', 'list')
+            ->from(ProcedureList::class, 'list')
             ->select("list.id as id, list.name as text")
             //->where("list.creator = ".$user)
             ->orderBy("list.orderinlist","ASC");
@@ -187,7 +206,8 @@ class ScanUtilController extends UtilController {
         $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:OrganList', 'list')
+            //->from('AppOrderformBundle:OrganList', 'list')
+            ->from(OrganList::class, 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -225,7 +245,8 @@ class ScanUtilController extends UtilController {
 
         //////////////////////////////////// 1) get all default list ////////////////////////////////////
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:RegionToScan', 'list')
+            //->from('AppOrderformBundle:RegionToScan', 'list')
+            ->from(RegionToScan::class, 'list')
             ->select("list.name")
             ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
             ->groupBy('list')
@@ -267,7 +288,8 @@ class ScanUtilController extends UtilController {
         $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $this->getDoctrine()->getRepository(Message::class)->findOneByOid($id);
             if( $message ) {
                 $slides = $message->getSlide();
                 foreach( $slides as $slide ) {
@@ -282,7 +304,8 @@ class ScanUtilController extends UtilController {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Message', 'list')
+            //->from('AppOrderformBundle:Message', 'list')
+            ->from(Message::class, 'list')
             ->select("scan.scanregion")
             ->innerJoin("list.slide","slide")
             ->innerJoin("slide.scan","scan")
@@ -333,7 +356,8 @@ class ScanUtilController extends UtilController {
 
         //////////////////////////////////// 1) get all default list ////////////////////////////////////
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:OrderDelivery', 'list')
+            //->from('AppOrderformBundle:OrderDelivery', 'list')
+            ->from(OrderDelivery::class, 'list')
             ->select("list.name")
             ->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user)
             ->groupBy('list')
@@ -367,7 +391,8 @@ class ScanUtilController extends UtilController {
         $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $this->getDoctrine()->getRepository(Message::class)->findOneByOid($id);
             if( $message ) {
                 $arr[] = $message->getScanorder()->getDelivery();
             }
@@ -378,7 +403,8 @@ class ScanUtilController extends UtilController {
         $parametersArr['user'] = $user;
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Message', 'list')
+            //->from('AppOrderformBundle:Message', 'list')
+            ->from(Message::class, 'list')
             ->select("scanorder.delivery")
             ->innerJoin("list.provider","provider")
             ->innerJoin("list.scanorder","scanorder")
@@ -424,7 +450,8 @@ class ScanUtilController extends UtilController {
         $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $this->getDoctrine()->getRepository(Message::class)->findOneByOid($id);
             if( $message ) {
                 $parts = $message->getPart();
                 foreach( $parts as $part ) {
@@ -460,7 +487,8 @@ class ScanUtilController extends UtilController {
         $id = trim((string)$request->get('opt') );
 
         if( $id && $id != "undefined" ) {
-            $message = $this->getDoctrine()->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $this->getDoctrine()->getRepository(Message::class)->findOneByOid($id);
             if( $message ) {
                 $blocks = $message->getBlock();
                 foreach( $blocks as $block ) {
@@ -497,7 +525,8 @@ class ScanUtilController extends UtilController {
         //echo "opt=".$opt."<br>";
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:AccessionType', 'list')
+            //->from('AppOrderformBundle:AccessionType', 'list')
+            ->from(AccessionType::class, 'list')
             ->select("list.id as id, list.name as text, list.abbreviation as abbreviation")
             ->orderBy("list.orderinlist","ASC");
 
@@ -541,7 +570,8 @@ class ScanUtilController extends UtilController {
 
         //echo "opt=".$opt."<br>";
 
-        $query = $em->createQueryBuilder()->from('AppOrderformBundle:MrnType', 'list');
+        //$query = $em->createQueryBuilder()->from('AppOrderformBundle:MrnType', 'list');
+        $query = $em->createQueryBuilder()->from(MrnType::class, 'list');
             //->select("list.id as id, list.name as text")
             //->select("list")
 
@@ -595,7 +625,8 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:SlideType', 'list')
+            //->from('AppOrderformBundle:SlideType', 'list')
+            ->from(SlideType::class, 'list')
             ->select("list.name as text")
             ->where("list.type='default' OR list.type='user-added' OR list.type='TMA'")
             ->orderBy("list.orderinlist","ASC");
@@ -709,7 +740,8 @@ class ScanUtilController extends UtilController {
         $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Account', 'list')
+            //->from('AppOrderformBundle:Account', 'list')
+            ->from(Account::class, 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -741,7 +773,8 @@ class ScanUtilController extends UtilController {
         $opt = trim((string)$request->get('opt') );
 
         $query = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Urgency', 'list')
+            //->from('AppOrderformBundle:Urgency', 'list')
+            ->from(Urgency::class, 'list')
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
@@ -789,7 +822,8 @@ class ScanUtilController extends UtilController {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQueryBuilder()
-            ->from('AppUserdirectoryBundle:Location', 'list')
+            //->from('AppUserdirectoryBundle:Location', 'list')
+            ->from(Location::class, 'list')
             ->select("list")
             ->orderBy("user.username","ASC")
             ->addOrderBy("list.name","ASC");
@@ -1072,7 +1106,8 @@ class ScanUtilController extends UtilController {
         //echo 'compare: '.strval($providerId).' ?= '.strval(intval($providerId))."<br>";
         if( strval($providerId) == strval(intval($providerId)) ) {
             //echo "Case1: providerId is integer=$providerId => providerID is wrapperId => find EncounterReferringProvider by field<br>";
-            $provider = $em->getRepository('AppOrderformBundle:EncounterReferringProvider')->findOneByField($providerId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterReferringProvider'] by [EncounterReferringProvider::class]
+            $provider = $em->getRepository(EncounterReferringProvider::class)->findOneByField($providerId);
 
             if( $provider ) {
                 //echo "provider=".$provider."<br>";

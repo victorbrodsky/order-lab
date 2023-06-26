@@ -17,6 +17,15 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
+
+
+use App\UserdirectoryBundle\Entity\Equipment; //process.py script: replaced namespace by ::class: added use line for classname=Equipment
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
@@ -260,7 +269,8 @@ class MessageType extends AbstractType
             //$builder->add( 'proxyuser', null);
 
             $builder->add( 'proxyuser', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:UserWrapper',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserWrapper'] by [UserWrapper::class]
+                'class' => UserWrapper::class,
                 //'choice_label' => 'getEntity',
                 'label' => $this->params['message.proxyuser.label'],
                 'required' => false,
@@ -282,7 +292,8 @@ class MessageType extends AbstractType
 
 
         $builder->add( 'equipment', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:Equipment',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Equipment'] by [Equipment::class]
+            'class' => Equipment::class,
             'choice_label' => 'name',
             'label' => 'Scanner:',
             'required'=> true,
@@ -355,7 +366,8 @@ class MessageType extends AbstractType
             'required' => true,
             'multiple' => false,
             //'empty_value' => false,
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));

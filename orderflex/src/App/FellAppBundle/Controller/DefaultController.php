@@ -17,6 +17,9 @@
 
 namespace App\FellAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -383,7 +386,8 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //get spreadsheets older than X year
-        $repository = $em->getRepository('AppUserdirectoryBundle:Document');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $repository = $em->getRepository(Document::class);
         $dql =  $repository->createQueryBuilder("document");
         $dql->select('document');
         $dql->leftJoin('document.type','documentType');

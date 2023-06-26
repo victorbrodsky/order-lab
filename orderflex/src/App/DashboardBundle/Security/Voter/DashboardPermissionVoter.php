@@ -25,6 +25,10 @@
 namespace App\DashboardBundle\Security\Voter;
 
 
+
+use App\UserdirectoryBundle\Entity\PermissionObjectList; //process.py script: replaced namespace by ::class: added use line for classname=PermissionObjectList
+use App\DashboardBundle\Entity\ChartList; //process.py script: replaced namespace by ::class: added use line for classname=ChartList
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -101,7 +105,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
                 return true;
             }
 
-            $repository = $this->em->getRepository('AppUserdirectoryBundle:PermissionObjectList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
+            $repository = $this->em->getRepository(PermissionObjectList::class);
             $dql = $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->leftJoin('list.sites', 'sites');
@@ -290,7 +295,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $userRolesId = $securityUtil->getUserRoleIdsBySite($user,$sitename);
         //dump($userRolesId);
 
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.accessRoles", "accessRoles");
@@ -329,7 +335,8 @@ class DashboardPermissionVoter extends BasePermissionVoter
         $userRolesId = $securityUtil->getUserRoleIdsBySite($user,$sitename);
         //dump($userRolesId);
 
-        $repository = $this->em->getRepository('AppDashboardBundle:TopicList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $repository = $this->em->getRepository(TopicList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
 

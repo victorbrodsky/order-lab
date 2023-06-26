@@ -18,6 +18,12 @@
 namespace App\FellAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
+
+use App\FellAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -70,7 +76,8 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('fellowshipSubspecialties', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            'class' => FellowshipSubspecialty::class,
             'label' => "Fellowship Application Types".$this->params['fellappTypesListLink'].":",
             'required' => false,
             'multiple' => true,
@@ -131,7 +138,8 @@ class GoogleFormConfigType extends AbstractType
         ));
 
         $builder->add('fellowshipVisaStatuses', EntityType::class, array(
-            'class' => 'AppFellAppBundle:VisaStatus',
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:VisaStatus'] by [VisaStatus::class]
+            'class' => VisaStatus::class,
             'label' => "Fellowship Visa Status".$this->params['fellappVisaStatusesListLink'].":",
             'required' => false,
             'multiple' => true,

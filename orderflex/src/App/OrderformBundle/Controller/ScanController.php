@@ -17,6 +17,15 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
+
+use App\OrderformBundle\Entity\Part; //process.py script: replaced namespace by ::class: added use line for classname=Part
+
+
+use App\OrderformBundle\Entity\Block; //process.py script: replaced namespace by ::class: added use line for classname=Block
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -48,7 +57,8 @@ class ScanController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppOrderformBundle:Imaging')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Imaging'] by [Imaging::class]
+        $entities = $em->getRepository(Imaging::class)->findAll();
 
         return array(
             'entities' => $entities,
@@ -82,18 +92,21 @@ class ScanController extends OrderAbstractController
             //get Accession, Part and Block. Create if they are not exist, or return them if they are exist.
             //process accession. If not exists - create and return new object, if exists - return object          
             $accession = $entity->getSlide()->getAccession();
-            $accession = $em->getRepository('AppOrderformBundle:Accession')->processAccession( $accession );                         
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+            $accession = $em->getRepository(Accession::class)->processAccession( $accession );                         
             $entity->getSlide()->setAccession($accession);          
             
             $part = $entity->getSlide()->getPart();
             $part->setAccession($accession);
-            $part = $em->getRepository('AppOrderformBundle:Part')->processPart( $part ); 
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+            $part = $em->getRepository(Part::class)->processPart( $part ); 
             $entity->getSlide()->setPart($part);         
             
             $block = $entity->getSlide()->getBlock();
             $block->setAccession($accession);
             $block->setPart($part);
-            $block = $em->getRepository('AppOrderformBundle:Block')->processBlock( $block );                         
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
+            $block = $em->getRepository(Block::class)->processBlock( $block );                         
             $entity->getSlide()->setBlock($block);    
                     
             $em->persist($entity);
@@ -142,7 +155,8 @@ class ScanController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Imaging'] by [Imaging::class]
+        $entity = $em->getRepository(Imaging::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -166,7 +180,8 @@ class ScanController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Imaging'] by [Imaging::class]
+        $entity = $em->getRepository(Imaging::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -192,7 +207,8 @@ class ScanController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Imaging'] by [Imaging::class]
+        $entity = $em->getRepository(Imaging::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Imaging entity.');
@@ -227,7 +243,8 @@ class ScanController extends OrderAbstractController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppOrderformBundle:Imaging')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Imaging'] by [Imaging::class]
+            $entity = $em->getRepository(Imaging::class)->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Imaging entity.');

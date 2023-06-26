@@ -9,6 +9,10 @@
 namespace App\DashboardBundle\Controller;
 
 
+
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\DashboardBundle\Entity\ChartTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ChartTypeList
 use App\DashboardBundle\Entity\ChartList;
 use App\DashboardBundle\Form\FilterDashboardType;
 use App\UserdirectoryBundle\Entity\AccessRequest;
@@ -440,7 +444,8 @@ class DashboardController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('dashboard_home') );
         }
 
-        $topic = $em->getRepository('AppDashboardBundle:TopicList')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $topic = $em->getRepository(TopicList::class)->find($id);
         if( !$topic ) {
             $error = "Topic is not found by ID '".$id."'";
             //throw new \Exception($error);
@@ -561,7 +566,8 @@ class DashboardController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('dashboard_home') );
         }
 
-        $institution = $em->getRepository('AppUserdirectoryBundle:Institution')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institution = $em->getRepository(Institution::class)->find($id);
         if( !$institution ) {
             $error = "Institution is not found by ID '".$id."'";
             $this->addFlash(
@@ -635,7 +641,8 @@ class DashboardController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('dashboard_home') );
         }
 
-        $chartType = $em->getRepository('AppDashboardBundle:ChartTypeList')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+        $chartType = $em->getRepository(ChartTypeList::class)->find($id);
         if( !$chartType ) {
             $error = "Chart type is not found by ID '".$id."'";
             $this->addFlash(
@@ -731,7 +738,8 @@ class DashboardController extends OrderAbstractController
 
             $counter = 1;
             foreach($idsArr as $chartId) {
-                $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+                $chart = $em->getRepository(ChartList::class)->find($chartId);
                 if( !$chart ) {
                     continue;
                 }
@@ -762,7 +770,8 @@ class DashboardController extends OrderAbstractController
         }
         else {
             //single chart
-            $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $chart = $em->getRepository(ChartList::class)->find($id);
             if( !$chart ) {
                 $error = "Chart is not found by ID '".$id."'";
                 $this->addFlash(
@@ -834,7 +843,8 @@ class DashboardController extends OrderAbstractController
 
         $chartId = trim((string)$request->get('chartId') );
 
-        $chart = $em->getRepository('AppDashboardBundle:ChartList')->find($chartId);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $chart = $em->getRepository(ChartList::class)->find($chartId);
         if( !$chart ) {
             exit("Chart not found by ID $chartId");
         }

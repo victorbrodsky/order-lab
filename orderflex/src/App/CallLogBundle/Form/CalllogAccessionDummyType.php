@@ -17,6 +17,7 @@
 
 namespace App\CallLogBundle\Form;
 
+use App\OrderformBundle\Entity\AccessionType;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -68,7 +69,8 @@ class CalllogAccessionDummyType extends AbstractType
         //showAccession
         //As not-mapped accession type and number
         $builder->add( 'accessionType', EntityType::class, array(
-            'class' => 'AppOrderformBundle:AccessionType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            'class' => AccessionType::class,
             //'choice_label' => 'name',
             'label' => 'Accession Type:',
             'required' => false,

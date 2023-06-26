@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\LifeFormList; //process.py script: replaced namespace by ::class: added use line for classname=LifeFormList
+
+
+use App\OrderformBundle\Entity\PatientRecordStatusList; //process.py script: replaced namespace by ::class: added use line for classname=PatientRecordStatusList
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -287,7 +293,8 @@ class PatientType extends AbstractType
 //            ));
 
             $builder->add('lifeForm', EntityType::class, array(
-                'class' => 'AppUserdirectoryBundle:LifeFormList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LifeFormList'] by [LifeFormList::class]
+                'class' => LifeFormList::class,
                 'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,
@@ -310,7 +317,8 @@ class PatientType extends AbstractType
                 $form = $event->getForm();
 
                 $statusParams = array(
-                    'class' => 'AppOrderformBundle:PatientRecordStatusList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientRecordStatusList'] by [PatientRecordStatusList::class]
+                    'class' => PatientRecordStatusList::class,
                     //'choice_label' => 'name',
                     'label' => 'Patient Record Status:',
                     'required' => false,
@@ -332,7 +340,8 @@ class PatientType extends AbstractType
                 if( $patient ) {
                     $patientRecordStatus = $patient->getPatientRecordStatus();
                     if( !$patientRecordStatus ) {
-                        $defaultStatus = $this->params['em']->getRepository('AppOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientRecordStatusList'] by [PatientRecordStatusList::class]
+                        $defaultStatus = $this->params['em']->getRepository(PatientRecordStatusList::class)->findOneByName("Active");
                         if( $defaultStatus ) {
                             //echo "show default status=".$defaultStatus."<br>";
                             $statusParams['data'] = $defaultStatus;

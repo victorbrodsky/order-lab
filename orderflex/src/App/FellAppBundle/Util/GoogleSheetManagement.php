@@ -34,6 +34,7 @@ namespace App\FellAppBundle\Util;
 // "deletion of rows from the spreadsheet on Google Drive upon successful import"
 // "Automatically delete downloaded applications that are older than [X] year(s)".
 
+use App\FellAppBundle\Entity\GoogleFormConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\Client;
 use Google\Service\Drive;
@@ -319,7 +320,8 @@ class GoogleSheetManagement {
             $documentType = trim((string)$documentType);
 
             //check if file already exists by file id
-            $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $documentDb = $this->em->getRepository(Document::class)->findOneByUniqueid($file->getId());
             if( $documentDb && $documentType != 'Fellowship Application Backup Spreadsheet' ) {
                 //$event = "Document already exists with uniqueid=".$file->getId()."; fileId=".$fileId;
                 //$logger->notice($event);
@@ -1692,7 +1694,7 @@ class GoogleSheetManagement {
     }
 
     function getGoogleConfigParameter( $parameterName ) {
-        $configs = $this->em->getRepository("AppFellAppBundle:GoogleFormConfig")->findAll();
+        $configs = $this->em->getRepository(GoogleFormConfig::class)->findAll();
 
         $config = null;
 

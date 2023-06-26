@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,7 +57,8 @@ class EncounterPatsexType extends AbstractType
 //        ));
 
         $builder->add( 'field', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:SexList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+            'class' => SexList::class,
             'choice_label' => 'name',
             'label' => "Patient's Gender (at the time of encounter):",
             'required'=> false,

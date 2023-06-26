@@ -8,6 +8,18 @@
 
 namespace App\ResAppBundle\Util;
 
+
+
+use App\ResAppBundle\Entity\ResidencyApplication; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyApplication
+
+
+use App\ResAppBundle\Entity\Reference; //process.py script: replaced namespace by ::class: added use line for classname=Reference
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -127,7 +139,8 @@ class RecLetterUtil {
 
         //check for uniqueness
         if( $hash ) {
-            $references = $this->em->getRepository('AppResAppBundle:Reference')->findByRecLetterHashId($hash);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Reference'] by [Reference::class]
+            $references = $this->em->getRepository(Reference::class)->findByRecLetterHashId($hash);
             if( count($references) > 0 ) {
                 $count = $count + 1;
                 $hash = $this->generateRecLetterId( $resapp, $reference, $request, $count );
@@ -715,7 +728,8 @@ class RecLetterUtil {
         }
 
         //check if file already exists by file id
-        $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($file->getId());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $documentDb = $this->em->getRepository(Document::class)->findOneByUniqueid($file->getId());
         if( $documentDb && $documentType != 'Residency Application Backup Spreadsheet' ) {
             //echo "letter already exists with document ID=".$documentDb->getId()."<br>";
             //$logger = $this->container->get('logger');
@@ -781,7 +795,8 @@ class RecLetterUtil {
 
         //find application and reference by reference ID
         //echo "search by ref ID=".$refId."<br>";
-        $references = $this->em->getRepository('AppResAppBundle:Reference')->findByRecLetterHashId($refId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Reference'] by [Reference::class]
+        $references = $this->em->getRepository(Reference::class)->findByRecLetterHashId($refId);
         //echo "references count=".count($references)."<br>";
 
         //not found
@@ -1219,7 +1234,8 @@ class RecLetterUtil {
 
             //set Status to "Complete"
             if( $originalStatusStr != "Complete" ) {
-                $completeStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("complete");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+                $completeStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("complete");
                 if (!$completeStatus) {
                     throw new EntityNotFoundException('Unable to find ResAppStatus by name=' . "complete");
                 }
@@ -1319,7 +1335,8 @@ class RecLetterUtil {
             }
 
             $duplicates = false;
-            $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $repository = $this->em->getRepository(ResidencyApplication::class);
             $dql = $repository->createQueryBuilder("resapp");
             $dql->select('resapp');
             $dql->leftJoin("resapp.residencyTrack", "residencyTrack");

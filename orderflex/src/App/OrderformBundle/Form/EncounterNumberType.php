@@ -40,7 +40,8 @@ class EncounterNumberType extends AbstractType
 
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('keytype', EntityType::class, array(
-                'class' => 'AppOrderformBundle:EncounterType',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
+                'class' => EncounterType::class,
                 'label' => 'Encounter Type:',
                 'required' => false,
                 //'data' => 1,

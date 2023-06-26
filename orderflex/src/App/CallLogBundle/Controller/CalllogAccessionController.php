@@ -26,6 +26,18 @@ namespace App\CallLogBundle\Controller;
 
 
 
+use App\OrderformBundle\Entity\AccessionListHierarchyGroupType; //process.py script: replaced namespace by ::class: added use line for classname=AccessionListHierarchyGroupType
+
+
+use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
+
+
+use App\OrderformBundle\Entity\AccessionListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=AccessionListHierarchy
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
+
 use App\CallLogBundle\Form\CalllogAccessionDummyType;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -70,11 +82,13 @@ class CalllogAccessionController extends OrderAbstractController {
         //for now use the mock page accession-list.html.twig
 
         //get list by id
-        $accessionGroup = $em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findOneByName('Accession');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchyGroupType'] by [AccessionListHierarchyGroupType::class]
+        $accessionGroup = $em->getRepository(AccessionListHierarchyGroupType::class)->findOneByName('Accession');
 
         $parameters = array();
 
-        $repository = $em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $repository = $em->getRepository(AccessionListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.accession", "accession");
@@ -122,7 +136,8 @@ class CalllogAccessionController extends OrderAbstractController {
 
         //echo "accessions=".count($accessions)."<br>";
 
-        $accessionListHierarchyObject = $em->getRepository('AppUserdirectoryBundle:PlatformListManagerRootList')->findOneByName('Accession List Hierarchy');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PlatformListManagerRootList'] by [PlatformListManagerRootList::class]
+        $accessionListHierarchyObject = $em->getRepository(PlatformListManagerRootList::class)->findOneByName('Accession List Hierarchy');
 
         //create accession form for "Add Accession" section
 //        $status = 'invalid';
@@ -165,7 +180,8 @@ class CalllogAccessionController extends OrderAbstractController {
 
         $parameters = array();
 
-        $repository = $em->getRepository('AppOrderformBundle:Accession');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $repository = $em->getRepository(Accession::class);
         $dql = $repository->createQueryBuilder("accession");
 
         $dql->leftJoin("accession.message", "message");
@@ -305,13 +321,15 @@ class CalllogAccessionController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $accessionList = $em->getRepository(AccessionListHierarchy::class)->find($accessionListId);
         if( !$accessionList ) {
             throw new \Exception( "AccessionListHierarchy not found by id $accessionListId" );
         }
 
         //remove accession from the list
-        $repository = $em->getRepository('AppOrderformBundle:AccessionListHierarchy');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $repository = $em->getRepository(AccessionListHierarchy::class);
         $dql = $repository->createQueryBuilder("list");
 
         $dql->leftJoin("list.accession", "accession");
@@ -366,13 +384,15 @@ class CalllogAccessionController extends OrderAbstractController {
         $calllogUtil = $this->container->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
-        $accessionList = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->find($accessionListId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+        $accessionList = $em->getRepository(AccessionListHierarchy::class)->find($accessionListId);
         if( !$accessionList ) {
             throw new \Exception( "AccessionListHierarchy not found by id $accessionListId" );
         }
 
         //add accession from the list
-        $accession = $em->getRepository('AppOrderformBundle:Accession')->find($accessionId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $em->getRepository(Accession::class)->find($accessionId);
         if( !$accession ) {
             throw new \Exception( "Accession not found by id $accessionId" );
         }

@@ -46,6 +46,7 @@ use App\OrderformBundle\Entity\MessageTypeClassifiers;
 use App\OrderformBundle\Entity\PatientListHierarchy;
 use App\OrderformBundle\Entity\PatientListHierarchyGroupType;
 use App\OrderformBundle\Entity\PatientRecordStatusList;
+use App\OrderformBundle\Entity\PatientType;
 use App\OrderformBundle\Entity\ResearchGroupType;
 //use App\OrderformBundle\Entity\SystemAccountRequestType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -614,7 +615,8 @@ class ScanAdminController extends AdminController
             //exit('stain exit');
 
             if( $stainName ) {
-                $entity = $em->getRepository('AppOrderformBundle:StainList')->findOneByName($stainName);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+                $entity = $em->getRepository(StainList::class)->findOneByName($stainName);
             }
 
             if( !$entity ) {
@@ -646,7 +648,8 @@ class ScanAdminController extends AdminController
 
             if( $synonym ) {
                 //echo "synonym=".$synonym."<br>";
-                $synonymEntity = $em->getRepository('AppOrderformBundle:StainList')->findOneByName($synonym);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+                $synonymEntity = $em->getRepository(StainList::class)->findOneByName($synonym);
                 if( !$synonymEntity ) {
                     //exit("Synonim not found!!!!!!!!!!!!!! Name=".$synonym);
                     //$count = $count + 10;
@@ -871,7 +874,8 @@ class ScanAdminController extends AdminController
     public function generateOrgans() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:OrganList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:OrganList'] by [OrganList::class]
+        $entities = $em->getRepository(OrganList::class)->findAll();
 
         if( $entities ) {
 
@@ -902,7 +906,8 @@ class ScanAdminController extends AdminController
     public function generateProcedures() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ProcedureList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureList'] by [ProcedureList::class]
+        $entities = $em->getRepository(ProcedureList::class)->findAll();
 
         if( $entities ) {
 
@@ -934,7 +939,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:Status')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+        $entities = $em->getRepository(Status::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1017,7 +1023,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:SlideType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideType'] by [SlideType::class]
+        $entities = $em->getRepository(SlideType::class)->findAll();
 
         if( $entities ) {
 
@@ -1079,7 +1086,8 @@ class ScanAdminController extends AdminController
 
             //echo "name=".$name."; abbreviation=".$abbreviation."<br>";
 
-            $mrnType = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $mrnType = $em->getRepository(MrnType::class)->findOneByName($name);
             if( $mrnType ) {
                 continue;
             }
@@ -1120,7 +1128,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $types as $name=>$level ) {
 
-            $messageTypeClassifier = $em->getRepository('AppOrderformBundle:MessageTypeClassifiers')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTypeClassifiers'] by [MessageTypeClassifiers::class]
+            $messageTypeClassifier = $em->getRepository(MessageTypeClassifiers::class)->findOneByName($name);
             if( $messageTypeClassifier ) {
                 continue;
             } else {
@@ -1279,9 +1288,11 @@ class ScanAdminController extends AdminController
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle"
                 );
-                $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findByChildnameAndParent($name,$parentCategory,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                $messageCategory = $em->getRepository(MessageCategory::class)->findByChildnameAndParent($name,$parentCategory,$mapper);
             } else {
-                $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+                $messageCategory = $em->getRepository(MessageCategory::class)->findOneByName($name);
             }
 
             if( !$messageCategory ) {
@@ -1294,7 +1305,8 @@ class ScanAdminController extends AdminController
                 //try to get default group by level
                 if( !$messageCategory->getOrganizationalGroupType() ) {
                     if( $messageCategory->getLevel() ) {
-                        $messageTypeClassifier = $em->getRepository('AppOrderformBundle:MessageTypeClassifiers')->findOneByLevel($messageCategory->getLevel());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTypeClassifiers'] by [MessageTypeClassifiers::class]
+                        $messageTypeClassifier = $em->getRepository(MessageTypeClassifiers::class)->findOneByLevel($messageCategory->getLevel());
                         if ($messageTypeClassifier) {
                             $messageCategory->setOrganizationalGroupType($messageTypeClassifier);
                         }
@@ -1348,7 +1360,8 @@ class ScanAdminController extends AdminController
     public function generatePatientType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:PatientType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientType'] by [PatientType::class]
+        $entities = $em->getRepository(PatientType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1432,7 +1445,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $types as $type => $abbreviation ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($type);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $entity = $em->getRepository(AccessionType::class)->findOneByName($type);
             if( $entity ) {
                 continue;
             }
@@ -1462,7 +1476,8 @@ class ScanAdminController extends AdminController
     public function generateEncounterType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:EncounterType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
+        $entities = $em->getRepository(EncounterType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1494,7 +1509,8 @@ class ScanAdminController extends AdminController
     public function generateEncounterInfoType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterInfoTypeList'] by [EncounterInfoTypeList::class]
+        $entities = $em->getRepository(EncounterInfoTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1526,7 +1542,8 @@ class ScanAdminController extends AdminController
     public function generateProcedureType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ProcedureType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
+        $entities = $em->getRepository(ProcedureType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1564,7 +1581,8 @@ class ScanAdminController extends AdminController
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         
-        $entities = $em->getRepository('AppOrderformBundle:OrderDelivery')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:OrderDelivery'] by [OrderDelivery::class]
+        $entities = $em->getRepository(OrderDelivery::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1605,7 +1623,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:RegionToScan')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:RegionToScan'] by [RegionToScan::class]
+        $entities = $em->getRepository(RegionToScan::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1638,7 +1657,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcessorComments'] by [ProcessorComments::class]
+        $entities = $em->getRepository(ProcessorComments::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1671,7 +1691,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:Urgency')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Urgency'] by [Urgency::class]
+        $entities = $em->getRepository(Urgency::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1700,7 +1721,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+        $entities = $em->getRepository(ProgressCommentsEventTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1739,7 +1761,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:Magnification')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Magnification'] by [Magnification::class]
+        $entities = $em->getRepository(Magnification::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1770,7 +1793,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ImageAnalysisAlgorithmList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ImageAnalysisAlgorithmList'] by [ImageAnalysisAlgorithmList::class]
+        $entities = $em->getRepository(ImageAnalysisAlgorithmList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1838,7 +1862,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:RaceList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:RaceList'] by [RaceList::class]
+        $entities = $em->getRepository(RaceList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1875,7 +1900,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
+        $entities = $em->getRepository(DiseaseTypeList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1908,7 +1934,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
+        $entities = $em->getRepository(DiseaseOriginList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1941,7 +1968,8 @@ class ScanAdminController extends AdminController
         $username = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:EmbedderInstructionList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EmbedderInstructionList'] by [EmbedderInstructionList::class]
+        $entities = $em->getRepository(EmbedderInstructionList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -1970,7 +1998,8 @@ class ScanAdminController extends AdminController
     public function generateResearchGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:ResearchGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ResearchGroupType'] by [ResearchGroupType::class]
+        $entities = $em->getRepository(ResearchGroupType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -2006,7 +2035,8 @@ class ScanAdminController extends AdminController
     public function generateCourseGroupType() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:CourseGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CourseGroupType'] by [CourseGroupType::class]
+        $entities = $em->getRepository(CourseGroupType::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -2041,7 +2071,8 @@ class ScanAdminController extends AdminController
     public function generateAmendmentReason() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:AmendmentReasonList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AmendmentReasonList'] by [AmendmentReasonList::class]
+        $entities = $em->getRepository(AmendmentReasonList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -2075,7 +2106,8 @@ class ScanAdminController extends AdminController
     public function generateEncounterStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:EncounterStatusList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterStatusList'] by [EncounterStatusList::class]
+        $entities = $em->getRepository(EncounterStatusList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -2109,7 +2141,8 @@ class ScanAdminController extends AdminController
     public function generatePatientRecordStatus() {
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:PatientRecordStatusList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientRecordStatusList'] by [PatientRecordStatusList::class]
+        $entities = $em->getRepository(PatientRecordStatusList::class)->findAll();
 
         if( $entities ) {
             return -1;
@@ -2162,7 +2195,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+            $entity = $em->getRepository(MessageStatusList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2228,7 +2262,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:MessageTagTypesList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagTypesList'] by [MessageTagTypesList::class]
+            $entity = $em->getRepository(MessageTagTypesList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2272,7 +2307,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $tagName=>$tagType ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:MessageTagsList')->findOneByName($tagName);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagsList'] by [MessageTagsList::class]
+            $entity = $em->getRepository(MessageTagsList::class)->findOneByName($tagName);
             if( $entity ) {
                 continue;
             }
@@ -2281,7 +2317,8 @@ class ScanAdminController extends AdminController
             $this->setDefaultList($entity,$count,$username,$tagName);
 
             if( $tagType ) {
-                $type = $em->getRepository('AppOrderformBundle:MessageTagTypesList')->findOneByName($tagType);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageTagTypesList'] by [MessageTagTypesList::class]
+                $type = $em->getRepository(MessageTagTypesList::class)->findOneByName($tagType);
                 if ($type) {
                     $entity->addTagType($type);
                 }
@@ -2349,7 +2386,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:CalllogAttachmentTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogAttachmentTypeList'] by [CalllogAttachmentTypeList::class]
+            $entity = $em->getRepository(CalllogAttachmentTypeList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2385,7 +2423,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogTaskTypeList'] by [CalllogTaskTypeList::class]
+            $entity = $em->getRepository(CalllogTaskTypeList::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2408,7 +2447,8 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchyGroupType'] by [PatientListHierarchyGroupType::class]
+        $entities = $em->getRepository(PatientListHierarchyGroupType::class)->findAll();
         if( $entities ) {
             return -1;
         }
@@ -2476,9 +2516,11 @@ class ScanAdminController extends AdminController
                     'className' => "PatientListHierarchy",
                     'bundleName' => "OrderformBundle"
                 );
-                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                $item = $em->getRepository(PatientListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
             } else {
-                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                $item = $em->getRepository(PatientListHierarchy::class)->findOneByName($name);
             }
 
             if( $item ) {
@@ -2492,7 +2534,8 @@ class ScanAdminController extends AdminController
             $item->setLevel($level);
 
             //find org group level
-            $levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchyGroupType'] by [PatientListHierarchyGroupType::class]
+            $levelGroup = $em->getRepository(PatientListHierarchyGroupType::class)->findOneByLevel($level);
             if( !$levelGroup ) {
                 exit("PatientListHierarchyGroupType not found by level ".$level);
             }
@@ -2525,7 +2568,8 @@ class ScanAdminController extends AdminController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchyGroupType'] by [AccessionListHierarchyGroupType::class]
+        $entities = $em->getRepository(AccessionListHierarchyGroupType::class)->findAll();
         if( $entities ) {
             return -1;
         }
@@ -2584,9 +2628,11 @@ class ScanAdminController extends AdminController
                     'className' => "AccessionListHierarchy",
                     'bundleName' => "OrderformBundle"
                 );
-                $item = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+                $item = $em->getRepository(AccessionListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
             } else {
-                $item = $em->getRepository('AppOrderformBundle:AccessionListHierarchy')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
+                $item = $em->getRepository(AccessionListHierarchy::class)->findOneByName($name);
             }
 
             if( $item ) {
@@ -2600,7 +2646,8 @@ class ScanAdminController extends AdminController
             $item->setLevel($level);
 
             //find org group level
-            $levelGroup = $em->getRepository('AppOrderformBundle:AccessionListHierarchyGroupType')->findOneByLevel($level);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchyGroupType'] by [AccessionListHierarchyGroupType::class]
+            $levelGroup = $em->getRepository(AccessionListHierarchyGroupType::class)->findOneByLevel($level);
             if( !$levelGroup ) {
                 exit("AccessionListHierarchyGroupType not found by level ".$level);
             }
@@ -2609,7 +2656,8 @@ class ScanAdminController extends AdminController
 
             //assign AccessionTypeList all to "Accessions for Follow-Up" list to be shown in all systems
             if( $name == "Accessions for Follow-Up" ) {
-                $accessionListTypes = $em->getRepository('AppOrderformBundle:AccessionListType')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListType'] by [AccessionListType::class]
+                $accessionListTypes = $em->getRepository(AccessionListType::class)->findAll();
                 foreach ($accessionListTypes as $accessionListType) {
                     $item->addAccessionListType($accessionListType);
                 }
@@ -2649,7 +2697,8 @@ class ScanAdminController extends AdminController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = $em->getRepository('AppOrderformBundle:AccessionListType')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListType'] by [AccessionListType::class]
+            $entity = $em->getRepository(AccessionListType::class)->findOneByName($name);
             if( $entity ) {
                 continue;
             }
@@ -2700,9 +2749,11 @@ class ScanAdminController extends AdminController
                     'className' => "PatientListHierarchy",
                     'bundleName' => "OrderformBundle"
                 );
-                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findByChildnameAndParent($name,$parentItem,$mapper);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                $item = $em->getRepository(PatientListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
             } else {
-                $item = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName($name);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+                $item = $em->getRepository(PatientListHierarchy::class)->findOneByName($name);
             }
 
             if( $item ) {
@@ -2718,7 +2769,8 @@ class ScanAdminController extends AdminController
             $item->setLevel($level);
 
             //find org group level
-            $levelGroup = $em->getRepository('AppOrderformBundle:PatientListHierarchyGroupType')->findOneByLevel($level);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchyGroupType'] by [PatientListHierarchyGroupType::class]
+            $levelGroup = $em->getRepository(PatientListHierarchyGroupType::class)->findOneByLevel($level);
             if( !$levelGroup ) {
                 exit("PatientListHierarchyGroupType not found by level ".$level);
             }
@@ -2909,7 +2961,9 @@ class ScanAdminController extends AdminController
     public function findAndReplaceOldByNew( $entityName, $fieldName, $oldNumberId, $newNumberId ) {
         $em = $this->getDoctrine()->getManager();
         //$encounterNumbers = $em->getRepository('AppOrderformBundle:EncounterNumber')->findOneByName("Auto-generated Encounter Number");
-        $repository = $em->getRepository('AppOrderformBundle:'.$entityName);
+        //$repository = $em->getRepository('AppOrderformBundle:'.$entityName);
+        $repository = $em->getRepository("App\\OrderformBundle\\Entity\\".$entityName);
+
         $dql = $repository->createQueryBuilder("numberid");
         //$dql->leftJoin("numberid.number", "number");
         $dql->where("numberid.".$fieldName." LIKE :oldNumberId");

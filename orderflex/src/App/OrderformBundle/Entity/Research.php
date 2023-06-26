@@ -206,8 +206,6 @@ class Research
 
     /**
      * Remove userWrappers
-     *
-     * @param userWrappers $userWrappers
      */
     public function removeUserWrapper($userWrappers)
     {

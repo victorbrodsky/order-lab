@@ -24,6 +24,30 @@
 
 namespace App\ResAppBundle\Util;
 
+
+
+use App\ResAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
+
+use App\UserdirectoryBundle\Entity\SiteList; //process.py script: replaced namespace by ::class: added use line for classname=SiteList
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -101,7 +125,8 @@ class ResAppUtil {
         $resappUtil = $this->container->get('resapp_util');
 
         //echo "year=$year<br>";
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->em->getRepository(ResidencyApplication::class);
         $dql =  $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin("resapp.appStatus", "appStatus");
@@ -249,7 +274,8 @@ class ResAppUtil {
         //$filterTypeIds = array();
 
         foreach( $user->getRoles() as $rolename ) {
-            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $residencyTrack = $roleObject->getResidencyTrack();
                 if( $residencyTrack ) {
@@ -280,16 +306,19 @@ class ResAppUtil {
             'className' => 'Institution'
         );
 
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         //exit("wcm=".$wcmc);
-        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
         );
 
         //get list of residency type with extra "ALL"
-        $repository = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+        $repository = $em->getRepository(ResidencyTrackList::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
         $dql->where("institution.id = ".$pathology->getId());
@@ -324,9 +353,11 @@ class ResAppUtil {
                 'className' => 'Institution'
             );
 
-            $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $wcmc = $this->em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
             //exit("wcm=".$wcmc);
-            $pathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $pathology = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
                 $wcmc,
                 $mapper
@@ -334,7 +365,8 @@ class ResAppUtil {
         }
 
         //get list of residency type with extra "ALL"
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+        $repository = $this->em->getRepository(ResidencyTrackList::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->where("list.type = :typedef OR list.type = :typeadd");
 
@@ -375,7 +407,8 @@ class ResAppUtil {
     public function getResidencyVisaStatuses( $asEntities=false, $idName = true ) {
         $em = $this->em;
 
-        $repository = $em->getRepository('AppResAppBundle:VisaStatus');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:VisaStatus'] by [VisaStatus::class]
+        $repository = $em->getRepository(VisaStatus::class);
         $dql = $repository->createQueryBuilder('list');
 
         $dql->where("list.type = :typedef OR list.type = :typeadd");
@@ -509,7 +542,8 @@ class ResAppUtil {
                 continue;
             }
 
-            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($rolename);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             //echo "roleObject=".$roleObject."<br>";
             if( $roleObject ) {
                 $residencyTrack = $roleObject->getResidencyTrack();
@@ -519,7 +553,8 @@ class ResAppUtil {
                         return true;
                         //Residency track does not required institution
                         //it is safer to check also for residencyTrack's institution is under roleObject's institution
-                        if( $em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode( $roleObject->getInstitution(), $residencyTrack->getInstitution() ) ) {
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                        if( $em->getRepository(Institution::class)->isNodeUnderParentnode( $roleObject->getInstitution(), $residencyTrack->getInstitution() ) ) {
                             return true;
                         }
                     }
@@ -595,13 +630,15 @@ class ResAppUtil {
 //        }
         $coordinatorResTypeRole = $this->getRoleByResidencyTrackAndRolename($residencyTrack,$roleName );
 
-        $users = $this->em->getRepository('AppUserdirectoryBundle:User')->findUserByRole($coordinatorResTypeRole);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $users = $this->em->getRepository(User::class)->findUserByRole($coordinatorResTypeRole);
 
         return $users;
     }
     public function getRoleByResidencyTrackAndRolename( $residencyTrack, $roleName ) {
         //$roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
-        $roles = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findByResidencyTrack($residencyTrack);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roles = $this->em->getRepository(Roles::class)->findByResidencyTrack($residencyTrack);
         foreach( $roles as $role ) {
             if( strpos((string)$role,$roleName) !== false ) {
                 return $role;
@@ -765,7 +802,8 @@ class ResAppUtil {
         $author = $this->security->getUser();
 
         //Pathology Residency Applicant in EmploymentStatus
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Residency Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
         }
@@ -804,7 +842,8 @@ class ResAppUtil {
         $author = $this->security->getUser();
 
         //Pathology Residency Applicant in EmploymentStatus
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Residency Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
         }
@@ -942,7 +981,8 @@ class ResAppUtil {
 
         if( !$specificLocation ) {
 
-            $locationType = $this->em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName($typeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+            $locationType = $this->em->getRepository(LocationTypeList::class)->findOneByName($typeName);
             if( !$locationType ) {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
@@ -992,7 +1032,8 @@ class ResAppUtil {
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
-        $trainingType = $this->em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName($typeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+        $trainingType = $this->em->getRepository(TrainingTypeList::class)->findOneByName($typeName);
         $training->setTrainingType($trainingType);
 
         //s2id_oleg_resappbundle_residencyapplication_trainings_1_jobTitle
@@ -1062,7 +1103,8 @@ class ResAppUtil {
         $row = 2;
         foreach( explode("-",$resappids) as $resappId ) {
         
-            $resapp = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($resappId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $resapp = $this->em->getRepository(ResidencyApplication::class)->find($resappId);
             if( !$resapp ) {
                 continue;
             }
@@ -1176,7 +1218,6 @@ class ResAppUtil {
             $sheet = $ea->getActiveSheet();
             $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }
@@ -1292,7 +1333,8 @@ class ResAppUtil {
 
         foreach( explode("-",$resappids) as $resappId ) {
 
-            $resapp = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($resappId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $resapp = $this->em->getRepository(ResidencyApplication::class)->find($resappId);
             if( !$resapp ) {
                 continue;
             }
@@ -1484,7 +1526,8 @@ class ResAppUtil {
 
         foreach( explode("-",$resappids) as $resappId ) {
 
-            $resapp = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($resappId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $resapp = $this->em->getRepository(ResidencyApplication::class)->find($resappId);
             if( !$resapp ) {
                 continue;
             }
@@ -1520,7 +1563,8 @@ class ResAppUtil {
         $em = $this->em;
         $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-        $site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('resapp');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $site = $em->getRepository(SiteList::class)->findOneByAbbreviation('resapp');
 
         $count = 0;
 
@@ -1533,7 +1577,8 @@ class ResAppUtil {
         //create Director role
         $roleName = "ROLE_RESAPP_".$roleType."_WCM_".$roleNameBase;
         //echo "roleName=$roleName<br>";
-        $role = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1967,7 +2012,8 @@ class ResAppUtil {
     }
 
     public function getRejectionEmailSent($resapp) {
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         //$resappIdInteger = $resapp->getId()."";
@@ -2012,7 +2058,8 @@ class ResAppUtil {
     public function getResappAcceptanceRejectionEmailSent( $resapp, $fullNonHtmlInfo=false ) {
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');
@@ -2251,7 +2298,8 @@ class ResAppUtil {
         return $last;
     }
     public function getResappByResidencyTrack($residencyTypeId) {
-        return $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+        return $this->em->getRepository(ResidencyTrackList::class)->find($residencyTypeId);
     }
 
     public function getDefaultResidencyTrack() {
@@ -2259,7 +2307,8 @@ class ResAppUtil {
         $defaultResidencyTrack = $userSecUtil->getSiteSettingParameter('defaultResidencyTrack',$this->container->getParameter('resapp.sitename'));
         //echo "1defaultResidencyTrack=$defaultResidencyTrack <br>";
         if( !$defaultResidencyTrack ) {
-            $residencyTracks = $this->em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findBy(array(), array('orderinlist' => 'ASC'));
+            //$residencyTracks = $this->em->getRepository("AppUserdirectoryBundle:ResidencyTrackList")->findBy(array(), array('orderinlist' => 'ASC'));
+            $residencyTracks = $this->em->getRepository(ResidencyTrackList::class)->findBy(array(), array('orderinlist' => 'ASC'));
             if( count($residencyTracks) > 0 ) {
                 $defaultResidencyTrack = $residencyTracks[0];
             }
@@ -2486,7 +2535,8 @@ class ResAppUtil {
         $currentYear = $this->getDefaultStartYear();
         $startDates = array();
         foreach($residencyTypes as $residencyId=>$residencyName) {
-            $residencyType = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($residencyId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyType = $this->em->getRepository(ResidencyTrackList::class)->find($residencyId);
             $startDate = $residencyType->getSeasonYearStart();
             if( $startDate ) {
                 //echo $residencyName.": startDate=".$startDate->format('d-m-Y')."<br>";
@@ -2645,7 +2695,8 @@ class ResAppUtil {
 
     public function isInterviewInvitationEmailSent($resapp) {
         //get the date from event log
-        $repository = $this->em->getRepository('AppUserdirectoryBundle:Logger');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $repository = $this->em->getRepository(Logger::class);
         $dql = $repository->createQueryBuilder("logger");
 
         $dql->innerJoin('logger.eventType', 'eventType');

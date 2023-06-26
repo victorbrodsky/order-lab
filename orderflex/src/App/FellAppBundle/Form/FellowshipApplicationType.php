@@ -18,6 +18,9 @@
 namespace App\FellAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\BoardCertificationType;
 use App\UserdirectoryBundle\Form\CitizenshipType;
@@ -71,7 +74,8 @@ class FellowshipApplicationType extends AbstractType
         }
 
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            'class' => FellowshipSubspecialty::class,
             'label' => "Fellowship Application Type:",
             //'required' => true,
             'required' => false,

@@ -17,6 +17,27 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\SlideReturnRequest; //process.py script: replaced namespace by ::class: added use line for classname=SlideReturnRequest
+
+
+use App\OrderformBundle\Entity\ProcessorComments; //process.py script: replaced namespace by ::class: added use line for classname=ProcessorComments
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\UserRequest; //process.py script: replaced namespace by ::class: added use line for classname=UserRequest
+
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,7 +176,8 @@ class ScanOrderController extends OrderAbstractController {
             return $this->createComplexSearchPage( $form, $routeName, $service, $filter, $search, $page );
         }
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->getDoctrine()->getRepository(Message::class);
 
         $withSearch = true;
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
@@ -238,7 +260,8 @@ class ScanOrderController extends OrderAbstractController {
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
-        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcessorComments'] by [ProcessorComments::class]
+        $processorComments = $em->getRepository(ProcessorComments::class)->findAll();
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
@@ -299,7 +322,8 @@ class ScanOrderController extends OrderAbstractController {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $entity = $em->getRepository(Message::class)->findOneByOid($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Message entity.');
@@ -395,9 +419,11 @@ class ScanOrderController extends OrderAbstractController {
 
 //        if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $routeName == "incoming-scan-orders" ) {
-            $statuses = $em->getRepository('AppOrderformBundle:Status')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+            $statuses = $em->getRepository(Status::class)->findAll();
         } else {
-            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Status');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+            $repository = $this->getDoctrine()->getRepository(Status::class);
             $dql = $repository->createQueryBuilder("status");
             //$dql->where('status.action IS NOT NULL');
             $dql->where("status.name != 'Superseded'");
@@ -470,7 +496,8 @@ class ScanOrderController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $statuses = $em->getRepository('AppUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $statuses = $em->getRepository(Institution::class)->findAll(); //filter by Level = 4?
         } 
 
         //add special cases
@@ -546,7 +573,8 @@ class ScanOrderController extends OrderAbstractController {
 
             if( is_numeric($service)  ) {
 
-                $siteUserService = $em->getRepository('AppUserdirectoryBundle:Institution')->find($service);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $siteUserService = $em->getRepository(Institution::class)->find($service);
 
                 if( !$siteUserService ) {
                     throw new \Exception( 'Unable to find Service '.$service );
@@ -671,7 +699,8 @@ class ScanOrderController extends OrderAbstractController {
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->getDoctrine()->getRepository(Message::class);
         $dql =  $repository->createQueryBuilder("message");
         $dql->innerJoin("message.status", "status");
         $dql->leftJoin("message.institution", "institution");
@@ -720,7 +749,8 @@ class ScanOrderController extends OrderAbstractController {
         //echo "instStr=".$instStr."<br>";
         /////////// EOF institution ///////////
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:SlideReturnRequest');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideReturnRequest'] by [SlideReturnRequest::class]
+        $repository = $this->getDoctrine()->getRepository(SlideReturnRequest::class);
         $dql =  $repository->createQueryBuilder("req");
         $dql->innerJoin("req.message", "message");
         $dql->leftJoin("message.institution", "institution");
@@ -742,7 +772,8 @@ class ScanOrderController extends OrderAbstractController {
         $accountreqs = array();
         if( $this->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findByStatus("active");
-            $accountreqs = $em->getRepository('AppUserdirectoryBundle:UserRequest')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
+            $accountreqs = $em->getRepository(UserRequest::class)->findBy(
                 array(
                     "status"=>"active",
                     "siteName"=>$this->getParameter('scan.sitename')
@@ -852,7 +883,8 @@ class ScanOrderController extends OrderAbstractController {
             $logger->setHeight($request->get('display_height'));
             $logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
 
-            $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            $eventtype = $em->getRepository(EventTypeList::class)->findOneByName('Search');
             $logger->setEventType($eventtype);
 
             $em->persist($logger);
@@ -907,7 +939,8 @@ class ScanOrderController extends OrderAbstractController {
             //$logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
             $logger->setEvent( implode("<br>",$resArr) );
 
-            $eventtype = $em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName('Search');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+            $eventtype = $em->getRepository(EventTypeList::class)->findOneByName('Search');
             $logger->setEventType($eventtype);
 
             $em->persist($logger);
@@ -934,7 +967,8 @@ class ScanOrderController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->getDoctrine()->getRepository(Message::class);
 
         $withSearch = false;
         $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
@@ -1177,7 +1211,8 @@ class ScanOrderController extends OrderAbstractController {
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
 
-        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcessorComments'] by [ProcessorComments::class]
+        $processorComments = $em->getRepository(ProcessorComments::class)->findAll();
 
         if( $increaseMaxExecTime ) {
             ini_set('max_execution_time', $max_exec_time); //set back to the original value
@@ -1483,25 +1518,30 @@ class ScanOrderController extends OrderAbstractController {
                 //echo "collaboration institutionId=".$institutionId."<br>";
 
                 $em = $this->getDoctrine()->getManager();
-                $node = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institutionId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $node = $em->getRepository(Institution::class)->find($institutionId);
                 //echo "inst=".$node."<br>";
 
-                $institutionalCriteriaStr = $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $node, "institution", false );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $institutionalCriteriaStr = $em->getRepository(Institution::class)->selectNodesUnderParentNode( $node, "institution", false );
 
 
                 //add collaboration inst
-                $rootNode = $em->getRepository('AppUserdirectoryBundle:Institution')->find($node->getRoot());
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $rootNode = $em->getRepository(Institution::class)->find($node->getRoot());
                 //echo "rootNode=".$rootNode."<br>";
 
                 //All Collaboration => get all children and their institutions
                 $allInstitutionalCriteriaArr = array();
                 if( $rootNode->getName()."" == "All Collaborations" ) {
-                    $childrenNodes = $em->getRepository('AppUserdirectoryBundle:Institution')->getChildren($rootNode);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $childrenNodes = $em->getRepository(Institution::class)->getChildren($rootNode);
                     //echo "childrenNodes count=".count($childrenNodes)."<br>";
                     foreach( $childrenNodes as $childrenNode ) {
                         foreach( $childrenNode->getCollaborationInstitutions() as $collInst ) {
                             //echo "collInst=".$collInst."<br>";
-                            $allInstitutionalCriteriaArr[] = $em->getRepository('AppUserdirectoryBundle:Institution')->selectNodesUnderParentNode( $collInst, "institution", false );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                            $allInstitutionalCriteriaArr[] = $em->getRepository(Institution::class)->selectNodesUnderParentNode( $collInst, "institution", false );
                         }
                     }
                 }

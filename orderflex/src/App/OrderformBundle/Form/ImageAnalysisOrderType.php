@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\ImageAnalysisAlgorithmList; //process.py script: replaced namespace by ::class: added use line for classname=ImageAnalysisAlgorithmList
 use App\UserdirectoryBundle\Form\DocumentContainerType;
 use App\UserdirectoryBundle\Form\DocumentType;
 use App\UserdirectoryBundle\Form\UserWrapperType;
@@ -41,7 +44,8 @@ class ImageAnalysisOrderType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('imageAnalysisAlgorithm', EntityType::class, array(
-            'class' => 'AppOrderformBundle:ImageAnalysisAlgorithmList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ImageAnalysisAlgorithmList'] by [ImageAnalysisAlgorithmList::class]
+            'class' => ImageAnalysisAlgorithmList::class,
             'choice_label' => 'name',
             'label' => 'Image Analysis Algorithm:',
             'required'=> true,

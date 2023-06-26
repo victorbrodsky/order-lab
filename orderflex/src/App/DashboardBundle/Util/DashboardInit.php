@@ -8,6 +8,13 @@
 
 namespace App\DashboardBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\DashboardBundle\Entity\TopicList; //process.py script: replaced namespace by ::class: added use line for classname=TopicList
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+use App\DashboardBundle\Entity\ChartList; //process.py script: replaced namespace by ::class: added use line for classname=ChartList
+use App\DashboardBundle\Entity\ChartTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ChartTypeList
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -1050,7 +1057,8 @@ class DashboardInit
     }
 
     public function getCharts() {
-        $repository = $this->em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $this->em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.institutions", "institutions");
@@ -1117,20 +1125,23 @@ class DashboardInit
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $this->em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('No Institution: "WCM"');
         }
         if( $wcmc->getLevel() != 0 ) {
             exit('Institution "WCM" level is not 0');
         }
-        $pathology = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
         );
 
-        $trp = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $trp = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
             "Center for Translational Pathology",
             $pathology,
             $mapper
@@ -1139,7 +1150,8 @@ class DashboardInit
             exit("Institution not found by name 'Center for Translational Pathology'");
         }
 
-        $informatics = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $informatics = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology Informatics",
             $pathology,
             $mapper
@@ -1243,7 +1255,8 @@ class DashboardInit
             'bundleName' => 'DashboardBundle',
             'className' => 'TopicList'
         );
-        $root = $this->em->getRepository('AppDashboardBundle:TopicList')->findOneByName("All Charts");
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $root = $this->em->getRepository(TopicList::class)->findOneByName("All Charts");
         if( !$root ) {
             exit('No Root: "All Charts"');
         }
@@ -1259,7 +1272,8 @@ class DashboardInit
         //16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 47, 48, 49, 50, 51, 52, 55, 64, 65
         $addChart1Arr = array("16. ", "17. ","18. ","19. ","20. ","21. ","22. ","23. ","24. ",
             "25. ","26. ","27. ","28. ","29. ","47. ","48. ","49. ","50. ","51. ","52. ","55. ","64. ","65. ");
-        $financial = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $financial = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Financial",
             $root,
             $mapper
@@ -1267,7 +1281,8 @@ class DashboardInit
         if( !$financial ) {
             exit("Error: not found: Financial");
         }
-        $financialTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $financialTrp = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Translational Research",
             $financial,
             $mapper
@@ -1283,7 +1298,8 @@ class DashboardInit
         $charts2Arr = array();
         //32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 53, 54, 55
         $addChart2Arr = array("32. ","33. ","34. ","35. ","36. ","37. ","38. ","39. ","40. ","41. ","53. ","54. ","55. ");
-        $productivity = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $productivity = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Productivity",
             $root,
             $mapper
@@ -1291,7 +1307,8 @@ class DashboardInit
         if( !$productivity ) {
             exit("Error: not found: Productivity");
         }
-        $productivityTurntime = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $productivityTurntime = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Turnaround Times",
             $productivity,
             $mapper
@@ -1299,7 +1316,8 @@ class DashboardInit
         if( !$productivityTurntime ) {
             exit("Error: not found: Productivity>Turnaround Times");
         }
-        $productivityTurntimeTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $productivityTurntimeTrp = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Translational Research",
             $productivityTurntime,
             $mapper
@@ -1315,7 +1333,8 @@ class DashboardInit
         $charts3Arr = array();
         //8, 9, 10, 11, 12, 13, 14, 15, 30, 31, 42, 43, 44, 45, 46, 56
         $addChart3Arr = array("8. ","9. ","10. ","11. ","12. ","13. ","14. ","15. ","30. ","31. ","42. ","43. ","44. ","45. ","46. ","56. ");
-        $productivityTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $productivityTrp = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Translational Research",
             $productivity,
             $mapper
@@ -1328,7 +1347,8 @@ class DashboardInit
         $charts4Arr = array();
         //5, 6, 7, 26, 27, 28, 29
         $addChart4Arr = array("5. ", "6. ", "7. ", "26. ", "27. ", "28. ", "29. ");
-        $productivityPath = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $productivityPath = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Pathologist Involvement in Translational Research",
             $productivity,
             $mapper
@@ -1341,7 +1361,8 @@ class DashboardInit
         $charts5Arr = array();
         //1, 2, 3, 4, 5
         $addChart5Arr = array("1. ", "2. ", "3. ", "4. ", "5. ");
-        $research = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $research = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Research",
             $root,
             $mapper
@@ -1349,7 +1370,8 @@ class DashboardInit
         if( !$research ) {
             exit("Error: not found: Research");
         }
-        $researchTrp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $researchTrp = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Translational Projects",
             $research,
             $mapper
@@ -1362,7 +1384,8 @@ class DashboardInit
         $charts6Arr = array();
         //57, 58, 59
         $addChart6Arr = array("57. ", "58. ", "59. ");
-        $siteutil = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteutil = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Site Utilization",
             $root,
             $mapper
@@ -1370,7 +1393,8 @@ class DashboardInit
         if( !$siteutil ) {
             exit("Error: not found: Site Utilization");
         }
-        $siteutilPlatform = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteutilPlatform = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Platform",
             $siteutil,
             $mapper
@@ -1383,7 +1407,8 @@ class DashboardInit
         $charts7Arr = array();
         //62, 63
         $addChart7Arr = array("62. ", "63. ");
-        $siteutilCalllog = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteutilCalllog = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Call Log",
             $siteutil,
             $mapper
@@ -1395,7 +1420,8 @@ class DashboardInit
         //7b) Site Utilization > Dashboards
         $charts7aArr = array();
         $addChart7aArr = array("66. ");
-        $siteutilDashboards = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteutilDashboards = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Dashboards",
             $siteutil,
             $mapper
@@ -1407,7 +1433,8 @@ class DashboardInit
         //8) 21- assign the appropriate Educational topic to charts 60 and 61
         $charts8Arr = array();
         $addChart8Arr = array("60. ", "61. ");
-        $educational = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educational = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Educational",
             $root,
             $mapper
@@ -1415,7 +1442,8 @@ class DashboardInit
         if( !$educational ) {
             exit("Error: not found: Educational");
         }
-        $educationalFellapp = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educationalFellapp = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Fellowship Candidate Statistics",
             $educational,
             $mapper
@@ -1427,7 +1455,8 @@ class DashboardInit
         //9) assign topic 'Clinical'->'Call log site utilization' to charts 62 and 63
         $charts9Arr = array();
         $addChart9Arr = array("62. ", "63. ");
-        $clinical = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $clinical = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Clinical",
             $root,
             $mapper
@@ -1435,7 +1464,8 @@ class DashboardInit
         if( !$clinical ) {
             exit("Error: not found: Clinical");
         }
-        $clinicalCalllog = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $clinicalCalllog = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Call log site utilization",
             $clinical,
             $mapper
@@ -1447,7 +1477,8 @@ class DashboardInit
         //10) "67. ", "68. ": "Education" -> "Interview Statistics"
         $charts10Arr = array();
         $addChart10Arr = array("67. ", "68. ");
-        $educational = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educational = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Educational",
             $root,
             $mapper
@@ -1455,7 +1486,8 @@ class DashboardInit
         if( !$educational ) {
             exit("Error: not found: Educational");
         }
-        $educationalInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educationalInterviewStats = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Interview Statistics",
             $educational,
             $mapper
@@ -1466,7 +1498,8 @@ class DashboardInit
         //11) "69. ", "71. ": "Education" -> "Interview Statistics"
         $charts11Arr = array();
         $addChart11Arr = array("69. ", "71. ");
-        $educationalResidencyInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educationalResidencyInterviewStats = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Residency Interview Statistics",
             $educational,
             $mapper
@@ -1477,7 +1510,8 @@ class DashboardInit
         //12) "70. ", "72. ": "Education" -> "Fellowship Interview Statistics"
         $charts12Arr = array();
         $addChart12Arr = array("70. ", "72. ");
-        $educationalFellowshipInterviewStats = $this->em->getRepository('AppDashboardBundle:TopicList')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $educationalFellowshipInterviewStats = $this->em->getRepository(TopicList::class)->findByChildnameAndParent(
             "Fellowship Interview Statistics",
             $educational,
             $mapper
@@ -1675,7 +1709,8 @@ class DashboardInit
 
         //23- Give all charts the role of “Dashboards-Associate-Administrator-Department-Of-Pathology”
         $roleAdminAbbreviation = "Dashboards-Associate-Administrator-Department-Of-Pathology";
-        $roleAdmin = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($roleAdminAbbreviation);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+        $roleAdmin = $this->em->getRepository(Roles::class)->findOneByAbbreviation($roleAdminAbbreviation);
         if( !$roleAdmin ) {
             exit("Role not found by abbreviation=".$roleAdminAbbreviation);
         }
@@ -1715,7 +1750,8 @@ class DashboardInit
         foreach( $chartPartialNameArr as $partialName ) {
             if( $this->compareChartNameByInt($chartName,$partialName) ) {
                 foreach($rolesArr as $roleAbbreviation) {
-                    $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($roleAbbreviation);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+                    $role = $this->em->getRepository(Roles::class)->findOneByAbbreviation($roleAbbreviation);
                     if( !$role ) {
                         exit("Role not found by abbreviation=".$roleAbbreviation);
                     }
@@ -1791,7 +1827,8 @@ class DashboardInit
 
         $rolesArr = array();
         foreach($roles as $role) {
-            $roleEntity = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByAbbreviation($role);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roleEntity = $em->getRepository(Roles::class)->findOneByAbbreviation($role);
             if( !$roleEntity ) {
                 exit("Can not find role by abbreviation '$role'");
             }
@@ -1799,7 +1836,8 @@ class DashboardInit
             $rolesArr[] = $roleEntity;
         }
 
-        $siteUtilizationTopic = $em->getRepository('AppDashboardBundle:TopicList')->findOneByName("Site Utilization");
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
+        $siteUtilizationTopic = $em->getRepository(TopicList::class)->findOneByName("Site Utilization");
         if( !$siteUtilizationTopic ) {
             exit("TopicList not found by name 'Site Utilization'");
         }
@@ -1809,14 +1847,16 @@ class DashboardInit
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('No Institution: "WCM"');
         }
         if( $wcmc->getLevel() != 0 ) {
             exit('Institution "WCM" level is not 0');
         }
-        $pathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
@@ -1826,14 +1866,16 @@ class DashboardInit
         }
 
         //“Department of Pathology” under NYP”
-        $nyp = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $nyp = $em->getRepository(Institution::class)->findOneByAbbreviation("NYP");
         if( !$nyp ) {
             exit('No Institution: "NYP"');
         }
         if( $nyp->getLevel() != 0 ) {
             exit('Institution "NYP" level is not 0');
         }
-        $nypPathology = $em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $nypPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $nyp,
             $mapper
@@ -1847,7 +1889,8 @@ class DashboardInit
         $names = array(55, 56, 57, 58, 59, 60, 61, 62, 63);
         //$names = array(55, 56, 57, 58, 59, 62, 63);
 
-        $repository = $em->getRepository('AppDashboardBundle:ChartList');
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+        $repository = $em->getRepository(ChartList::class);
         $dql =  $repository->createQueryBuilder("list");
 
         $dql->leftJoin('list.topics','topics');
@@ -1991,7 +2034,8 @@ class DashboardInit
             }
 
             //find ChartList by $chartType
-            $chartEntity = $em->getRepository('AppDashboardBundle:ChartList')->findOneByAbbreviation($chartType);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
+            $chartEntity = $em->getRepository(ChartList::class)->findOneByAbbreviation($chartType);
             if( !$chartEntity ) {
                 exit("ChartList not find by abbreviation $chartType");
             }
@@ -2004,7 +2048,8 @@ class DashboardInit
 
             //echo "type=$type <br>";
             //find ChartTypeList by $chartType
-            $chartTypeEntity = $em->getRepository('AppDashboardBundle:ChartTypeList')->findOneByName($type);
+        //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartTypeList'] by [ChartTypeList::class]
+            $chartTypeEntity = $em->getRepository(ChartTypeList::class)->findOneByName($type);
             if( !$chartTypeEntity ) {
                 exit("ChartTypeList not find by name $type");
             }

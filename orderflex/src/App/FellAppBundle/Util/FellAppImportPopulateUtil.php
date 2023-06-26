@@ -25,6 +25,24 @@
 namespace App\FellAppBundle\Util;
 
 
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
+
+
+use App\FellAppBundle\Entity\FellAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=FellAppStatus
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
+
+use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
+
+
+use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -277,7 +295,8 @@ class FellAppImportPopulateUtil {
             $fileTitle = $file->getTitle();
             //$logger->notice("Checking fellapp by title: ".$fileTitle);
             if( $fileTitle ) {
-                $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+                $fellowshipApplicationDb = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($fileTitle);
                 if( !$fellowshipApplicationDb ) {
                     $notExistedArr[] = $file->getTitle();
                 }
@@ -300,7 +319,8 @@ class FellAppImportPopulateUtil {
             $fileTitle = $file->getName();
             //$logger->notice("Checking fellapp by title: ".$fileTitle);
             if( $fileTitle ) {
-                $fellowshipApplicationDb = $this->em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($fileTitle);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+                $fellowshipApplicationDb = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($fileTitle);
                 if( !$fellowshipApplicationDb ) {
                     $notExistedArr[] = $file->getName();
                 }
@@ -374,7 +394,8 @@ class FellAppImportPopulateUtil {
         }
 
         //get not completed DataFile
-        $repository = $this->em->getRepository('AppFellAppBundle:DataFile');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:DataFile'] by [DataFile::class]
+        $repository = $this->em->getRepository(DataFile::class);
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.fellapp", "fellapp");
@@ -473,7 +494,8 @@ class FellAppImportPopulateUtil {
         }
 
         //get completed DataFile
-        $repository = $this->em->getRepository('AppFellAppBundle:DataFile');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:DataFile'] by [DataFile::class]
+        $repository = $this->em->getRepository(DataFile::class);
         $dql =  $repository->createQueryBuilder("datafile");
         $dql->select('datafile');
         $dql->leftJoin("datafile.fellapp", "fellapp");
@@ -780,7 +802,8 @@ class FellAppImportPopulateUtil {
 
         //$logger = $this->container->get('logger');
 
-        $dataFile = $this->em->getRepository('AppFellAppBundle:DataFile')->findOneByDocument($document->getId());
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:DataFile'] by [DataFile::class]
+        $dataFile = $this->em->getRepository(DataFile::class)->findOneByDocument($document->getId());
         if( $dataFile ) {
             //$event = "DataFile already exists with document ID=".$document->getId();
             //$logger->notice($event);
@@ -1037,24 +1060,29 @@ class FellAppImportPopulateUtil {
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
         }
-        $presentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Present Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $presentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
         if( !$presentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Present Address");
         }
-        $permanentLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Permanent Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $permanentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Permanent Address");
         if( !$permanentLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Permanent Address");
         }
-        $workLocationType = $em->getRepository('AppUserdirectoryBundle:LocationTypeList')->findOneByName("Work Address");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $workLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Work Address");
         if( !$workLocationType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Work Address");
         }
 
-        $activeStatus = $em->getRepository('AppFellAppBundle:FellAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+        $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
@@ -1338,7 +1366,8 @@ class FellAppImportPopulateUtil {
 
                 //echo "row=".$row.": id=".$googleFormId."<br>";
 
-                $fellowshipApplicationDb = $em->getRepository('AppFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+                $fellowshipApplicationDb = $em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
                 if( $fellowshipApplicationDb ) {
                     //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
@@ -2177,32 +2206,39 @@ class FellAppImportPopulateUtil {
 
         //set TrainingType
         if( $typeStr == 'undergraduateSchool' ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Undergraduate');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Undergraduate');
             $training->setTrainingType($trainingType);
         }
         if( $typeStr == 'graduateSchool' ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Graduate');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Graduate');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'medical') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Medical');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'residency') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Residency');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'gme1') !== false ) {
             //Post-Residency Fellowship
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Post-Residency Fellowship');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Post-Residency Fellowship');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'gme2') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('GME');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('GME');
             $training->setTrainingType($trainingType);
         }
         if( strpos((string)$typeStr,'other') !== false ) {
-            $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Other');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+            $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Other');
             $training->setTrainingType($trainingType);
         }
 
@@ -2454,8 +2490,10 @@ class FellAppImportPopulateUtil {
         }
 
         //Get Last successful import date
-        $eventtype = $this->em->getRepository('AppUserdirectoryBundle:EventTypeList')->findOneByName("Import of Fellowship Applications Spreadsheet");
-        $lastImportTimestamps = $this->em->getRepository('AppUserdirectoryBundle:Logger')->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
+        $eventtype = $this->em->getRepository(EventTypeList::class)->findOneByName("Import of Fellowship Applications Spreadsheet");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
+        $lastImportTimestamps = $this->em->getRepository(Logger::class)->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
         } else {

@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\DiseaseTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseTypeList
+
+
+use App\OrderformBundle\Entity\DiseaseOriginList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseOriginList
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +46,8 @@ class PartDiseaseTypeType extends AbstractType
 
         //New in Symfony 2.8: choices is array
         //get array of diseaseTypes
-        $repository = $this->params['em']->getRepository('AppOrderformBundle:DiseaseTypeList');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
+        $repository = $this->params['em']->getRepository(DiseaseTypeList::class);
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
         $query = $this->params['em']->createQuery($dql);
         $items = $query->getResult();
@@ -52,7 +59,8 @@ class PartDiseaseTypeType extends AbstractType
         //exit();
 
         $builder->add( 'diseaseTypes', EntityType::class, array(
-            'class' => 'AppOrderformBundle:DiseaseTypeList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
+            'class' => DiseaseTypeList::class,
             'label'=>'Type of Disease:',
             'required'=>false,
             'multiple' => true,
@@ -76,7 +84,8 @@ class PartDiseaseTypeType extends AbstractType
         ));
 
         //get array of diseaseTypes
-        $repository = $this->params['em']->getRepository('AppOrderformBundle:DiseaseOriginList');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
+        $repository = $this->params['em']->getRepository(DiseaseOriginList::class);
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
         $query = $this->params['em']->createQuery($dql);
         $items = $query->getResult();
@@ -86,7 +95,8 @@ class PartDiseaseTypeType extends AbstractType
         }
 
         $builder->add( 'diseaseOrigins', EntityType::class, array(
-            'class' => 'AppOrderformBundle:DiseaseOriginList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
+            'class' => DiseaseOriginList::class,
             'label'=>'Origin:',
             'required'=>false,
             'multiple' => true,

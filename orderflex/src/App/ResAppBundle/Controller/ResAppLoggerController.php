@@ -17,6 +17,9 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\ResAppBundle\Entity\ResidencyApplication; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyApplication
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\UserdirectoryBundle\Controller\LoggerController;
@@ -89,7 +92,8 @@ class ResAppLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
 
-        $resApp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resApp = $em->getRepository(ResidencyApplication::class)->find($id);
         if( !$resApp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
         }
@@ -166,7 +170,8 @@ class ResAppLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
 
 
-        $resApp = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($objectId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resApp = $em->getRepository(ResidencyApplication::class)->find($objectId);
         if( !$resApp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$objectId);
         }

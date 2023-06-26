@@ -82,7 +82,7 @@ class BlockType extends AbstractType
         //if X=7, show only the first 7 levels (patient + encounter + procedure + accession + part + block + slide)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 7 ) {
             $builder->add('slide', CollectionType::class, array(
-                'entry_type' => SlideType::class,
+                'entry_type' => \App\OrderformBundle\Form\SlideType::class,
                 'entry_options' => array(
                     'form_custom_value' => $this->params,
                 ),

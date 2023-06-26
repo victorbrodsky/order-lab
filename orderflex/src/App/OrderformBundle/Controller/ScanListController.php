@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\StainList; //process.py script: replaced namespace by ::class: added use line for classname=StainList
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -94,7 +97,8 @@ class ScanListController extends ListController
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('AppOrderformBundle:StainList')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+        $entities = $em->getRepository(StainList::class)->findAll();
 
         //echo "count=".count($entities)."<br>";
         //exit();

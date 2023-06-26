@@ -20,6 +20,36 @@ namespace App\CallLogBundle\Controller;
 
 
 
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
+
+
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\OrderformBundle\Entity\CalllogAttachmentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CalllogAttachmentTypeList
+
+
+use App\OrderformBundle\Entity\PatientListHierarchy; //process.py script: replaced namespace by ::class: added use line for classname=PatientListHierarchy
+
+
+use App\OrderformBundle\Entity\PatientRecordStatusList; //process.py script: replaced namespace by ::class: added use line for classname=PatientRecordStatusList
+
+
+use App\OrderformBundle\Entity\EncounterStatusList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterStatusList
+
+
+use App\OrderformBundle\Entity\EncounterInfoTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EncounterInfoTypeList
+
+
+use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
+
+
 
 use App\CallLogBundle\Util\CallLogUtil;
 use App\OrderformBundle\Entity\Accession;
@@ -243,7 +273,8 @@ class CallEntryController extends OrderAbstractController
         //$title = "Call Case List";
 
         //$messageStatuses
-        $messageStatuses = $em->getRepository('AppOrderformBundle:MessageStatusList')->findBy(array('type'=>array('default','user-added')));
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+        $messageStatuses = $em->getRepository(MessageStatusList::class)->findBy(array('type'=>array('default','user-added')));
         $messageStatusesChoice = array();
         foreach( $messageStatuses as $messageStatuse ) {
             //$messageStatusesChoice[$messageStatuse->getId()] = $messageStatuse."";
@@ -332,7 +363,8 @@ class CallEntryController extends OrderAbstractController
 
         //get mrntypes ($mrntypeChoices)
         $mrntypeChoices = array();
-        $mrntypeChoicesArr = $em->getRepository('AppOrderformBundle:MrnType')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $mrntypeChoicesArr = $em->getRepository(MrnType::class)->findBy(
             array(
                 'type'=>array('default','user-added')
             ),
@@ -416,7 +448,8 @@ class CallEntryController extends OrderAbstractController
         );
 
         ////////// attachmentTypes //////////
-        $attachmentTypes = $em->getRepository('AppOrderformBundle:CalllogAttachmentTypeList')->findBy(array('type'=>array('default','user-added')));
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogAttachmentTypeList'] by [CalllogAttachmentTypeList::class]
+        $attachmentTypes = $em->getRepository(CalllogAttachmentTypeList::class)->findBy(array('type'=>array('default','user-added')));
         $attachmentTypesChoice = array();
         //add: "With attachments", "Without attachments"
         $attachmentTypesChoice["With attachments"] = "With attachments";
@@ -443,7 +476,8 @@ class CallEntryController extends OrderAbstractController
 //        }
         //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultAccessionType',$sitename);
 
-        $parentPatientList = $em->getRepository('AppOrderformBundle:PatientListHierarchy')->findOneByName("Pathology Call Log Book Lists");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
+        $parentPatientList = $em->getRepository(PatientListHierarchy::class)->findOneByName("Pathology Call Log Book Lists");
         if( $parentPatientList ) {
             $parentPatientListId = $parentPatientList->getId();
         } else {
@@ -544,7 +578,8 @@ class CallEntryController extends OrderAbstractController
         }
 
         //perform search
-        $repository = $em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder('message');
         $dql->leftJoin("message.patient","patient");
         $dql->leftJoin("patient.mrn","mrn");
@@ -901,7 +936,10 @@ class CallEntryController extends OrderAbstractController
             if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
                 $castAs = "UNSIGNED";
             }
-            $entryBodySearchStr = "SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+            $fromEntity = "App\\UserdirectoryBundle\\Entity\\ObjectTypeText"; //"AppUserdirectoryBundle:ObjectTypeText";
+            $entryBodySearchStr =
+                //"SELECT s FROM AppUserdirectoryBundle:ObjectTypeText s WHERE " .
+                "SELECT s FROM $fromEntity s WHERE " .
                 "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND " .
                 "( (LOWER(s.value) LIKE LOWER(:entryBodySearch)) OR (LOWER(s.secondaryValue) LIKE LOWER(:entryBodySearch))  )" .
                 ")";
@@ -1102,7 +1140,8 @@ class CallEntryController extends OrderAbstractController
             //$mergeMrnKeytypeId = $mergeMrnKeytype->getId();
             //echo "mergeMrnKeytypeId=".$mergeMrnKeytypeId."<br>";
 
-            $thisPatient = $em->getRepository('AppOrderformBundle:Patient')->findByValidMrnAndMrntype($mergeMrn,$mergeMrnKeytypeId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $thisPatient = $em->getRepository(Patient::class)->findByValidMrnAndMrntype($mergeMrn,$mergeMrnKeytypeId);
             if( $thisPatient ) {
                 //echo "thisPatient=".$thisPatient."<br>";
                 $mergedPatients = $calllogUtil->getAllMergedPatients(array($thisPatient));
@@ -1364,7 +1403,8 @@ class CallEntryController extends OrderAbstractController
         $patient->setInstitution($institution);
 
         //set patient record status "Active"
-        $patientActiveStatus = $em->getRepository('AppOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientRecordStatusList'] by [PatientRecordStatusList::class]
+        $patientActiveStatus = $em->getRepository(PatientRecordStatusList::class)->findOneByName("Active");
         if( $patientActiveStatus ) {
             $patient->setPatientRecordStatus($patientActiveStatus);
         }
@@ -1419,7 +1459,8 @@ class CallEntryController extends OrderAbstractController
 
             //set encounter generated id
             $key = $encounter2->obtainAllKeyfield()->first();
-            $encounter2 = $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $encounter2, $user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+            $encounter2 = $em->getRepository(Encounter::class)->setEncounterKey($key, $encounter2, $user);
 
             //TODO: encounter drop down should be:
             //[Autogenerated new ID, selected by default]
@@ -1439,13 +1480,15 @@ class CallEntryController extends OrderAbstractController
             $date->setTime($nowDate);
 
             //set encounter status "Open"
-            $encounterOpenStatus = $em->getRepository('AppOrderformBundle:EncounterStatusList')->findOneByName("Open");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterStatusList'] by [EncounterStatusList::class]
+            $encounterOpenStatus = $em->getRepository(EncounterStatusList::class)->findOneByName("Open");
             if ($encounterOpenStatus) {
                 $encounter2->setEncounterStatus($encounterOpenStatus);
             }
 
             //set encounter info type to "Call to Pathology"
-            $encounterInfoType = $em->getRepository('AppOrderformBundle:EncounterInfoTypeList')->findOneByName("Call to Pathology");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterInfoTypeList'] by [EncounterInfoTypeList::class]
+            $encounterInfoType = $em->getRepository(EncounterInfoTypeList::class)->findOneByName("Call to Pathology");
             if ($encounterInfoType) {
                 if (count($encounter2->getEncounterInfoTypes()) > 0) {
                     $encounter2->getEncounterInfoTypes()->first()->setField($encounterInfoType);
@@ -1729,7 +1772,8 @@ class CallEntryController extends OrderAbstractController
 
             //Check if $previousEncounter is really exists, however it's not supposed to happen
             if( $previousEncounterId ) {
-                $checkPreviousEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                $checkPreviousEncounter = $em->getRepository(Encounter::class)->find($previousEncounterId);
                 if( !$checkPreviousEncounter ) {
                     //Recovery for previous encounter is not found by ID
                     $logger = $this->container->get('logger');
@@ -1855,7 +1899,8 @@ class CallEntryController extends OrderAbstractController
             $taskUpdateStr = $calllogUtil->processCalllogTask($message,$originalTasks); //Save New Call Log Entry
 
             //process Attached Documents (here this function works, but entityId is NULL - still it's OK)
-            $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($message->getCalllogEntryMessage()); //Save new entry
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+            $em->getRepository(Document::class)->processDocuments($message->getCalllogEntryMessage()); //Save new entry
 
             //exit('$newEncounter='.$newEncounter);
 
@@ -1873,7 +1918,8 @@ class CallEntryController extends OrderAbstractController
                 }
 
                 if( $previousEncounterId ) {
-                    $newEncounter = $em->getRepository('AppOrderformBundle:Encounter')->find($previousEncounterId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                    $newEncounter = $em->getRepository(Encounter::class)->find($previousEncounterId);
                     if( !$newEncounter ) {
                         $previousEncounterErrorMsg = "Previous encounter is not found by ID=" . $previousEncounterId . " Current user is " . $user;
                         throw new \Exception($previousEncounterErrorMsg);
@@ -1898,7 +1944,8 @@ class CallEntryController extends OrderAbstractController
                         //}
                         throw new \Exception("CallLog save new Entry Action: Encounter does not have a key.");
                     }
-                    $em->getRepository('AppOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                    $em->getRepository(Encounter::class)->setEncounterKey($key, $newEncounter, $user);
 
                     //Remove tracker if spots/location is empty
                     $tracker = $newEncounter->getTracker();
@@ -1946,7 +1993,8 @@ class CallEntryController extends OrderAbstractController
                 $messageStatusForm = $data['messageStatusJs'];
                 //echo "messageStatusForm=".$messageStatusForm."<br>";
                 if( $messageStatusForm ) {
-                    $messageStatusObj = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName($messageStatusForm);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+                    $messageStatusObj = $em->getRepository(MessageStatusList::class)->findOneByName($messageStatusForm);
                     if( $messageStatusObj ) {
                         //echo "set message status to ".$messageStatusObj."<br>";
                         $message->setMessageStatus($messageStatusObj);
@@ -2000,7 +2048,8 @@ class CallEntryController extends OrderAbstractController
     //                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
     //                }
 
-                    $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patient->getId());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+                    $patient = $em->getRepository(Patient::class)->find($patient->getId());
                     $message->clearPatient();
                     $message->addPatient($patient);
 
@@ -2314,7 +2363,8 @@ class CallEntryController extends OrderAbstractController
 
         //set order category
         if( $messageCategoryId ) {
-            $messageCategory = $em->getRepository('AppOrderformBundle:MessageCategory')->find($messageCategoryId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $messageCategory = $em->getRepository(MessageCategory::class)->find($messageCategoryId);
         } else {
             //$categoryStr = "Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
@@ -2331,7 +2381,8 @@ class CallEntryController extends OrderAbstractController
         $message->setInstitution($permittedInstitutions->first());
 
         //set message status "Draft"
-        $messageStatus = $em->getRepository('AppOrderformBundle:MessageStatusList')->findOneByName("Draft");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+        $messageStatus = $em->getRepository(MessageStatusList::class)->findOneByName("Draft");
         if( $messageStatus ) {
             $message->setMessageStatus($messageStatus);
         }
@@ -2773,7 +2824,8 @@ class CallEntryController extends OrderAbstractController
         if( $mrntype && $mrn ) {
             $keytype = $mrntype;
         } else {
-            $keytypeEntity = $this->getDoctrine()->getRepository('AppOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $keytypeEntity = $this->getDoctrine()->getRepository(MrnType::class)->findOneByName("Auto-generated MRN");
             $keytype = $keytypeEntity->getId() . ""; //id of "New York Hospital MRN" in DB
         }
 
@@ -2920,7 +2972,8 @@ class CallEntryController extends OrderAbstractController
 
         //testing
         if(0) {
-            $patient = $em->getRepository('AppOrderformBundle:Patient')->find(32);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+            $patient = $em->getRepository(Patient::class)->find(32);
             $patientsArr = array(); //return json data
             $patientInfo = $calllogUtil->getJsonEncodedPatient($patient);
             $patientsArr[$patient->getId()] = $patientInfo;
@@ -2956,7 +3009,8 @@ class CallEntryController extends OrderAbstractController
 
 
         $em = $this->getDoctrine()->getManager();
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->createElement(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->createElement(
             $institution,
             $status,            //status
             $user,              //provider
@@ -2977,7 +3031,8 @@ class CallEntryController extends OrderAbstractController
         $patient->setSource($sourcesystem);
 
         //set patient record status "Active"
-        $patientActiveStatus = $em->getRepository('AppOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientRecordStatusList'] by [PatientRecordStatusList::class]
+        $patientActiveStatus = $em->getRepository(PatientRecordStatusList::class)->findOneByName("Active");
         if( $patientActiveStatus ) {
             $patient->setPatientRecordStatus($patientActiveStatus);
         }
@@ -3090,7 +3145,8 @@ class CallEntryController extends OrderAbstractController
 
         if( $sex ) {
             //echo "sex=".$sex."<br>";
-            $sexObj = $em->getRepository('AppUserdirectoryBundle:SexList')->findOneById( $sex );
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+            $sexObj = $em->getRepository(SexList::class)->findOneById( $sex );
 
             if( $withEncounter ) {
                 $EncounterPatsex = new EncounterPatsex($status, $user, $sourcesystem);
@@ -3190,7 +3246,8 @@ class CallEntryController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $patient = $em->getRepository('AppOrderformBundle:Patient')->find($patientId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $patient = $em->getRepository(Patient::class)->find($patientId);
         if( !$patient ) {
             $response->setContent(json_encode("ERROR"));
             return $response;
@@ -3244,11 +3301,13 @@ class CallEntryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
-            $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $messageLatest = $em->getRepository(Message::class)->findByOidAndVersion($messageOid);
 
             if( !$messageLatest && !$messageVersion ) {
                 //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
-                $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                $messageLatest = $em->getRepository(Message::class)->find($messageOid);
             }
 
 //            if( $messageLatest ) {
@@ -3277,7 +3336,8 @@ class CallEntryController extends OrderAbstractController
             throw new \Exception( "Latest Message is not found by oid=".$messageOid." or by version=$latestMessageVersion" );
         }
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -3315,7 +3375,8 @@ class CallEntryController extends OrderAbstractController
             $pathPostfix = "_latest_encounter";
             //$encounter = $message->getEncounter()->first();
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
-                $latestEncounter = $em->getRepository('AppOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
+                $latestEncounter = $em->getRepository(Encounter::class)->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
                     //echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
                     //clear encounter
@@ -3445,7 +3506,8 @@ class CallEntryController extends OrderAbstractController
         }
 
         //View Previous Version(s)
-        $allMessages = $em->getRepository('AppOrderformBundle:Message')->findAllMessagesByOid($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $allMessages = $em->getRepository(Message::class)->findAllMessagesByOid($messageOid);
 
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
@@ -3529,11 +3591,13 @@ class CallEntryController extends OrderAbstractController
         $user = $this->getUser();
 
         if( !is_numeric($messageVersion) || !$messageVersion ) {
-            $messageLatest = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $messageLatest = $em->getRepository(Message::class)->findByOidAndVersion($messageOid);
 
             if( !$messageLatest && !$messageVersion ) {
                 //handle case with th real DB id: http://localhost/order/call-log-book/entry/view/267
-                $messageLatest = $em->getRepository('AppOrderformBundle:Message')->find($messageOid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                $messageLatest = $em->getRepository(Message::class)->find($messageOid);
             }
 
             if( $messageLatest ) {
@@ -3546,7 +3610,8 @@ class CallEntryController extends OrderAbstractController
             throw new \Exception( "Latest Message is not found by oid ".$messageOid );
         }
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findByOidAndVersion($messageOid,$messageVersion);
         if( !$message ) {
             throw new \Exception( "Message is not found by oid ".$messageOid." and version ".$messageVersion );
         }
@@ -3933,7 +3998,6 @@ class CallEntryController extends OrderAbstractController
             $sheet = $ea->getActiveSheet();
             $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            /** @var PHPExcel_Cell $cell */
             foreach ($cellIterator as $cell) {
                 $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
             }

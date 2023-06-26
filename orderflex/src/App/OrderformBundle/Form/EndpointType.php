@@ -17,6 +17,12 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -78,7 +84,8 @@ class EndpointType extends AbstractType
                     'label' => $this->params['endpoint.location.label'],
                     'required'=> false,
                     'multiple' => false,
-                    'class' => 'AppUserdirectoryBundle:Location',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Location'] by [Location::class]
+                    'class' => Location::class,
                     'attr' => array('class' => 'combobox combobox-width')
                 ));
             } else {
@@ -96,7 +103,8 @@ class EndpointType extends AbstractType
                 'label' => $this->params['endpoint.system.label'],
                 'required'=> false,
                 'multiple' => false,
-                'class' => 'AppUserdirectoryBundle:SourceSystemList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+                'class' => SourceSystemList::class,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }

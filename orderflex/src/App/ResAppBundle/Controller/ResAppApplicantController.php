@@ -24,6 +24,12 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\ResAppBundle\Entity\Interview; //process.py script: replaced namespace by ::class: added use line for classname=Interview
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +68,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -100,7 +107,8 @@ class ResAppApplicantController extends OrderAbstractController {
         //$userServiceUtil = $this->container->get('user_service_utility');
         $resappUtil = $this->container->get('resapp_util');
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -120,7 +128,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         ////////////// Getting comparison 1st best of 1 available in AP/CP for 2021 ///////////////
 //        $applicants = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
-        $repository = $em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $em->getRepository(ResidencyApplication::class);
         $dql = $repository->createQueryBuilder("resapp");
         //TODO: optimize this by a single query without foreach loop
 //        ->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank')
@@ -228,7 +237,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -285,7 +295,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $interview = $em->getRepository('AppResAppBundle:Interview')->find($interviewId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($interviewId);
 
         if( !$interviewId ) {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
@@ -535,7 +546,8 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $em->getRepository(ResidencyApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$id);
@@ -643,7 +655,8 @@ class ResAppApplicantController extends OrderAbstractController {
         $institutionNameResappName = "";
 
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyTrack = $em->getRepository(ResidencyTrackList::class)->find($resappTypeId);
         }
 
         if( $residencyTrack ) {
@@ -742,7 +755,8 @@ class ResAppApplicantController extends OrderAbstractController {
         $institutionNameResappName = "";
 
         if( $resappTypeId && $resappTypeId > 0 ) {
-            $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->find($resappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $residencyTrack = $em->getRepository(ResidencyTrackList::class)->find($resappTypeId);
         }
 
         if( $residencyTrack ) {

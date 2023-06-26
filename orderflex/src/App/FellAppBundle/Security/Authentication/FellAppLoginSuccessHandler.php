@@ -25,6 +25,9 @@
 
 namespace App\FellAppBundle\Security\Authentication;
 
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -116,7 +119,8 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     {
         $level = 0;
         foreach( $user->getRoles() as $roleName ) {
-            $role = $this->em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($roleName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $role = $this->em->getRepository(Roles::class)->findOneByName($roleName);
             //echo "role=".$role."<br>";
             if( $role && $role->getLevel() > $level ) {
                 $level = $role->getLevel();

@@ -17,6 +17,24 @@
 
 namespace App\ResAppBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\DocumentTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DocumentTypeList
+
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
 use App\ResAppBundle\Entity\InputDataFile;
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\ResAppBundle\Form\ResAppUploadCsvType;
@@ -137,7 +155,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             if( $form->getClickedButton() === $form->get('upload') ) {
                 //exit("Extracting applications from CSV");
 
-                $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $em->getRepository(Document::class)->processDocuments($inputDataFile, 'erasFile');
                 $em->persist($inputDataFile);
                 $em->flush();
 
@@ -196,7 +215,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                     //$files = $inputDataFile->getErasFiles();
                     //echo "1 file count=" . count($files) . "<br>";
 
-                    $em->getRepository('AppUserdirectoryBundle:Document')->processDocuments($inputDataFile, 'erasFile');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                    $em->getRepository(Document::class)->processDocuments($inputDataFile, 'erasFile');
                     $em->persist($inputDataFile);
                     $em->flush();
                 }
@@ -419,7 +439,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         $object->setSize($filesize);
 
         $documentTypeName = "Residency ERAS Document";
-        $documentErasType = $em->getRepository('AppUserdirectoryBundle:DocumentTypeList')->findOneByName($documentTypeName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:DocumentTypeList'] by [DocumentTypeList::class]
+        $documentErasType = $em->getRepository(DocumentTypeList::class)->findOneByName($documentTypeName);
         $object->setType($documentErasType);
 
         //exit('exit upload listener');
@@ -472,22 +493,26 @@ class ResAppBulkUploadController extends OrderAbstractController
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Residency Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
         }
 
-        $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $activeStatus = $em->getRepository(ResAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
 
-        $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+        $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Medical');
         if( !$trainingType ) {
             throw new EntityNotFoundException("TrainingTypeList not found by name=Medical");
         }
 
-        $residencyTrainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Residency');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+        $residencyTrainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Residency');
         if( !$residencyTrainingType ) {
             throw new EntityNotFoundException("TrainingTypeList not found by name=Residency");
         }
@@ -505,23 +530,28 @@ class ResAppBulkUploadController extends OrderAbstractController
                 $rootInst = str_replace("(", "", $rootInst);
                 $rootInst = str_replace(")", "", $rootInst);
                 //$logger->warning('rootInst='.$rootInst.'; localInst='.$localInst);
-                $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($rootInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation($rootInst);
                 if( !$wcmc ) {
-                    $wcmc = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($rootInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                    $wcmc = $em->getRepository(Institution::class)->findOneByName($rootInst);
                     if( !$wcmc ) {
                         throw new EntityNotFoundException('Unable to find Institution by name=' . $rootInst);
                     }
                 }
-                $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findNodeByNameAndRoot($wcmc->getId(), $localInst);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findNodeByNameAndRoot($wcmc->getId(), $localInst);
                 if( !$instPathologyResidencyProgram ) {
                     throw new EntityNotFoundException('Unable to find Institution by name=' . $localInst);
                 }
             }
         } else {
             //Case 2: get string from SiteParameters - "WCM" or "Weill Cornell Medical College"
-            $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation($localInstitutionResApp);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findOneByAbbreviation($localInstitutionResApp);
             if( !$instPathologyResidencyProgram ) {
-                $instPathologyResidencyProgram = $em->getRepository('AppUserdirectoryBundle:Institution')->findOneByName($localInstitutionResApp);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                $instPathologyResidencyProgram = $em->getRepository(Institution::class)->findOneByName($localInstitutionResApp);
             }
         }
 
@@ -569,7 +599,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             $erasFileId = $erasFileArr['id']; //ERAS document ID
             $erasDocument = NULL;
             if( $erasFileId ) {
-                $erasDocument = $em->getRepository('AppUserdirectoryBundle:Document')->find($erasFileId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+                $erasDocument = $em->getRepository(Document::class)->find($erasFileId);
                 //echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
             }
             echo "Found eras by id=$erasFileId: ".$erasDocument." <br>";
@@ -686,7 +717,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByErasApplicantId($erasIdValue);
                 //echo "1Found resapp?: $residencyApplicationDb <br>";
             }
 
@@ -821,7 +853,8 @@ class ResAppBulkUploadController extends OrderAbstractController
 //                    }
 //                }
 
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->find($actionId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->find($actionId);
                 echo "residencyApplicationDb=".$residencyApplicationDb->getId()." <br>";
                 if( !$residencyApplicationDb ) {
                     $updateInfo = "ERAS Applicant ID $erasIdValue for " . $applicantName .
@@ -1112,7 +1145,8 @@ class ResAppBulkUploadController extends OrderAbstractController
             $resTrackValue = $resTrackArr['val'];
             //$resTrackId = $resTrackArr['id'];
             if( $resTrackValue ) {
-                $residencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($resTrackValue);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+                $residencyTrack = $em->getRepository(ResidencyTrackList::class)->findOneByName($resTrackValue);
                 //echo "residencyTrack found=".$residencyTrack."<br>";
                 if( $residencyTrack ) {
                     $residencyApplication->setResidencyTrack($residencyTrack);
@@ -1242,7 +1276,8 @@ class ResAppBulkUploadController extends OrderAbstractController
                 }
 
                 if( $previousResidencyTrackValue ) {
-                    $previousResidencyTrack = $em->getRepository('AppUserdirectoryBundle:ResidencyTrackList')->findOneByName($previousResidencyTrackValue);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+                    $previousResidencyTrack = $em->getRepository(ResidencyTrackList::class)->findOneByName($previousResidencyTrackValue);
                     if( $previousResidencyTrack ) {
                         $training->setResidencyTrack($previousResidencyTrack);
                     }
@@ -1409,13 +1444,15 @@ class ResAppBulkUploadController extends OrderAbstractController
         /////////////// EOF Create unique username ///////////////
 
         //check if the user already exists in DB by $googleFormId
-        $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
 
         //Try to find by email
         if( !$user ) {
             if( $email ) {
                 $email = strtolower($email);
-                $users = $em->getRepository('AppUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $users = $em->getRepository(User::class)->findUserByUserInfoEmail($email);
                 if( count($users) == 1 ) {
                     $user = $users[0];
                 }
@@ -1713,7 +1750,8 @@ class ResAppBulkUploadController extends OrderAbstractController
         exit('EOF pdfParserTestAction');
     }
     public function getTestApplications() {
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->em->getRepository(ResidencyApplication::class);
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin('resapp.coverLetters','coverLetters');

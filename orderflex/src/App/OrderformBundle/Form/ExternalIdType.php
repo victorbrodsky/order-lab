@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,7 +36,8 @@ class ExternalIdType extends AbstractType
             'label' => "External ID Source System:",
             'required'=> false,
             'multiple' => false,
-            'class' => 'AppUserdirectoryBundle:SourceSystemList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+            'class' => SourceSystemList::class,
             'attr' => array('class' => 'combobox combobox-width')
         ));
 

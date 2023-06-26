@@ -18,6 +18,9 @@
 namespace App\ResAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+
 use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -55,7 +58,8 @@ class ResAppResidencyApplicationType extends AbstractType
 //            },
 //        ));
         $builder->add( 'residencytracklisttype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:ResidencyTrackList',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            'class' => ResidencyTrackList::class,
             'label'=> "Residency Track:",
             'required'=> false,
             //'multiple' => true,

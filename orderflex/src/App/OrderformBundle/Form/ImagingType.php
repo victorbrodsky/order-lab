@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\Magnification; //process.py script: replaced namespace by ::class: added use line for classname=Magnification
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -75,7 +78,8 @@ class ImagingType extends AbstractType
             "We will do our best to expedite the process.";
 
         $builder->add('magnification', EntityType::class, array(
-            'class' => 'AppOrderformBundle:Magnification',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Magnification'] by [Magnification::class]
+            'class' => Magnification::class,
             'choice_label' => 'name',
             'label'=>'Magnification:',
             'required'=> true,

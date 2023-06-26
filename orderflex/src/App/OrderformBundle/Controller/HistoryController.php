@@ -17,6 +17,18 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProgressCommentsEventTypeList
+
+
+use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
+
+
+use App\OrderformBundle\Entity\ProcessorComments; //process.py script: replaced namespace by ::class: added use line for classname=ProcessorComments
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -163,7 +175,8 @@ class HistoryController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+        $entity = $em->getRepository(History::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -193,7 +206,8 @@ class HistoryController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+        $entity = $em->getRepository(History::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -243,7 +257,8 @@ class HistoryController extends OrderAbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+        $entity = $em->getRepository(History::class)->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find History entity.');
@@ -283,7 +298,8 @@ class HistoryController extends OrderAbstractController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppOrderformBundle:History')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+            $entity = $em->getRepository(History::class)->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find History entity.');
@@ -336,7 +352,8 @@ class HistoryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $entities = $em->getRepository('AppOrderformBundle:History')->findByCurrentid($id,array('changedate'=>'DESC'));
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+        $entities = $em->getRepository(History::class)->findByCurrentid($id,array('changedate'=>'DESC'));
         //echo "hist count=".count($entities)."<br>";
 
         $securityUtil = $this->container->get('user_security_utility');
@@ -428,7 +445,8 @@ class HistoryController extends OrderAbstractController
 //            throw $this->createNotFoundException('Unable to find History entity.');
 //        }
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findOneByOid($id);
 
         //if( $viewcount > 0 && $message->getProvider()->getId() != $user->getId()) {
         if( 1 ) {
@@ -446,7 +464,8 @@ class HistoryController extends OrderAbstractController
             //$history->setViewed($user);
             //$history->setVieweddate( new \DateTime() );
 
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Progress & Comments Viewed');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Progress & Comments Viewed');
             $history->setEventtype($eventtype);
 
             $em->persist($history);
@@ -457,7 +476,8 @@ class HistoryController extends OrderAbstractController
         }
 
         if( count($entities) > 0 ) {
-            $roles = $em->getRepository('AppUserdirectoryBundle:Roles')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
+            $roles = $em->getRepository(Roles::class)->findAll();
             $rolesArr = array();
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
@@ -466,7 +486,8 @@ class HistoryController extends OrderAbstractController
             $rolesArr = '';
         }
 
-        $processorComments = $em->getRepository('AppOrderformBundle:ProcessorComments')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcessorComments'] by [ProcessorComments::class]
+        $processorComments = $em->getRepository(ProcessorComments::class)->findAll();
 
         $curdatetime = new \DateTime();
 
@@ -501,7 +522,8 @@ class HistoryController extends OrderAbstractController
 
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
-            $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $message = $em->getRepository(Message::class)->findOneByOid($id);
 
             $history = new History();
             $history->setMessage($message);
@@ -514,7 +536,8 @@ class HistoryController extends OrderAbstractController
             $history->setSelectednote($selectednote);
             $history->setRoles($user->getRoles());
 
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Comment Added');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Comment Added');
             $history->setEventtype($eventtype);
 
             //echo "ok";

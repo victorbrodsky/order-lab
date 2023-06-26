@@ -19,6 +19,7 @@ namespace App\ResAppBundle\Controller;
 
 //use App\ResAppBundle\Entity\ResidencyApplication;
 //use App\ResAppBundle\Form\ResAppUploadType;
+use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,8 @@ class ResAppUtilController extends OrderAbstractController
         $resappId = trim((string)$request->get('id'));
         $emailType = trim((string)$request->get('emailType')); //accepted, rejected
         
-        $resapp = $this->getDoctrine()->getRepository('AppResAppBundle:ResidencyApplication')->find($resappId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resapp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappId);
         if( !$resapp ) {
             throw $this->createNotFoundException('Unable to find Residency Application by id='.$resappId);
         }
@@ -250,7 +252,8 @@ class ResAppUtilController extends OrderAbstractController
 
             $residencyApplicationDb = NULL;
             if( $erasIdValue ) {
-                $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasIdValue);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByErasApplicantId($erasIdValue);
                 //echo "1Found resapp?: $residencyApplicationDb <br>";
             }
 

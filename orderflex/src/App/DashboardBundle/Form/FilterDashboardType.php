@@ -17,6 +17,9 @@
 
 namespace App\DashboardBundle\Form;
 
+
+
+use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -143,7 +146,8 @@ class FilterDashboardType extends AbstractType
         if( isset($this->params['category']) && $this->params['category'] ) {
             //productservice
             $builder->add('category', EntityType::class, array(
-                'class' => 'AppTranslationalResearchBundle:RequestCategoryTypeList',
+        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+                'class' => RequestCategoryTypeList::class,
                 'label' => "Products/Services", //false,
                 'choice_label' => "getOptimalAbbreviationName",
                 'required' => false,

@@ -24,6 +24,12 @@
 
 namespace App\FellAppBundle\Controller;
 
+
+
+use App\FellAppBundle\Entity\Interview; //process.py script: replaced namespace by ::class: added use line for classname=Interview
+
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +68,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -99,7 +106,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -118,7 +126,8 @@ class FellAppApplicantController extends OrderAbstractController {
         //$startDateStr = $transformer->transform($startDate);
 
 //        $applicants = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
-        $repository = $em->getRepository('AppFellAppBundle:FellowshipApplication');
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $repository = $em->getRepository(FellowshipApplication::class);
         $dql = $repository->createQueryBuilder("fellapp");
         //TODO: optimize this by a single query without foreach loop
 //        ->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank')
@@ -208,7 +217,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -255,7 +265,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $interview = $em->getRepository('AppFellAppBundle:Interview')->find($interviewId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Interview'] by [Interview::class]
+        $interview = $em->getRepository(Interview::class)->find($interviewId);
 
         if( !$interviewId ) {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
@@ -488,7 +499,8 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $entity = $em->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
@@ -588,7 +600,8 @@ class FellAppApplicantController extends OrderAbstractController {
         $institutionNameFellappName = "";
 
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $fellowshipSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->find($fellappTypeId);
         }
 
         if( $fellowshipSubspecialty ) {
@@ -682,7 +695,8 @@ class FellAppApplicantController extends OrderAbstractController {
         $institutionNameFellappName = "";
 
         if( $fellappTypeId && $fellappTypeId > 0 ) {
-            $fellowshipSubspecialty = $em->getRepository('AppUserdirectoryBundle:FellowshipSubspecialty')->find($fellappTypeId);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $fellowshipSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->find($fellappTypeId);
         }
 
         if( $fellowshipSubspecialty ) {

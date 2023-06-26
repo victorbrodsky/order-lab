@@ -24,6 +24,30 @@
 
 namespace App\ResAppBundle\Util;
 
+
+
+use App\UserdirectoryBundle\Entity\ResidencyTrackList; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyTrackList
+
+
+use App\ResAppBundle\Entity\ResAppRank; //process.py script: replaced namespace by ::class: added use line for classname=ResAppRank
+
+
+use App\ResAppBundle\Entity\LanguageProficiency; //process.py script: replaced namespace by ::class: added use line for classname=LanguageProficiency
+
+
+use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
+
+
+use App\ResAppBundle\Entity\PostSophList; //process.py script: replaced namespace by ::class: added use line for classname=PostSophList
+
+
+use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\ResAppBundle\Entity\Interview;
 use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Entity\Document;
@@ -116,7 +140,8 @@ class ImportFromOldSystem {
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $ranks = $em->getRepository('AppResAppBundle:ResAppRank')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppRank'] by [ResAppRank::class]
+        $ranks = $em->getRepository(ResAppRank::class)->findAll();
         $ranksArr = array();
         foreach($ranks as $rank) {
             $ranksArr[$rank->getValue()] = $rank;
@@ -199,7 +224,8 @@ class ImportFromOldSystem {
 //                continue;
 //            }
 
-            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($applicantId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByGoogleFormId($applicantId);
 
             if( !$residencyApplicationDb ) {
                 $errorMsg = $row.": Skip ResidencyApplication not found by id=$applicantId";
@@ -273,7 +299,8 @@ class ImportFromOldSystem {
                     $interview->setTotalRank($totalRank);
 
                     //LanguageProficiency
-                    $langProficiencyEntity = $this->em->getRepository('AppResAppBundle:LanguageProficiency')->findOneByName($langProficiency);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
+                    $langProficiencyEntity = $this->em->getRepository(LanguageProficiency::class)->findOneByName($langProficiency);
 //                    if( !$langProficiencyEntity ) {
 //                        exit("LanguageProficiency not found by langProficiency=$langProficiency");
 //                    }
@@ -317,7 +344,8 @@ class ImportFromOldSystem {
             exit("Interviewer not found by facultyResidentId=$facultyResidentId");
         }
 
-        $repository = $this->em->getRepository('AppResAppBundle:Interview');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Interview'] by [Interview::class]
+        $repository = $this->em->getRepository(Interview::class);
         $dql = $repository->createQueryBuilder('interview');
         $dql->leftJoin("interview.resapp","resapp");
         $dql->leftJoin("interview.interviewer","interviewer");
@@ -490,7 +518,8 @@ class ImportFromOldSystem {
                 exit($row.": The file does not exist: $inputFilePath <br>");
             }
 
-            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByGoogleFormId($id);
 
             //Modify files
             if( 0 ) {
@@ -578,7 +607,8 @@ class ImportFromOldSystem {
         //$uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.'resapp'.DIRECTORY_SEPARATOR.'documents'.DIRECTORY_SEPARATOR;
 
         //check if file already exists by file id
-        $documentDb = $this->em->getRepository('AppUserdirectoryBundle:Document')->findOneByUniqueid($fileUniqueName);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
+        $documentDb = $this->em->getRepository(Document::class)->findOneByUniqueid($fileUniqueName);
         if( $documentDb ) {
             echo "Document already exists with uniqueid=".$fileUniqueName."; Application Id=".$residencyApplicationDb->getId();
             //$logger->notice($event);
@@ -682,25 +712,30 @@ class ImportFromOldSystem {
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
-        $employmentType = $em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Residency Applicant");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Residency Applicant");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Pathology Residency Applicant");
         }
 
-        $activeStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("active");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $activeStatus = $em->getRepository(ResAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
-        $archiveStatus = $em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+        $archiveStatus = $em->getRepository(ResAppStatus::class)->findOneByName("archive");
         if( !$archiveStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."archive");
         }
 
-        $postSophPathologyEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName("Pathology");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:PostSophList'] by [PostSophList::class]
+        $postSophPathologyEntity = $em->getRepository(PostSophList::class)->findOneByName("Pathology");
         if( !$postSophPathologyEntity ) {
             throw new EntityNotFoundException('Unable to find PostSophList entity by name='."Pathology");
         }
-        $postSophNoneEntity = $em->getRepository('AppResAppBundle:PostSophList')->findOneByName("None");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:PostSophList'] by [PostSophList::class]
+        $postSophNoneEntity = $em->getRepository(PostSophList::class)->findOneByName("None");
         if( !$postSophNoneEntity ) {
             throw new EntityNotFoundException('Unable to find PostSophList entity by name='."None");
         }
@@ -827,7 +862,8 @@ class ImportFromOldSystem {
                 $md = false;
             }
 
-            $residencyApplicationDb = $em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByGoogleFormId($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $residencyApplicationDb = $em->getRepository(ResidencyApplication::class)->findOneByGoogleFormId($id);
 
             //Modify applications
             if( 0 ) {
@@ -892,7 +928,8 @@ class ImportFromOldSystem {
 
 
             //check if the user already exists in DB by $googleFormId
-            $user = $em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
 
             if (!$user) {
                 //create excel user
@@ -1073,7 +1110,8 @@ class ImportFromOldSystem {
             $training->setOrderinlist(1);
         }
 
-        $trainingType = $em->getRepository('AppUserdirectoryBundle:TrainingTypeList')->findOneByName('Medical');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:TrainingTypeList'] by [TrainingTypeList::class]
+        $trainingType = $em->getRepository(TrainingTypeList::class)->findOneByName('Medical');
         if( !$trainingType ) {
             exit("TrainingTypeList not found by name=Medical");
         }
@@ -1412,7 +1450,8 @@ class ImportFromOldSystem {
 
         $residencySpecialtyStrArr = array('AP','CP','AP/CP','AP/EXP','CP/EXP');
 
-        $wcmc = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findOneByAbbreviation("WCM");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $this->em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCM"');
         }
@@ -1422,7 +1461,8 @@ class ImportFromOldSystem {
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $pathologyInstitution = $this->em->getRepository('AppUserdirectoryBundle:Institution')->findByChildnameAndParent(
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $pathologyInstitution = $this->em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
             $wcmc,
             $mapper
@@ -1433,7 +1473,8 @@ class ImportFromOldSystem {
             //$residencySpecialtyEntity = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialtyStr);
 
             //$repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencySpecialty');
-            $repository = $this->em->getRepository('AppUserdirectoryBundle:ResidencyTrackList');
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencyTrackList'] by [ResidencyTrackList::class]
+            $repository = $this->em->getRepository(ResidencyTrackList::class);
             $dql =  $repository->createQueryBuilder("list");
             $dql->select('list');
             $dql->leftJoin("list.institution", "institution");
@@ -1519,7 +1560,8 @@ class ImportFromOldSystem {
             throw new EntityNotFoundException('Unable to find ldap-user user keytype');
         }
 
-        $employmentType = $this->em->getRepository('AppUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $this->em->getRepository(EmploymentType::class)->findOneByName("Full Time");
         if( !$employmentType ) {
             throw new EntityNotFoundException('Unable to find entity by name='."Full Time");
         }
@@ -1569,11 +1611,13 @@ class ImportFromOldSystem {
 
             $cwid = $this->canonicalize($cwid);
 
-            $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
 
             if( !$user ) {
                 $emailCanonical = $this->canonicalize($EMAIL);
-                $user = $this->em->getRepository('AppUserdirectoryBundle:User')->findOneByEmailCanonical($emailCanonical);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
             }
 
             if( !$user ) {

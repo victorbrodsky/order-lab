@@ -17,6 +17,9 @@
 
 namespace App\CallLogBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\CalllogTaskTypeList; //process.py script: replaced namespace by ::class: added use line for classname=CalllogTaskTypeList
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -74,7 +77,8 @@ class CalllogTaskType extends AbstractType
         $taskTypeDefault = null;
         if( $this->params['cycle'] == 'new' ) {
             $em = $this->params["em"];
-            $taskTypeDefault = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName("Other");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:CalllogTaskTypeList'] by [CalllogTaskTypeList::class]
+            $taskTypeDefault = $em->getRepository(CalllogTaskTypeList::class)->findOneByName("Other");
             //Testing: Order blood products
             //$taskTypeDefault = $em->getRepository('AppOrderformBundle:CalllogTaskTypeList')->findOneByName("Order blood products");
         }

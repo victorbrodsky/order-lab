@@ -17,6 +17,24 @@
 
 namespace App\OrderformBundle\Repository;
 
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\OrderformBundle\Entity\Educational; //process.py script: replaced namespace by ::class: added use line for classname=Educational
+
+
+use App\OrderformBundle\Entity\Research; //process.py script: replaced namespace by ::class: added use line for classname=Research
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
+
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+
+
+use App\OrderformBundle\Entity\ProgressCommentsEventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=ProgressCommentsEventTypeList
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
@@ -51,7 +69,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $entity = $this->replaceDuplicateEntities( $entity, $entity );
 
         if( $type && !$entity->getMessageCategory() ) {
-            $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+            $category = $em->getRepository(MessageCategory::class)->findOneByName( $type );
             $entity->setMessageCategory($category);
         }
 
@@ -70,8 +89,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         }
 
         //********** take care of educational and research director and principal investigator ***********//
-        $entity = $em->getRepository('AppOrderformBundle:Educational')->processEntity( $entity, $this->user );
-        $entity = $em->getRepository('AppOrderformBundle:Research')->processEntity( $entity, $this->user );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Educational'] by [Educational::class]
+        $entity = $em->getRepository(Educational::class)->processEntity( $entity, $this->user );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Research'] by [Research::class]
+        $entity = $em->getRepository(Research::class)->processEntity( $entity, $this->user );
         //********** end of educational and research processing ***********//
 
         //return $this->setMessageResultTopToBottom( $entity );
@@ -99,10 +120,12 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             //echo "<br>###################### Process Slide:".$slide;
 
             //set correct accession in case of accession-mrn conflict
-            $em->getRepository('AppOrderformBundle:Accession')->setCorrectAccessionIfConflict( $slide, $entity );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+            $em->getRepository(Accession::class)->setCorrectAccessionIfConflict( $slide, $entity );
 
             //process slide
-            $slide = $em->getRepository('AppOrderformBundle:Slide')->processEntity( $slide, $entity );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Slide'] by [Slide::class]
+            $slide = $em->getRepository(Slide::class)->processEntity( $slide, $entity );
 
             //set block and part names if not set (block and part name auto generation requires accession number to be set)
             $this->postProcessing($entity);
@@ -122,7 +145,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $originalId = $entity->getOid();
 
             //find existing order in db
-            $originalOrder = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($originalId);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+            $originalOrder = $em->getRepository(Message::class)->findOneByOid($originalId);
             $originalOrderdate = $originalOrder->getOrderdate();
             $originalProvider = $originalOrder->getProvider();
 
@@ -233,7 +257,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         //*********** record history ***********//
         //echo "before find entity=".$entity."<br>";
-        $entity = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($entity->getOid());
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->findOneByOid($entity->getOid());
         $user = $em->getRepository(User::class)->findOneById($this->user->getId());
         $history = new History();
         $history->setMessage($entity);
@@ -245,7 +270,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         //record history
         if( $originalStatus == 'Amended' ) {
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Amended Order Submission');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Amended Order Submission');
             $history->setEventtype($eventtype);
             //get url link
             $supersedeId = $entity->getId(); //use id because superseded order and amended order have swaped ids
@@ -258,10 +284,12 @@ class MessageRepository extends ArrayFieldAbstractRepository {
             $systemUser = $userSecUtil->findSystemUser();
             $history->setProvider( $systemUser );
             $history->setNote('Auto-Saved Draft; Submit this order to Process');
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Auto-saved at the time of auto-logout');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Auto-saved at the time of auto-logout');
             $history->setEventtype($eventtype);
         } else {
-            $eventtype = $em->getRepository('AppOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Initial Order Submission');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProgressCommentsEventTypeList'] by [ProgressCommentsEventTypeList::class]
+            $eventtype = $em->getRepository(ProgressCommentsEventTypeList::class)->findOneByName('Initial Order Submission');
             $history->setEventtype($eventtype);
             //$history->setChangedate($entity->getOrderdate());
         }
@@ -342,7 +370,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $message = null;
         $parameters = array();
 
-        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->_em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -370,7 +399,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $message = null;
         $parameters = array();
 
-        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->_em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -412,7 +442,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     public function findByOidAndStatus( $oid, $statusName="Signed" ) {
         $parameters = array();
 
-        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->_em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -435,7 +466,8 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     //get max message version using oid
     public function getMaxMessageVersion( $message ) {
 
-        $repository = $this->_em->getRepository('AppOrderformBundle:Message');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $repository = $this->_em->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
         $dql->select("MAX(message.version) as maxVersion");
 

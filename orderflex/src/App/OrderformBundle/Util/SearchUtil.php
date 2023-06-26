@@ -72,7 +72,8 @@ class SearchUtil {
             $sort = $postData['sort'];
         }
 
-        $repository = $this->em->getRepository('AppOrderformBundle:'.$object);
+        //$repository = $this->em->getRepository('AppOrderformBundle:'.$object);
+        $repository = $this->em->getRepository('App\\OrderformBundle\\Entity\\'.$object);
         $dql =  $repository->createQueryBuilder($object);
         $dql->select($object);
         $dql->leftJoin($object.".institution", "institution");

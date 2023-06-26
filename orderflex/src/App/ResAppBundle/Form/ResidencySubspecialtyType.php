@@ -18,6 +18,9 @@
 namespace App\ResAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,7 +36,8 @@ class ResidencySubspecialtyType extends AbstractType
     {
 
         $builder->add('coordinators', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Coordinator(s):",
             'required' => false,
             'multiple' => true,
@@ -50,7 +54,8 @@ class ResidencySubspecialtyType extends AbstractType
 
 
         $builder->add('directors', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Director(s):",
             'required' => false,
             'multiple' => true,
@@ -66,7 +71,8 @@ class ResidencySubspecialtyType extends AbstractType
         ));
 
         $builder->add('interviewers', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:User',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            'class' => User::class,
             'label' => "Default Interviewer(s):",
             'required' => false,
             'multiple' => true,

@@ -26,6 +26,23 @@
 namespace App\OrderformBundle\Controller;
 
 
+
+use App\OrderformBundle\Entity\History; //process.py script: replaced namespace by ::class: added use line for classname=History
+
+
+use App\OrderformBundle\Entity\MessageCategory; //process.py script: replaced namespace by ::class: added use line for classname=MessageCategory
+
+
+use App\OrderformBundle\Entity\OrderDelivery;
+use App\OrderformBundle\Entity\SlideType;
+use App\OrderformBundle\Entity\Status; //process.py script: replaced namespace by ::class: added use line for classname=Status
+use App\UserdirectoryBundle\Entity\Equipment;
+use App\UserdirectoryBundle\Entity\SexList; //process.py script: replaced namespace by ::class: added use line for classname=SexList
+use App\OrderformBundle\Entity\DiseaseTypeList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseTypeList
+use App\OrderformBundle\Entity\DiseaseOriginList; //process.py script: replaced namespace by ::class: added use line for classname=DiseaseOriginList
+use App\OrderformBundle\Entity\StainList; //process.py script: replaced namespace by ::class: added use line for classname=StainList
+use App\OrderformBundle\Entity\Magnification; //process.py script: replaced namespace by ::class: added use line for classname=Magnification
+
 use App\OrderformBundle\Entity\PartParttitle;
 use App\OrderformBundle\Util\ScanEmailUtil;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
@@ -79,12 +96,9 @@ use App\OrderformBundle\Entity\RelevantScans;
 use App\OrderformBundle\Entity\BlockSpecialStains;
 use App\OrderformBundle\Entity\Slide;
 use App\OrderformBundle\Entity\Stain;
-
 use App\OrderformBundle\Entity\Educational;
 use App\OrderformBundle\Entity\Research;
-
-use App\OrderformBundle\Form\SlideMultiType;
-
+//use App\OrderformBundle\Form\SlideMultiType;
 use App\OrderformBundle\Helper\ErrorHelper;
 //use App\OrderformBundle\Util\ScanEmailUtil;
 use App\OrderformBundle\Util\SecurityUtil;
@@ -152,7 +166,8 @@ class TableController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findOneByOid($id);
 
         if( $routeName == "table_show") {
             $actions = array('show');
@@ -233,9 +248,16 @@ class TableController extends OrderAbstractController {
         ));
 
         //$slides = $message->getSlide();
+//        $query = $em->createQuery('
+//            SELECT slide
+//            FROM AppOrderformBundle:Slide slide
+//            INNER JOIN slide.message message
+//            WHERE message.oid = :id
+//            ORDER BY slide.sequence ASC'
+//        )->setParameter('id', $id);
         $query = $em->createQuery('
             SELECT slide
-            FROM AppOrderformBundle:Slide slide
+            FROM App\\OrderformBundle\\Entity\\Slide slide
             INNER JOIN slide.message message
             WHERE message.oid = :id
             ORDER BY slide.sequence ASC'
@@ -455,7 +477,8 @@ class TableController extends OrderAbstractController {
         if( $routeName == "table_show") {
 
             //$history = $em->getRepository('AppOrderformBundle:History')->findByCurrentid( $entity->getOid(), array('changedate' => 'DESC') );
-            $repository = $this->getDoctrine()->getRepository('AppOrderformBundle:History');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:History'] by [History::class]
+            $repository = $this->getDoctrine()->getRepository(History::class);
             $dql = $repository->createQueryBuilder("h");
             $dql->innerJoin("h.message", "message");
             $dql->leftJoin("h.eventtype", "eventtype");
@@ -560,7 +583,8 @@ class TableController extends OrderAbstractController {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $category = $em->getRepository(MessageCategory::class)->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         //$permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -574,11 +598,13 @@ class TableController extends OrderAbstractController {
         $orderUtil->setDefaultPerformingOrganization($entity);
 
         //set "Slide Delivery"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
+        //$defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','AppOrderformBundle:OrderDelivery');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery',OrderDelivery::class);
         $scanOrder->setDelivery($defaultDelivery);
 
         //set "Scanner"
-        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
+        //$defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','App\UserdirectoryBundle\Entity\Equipment');
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner',Equipment::class);
         $entity->setEquipment($defaultDelivery);
 
         //set $defaultAccessionType
@@ -647,7 +673,8 @@ class TableController extends OrderAbstractController {
         $type = "Table-View Scan Order";
 
         //set order category
-        $category = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName( $type );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
+        $category = $em->getRepository(MessageCategory::class)->findOneByName( $type );
         $entity->setMessageCategory($category);
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user, 'em' => $em);
@@ -672,19 +699,22 @@ class TableController extends OrderAbstractController {
 
         if( $clickedbtn == 'btnSubmit' ) {
             $cycle = 'new';
-            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Submitted');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+            $status = $em->getRepository(Status::class)->findOneByName('Submitted');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnAmend' ) {
             $cycle = 'amend';
-            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Amended');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+            $status = $em->getRepository(Status::class)->findOneByName('Amended');
             $entity->setStatus($status);
         }
 
         if( $clickedbtn == 'btnSaveOnIdleTimeout' ) {
             $cycle = 'edit';
-            $status = $em->getRepository('AppOrderformBundle:Status')->findOneByName('Not Submitted');
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Status'] by [Status::class]
+            $status = $em->getRepository(Status::class)->findOneByName('Not Submitted');
             $entity->setStatus($status);
         }
 
@@ -748,7 +778,8 @@ class TableController extends OrderAbstractController {
         $orderUtil = $this->container->get('scanorder_utility');
         $orderUtil->setDataQualityAccMrn($entity,$dataqualities);
 
-        $entity = $em->getRepository('AppOrderformBundle:Message')->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $entity = $em->getRepository(Message::class)->processMessageEntity( $entity, $user, $type, $this->container->get('router'), $this->container );
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');
@@ -912,7 +943,8 @@ class TableController extends OrderAbstractController {
         $patsexArr = $this->getValueByHeaderName('Patient Sex',$row,$columnData);
         if( $force || $patsexArr['val'] && $patsexArr['val'] != '' ) {
             $patsexObj = new EncounterPatsex($status,$provider,$system);
-            $sexlist = $em->getRepository('AppUserdirectoryBundle:SexList')->findOneByName($patsexArr['val']);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SexList'] by [SexList::class]
+            $sexlist = $em->getRepository(SexList::class)->findOneByName($patsexArr['val']);
             $patsexObj->setField($sexlist);
             $patsexObj->setId($patsexArr['id']);
             $encounter->addPatsex($patsexObj);
@@ -1057,12 +1089,14 @@ class TableController extends OrderAbstractController {
 
             //addDiseaseType
             //echo "<br>DiseaseType=".$partdistypeArr['val']."<br>";
-            $diseaseType = $em->getRepository('AppOrderformBundle:DiseaseTypeList')->findOneByName($partdistypeArr['val']);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
+            $diseaseType = $em->getRepository(DiseaseTypeList::class)->findOneByName($partdistypeArr['val']);
             $partDiseaseType->addDiseaseType($diseaseType);
             //exit();
 
             //Origin of Disease
-            $diseaseOrigin = $em->getRepository('AppOrderformBundle:DiseaseOriginList')->findOneByName($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
+            $diseaseOrigin = $em->getRepository(DiseaseOriginList::class)->findOneByName($this->getValueByHeaderName('Origin of Disease',$row,$columnData)['val']);
             $partDiseaseType->addDiseaseOrigin($diseaseOrigin);
 
             //Primary Site of Disease Origin
@@ -1105,7 +1139,8 @@ class TableController extends OrderAbstractController {
             //special stain type might be null in table, so get one from StainList with smallest 'orderinlist'
             $specialstainList = $stainTransformer->reverseTransform($this->getValueByHeaderName('Associated Special Stain Name',$row,$columnData)['val']); //list
             if( $specialstainList == null ) {
-                $stainList = $em->getRepository('AppOrderformBundle:StainList')->findBy(array(), array('orderinlist'=>'ASC'));
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
+                $stainList = $em->getRepository(StainList::class)->findBy(array(), array('orderinlist'=>'ASC'));
                 $specialstainList = $stainList[0];
             }
 
@@ -1133,7 +1168,8 @@ class TableController extends OrderAbstractController {
         $slide->setMicroscopicdescr($this->getValueByHeaderName('Microscopic Description',$row,$columnData)['val']);
 
         //Slide Type
-        $slidetype = $em->getRepository('AppOrderformBundle:SlideType')->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData)['val']);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:SlideType'] by [SlideType::class]
+        $slidetype = $em->getRepository(SlideType::class)->findOneByName($this->getValueByHeaderName('Slide Type',$row,$columnData)['val']);
         $slide->setSlidetype($slidetype);
 
         //Stain
@@ -1157,7 +1193,8 @@ class TableController extends OrderAbstractController {
         //echo "<br>mag=".$magArr['id']."<br>";
 
         //setMagnification
-        $mag = $em->getRepository('AppOrderformBundle:Magnification')->findOneByName($magArr['val']);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Magnification'] by [Magnification::class]
+        $mag = $em->getRepository(Magnification::class)->findOneByName($magArr['val']);
         $scan->setMagnification($mag);
         $scan->setId($magArr['id']);
 

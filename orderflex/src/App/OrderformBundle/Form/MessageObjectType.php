@@ -17,6 +17,15 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\OrderformBundle\Entity\MessageStatusList; //process.py script: replaced namespace by ::class: added use line for classname=MessageStatusList
+
+
+use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+
+
+use App\UserdirectoryBundle\Entity\Equipment; //process.py script: replaced namespace by ::class: added use line for classname=Equipment
 use App\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\InstitutionalWrapperType;
@@ -273,7 +282,8 @@ class MessageObjectType extends AbstractType
 
             //Message Status
             $builder->add('messageStatus', EntityType::class, array(
-                'class' => 'AppOrderformBundle:MessageStatusList',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageStatusList'] by [MessageStatusList::class]
+                'class' => MessageStatusList::class,
                 //'choice_label' => 'name',
                 'label'=>'Message Status:',
                 'required'=> false,
@@ -324,7 +334,8 @@ class MessageObjectType extends AbstractType
             'required'=> true,
             'multiple' => false,
             //'empty_value' => false,
-            'class' => 'AppUserdirectoryBundle:Institution',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+            'class' => Institution::class,
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
@@ -348,7 +359,8 @@ class MessageObjectType extends AbstractType
         //Associations
         if(  $this->keyInArrayAndTrue($this->params,'message.associations') ) {
             $builder->add('associations', EntityType::class, array(
-                'class' => 'AppOrderformBundle:Message',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                'class' => Message::class,
                 'choice_label' => 'getFullName',
                 'label' => "Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -358,7 +370,8 @@ class MessageObjectType extends AbstractType
         }
         if( $this->keyInArrayAndTrue($this->params,'message.backAssociations') ) {
             $builder->add('backAssociations', EntityType::class, array(
-                'class' => 'AppOrderformBundle:Message',
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+                'class' => Message::class,
                 'choice_label' => 'getFullName',
                 'label' => "Reciprocal Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -561,7 +574,8 @@ if( 1 ) {
                     ));
 
                     $form->add('equipment', EntityType::class, array(
-                        'class' => 'AppUserdirectoryBundle:Equipment',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Equipment'] by [Equipment::class]
+                        'class' => Equipment::class,
                         'choice_label' => 'name',
                         'label' => 'Microtome Device:',
                         'required'=> true,
@@ -592,7 +606,8 @@ if( 1 ) {
                     ));
 
                     $form->add('equipment', EntityType::class, array(
-                        'class' => 'AppUserdirectoryBundle:Equipment',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Equipment'] by [Equipment::class]
+                        'class' => Equipment::class,
                         'choice_label' => 'name',
                         'label' => 'Slide Stainer Device:',
                         'required'=> true,

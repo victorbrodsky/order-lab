@@ -17,6 +17,11 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\Educational;
+use App\OrderformBundle\Entity\Message; //process.py script: replaced namespace by ::class: added use line for classname=Message
+use App\OrderformBundle\Entity\Research;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -37,10 +42,12 @@ class DataReviewController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $message = $em->getRepository('AppOrderformBundle:Message')->findOneByOid($id);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
+        $message = $em->getRepository(Message::class)->findOneByOid($id);
 
         $queryE = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Educational', 'e')
+            //->from('AppOrderformBundle:Educational', 'e')
+            ->from(Educational::class, 'e')
             ->select("e")
             ->leftJoin("e.message", "message")
             ->where("message.id=:id")
@@ -50,7 +57,8 @@ class DataReviewController extends OrderAbstractController {
 
 
         $queryR = $em->createQueryBuilder()
-            ->from('AppOrderformBundle:Research', 'e')
+            //->from('AppOrderformBundle:Research', 'e')
+            ->from(Research::class, 'e')
             ->select("e")
             ->leftJoin("e.message", "message")
             ->where("message.id=:id")

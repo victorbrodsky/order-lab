@@ -58,7 +58,8 @@ class FellAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
@@ -102,7 +103,8 @@ class FellAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
@@ -165,7 +167,8 @@ class FellAppRankController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($fellappid);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellApp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappid);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }

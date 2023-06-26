@@ -164,8 +164,6 @@ class ProjectTitleTree extends BaseCompositeNode {
 
     /**
      * Remove userWrappers
-     *
-     * @param userWrappers $userWrappers
      */
     public function removeUserWrapper($userWrappers)
     {

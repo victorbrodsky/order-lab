@@ -25,6 +25,12 @@
 namespace App\ResAppBundle\Util;
 
 
+
+use App\ResAppBundle\Entity\ResidencyApplication; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyApplication
+
+
+use App\ResAppBundle\Entity\ResAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=ResAppStatus
+
 //use Clegginabox\PDFMerger\PDFMerger;
 use App\ResAppBundle\PdfParser\PDFService;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
@@ -112,7 +118,8 @@ class PdfUtil {
                         //echo "erasApplicantID=$extractedErasApplicantID <br>";
                         if ($extractedErasApplicantID) {
                             //find resapp by Applicant ID
-                            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($extractedErasApplicantID);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                            $residencyApplicationDb = $this->em->getRepository(ResidencyApplication::class)->findOneByErasApplicantId($extractedErasApplicantID);
                         }
 //                        if ($residencyApplicationDb) {
 //                            echo "found by extractedErasApplicantID=$extractedErasApplicantID: ID=".$residencyApplicationDb->getId()."<br>";
@@ -121,7 +128,8 @@ class PdfUtil {
                         $aamcID = $this->getSingleKeyField($pdfText, 'AAMC ID:');
                         //echo "aamcID=$aamcID <br>";
                         if ($aamcID && !$residencyApplicationDb) {
-                            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByAamcId($aamcID);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                            $residencyApplicationDb = $this->em->getRepository(ResidencyApplication::class)->findOneByAamcId($aamcID);
                         }
 //                        if ($residencyApplicationDb) {
 //                            echo "found by aamcID=$aamcID: ID=".$residencyApplicationDb->getId()."<br>";
@@ -1231,23 +1239,28 @@ class PdfUtil {
         $resappUtil = $this->container->get('resapp_util');
 
         if( count($exceptStatusArr) == 0 ) {
-            $archiveStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("archive");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $archiveStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("archive");
             if (!$archiveStatus) {
                 throw new EntityNotFoundException('Unable to find entity by name=' . "archive");
             }
-            $hideStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("hide");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $hideStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("hide");
             if (!$archiveStatus) {
                 throw new EntityNotFoundException('Unable to find entity by name=' . "hide");
             }
-            $declinedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("declined");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $declinedStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("declined");
             if (!$declinedStatus) {
                 throw new EntityNotFoundException('Unable to find entity by name=' . "declined");
             }
-            $rejectedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("reject");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $rejectedStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("reject");
             if (!$rejectedStatus) {
                 throw new EntityNotFoundException('Unable to find entity by name=' . "reject");
             }
-            $rejectedandnotifiedStatus = $this->em->getRepository('AppResAppBundle:ResAppStatus')->findOneByName("rejectedandnotified");
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResAppStatus'] by [ResAppStatus::class]
+            $rejectedandnotifiedStatus = $this->em->getRepository(ResAppStatus::class)->findOneByName("rejectedandnotified");
             if (!$rejectedandnotifiedStatus) {
                 throw new EntityNotFoundException('Unable to find entity by name=' . "rejectedandnotified");
             }
@@ -1255,7 +1268,8 @@ class PdfUtil {
         }
 
         //show the list of current residency applicants that do not have a status of Hidden or Archived for the current year
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->em->getRepository(ResidencyApplication::class);
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
 
@@ -1395,7 +1409,8 @@ class PdfUtil {
         }
 
         if( $foundResappId ) {
-            $residencyApplicationDb = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($foundResappId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+            $residencyApplicationDb = $this->em->getRepository(ResidencyApplication::class)->find($foundResappId);
             return $residencyApplicationDb;
         }
 
@@ -1599,7 +1614,8 @@ class PdfUtil {
                 $erasApplicantId = str_replace("_","",$erasApplicantId);
                 //echo "erasApplicantId=$erasApplicantId <br>"; //2021248381.pdf
                 //echo "filename erasApplicantId=$erasApplicantId <br>";
-                return $this->em->getRepository('AppResAppBundle:ResidencyApplication')->findOneByErasApplicantId($erasApplicantId);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+                return $this->em->getRepository(ResidencyApplication::class)->findOneByErasApplicantId($erasApplicantId);
             }
         }
         return NULL;
@@ -1791,7 +1807,8 @@ class PdfUtil {
 
         $parameters = array();
 
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->em->getRepository(ResidencyApplication::class);
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
         $dql->leftJoin('resapp.user','user');

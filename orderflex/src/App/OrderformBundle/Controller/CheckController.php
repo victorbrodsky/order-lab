@@ -17,6 +17,19 @@
 
 namespace App\OrderformBundle\Controller;
 
+
+
+use App\OrderformBundle\Entity\AccessionType;
+use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace by ::class: added use line for classname=MrnType
+
+
+use App\OrderformBundle\Entity\Accession; //process.py script: replaced namespace by ::class: added use line for classname=Accession
+
+
+use App\OrderformBundle\Entity\Part; //process.py script: replaced namespace by ::class: added use line for classname=Part
+
+
+use App\OrderformBundle\Entity\Block; //process.py script: replaced namespace by ::class: added use line for classname=Block
 use App\OrderformBundle\Entity\Patient;
 use App\OrderformBundle\Entity\PatientMrn;
 use Symfony\Component\HttpFoundation\Response;
@@ -143,7 +156,8 @@ class CheckController extends OrderAbstractController {
         $originalKeytype = $keytype;
         
         $em = $this->getDoctrine()->getManager();
-        $keytype = $em->getRepository('AppOrderformBundle:Patient')->getCorrectKeytypeId($keytype,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $keytype = $em->getRepository(Patient::class)->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;
@@ -155,7 +169,8 @@ class CheckController extends OrderAbstractController {
         $institutions = array();
         $institutions[] = $inst;
 
-        $entity = $em->getRepository('AppOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$key,"Patient","mrn",$validity,true,$extra);   //findOneByIdJoinedToMrn($mrn);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $entity = $em->getRepository(Patient::class)->findOneByIdJoinedToField($institutions,$key,"Patient","mrn",$validity,true,$extra);   //findOneByIdJoinedToMrn($mrn);
 
         $element = array();
         
@@ -177,7 +192,8 @@ class CheckController extends OrderAbstractController {
             $originalKeytype = $keytype;
         }
         
-        $originalKeytype = $em->getRepository('AppOrderformBundle:MrnType')->findOneById($originalKeytype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $originalKeytype = $em->getRepository(MrnType::class)->findOneById($originalKeytype);
         if( $originalKeytype == "Existing Auto-generated MRN" && !$entity ) {
             $entity = null;               
             $element = -2;
@@ -218,7 +234,8 @@ class CheckController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $keytypeEntity = $this->getDoctrine()->getRepository('AppOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+        $keytypeEntity = $this->getDoctrine()->getRepository(MrnType::class)->findOneByName("Auto-generated MRN");
         $keytype = $keytypeEntity->getId().""; //id of "New York Hospital MRN" in DB
 
         $extra = array();
@@ -228,7 +245,8 @@ class CheckController extends OrderAbstractController {
         //exit();
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('AppOrderformBundle:Patient')->createElement(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $entity = $em->getRepository(Patient::class)->createElement(
             $inst,
             null,       //status
             $user,      //provider
@@ -272,12 +290,14 @@ class CheckController extends OrderAbstractController {
         $institutions[] = $inst;
 
         $em = $this->getDoctrine()->getManager();
-        $keytype = $em->getRepository('AppOrderformBundle:Patient')->getCorrectKeytypeId($keytype,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $keytype = $em->getRepository(Patient::class)->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $res = $em->getRepository('AppOrderformBundle:Patient')->deleteIfReserved( $institutions, $key,"Patient","mrn",$extra );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
+        $res = $em->getRepository(Patient::class)->deleteIfReserved( $institutions, $key,"Patient","mrn",$extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -304,7 +324,8 @@ class CheckController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $keytype = $em->getRepository('AppOrderformBundle:Accession')->getCorrectKeytypeId($keytype,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $keytype = $em->getRepository(Accession::class)->getCorrectKeytypeId($keytype,$user);
         //echo "keytype2=".$keytype.", key=".$key." => ";
 
         $extra = array();
@@ -315,7 +336,8 @@ class CheckController extends OrderAbstractController {
         $institutions = array();
         $institutions[] = $inst;
 
-        $entity = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$key,"Accession","accession",$validity,true,$extra);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $entity = $em->getRepository(Accession::class)->findOneByIdJoinedToField($institutions,$key,"Accession","accession",$validity,true,$extra);
 
         $element = array();
 
@@ -332,7 +354,8 @@ class CheckController extends OrderAbstractController {
             $originalKeytype = $keytype;
         }
 
-        $originalKeytype = $em->getRepository('AppOrderformBundle:AccessionType')->findOneById($originalKeytype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $originalKeytype = $em->getRepository(AccessionType::class)->findOneById($originalKeytype);
         if( $originalKeytype == "Existing Auto-generated Accession Number" && !$entity ) {
             $entity = null;               
             $element = -2;
@@ -374,10 +397,12 @@ class CheckController extends OrderAbstractController {
                     $dateStr = $transformer->transform($parentKey->getCreationdate());
                     $mrnstring = 'MRN '.$parentKey.' ['.$parentKey->getKeytype().'] (as submitted by '.$parentKey->getProvider().' on '. $dateStr.')';
                     $extraid = $parentKey->getKeytype()->getId()."";
-                    $mrnkeytype = $em->getRepository('AppOrderformBundle:MrnType')->findOneById($extraid);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                    $mrnkeytype = $em->getRepository(MrnType::class)->findOneById($extraid);
                     if( $mrnkeytype == "Auto-generated MRN" ) {
                         //set to "Existing Auto-generated MRN" in order to correct set select2 to "Existing Auto-generated MRN"
-                        $newkeytype = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+                        $newkeytype = $em->getRepository(MrnType::class)->findOneByName("Existing Auto-generated MRN");
                         $extraid = $newkeytype->getId()."";
                     }
                     $messageString = "Order ".$patient->getMessage()->first()->getId()." submitted on ".$transformer->transform($patient->getMessage()->first()->getOrderdate()). " by ". $patient->getMessage()->first()->getProvider();
@@ -473,14 +498,16 @@ class CheckController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //always use Auto-generated Accession Number keytype to generate the new key
-        $typeEntity = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $typeEntity = $em->getRepository(AccessionType::class)->findOneByName("Auto-generated Accession Number");
         $keytype = $typeEntity->getId().""; //id of "New York Hospital MRN" in DB
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
         //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-        $entity = $em->getRepository('AppOrderformBundle:Accession')->createElement(
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $entity = $em->getRepository(Accession::class)->createElement(
             $inst,
             null,           //status
             $user,          //provider
@@ -521,12 +548,14 @@ class CheckController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $keytype = $em->getRepository('AppOrderformBundle:Accession')->getCorrectKeytypeId($keytype,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $keytype = $em->getRepository(Accession::class)->getCorrectKeytypeId($keytype,$user);
 
         $extra = array();
         $extra["keytype"] = $keytype;
 
-        $res = $em->getRepository('AppOrderformBundle:Accession')->deleteIfReserved( $institutions, $key,"Accession","accession",$extra );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $res = $em->getRepository(Accession::class)->deleteIfReserved( $institutions, $key,"Accession","accession",$extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -553,7 +582,8 @@ class CheckController extends OrderAbstractController {
 
         $validity = array('valid','reserved');
 
-        $entity = $this->getDoctrine()->getRepository('AppOrderformBundle:Part')->findOnePartByJoinedToField( $institutions, $accession, $keytype, $key, $validity );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $entity = $this->getDoctrine()->getRepository(Part::class)->findOnePartByJoinedToField( $institutions, $accession, $keytype, $key, $validity );
 
         //echo "count=".count($entity)."<br>";
         //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -612,7 +642,8 @@ class CheckController extends OrderAbstractController {
 
             $user = $this->getUser();
             $em = $this->getDoctrine()->getManager();
-            $part = $em->getRepository('AppOrderformBundle:Part')->createPartByAccession($inst,$accession,$keytype,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+            $part = $em->getRepository(Part::class)->createPartByAccession($inst,$accession,$keytype,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             if( $part ) {
@@ -659,7 +690,8 @@ class CheckController extends OrderAbstractController {
         //echo "key=".$key." , accession=".$accession.", keytype=".$keytype."   ";
 
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('AppOrderformBundle:Part')->deleteIfReserved( $institutions, $key,"Part","partname", $extra );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
+        $res = $em->getRepository(Part::class)->deleteIfReserved( $institutions, $key,"Part","partname", $extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -687,7 +719,8 @@ class CheckController extends OrderAbstractController {
         $validity = array('valid','reserved');
 
         if( $accession != "" && $partname != "" ) {
-            $entity = $this->getDoctrine()->getRepository('AppOrderformBundle:Block')->findOneBlockByJoinedToField( $institutions, $accession, $keytype, $partname, $key, $validity );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
+            $entity = $this->getDoctrine()->getRepository(Block::class)->findOneBlockByJoinedToField( $institutions, $accession, $keytype, $partname, $key, $validity );
 
             //echo "count=".count($entity)."<br>";
             //echo "partname=".$entity->getPartname()->first()."<br>";
@@ -745,7 +778,8 @@ class CheckController extends OrderAbstractController {
 
             $user = $this->getUser();
             $em = $this->getDoctrine()->getManager();
-            $block = $em->getRepository('AppOrderformBundle:Block')->createBlockByPartnameAccession($inst,$accession,$keytype,$partname,$user);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
+            $block = $em->getRepository(Block::class)->createBlockByPartnameAccession($inst,$accession,$keytype,$partname,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             $user = $this->getUser();
@@ -795,7 +829,8 @@ class CheckController extends OrderAbstractController {
         $extra["partname"] = $partname;
 
         $em = $this->getDoctrine()->getManager();
-        $res = $em->getRepository('AppOrderformBundle:Block')->deleteIfReserved( $institutions, $key,"Block","blockname", $extra );
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
+        $res = $em->getRepository(Block::class)->deleteIfReserved( $institutions, $key,"Block","blockname", $extra );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -814,10 +849,12 @@ class CheckController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         if( $request->get('_route') == "get-accession-keytypeid" ) {
-            $keytypeEntity = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName($keytype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+            $keytypeEntity = $em->getRepository(AccessionType::class)->findOneByName($keytype);
         } else
         if( $request->get('_route') == "get-patient-keytypeid" ) {
-            $keytypeEntity = $em->getRepository('AppOrderformBundle:MrnType')->findOneByName($keytype);
+        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
+            $keytypeEntity = $em->getRepository(MrnType::class)->findOneByName($keytype);
         } else {
             $keytypeEntity = null;
         }

@@ -18,6 +18,9 @@
 namespace App\FellAppBundle\Form;
 
 
+
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
+
 use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,7 +41,8 @@ class FellAppFellowshipApplicationType extends AbstractType
     {
 
         $builder->add( 'fellowshipsubspecialtytype', EntityType::class, array(
-            'class' => 'AppUserdirectoryBundle:FellowshipSubspecialty',
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            'class' => FellowshipSubspecialty::class,
             'label'=> "Fellowship Subspecialty:",
             'required'=> false,
             //'multiple' => true,

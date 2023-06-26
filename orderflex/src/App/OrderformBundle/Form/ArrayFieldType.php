@@ -17,6 +17,9 @@
 
 namespace App\OrderformBundle\Form;
 
+
+
+use App\UserdirectoryBundle\Entity\SourceSystemList; //process.py script: replaced namespace by ::class: added use line for classname=SourceSystemList
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -134,7 +137,8 @@ class ArrayFieldType extends AbstractType
                                     return $submittedData;
                                 }
                                 if ($submittedData) { //id
-                                    $submittedObject = $this->params['em']->getRepository('AppUserdirectoryBundle:SourceSystemList')->find($submittedData);
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
+                                    $submittedObject = $this->params['em']->getRepository(SourceSystemList::class)->find($submittedData);
                                     return $submittedObject;
                                 }
                                 return null;

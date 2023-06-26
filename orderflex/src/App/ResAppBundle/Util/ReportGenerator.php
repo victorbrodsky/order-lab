@@ -25,6 +25,9 @@
 namespace App\ResAppBundle\Util;
 
 
+
+use App\ResAppBundle\Entity\ResidencyApplication; //process.py script: replaced namespace by ::class: added use line for classname=ResidencyApplication
+
 //use Clegginabox\PDFMerger\PDFMerger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -91,7 +94,8 @@ class ReportGenerator {
         $this->resetQueue($queue);
 
         //remove all waiting processes
-        $query = $this->em->createQuery('DELETE FROM AppResAppBundle:Process p');
+        //$query = $this->em->createQuery('DELETE FROM AppResAppBundle:Process p');
+        $query = $this->em->createQuery('DELETE FROM App\\ResAppBundle\\Entity\\Process p');
         $numDeleted = $query->execute();
 
         //add all reports generation to queue
@@ -109,7 +113,8 @@ class ReportGenerator {
         //$userServiceUtil = $this->container->get('user_service_utility');
         $resappUtil = $this->container->get('resapp_util');
         
-        $repository = $this->em->getRepository('AppResAppBundle:ResidencyApplication');
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $repository = $this->em->getRepository(ResidencyApplication::class);
         $dql = $repository->createQueryBuilder("resapp");
         $dql->select('resapp');
 
@@ -186,7 +191,8 @@ class ReportGenerator {
         $processesDb = null;
         if( $argument != 'overwrite' ) {
             //$argument == asap
-            $processesDb = $this->em->getRepository('AppResAppBundle:Process')->findOneByResappId($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+            $processesDb = $this->em->getRepository(Process::class)->findOneByResappId($id);
         }
 
         //add as a new process only if argument is 'overwrite' or process is not created yet
@@ -200,7 +206,8 @@ class ReportGenerator {
         }
 
         //move all reports to OldReports
-        $resapp = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resapp = $this->em->getRepository(ResidencyApplication::class)->find($id);
         foreach( $resapp->getReports() as $report ) {
             $resapp->removeReport($report);
             $resapp->addOldReport($report);
@@ -238,7 +245,8 @@ class ReportGenerator {
         }
 
         //get processes with asap flag
-        $processes = $this->em->getRepository('AppResAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+        $processes = $this->em->getRepository(Process::class)->findBy(
             array(
                 'startTimestamp' => NULL,
                 'argument' => 'asap'
@@ -248,7 +256,8 @@ class ReportGenerator {
 
         //get processes with NULL timestamp
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('AppResAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+            $processes = $this->em->getRepository(Process::class)->findBy(
                 array('startTimestamp' => NULL),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -256,7 +265,8 @@ class ReportGenerator {
 
         //get all other processes in queue
         if( count($processes) == 0 ) {
-            $processes = $this->em->getRepository('AppResAppBundle:Process')->findBy(
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+            $processes = $this->em->getRepository(Process::class)->findBy(
                 array(),
                 array('queueTimestamp' => 'ASC') //ASC => most recent will be the last
             );
@@ -410,7 +420,8 @@ class ReportGenerator {
 
         $queue = null;
 
-        $queues = $this->em->getRepository('AppResAppBundle:ReportQueue')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ReportQueue'] by [ReportQueue::class]
+        $queues = $this->em->getRepository(ReportQueue::class)->findAll();
         //$logger->notice("Current queue count=".count($queues));
 
         //must be only one
@@ -441,7 +452,8 @@ class ReportGenerator {
         $this->runningGenerationReport = false;
 
         //clear start timestamp for all processes
-        $query = $this->em->createQuery('UPDATE AppResAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        //$query = $this->em->createQuery('UPDATE AppResAppBundle:Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
+        $query = $this->em->createQuery('UPDATE App\\ResAppBundle\\Entity\\Process p SET p.startTimestamp = NULL WHERE p.startTimestamp IS NOT NULL');
         $numUpdated = $query->execute();
 
         return $numUpdated;
@@ -466,7 +478,8 @@ class ReportGenerator {
 //        return $count;
 //    }
     public function clearProcesses() {
-        $processes = $this->em->getRepository('AppResAppBundle:Process')->findAll();
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:Process'] by [Process::class]
+        $processes = $this->em->getRepository(Process::class)->findAll();
 
         $count = 0;
         foreach($processes as $process) {
@@ -499,7 +512,8 @@ class ReportGenerator {
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
-        $entity = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $entity = $this->em->getRepository(ResidencyApplication::class)->find($id);
         if( !$entity ) {
             throw new EntityNotFoundException('Unable to find Residency Application by id='.$id);
         }
@@ -1796,7 +1810,8 @@ class ReportGenerator {
     //test method for console command
     public function testCmd() {
 
-        $resapp = $this->em->getRepository('AppResAppBundle:ResidencyApplication')->find(6);
+        //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
+        $resapp = $this->em->getRepository(ResidencyApplication::class)->find(6);
         $avatar = $resapp->getAvatars()->last();
 
         //$serverPath = $avatar->getFullServerPath();

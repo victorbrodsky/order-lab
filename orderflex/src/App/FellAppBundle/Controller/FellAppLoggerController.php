@@ -17,6 +17,9 @@
 
 namespace App\FellAppBundle\Controller;
 
+
+
+use App\FellAppBundle\Entity\FellowshipApplication; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipApplication
 use App\UserdirectoryBundle\Entity\EventObjectTypeList;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\UserdirectoryBundle\Controller\LoggerController;
@@ -89,7 +92,8 @@ class FellAppLoggerController extends LoggerController
 
         $em = $this->getDoctrine()->getManager();
 
-        $fellApp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellApp = $em->getRepository(FellowshipApplication::class)->find($id);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
@@ -166,7 +170,8 @@ class FellAppLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
 
 
-        $fellApp = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($objectId);
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+        $fellApp = $em->getRepository(FellowshipApplication::class)->find($objectId);
         if( !$fellApp ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$objectId);
         }
