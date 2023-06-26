@@ -113,13 +113,13 @@ def process_single_file( filepath, startstr, endstr ):
             bundlefiles = getListOfFiles(bundlefoldername_path)
             print("!!! "+bundlefoldername_path+": bundlefiles=", len(list(bundlefiles)))
             foundcount = 0
-            foundclass = None
+            #foundclass = None
             classpath = None
             for bundlefile in bundlefiles:
                 #print("bundlefile="+bundlefile)
                 if os.path.basename(bundlefile) == classname+".php":
-                    print("Found "+bundlefile)
-                    foundclass = bundlefile
+                    print("Found to add use: "+bundlefile)
+                    #foundclass = bundlefile
                     classpath = bundlefile
                     foundcount = foundcount + 1
 
@@ -129,10 +129,9 @@ def process_single_file( filepath, startstr, endstr ):
                 bundledirname = os.path.dirname(classpath)
                 subfolder = os.path.basename(bundledirname)
                 useline = r'use App\{}\{}\{};'.format(bundlefoldername,subfolder,classname)  # +  r"\" + bundlefoldername + r"\" + subfolder + r"\" + classname
-                useline = useline + " //Added use line for replacing namespace by ::class"
-                print("useline="+useline)
-
                 if useline not in content:
+                    useline = useline + " //process.py script: replaced namespace by ::class: added use line for classname=" + classname
+                    #print("useline=" + useline)
                     print("Added use: " + useline + " in ", filepath)
                     #add after namespace App\DeidentifierBundle\Controller;
                     #print(data)
@@ -184,7 +183,7 @@ def process_line( l_no, origline, filepath, startstr, endstr ):
                 if searchstr in origline:
                     print('Replaced: bundle=', bundle, ', classname=', classname,"=> searchstr=" + searchstr + " replacedstr=" + replacedstr)
                     linemodified = origline.replace(searchstr, replacedstr)
-                    linemodified = "    //Replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
+                    linemodified = "    //process.py script: replaced namespace by ::class: [" + searchstr + "] by [" + replacedstr + "]" + "\n" + linemodified
                     return linemodified, bundle, classname
                 else:
                     print("Skipped in filepath=" + filepath + "\n" + "line=" + line + "\n" + "Skipped: searchstr [" + searchstr + "] is not in the line" + "\n")

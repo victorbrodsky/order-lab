@@ -29,6 +29,9 @@
 
 namespace App\DeidentifierBundle\Controller;
 
+
+
+use App\UserdirectoryBundle\Entity\Institution; //Added use line for replacing namespace by ::class: classname=Institution
 use App\DeidentifierBundle\Form\DeidentifierSearchType;
 use App\OrderformBundle\Entity\Accession;
 use App\OrderformBundle\Entity\AccessionAccession;
@@ -65,7 +68,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessionTypes = $em->getRepository(AccessionType::class)->findBy( array('type'=>array('default','user-added')) );
 
 
         $accessionTypeStr = trim((string)$accessionTypeStr);
@@ -247,7 +251,8 @@ class DefaultController extends OrderAbstractController
 
         //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
-        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionType);
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionType);
 
         //Event Log
         $event = "Deidentifier Search with Accession Type " . $accessionTypeObj ." and  Accession Number " . $accessionNumber;
@@ -275,7 +280,8 @@ class DefaultController extends OrderAbstractController
         //$institutions[] = $inst->getId();
 
         //findOneByIdJoinedToField already include collaboration based on the provided permitted $institutions
-        $accessions = $em->getRepository('AppOrderformBundle:Accession')->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
+    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accessions = $em->getRepository(Accession::class)->findOneByIdJoinedToField($institutions,$accessionNumber,"Accession","accession",$validity,$single,$extra);
 
         return $accessions;
     }
@@ -314,7 +320,8 @@ class DefaultController extends OrderAbstractController
         //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
 
-        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionTypeId);
 
         if( !$accessionNumber ) {
             $this->addFlash(
@@ -406,8 +413,10 @@ class DefaultController extends OrderAbstractController
         //$accessionTypes = $em->getRepository('AppOrderformBundle:AccessionType')->findBy( array('type'=>array('default','user-added')) );
 
         //Event Log
-        $accessionTypeObj = $em->getRepository('AppOrderformBundle:AccessionType')->find($accessionTypeId);
-        $institutionObj = $em->getRepository('AppUserdirectoryBundle:Institution')->find($institution);
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $accessionTypeObj = $em->getRepository(AccessionType::class)->find($accessionTypeId);
+    //Replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $institutionObj = $em->getRepository(Institution::class)->find($institution);
         //$event = "Deidentifier Generate with Accession Type " . $accessionTypeObj .",  Accession Number " . $accessionNumber . " and Institution " . $institutionObj;
         $event = "Deidentifier ID ".$deidentifier." generated for ".$accessionTypeObj." ".$accessionNumber." (Institution: ".$institutionObj.")";
         $userSecUtil = $this->container->get('user_security_utility');
@@ -454,7 +463,8 @@ class DefaultController extends OrderAbstractController
 
         //create a new accession object
         //$status, $provider, $className, $fieldName, $parent = null, $fieldValue = null, $extra = null, $withfields = true, $flush=true
-        $accession = $em->getRepository('AppOrderformBundle:Accession')->createElement(
+    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $em->getRepository(Accession::class)->createElement(
             $institution,       //institution
             "valid",            //status. if null => STATUS_RESERVED
             $user,              //provider
@@ -608,7 +618,8 @@ class DefaultController extends OrderAbstractController
 
         $deidentifier = null;
 
-        $deidentifierType = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $deidentifierType = $em->getRepository(AccessionType::class)->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
         }
@@ -680,7 +691,8 @@ class DefaultController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $accession = $em->getRepository('AppOrderformBundle:Accession')->find($accessionId);
+    //Replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
+        $accession = $em->getRepository(Accession::class)->find($accessionId);
 
         if( !$accession ) {
             throw $this->createNotFoundException('Accession is not found by ID ' . $accessionId);
@@ -697,7 +709,8 @@ class DefaultController extends OrderAbstractController
 
         $accessionAccession = new AccessionAccession($status,$user,$source);
 
-        $deidentifierType = $em->getRepository('AppOrderformBundle:AccessionType')->findOneByName("Deidentifier ID");
+    //Replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
+        $deidentifierType = $em->getRepository(AccessionType::class)->findOneByName("Deidentifier ID");
         if( !$deidentifierType ) {
             throw $this->createNotFoundException('Unable to find Deidentifier ID AccessionType entity.');
         }
