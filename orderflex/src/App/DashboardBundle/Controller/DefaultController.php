@@ -285,7 +285,9 @@ class DefaultController extends OrderAbstractController
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");

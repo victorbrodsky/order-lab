@@ -137,7 +137,9 @@ class EducationalType extends AbstractType
                     'prefix' => "App",
                     'className' => "CourseTitleTree",
                     'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "CourseGroupType"
+                    'organizationalGroupType' => "CourseGroupType",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\CourseTitleTree",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
                 if( $title ) {
                     $educationalTitle = $title->getCourseTitle();

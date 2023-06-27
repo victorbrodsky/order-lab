@@ -137,7 +137,9 @@ class ResearchType extends AbstractType
                     'prefix' => "App",
                     'className' => "ProjectTitleTree",
                     'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "ResearchGroupType"
+                    'organizationalGroupType' => "ResearchGroupType",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\ProjectTitleTree",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
                 if( $title ) {
                     $projectTitle = $title->getProjectTitle();

@@ -650,7 +650,9 @@ class ProjectType extends AbstractType
                     'prefix' => "App",
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "MessageTypeClassifiers"
+                    'organizationalGroupType' => "MessageTypeClassifiers",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\MessageCategory",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();

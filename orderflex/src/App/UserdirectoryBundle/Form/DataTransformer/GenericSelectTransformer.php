@@ -35,6 +35,7 @@ class GenericSelectTransformer implements DataTransformerInterface
     private $user;
     protected $className;
     protected $bundleName;
+    protected $fullClassName;
     protected $params;
     
     public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
@@ -49,6 +50,8 @@ class GenericSelectTransformer implements DataTransformerInterface
         } else {
             $this->bundleName = "UserdirectoryBundle";
         }
+
+        $this->fullClassName = "App\\".$this->bundleName."\\Entity\\".$this->className;
     }
 
     /**
@@ -65,7 +68,8 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by name=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
         else {
@@ -99,7 +103,8 @@ class GenericSelectTransformer implements DataTransformerInterface
 
         if( is_numeric ( $text ) ) {    //number => most probably it is id
             //echo 'text is id <br>';
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($text);
 
             if( $entity ) {
                 //return $entity->getBlockPrefix();
@@ -116,16 +121,19 @@ class GenericSelectTransformer implements DataTransformerInterface
 
 
     public function findEntityByString($string) {
-        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+        //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+        $entity = $this->em->getRepository($this->fullClassName)->findOneByName($string."");
 
         if( null === $entity ) {
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            $entity = $this->em->getRepository($this->fullClassName)->findOneByAbbreviation($string."");
         }
 
         return $entity;
     }
     public function findEntityById($id) {
-        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
+        //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
+        $entity = $this->em->getRepository($this->fullClassName)->find($id);
         return $entity;
     }
 }

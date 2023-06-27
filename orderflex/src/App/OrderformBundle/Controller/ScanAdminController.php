@@ -1286,7 +1286,9 @@ class ScanAdminController extends AdminController
                 $mapper = array(
                     'prefix' => "App",
                     'className' => "MessageCategory",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\MessageCategory",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
                 $messageCategory = $em->getRepository(MessageCategory::class)->findByChildnameAndParent($name,$parentCategory,$mapper);
@@ -2514,7 +2516,9 @@ class ScanAdminController extends AdminController
                 $mapper = array(
                     'prefix' => "App",
                     'className' => "PatientListHierarchy",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\PatientListHierarchy",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
                 $item = $em->getRepository(PatientListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
@@ -2626,7 +2630,9 @@ class ScanAdminController extends AdminController
                 $mapper = array(
                     'prefix' => "App",
                     'className' => "AccessionListHierarchy",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\AccessionListHierarchy",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionListHierarchy'] by [AccessionListHierarchy::class]
                 $item = $em->getRepository(AccessionListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
@@ -2747,7 +2753,9 @@ class ScanAdminController extends AdminController
                 $mapper = array(
                     'prefix' => "App",
                     'className' => "PatientListHierarchy",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\PatientListHierarchy",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:PatientListHierarchy'] by [PatientListHierarchy::class]
                 $item = $em->getRepository(PatientListHierarchy::class)->findByChildnameAndParent($name,$parentItem,$mapper);
@@ -2932,6 +2940,8 @@ class ScanAdminController extends AdminController
             'bundlePreffix' => $bundlePreffix,
             'bundleName' => $bundleName,
             'className' => $className,
+            'fullClassName' => $bundlePreffix."\\".$bundleName."\\Entity\\".$className,
+            'entityNamespace' => $bundlePreffix."\\".$bundleName."\\Entity",
             'title' => $title,
             'nodeshowpath' => $nodeshowpath
         );

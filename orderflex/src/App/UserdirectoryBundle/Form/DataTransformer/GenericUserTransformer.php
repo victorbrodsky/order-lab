@@ -31,6 +31,7 @@ class GenericUserTransformer implements DataTransformerInterface
     protected $user;
     protected $bundleName;
     protected $className;
+    protected $fullClassName;
     protected $params;
 
 
@@ -50,6 +51,8 @@ class GenericUserTransformer implements DataTransformerInterface
         if( !$this->className ) {
             throw $this->createNotFoundException('className is null');
         }
+
+        $this->fullClassName = "App\\".$this->bundleName."\\Entity\\".$this->className;
     }
 
     public function getThisEm() {
@@ -139,7 +142,8 @@ class GenericUserTransformer implements DataTransformerInterface
             //echo "reverseTransform: return count:".count($newListArr)."<br>";
             return $newListArr;
         } else {
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($text);
             return $entity;
         }
     }
@@ -150,7 +154,8 @@ class GenericUserTransformer implements DataTransformerInterface
 
             //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($entity);
 
             if( null === $entity ) {
 

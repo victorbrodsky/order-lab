@@ -124,6 +124,8 @@ class ResearchLabType extends AbstractType
             $params['standalone'] = true;
             $mapper['className'] = "ResearchLab";
             $mapper['bundleName'] = "AppUserdirectoryBundle";
+            $mapper['fullClassName'] = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+            $mapper['entityNamespace'] = "App\\".$mapper['bundleName']."\\Entity";
 
             //new ListType($params, $mapper)
             $builder->add('list', ListType::class, array(

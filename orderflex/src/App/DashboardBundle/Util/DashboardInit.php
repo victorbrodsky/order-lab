@@ -1123,7 +1123,9 @@ class DashboardInit
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $wcmc = $this->em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
@@ -1253,7 +1255,9 @@ class DashboardInit
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'DashboardBundle',
-            'className' => 'TopicList'
+            'className' => 'TopicList',
+            'fullClassName' => "App\\DashboardBundle\\Entity\\TopicList",
+            'entityNamespace' => "App\\DashboardBundle\\Entity"
         );
         //process.py script: replaced namespace by ::class: ['AppDashboardBundle:TopicList'] by [TopicList::class]
         $root = $this->em->getRepository(TopicList::class)->findOneByName("All Charts");
@@ -1845,7 +1849,9 @@ class DashboardInit
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");

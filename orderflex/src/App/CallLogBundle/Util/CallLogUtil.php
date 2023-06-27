@@ -2172,7 +2172,9 @@ class CallLogUtil
             $mapper = array(
                 'prefix' => "App",
                 'className' => "MessageCategory",
-                'bundleName' => "OrderformBundle"
+                'bundleName' => "OrderformBundle",
+                'fullClassName' => "App\\OrderformBundle\\Entity\\MessageCategory",
+                'entityNamespace' => "App\\OrderformBundle\\Entity"
             );
             //$messageCategoryEntity = $em->getRepository('AppOrderformBundle:MessageCategory')->findOneByName($messageCategory);
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]

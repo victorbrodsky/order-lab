@@ -2751,7 +2751,9 @@ class AdminController extends OrderAbstractController
             $mapper = array(
                 'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution'
+                'className' => 'Institution',
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $autoAssignInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
@@ -4854,7 +4856,9 @@ class AdminController extends OrderAbstractController
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
 
         //AutoAssignInstitution
@@ -5563,7 +5567,9 @@ class AdminController extends OrderAbstractController
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $pathologyInstitution = $em->getRepository(Institution::class)->findByChildnameAndParent(
@@ -8289,7 +8295,9 @@ class AdminController extends OrderAbstractController
             $mapper = array(
                 'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution'
+                'className' => 'Institution',
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
@@ -8334,7 +8342,9 @@ class AdminController extends OrderAbstractController
             $mapper = array(
                 'prefix' => 'App',
                 'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution'
+                'className' => 'Institution',
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
@@ -8991,7 +9001,9 @@ class AdminController extends OrderAbstractController
             'bundleName' => $bundleName,
             'className' => $className,
             'title' => $title,
-            'nodeshowpath' => $nodeshowpath
+            'nodeshowpath' => $nodeshowpath,
+            'fullClassName' => $bundlePreffix."\\".$bundleName."\\Entity\\".$className,
+            'entityNamespace' => $bundlePreffix."\\".$bundleName."\\Entity"
         );
 
         return $mapper;
@@ -11335,7 +11347,9 @@ class AdminController extends OrderAbstractController
         $mapper = array(
             'prefix' => 'App',
             'bundleName' => 'DashboardBundle',
-            'className' => 'TopicList'
+            'className' => 'TopicList',
+            'fullClassName' => "App\\DashboardBundle\\Entity\\TopicList",
+            'entityNamespace' => "App\\DashboardBundle\\Entity"
         );
 
         //2) create under root

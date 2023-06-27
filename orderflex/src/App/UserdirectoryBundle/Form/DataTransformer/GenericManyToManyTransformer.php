@@ -31,6 +31,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     protected $user;
     protected $bundleName;
     protected $className;
+    protected $fullClassName;
     protected $params;
 
 
@@ -50,6 +51,8 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         if( !$this->className ) {
             throw $this->createNotFoundException('className is null');
         }
+
+        $this->fullClassName = "App\\".$this->bundleName."\\Entity\\".$this->className;
     }
 
     public function getThisEm() {
@@ -135,7 +138,8 @@ class GenericManyToManyTransformer implements DataTransformerInterface
 
             //echo "principal=".$username." => numeric => most probably it is id<br>";
 
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($entity);
 
             if( null === $entity ) {
 
@@ -181,8 +185,9 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         }
 
         //check if it is already exists in db
-        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($name."");
-        
+        //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($name."");
+        $entity = $this->em->getRepository('App\\'.$this->bundleName.'\\Entity\\'.$this->className)->findOneByName($name."");
+
         if( null === $entity ) {
 
             //echo "create new with name=".$name."<br>";
@@ -247,7 +252,9 @@ class GenericManyToManyTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
+        //$query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
+        $fullClassName = "App\\".$this->bundleName."\\Entity\\".$className;
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$fullClassName.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 

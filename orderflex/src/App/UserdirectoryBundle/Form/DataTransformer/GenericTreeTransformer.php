@@ -48,6 +48,7 @@ class GenericTreeTransformer implements DataTransformerInterface
     protected $user;
     protected $className;
     protected $bundleName;
+    protected $fullClassName;
     protected $params;
     
     public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
@@ -66,6 +67,8 @@ class GenericTreeTransformer implements DataTransformerInterface
         if( !$this->className ) {
             throw new \Exception('className is null');
         }
+
+        $this->fullClassName = "App\\".$this->bundleName."\\Entity\\".$this->className;
     }
 
     public function getThisEm() {
@@ -93,7 +96,8 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         if( is_int($entity) ) {
             //echo "transform by id=".$entity." !!!<br>";
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($entity);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($entity);
             //echo "findOneById entity=".$entity."<br>";
         }
 //        else {
@@ -137,7 +141,8 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             //echo 'text is id <br>';
 
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneById($text);
+            $entity = $this->em->getRepository($this->fullClassName)->findOneById($text);
 
             if( null === $entity ) {
 
@@ -262,7 +267,9 @@ class GenericTreeTransformer implements DataTransformerInterface
         $className = $fullClassName->getShortName();
 
         //get max orderinlist
-        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
+        //$query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM App'.$this->bundleName.':'.$className.' c');
+        $classPathName = "App\\".$this->bundleName."\\Entity\\".$className;
+        $query = $this->em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$classPathName.' c');
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 
@@ -272,7 +279,7 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "OrganizationalGroupType",
-                    'bundleName' => "UserdirectoryBundle"
+                    'bundleName' => "UserdirectoryBundle",
                 );
             }
 
@@ -280,7 +287,7 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "CommentGroupType",
-                    'bundleName' => "UserdirectoryBundle"
+                    'bundleName' => "UserdirectoryBundle",
                 );
             }
 
@@ -288,7 +295,7 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "MessageTypeClassifiers",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
                 );
             }
 
@@ -296,7 +303,7 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "PatientListHierarchyGroupType",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
                 );
             }
 
@@ -304,7 +311,7 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => "AccessionListHierarchyGroupType",
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
                 );
             }
 
@@ -312,9 +319,11 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $mapper = array(
                     'prefix' => "App",
                     'organizationalGroupType' => NULL,
-                    'bundleName' => "OrderformBundle"
+                    'bundleName' => "OrderformBundle",
                 );
             }
+
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
 
             //$organizationalGroupTypes = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
             $organizationalGroupTypes = $this->em->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
@@ -353,21 +362,25 @@ class GenericTreeTransformer implements DataTransformerInterface
 
 
     public function findEntityByString($string) {
+
         if( $this->bundleName == "UserdirectoryBundle" && $this->className == "User" ) {
             //User does not have field "name"
             $entity = null;
         } else {
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByName($string."");
+            $entity = $this->em->getRepository($this->fullClassName)->findOneByName($string."");
         }
 
         if( null === $entity ) {
-            $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->findOneByAbbreviation($string."");
+            $entity = $this->em->getRepository($this->fullClassName)->findOneByAbbreviation($string."");
         }
 
         return $entity;
     }
     public function findEntityById($id) {
-        $entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
+        //$entity = $this->em->getRepository('App'.$this->bundleName.':'.$this->className)->find($id);
+        $entity = $this->em->getRepository($this->fullClassName)->find($id);
         return $entity;
     }
 }

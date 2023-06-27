@@ -321,7 +321,9 @@ class CalllogSiteParameterType extends AbstractType
                     'prefix' => "App",
                     'className' => "MessageCategory",
                     'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "MessageTypeClassifiers"
+                    'organizationalGroupType' => "MessageTypeClassifiers",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\MessageCategory",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();
@@ -397,7 +399,9 @@ class CalllogSiteParameterType extends AbstractType
                     'prefix' => "App",
                     'className' => "PatientListHierarchy",
                     'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "MessageTypeClassifiers"
+                    'organizationalGroupType' => "MessageTypeClassifiers",
+                    'fullClassName' => "App\\OrderformBundle\\Entity\\PatientListHierarchy",
+                    'entityNamespace' => "App\\OrderformBundle\\Entity"
                 );
                 if ($message) {
                     $messageCategory = $message->getMessageCategory();

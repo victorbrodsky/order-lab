@@ -543,6 +543,7 @@ class TransResRequestUtil
         $mapper = array(
             "entityName" => "TransResRequest",
             "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
+            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\TransResRequest",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$categoryType->getId(),$mapper,"exact");
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
@@ -594,6 +595,7 @@ class TransResRequestUtil
         $mapper = array(
             "entityName" => "TransResRequest",
             "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
+            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\TransResRequest",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$commentStr,$mapper,"like");
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
@@ -1362,6 +1364,7 @@ class TransResRequestUtil
         $mapper = array(
             "entityName" => "Project",
             "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
+            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\TransResRequest",
             "entityId" => $project->getId(),
         );
         $receivingValue = null;

@@ -2602,15 +2602,16 @@ class UserSecurityUtil {
             $className = $class->getShortName();          //ObjectTypeText
             $classNamespace = $class->getNamespaceName(); //App\UserdirectoryBundle\Entity
 
-            //format to: "AppUserdirectoryBundle:ObjectTypeText"
-            $classNamespaceArr = explode("\\",$classNamespace);
-            if( count($classNamespaceArr) > 2 ) {
-                $classNamespaceShort = $classNamespaceArr[0] . $classNamespaceArr[1];
-                $classFullName = $classNamespaceShort . ":" . $className;
-            } else {
-                throw new \Exception( 'Corresponding value list namespace is invalid: '.$classNamespace );
-            }
+//            //format to: "AppUserdirectoryBundle:ObjectTypeText"
+//            $classNamespaceArr = explode("\\",$classNamespace);
+//            if( count($classNamespaceArr) > 2 ) {
+//                $classNamespaceShort = $classNamespaceArr[0] . $classNamespaceArr[1];
+//                $classFullName = $classNamespaceShort . ":" . $className;
+//            } else {
+//                throw new \Exception( 'Corresponding value list namespace is invalid: '.$classNamespace );
+//            }
 
+            $classFullName = $classNamespace."\\".$className;
             $count = $this->getMaxField($classFullName);
             //echo "count=".$count."<br>";
         }
@@ -2704,7 +2705,8 @@ class UserSecurityUtil {
         //echo "entityId=".$object->getId()."<br>";
         //print_r($mapper);
 
-        $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->em->getRepository($mapper['prefix']."\\".$mapper['bundleName'].'\\Entity\\'.$mapper['className']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId");

@@ -447,7 +447,8 @@ class FosCommentListenerUtil {
         }
 
         if( $entitySitename == "transres" ) {
-            $bundleName = 'AppTranslationalResearchBundle';
+            //$bundleName = 'AppTranslationalResearchBundle';
+            $bundleName = 'TranslationalResearchBundle';
         }
 
         if( $entityName == "Request" ) {
@@ -456,7 +457,8 @@ class FosCommentListenerUtil {
         //exit("Find entity by ID=".$entityId."; namespace=".$bundleName.':'.$entityName);
 
         if( $bundleName && $entityId ) {
-            $entity = $this->em->getRepository($bundleName.':'.$entityName)->find($entityId);
+            //$entity = $this->em->getRepository($bundleName.':'.$entityName)->find($entityId);
+            $entity = $this->em->getRepository("App\\".$bundleName.'\\Entity\\'.$entityName)->find($entityId);
         }
 
 //        if( !$entity ) {

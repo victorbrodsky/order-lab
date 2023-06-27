@@ -566,7 +566,9 @@ class TransResFormNodeUtil
         $mapper = array(
             'prefix' => "App",
             'className' => "FormNode",
-            'bundleName' => "UserdirectoryBundle"
+            'bundleName' => "UserdirectoryBundle",
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\FormNode",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
 
         //1) get FormNode by fieldName

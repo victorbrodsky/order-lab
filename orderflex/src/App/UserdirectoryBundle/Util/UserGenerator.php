@@ -1013,9 +1013,12 @@ class UserGenerator {
         $mapper = array(
             'prefix' => "App",
             'className' => "Institution",
-            'bundleName' => "UserdirectoryBundle"
+            'bundleName' => "UserdirectoryBundle",
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
-        $treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->em->getRepository($mapper['fullClassName']);
 
         return $treeRepository->findEntityByInstitutionDepartmentDivisionService($institution,$department,$division,$service,$mapper);
     }
@@ -2327,7 +2330,14 @@ class UserGenerator {
         $DivisionObj = null;
         $ServiceObj = null;
 
-        $mapper = array('prefix'=>'App','bundleName'=>'UserdirectoryBundle','className'=>'Institution','organizationalGroupType'=>'OrganizationalGroupType');
+        $mapper = array(
+            'prefix'=>'App',
+            'bundleName'=>'UserdirectoryBundle',
+            'className'=>'Institution',
+            'organizationalGroupType'=>'OrganizationalGroupType',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
 
         $params = array('type'=>'Medical');
 

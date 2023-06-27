@@ -1390,7 +1390,8 @@ class ListController extends OrderAbstractController
         if( $pid ) {
             //echo "pid=".$pid."<br>";
             $parentNMapper = $this->getParentName($mapper['className']);
-            $parent = $em->getRepository($parentNMapper['bundleName'].':'.$parentNMapper['className'])->find($pid);
+            //$parent = $em->getRepository($parentNMapper['bundleName'].':'.$parentNMapper['className'])->find($pid);
+            $parent = $em->getRepository($parentNMapper['fullClassName'])->find($pid);
             $entity->setParent($parent);
         }
 

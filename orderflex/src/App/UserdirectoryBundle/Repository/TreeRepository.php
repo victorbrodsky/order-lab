@@ -338,6 +338,16 @@ class TreeRepository extends NestedTreeRepository {
 
         $foundChildEntity = null;
 
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -375,6 +385,16 @@ class TreeRepository extends NestedTreeRepository {
         }
         //echo "search nameStr=".$nameStr."<br>";
 
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         $foundEntity = null;
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
@@ -410,6 +430,16 @@ class TreeRepository extends NestedTreeRepository {
                 'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
                 'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
+        }
+
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
@@ -454,6 +484,16 @@ class TreeRepository extends NestedTreeRepository {
         if( !$childName ) {
             //exit('Logical Error: category and/or parent is null');
             throw new \Exception('Logical Error: child name is null');
+        }
+
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
         $foundChildEntity = null;
@@ -514,7 +554,9 @@ class TreeRepository extends NestedTreeRepository {
             $mapper = array(
                 'prefix' => "App",
                 'className' => "Institution",
-                'bundleName' => "UserdirectoryBundle"
+                'bundleName' => "UserdirectoryBundle",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         }
 
@@ -781,6 +823,16 @@ class TreeRepository extends NestedTreeRepository {
             );
         }
 
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //check if types exists (types exists only for institution)
         $isInstitution = false;
         if( $mapper['className'] == "Institution" ) {
@@ -904,6 +956,16 @@ class TreeRepository extends NestedTreeRepository {
             );
         }
 
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
@@ -1014,6 +1076,16 @@ class TreeRepository extends NestedTreeRepository {
             return null;
         }
 
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //$organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
         $organizationalGroupTypes = $this->_em->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
             array(
@@ -1035,6 +1107,17 @@ class TreeRepository extends NestedTreeRepository {
 
 
     public function removeTreeNodeAndAllChildrenById( $id, $mapper, $count=0 ) {
+
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $treeNode = $treeRepository->find($id);
@@ -1065,6 +1148,17 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     public function setLevelFromParentRecursively($mapper,$count=0) {
+
+        if( !isset($mapper['prefix']) ) {
+            $mapper['prefix'] = "App";
+        }
+        if( !isset($mapper['fullClassName']) ) {
+            $mapper['fullClassName'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        }
+        if( !isset($mapper['entityNamespace']) ) {
+            $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
+        }
+
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
 

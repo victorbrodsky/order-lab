@@ -2370,14 +2370,15 @@ class FormNodeUtil
 
         if( $entityNamespace && $entityName ) {
 
-            $entityNamespaceArr = explode("\\",$entityNamespace);
-            $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
+            //$entityNamespaceArr = explode("\\",$entityNamespace);
+            //$bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
 
             $dropdownObjectClassname = $entityNamespace."\\".$entityName;
             $dropdownObject = new $dropdownObjectClassname();
 
             $parameters = array();
-            $query = $em->createQueryBuilder()->from($bundleName . ':' . $entityName, 'list')
+            //$query = $em->createQueryBuilder()->from($bundleName . ':' . $entityName, 'list')
+            $query = $em->createQueryBuilder()->from($dropdownObjectClassname, 'list')
                 //->select("list.id as id, list.name as text")
                 ->select("list");
 
@@ -2451,9 +2452,10 @@ class FormNodeUtil
         $entityId = $formNode->getEntityId();
 
         if( $entityNamespace && $entityName && $entityId ) {
-            $entityNamespaceArr = explode("\\", $entityNamespace);
-            $bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
-            $defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
+            //$entityNamespaceArr = explode("\\", $entityNamespace);
+            //$bundleName = $entityNamespaceArr[0] . $entityNamespaceArr[1];
+            //$defaultValueEntity = $em->getRepository($bundleName.':'.$entityName)->find($entityId);
+            $defaultValueEntity = $em->getRepository($entityNamespace.'\\'.$entityName)->find($entityId);
 
             if( $defaultValueEntity ) {
                 return $defaultValueEntity->getName() . "";
@@ -2476,9 +2478,10 @@ class FormNodeUtil
             return null;
         }
 
-        $receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
-        $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
-        $repoNameStr = $bundleName.':'.$receivedValueEntityName;
+        //$receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
+        //$bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
+        //$repoNameStr = $bundleName.':'.$receivedValueEntityName;
+        $repoNameStr = $receivedValueEntityNamespace.'\\'.$receivedValueEntityName;
         //echo "repoNameStr=".$repoNameStr."<br>";
         //exit('111');
         $repo = $this->em->getRepository($repoNameStr);

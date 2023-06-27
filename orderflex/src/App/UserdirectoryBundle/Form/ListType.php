@@ -156,7 +156,8 @@ class ListType extends AbstractType
 
 
         $builder->add('synonyms', EntityType::class, array(
-            'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            //'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            'class' => "App\\".$this->mapper['bundleName'].'\\Entity\\'.$this->mapper['className'],
             'label' => 'Synonyms:',
             //'disabled' => true,
             'required' => false,
@@ -171,7 +172,8 @@ class ListType extends AbstractType
         ));
 
         $builder->add('original', EntityType::class, array(
-            'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            //'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
+            'class' => "App\\".$this->mapper['bundleName'].'\\Entity\\'.$this->mapper['className'],
             'label'=>'Original (Canonical) Synonymous Term:',
             'required' => false,
             'multiple' => false,

@@ -99,6 +99,7 @@ class UtilController extends OrderAbstractController {
         if( $className ) {
 
             $em = $this->getDoctrine()->getManager();
+            $fullClassName = "App\\".$bundleName."\\Enity\\".$className;
 
             switch( $className ) {
 
@@ -110,7 +111,10 @@ class UtilController extends OrderAbstractController {
                         $optionArr = array('default','user-added');
                     }
 
-                    $entities = $em->getRepository('App'.$bundleName.':'.$className)->findBy(
+                    //$entities = $em->getRepository('App'.$bundleName.':'.$className)->findBy(
+                    //    array('type' => $optionArr)
+                    //);
+                    $entities = $em->getRepository($fullClassName)->findBy(
                         array('type' => $optionArr)
                     );
                     foreach( $entities as $entity ) {
@@ -121,7 +125,9 @@ class UtilController extends OrderAbstractController {
 
 
                 default:
-                    $query = $em->createQueryBuilder()->from('App'.$bundleName.':'.$className, 'list')
+                    $query =
+                        //$em->createQueryBuilder()->from('App'.$bundleName.':'.$className, 'list')
+                        $em->createQueryBuilder()->from($fullClassName, 'list')
                         ->select("list.id as id, list.name as text")
                         ->orderBy("list.orderinlist","ASC");
 
@@ -173,7 +179,8 @@ class UtilController extends OrderAbstractController {
         if( $className && is_numeric($pid) ) {
             //echo "className=".$className."<br>";
             $query = $em->createQueryBuilder()
-                ->from('App'.$bundleName.':'.$className, 'list')
+                //->from('App'.$bundleName.':'.$className, 'list')
+                ->from('App\\'.$bundleName.'\\Entity\\'.$className, 'list')
                 ->innerJoin("list.parent", "parent")
                 ->select("list.id as id, list.name as text, parent.id as parentid")
                 //->select("list.name as id, list.name as text")
@@ -189,7 +196,8 @@ class UtilController extends OrderAbstractController {
 
         //add current element by id
         if( $id ) {
-            $entity = $this->getDoctrine()->getRepository('App'.$bundleName.':'.$className)->findOneById($id);
+            //$entity = $this->getDoctrine()->getRepository('App'.$bundleName.':'.$className)->findOneById($id);
+            $entity = $this->getDoctrine()->getRepository("App\\".$bundleName."\\Entity\\".$className)->findOneById($id);
             if( $entity ) {
                 if( array_key_exists($entity->getId(), $output) === false ) {
                     $element = array('id'=>$entity->getId(), 'text'=>$entity->getName()."");

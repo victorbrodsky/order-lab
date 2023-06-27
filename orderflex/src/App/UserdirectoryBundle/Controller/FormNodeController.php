@@ -87,14 +87,15 @@ class FormNodeController extends OrderAbstractController {
 
         //App\UserdirectoryBundle\Entity:ObjectTypeText
         //"AppUserdirectoryBundle:ObjectTypeText"
-        $holderNamespaceArr = explode("\\",$holderNamespace);
-        if( count($holderNamespaceArr) > 2 ) {
-            $holderNamespaceShort = $holderNamespaceArr[0] . $holderNamespaceArr[1];
-            $holderFullName = $holderNamespaceShort . ":" . $holderName;
-        } else {
-            throw new \Exception( 'Corresponding value list namespace is invalid: '.$holderNamespace );
-        }
+//        $holderNamespaceArr = explode("\\",$holderNamespace);
+//        if( count($holderNamespaceArr) > 2 ) {
+//            $holderNamespaceShort = $holderNamespaceArr[0] . $holderNamespaceArr[1];
+//            $holderFullName = $holderNamespaceShort . ":" . $holderName;
+//        } else {
+//            throw new \Exception( 'Corresponding value list namespace is invalid: '.$holderNamespace );
+//        }
 
+        $holderFullName = $holderNamespace . "\\" . $holderName;
         $formNodeHolderEntity = $em->getRepository($holderFullName)->find($holderId);
         if( !$formNodeHolderEntity ) {
             throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
@@ -557,7 +558,9 @@ class FormNodeController extends OrderAbstractController {
         $mapper = array(
             'prefix' => "App",
             'className' => "FormNode",
-            'bundleName' => "UserdirectoryBundle"
+            'bundleName' => "UserdirectoryBundle",
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\FormNode",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]

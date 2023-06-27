@@ -194,7 +194,9 @@ class BaseTitleType extends AbstractType
                         $mapper = array(
                             'prefix' => "App",
                             'className' => "Institution",
-                            'bundleName' => "UserdirectoryBundle"
+                            'bundleName' => "UserdirectoryBundle",
+                            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
                         );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                         $newInstitution = $this->params['em']->getRepository(Institution::class)->findByChildnameAndParent(

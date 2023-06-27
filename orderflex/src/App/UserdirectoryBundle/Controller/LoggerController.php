@@ -677,15 +677,16 @@ class LoggerController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //App\UserdirectoryBundle\Entity
-        $objectNamespaceArr = explode("\\",$objectNamespace);
-        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+        //$objectNamespaceArr = explode("\\",$objectNamespace);
+        //$objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
         $objectName = $em->getRepository(EventObjectTypeList::class)->find($objectType);
         if( !$objectName ) {
             throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
         }
 
-        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        //$subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        $subjectEntity = $em->getRepository($objectNamespace.'\\'.$objectName)->find($objectId);
 
         if( $this->isGranted($action,$subjectEntity) ) {
             $res = 1;

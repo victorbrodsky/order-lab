@@ -2896,9 +2896,11 @@ class TransResImportData
 
                 $antibody->setType('default');
 
-                $classNamespaceShort = "AppTranslationalResearchBundle";
+                //$classNamespaceShort = "AppTranslationalResearchBundle";
+                $bundleName = "TranslationalResearchBundle";
                 $className = "AntibodyList";
-                $classFullName = $classNamespaceShort . ":" . $className;
+                //$classFullName = $classNamespaceShort . ":" . $className;
+                $classFullName = "App\\" . $bundleName . "\\Entity\\" . $className;
                 $orderinlist = $userSecUtil->getMaxField($classFullName);
                 echo "Create a new orderinlist=$orderinlist<br>";
 
@@ -3184,9 +3186,11 @@ class TransResImportData
             $fee->setType('default');
 
             //Get orderinlist
-            $classNamespaceShort = "AppTranslationalResearchBundle";
+            //$classNamespaceShort = "AppTranslationalResearchBundle";
+            $bundleName = "TranslationalResearchBundle";
             $className = "RequestCategoryTypeList";
-            $classFullName = $classNamespaceShort . ":" . $className;
+            //$classFullName = $classNamespaceShort . ":" . $className;
+            $classFullName = $classFullName = "App\\" . $bundleName . "\\Entity\\" . $className;
             $orderinlist = $userSecUtil->getMaxField($classFullName);
             echo "Create a new orderinlist=$orderinlist<br>";
 
@@ -3367,9 +3371,10 @@ class TransResImportData
                     $priceFeeDb->setType('default');
 
                     //Get orderinlist
-                    $classNamespaceShort = "AppTranslationalResearchBundle";
+                    $classNamespaceShort = "TranslationalResearchBundle";
                     $className = "RequestCategoryTypeList";
-                    $classFullName = $classNamespaceShort . ":" . $className;
+                    //$classFullName = $classNamespaceShort . ":" . $className;
+                    $classFullName = $classFullName = "App\\" . $classNamespaceShort . "\\Entity\\" . $className;
                     $orderinlist = $userSecUtil->getMaxField($classFullName);
                     echo "Create a new orderinlist=$orderinlist<br>";
 

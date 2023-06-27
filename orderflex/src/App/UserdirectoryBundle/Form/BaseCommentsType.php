@@ -125,6 +125,8 @@ class BaseCommentsType extends AbstractType
                         'prefix' => "App",
                         'className' => "CommentTypeList",
                         'bundleName' => "UserdirectoryBundle",
+                        'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                        'entityNamespace' => "App\\UserdirectoryBundle\\Entity",
                         'organizationalGroupType' => "CommentGroupType"
                     );
             if( $title ) {

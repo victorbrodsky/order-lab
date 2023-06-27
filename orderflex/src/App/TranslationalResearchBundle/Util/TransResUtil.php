@@ -4636,6 +4636,7 @@ class TransResUtil
         $mapper = array(
             "entityName" => "Project",
             "entityNamespace" => "App\\TranslationalResearchBundle\\Entity",
+            'fullClassName' => "App\\TranslationalResearchBundle\\Entity\\Project",
         );
         $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$search,$mapper,$compareType);
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";

@@ -66,6 +66,8 @@ class BuildingType extends AbstractType
             $params['standalone'] = true;
             $mapper['className'] = "BuildingList";
             $mapper['bundleName'] = "AppUserdirectoryBundle";
+            $mapper['fullClassName'] = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+            $mapper['entityNamespace'] = "App\\".$mapper['bundleName']."\\Entity";
 
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(

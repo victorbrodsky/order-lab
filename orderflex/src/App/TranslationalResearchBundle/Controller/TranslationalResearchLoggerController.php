@@ -150,8 +150,8 @@ class TranslationalResearchLoggerController extends LoggerController
         $objectNamespace = "App\\TranslationalResearchBundle\\Entity";
 
         //App\UserdirectoryBundle\Entity
-        $objectNamespaceArr = explode("\\",$objectNamespace);
-        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+        //$objectNamespaceArr = explode("\\",$objectNamespace);
+        //$objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
 
         $objectName = $em->getRepository(EventObjectTypeList::class)->find($objectType);
         if( !$objectName ) {
@@ -163,7 +163,8 @@ class TranslationalResearchLoggerController extends LoggerController
         //    return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         //}
 
-        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        //$subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        $subjectEntity = $em->getRepository($objectNamespace.'\\'.$objectName)->find($objectId);
         if( !$subjectEntity ) {
             $this->addFlash(
                 'warning',
