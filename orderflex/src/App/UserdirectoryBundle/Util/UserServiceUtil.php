@@ -1660,6 +1660,33 @@ Pathology and Laboratory Medicine",
         return substr($string, $ini, $len);
     }
 
+    //convert "AppFellAppBundle:FellowshipApplication" to App\FellAppBundle\Entity\FellowshipApplication
+    public function convertNamespaceToClasspath($commentclass) {
+        $classpath = null;
+        $app = null;
+        $bundle = null;
+        $entity = "Entity";
+        $className = null;
+
+        if( str_contains($commentclass,"App") ) {
+            $app = "App";
+        }
+        
+        if( str_contains($commentclass,":") ) {
+            $bundle = $this->getStringBetween($commentclass,$app,":"); //$string, $start, $end
+
+            $pieces = explode(":", $commentclass);
+            $className = $pieces[1]; //FellowshipApplication
+        }
+
+        if( $app && $entity && $className ) {
+            $classpath = $app . "\\" . $bundle . "\\" . $entity . "\\" . $className;
+            echo "classpath=$classpath <br>";
+        }
+
+        return $classpath;
+    }
+
     public function getPhpPath() {
         $phpPath = "php";
 

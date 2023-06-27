@@ -327,7 +327,9 @@ class ListController extends OrderAbstractController
         //echo "bundleName=".$mapper['bundleName']."<br>";
         //echo "className=".$mapper['className']."<br>";
 
-        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
+
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
         $dql->groupBy('ent');
@@ -623,7 +625,9 @@ class ListController extends OrderAbstractController
         //echo "bundleName=".$mapper['bundleName']."<br>";
         //echo "className=".$mapper['className']."<br>";
 
-        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
+
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
         //$dql->groupBy('ent');
@@ -726,7 +730,8 @@ class ListController extends OrderAbstractController
         $mapper = $this->classListMapper($pathbase,$request);
         //echo "repository=".$mapper['bundleName'].':'.$mapper['className']."<br>";
 
-        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
 
         $entityClass = $mapper['fullClassName'];
 
@@ -1390,7 +1395,9 @@ class ListController extends OrderAbstractController
         }
 
         //get max orderinlist + 10
-        $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['bundleName'].':'.$mapper['className'].' c');
+        //$query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['bundleName'].':'.$mapper['className'].' c');
+        $query = $em->createQuery('SELECT MAX(c.orderinlist) as maxorderinlist FROM '.$mapper['fullClassName'].' c');
+
         $nextorder = $query->getSingleResult()['maxorderinlist']+10;
         $entity->setOrderinlist($nextorder);
 
@@ -1688,7 +1695,9 @@ class ListController extends OrderAbstractController
 
         $mapper = $this->classListMapper($pathbase,$request);
 
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($id);
+
         //echo "entity ID=".$entity->getId()."; name=".$entity->getName()."<br>";
         $form = $this->createEditForm($entity,$mapper,$pathbase,'edit',true);
 
@@ -1980,7 +1989,8 @@ class ListController extends OrderAbstractController
 
         $mapper= $this->classListMapper($pathbase,$request);
 
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
@@ -2336,7 +2346,8 @@ class ListController extends OrderAbstractController
 
         $mapper= $this->classListMapper($pathbase,$request);
 
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($id);
 
         //save array of synonyms
         $beforeformSynonyms = clone $entity->getSynonyms();
@@ -2375,7 +2386,9 @@ class ListController extends OrderAbstractController
 
             //make sure to keep creator and creation date from original entity, according to the requirements (Issue#250):
             //For "Creation Date", "Creator" these variables should not be modifiable via the form even if the user unlocks these fields in the browser.
-            $originalEntity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+            //$originalEntity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+            $originalEntity = $em->getRepository($mapper['fullClassName'])->find($id);
+
             $entity->setCreator($originalEntity->getCreator());
             $entity->setCreatedate($originalEntity->getCreatedate());
 
@@ -4156,7 +4169,8 @@ class ListController extends OrderAbstractController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+            //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+            $entity = $em->getRepository($mapper['fullClassName'])->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find '.$mapper['fullClassName'].' entity.');
@@ -4317,7 +4331,9 @@ class ListController extends OrderAbstractController
         $mapper = $this->classListMapper($pathbase,$request);
         //echo "bundleName=".$mapper['bundleName']."<br>";
         //echo "className=".$mapper['className']."<br>";
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($entityId);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($entityId);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($entityId);
+
         //echo "entity=".$entity."<br>";
 
         if( $type ) {

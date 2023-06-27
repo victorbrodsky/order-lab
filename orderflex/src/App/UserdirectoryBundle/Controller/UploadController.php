@@ -73,6 +73,7 @@ class UploadController extends OrderAbstractController {
 
         //exit('my uploader');
 
+        $userServiceUtil = $this->container->get('user_service_utility');
         //find document with id
         $em = $this->getDoctrine()->getManager();
         $document = NULL;
@@ -116,7 +117,13 @@ class UploadController extends OrderAbstractController {
 
             if( $commentid && $commentid != 'undefined' && $commentclass && $commentclass != 'undefined' ) {
 
-                $repository = $this->getDoctrine()->getRepository($commentclass);
+                //convert "AppFellAppBundle:FellowshipApplication" to App\FellAppBundle\Entity\FellowshipApplication
+                $classPath = $userServiceUtil->convertNamespaceToClasspath($commentclass);
+                if( !$classPath ) {
+                    throw new \Exception( 'Can not convert short namespace to class path, commentclass='.$commentclass );
+                }
+
+                $repository = $this->getDoctrine()->getRepository($classPath);
                 $dql = $repository->createQueryBuilder("comment");
                 $dql->select('comment');
                 //$dql->innerJoin("comment.documents", "documents");
@@ -182,6 +189,7 @@ class UploadController extends OrderAbstractController {
 
     public function setHolderDocumentsDql($dql,$commentclass) {
 
+        //Here use short namespace AppFellAppBundle:FellowshipApplication, as a legacy,  which is passed from js script user-fileuploads.js
         switch( $commentclass ) {
             case "AppFellAppBundle:FellowshipApplication":
                 $str = "comment.coverLetters";

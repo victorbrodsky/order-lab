@@ -316,7 +316,8 @@ class GenericTreeTransformer implements DataTransformerInterface
                 );
             }
 
-            $organizationalGroupTypes = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+            //$organizationalGroupTypes = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+            $organizationalGroupTypes = $this->em->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
                 array(
                     "level" => 0,
                     "type" => array('default','user-added')
@@ -339,9 +340,11 @@ class GenericTreeTransformer implements DataTransformerInterface
 
         //add type for institution: Medical and Educational
         if( method_exists($entity,'addType') && $className == 'Institution' ) {
-            $institutionMedicalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            //$institutionMedicalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            $institutionMedicalType = $this->em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Medical');
             $entity->addType($institutionMedicalType);
-            $institutionEducationalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            //$institutionEducationalType = $this->em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            $institutionEducationalType = $this->em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Educational');
             $entity->addType($institutionEducationalType);
         }
 

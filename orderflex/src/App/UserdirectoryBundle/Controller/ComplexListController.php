@@ -71,7 +71,9 @@ class ComplexListController extends OrderAbstractController
 
         $mapper = $this->classListMapper($routeName,$request);
 
-        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
+
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
         $dql->groupBy('ent');
@@ -243,7 +245,8 @@ class ComplexListController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($id);
 
         if( $mapper['pathname'] == 'grants' ) {
             $entity->createAttachmentDocument();
@@ -461,7 +464,8 @@ class ComplexListController extends OrderAbstractController
         $userUtil = $this->container->get('user_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        //$entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
+        $entity = $em->getRepository($mapper['fullClassName'])->find($id);
 
         //update author can be set to any user, not a current user
         $entity->setUpdateAuthor(null);

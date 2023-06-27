@@ -200,9 +200,54 @@ class UserController extends OrderAbstractController
 //
 //        $encoder = $this->container->get('security.password_encoder');
 
+//        $em = $this->getDoctrine()->getManager();
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        $document = $em->getRepository(Document::class)->find(100);
+//
+//        $commentclass = "AppUserdirectoryBundle:PublicComment";
+//        $commentclass = "AppUserdirectoryBundle:PrivateComment";
+//        $commentclass = "AppUserdirectoryBundle:AdminComment";
+//        $commentclass = "AppUserdirectoryBundle:ConfidentialComment";
+//        $commentclass = "AppFellAppBundle:FellowshipApplication";
+//        $commentclass = "AppUserdirectoryBundle:Examination";
+//
+//        $classPath = $userServiceUtil->convertNamespaceToClasspath($commentclass);
+//        echo "classPath=$classPath <br>";
+//        $repository = $this->getDoctrine()->getRepository($classPath);
+//        $dql = $repository->createQueryBuilder("comment");
+//        $dql->select('comment');
+//        //$dql->innerJoin("comment.documents", "documents");
+//        $this->setHolderDocumentsDql($dql,$commentclass);
+//        //$dql->where("documents = :document");
+//        //$query = $em->createQuery($dql)->setParameter("document",$document);
+//        $query = $em->createQuery($dql);
+//        $comments = $query->getResult();
+//        exit('comments='.count($comments));
+        
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
+//    //temp to test comment
+//    public function setHolderDocumentsDql($dql,$commentclass) {
+//
+//        switch( $commentclass ) {
+//            case "AppFellAppBundle:FellowshipApplication":
+//                $str = "comment.coverLetters";
+//                break;
+//            case "AppUserdirectoryBundle:Examination":
+//                $str = "comment.scores";
+//                break;
+////            case "AppTranslationalResearchBundle:TransResSiteParameters":
+////                $str = "comment.transresLogo";
+////                break;
+//            default:
+//                $str = "comment.documents";
+//        }
+//
+//        //echo "dql str=".$str."<br>";
+//
+//        $dql->innerJoin($str, "documents");
+//    }
 
 
 //    /**

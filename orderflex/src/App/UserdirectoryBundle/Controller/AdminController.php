@@ -8857,21 +8857,21 @@ class AdminController extends OrderAbstractController
     {
         $mapper = $this->getMapper($request->get('_route'));
 
-        //show html tree
-        if( 0 ) {
-            $em = $this->getDoctrine()->getManager();
-            $repo = $em->getRepository($mapper['bundlePreffix'].$mapper['bundleName'].':'.$mapper['className']);
-            $htmlTree = $repo->childrenHierarchy(
-                null, /* starting from root nodes */
-                false, /* true: load all children, false: only direct */
-                array(
-                    'decorate' => true,
-                    'representationField' => 'slug',
-                    'html' => true
-                )
-            );
-            echo $htmlTree;
-        }
+//        //show html tree
+//        if( 0 ) {
+//            $em = $this->getDoctrine()->getManager();
+//            $repo = $em->getRepository($mapper['bundlePreffix'].$mapper['bundleName'].':'.$mapper['className']);
+//            $htmlTree = $repo->childrenHierarchy(
+//                null, /* starting from root nodes */
+//                false, /* true: load all children, false: only direct */
+//                array(
+//                    'decorate' => true,
+//                    'representationField' => 'slug',
+//                    'html' => true
+//                )
+//            );
+//            echo $htmlTree;
+//        }
 
         //$filterList = array('default','user-added','disabled','draft');
         //$filters = trim((string)$request->get('filters') );

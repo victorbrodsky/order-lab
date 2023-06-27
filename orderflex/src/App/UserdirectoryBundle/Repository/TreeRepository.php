@@ -338,7 +338,8 @@ class TreeRepository extends NestedTreeRepository {
 
         $foundChildEntity = null;
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
@@ -376,7 +377,8 @@ class TreeRepository extends NestedTreeRepository {
 
         $foundEntity = null;
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where('LOWER(list.name) LIKE LOWER(:name)');
@@ -404,11 +406,14 @@ class TreeRepository extends NestedTreeRepository {
             $mapper = array(
                 'prefix' => "App",
                 'className' => "Institution",
-                'bundleName' => "UserdirectoryBundle"
+                'bundleName' => "UserdirectoryBundle",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         }
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
@@ -460,7 +465,8 @@ class TreeRepository extends NestedTreeRepository {
         //echo "childName=(".$childName.")<br>";
         //echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
@@ -731,7 +737,9 @@ class TreeRepository extends NestedTreeRepository {
                 'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle",
-                'organizationalGroupType' => "OrganizationalGroupType"
+                'organizationalGroupType' => "OrganizationalGroupType",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         }
 
@@ -767,7 +775,9 @@ class TreeRepository extends NestedTreeRepository {
                 'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle",
-                'organizationalGroupType' => "OrganizationalGroupType"
+                'organizationalGroupType' => "OrganizationalGroupType",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         }
 
@@ -779,7 +789,8 @@ class TreeRepository extends NestedTreeRepository {
 
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
@@ -887,13 +898,17 @@ class TreeRepository extends NestedTreeRepository {
                 'prefix' => "App",
                 'className' => "Institution",
                 'bundleName' => "UserdirectoryBundle",
-                'organizationalGroupType' => "OrganizationalGroupType"
+                'organizationalGroupType' => "OrganizationalGroupType",
+                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
             );
         }
 
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('DISTINCT(organizationalGroupType.name) AS levelLabel');
         $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
@@ -999,7 +1014,8 @@ class TreeRepository extends NestedTreeRepository {
             return null;
         }
 
-        $organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+        //$organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+        $organizationalGroupTypes = $this->_em->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
             array(
                 "level" => $level,
                 "type" => array('default','user-added')
@@ -1019,7 +1035,8 @@ class TreeRepository extends NestedTreeRepository {
 
 
     public function removeTreeNodeAndAllChildrenById( $id, $mapper, $count=0 ) {
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
         $treeNode = $treeRepository->find($id);
 
         if( !$treeNode ) {
@@ -1048,7 +1065,8 @@ class TreeRepository extends NestedTreeRepository {
     }
 
     public function setLevelFromParentRecursively($mapper,$count=0) {
-        $treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
 
         //$nodes = $treeRepository->findByLevel(-1);
         $dql =  $treeRepository->createQueryBuilder("list");

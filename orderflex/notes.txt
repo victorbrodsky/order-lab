@@ -1585,7 +1585,7 @@ $fromEntity = "AppUserdirectoryBundle:ObjectTypeText";
 
 
 
-Check: ['bundleName'] in mapper
+Check: mapper['bundleName']
 
 
 

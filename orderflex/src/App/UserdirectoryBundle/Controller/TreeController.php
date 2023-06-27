@@ -109,7 +109,8 @@ class TreeController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $mapper = $this->classMapper($bundleName,$className);
-        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $em->getRepository($mapper['fullClassName']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
         //$dql->orderBy("list.lft","ASC");
@@ -268,7 +269,8 @@ class TreeController extends OrderAbstractController {
         //add additional node. For example, attach users to each institution node
         $addNodeRepository = null;
         if( !$combobox && $mapper['addNodeClassName'] ) {
-            $addNodeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['addNodeClassName']);
+            //$addNodeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['addNodeClassName']);
+            $addNodeRepository = $em->getRepository($mapper['entityNamespace'].'\\'.$mapper['addNodeClassName']);
         }
 
         $output = array();
@@ -448,7 +450,8 @@ class TreeController extends OrderAbstractController {
 
         $mapper = $this->classMapper($bundleName,$className);
 
-        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        $treeRepository = $em->getRepository($mapper['fullClassName']);
 
         $node = NULL;
 
@@ -529,7 +532,8 @@ class TreeController extends OrderAbstractController {
                 }
 
                 if( $mapper['organizationalGroupType'] ) {
-                    $organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel($childLevel);
+                    //$organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel($childLevel);
+                    $organizationalGroupType = $em->getRepository($mapper['entityNamespace'] . '\\' . $mapper['organizationalGroupType'])->findOneByLevel($childLevel);
                 } else {
                     $organizationalGroupType = NULL;
                 }
@@ -549,7 +553,8 @@ class TreeController extends OrderAbstractController {
                 }
                 //////////// EOF get max ordeinlist ////////////////////
 
-                $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+                //$fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+                $fullClassName = $mapper['fullClassName'];
                 $node = new $fullClassName();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $userSecUtil->setDefaultList($node,$orderinlist,$username,$nodetext);
@@ -564,9 +569,11 @@ class TreeController extends OrderAbstractController {
 
                 //add type for institution: Medical and Educational
                 if( method_exists($node,'addType') && $mapper['className'] == 'Institution' && $childLevel == 0 ) {
-                    $institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+                    //$institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+                    $institutionMedicalType = $em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Medical');
                     $node->addType($institutionMedicalType);
-                    $institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+                    //$institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+                    $institutionEducationalType = $em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Educational');
                     $node->addType($institutionEducationalType);
                 }
 
@@ -617,14 +624,16 @@ class TreeController extends OrderAbstractController {
         $mapper = $this->classMapper($bundleName,$className);
         //$treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
-        $fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        //$fullClassName = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        $fullClassName = $mapper['fullClassName'];
         $root = new $fullClassName();
         $userSecUtil = $this->container->get('user_security_utility');
         $userSecUtil->setDefaultList($root,1,$user,$rootNodeName);
 
 
         if( $mapper['organizationalGroupType'] ) {
-            $organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel(0);
+            //$organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel(0);
+            $organizationalGroupType = $em->getRepository($mapper['entityNamespace'] . '\\' . $mapper['organizationalGroupType'])->findOneByLevel(0);
         } else {
             $organizationalGroupType = NULL;
         }
@@ -635,9 +644,11 @@ class TreeController extends OrderAbstractController {
 
         //add type for institution: Medical and Educational
         if( method_exists($root,'addType') && $mapper['className'] == 'Institution' ) {
-            $institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            //$institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            $institutionMedicalType = $em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Medical');
             $root->addType($institutionMedicalType);
-            $institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            //$institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            $institutionEducationalType = $em->getRepository($mapper['entityNamespace'].'\\'.'InstitutionType')->findOneByName('Educational');
             $root->addType($institutionEducationalType);
         }
 
@@ -745,7 +756,9 @@ class TreeController extends OrderAbstractController {
             'className' => $className,
             'bundleName' => $bundleName,
             'organizationalGroupType' => $organizationalGroupType,
-            'addNodeClassName' => $addNodeClassName
+            'addNodeClassName' => $addNodeClassName,
+            'fullClassName' => "App\\".$bundleName."\\Entity\\".$className,
+            'entityNamespace' => "App\\".$bundleName."\\Entity"
         );
 
         return $res;

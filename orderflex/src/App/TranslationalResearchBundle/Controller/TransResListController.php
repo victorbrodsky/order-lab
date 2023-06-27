@@ -227,7 +227,8 @@ class TransResListController extends ListController
         $mapper = $this->classListMapper($pathbase,$request);
         //echo "repository=".$mapper['bundleName'].':'.$mapper['className']."<br>";
 
-        $repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
+        $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
 
         $entityClass = $mapper['fullClassName'];
 
