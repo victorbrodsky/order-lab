@@ -239,7 +239,7 @@ class TreeController extends OrderAbstractController {
             }
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setParameters($params);
         foreach( $params as $key=>$value) {
             $query->setParameter($key, $value);

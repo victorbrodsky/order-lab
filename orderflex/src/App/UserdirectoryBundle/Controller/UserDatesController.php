@@ -270,7 +270,7 @@ class UserDatesController extends OrderAbstractController
             $dql->addOrderBy("medicalInstitution.name",$sortDirection);
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameters($queryParameters);
 

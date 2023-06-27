@@ -247,7 +247,8 @@ class LoggerController extends OrderAbstractController
                 $dql2->orderBy("logger.id","ASC");
                 //echo "dql2=".$dql2."<br>";
 
-                $query2 = $em->createQuery($dql2);
+                //$query2 = $em->createQuery($dql2);
+                $query2 = $dql2->getQuery();
                 $query2->setParameters( $queryParameters );
                 $query2->setMaxResults(1);
 
@@ -265,7 +266,8 @@ class LoggerController extends OrderAbstractController
                 $dql3->orderBy("logger.id","DESC");
                 //echo "dql2=".$dql3."<br>";
 
-                $query3 = $em->createQuery($dql3);
+                //$query3 = $em->createQuery($dql3);
+                $query3 = $dql3->createQuery();
                 $query3->setParameters( $queryParameters );
                 $query3->setMaxResults(1);
                 $loggers = $query3->getResult();
@@ -325,7 +327,7 @@ class LoggerController extends OrderAbstractController
 //        }
 		
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         //echo "dql=".$dql."<br>";
         //echo "dql=".$query->getSql()."<br>";
@@ -411,7 +413,8 @@ class LoggerController extends OrderAbstractController
         $dqlFilterUser->leftJoin("user.infos","infos");
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
-        $queryFilterUser = $em->createQuery($dqlFilterUser);
+        //$queryFilterUser = $em->createQuery($dqlFilterUser);
+        $queryFilterUser = $dqlFilterUser->createQuery();
         $filterUsers = $queryFilterUser->getResult();
         //echo "count=".count($filterUsers)."<br>";
         //add unknown dummy user

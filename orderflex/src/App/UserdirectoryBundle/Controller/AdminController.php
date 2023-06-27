@@ -11887,7 +11887,7 @@ class AdminController extends OrderAbstractController
         $dql->where("degree.name = :degreeMd");
         $dql->andWhere("employmentType.name != :fellappType");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameters(array(
             'degreeMd' => 'MD',
@@ -12031,7 +12031,7 @@ class AdminController extends OrderAbstractController
         $criterion = $criterion . " OR (middlename.fieldMetaphone IS NULL)";
 
         $dql->where($criterion);
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $patients = $query->getResult();
         echo "Number of patients without metaphone key: ".count($patients)."<br>";
 

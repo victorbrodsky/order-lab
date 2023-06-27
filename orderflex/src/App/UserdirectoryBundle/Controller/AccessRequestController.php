@@ -444,7 +444,7 @@ class AccessRequestController extends OrderAbstractController
         $dql->where("institution.type = 'default'");
         $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $requestedScanOrderInstitutionScope = $query->getResult();
 
         return $requestedScanOrderInstitutionScope;
@@ -809,7 +809,7 @@ class AccessRequestController extends OrderAbstractController
 //        }
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -1489,7 +1489,7 @@ class AccessRequestController extends OrderAbstractController
             $dql->andWhere($searchStr);
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //$users = $query->getResult();
@@ -1704,7 +1704,7 @@ class AccessRequestController extends OrderAbstractController
 //        }
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $paginator  = $this->container->get('knp_paginator');
         $users = $paginator->paginate(
             $query,

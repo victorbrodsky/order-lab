@@ -96,7 +96,7 @@ abstract class BasePermissionVoter extends Voter {
         $dql->select('list');
         $dql->leftJoin('list.sites', 'sites');
         $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             array(

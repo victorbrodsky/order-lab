@@ -1178,7 +1178,8 @@ class CallEntryController extends OrderAbstractController
         //$dql->orderBy("message.id","DESC");
 
         //$limit = 10;
-        $query = $em->createQuery($dql);
+        //$query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($queryParameters);
 
         //$logger = $this->container->get('logger');

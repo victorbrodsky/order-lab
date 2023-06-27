@@ -450,7 +450,7 @@ class UserUtil {
         //echo "Location dql=".$dql."<br>";
 
         //$em = $doctrine->getManager();
-        $query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         $limitFlag = true;
         if( $limitFlag ) {

@@ -171,7 +171,7 @@ class ComplexListController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $limit = 50;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );

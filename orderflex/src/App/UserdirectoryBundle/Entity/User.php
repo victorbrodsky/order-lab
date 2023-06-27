@@ -1202,7 +1202,7 @@ class User extends UserBase {
 //        }
 //        return $displayName;
 
-        return $this->getUserNameStr();
+        return (string) $this->getUserNameStr();
     }
 
 

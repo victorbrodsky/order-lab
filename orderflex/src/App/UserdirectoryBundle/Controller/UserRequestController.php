@@ -93,7 +93,7 @@ class UserRequestController extends OrderAbstractController
 //        }
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameter("siteName",$this->siteName);
 
         //echo "siteName=".$this->siteName."<br>";
@@ -479,7 +479,7 @@ class UserRequestController extends OrderAbstractController
         $dql->where("institution.type = 'default' OR institution.type = 'user-added'");
         $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $requestedScanOrderInstitutionScope = $query->getResult();
 
         //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;

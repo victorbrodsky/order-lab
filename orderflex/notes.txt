@@ -1545,7 +1545,7 @@ symfony to 6.2.6
 
 "doctrine/doctrine-bundle": "2.5.*",
 "doctrine/doctrine-migrations-bundle": "^3.2",
-"doctrine/orm": "2.9.6",
+"doctrine/orm": "2.9.6" (the same as "2.9.*")
         =>
 "doctrine/doctrine-bundle": "^2.5",
 "doctrine/orm": "^2.9",

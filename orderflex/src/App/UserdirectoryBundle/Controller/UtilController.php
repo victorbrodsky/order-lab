@@ -1483,7 +1483,9 @@ class UtilController extends OrderAbstractController {
 
         $dql->where($criteriastr);
 
-        $query = $em->createQuery($dql)->setMaxResults($limit);
+        //$query = $em->createQuery($dql)->setMaxResults($limit);
+        $query = $dql->getQuery();
+        $query->setMaxResults($limit);
 
         $output = $query->getResult();
 

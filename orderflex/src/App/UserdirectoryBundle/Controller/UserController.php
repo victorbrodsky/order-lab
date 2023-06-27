@@ -764,7 +764,7 @@ class UserController extends OrderAbstractController
         //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         //$limitFlag = null;//testing
         if( $limitFlag ) {
@@ -2864,7 +2864,7 @@ class UserController extends OrderAbstractController
         $dql->leftJoin("user.avatar", "avatar");
         $dql->leftJoin("user.locations", "locations");
         $dql->where('user.id = '.$id);
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$entity = $query->getArrayResult();
         //$entity = $query->getSingleResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         //$entity = $query->getSingleResult();

@@ -616,7 +616,7 @@ class FormNodeUtil
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -697,7 +697,7 @@ class FormNodeUtil
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -2530,7 +2530,7 @@ class FormNodeUtil
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
 

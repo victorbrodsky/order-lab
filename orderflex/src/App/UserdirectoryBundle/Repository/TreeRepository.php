@@ -255,7 +255,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
         $collaborations = $query->getResult();
 
         //TODO: add collaboration institutions if node is collaboration type and has collaboration institutions
@@ -361,7 +361,7 @@ class TreeRepository extends NestedTreeRepository {
 //            $dql->orWhere("list.type='".$type."'");
 //        }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
         $query->setParameters($params);
 
@@ -405,7 +405,7 @@ class TreeRepository extends NestedTreeRepository {
 
         $params = array('name' => '%"' . $nameStr . '"%');
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
         $query->setParameters($params);
 
@@ -449,7 +449,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
         $dql->orderBy("list.level","ASC"); //higher level first, so in case of similar division and service name, the division will be returned.
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
         $query->setParameters( array("nameStr"=>$nameStr,"rootNodeId"=>$rootNodeId) );
 
         $nodes = $query->getResult();
@@ -531,7 +531,7 @@ class TreeRepository extends NestedTreeRepository {
 //            $dql->orWhere("list.type='".$type."'");
 //        }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
         $query->setParameters($params);
 
@@ -873,7 +873,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where($where);
         //echo "dql=".$dql."<br>";
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
         $query->setParameters($params);
 
         $results = $query->getResult();
@@ -997,7 +997,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where($where);
         //echo "dql=".$dql."<br>";
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
         $query->setParameters($params);
 
         $results = $query->getResult();
@@ -1170,7 +1170,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where("list.level < 0 AND parent IS NOT NULL AND parent.level > 0");
         //echo "dql=".$dql."<br>";
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
         $nodes = $query->getResult();
 
         //echo "nodes count=".count($nodes)."<br>";

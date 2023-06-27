@@ -664,7 +664,7 @@ class AuthUtil {
         $dql->andWhere("identifiers.status = :identifierStatus AND identifiers.enableAccess = :identifierEnableAccess");
         $dql->andWhere("user.username=:username");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //$this->logger->notice('username='.$username.'; identifierKeytype='.$identifierKeytype->getId()."; identifierField=".$credentials."; identifierStatus=".$identifierStatus."; identifierEnableAccess=".$identifierEnableAccess);
 
@@ -1947,7 +1947,7 @@ class AuthUtil {
 
         $dql->orderBy("infos.lastName","ASC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);

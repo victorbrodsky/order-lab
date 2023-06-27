@@ -3098,7 +3098,7 @@ Pathology and Laboratory Medicine",
 
         $dql->orderBy("logger.id","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
 
         $query->setMaxResults(1);
@@ -3230,7 +3230,7 @@ Pathology and Laboratory Medicine",
             'expireDate'=>$expireDate->format('Y-m-d')
         );
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
 
         $userinfos = $query->getResult();
@@ -3351,7 +3351,7 @@ Pathology and Laboratory Medicine",
         $dql->where("infos.mobilePhoneVerifyCode = :mobilePhoneVerifyCode");
         $queryParameters = array('mobilePhoneVerifyCode'=>$verificationCode);
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
 
         $users = $query->getResult();
@@ -3400,7 +3400,7 @@ Pathology and Laboratory Medicine",
             'expireDate'=>$expireDate->format('Y-m-d')
         );
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         $query->setParameters( $queryParameters );
 
         $userrequests = $query->getResult();
@@ -4024,7 +4024,7 @@ Pathology and Laboratory Medicine",
         $dql->andWhere($searchStr);
         $dqlParameters['search'] = '%'.$search.'%';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
@@ -4159,79 +4159,73 @@ Pathology and Laboratory Medicine",
             return $pendingCount;
         }
 
-        //$limitFlag = false;
-
-//        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
-//        $criteriastr = "(".
-//            "administrativeTitles.status = ".$pendingStatus.
-//            " OR appointmentTitles.status = ".$pendingStatus.
-//            " OR medicalTitles.status = ".$pendingStatus.
-//            //" OR locations.status = ".$pendingStatus.
-//            ")";
-//
-//        //current_only
-//        $curdate = date("Y-m-d", time());
-//        $criteriastr .= " AND (";
-//        $criteriastr .= "employmentStatus.id IS NULL";
-//        $criteriastr .= " OR ";
-//        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
-//        $criteriastr .= ")";
-//
-//        //filter out system user
-//        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
-//
-//        //filter out Pathology Fellowship Applicants
-//        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
-//
-//        //activeAD
-//        $totalcriteriastr = $totalcriteriastr . " AND (user.activeAD = TRUE AND user.enabled = TRUE)";
-//
-//        if( $criteriastr ) {
-//            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+//        //Test
+//        if(0) {
+//            $query = $this->em->createQueryBuilder()
+//                ->from(User::class, 'user')
+//                ->select("user")
+//                ->leftJoin("user.infos", "infos")
+//                ->where("infos.email = 'cinava@yahoo.com' OR infos.emailCanonical = 'cinava@yahoo.com'")
+//                ->orderBy("user.id", "ASC");
+//            $pendings = $query->getQuery()->getResult();
+//            $pendingCount = count($pendings);
+//            echo "pendingCount=$pendingCount<br>";
+//            exit("111");
+//            //return $pendingCount;
 //        }
+//        if(0) {
+//            //$user = $this->em->getRepository(User::class)->find(1);
+//            //exit("111");
+//            $repository = $this->em->getRepository(User::class);
+//            $dql = $repository->createQueryBuilder('user');
+//            $dql->select('user');
+//            $dql->where("user.id = 1");
+//            //$query = $this->em->createQuery($dql);
+//            $query = $dql->getQuery();
+//            $pendings = $query->getResult();
+//            exit("111");
+//            $pendingCount = count($pendings);
+//            echo "pendingCount=$pendingCount<br>";
+//            exit("111");
+//        }
+        //$pendings = $this->em->getRepository(User::class)->getPendingAdminReview();
+        //$user = $this->em->getRepository(User::class)->find(1);
+        //echo "pendings=".count($pendings)."<br>";
+        //return count($pendings);
+        //$users = $this->em->getRepository(User::class)->findUserByUserInfoEmail('cinava@yahoo.com');
+        //echo "users=".count($users)."<br>";
+        //return count($users);
 
         $totalcriteriastr = $this->getPendingReviewCriteria();
-
-        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
 
         //$em = $this->em; //getDoctrine()->getManager();
         $repository = $this->em->getRepository(User::class);
         $dql = $repository->createQueryBuilder('user');
 
-        //$dql->select('COUNT(DISTINCT user.id)');
-        $dql->select('user');
-
-        //$dql->select('COUNT(user.id)');
+        $dql->select('COUNT(DISTINCT user.id) as count');
+        //$dql->select('user');
+        //$dql->select('COUNT(user.id) as count');
 
         $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
         $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
         $dql->leftJoin("user.medicalTitles", "medicalTitles");
-        $dql->leftJoin("user.locations", "locations");
+        //$dql->leftJoin("user.locations", "locations");
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
 
         $dql->where($totalcriteriastr);
 
-        $query = $this->em->createQuery($dql);
+        //$query = $this->em->createQuery($dql); //Symfony Exception: Doctrine\ORM\Query::getDQL(): Return value must be of type ?string, Doctrine\ORM\QueryBuilder returned
+        $query = $dql->getQuery();
 
-        //$pending = 0;
-        //$pending = $query->getSingleScalarResult();
-        //$pending = $query->getOneOrNullResult();
-        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
-
-        //Symfony Exception: Doctrine\ORM\Query::getDQL(): Return value must be of type ?string, Doctrine\ORM\QueryBuilder returned
-        $pendings = $query->getResult();
+        $pendings = $query->getSingleResult();
         //dump($pendings);
         //exit('111');
+        return $pendings['count'];
 
-        //return $pendings;
-
-        $pendingCount = count($pendings);
-
-        //dump($pending);
-        //exit('111');
-
-        return $pendingCount;
+        //$pendings = $query->getResult();
+        //$pendingCount = count($pendings);
+        //return $pendingCount;
     }
     public function getPendingReviewCriteria() {
         $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
@@ -4382,7 +4376,7 @@ Pathology and Laboratory Medicine",
             $dql = $repository->createQueryBuilder("list");
             $dql->select("list.id as id, LEVENSHTEIN(list.field, '".$search."') AS d");
             $dql->orderBy("d","ASC");
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
             //$query = $em
             //->createQueryBuilder('list')

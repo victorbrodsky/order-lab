@@ -495,7 +495,7 @@ class DefaultController extends OrderAbstractController
         $repository = $em->getRepository(User::class);
         $dql = $repository->createQueryBuilder("user");
         $dql->where("user.createdby LIKE '%manual-%'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $users = $query->getResult();
         echo "Generated users count=".count($users)."<br>";
 
@@ -530,7 +530,7 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("logger.event LIKE :eventStr OR logger.event LIKE :eventStr2");
 
         $dql->orderBy("logger.id","DESC");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $search = "User account for ";
         $search2 = "has been created by";
@@ -1039,7 +1039,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dql->andWhere("LOWER(infos.email) LIKE '%nyp%'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setMaxResults(5000);
         $users = $query->getResult();
         echo "usesr count=".count($users)."<br>";
@@ -1095,7 +1095,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->where("showToInstitutions IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setMaxResults(5000);
         $users = $query->getResult();
         echo "users with show only to inst count=".count($users)."<br>";
@@ -1155,7 +1155,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("user.keytype", "keytype");
         $dql->andWhere("keytype.abbreviation = 'ldap-user'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setMaxResults(5000);
         $users = $query->getResult();
         echo "users without PHI scope count=".count($users)."<br>";

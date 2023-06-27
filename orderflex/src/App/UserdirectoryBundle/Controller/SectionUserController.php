@@ -116,7 +116,7 @@ class SectionUserController extends UserController
             $dql->where("encounter.provider = :userId");
             $parameters['userId'] = $userid;
             $dql->orderBy("patient.id","ASC"); //show latest first
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             $query->setParameters($parameters);
             //echo "sql=".$query->getSql()."<br>";
             $patients = $query->getResult();
@@ -132,7 +132,7 @@ class SectionUserController extends UserController
             $dql->where("user = :userId OR user.id IS NULL");
             $parameters['userId'] = $userid;
             $dql->orderBy("wrapper.id","ASC"); //show latest first
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             $query->setParameters($parameters);
             //echo "sql=".$query->getSql()."<br>";
             $userWrappers = $query->getResult();

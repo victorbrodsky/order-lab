@@ -322,7 +322,7 @@ class ExceptionListener {
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 

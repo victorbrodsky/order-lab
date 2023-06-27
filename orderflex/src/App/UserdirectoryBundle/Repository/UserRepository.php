@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Repository;
 
 
 
+use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\UserdirectoryBundle\Entity\Permission;
 use App\UserdirectoryBundle\Entity\Roles;
@@ -751,6 +752,103 @@ class UserRepository extends EntityRepository {
         ;
         //return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)->getResult();
         return $query->getQuery()->getResult();
+    }
+    
+    public function getPendingAdminReview() {
+        if(1) {
+            $query = $this->_em->createQueryBuilder()
+                ->from(User::class, 'user')
+                ->select("user")
+                ->leftJoin("user.infos", "infos")
+                ->where("infos.email = 'cinava@yahoo.com' OR infos.emailCanonical = 'cinava@yahoo.com'")
+                ->orderBy("user.id", "ASC");
+            $pendings = $query->getQuery()->getResult();
+            $pendingCount = count($pendings);
+            echo "pendingCount=$pendingCount<br>";
+            exit("111");
+            //return $pendingCount;
+        }
+
+        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
+
+        //$em = $this->em; //getDoctrine()->getManager();
+        $repository = $this->_em->getRepository(User::class);
+        $dql = $repository->createQueryBuilder('user');
+        $dql->select('user');
+        $dql->where("user.id = 1");
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $pendings = $query->getResult();
+        exit("111");
+        $pendingCount = count($pendings);
+        echo "pendingCount=$pendingCount<br>";
+        exit("111");
+
+        //return $pendingCount;
+
+
+        //$dql->select('COUNT(user.id)');
+
+        $dql->leftJoin("user.administrativeTitles", "administrativeTitles");
+        $dql->leftJoin("user.appointmentTitles", "appointmentTitles");
+        $dql->leftJoin("user.medicalTitles", "medicalTitles");
+        $dql->leftJoin("user.locations", "locations");
+        $dql->leftJoin("user.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
+        $dql->where($totalcriteriastr);
+
+        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+
+        //$pending = 0;
+        //$pending = $query->getSingleScalarResult();
+        //$pending = $query->getOneOrNullResult();
+        //$pending = $query->getResult(\Doctrine\ORM\Query::HYDRATE_SINGLE_SCALAR);
+
+        //Symfony Exception: Doctrine\ORM\Query::getDQL(): Return value must be of type ?string, Doctrine\ORM\QueryBuilder returned
+        $pendings = $query->getResult();
+        //dump($pendings);
+        //exit('111');
+
+        //return $pendings;
+
+        $pendingCount = count($pendings);
+
+        //dump($pending);
+        //exit('111');
+
+        return $pendingCount;
+    }
+    public function getPendingReviewCriteria() {
+        $pendingStatus = BaseUserAttributes::STATUS_UNVERIFIED;
+        $criteriastr = "(".
+            "administrativeTitles.status = ".$pendingStatus.
+            " OR appointmentTitles.status = ".$pendingStatus.
+            " OR medicalTitles.status = ".$pendingStatus.
+            //" OR locations.status = ".$pendingStatus.
+            ")";
+
+        //current_only
+        $curdate = date("Y-m-d", time());
+        $criteriastr .= " AND (";
+        $criteriastr .= "employmentStatus.id IS NULL";
+        $criteriastr .= " OR ";
+        $criteriastr .= "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+        $criteriastr .= ")";
+
+        //filter out system user
+        $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+
+        //filter out Pathology Fellowship Applicants
+        $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+
+        //activeAD
+        $totalcriteriastr = $totalcriteriastr . " AND (user.activeAD = TRUE AND user.enabled = TRUE)";
+
+        if( $criteriastr ) {
+            $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+        }
+
+        return $totalcriteriastr;
     }
     
 }

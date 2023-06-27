@@ -129,7 +129,9 @@ class UploadController extends OrderAbstractController {
                 //$dql->innerJoin("comment.documents", "documents");
                 $this->setHolderDocumentsDql($dql,$commentclass);
                 $dql->where("documents = :document");
-                $query = $em->createQuery($dql)->setParameter("document",$document);
+                //$query = $em->createQuery($dql)->setParameter("document",$document);
+                $query = $dql->getQuery();
+                $query->setParameter("document",$document);
                 $comments = $query->getResult();
 
                 //echo "comment count=".count($comments)." ";

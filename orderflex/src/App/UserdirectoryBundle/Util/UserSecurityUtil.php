@@ -478,7 +478,7 @@ class UserSecurityUtil {
         //$users = $query->getResult();
 
         $limit = 30;
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         $query->setParameters(array('delay'=>$delay));
         $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
@@ -546,7 +546,7 @@ class UserSecurityUtil {
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :sitename OR list.abbreviation = :sitename");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(array('sitename'=>$sitename));
 
@@ -1344,7 +1344,7 @@ class UserSecurityUtil {
 
     public function getQueryUserBySite( $sitename ) {
         $dql = $this->getDqlUserBySite($sitename);
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         return $query;
     }
 
@@ -1409,7 +1409,7 @@ class UserSecurityUtil {
         //only default and user-added types
         $dql->andWhere("roles.type = :typedef OR roles.type = :typeadd");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(array(
             "sitename" => $sitename,
@@ -1443,7 +1443,7 @@ class UserSecurityUtil {
 
         //echo "dql=".$dql."<br>";
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(array(
             "sitename" => "'%".$this->siteName."%'"
@@ -1551,7 +1551,7 @@ class UserSecurityUtil {
             $queryParameters['documentType'] = $documentType;
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -2711,7 +2711,7 @@ class UserSecurityUtil {
         $dql->select('list');
         $dql->where("list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
 
