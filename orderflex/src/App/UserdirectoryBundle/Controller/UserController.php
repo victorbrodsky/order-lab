@@ -223,7 +223,17 @@ class UserController extends OrderAbstractController
 //        $query = $em->createQuery($dql);
 //        $comments = $query->getResult();
 //        exit('comments='.count($comments));
-        
+
+//        $em = $this->getDoctrine()->getManager();
+//        $query = $em->createQuery('SELECT u.id FROM App\\UserdirectoryBundle\\Entity\\User u');
+//        $repository = $this->getDoctrine()->getRepository(User::class);
+//        $dql = $repository->createQueryBuilder("user");
+        //$query = $em->createQuery($dql);
+//        $query = $dql->getQuery();
+//        $users = $query->getResult();
+//        dump($users);
+//        exit("users=".count($users));
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
