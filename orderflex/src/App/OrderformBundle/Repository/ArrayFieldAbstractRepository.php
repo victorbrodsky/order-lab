@@ -1277,7 +1277,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //$query = $this->getEntityManager()
         //    ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
-        $query = $dql->getQuery()->setParameter('field', '%'.$prefixname.'%');
+        $query = $queryStr->getQuery()->setParameter('field', '%'.$prefixname.'%');
 
         //echo "query=".$query->getSql()."<br>";
 

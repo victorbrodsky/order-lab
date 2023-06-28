@@ -1590,4 +1590,7 @@ Check: mapper['bundleName']
 $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-
+//Change id generation strategy to IDENTITY: to ALTER TABLE public.transres_finalreview ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
+deprecation.INFO: User Deprecated: Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment
+Problem: Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated
+and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.

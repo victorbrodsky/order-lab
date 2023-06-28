@@ -95,7 +95,8 @@ class CrnTest extends WebTestBase
         $dql->andWhere('list.entityId IS NOT NULL');
         $dql->andWhere('list.formNode IS NOT NULL');
 
-        $query = $this->em->createQuery($dql);
+        //$query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 
