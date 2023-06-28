@@ -1757,7 +1757,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $dql->leftJoin('resapp.coverLetters','coverLetters');
         $dql->where("coverLetters IS NOT NULL");
         $dql->orderBy("resapp.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($ dql);
         $query->setMaxResults(10);
         $resapps = $query->getResult();
         echo "resapps count=".count($resapps)."<br>";

@@ -1445,7 +1445,7 @@ class RecLetterUtil {
 
             $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery();
 
             $query->setParameters(array(
                 "fellowshipSubspecialtyId" => $fellapp->getFellowshipSubspecialty()->getId(),

@@ -115,7 +115,7 @@ class CalllogAccessionController extends OrderAbstractController {
 
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
-        //$query = $em->createQuery($dql);
+        //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
@@ -214,7 +214,7 @@ class CalllogAccessionController extends OrderAbstractController {
             $parameters['hours96Ago'] = $hours96Ago;
         }
 
-        //$query = $em->createQuery($dql);
+        //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
@@ -339,7 +339,7 @@ class CalllogAccessionController extends OrderAbstractController {
         $dql->where("accession = :accessionId");
         $parameters['accessionId'] = $accessionId;
 
-        //$query = $em->createQuery($dql);
+        //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();

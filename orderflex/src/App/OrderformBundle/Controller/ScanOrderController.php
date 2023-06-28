@@ -231,7 +231,7 @@ class ScanOrderController extends OrderAbstractController {
 
         $limit = $this->limit;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $paginator  = $this->container->get('knp_paginator');
 
         $pagination = $paginator->paginate(
@@ -708,7 +708,7 @@ class ScanOrderController extends OrderAbstractController {
 
         $dql->where("status.name NOT LIKE '%Filled%' AND status.name NOT LIKE '%Not Submitted%'" . $instStr);
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $unprocessedOrders = $query->getResult();
 
         if( $unprocessedOrders && count($unprocessedOrders) > 0 ) {
@@ -756,7 +756,7 @@ class ScanOrderController extends OrderAbstractController {
         $dql->leftJoin("message.institution", "institution");
         $dql->where("req.status='active'" . $instStr);
         //echo "dql=".$dql;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $slideReturnRequest = $query->getResult();
 
         if( $slideReturnRequest && count($slideReturnRequest) > 0 ) {
@@ -1193,7 +1193,7 @@ class ScanOrderController extends OrderAbstractController {
             $page = 1;
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $paginator  = $this->container->get('knp_paginator');
 

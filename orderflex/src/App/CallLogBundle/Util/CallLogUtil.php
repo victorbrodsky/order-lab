@@ -293,7 +293,7 @@ class CallLogUtil
 
         $dql->orderBy("patient.id","ASC"); //show latest first
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo $mergeId.":sql=".$query->getSql()."<br>";
         $patients = $query->getResult();
@@ -1484,7 +1484,7 @@ class CallLogUtil
                         //$parameters['typedef'] = 'default';
                         //$parameters['typeadd'] = 'user-added';
 
-                        $query = $this->em->createQuery($dql);
+                        $query = $dql->getQuery();
 
                         if (count($parameters) > 0) {
                             //print_r($parameters);
@@ -1864,7 +1864,7 @@ class CallLogUtil
         $parameters['typedef'] = 'default';
         $parameters['typeadd'] = 'user-added';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $patients = $query->getResult();
         if( count($patients) > 0 ) {
@@ -2313,7 +2313,7 @@ class CallLogUtil
         $dql->andWhere("logger.event LIKE :eventStr2");
         $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters( $queryParameters );
         $logs = $query->getResult();
         //echo $oid."[".$statusName."]: logs count=".count($logs)."<br>";
@@ -2561,7 +2561,7 @@ class CallLogUtil
 
         $dql->andWhere("message.orderdate BETWEEN :monday AND :sunday");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'userId' => $user->getId(),
@@ -2646,7 +2646,7 @@ class CallLogUtil
 
         $dql->orderBy("message.orderdate","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'patientId' => $patient->getId(),
@@ -2692,7 +2692,7 @@ class CallLogUtil
 
         $dql->orderBy("message.orderdate","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'accessionId' => $accession->getId(),
@@ -2814,7 +2814,7 @@ class CallLogUtil
 
         $dql->orderBy('message.version','ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $messages = $query->getResult();
 
@@ -3196,7 +3196,7 @@ class CallLogUtil
         $dql->andWhere($subquery."=0");
         //$dql->andWhere("list.entityId = html.entityId");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $unprocessedSourceTextObjects = $query->getResult();
         //echo "\n\r getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
@@ -3238,7 +3238,7 @@ class CallLogUtil
         $dql->where("formNode.id = " . $historySourceFormNode->getId());
         $dql->andWhere("list.entityId IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $sourceTextObjects = $query->getResult();
         //echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
@@ -3613,7 +3613,7 @@ class CallLogUtil
 
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $sourceTextObjects = $query->getResult();
         echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
@@ -3857,7 +3857,7 @@ class CallLogUtil
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
         //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
 
@@ -3896,7 +3896,7 @@ class CallLogUtil
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
         //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
 
@@ -3925,7 +3925,7 @@ class CallLogUtil
         $dql->leftJoin("parent.parent", "grandParent");
         $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $sourceTextObjects = $query->getResult();
         // "sourceTextObjects count=".count($sourceTextObjects)."<br>";
 
@@ -3952,7 +3952,7 @@ class CallLogUtil
         //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
         $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
         $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $destinationTextObjects = $query->getResult();
 
         if( count($destinationTextObjects) == 1 ) {
@@ -4555,7 +4555,7 @@ class CallLogUtil
 
         if( $where ) {
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             $query->setParameters($parameters);
             $patients = $query->getResult();
 
@@ -4996,7 +4996,7 @@ class CallLogUtil
 
         if( $where ) {
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             $query->setParameters($parameters);
             //dump($parameters);
             //echo "sql=".$query->getSql()."<br>";
@@ -5094,7 +5094,7 @@ class CallLogUtil
         $parameters['statusValid'] = 'valid';
         $parameters['statusAlias'] = 'alias';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();
 
@@ -5211,7 +5211,7 @@ class CallLogUtil
         $dql->andWhere("patient.id = :patientId");
         $parameters['patientId'] = $patient->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();
 
@@ -5347,7 +5347,7 @@ class CallLogUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 
@@ -5446,7 +5446,7 @@ class CallLogUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 
@@ -5486,7 +5486,7 @@ class CallLogUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 

@@ -797,7 +797,7 @@ class InvoiceController extends OrderAbstractController
         }
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if (count($dqlParameters) > 0) {
             $query->setParameters($dqlParameters);

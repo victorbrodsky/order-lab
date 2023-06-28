@@ -453,7 +453,7 @@ class SlideReturnRequestController extends OrderAbstractController
         //echo "dql=".$dql;
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         if( $setParameter ) {
             $query->setParameter('status',$filter);
@@ -568,7 +568,7 @@ class SlideReturnRequestController extends OrderAbstractController
         //echo "dql=".$dql."<br>";
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         if( $setParameter ) {
             $query->setParameter('status',$filter);

@@ -1365,7 +1365,7 @@ class RecLetterUtil {
 
             $dql->andWhere("resapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery();
 
             $query->setParameters(array(
                 "residencyTrackId" => $resapp->getResidencyTrack()->getId(),

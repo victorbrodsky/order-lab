@@ -289,7 +289,7 @@ class TransResSiteParametersController extends OrderAbstractController
 //
 //        $dqlParameters["specialtyStr"] = $specialtyStr;
 //
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //
 //        if( count($dqlParameters) > 0 ) {
 //            $query->setParameters($dqlParameters);

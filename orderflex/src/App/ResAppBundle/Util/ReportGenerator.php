@@ -136,7 +136,7 @@ class ReportGenerator {
 
         $dql->andWhere("resapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $resapps = $query->getResult();
 

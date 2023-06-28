@@ -158,7 +158,7 @@ class FellAppApplicantController extends OrderAbstractController {
 
         $dql->orderBy("fellapp.interviewScore","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $applicantions = $query->getResult();
 
         //echo "applicants=".count($applicantions)."<br>";

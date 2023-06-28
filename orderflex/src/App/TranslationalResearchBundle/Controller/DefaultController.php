@@ -1248,7 +1248,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->where("foscomment.entityName IS NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $comments = $query->getResult();
         echo "comments count=".count($comments)."<br>";
@@ -1590,7 +1590,7 @@ class DefaultController extends OrderAbstractController
         $params = array(
             'externalPriceList' => $externalPriceList->getId(),
         );
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
         $projects = $query->getResult();
@@ -1636,7 +1636,7 @@ class DefaultController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
         $dql->where("project.noBudgetLimit IS NULL");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
         $projects = $query->getResult();
         echo "projects=".count($projects)."<br>";
@@ -1683,7 +1683,7 @@ class DefaultController extends OrderAbstractController
         $dql->orderBy("project.id","DESC");
         //$dql->where("project.total IS NULL");
         //$dql->where("project.total IS NOT NULL");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
         $projects = $query->getResult();
         echo "projects=".count($projects)."<br>";
@@ -1746,7 +1746,7 @@ class DefaultController extends OrderAbstractController
 //        $dql =  $repository->createQueryBuilder("project");
 //        $dql->select('project');
 //        $dql->where("project.noBudgetLimit IS NULL");
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        //echo "query=".$query->getSql()."<br>";
 //        $projects = $query->getResult();
 //        echo "projects=".count($projects)."<br>";
@@ -1922,7 +1922,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("invoice.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);
@@ -2146,7 +2146,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("project.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);
@@ -2405,7 +2405,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("product.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $products = $query->getResult();
 
@@ -2481,7 +2481,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("transresRequest.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $transresRequests = $query->getResult();
         echo "Not completed transresRequests=".count($transresRequests)."<br>";
@@ -2501,7 +2501,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("transresRequest.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $products = $query->getResult();
         echo "Products with status=".count($products)."<br>";
@@ -2567,7 +2567,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("product.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $products = $query->getResult();
 
@@ -2692,7 +2692,7 @@ class DefaultController extends OrderAbstractController
         $dql->select('project');
         $dql->where("project.expectedExpirationDate IS NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
 
@@ -2792,7 +2792,7 @@ class DefaultController extends OrderAbstractController
 
         //$dql->andWhere("project.expectedExpirationDate IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
 
@@ -2931,7 +2931,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->andWhere("project.expectedExpirationDate IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
 
@@ -3058,7 +3058,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("project.expectedExpirationDate","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setParameters($params);
         //echo "query=".$query->getSql()."<br>";
 

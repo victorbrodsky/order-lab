@@ -239,7 +239,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("resapp.references", "references");
         $dql->where("references.recLetterHashId IS NULL");
         $dql->orderBy("resapp.id","DESC");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $resapps = $query->getResult();
         echo "resapps count=".count($resapps)."<br>";
 
@@ -297,7 +297,7 @@ class DefaultController extends OrderAbstractController
         //$dql->where("documentType.name = 'Residency Photo'");
         $dql->where("documentType.name = 'Residency Photo' OR documentType.name = 'Avatar Image'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -446,7 +446,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("application.id","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -529,7 +529,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("application.id","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -669,7 +669,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("application.id","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 

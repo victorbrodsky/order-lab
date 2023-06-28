@@ -129,7 +129,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         //select user, distinct start, end dates
         //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('statusPending', 'pending');
         $query->setParameter('statusApproved', 'approved');
@@ -320,7 +320,7 @@ class CalendarSubscriber implements EventSubscriberInterface
         //select user, distinct start, end dates
         //$dql->groupBy('request.user,requestType.startDate,requestType.endDate');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('statusPending', 'pending');
         $query->setParameter('statusApproved', 'approved');

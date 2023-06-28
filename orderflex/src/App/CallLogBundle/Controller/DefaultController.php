@@ -274,7 +274,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("user.infos", "infos");
         $dql->where("infos.displayName = :displayName");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameter('displayName', $userStr);
 
         $users = $query->getResult();
@@ -333,7 +333,7 @@ class DefaultController extends OrderAbstractController
 
         //$dql->setMaxResults(100);
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $messages = $query->getResult();
         //echo "Messages to update count=".count($messages)."<br>";
@@ -486,7 +486,7 @@ class DefaultController extends OrderAbstractController
 //        $dql->where("formNode.id = " . $historySourceFormNode->getId() . " OR formNode.id = " . $impressionSourceFormNode->getId());
 //        //$dql->orderBy('list.arraySectionIndex','DESC');
 //        //$dql->addOrderBy('list.orderinlist', 'ASC');
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //
 //        $sourceTextObjects = $query->getResult();
 //        echo "Searching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
@@ -686,7 +686,7 @@ class DefaultController extends OrderAbstractController
 //
 //        $dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
 //
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $destinationTextObjects = $query->getResult();
 //        //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
 //
@@ -713,7 +713,7 @@ class DefaultController extends OrderAbstractController
 //        $dql->leftJoin("parent.parent", "grandParent");
 //        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
 //        $dql->andWhere("list.name = '".$name."'");
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $sourceTextObjects = $query->getResult();
 //        echo "sourceTextObjects count=".count($sourceTextObjects)."<br>";
 //
@@ -739,7 +739,7 @@ class DefaultController extends OrderAbstractController
 //        //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
 //        $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Pathology Call Log Entry'");
 //        $dql->andWhere("list.name = '".$name."'");
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $destinationTextObjects = $query->getResult();
 //
 //        if( count($destinationTextObjects) == 1 ) {
@@ -776,7 +776,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("calllogMessage.entryTags", "entryTag");
         $dql->where("entryTag IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $calllogMessages = $query->getResult();
         echo "calllogMessages=".count($calllogMessages)."<br>";
@@ -851,7 +851,7 @@ class DefaultController extends OrderAbstractController
 //        $dql->andWhere("mrn.field = :mrn");
 //        $parameters['mrn'] = $mrn;
 //
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $query->setParameters($parameters);
 //        $patients = $query->getResult();
 //        echo "patients=".count($patients)."<br>";
@@ -985,7 +985,7 @@ class DefaultController extends OrderAbstractController
             $parameters['firstname'] = $firstName;
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameters($parameters);
 
@@ -1093,7 +1093,7 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("mrn.keytype = :keytype");
         $parameters['keytype'] = $nmrnType->getId();
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameters($parameters);
 
@@ -1136,7 +1136,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("location.id", "DESC"); //last entered showed first
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $locations = $query->getResult();
         echo "locations=".count($locations)."<br>";
@@ -1232,7 +1232,7 @@ class DefaultController extends OrderAbstractController
 //
 //        $dql->orderBy("location.id", "DESC"); //last entered showed first
 //
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //
 //        $disabledLocations = $query->getResult();
 //        echo "disabled locations=".count($disabledLocations)."<br>";
@@ -1250,7 +1250,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("location.id", "DESC"); //last entered showed first
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $locations = $query->getResult();
         echo "locations=".count($locations)."<br>";
@@ -1300,7 +1300,7 @@ class DefaultController extends OrderAbstractController
 
         $dql->orderBy("currentLocation.id", "DESC"); //last entered showed first
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $encounters = $query->getResult();
         echo "encounters=".count($encounters)."<br>";

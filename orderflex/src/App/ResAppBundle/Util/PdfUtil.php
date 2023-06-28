@@ -1312,7 +1312,7 @@ class PdfUtil {
 
         $dql->andWhere("resapp.applicationSeasonStartDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" );
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
 //        $query->setParameters(array(
 //            "archive" => $archiveStatus->getId(),
@@ -1819,7 +1819,7 @@ class PdfUtil {
         if( $erasApplicantId ) {
             $dql->where("resapp.erasApplicantId = :erasApplicantId");
             $parameters["erasApplicantId"] = $erasApplicantId;
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery();
             $query->setParameters($parameters);
             $resapps = $query->getResult();
             return $resapps;
@@ -1856,7 +1856,7 @@ class PdfUtil {
             }
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         //$query->setMaxResults(10);
 
         $query->setParameters($parameters);

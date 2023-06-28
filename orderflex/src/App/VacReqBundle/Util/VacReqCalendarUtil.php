@@ -392,7 +392,7 @@ class VacReqCalendarUtil
             //diff month and date
             $dql->andWhere("holidays.holidayDate != :holidayDate");
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameter('holidayName', $name);
             $query->setParameter('holidayYear', $year);
@@ -406,7 +406,7 @@ class VacReqCalendarUtil
             $dql->andWhere("holidays.holidayDate = :holidayDate");
             $dql->andWhere("holidays.holidayName != :holidayName");
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameter('holidayName', $name);
             $query->setParameter('holidayDate', $date);
@@ -417,7 +417,7 @@ class VacReqCalendarUtil
             $dql->andWhere("country.abbreviation = :country");
             $dql->andWhere("holidays.holidayDate = :holidayDate");
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameter('holidayName', $name);
             $query->setParameter('holidayDate', $date);
@@ -516,7 +516,7 @@ class VacReqCalendarUtil
 
         $dql->orderBy("holidays.holidayDate","ASC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
@@ -630,7 +630,7 @@ class VacReqCalendarUtil
             $dql->andWhere($instStr);
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
@@ -695,7 +695,7 @@ class VacReqCalendarUtil
             $dql->andWhere($instStr);
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //$startDateStr = $startDate->format('Y-m-d');
         //$endDateStr = $endDate->format('Y-m-d');
@@ -814,7 +814,7 @@ class VacReqCalendarUtil
         $dql->andWhere("YEAR(holidays.holidayDate) = :holidayYear");
         $parameters['holidayYear'] = $year;
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);

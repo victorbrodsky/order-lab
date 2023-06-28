@@ -143,7 +143,7 @@ class SearchUtil {
 
         //echo "dql=".$dql."<br>";
 
-        $query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
+        $query = $dql->getQuery();    //->setParameter('now', date("Y-m-d", time()));
 
 
         $limitFlag = true;

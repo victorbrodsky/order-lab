@@ -395,7 +395,7 @@ class DefaultController extends OrderAbstractController
         //$dql->where("documentType.name = 'Fellowship Photo'");
         $dql->where("documentType.name = 'Fellowship Photo' OR documentType.name = 'Avatar Image'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //echo "query=".$query->getSql()."<br>";
 

@@ -660,7 +660,7 @@ class WorkQueueController extends OrderAbstractController
         //////////// EOF Process Filter //////////////////
 
         $limit = 20;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);

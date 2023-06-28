@@ -229,7 +229,7 @@ class FloatingDayController extends OrderAbstractController
         //$requestTypeAbbreviation = $filterRes['requestTypeAbbreviation'];
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
@@ -289,7 +289,8 @@ class FloatingDayController extends OrderAbstractController
         $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
-        $queryFilterUser = $em->createQuery($dqlFilterUser);
+        //$queryFilterUser = $em->createQuery($dqlFilterUser);
+        $queryFilterUser = $dqlFilterUser->getQuery();
         $filterUsers = $queryFilterUser->getResult();
         //echo "count=".count($filterUsers)."<br>";
         //add unknown dummy user
@@ -2035,7 +2036,7 @@ class FloatingDayController extends OrderAbstractController
         $dql->orderBy("list.orderinlist","ASC");
         $parameters['typedef'] = 'default';
         $parameters['typeadd'] = 'user-added';
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
         }
@@ -2179,7 +2180,7 @@ class FloatingDayController extends OrderAbstractController
 
         $dql->orderBy('request.id');
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
         $query->setParameter('requestId', $subjectRequest->getId());

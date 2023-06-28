@@ -984,8 +984,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 JOIN c.institution institution
                 WHERE cfield.field = :field'.$validityStr.$extraStr.$instStr;
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)->setParameter('field', $fieldStr."");
+        //$query = $this->getEntityManager()
+        //    ->createQuery($dql)->setParameter('field', $fieldStr."");
+        $query = $dql->getQuery()->setParameter('field', $fieldStr."");
 
         //echo "<br>dql=".$dql." ==> <br>";
         //echo "field=".$fieldStr." <br> ";
@@ -1274,8 +1275,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
         //echo "queryStr=".$queryStr."<br>";
 
-        $query = $this->getEntityManager()
-            ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
+        //$query = $this->getEntityManager()
+        //    ->createQuery($queryStr)->setParameter('field', '%'.$prefixname.'%');
+        $query = $dql->getQuery()->setParameter('field', '%'.$prefixname.'%');
 
         //echo "query=".$query->getSql()."<br>";
 
@@ -1311,8 +1313,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             ' JOIN c.'.$fieldName.' cfield'.
             ' JOIN c.institution institution'.
             ' WHERE '.$extraStr.'cfield.field = :field'.$inst;
-        $checkQuery = $this->getEntityManager()
-            ->createQuery($queryCheckStr)->setParameter('field', $maxKey);
+        //$checkQuery = $this->getEntityManager()
+        //    ->createQuery($queryCheckStr)->setParameter('field', $maxKey);
+        $checkQuery = $queryCheckStr->getQuery()->setParameter('field', $maxKey);
         //echo "query=".$checkQuery->getSql()."<br>";
         $fields = $checkQuery->getResult();
         //echo "fields=".count($fields)."<br>";

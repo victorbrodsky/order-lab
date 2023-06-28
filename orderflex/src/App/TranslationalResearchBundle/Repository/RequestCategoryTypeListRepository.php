@@ -41,7 +41,7 @@ class RequestCategoryTypeListRepository extends EntityRepository {
                 ." ON list.projectSpecialties.id = s.id"
             ;
         echo "sql=$sql <br>";
-        $query = $entityManager->createQuery($sql);//->setParameter('ids', $specialty);
+        $query = $dql->getQuery(); //$query = $entityManager->createQuery($sql);//->setParameter('ids', $specialty);
 
         return $query->getOneOrNullResult();
     }

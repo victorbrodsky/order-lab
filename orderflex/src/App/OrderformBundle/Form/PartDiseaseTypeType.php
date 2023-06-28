@@ -49,7 +49,8 @@ class PartDiseaseTypeType extends AbstractType
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseTypeList'] by [DiseaseTypeList::class]
         $repository = $this->params['em']->getRepository(DiseaseTypeList::class);
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
-        $query = $this->params['em']->createQuery($dql);
+        //$query = $this->params['em']->createQuery($dql);
+        $query = $dql->getQuery();
         $items = $query->getResult();
         $diseaseTypesArr = array();
         foreach( $items as $item ) {
@@ -87,7 +88,8 @@ class PartDiseaseTypeType extends AbstractType
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:DiseaseOriginList'] by [DiseaseOriginList::class]
         $repository = $this->params['em']->getRepository(DiseaseOriginList::class);
         $dql = $repository->createQueryBuilder("list")->orderBy("list.orderinlist","ASC");
-        $query = $this->params['em']->createQuery($dql);
+        //$query = $this->params['em']->createQuery($dql);
+        $query = $dql->getQuery();
         $items = $query->getResult();
         $DiseaseOriginListArr = array();
         foreach( $items as $item ) {

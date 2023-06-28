@@ -512,7 +512,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $dql->orderBy("encounter.version","DESC"); //show latest first
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
 
         $encounters = $query->getResult();
@@ -570,7 +570,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $parameters['number'] = $encounterNumber;
         $parameters['keytype'] = $encounterTypeId;
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
 
         $maxVersions = $query->getResult();
@@ -612,7 +612,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $parameters['number'] = $encounterNumber;
         $parameters['keytype'] = $encounterTypeId;
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $query->setMaxResults(1);
 

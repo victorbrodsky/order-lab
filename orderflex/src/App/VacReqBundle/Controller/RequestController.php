@@ -1858,7 +1858,7 @@ class RequestController extends OrderAbstractController
         $dql->select('request');
         //$dql->where("request.exportId != 0");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $requests = $query->getResult();
 
@@ -1925,7 +1925,7 @@ class RequestController extends OrderAbstractController
         $dql->andWhere("request.firstDayAway IS NULL");
         $dql->andWhere("request.firstDayBackInOffice IS NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $requests = $query->getResult();
 
@@ -2024,7 +2024,7 @@ class RequestController extends OrderAbstractController
 
         //$dql->orderBy('request.id');
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $requests = $query->getResult();
         //echo "requests with users=".count($requests)."<br>";
@@ -2072,7 +2072,7 @@ class RequestController extends OrderAbstractController
 
         $dql->where("request.status = 'pending' AND requestType.abbreviation = 'carryover'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $pendingRequests = $query->getResult();
         //echo "pending request count=".count($pendingRequests)."<br><br>";

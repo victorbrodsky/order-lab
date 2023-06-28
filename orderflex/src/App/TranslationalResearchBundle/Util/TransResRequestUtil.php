@@ -127,7 +127,7 @@ class TransResRequestUtil
 
         $dqlParameters["projectId"] = $project->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -2592,7 +2592,7 @@ class TransResRequestUtil
 
         $dqlParameters["transresRequestId"] = $transresRequest->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -3218,7 +3218,7 @@ class TransResRequestUtil
             $dqlParameters['eventStr'] = '%'.$oid.'%';
 
             $dql->orderBy("logger.id","DESC");
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             if( count($dqlParameters) > 0 ) {
                 $query->setParameters($dqlParameters);
@@ -3525,7 +3525,7 @@ class TransResRequestUtil
         $dql->where("transresRequest.id = :transresRequestId");
         $dql->orderBy("invoice.id","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( $transresRequest ) {
             $transresRequestId = $transresRequest->getId();
@@ -3807,7 +3807,7 @@ class TransResRequestUtil
         $dql->andWhere("foscomment.entityName = 'TransResRequest'");
         //$dql->andWhere("(foscomment.entityName IS NULL OR foscomment.entityName = 'TransResRequest')");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(array(
             "searchStr" => "%".$searchStr."%",
@@ -3869,7 +3869,7 @@ class TransResRequestUtil
         $params["overDueDate"] = $overDueDate->format('Y-m-d H:i:s');
         ////////////// EOF //////////////
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params
@@ -4158,7 +4158,7 @@ class TransResRequestUtil
 
         $dqlParameters["projectId"] = $projectId;
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -5029,7 +5029,7 @@ class TransResRequestUtil
             }
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -5109,7 +5109,7 @@ class TransResRequestUtil
             }
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -5159,7 +5159,7 @@ class TransResRequestUtil
 //        $projectSpecialtyIdsArr[] = $projectSpecialtyId;
 //        $dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        if( count($dqlParameters) > 0 ) {
 //            $query->setParameters($dqlParameters);
@@ -5221,7 +5221,7 @@ class TransResRequestUtil
 //        $projectSpecialtyId = $projectSpecialty->getId();
 //        $dqlParameters["projectSpecialtyId"] = $projectSpecialtyId;
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        if( count($dqlParameters) > 0 ) {
 //            $query->setParameters($dqlParameters);
@@ -5247,7 +5247,7 @@ class TransResRequestUtil
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -5320,7 +5320,7 @@ class TransResRequestUtil
         $dqlParameters["typeadd"] = 'user-added';
         $dqlParameters["productId"] = $productId;
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -6638,7 +6638,7 @@ class TransResRequestUtil
         $dqlParameters["productId"] = $productId;
         $dqlParameters["transresRequestId"] = $transresRequest->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -6701,7 +6701,7 @@ class TransResRequestUtil
         $dqlParameters["productId"] = $productId;
         $dqlParameters["transresRequestId"] = $transresRequest->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -7172,7 +7172,7 @@ class TransResRequestUtil
 
         $dql->orderBy('list.orderinlist','ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
@@ -7385,7 +7385,7 @@ class TransResRequestUtil
 //        $dqlParameters["productId"] = $productId;
 //        $dqlParameters["invoiceId"] = $invoice->getId();
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        if( count($dqlParameters) > 0 ) {
 //            $query->setParameters($dqlParameters);
@@ -7435,7 +7435,7 @@ class TransResRequestUtil
 //        $dqlParameters["productId"] = $productId;
 //        $dqlParameters["invoiceItemId"] = $invoiceItem->getId();
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        if( count($dqlParameters) > 0 ) {
 //            $query->setParameters($dqlParameters);

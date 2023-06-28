@@ -3677,7 +3677,7 @@ class TransResUtil
             $dql =  $repository->createQueryBuilder("list");
 
             $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
             $query->setParameter('urlSlug',$collDivStr);
             $collDivs = $query->getResult();
             //echo "requesterGroups=".count($requesterGroups)."<br>";
@@ -3779,7 +3779,7 @@ class TransResUtil
             $dql =  $repository->createQueryBuilder("list");
 
             $dql->andWhere("LOWER(list.urlSlug) = LOWER(:urlSlug)");
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
             $query->setParameter('urlSlug',$requesterGroupStr);
             $requesterGroups = $query->getResult();
             //echo "requesterGroups=".count($requesterGroups)."<br>";
@@ -4246,7 +4246,7 @@ class TransResUtil
             $parameters['abbreviation'] = $specialtyAbbreviation;
         }
         
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($parameters);
 
@@ -7105,7 +7105,7 @@ class TransResUtil
             $dql->where("projectSpecialty IS NULL");
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -7342,7 +7342,7 @@ class TransResUtil
         }
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -7396,7 +7396,7 @@ class TransResUtil
         }
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -7464,7 +7464,7 @@ class TransResUtil
         }
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -7516,7 +7516,7 @@ class TransResUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -7568,7 +7568,7 @@ class TransResUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -8043,7 +8043,7 @@ class TransResUtil
             $name = strtolower($name);
             $dqlParameters['workQueueName'] = $name;
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
             $query->setParameters($dqlParameters);
 
             $entity = $query->getOneOrNullResult();
@@ -8149,7 +8149,7 @@ class TransResUtil
 
         $dql->orderBy("list.orderinlist","ASC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -8514,7 +8514,7 @@ class TransResUtil
 
         $dql->andWhere("prices.fee IS NOT NULL OR prices.feeAdditionalItem IS NOT NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
@@ -8785,7 +8785,7 @@ WHERE
 //            $query = $this->em->createQuery($sql)->setParameter('id', $specialtiesStr);
 //        }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
         echo "query=" . $query->getSql() . "<br>";
 
         //$dqlParameters['ids'] = $specialties;

@@ -1178,7 +1178,7 @@ class CallEntryController extends OrderAbstractController
         //$dql->orderBy("message.id","DESC");
 
         //$limit = 10;
-        //$query = $em->createQuery($dql);
+        //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
         $query->setParameters($queryParameters);
 
@@ -3688,7 +3688,7 @@ class CallEntryController extends OrderAbstractController
 //        $dql = $repository->createQueryBuilder("message");
 //        //$dql->select('message.id');
 //        $dql->select('message');
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $query->setMaxResults(1);
 //        $entries = $query->getResult();
         //foreach($entries as $message) {

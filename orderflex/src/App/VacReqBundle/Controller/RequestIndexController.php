@@ -213,7 +213,7 @@ class RequestIndexController extends OrderAbstractController
         $requestTypeAbbreviation = $filterRes['requestTypeAbbreviation'];
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );
@@ -452,7 +452,8 @@ class RequestIndexController extends OrderAbstractController
         $dqlFilterUser->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
-        $queryFilterUser = $em->createQuery($dqlFilterUser);
+        //$queryFilterUser = $em->createQuery($dqlFilterUser);
+        $queryFilterUser = $dqlFilterUser->getQuery();
         $filterUsers = $queryFilterUser->getResult();
         //echo "count=".count($filterUsers)."<br>";
         //add unknown dummy user

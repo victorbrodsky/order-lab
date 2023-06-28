@@ -207,7 +207,7 @@ class ResAppImportPopulateUtil {
         $dql->leftJoin("datafile.resapp", "resapp");
         $dql->where("datafile.status != :completeStatus OR resapp.id IS NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameter("completeStatus","completed");
 
@@ -272,7 +272,7 @@ class ResAppImportPopulateUtil {
         $dql->leftJoin("datafile.resapp", "resapp");
         $dql->where("datafile.status = :completeStatus AND resapp.id IS NOT NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameter("completeStatus","completed");
 

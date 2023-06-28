@@ -133,7 +133,7 @@ class ReportGenerator {
 
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $fellapps = $query->getResult();
 

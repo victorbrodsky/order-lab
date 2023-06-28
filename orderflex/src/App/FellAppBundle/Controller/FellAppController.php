@@ -510,7 +510,7 @@ class FellAppController extends OrderAbstractController {
 
         $limit = 200;
         //$limit = 10; //testing
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         //echo "query=".$query->getSql()."<br>";
 
         $paginator  = $this->container->get('knp_paginator');

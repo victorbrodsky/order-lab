@@ -52,7 +52,8 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $repository = $em->getRepository(StainList::class);
         $dql =  $repository->createQueryBuilder("stain");
         $dql->select('MIN(stain.orderinlist) AS default_staintype');
-        $query = $this->getEntityManager()->createQuery($dql);
+        //$query = $this->getEntityManager()->createQuery($dql);
+        $query = $dql->getQuery();
         $default_staintype = $query->getSingleResult()['default_staintype'];
         //$default_staintype = $staintypeResult['default_staintype'];
 

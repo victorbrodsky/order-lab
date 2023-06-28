@@ -217,7 +217,7 @@ class ReminderUtil
             //$dql->andWhere("invoice.id=4730"); //test
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
 //            array(
@@ -537,7 +537,7 @@ class ReminderUtil
             //$dql->orWhere("invoice.id=1");
         //}
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params
@@ -686,7 +686,7 @@ class ReminderUtil
         $dqlParameters['eventStr'] = "%" . $eventStr . "%";
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -877,7 +877,7 @@ class ReminderUtil
             //TODO: add billing status? Paid or not?
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params
@@ -984,7 +984,7 @@ class ReminderUtil
         $dqlParameters['eventStr'] = "%" . $eventStr . "%";
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($dqlParameters);
 
@@ -1089,7 +1089,7 @@ class ReminderUtil
         $params['nowDatetime'] = $nowStr;
         $params['upcomingDeadline'] = $upcomingDeadline->format('Y-m-d');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params
@@ -1276,7 +1276,7 @@ class ReminderUtil
 
         $params['expirationDuration'] = $expirationDurationStr;
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params
@@ -1482,7 +1482,7 @@ class ReminderUtil
 
         $dql->orderBy("project.id","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters(
             $params

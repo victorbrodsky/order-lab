@@ -499,7 +499,7 @@ class DefaultController extends OrderAbstractController
         //$dql->andWhere("request.destinationYear = :destinationYear");
         //$params['destinationYear'] = $year;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);
@@ -616,7 +616,7 @@ class DefaultController extends OrderAbstractController
         //$dql->andWhere("request.destinationYear = :destinationYear");
         //$params['destinationYear'] = $year;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
 //        if( count($params) > 0 ) {
 //            $query->setParameters($params);
@@ -693,7 +693,7 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("request.createDate < :maxCreateDate");
         $params['maxCreateDate'] = '2019-01-01';
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);
@@ -800,7 +800,7 @@ class DefaultController extends OrderAbstractController
         $dql->andWhere("request.createDate < :maxCreateDate");
         $params['maxCreateDate'] = '2020-01-01';
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);

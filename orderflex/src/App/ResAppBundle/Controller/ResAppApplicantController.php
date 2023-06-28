@@ -167,7 +167,7 @@ class ResAppApplicantController extends OrderAbstractController {
 
         $dql->orderBy("resapp.interviewScore","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $applicantions = $query->getResult();
 
         //echo "applicants=".count($applicantions)."<br>";

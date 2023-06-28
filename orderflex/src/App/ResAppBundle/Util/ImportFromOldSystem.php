@@ -352,7 +352,7 @@ class ImportFromOldSystem {
 
         $dql->where("resapp.id = :resappId AND interviewer.id = :interviewerId");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'resappId' => $residencyApplicationDb->getId(),
@@ -1482,7 +1482,7 @@ class ImportFromOldSystem {
             $dql->leftJoin("list.institution", "institution");
             $dql->where("list.name = :name AND institution.id = :institutionId");
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery();
             $query->setParameters(
                 array(
                     'name' => $residencySpecialtyStr,

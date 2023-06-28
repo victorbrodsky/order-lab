@@ -1169,7 +1169,7 @@ class ProjectController extends OrderAbstractController
 //        }
 
         $limit = 10;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
 //        if( $withMatching ) {
 //            $query2 = $em->createQuery($dql);

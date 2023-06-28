@@ -2294,7 +2294,8 @@ class DashboardUtil
             $dql2->andWhere("logger.event LIKE :eventStr");
 
             $dql2->orderBy("logger.id","DESC");
-            $query2 = $this->em->createQuery($dql2);
+            //$query2 = $this->em->createQuery($dql2);
+            $query2 = $dql2->getQuery();
 
             $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
             $query2->setParameters(

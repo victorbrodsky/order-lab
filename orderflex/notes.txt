@@ -1587,7 +1587,7 @@ $fromEntity = "AppUserdirectoryBundle:ObjectTypeText";
 
 Check: mapper['bundleName']
 
-
-
+$query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
+$query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
 

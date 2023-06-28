@@ -247,7 +247,7 @@ class CalendarController extends OrderAbstractController
         //$filtered = $filterRes['filtered'];
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
@@ -388,7 +388,7 @@ class CalendarController extends OrderAbstractController
 
         $dql->addOrderBy("holiday.holidayDate","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         if (count($dqlParameters) > 0) {
@@ -441,7 +441,7 @@ class CalendarController extends OrderAbstractController
         //$filtered = $filterRes['filtered'];
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
@@ -545,7 +545,7 @@ class CalendarController extends OrderAbstractController
             $dqlParameters = $filterRes['dqlParameters'];
             $years = $filterRes['years'];
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
             //echo "query=".$query->getSql()."<br>";
 
             if (count($dqlParameters) > 0) {
@@ -759,7 +759,7 @@ class CalendarController extends OrderAbstractController
         //$dqlParameters = $filterRes['dqlParameters'];
         //$filtered = $filterRes['filtered'];
 
-        //$query = $em->createQuery($dql);
+        //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         //if (count($dqlParameters) > 0) {
@@ -903,7 +903,7 @@ class CalendarController extends OrderAbstractController
         $dqlParameters = $filterRes['dqlParameters'];
         $years = $filterRes['years'];
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
@@ -1092,7 +1092,7 @@ class CalendarController extends OrderAbstractController
 //                $dql->andWhere($yearWhereStr);
 //            }
 //
-//            $query = $em->createQuery($dql);
+//            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //            //echo "query=".$query->getSql()."<br>";
 //
 //            if( count($dqlParameters) > 0 ) {

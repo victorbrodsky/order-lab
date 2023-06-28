@@ -401,7 +401,7 @@ class FellAppImportPopulateUtil {
         $dql->leftJoin("datafile.fellapp", "fellapp");
         $dql->where("datafile.status != :completeStatus OR fellapp.id IS NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameter("completeStatus","completed");
 
@@ -501,7 +501,7 @@ class FellAppImportPopulateUtil {
         $dql->leftJoin("datafile.fellapp", "fellapp");
         $dql->where("datafile.status = :completeStatus AND fellapp.id IS NOT NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameter("completeStatus","completed");
 

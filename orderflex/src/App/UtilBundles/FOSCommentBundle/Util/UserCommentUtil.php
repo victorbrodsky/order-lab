@@ -115,7 +115,8 @@ class UserCommentUtil {
         $dql->leftJoin("comment.thread", "thread");
         $dql->where("thread.id = :threadId");
         $dql->orderBy("comment.id",'DESC');
-        $query = $this->em->createQuery($dql);
+        //$query = $this->em->createQuery($dql);
+        $query = $dql->getQuery($dql);
 
         $query->setParameters(array('threadId'=>$thread->getId()));
 

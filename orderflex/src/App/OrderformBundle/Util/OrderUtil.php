@@ -951,7 +951,9 @@ class OrderUtil {
         $dql->where($criteria);
         $dql->orderBy('message.orderdate','DESC');
 
-        $query = $this->em->createQuery($dql)->setMaxResults(1);
+        //$query = $this->em->createQuery($dql)->setMaxResults(1);
+        $query = $dql->getQuery()->setMaxResults(1);
+
         $previousOrders = $query->getResult();
 
         if( $previousOrders && count($previousOrders) > 0 ) {
@@ -1010,7 +1012,7 @@ class OrderUtil {
         $dql->select('location');
         $dql->leftJoin("location.locationTypes", "locationTypes");
         $dql->where("locationTypes.name = 'Filing Room'");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $surgicalPathLocations = $query->getResult();
         if( $surgicalPathLocations && count($surgicalPathLocations) == 1 ) {
             $surgicalPathLocation = $surgicalPathLocations[0];
@@ -1066,7 +1068,8 @@ class OrderUtil {
         $dql->leftJoin("message.proxyuser", "proxyuser");
         $dql->where("provider=:user AND proxyuser.id IS NOT NULL");
         $dql->orderBy("message.orderdate","DESC");
-        $query = $this->em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
+        //$query = $this->em->createQuery($dql)->setParameter('user', $user)->setMaxResults(1);
+        $query = $dql->getQuery()->setParameter('user', $user)->setMaxResults(1);
         $lastOrderWithProxies = $query->getResult();
         //echo "count=".count($lastOrderWithProxies)."<br>";
 
@@ -1435,7 +1438,7 @@ class OrderUtil {
             $dql->andWhere("accessionListTypes.id = :accessionListTypeId ");
             $parameters['accessionListTypeId'] = $accessionListType->getId();
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery();
             $query->setParameters($parameters);
             $accessionLists = $query->getResult();
 
@@ -1647,7 +1650,7 @@ class OrderUtil {
         $parameters['typedef'] = 'default';
         $parameters['typeadd'] = 'user-added';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();
         if( count($accessions) > 0 ) {

@@ -2331,7 +2331,7 @@ class RequestController extends OrderAbstractController
         //$dql->andWhere("transresRequest.id = 2");
 
         $limit = 20;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         //doctrine cache queries
         //$query->useQueryCache(true);
@@ -2492,7 +2492,7 @@ class RequestController extends OrderAbstractController
 //        $dql =  $repository->createQueryBuilder("transresRequest");
 //        $dql->select('transresRequest');
 //        $dql->where("transresRequest.id=2");
-//        $query = $em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 //        $paginationParams = array(
 //            'defaultSortFieldName' => 'transresRequest.id',
 //            'defaultSortDirection' => 'DESC',
@@ -3423,7 +3423,7 @@ class RequestController extends OrderAbstractController
         }
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters( $dqlParameters );

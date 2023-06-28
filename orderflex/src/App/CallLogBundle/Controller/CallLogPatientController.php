@@ -599,7 +599,7 @@ class CallLogPatientController extends PatientController {
             $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
             $dql->andWhere("calllogEntryMessage IS NOT NULL");
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
             $messages = $query->getResult();
             //echo "Messages count=".count($messages)."<br>";
@@ -803,7 +803,7 @@ class CallLogPatientController extends PatientController {
 //        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
 
         $dql->where("patient.id = ".$patient->getId()." AND messageStatus.name != 'Deleted'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setMaxResults(10);
 
         $messages = $query->getResult();
@@ -867,7 +867,7 @@ class CallLogPatientController extends PatientController {
 
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
 
@@ -969,7 +969,7 @@ class CallLogPatientController extends PatientController {
         //$parameters['hours96Ago'] = $hours96Ago->format('Y-m-d');
         $parameters['hours96Ago'] = $hours96Ago;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
 
@@ -1033,7 +1033,7 @@ class CallLogPatientController extends PatientController {
         $dql->where("patient = :patientId");
         $parameters['patientId'] = $patientId;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($parameters);
         $patients = $query->getResult();
 
@@ -1287,7 +1287,7 @@ class CallLogPatientController extends PatientController {
         // "Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord).
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
         $limit = 10;
@@ -1554,7 +1554,7 @@ class CallLogPatientController extends PatientController {
             $queryParameters['messageCategoryId'] = $messageCategoryId;
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
         //$limit = 10;
@@ -1850,7 +1850,7 @@ class CallLogPatientController extends PatientController {
 
         $dql->orderBy("patient.id","DESC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         //$query->setMaxResults(100);
 
         $patients = $query->getResult();

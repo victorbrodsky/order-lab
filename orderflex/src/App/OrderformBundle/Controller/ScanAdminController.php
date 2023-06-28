@@ -2979,7 +2979,7 @@ class ScanAdminController extends AdminController
         $dql->where("numberid.".$fieldName." LIKE :oldNumberId");
         $parameters['oldNumberId'] = '%'.$oldNumberId.'%';
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo $mergeId.":sql=".$query->getSql()."<br>";
         $numberObjects = $query->getResult();

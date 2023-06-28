@@ -190,7 +190,7 @@ class FellAppUtil {
 
         //echo "dql=".$dql."<br>";
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $applicants = $query->getResult();
         
 //        echo "applicants=".count($applicants)."<br>";
@@ -403,7 +403,7 @@ class FellAppUtil {
         $dql->where("institution.id = ".$pathology->getId());
         $dql->orderBy("list.orderinlist","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $fellTypes = $query->getResult();
         //echo "fellTypes count=".count($fellTypes)."<br>";
@@ -433,7 +433,7 @@ class FellAppUtil {
         $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->orderBy("list.orderinlist","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'typedef' => 'default',
@@ -1927,7 +1927,7 @@ class FellAppUtil {
         $dql->andWhere("eventType.name = :eventTypeRejectionStr OR eventType.name = :eventTypeAcceptanceStr");
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
 
@@ -2242,7 +2242,7 @@ class FellAppUtil {
         //$dql->andWhere("logger.event LIKE :eventStr");
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //$search = "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate";
         $search = "Invited interviewers to rate fellowship application ID";

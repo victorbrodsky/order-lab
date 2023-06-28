@@ -1192,7 +1192,7 @@ class VacReqUtil
         $dql->where("userCarryOver.user = :user");
         $dql->andWhere("carryOver.year = :year");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('user', $user->getId());
         $query->setParameter('year', $startYear);
@@ -2216,7 +2216,7 @@ class VacReqUtil
 //        //$dql->groupBy('request.id');
 //        //}
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        //echo "query=".$query->getSql()."<br>";
 //        //echo "dql=".$dql."<br>";
@@ -2354,7 +2354,7 @@ class VacReqUtil
             $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
@@ -2574,7 +2574,7 @@ class VacReqUtil
 
         $dql->orderBy('request.createDate', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
@@ -2613,7 +2613,7 @@ class VacReqUtil
 
         $dql->orderBy('request.createDate', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $requests = $query->getResult();
         //echo "requests to analyze=".count($requests)."<br>";
@@ -2715,7 +2715,7 @@ class VacReqUtil
 
         $dql->orderBy('request.id');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
         $query->setParameter('requestId', $subjectRequest->getId());
@@ -3257,7 +3257,7 @@ class VacReqUtil
         $dql->where("requestType.id IS NOT NULL AND requestType.status = :statusApproved");
         $dql->andWhere('(requestType.startDate BETWEEN :startDate and :endDate)');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('statusApproved', 'approved');
         $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
@@ -3356,7 +3356,7 @@ class VacReqUtil
 
         $dql->andWhere('(:today BETWEEN requestType.startDate and requestType.endDate)');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
         $query->setParameter('statusApproved', 'approved');
@@ -3821,7 +3821,7 @@ class VacReqUtil
 
         $dql->orderBy('infos.lastName', 'ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters( array(
             'groupId' => $groupId
@@ -3923,7 +3923,7 @@ class VacReqUtil
 
         $dql->orderBy('request.createDate', 'DESC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters( array(
             'userId' => $user->getId(),
@@ -4004,7 +4004,7 @@ class VacReqUtil
             $dql->andWhere("request.availableCellPhone IS NOT NULL");
             $dql->orderBy('request.createDate', 'DESC');
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameters(array(
                 'userId' => $user->getId(),
@@ -4030,7 +4030,7 @@ class VacReqUtil
             $dql->andWhere("request.availableEmail IS NOT NULL");
             $dql->orderBy('request.createDate', 'DESC');
 
-            $query = $this->em->createQuery($dql);
+            $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             $query->setParameters(array(
                 'userId' => $user->getId(),
@@ -4393,7 +4393,7 @@ class VacReqUtil
 //
 //        $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
 //
-//        $query = $this->em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 //
 //        $query->setParameters($params);
 //
@@ -4545,7 +4545,7 @@ class VacReqUtil
             $dql->andWhere("institution.id IN (" . $idsStr . ") ");
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
 //        $query->setParameters(array(
 //            'groupIds' => implode(",",$idArr),
@@ -4588,7 +4588,7 @@ class VacReqUtil
 
         $dql->orderBy("request.id","DESC"); //highest id on top
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($params) > 0 ) {
             $query->setParameters($params);
@@ -4937,7 +4937,7 @@ class VacReqUtil
 
         $dql->orderBy("list.orderinlist","ASC"); //first with lower orderinlist
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameters($params);
 
@@ -5294,7 +5294,7 @@ class VacReqUtil
             $dql->andWhere("request.destinationYear = '".$startAcademicYearStr."'");
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
 
@@ -5417,7 +5417,7 @@ class VacReqUtil
             }
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
@@ -5471,7 +5471,7 @@ class VacReqUtil
             }
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
@@ -6587,93 +6587,94 @@ class VacReqUtil
         return 0;
     }
 
-    //NOT USED
-    //get all unique users with vacreq requests
-    public function getVacReqUsers() {
-
-        if(0) {
-        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
-            $repository = $this->em->getRepository(VacReqRequest::class);
-            $dql = $repository->createQueryBuilder("request");
-
-            //$dql->select('request, DISTINCT user as users');
-            //$dql->select('DISTINCT request.user');
-            //$dql->select('user');
-            $dql->select('request');
-
-            //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
-            //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
-
-            $dql->leftJoin("request.user", "user");
-            //$dql->leftJoin("request.submitter", "submitter");
-            //$dql->leftJoin("user.infos", "infos");
-            //$dql->leftJoin("request.institution", "institution");
-            //$dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
-
-            //$dql->leftJoin("request.requestBusiness", "requestBusiness");
-            //$dql->leftJoin("request.requestVacation", "requestVacation");
-
-            //$dql->leftJoin("request.requestType", "requestType");
-
-            //$dql->groupBy('request,user.id');
-            //$dql->groupBy('request.id,user.id');
-            //$dql->groupBy('user.id');
-
-            $query = $dql->getQuery();
-            $requests = $query->getResult();
-            $uniqueUsers = array();
-            foreach ($requests as $request) {
-                $thisUser = $request->getUser();
-                $uniqueUsers[$thisUser->getId()] = 1;
-            }
-            echo "uniqueUsers=" . count($uniqueUsers) . "<br>";
-        }
-
-        //WITH  request.id <> request2.id
-        //WHERE duser.id = user.id
-        //INNER JOIN request.user user
-
-//        $str =
-//              "SELECT fosuser.id".
-//              " FROM AppVacReqBundle:VacReqRequest request".
-//              " INNER JOIN AppUserdirectoryBundle:User fosuser"
-//              ." ON request.user = fosuser.id"
-//              ." WHERE request.user IS NOT NULL"
-//        ;
-
-        //When you include fields from the joined entity in the SELECT clause you get a fetch join
-        //" FROM AppVacReqBundle:VacReqRequest request".
-        $str =
-            "SELECT DISTINCT user.id as id".
-            " FROM App\\VacReqBundle\\Entity\\VacReqRequest request".
-            " INNER JOIN request.user user"
-            //." ON request.user = fosuser.id"
-            ." WHERE user IS NOT NULL"
-        ;
-
-        //$str = 'SELECT DISTINCT user.id FROM AppVacReqBundle:VacReqRequest r INNER JOIN r.user user';
-
-        $query = $this->em->createQuery($str);
-
-        //$query->setMaxResults(50); //testing
-
-        $users = $query->getResult();
-        $ids = array_map('current', $users);
-        //echo "ids=".count($ids)."<br>";
-
-//        //dump($users);
-//        dump($ids);
-//        exit('222');
+//    //NOT USED
+//    //get all unique users with vacreq requests
+//    public function getVacReqUsers() {
 //
-//        foreach($users as $user) {
-//            echo "user=".$user."<br>";
+//        if(0) {
+//        //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
+//            $repository = $this->em->getRepository(VacReqRequest::class);
+//            $dql = $repository->createQueryBuilder("request");
+//
+//            //$dql->select('request, DISTINCT user as users');
+//            //$dql->select('DISTINCT request.user');
+//            //$dql->select('user');
+//            $dql->select('request');
+//
+//            //COALESCE(requestBusiness.numberOfDays,0) replace NULL with 0 (similar to ISNULL)
+//            //$dql->addSelect('(COALESCE(requestBusiness.numberOfDays,0) + COALESCE(requestVacation.numberOfDays,0)) as thisRequestTotalDays');
+//
+//            $dql->leftJoin("request.user", "user");
+//            //$dql->leftJoin("request.submitter", "submitter");
+//            //$dql->leftJoin("user.infos", "infos");
+//            //$dql->leftJoin("request.institution", "institution");
+//            //$dql->leftJoin("request.tentativeInstitution", "tentativeInstitution");
+//
+//            //$dql->leftJoin("request.requestBusiness", "requestBusiness");
+//            //$dql->leftJoin("request.requestVacation", "requestVacation");
+//
+//            //$dql->leftJoin("request.requestType", "requestType");
+//
+//            //$dql->groupBy('request,user.id');
+//            //$dql->groupBy('request.id,user.id');
+//            //$dql->groupBy('user.id');
+//
+//            $query = $dql->getQuery();
+//            $requests = $query->getResult();
+//            $uniqueUsers = array();
+//            foreach ($requests as $request) {
+//                $thisUser = $request->getUser();
+//                $uniqueUsers[$thisUser->getId()] = 1;
+//            }
+//            echo "uniqueUsers=" . count($uniqueUsers) . "<br>";
 //        }
 //
-//        echo "users=".count($users)."<br>";
-        //exit('111');
-
-        return $ids;
-    }
+//        //WITH  request.id <> request2.id
+//        //WHERE duser.id = user.id
+//        //INNER JOIN request.user user
+//
+////        $str =
+////              "SELECT fosuser.id".
+////              " FROM AppVacReqBundle:VacReqRequest request".
+////              " INNER JOIN AppUserdirectoryBundle:User fosuser"
+////              ." ON request.user = fosuser.id"
+////              ." WHERE request.user IS NOT NULL"
+////        ;
+//
+//        //When you include fields from the joined entity in the SELECT clause you get a fetch join
+//        //" FROM AppVacReqBundle:VacReqRequest request".
+//        $str =
+//            "SELECT DISTINCT user.id as id".
+//            " FROM App\\VacReqBundle\\Entity\\VacReqRequest request".
+//            " INNER JOIN request.user user"
+//            //." ON request.user = fosuser.id"
+//            ." WHERE user IS NOT NULL"
+//        ;
+//
+//        //$str = 'SELECT DISTINCT user.id FROM AppVacReqBundle:VacReqRequest r INNER JOIN r.user user';
+//
+//        $query = $this->em->createQuery($str);
+//        //$query = $str->getQuery($str);
+//
+//        //$query->setMaxResults(50); //testing
+//
+//        $users = $query->getResult();
+//        $ids = array_map('current', $users);
+//        //echo "ids=".count($ids)."<br>";
+//
+////        //dump($users);
+////        dump($ids);
+////        exit('222');
+////
+////        foreach($users as $user) {
+////            echo "user=".$user."<br>";
+////        }
+////
+////        echo "users=".count($users)."<br>";
+//        //exit('111');
+//
+//        return $ids;
+//    }
 
     public function getVacReqUserIdsArrByDqlParameters($dql,$dqlParameters) {
         $dql->select('user.id');
@@ -7416,7 +7417,7 @@ class VacReqUtil
 
         $dql->andWhere("(floating.status = 'pending' OR floating.status = 'approved')");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
             $query->setParameters($parameters);
@@ -7961,7 +7962,7 @@ class VacReqUtil
 
         $dql->andWhere("request.floatingDay BETWEEN :floatingDayDateFrom AND :floatingDayDateTo");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";

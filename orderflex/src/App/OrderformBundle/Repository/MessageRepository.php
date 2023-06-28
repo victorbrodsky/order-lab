@@ -384,7 +384,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         $dql->orderBy('message.version','DESC');
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $messages = $query->getResult();
 
@@ -413,7 +413,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         $dql->orderBy('message.version','DESC');
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $messages = $query->getResult();
 
@@ -456,7 +456,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         $dql->orderBy('message.version','DESC');
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $messages = $query->getResult();
 
@@ -475,7 +475,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
         $parameters['messageOid'] = $message->getOid();
 
-        $query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
 
         $maxVersions = $query->getResult();

@@ -101,7 +101,7 @@ class DefaultReviewerController extends OrderAbstractController
         $dql->where('defaultReviewer.state=:state AND projectSpecialty.id=:specialty');
 
         $limit = 30;
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         $query->setParameters(array(
             "state" => $stateStr,

@@ -566,7 +566,7 @@ class ResAppController extends OrderAbstractController {
 
         $limit = 200;
         //$limit = 10; //testing
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $paginator  = $this->container->get('knp_paginator');
         $resApps = $paginator->paginate(
             $query,

@@ -359,7 +359,8 @@ class PartRepository extends ArrayFieldAbstractRepository
 
         //echo "dql=".$dql."<br>";
 
-        $query = $this->getEntityManager()->createQuery($dql)->setParameters($parameters);
+        //$query = $this->getEntityManager()->createQuery($dql)->setParameters($parameters);
+        $query = $dql->getQuery()->setParameters($parameters);
 
 //        ->createQuery($dql)->setParameter('field', $partname."");
 //        if( $accession && $accession != "" ) {
