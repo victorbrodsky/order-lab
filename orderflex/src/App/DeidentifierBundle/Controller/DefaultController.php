@@ -557,7 +557,7 @@ class DefaultController extends OrderAbstractController
             $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
 //        $query->setParameters( array(
 //                'accession' => $accession->getId(),
@@ -644,7 +644,7 @@ class DefaultController extends OrderAbstractController
         $dql->where("accessionAccession.keytype = :accessionType");
         //$dql->orderBy("fellapp.interviewScore","ASC");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
                 //'accessionId' => $accessionId,

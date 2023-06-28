@@ -591,8 +591,8 @@ class CrnPatientController extends PatientController {
             //filter only CRN messages
             $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
             $dql->andWhere("crnEntryMessage IS NOT NULL");
-            
-            $query = $em->createQuery($dql);
+
+            $query = $dql->getQuery();
 
             $messages = $query->getResult();
             //echo "Messages count=".count($messages)."<br>";
@@ -796,7 +796,7 @@ class CrnPatientController extends PatientController {
 //        $dql->leftJoin("message.crnEntryMessage","crnEntryMessage");
 
         $dql->where("patient.id = ".$patient->getId()." AND messageStatus.name != 'Deleted'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         //$query->setMaxResults(10);
 
         $messages = $query->getResult();
@@ -860,7 +860,7 @@ class CrnPatientController extends PatientController {
 
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
 
@@ -962,7 +962,7 @@ class CrnPatientController extends PatientController {
         //$parameters['hours96Ago'] = $hours96Ago->format('Y-m-d');
         $parameters['hours96Ago'] = $hours96Ago;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo "sql=".$query->getSql()."<br>";
 
@@ -1026,7 +1026,7 @@ class CrnPatientController extends PatientController {
         $dql->where("patient = :patientId");
         $parameters['patientId'] = $patientId;
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $patients = $query->getResult();
 
@@ -1280,7 +1280,7 @@ class CrnPatientController extends PatientController {
         // "Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord).
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($queryParameters);
 
         $limit = 10;
@@ -1542,7 +1542,7 @@ class CrnPatientController extends PatientController {
             $queryParameters['messageCategoryId'] = $messageCategoryId;
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($queryParameters);
 
         //$limit = 10;

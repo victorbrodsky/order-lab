@@ -254,7 +254,7 @@ class DefaultController extends OrderAbstractController
         $dql->leftJoin("user.infos", "infos");
         $dql->where("infos.displayName = :displayName");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameter('displayName', $userStr);
 
         $users = $query->getResult();
@@ -313,7 +313,7 @@ class DefaultController extends OrderAbstractController
 
         //$dql->setMaxResults(100);
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $messages = $query->getResult();
         //echo "Messages to update count=".count($messages)."<br>";

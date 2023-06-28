@@ -103,7 +103,7 @@ class DashboardUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         //$dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 
@@ -143,7 +143,7 @@ class DashboardUtil
         $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
         $dql->orderBy("logger.entityId","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 
@@ -1774,7 +1774,7 @@ class DashboardUtil
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
@@ -1829,7 +1829,7 @@ class DashboardUtil
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
@@ -1899,7 +1899,7 @@ class DashboardUtil
             $dqlParameters["categoryId"] = $productservice; //->getId();
         }
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
@@ -1998,7 +1998,7 @@ class DashboardUtil
             $dqlParameters["todayDate"] = $todayDate->format('Y-m-d');
         }
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
         //echo "query=".$query->getSql()."<br>";
@@ -2269,7 +2269,7 @@ class DashboardUtil
         $dql->andWhere("logger.event LIKE :eventStr");
 
         $dql->orderBy("logger.id","DESC");
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         //$search = "status changed to 'Unpaid/Issued'";
         $search = "invoice status change to Unpaid/Issued";

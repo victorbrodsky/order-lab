@@ -293,7 +293,7 @@ class CrnUtil
 
         $dql->orderBy("patient.id","ASC"); //show latest first
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         //echo $mergeId.":sql=".$query->getSql()."<br>";
         $patients = $query->getResult();
@@ -1474,7 +1474,7 @@ class CrnUtil
                         //$parameters['typedef'] = 'default';
                         //$parameters['typeadd'] = 'user-added';
 
-                        $query = $this->em->createQuery($dql);
+                        $query = $dql->getQuery();
 
                         if( count($parameters) > 0 ) {
                             //print_r($parameters);
@@ -1848,7 +1848,7 @@ class CrnUtil
         $parameters['typedef'] = 'default';
         $parameters['typeadd'] = 'user-added';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $patients = $query->getResult();
         if( count($patients) > 0 ) {
@@ -2283,7 +2283,7 @@ class CrnUtil
         $dql->andWhere("logger.event LIKE :eventStr2");
         $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters( $queryParameters );
         $logs = $query->getResult();
         //echo $oid."[".$statusName."]: logs count=".count($logs)."<br>";
@@ -2531,7 +2531,7 @@ class CrnUtil
 
         $dql->andWhere("message.orderdate BETWEEN :monday AND :sunday");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'userId' => $user->getId(),
@@ -2616,7 +2616,7 @@ class CrnUtil
 
         $dql->orderBy("message.orderdate","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'patientId' => $patient->getId(),
@@ -2662,7 +2662,7 @@ class CrnUtil
 
         $dql->orderBy("message.orderdate","DESC");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'accessionId' => $accession->getId(),
@@ -2702,7 +2702,7 @@ class CrnUtil
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
         $dql->andWhere("crnEntryMessage IS NOT NULL");
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters( array(
             'deletedMessageStatus' => "Deleted"
@@ -2800,7 +2800,7 @@ class CrnUtil
 
         $dql->orderBy('message.version','ASC');
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $messages = $query->getResult();
 
@@ -3165,7 +3165,7 @@ class CrnUtil
         $dql->andWhere($subquery."=0");
         //$dql->andWhere("list.entityId = html.entityId");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $unprocessedSourceTextObjects = $query->getResult();
         //echo "\n\r getUnprocessedTextObjects: UnprocessedSourceTextObjects count=".count($unprocessedSourceTextObjects)."<br>";
@@ -3207,7 +3207,7 @@ class CrnUtil
         $dql->where("formNode.id = " . $historySourceFormNode->getId());
         $dql->andWhere("list.entityId IS NOT NULL");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $sourceTextObjects = $query->getResult();
         //echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
@@ -3582,7 +3582,7 @@ class CrnUtil
 
         //$dql->orderBy('list.arraySectionIndex','DESC');
         //$dql->addOrderBy('list.orderinlist', 'ASC');
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $sourceTextObjects = $query->getResult();
         echo "\n\rSearching text objects by formnode ID ".$historySourceFormNode->getId()." and ".$impressionSourceFormNode->getId()."<br>";
@@ -3826,7 +3826,7 @@ class CrnUtil
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $destinationTextObjects = $query->getResult();
         //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
 
@@ -3865,7 +3865,7 @@ class CrnUtil
         //$dql->andWhere("list.entityNamespace = '$entityNamespace' AND list.entityName = '$entityName' AND list.entityId = '$entityId'");
         $dql->andWhere("list.entityName = '$entityName' AND list.entityId = '$entityId'");
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $destinationTextObjects = $query->getResult();
         //echo "Existing destinationTextObjects count=".count($destinationTextObjects)."<br>";
 
@@ -3894,7 +3894,7 @@ class CrnUtil
         $dql->leftJoin("parent.parent", "grandParent");
         $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Critical Result Notification Entry'");
         $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $sourceTextObjects = $query->getResult();
         // "sourceTextObjects count=".count($sourceTextObjects)."<br>";
 
@@ -3921,7 +3921,7 @@ class CrnUtil
         //$dql->where('list.level = 4 AND objectType.id = '.$objectTypeText->getId().' AND parent.level = 3');
         $dql->where("list.level = 4 AND objectType.id = ".$objectTypeText->getId()." AND parent.level = 3 AND grandParent.name = 'Critical Result Notification Entry'");
         $dql->andWhere("list.name = '".$name."'");
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
         $destinationTextObjects = $query->getResult();
 
         if( count($destinationTextObjects) == 1 ) {
@@ -4524,7 +4524,7 @@ class CrnUtil
 
         if( $where ) {
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery();
             $query->setParameters($parameters);
             $patients = $query->getResult();
 
@@ -4962,7 +4962,7 @@ class CrnUtil
 
         if( $where ) {
 
-            $query = $em->createQuery($dql);
+            $query = $dql->getQuery();
             $query->setParameters($parameters);
             $patients = $query->getResult();
 
@@ -5057,7 +5057,7 @@ class CrnUtil
         $parameters['statusValid'] = 'valid';
         $parameters['statusAlias'] = 'alias';
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();
 
@@ -5173,7 +5173,7 @@ class CrnUtil
         $dql->andWhere("patient.id = :patientId");
         $parameters['patientId'] = $patient->getId();
 
-        $query = $this->em->createQuery($dql);
+        $query = $dql->getQuery();
         $query->setParameters($parameters);
         $accessions = $query->getResult();
 

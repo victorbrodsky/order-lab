@@ -267,7 +267,7 @@ class LoggerController extends OrderAbstractController
                 //echo "dql2=".$dql3."<br>";
 
                 //$query3 = $em->createQuery($dql3);
-                $query3 = $dql3->createQuery();
+                $query3 = $dql3->getQuery();
                 $query3->setParameters( $queryParameters );
                 $query3->setMaxResults(1);
                 $loggers = $query3->getResult();
@@ -414,7 +414,7 @@ class LoggerController extends OrderAbstractController
         //$dqlFilterUser->where("user.keytype IS NOT NULL");
         $dqlFilterUser->orderBy("infos.lastName","ASC");
         //$queryFilterUser = $em->createQuery($dqlFilterUser);
-        $queryFilterUser = $dqlFilterUser->createQuery();
+        $queryFilterUser = $dqlFilterUser->getQuery();
         $filterUsers = $queryFilterUser->getResult();
         //echo "count=".count($filterUsers)."<br>";
         //add unknown dummy user

@@ -564,7 +564,7 @@ class DefaultController extends OrderAbstractController
         //$dql->andWhere('logger.creationdate <= :endDate');
         //$dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
 
-        $query = $em->createQuery($dql);
+        $query = $dql->getQuery();
 
         $query->setParameters($dqlParameters);
 
