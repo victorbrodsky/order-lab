@@ -171,7 +171,7 @@ class GrantType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "Grant";
-            $mapper['bundleName'] = "AppUserdirectoryBundle";
+            $mapper['bundleName'] = "UserdirectoryBundle";
             $mapper['fullClassName'] = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
             $mapper['entityNamespace'] = "App\\".$mapper['bundleName']."\\Entity";
 

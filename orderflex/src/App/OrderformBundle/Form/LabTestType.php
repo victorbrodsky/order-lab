@@ -77,7 +77,7 @@ class LabTestType extends AbstractType
             $params['cycle'] = $this->params['cycle'];
             $params['standalone'] = true;
             $mapper['className'] = "LabTest";
-            $mapper['bundleName'] = "AppOrderformBundle";
+            $mapper['bundleName'] = "OrderformBundle";
             $mapper['fullClassName'] = "App\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
             $mapper['entityNamespace'] = "App\\".$mapper['bundleName']."\\Entity";
 

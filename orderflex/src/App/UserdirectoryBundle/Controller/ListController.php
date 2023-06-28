@@ -2761,7 +2761,7 @@ class ListController extends OrderAbstractController
         $res = array();
         $res['className'] = $parentClassName;
         $res['fullClassName'] = "App\\UserdirectoryBundle\\Entity\\".$className;
-        $res['bundleName'] = "AppUserdirectoryBundle";
+        $res['bundleName'] = "UserdirectoryBundle";
 
         return $res;
     }
@@ -3856,7 +3856,7 @@ class ListController extends OrderAbstractController
         $res['className'] = $className;
         $res['fullClassName'] = "App\\".$bundleName."\\Entity\\".$className;
         $res['entityNamespace'] = "App\\".$bundleName."\\Entity";
-        $res['bundleName'] = "App".$bundleName;
+        $res['bundleName'] = $bundleName;
         $res['displayName'] = $displayName . ", class: [" . $className . "]";
         //$res['labels'] = $labels;
 

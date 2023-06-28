@@ -533,7 +533,7 @@ class ScanListController extends ListController
     public function classListMapper( $route, $request ) {
 
         $classPath = "App\\OrderformBundle\\Entity\\";
-        $bundleName = "AppOrderformBundle";
+        $bundleName = "OrderformBundle";
 
         switch( $route ) {
 
@@ -625,7 +625,7 @@ class ScanListController extends ListController
             $className = "EventTypeList";
             $displayName = "Event Log's Event Types";
             $classPath = "App\\UserdirectoryBundle\\Entity\\";
-            $bundleName = "AppUserdirectoryBundle";
+            $bundleName = "UserdirectoryBundle";
             break;
         case "races":
             $className = "RaceList";
@@ -687,7 +687,7 @@ class ScanListController extends ListController
             $className = "PathologyCallComplexPatients";
             $displayName = "Pathology Call Complex Patients";
             $classPath = "App\\CallLogBundle\\Entity\\";
-            $bundleName = "AppCallLogBundle";
+            $bundleName = "CallLogBundle";
             break;
         case "patientlisthierarchygrouptype":
             $className = "PatientListHierarchyGroupType";
