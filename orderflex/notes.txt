@@ -1594,3 +1594,16 @@ $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 deprecation.INFO: User Deprecated: Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment
 Problem: Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated
 and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.
+
+
+
+
+
+
+
+
+
+
+
+
+
