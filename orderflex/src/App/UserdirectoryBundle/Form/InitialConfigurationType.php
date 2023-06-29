@@ -220,12 +220,12 @@ class InitialConfigurationType extends AbstractType
             'label'=>'Default Primary Public User ID Type:',
             'attr' => array('class'=>'combobox')
         ));
-        $builder->add('defaultPrimaryPublicUserIdType', CustomSelectorType::class, array(
-            'label'=>'Default Primary Public User ID Type:',
-            'attr' => array('class' => 'ajax-combobox-usernametype', 'type' => 'hidden'),
-            'required' => false,
-            'classtype' => 'usernametype'
-        ));
+//        $builder->add('defaultPrimaryPublicUserIdType', CustomSelectorType::class, array(
+//            'label'=>'Default Primary Public User ID Type:',
+//            'attr' => array('class' => 'ajax-combobox-usernametype', 'type' => 'hidden'),
+//            'required' => false,
+//            'classtype' => 'usernametype'
+//        ));
 
 //        $builder->add('holidaysUrl',null,array(
 //            'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',

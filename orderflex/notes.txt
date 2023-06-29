@@ -1608,16 +1608,16 @@ Deprecated on DigitalOcean:
 
 1) The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver (doctrine/orm)
 
-2) Column::setCustomSchemaOptions() is deprecated. Use setPlatformOptions (doctrine/dbal)
+2) Column::setCustomSchemaOptions() is deprecated. Use setPlatformOptions (doctrine/dbal) (fixed in setparameters.php)
 
 3) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine/dbal)
-https://stackoverflow.com/questions/76488760/doctrine-deprecation-messages-during-symfony-6-3-production-server-cacheclear
+might be a bug in doctrine/dbal: https://stackoverflow.com/questions/76488760/doctrine-deprecation-messages-during-symfony-6-3-production-server-cacheclear
 
 4) Doctrine\DBAL\Schema\SchemaDiff::toSaveSql is deprecated. (doctrine/dbal)
 
 5) Not configuring a schema manager factory is deprecated. Use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory (doctrine/dbal)
 
-6) Connection::getSchemaManager() is deprecated, use Connection::createSchemaManager() instead (setparameters.php:136) (done in setparameters and PostgresMigration)
+* 6) Connection::getSchemaManager() is deprecated, use Connection::createSchemaManager() instead (setparameters.php:136) (done in setparameters and PostgresMigration)
 
 7) str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated at /usr/local/bin/order-lab/orderflex/config/setparameters.php:533) x5
 
