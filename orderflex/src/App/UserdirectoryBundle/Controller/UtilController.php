@@ -99,7 +99,7 @@ class UtilController extends OrderAbstractController {
         if( $className ) {
 
             $em = $this->getDoctrine()->getManager();
-            $fullClassName = "App\\".$bundleName."\\Enity\\".$className;
+            $fullClassName = "App\\".$bundleName."\\Entity\\".$className;
 
             switch( $className ) {
 
