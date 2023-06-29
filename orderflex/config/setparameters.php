@@ -72,17 +72,6 @@ if( !$connection_channel ) {
 //echo "user=".$user."<br>";
 //echo "password=".$password."<br>";
 
-$config = new \Doctrine\DBAL\Configuration();
-
-$connectionParams = array(
-    'dbname' => $dbname,
-    'user' => $user,
-    'password' => $password,
-    'host' => $host,
-    'driver' => $driver,
-    //'port' => 3306
-);
-
 //upload paths can't be NULL
 $employeesuploadpath = "directory/documents";
 $employeesavataruploadpath = "directory/avatars";
@@ -114,6 +103,19 @@ $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
 
 $container->setParameter('mailer_dsn', "null://null");
+
+
+$config = new \Doctrine\DBAL\Configuration();
+$config->setSchemaManagerFactory(new \Doctrine\DBAL\Schema\DefaultSchemaManagerFactory());
+
+$connectionParams = array(
+    'dbname' => $dbname,
+    'user' => $user,
+    'password' => $password,
+    'host' => $host,
+    'driver' => $driver,
+    //'port' => 3306
+);
 
 //exit("1");
 if( $useDb ) {

@@ -24,16 +24,21 @@
 
 namespace App\UserdirectoryBundle\Services;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\OnFlushEventArgs;
-use Doctrine\ORM\Event\PostFlushEventArgs;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+//use Doctrine\ORM\Event\LifecycleEventArgs;
+//use Doctrine\ORM\Event\OnFlushEventArgs;
+//use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use App\FellAppBundle\Entity\FellowshipApplication;
+
+//use App\FellAppBundle\Entity\FellowshipApplication;
+//use App\UserdirectoryBundle\Entity\AdministrativeTitle;
+//use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use App\OrderformBundle\Entity\Message;
 use App\OrderformBundle\Entity\PatientLastName;
-use App\UserdirectoryBundle\Entity\AdministrativeTitle;
-use App\UserdirectoryBundle\Entity\CompositeNodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\OrderformBundle\Entity\PatientFirstName;
+use App\OrderformBundle\Entity\PatientMiddleName;
+
 
 class DoctrineListener {
 
@@ -47,10 +52,13 @@ class DoctrineListener {
 
 
     //create new entity
-    public function postPersist(LifecycleEventArgs $args)
+    //public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
-        $entity = $args->getEntity();
-        $em = $args->getEntityManager();
+        //$entity = $args->getEntity();
+        $entity = $args->getObject();
+        //$em = $args->getEntityManager();
+        $em = $args->getObjectManager();
         //$logger = $this->container->get('logger');
         //$logger->notice("doctrine listener postPersist: ".get_class($entity));
 
@@ -87,7 +95,9 @@ class DoctrineListener {
 
     public function preUpdate( PreUpdateEventArgs $args )
     {
-        $entity = $args->getEntity();
+        //exit("DoctrineListener->preUpdate");
+        //$entity = $args->getEntity();
+        $entity = $args->getObject();
 
         //$logger = $this->container->get('logger');
         //$logger->notice("doctrine listener preUpdate: ".get_class($entity));
@@ -97,6 +107,17 @@ class DoctrineListener {
     }
 
     public function setMetaphoneField( $entity ) {
+
+        if( !$entity instanceof PatientFirstName ) {
+            return;
+        }
+        if( !$entity instanceof PatientLastName ) {
+            return;
+        }
+        if( !$entity instanceof PatientMiddleName ) {
+            return;
+        }
+
         //$logger = $this->container->get('logger');
         //if( $entity instanceof PatientLastName ) {
         if( method_exists($entity, 'setFieldMetaphone') ) {
