@@ -6455,7 +6455,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $elements as $name ) {
 
-            $entity = new App\FellAppBundle\Entity\VisaStatus();
+            $entity = new \App\FellAppBundle\Entity\VisaStatus();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);
