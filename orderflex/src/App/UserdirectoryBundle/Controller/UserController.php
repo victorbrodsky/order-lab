@@ -234,6 +234,12 @@ class UserController extends OrderAbstractController
 //        dump($users);
 //        exit("users=".count($users));
 
+        $em = $this->getDoctrine()->getManager();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:VisaStatus'] by [VisaStatus::class]
+        $entityNamespace = "App\\"."FellAppBundle"."\\Entity";
+        $entities = $em->getRepository($entityNamespace."\\"."VisaStatus")->findAll();
+        exit("entities=".count($entities));
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 

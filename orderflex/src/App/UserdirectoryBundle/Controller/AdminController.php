@@ -6435,7 +6435,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:VisaStatus'] by [VisaStatus::class]
-        $entities = $em->getRepository(App\FellAppBundle\Entity\VisaStatus::class)->findAll();
+        $entities = $em->getRepository("App\\FellAppBundle\\Entity\\VisaStatus")->findAll();
 
         if( $entities ) {
             return -1;
@@ -6473,7 +6473,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
-        $entities = $em->getRepository(\App\FellAppBundle\Entity\LanguageProficiency::class)->findAll();
+        $entities = $em->getRepository("App\\FellAppBundle\\Entity\\LanguageProficiency")->findAll();
 
         if( $entities ) {
             return -1;
@@ -6594,7 +6594,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:VisaStatus'] by [VisaStatus::class]
-        $entities = $em->getRepository(App\ResAppBundle\Entity\VisaStatus::class)->findAll();
+        $entities = $em->getRepository("App\\ResAppBundle\\Entity\\VisaStatus")->findAll();
 
         if( $entities ) {
             return -1;
@@ -6671,7 +6671,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
-        $entities = $em->getRepository(\App\ResAppBundle\Entity\LanguageProficiency::class)->findAll();
+        $entities = $em->getRepository("App\\ResAppBundle\\Entity\\LanguageProficiency")->findAll();
 
         if( $entities ) {
             return -1;

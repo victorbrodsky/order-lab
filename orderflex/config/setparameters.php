@@ -533,18 +533,31 @@ if( $conn ) {
             }
 
             //titles
-            $mainhome_title = str_replace("%", "%%", $mainhome_title);
-            $container->setParameter('mainhome_title', $mainhome_title);
-            $listmanager_title = str_replace("%", "%%", $listmanager_title);
-            $container->setParameter('listmanager_title', $listmanager_title);
-            $eventlog_title = str_replace("%", "%%", $eventlog_title);
-            $container->setParameter('eventlog_title', $eventlog_title);
-            $sitesettings_title = str_replace("%", "%%", $sitesettings_title);
-            $container->setParameter('sitesettings_title', $sitesettings_title);
+            if( $mainhome_title) {
+                $mainhome_title = str_replace("%", "%%", $mainhome_title);
+                $container->setParameter('mainhome_title', $mainhome_title);
+            }
+
+            if( $listmanager_title) {
+                $listmanager_title = str_replace("%", "%%", $listmanager_title);
+                $container->setParameter('listmanager_title', $listmanager_title);
+            }
+
+            if( $eventlog_title ) {
+                $eventlog_title = str_replace("%", "%%", $eventlog_title);
+                $container->setParameter('eventlog_title', $eventlog_title);
+            }
+
+            if( $sitesettings_title ) {
+                $sitesettings_title = str_replace("%", "%%", $sitesettings_title);
+                $container->setParameter('sitesettings_title', $sitesettings_title);
+            }
 
             //The percent sign inside a parameter or argument, as part of the string, must be escaped with another percent sign: % -> %%
-            $contentabout_page = str_replace("%", "%%", $contentabout_page);
-            $container->setParameter('contentabout_page', $contentabout_page);
+            if( $contentabout_page ) {
+                $contentabout_page = str_replace("%", "%%", $contentabout_page);
+                $container->setParameter('contentabout_page', $contentabout_page);
+            }
 
 //            /////////////////// mailer_dsn ///////////////////
 //            $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
