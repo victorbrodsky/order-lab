@@ -1594,11 +1594,36 @@ $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 deprecation.INFO: User Deprecated: Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment
 Problem: Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated
 and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.
+https://github.com/doctrine/orm/issues/8893
+
+==> digitalocean: [2023-06-28T21:37:53.262045+00:00] deprecation.INFO: User Deprecated: The annotation mapping driver is deprecated
+and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver.
+(AnnotationDriver.php:68 called by App_KernelProdContainer.php:4368, https://github.com/doctrine/orm/issues/10098, package doctrine/orm)
+{"exception":"[object] (ErrorException(code: 0): User Deprecated: The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0,
+please migrate to the attribute or XML driver.
+(AnnotationDriver.php:68 called by App_KernelProdContainer.php:4368, https://github.com/doctrine/orm/issues/10098,
+package doctrine/orm) at /usr/local/bin/order-lab/orderflex/vendor/doctrine/deprecations/lib/Doctrine/Deprecations/Deprecation.php:209)"} []
+
+Deprecated on DigitalOcean:
 
 
 
-
-
+1) The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver (doctrine/orm)
+2) Column::setCustomSchemaOptions() is deprecated. Use setPlatformOptions (doctrine/dbal)
+3) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine/dbal)
+4) Doctrine\DBAL\Schema\SchemaDiff::toSaveSql is deprecated. (doctrine/dbal)
+5) Not configuring a schema manager factory is deprecated. Use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory (doctrine/dbal)
+6) Connection::getSchemaManager() is deprecated, use Connection::createSchemaManager() instead (setparameters.php:136) (done in setparameters and PostgresMigration)
+7) str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated at /usr/local/bin/order-lab/orderflex/config/setparameters.php:533) x5
+8) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine-bridge)
+9) Since symfony/http-kernel 6.3: Parameter "container.dumper.inline_factories" is deprecated, use ".container.dumper.inline_factories" instead (symfony/http-kernel)
+10) Since symfony/http-kernel 6.3: Parameter "container.dumper.inline_class_loader" is deprecated, use ".container.dumper.inline_class_loader" instead
+11) The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver (doctrine/orm)
+12) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine-bridge)
+13) Doctrine\DBAL\Platforms\PostgreSQLPlatform::usesSequenceEmulatedIdentityColumns is deprecated (doctrine/dbal)
+14) Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment Problem: Using the IDENTITY generator strategy
+with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated and will not be possible in Doctrine ORM 3.0.
+Solution: Use the SEQUENCE generator strategy instead (doctrine/orm)
 
 
 

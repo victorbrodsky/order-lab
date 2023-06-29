@@ -54,6 +54,11 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     private $sequenceArr = array();
     private $counter = 0;
 
+    /**
+     * Sets the container.
+     *
+     * @return void
+     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -65,7 +70,10 @@ class PostgresMigration extends AbstractMigration implements ContainerAwareInter
     public function createIndexArr() {
         $newline = "\n";
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $sm = $em->getConnection()->getSchemaManager();
+        
+        //$sm = $em->getConnection()->getSchemaManager();
+        $sm = $em->getConnection()->createSchemaManager();
+        
         $tables = $sm->listTables();
         //ALTER INDEX idx_15b668721aca1422 RENAME TO IDX_5AFC0F4BCD46F646
         foreach ($tables as $table) {
