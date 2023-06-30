@@ -28,12 +28,12 @@ use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespa
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+//use Doctrine\Common\Collections\ArrayCollection;
 use App\TranslationalResearchBundle\Entity\Invoice;
-use App\TranslationalResearchBundle\Entity\InvoiceItem;
-use App\TranslationalResearchBundle\Entity\ReminderEmail;
-use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+//use App\TranslationalResearchBundle\Entity\InvoiceItem;
+//use App\TranslationalResearchBundle\Entity\ReminderEmail;
+//use App\TranslationalResearchBundle\Entity\TransResSiteParameters;
+//use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -1034,7 +1034,7 @@ class ReminderUtil
     //Expiring - Upcoming expiration notification
     public function sendExpiringProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
         $transresUtil = $this->container->get('transres_util');
-        $newline = "\r\n";
+        //$newline = "\r\n";
         $newline = "<br>";
 
         //We don't need projectExprApply, since we can use sendExpriringProjectEmail and sendExpiredProjectEmail
@@ -1209,7 +1209,7 @@ class ReminderUtil
     public function sendExpiredProjectReminderPerSpecialty($projectSpecialty, $testing=false) {
 
         $transresUtil = $this->container->get('transres_util');
-        $newline = "\r\n";
+        //$newline = "\r\n";
         $newline = "<br>";
 
         //If the “Send reminder” variable for this given project request type is set to “Yes” (in A2 above) and the number of day in A above is set (?)
@@ -1417,7 +1417,7 @@ class ReminderUtil
     public function closeExpiredProjectPerSpecialty($projectSpecialty, $testing=false) {
 
         $transresUtil = $this->container->get('transres_util');
-        $newline = "\r\n";
+        //$newline = "\r\n";
         $newline = "<br>";
 
         //Apply project request auto-closure after expiration rule to this project request type

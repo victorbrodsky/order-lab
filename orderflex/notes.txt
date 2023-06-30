@@ -1620,7 +1620,7 @@ might be a bug in doctrine/dbal: https://stackoverflow.com/questions/76488760/do
 
 * 6) Connection::getSchemaManager() is deprecated, use Connection::createSchemaManager() instead (setparameters.php:136) (done in setparameters and PostgresMigration)
 
-7) str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated at /usr/local/bin/order-lab/orderflex/config/setparameters.php:533) x5
+* 7) str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated at /usr/local/bin/order-lab/orderflex/config/setparameters.php:533) x5
 
 8) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine-bridge)
 
@@ -1637,6 +1637,7 @@ might be a bug in doctrine/dbal: https://stackoverflow.com/questions/76488760/do
 14) Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment Problem: Using the IDENTITY generator strategy
 with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated and will not be possible in Doctrine ORM 3.0.
 Solution: Use the SEQUENCE generator strategy instead (doctrine/orm)
+IDENTITY generates this for id constrains in DB: nextval('transres_product_id_seq'::regclass), nextval('transres_invoiceitem_id_seq'::regclass) ...
 
 
 https://github.com/doctrine/dbal/blob/3.6.x/UPGRADE.md

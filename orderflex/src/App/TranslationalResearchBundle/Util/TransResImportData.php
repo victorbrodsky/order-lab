@@ -48,11 +48,11 @@ use App\TranslationalResearchBundle\Entity\AntibodyList;
 use App\TranslationalResearchBundle\Entity\CommitteeReview;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
-use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use App\UserdirectoryBundle\Util\UserSecurityUtil;
-use App\UserdirectoryBundle\Util\UserUtil;
+//use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
+//use App\UserdirectoryBundle\Util\UserSecurityUtil;
+//use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-use Symfony\Component\Validator\Constraints\DateTime;
+//use Symfony\Component\Validator\Constraints\DateTime;
 
 //use FOS\RestBundle\View\View;
 
@@ -134,7 +134,7 @@ class TransResImportData
 
         $i = 0;
         $batchSize = 20;
-        $classical = false;
+        //$classical = false;
         $classical = true;
 
         $limitRow = $highestRow;
@@ -776,7 +776,7 @@ class TransResImportData
         ini_set('memory_limit', '7168M');
 
         $transresUtil = $this->container->get('transres_util');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
@@ -829,12 +829,12 @@ class TransResImportData
         //////// EOF Admin user /////////
 
         $count = 0;
-        $commentRequestArr = array();
+        //$commentRequestArr = array();
 
-        $i = 0;
-        $batchSize = 20;
-        $classical = false;
-        $classical = true;
+        //$i = 0;
+        //$batchSize = 20;
+        //$classical = false;
+        //$classical = true;
 
         $limitRow = $highestRow;
         if( $endRaw && $endRaw <= $highestRow ) {
@@ -859,7 +859,7 @@ class TransResImportData
             //    exit("count limit $count");
             //}
 
-            $commentArr = array();
+            //$commentArr = array();
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -1209,14 +1209,14 @@ class TransResImportData
         $logger = $this->container->get('logger');
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
 
         $testing = false;
         //$testing = true;
 
         //$email = "oli2002@med.cornell.edu";
-        $requests = array();
+        //$requests = array();
 
         //$default_time_zone = $this->container->getParameter('default_time_zone');
         //$userSecUtil = $this->container->get('user_security_utility');
@@ -1804,9 +1804,9 @@ class TransResImportData
 
 
     public function editProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $count, $testing=false ) {
-        $transresUtil = $this->container->get('transres_util');
-        $logger = $this->container->get('logger');
-        $em = $this->em;
+        //$transresUtil = $this->container->get('transres_util');
+        //$logger = $this->container->get('logger');
+        //$em = $this->em;
 
         //$testing = true;
 
@@ -2412,13 +2412,13 @@ class TransResImportData
 
         switch( $statusId ){
             case "2":
-                $status = "pending";
+                //$status = "pending";
                 $statusProgress = "active";
                 $statusBilling = "active";
                 break;
             case "5":
                 //TODO:???
-                $status = "completed";
+                //$status = "completed";
                 $statusProgress = "completed";
                 $statusBilling = "paid";
                 break;
@@ -2542,15 +2542,15 @@ class TransResImportData
 
         switch( $id ){
             case "1":
-                $status = "Case Study";
+                //$status = "Case Study";
                 $statusNewSystem = "Clinical Research (Case Study)";
                 break;
             case "2":
-                $status = "Descriptive Study";
+                //$status = "Descriptive Study";
                 $statusNewSystem = "Experimental Research (Descriptive Study)";
                 break;
             case "3":
-                $status = "Association Study - Request Statistical Support";
+                //$status = "Association Study - Request Statistical Support";
                 $statusNewSystem = "Education/Teaching (Pathology Faculty)";
                 break;
         }

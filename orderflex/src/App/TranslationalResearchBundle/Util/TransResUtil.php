@@ -2832,7 +2832,7 @@ class TransResUtil
         }
 
         //1) check if project state is reviewable
-        $projectStateReviewable = false;
+        //$projectStateReviewable = false;
         $projectState = $project->getState();
         //echo "projectId=".$project->getId()."<br>";
         //echo "projectState=".$projectState."<br>";
@@ -5432,7 +5432,7 @@ class TransResUtil
     public function createProjectListExcelSheets($projectIdsArr,$limit=null)
     {
 
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $author = $this->security->getUser();
@@ -5709,7 +5709,7 @@ class TransResUtil
 
         // Auto size columns for each worksheet
         //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-        $autosize = true;
+        //$autosize = true;
         $autosize = false;
         if( $autosize ) {
             $cellIterator = $ews->getRowIterator()->current()->getCellIterator();
@@ -6034,7 +6034,7 @@ class TransResUtil
 
         // Auto size columns for each worksheet
         //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
-        $autosize = true;
+        //$autosize = true;
         $autosize = false;
         if( $autosize ) {
             foreach ($ea->getWorksheetIterator() as $worksheet) {
