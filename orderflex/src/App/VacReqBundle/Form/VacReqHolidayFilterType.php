@@ -49,15 +49,17 @@ class VacReqHolidayFilterType extends AbstractType
             'label' => false, //'Start Date',
             'required' => false,
             //'data' => $startDates, //$this->params['defaultStartDates'],
+            //'data' => '2023,2024',
             'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Year', 'data-toggle'=>'tooltip'),
         ));
 
 //        $builder->add('years', DateType::class, array(
 //            'label' => false, //'Start Date/Time:',
 //            'required' => false,
-//            //'widget' => 'single_text',
-//            //'format' => 'MM/dd/yyyy',
-//            //'html5' => false,
+//            'widget' => 'single_text',
+//            'format' => 'yyyy',
+//            'html5' => false,
+//            //'data' => new \DateTime(),
 //            'attr' => array('class' => 'datepicker-only-year datepicker-multidate form-control', 'placeholder' => 'Years', 'title'=>'Years', 'data-toggle'=>'tooltip')
 //        ));
 
