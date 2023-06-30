@@ -1,0 +1,92 @@
+"doctrine/doctrine-bundle": "2.5.*",
+"doctrine/doctrine-migrations-bundle": "^3.2",
+"doctrine/orm": "2.9.6" (the same as "2.9.*")
+        =>
+"doctrine/doctrine-bundle": "^2.5",
+"doctrine/orm": "^2.9",
+
+### Deprecated: ###
+
+Replace in: @ORM\GeneratedValue(strategy="IDENTITY") => SEQUENCE or AUTO for new postgresql >10?
+
+//Change id generation strategy to IDENTITY: to ALTER TABLE public.transres_finalreview ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
+deprecation.INFO: User Deprecated: Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment
+Problem: Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated
+and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.
+https://github.com/doctrine/orm/issues/8893
+
+==> digitalocean: [2023-06-28T21:37:53.262045+00:00] deprecation.INFO: User Deprecated: The annotation mapping driver is deprecated
+and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver.
+(AnnotationDriver.php:68 called by App_KernelProdContainer.php:4368, https://github.com/doctrine/orm/issues/10098, package doctrine/orm)
+{"exception":"[object] (ErrorException(code: 0): User Deprecated: The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0,
+please migrate to the attribute or XML driver.
+(AnnotationDriver.php:68 called by App_KernelProdContainer.php:4368, https://github.com/doctrine/orm/issues/10098,
+package doctrine/orm) at /usr/local/bin/order-lab/orderflex/vendor/doctrine/deprecations/lib/Doctrine/Deprecations/Deprecation.php:209)"} []
+
+Deprecated on DigitalOcean:
+
+1) The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver (doctrine/orm)
+
+2) Column::setCustomSchemaOptions() is deprecated. Use setPlatformOptions (doctrine/dbal) (fixed in setparameters.php)
+
+3) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine/dbal)
+might be a bug in doctrine/dbal: https://stackoverflow.com/questions/76488760/doctrine-deprecation-messages-during-symfony-6-3-production-server-cacheclear
+
+4) Doctrine\DBAL\Schema\SchemaDiff::toSaveSql is deprecated. (doctrine/dbal)
+
+5) Not configuring a schema manager factory is deprecated. Use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory (doctrine/dbal)
+
+* 6) Connection::getSchemaManager() is deprecated, use Connection::createSchemaManager() instead (setparameters.php:136) (done in setparameters and PostgresMigration)
+
+* 7) str_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated at /usr/local/bin/order-lab/orderflex/config/setparameters.php:533) x5
+
+8) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine-bridge)
+
+9) Since symfony/http-kernel 6.3: Parameter "container.dumper.inline_factories" is deprecated, use ".container.dumper.inline_factories" instead (symfony/http-kernel)
+
+10) Since symfony/http-kernel 6.3: Parameter "container.dumper.inline_class_loader" is deprecated, use ".container.dumper.inline_class_loader" instead
+
+11) The annotation mapping driver is deprecated and will be removed in Doctrine ORM 3.0, please migrate to the attribute or XML driver (doctrine/orm)
+
+12) Since symfony/doctrine-bridge 6.3: Using Doctrine subscribers as services is deprecated, declare listeners instead (doctrine-bridge)
+
+13) Doctrine\DBAL\Platforms\PostgreSQLPlatform::usesSequenceEmulatedIdentityColumns is deprecated (doctrine/dbal)
+
+14) Context: Loading metadata for class App\UserdirectoryBundle\Entity\AdminComment Problem: Using the IDENTITY generator strategy
+with platform "Doctrine\DBAL\Platforms\PostgreSQL100Platform" is deprecated and will not be possible in Doctrine ORM 3.0.
+Solution: Use the SEQUENCE generator strategy instead (doctrine/orm)
+IDENTITY generates this for id constrains in DB: nextval('transres_product_id_seq'::regclass), nextval('transres_invoiceitem_id_seq'::regclass) ...
+
+https://github.com/doctrine/dbal/issues/5614:
+"AUTO uses SEQUENCE by default on PostgreSQL. This seems sub-optimal as it forces INSERT queries to
+provide the id explicitly using nextval('sequence_name') which is not easy to do in ORM queries,
+and requires that you know the sequence name. On the other hand if it's set to IDENTITY it works better
+as it does it like MySQL's AUTO_INCREMENT, you can just omit the id field entirely."
+
+Use this to see changes: bin/console doctrine:schema:create --dump-sql
+IDENTITY:
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC919E5513 FOREIGN KEY (submitter_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC5809308F FOREIGN KEY (transresRequest_id) REFERENCES transres_request (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC64C19C1 FOREIGN KEY (category) REFERENCES transres_requestCategoryTypeList (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5ECCD8563C0 FOREIGN KEY (orderableStatus) REFERENCES transres_orderablestatusList (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+AUTO:
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC919E5513 FOREIGN KEY (submitter_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC5809308F FOREIGN KEY (transresRequest_id) REFERENCES transres_request (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5EC64C19C1 FOREIGN KEY (category) REFERENCES transres_requestCategoryTypeList (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE transres_product ADD CONSTRAINT FK_65ABD5ECCD8563C0 FOREIGN KEY (orderableStatus) REFERENCES transres_orderablestatusList (id) NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+Changing IDENTITY to AUTO for product's id: @ORM\GeneratedValue(strategy="IDENTITY") => @ORM\GeneratedValue(strategy="AUTO") => migration create this,
+the same as in "doctrine/orm": "2.9.6" AUTO to IDENTITY:
+$this->processSql('CREATE SEQUENCE transres_product_id_seq');
+$this->processSql('SELECT setval(\'transres_product_id_seq\', (SELECT MAX(id) FROM transres_product))');
+$this->processSql('ALTER TABLE transres_product ALTER id SET DEFAULT nextval(\'transres_product_id_seq\')');
+
+https://github.com/doctrine/dbal/blob/3.6.x/UPGRADE.md
+
+https://www.doctrine-project.org/projects/doctrine-orm/en/2.9/reference/basic-mapping.html:
+AUTO (default): IDENTITY for MySQL, SQLite, MsSQL and SQL Anywhere
+SEQUENCE for Oracle and PostgreSQL.
+This strategy provides full portability.
+IDENTITY: MySQL/SQLite/SQL Anywhere (AUTO\_INCREMENT), MSSQL (IDENTITY) and PostgreSQL (SERIAL).
+SEQUENCE: Sequences are supported by Oracle, PostgreSql and SQL Anywhere.
+

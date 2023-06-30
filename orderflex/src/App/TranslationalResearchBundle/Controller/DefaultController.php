@@ -254,6 +254,13 @@ class DefaultController extends OrderAbstractController
         //dump($resArr);
         //exit('111');
 
+        //testing IDENTITY, AUTO
+        //$em = $this->getDoctrine()->getManager();
+        //$product = new Product();
+        //$id = $product->getId();
+        //echo "id=".$id."<br>";
+        //exit();
+
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
 

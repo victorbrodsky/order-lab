@@ -28,20 +28,10 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
-
-
 use App\UserdirectoryBundle\Entity\UserInfo; //process.py script: replaced namespace by ::class: added use line for classname=UserInfo
-
-
 use App\OrderformBundle\Entity\PatientLastName; //process.py script: replaced namespace by ::class: added use line for classname=PatientLastName
-
-
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
-
-
 use App\UserdirectoryBundle\Entity\PlatformListManagerRootList; //process.py script: replaced namespace by ::class: added use line for classname=PlatformListManagerRootList
-
-
 
 use App\ResAppBundle\Entity\ResappSiteParameter;
 use App\UserdirectoryBundle\Entity\BaseUserAttributes;
@@ -1729,6 +1719,7 @@ Pathology and Laboratory Medicine",
         } else {
             $command = $phpPath . " " . $projectRoot . "/bin/console" . " dbal:run-sql" . " 'SELECT version()'";
         }
+        //echo "command=$command <br>";
 
         //$process = new Process($command);
         $process = Process::fromShellCommandline($command);
@@ -1743,7 +1734,11 @@ Pathology and Laboratory Medicine",
         //exit('111');
 
         if( $info ) {
-            $dbInfo = $this->getStringBetween($info,') "','"');
+            //$dbInfo = $this->getStringBetween($info,') "','"');
+            $dbInfo = $this->getStringBetween($info,'version','\r\n');
+            $dbInfo = trim($info);
+            $dbInfo = str_replace("version","",$dbInfo);
+            $dbInfo = str_replace("-","",$dbInfo);
             return $dbInfo;
         }
 
