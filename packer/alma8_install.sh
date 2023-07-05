@@ -52,6 +52,7 @@ f_update_os () {
 }
 
 # Function install LAMP stack
+# https://linux.how2shout.com/how-to-install-apache-on-almalinux-8-rocky-linux-8/
 f_install_apache () {
     ########## INSTALL APACHE ##########
     echo -e "${COLOR} Installing apache ... ${NC}"
