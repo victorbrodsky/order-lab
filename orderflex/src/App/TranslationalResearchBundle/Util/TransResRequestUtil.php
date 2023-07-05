@@ -5008,11 +5008,11 @@ class TransResRequestUtil
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
 
-        //show only with $fee for this price list
-        if(1) {
-            $feeRestriction = "(list.fee IS NOT NULL)";
+        //show only with $fee (not zero and not null) for this price list.
+        if(0) {
             if ($project) {
                 $priceList = $project->getPriceList();
+                $feeRestriction = "(list.fee IS NOT NULL)";
                 if ($priceList) {
                     $priceListId = $priceList->getId();
                     if ($priceListId) {
@@ -5020,12 +5020,33 @@ class TransResRequestUtil
                         $dql->leftJoin('prices.priceList','priceList');
                         //$specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL AND prices.fee <> '0')";
                         $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
+                        //$specificFeeRestriction = "(priceList.id = $priceListId)";
                         $feeRestriction = $feeRestriction . " OR ";
                         $feeRestriction = $feeRestriction . $specificFeeRestriction;
                         //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
                     }
                 }
                 $dql->andWhere($feeRestriction);
+            }
+        }
+
+        //show all products or services, even with zero or null $fee
+        if(1) {
+            if( $project ) {
+                $priceList = $project->getPriceList();
+                //$feeRestriction = "(list.fee IS NOT NULL)";
+                if( $priceList ) {
+                    $priceListId = $priceList->getId();
+                    if( $priceListId ) {
+                        $dql->leftJoin('list.prices','prices');
+                        $dql->leftJoin('prices.priceList','priceList');
+                        $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
+                        //$feeRestriction = $feeRestriction . " OR ";
+                        //$feeRestriction = $feeRestriction . $specificFeeRestriction;
+                        //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
+                        $dql->andWhere($specificFeeRestriction);
+                    }
+                }
             }
         }
 
