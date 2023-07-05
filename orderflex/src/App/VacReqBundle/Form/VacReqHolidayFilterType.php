@@ -50,7 +50,12 @@ class VacReqHolidayFilterType extends AbstractType
             'required' => false,
             //'data' => $startDates, //$this->params['defaultStartDates'],
             //'data' => '2023,2024',
-            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Year', 'data-toggle'=>'tooltip'),
+            'attr' => array(
+                'class'=>'datepicker-only-year datepicker-multidate form-control',
+                'placeholder' => 'Years',
+                'title'=>'Year',
+                'data-toggle'=>'tooltip'
+            ),
         ));
 
 //        $builder->add('years', DateType::class, array(
@@ -60,7 +65,12 @@ class VacReqHolidayFilterType extends AbstractType
 //            'format' => 'yyyy',
 //            'html5' => false,
 //            //'data' => new \DateTime(),
-//            'attr' => array('class' => 'datepicker-only-year datepicker-multidate form-control', 'placeholder' => 'Years', 'title'=>'Years', 'data-toggle'=>'tooltip')
+//            'attr' => array(
+//                'class' => 'datepicker-only-year datepicker-multidate form-control',
+//                'placeholder' => 'Years',
+//                'title'=>'Years',
+//                'data-toggle'=>'tooltip'
+//            )
 //        ));
 
 //        $builder->add('endYear', DateType::class, array(

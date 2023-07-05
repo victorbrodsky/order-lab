@@ -98,7 +98,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 if [ -z "$os" ]
   then 	
-    os='alma8'
+    os='centos'
 fi
 
 if [ -z "$dbuser" ]
@@ -160,14 +160,6 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-if [ "$os" = "alma8" ]
-  then 	
-	ORDERPACKERJSON="order-packer-alma8.json"
-fi
-if [ "$os" = "alma9" ]
-  then 	
-	ORDERPACKERJSON="order-packer-alma9.json"
-fi
 if [ "$os" = "centos" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos.json"
