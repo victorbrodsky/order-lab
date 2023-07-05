@@ -27,11 +27,17 @@ f_update_os () {
 	#exit 0
     sleep 1
 
+	echo -e ${COLOR} sudo dnf check-update ${NC}
+	sudo dnf check-update
+	
+	echo -e ${COLOR} check-update command again to ensure the system is up-to-date ${NC}
+	sudo yum update -y
+
 	echo -e ${COLOR} sudo yum update -y ${NC}
     sudo yum update -y
 	
-	echo -e ${COLOR} sudo yum upgrade -y ${NC}
-    sudo yum upgrade -y
+	echo -e ${COLOR} Once the system is updated, reboot the system ${NC}
+    sudo reboot
 	
 	echo -e ${COLOR} Disable SELinux ${NC}
 	#Set "sudo setenforce 0" for now to complete composer later
