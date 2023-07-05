@@ -440,9 +440,15 @@ class RequestCategoryTypeList extends ListAbstract
             if( !$fee ) {
                 $fee = $this->getFee(); //get default fee from this if the extra price list's fee is null
             }
+            if( !$fee ) {
+                $fee = 0;
+            }
             $feeAdditionalItem = $price->getFeeAdditionalItem(); //get additional fee from the extra price list
             if( !$feeAdditionalItem ) {
                 $feeAdditionalItem = $this->getFeeAdditionalItem(); //get default additional fee
+            }
+            if( !$feeAdditionalItem ) {
+                $feeAdditionalItem = 0;
             }
 
             $res = "$".$fee;
@@ -459,7 +465,13 @@ class RequestCategoryTypeList extends ListAbstract
         //use default price list, if additional price list does not exist
         if( !$res ) {
             $fee = $this->getFee();
+            if( !$fee ) {
+                $fee = 0;
+            }
             $feeAdditionalItem = $this->getFeeAdditionalItem();
+            if( !$feeAdditionalItem ) {
+                $feeAdditionalItem = 0;
+            }
             //$res = "$".$fee . " ($" .  $feeAdditionalItem . " per additional item)";
             $res = "$".$fee;
 
