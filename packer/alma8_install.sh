@@ -1,5 +1,5 @@
 #!/bin/bash
-# CentOs installation script (Rhel 7, PHP 7.2, Postgresql)
+# alma8 installation script (alma8, PHP 7.2, Postgresql)
 echo @### Get bash_dbuser bash_dbpass ###
 #bashdbuser=$1
 #bashdbpass=$2
@@ -21,7 +21,7 @@ NC='\033[0m' # No Color
 #https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
 # Function update os
 f_update_os () {
-    echo -e ${COLOR} Starting update os centos ... ${NC}
+    echo -e ${COLOR} Starting update os alma8 ... ${NC}
 	#echo -e ${COLOR} @### Test Color 1 ### ${NC}	
 	#echo -e "${COLOR}" @### Test Color 2 ### "${NC}"	
 	#exit 0
@@ -120,43 +120,50 @@ f_install_postgresql14 () {
     sleep 1
 }
 
-f_install_php81 () {
-    ########## INSTALL APACHE 8.1 ##########
-    echo "Installing apache 8.1 ..."
+f_install_php82 () {
+    ########## INSTALL PHP 8.2 ##########
+    echo "Installing PHP 8.2 ..."
     sleep 1
 
 	echo @### Install yum-utils and epel repository ###
-	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	sudo sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+	sudo dnf -y install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
 
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum -y install yum-utils
-	sudo yum-config-manager --disable 'remi-php*'
-	sudo yum-config-manager --enable remi-php81
+	echo @### PHP: update DNF cache ###
+	sudo dnf makecache -y
 
-	echo @### PHP2: sudo yum-config-manager --enable remi-php81 ###
-	sudo yum -y update
+	echo @### PHP: List the repositories to ensure they are installed using the command below ###
+	sudo dnf repolist
 
-	#echo @### PHP3: Search for PHP 8.1 packages ###
-	#sudo yum search php81 | more
-	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
+	echo @### PHP: reset the default PHP module ###
+	sudo dnf module reset php -y
 	
-	echo @### PHP3: Install PHP 8.1 ###
-	sudo yum -y install php81 php81-php-cli
+	echo @### PHP: Enable the PHP 8.2 REMI module ###
+	sudo dnf module install php:remi-8.2 -y
 	
-	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
-	sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
-	sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
-	sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
-	sudo yum -y install php81-php-common
+	echo @### PHP: Install PHP 8.2 ###
+	sudo dnf -y install php 
+
+	#echo @### PHP3: Install PHP 8.1 ###
+	#sudo yum -y install php82 php82-php-cli
 	
-	yum -y install php81-syspaths
+	echo @### PHP: list of all the installable PHP modules ###
+	php -m
 	
-	yum -y --enablerepo=remi install php81-php
+	echo @### PHP: Install PHP modules ###
+	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm}
+	#sudo dnf -y install php82-php-mcrypt php82-php-gd php82-curl php82-php-ldap php82-php-zip 
+	#sudo dnf -y install php82-php-fileinfo php82-php-opcache php82-php-fpm php82-php-mbstring php82-php-xml php82-php-json
+	#sudo dnf -y install php82-php-pgsql php82-php-xmlreader php82-php-pdo php82-php-dom php82-php-intl
+	#sudo dnf -y install php82-php-devel php82-php-pear php82-php-bcmath
+	#sudo dnf -y install php82-php-common
 	
-	echo -e  ${COLOR} export PATH ${NC}
-	export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	#dnf -y install php82-syspaths
+	
+	#dnf -y --enablerepo=remi install php82-php
+	
+	#echo -e  ${COLOR} export PATH ${NC}
+	#export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
@@ -354,12 +361,12 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-f_install_postgresql14
-f_install_php81
-f_install_util
-f_install_python3
-f_install_order
-f_install_prepare
+#f_install_postgresql14
+f_install_php82
+#f_install_util
+#f_install_python3
+#f_install_order
+#f_install_prepare
 		   
 
 

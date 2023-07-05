@@ -172,6 +172,12 @@ if [ "$os" = "centos" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos.json"
 fi
+
+#Optional OS
+if [ "$os" = "alma8basiconly" ]
+  then 	
+	ORDERPACKERJSON="order-packer-alma8-basic-only.json"
+fi
 if [ "$os" = "centosonly" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos-only.json"

@@ -1,0 +1,62 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [{
+    "type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "centos-7-x64",
+    "ssh_username": "{{user `ssh_name`}}"  
+  }],
+
+  "provisioners": [
+  
+	{
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass"
+		],
+        "script": "centos_install.sh"
+    },
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file] ###"
+         ]    
+	},
+	
+	{
+		"type": "file",
+		"source": "parameters_bash_file",
+		"destination": "/usr/local/bin/order-lab/Scanorders2/app/config/parameters_bash_file"         
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Create ssl folder /usr/local/bin/order-lab/ssl ###",		
+		   "sudo mkdir /usr/local/bin/order-lab/ssl"
+         ]    
+	},
+	  
+	  {
+          "type": "file",
+          "source": "bash_sslcertificate",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.crt"         
+       },
+	   
+	   {
+          "type": "file",
+          "source": "bash_sslprivatekey",
+          "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
+       }
+      
+   ]
+
+}
