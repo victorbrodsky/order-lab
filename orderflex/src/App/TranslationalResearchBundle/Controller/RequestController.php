@@ -2659,8 +2659,6 @@ class RequestController extends OrderAbstractController
                 $projectSpecialties = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty,$project);
             }
         }
-        //dump($projectSpecialties);
-        //exit('req');
 
         //for non-funded projects, show "Funding Number (Optional):"
         //transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded")
