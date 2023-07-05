@@ -5041,9 +5041,6 @@ class TransResRequestUtil
                         $dql->leftJoin('list.prices','prices');
                         $dql->leftJoin('prices.priceList','priceList');
                         $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
-                        //$feeRestriction = $feeRestriction . " OR ";
-                        //$feeRestriction = $feeRestriction . $specificFeeRestriction;
-                        //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
                         $dql->andWhere($specificFeeRestriction);
                     }
                 }
