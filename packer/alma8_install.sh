@@ -57,10 +57,15 @@ f_install_apache () {
     echo -e "${COLOR} Installing apache ... ${NC}"
     sleep 1
 
-	sudo yum install httpd -y
+	sudo dnf install httpd -y
 	sudo systemctl enable httpd.service
 	sudo systemctl start httpd.service
 	sudo systemctl status httpd.service
+	
+	echo -e "${COLOR} Allow port 80 in Firewall on AlmaLinux/Rocky 8 ${NC}"
+	sudo firewall-cmd --zone=public --permanent --add-port=80/tcp
+	sudo firewall-cmd --zone=public --permanent --add-port=443/tcp
+	sudo firewall-cmd --reload
 	
 	echo ""
     sleep 1
