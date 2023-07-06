@@ -31,10 +31,10 @@ f_update_os () {
 	sudo dnf check-update
 	
 	echo -e ${COLOR} check-update command again to ensure the system is up-to-date ${NC}
-	sudo yum update -y
+	sudo dnf update -y
 
-	echo -e ${COLOR} sudo yum update -y ${NC}
-    sudo yum update -y
+	echo -e ${COLOR} sudo dnf update -y ${NC}
+    sudo dnf update -y
 	
 	#echo -e ${COLOR} Once the system is updated, reboot the system ${NC}
     #sudo reboot
@@ -78,22 +78,22 @@ f_install_postgresql14 () {
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
 	#After repository has been added, list available repositories, update system and reboot
 	echo @### List available repositories, update system ###	
-	sudo yum repolist -y
-	sudo yum -y update 
+	sudo dnf repolist -y
+	sudo dnf -y update 
 	#sudo systemctl reboot
 	
 	echo @### Install postgresql 14 ###	
-	yum install -y postgresql14
-	yum install -y postgresql14-server
+	dnf install -y postgresql14
+	dnf install -y postgresql14-server
 
 	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
 	#sudo yum install -y oidentd
-	sudo yum install -y authd
-	sudo yum install -y xinetd
+	sudo dnf install -y authd
+	sudo dnf install -y xinetd
 
 	echo @### Optionally initialize the database and enable automatic start ###	
 	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
@@ -373,8 +373,8 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-#f_install_postgresql14
-#f_install_php82
+f_install_postgresql14
+f_install_php82
 #f_install_util
 #f_install_python3
 #f_install_order

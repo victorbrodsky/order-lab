@@ -207,23 +207,37 @@
 //                clearBtn: true
 //            });
 
+//            var date = new Date();
+//            date.setFullYear(date.getFullYear() - 10);
+//            date.setMonth(0);
+//            date.setDate(1);
             var datefilter = $(target).datepicker({
-                autoclose: true,
-                format: "yyyy",
+                format: " yyyy",
+                inline: false,
                 viewMode: "years",
                 minViewMode: "years",
-                updateViewDate: true,
-                changeYear: true,
+                maxViewMode: "years",
+                startView: "years",
                 multidate: true,
-                clearBtn: true
-                //defaultViewDate: {year: '2014'}
             });
+
+//            var datefilter = $(target).datepicker({
+//                autoclose: true,
+//                format: "yyyy",
+//                viewMode: "years",
+//                minViewMode: "years",
+//                updateViewDate: true,
+//                changeYear: true,
+//                multidate: true,
+//                clearBtn: true
+//                //defaultViewDate: {year: '2014'}
+//            });
 
             //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
             //$(target).datepicker('setDate', new Date());
             //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
 
-            datefilter.data('datepicker').setDates(new Date());
+            datefilter.data('datepicker').setDates(["2022","2023"]);
 
         });
 
