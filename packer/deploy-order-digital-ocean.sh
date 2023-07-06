@@ -230,6 +230,12 @@ echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 #echo "*** PACKEROUT=$PACKEROUT ***"
 packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
+
+TESTING=true
+#TESTING=false
+if [ "$TESTING" = false ] ; then 
+#not testing
+
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 LASTLINE=$(tail -1 buildpacker.log)
@@ -349,6 +355,10 @@ else
 fi
 
 
+#if TESTING
+else
+ echo "Testing"
+fi #if TESTING
 
 
 
