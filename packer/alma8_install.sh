@@ -36,8 +36,8 @@ f_update_os () {
 	echo -e ${COLOR} sudo yum update -y ${NC}
     sudo yum update -y
 	
-	echo -e ${COLOR} Once the system is updated, reboot the system ${NC}
-    sudo reboot
+	#echo -e ${COLOR} Once the system is updated, reboot the system ${NC}
+    #sudo reboot
 	
 	echo -e ${COLOR} Disable SELinux ${NC}
 	#Set "sudo setenforce 0" for now to complete composer later
