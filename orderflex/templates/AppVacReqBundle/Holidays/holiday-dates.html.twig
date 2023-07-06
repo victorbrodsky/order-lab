@@ -198,18 +198,19 @@
 
             var target = ".datepicker-only-year";
             var datefilter = $(target).datepicker( {
-                //setDate: new Date(),
                 autoclose: true,
-                format: " yyyy",
+                //format: " yyyy",
                 viewMode: "years",
                 minViewMode: "years",
-                orientation: 'auto', //'auto top'
+                //orientation: 'auto', //'auto top'
                 multidate: true,
                 clearBtn: true
             });
 
             //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
-            $(target).datepicker('setDate', new Date());
+            //$(target).datepicker('setDate', new Date());
+
+            datefilter.data('datepicker').setDates(new Date());
 
         });
 

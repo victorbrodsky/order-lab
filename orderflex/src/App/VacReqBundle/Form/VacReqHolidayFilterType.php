@@ -51,7 +51,8 @@ class VacReqHolidayFilterType extends AbstractType
             //'data' => $startDates, //$this->params['defaultStartDates'],
             //'data' => '2023,2024',
             'attr' => array(
-                'class'=>'datepicker-only-year datepicker-multidate form-control',
+                //'class'=>'datepicker-only-year datepicker-multidate form-control',
+                'class'=>'datepicker-only-year',
                 'placeholder' => 'Years',
                 'title'=>'Year',
                 'data-toggle'=>'tooltip'

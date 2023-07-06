@@ -371,8 +371,8 @@ f_install_prepare () {
     sleep 1
 }	
 
-f_update_os
-f_install_apache
+#f_update_os
+#f_install_apache
 #f_install_postgresql14
 #f_install_php82
 #f_install_util

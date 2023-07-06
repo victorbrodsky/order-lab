@@ -17,35 +17,13 @@
   
 	{
         "type": "shell",
+		"expect_disconnect": "true",
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
         "script": "alma8_install.sh"
-    },
-	
-	{
-        "type": "shell",
-		"expect_disconnect": "true",
-        "inline": [ 
-           "echo @### Disable SELinux again ###",
-		   "sudo setenforce 0",
-		   "echo @### Reboot Server ###",
-		   "sudo shutdown -r now"
-         ]    
-	},
-	
-	{
-        "type": "shell",
-		"expect_disconnect": "true",
-		"pause_before": "60s",
-        "inline": [ 
-		   "echo @### Check SELinux status ###",	
-		   "sestatus",
-           "echo @### PostgreSQL Version after centos_install ###",		
-		   "psql --version"
-         ]
-	}
+    }
       
    ]
 }
