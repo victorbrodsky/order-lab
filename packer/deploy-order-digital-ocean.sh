@@ -231,11 +231,6 @@ echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
 
-TESTING=true
-#TESTING=false
-if [ "$TESTING" = false ] ; then 
-#not testing
-
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 LASTLINE=$(tail -1 buildpacker.log)
@@ -275,6 +270,11 @@ sed -i -e "s/$sslprivatekey/bash_sslprivatekey/g" "$ORDERPACKERJSON"
 echo "*** Creating droplet ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
+
+TESTING=true
+#TESTING=false
+if [ "$TESTING" = false ] ; then 
+#not testing
 
 echo "*** Starting firefox browser and creating admin user ***"
 dropletinfos=( $DROPLET )

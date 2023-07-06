@@ -52,7 +52,7 @@ class VacReqHolidayFilterType extends AbstractType
             //'data' => '2023,2024',
             'attr' => array(
                 //'class'=>'datepicker-only-year datepicker-multidate form-control',
-                'class'=>'datepicker-only-year',
+                'class'=>'datepicker-only-year form-control',
                 'placeholder' => 'Years',
                 'title'=>'Year',
                 'data-toggle'=>'tooltip'
