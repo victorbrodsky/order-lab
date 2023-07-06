@@ -21,7 +21,7 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
-        "script": "alma8_install_basic.sh"
+        "script": "alma8_install.sh"
     },
 	
 	{
