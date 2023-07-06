@@ -214,7 +214,7 @@ class CalendarController extends OrderAbstractController
         }
 
         $filterParams = $request->query->all();
-        if( 0 && count($filterParams) == 0 ) {
+        if( count($filterParams) == 0 ) {
             $thisYear = date("Y");
             $nextYear = (int)$thisYear + 1;
             //$endYear = date("Y+1");

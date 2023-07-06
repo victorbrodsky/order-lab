@@ -197,29 +197,33 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-//            var datefilter = $(target).datepicker( {
-//                autoclose: true,
-//                format: " yyyy",
-//                viewMode: "years",
-//                minViewMode: "years",
-//                orientation: 'auto', //'auto top'
-//                multidate: true,
-//                clearBtn: true
-//            });
+            if(1) {
+                var datefilter = $(target).datepicker( {
+                    autoclose: true,
+                    format: " yyyy",
+                    viewMode: "years",
+                    minViewMode: "years",
+                    orientation: 'auto', //'auto top'
+                    multidate: true,
+                    clearBtn: true
+                });
+            } else {
 
+                //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
 //            var date = new Date();
 //            date.setFullYear(date.getFullYear() - 10);
 //            date.setMonth(0);
 //            date.setDate(1);
-            var datefilter = $(target).datepicker({
-                format: " yyyy",
-                inline: false,
-                viewMode: "years",
-                minViewMode: "years",
-                maxViewMode: "years",
-                startView: "years",
-                multidate: true,
-            });
+                var datefilter = $(target).datepicker({
+                    format: "yyyy",
+                    inline: false,
+                    viewMode: "years",
+                    minViewMode: "years",
+                    //maxViewMode: "years",
+                    startView: "years",
+                    multidate: true,
+                    multidateSeparator: " "
+                });
 
 //            var datefilter = $(target).datepicker({
 //                autoclose: true,
@@ -233,11 +237,14 @@
 //                //defaultViewDate: {year: '2014'}
 //            });
 
-            //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
-            //$(target).datepicker('setDate', new Date());
-            //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
+                //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
+                //$(target).datepicker('setDate', new Date());
+                //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
 
-            datefilter.data('datepicker').setDates(["2022","2023"]);
+                //datefilter.data('datepicker').setDates(["2022","2023"]);
+                datefilter.datepicker('update', new Date());
+                //datefilter.datepicker('update');
+            }
 
         });
 

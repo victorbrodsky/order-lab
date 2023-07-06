@@ -5009,7 +5009,7 @@ class TransResRequestUtil
         $dqlParameters["typeadd"] = 'user-added';
 
         //show only with $fee (not zero and not null) for this price list.
-        if(0) {
+        if(1) {
             if ($project) {
                 $priceList = $project->getPriceList();
                 $feeRestriction = "(list.fee IS NOT NULL)";
@@ -5031,7 +5031,7 @@ class TransResRequestUtil
         }
 
         //show all products or services, even with zero or null $fee
-        if(1) {
+        if(0) {
             if( $project ) {
                 $priceList = $project->getPriceList();
                 //$feeRestriction = "(list.fee IS NOT NULL)";
