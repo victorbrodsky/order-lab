@@ -20,27 +20,12 @@ namespace App\TranslationalResearchBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
-
-
 use App\UserdirectoryBundle\Entity\FosComment; //process.py script: replaced namespace by ::class: added use line for classname=FosComment
-
-
 use App\TranslationalResearchBundle\Entity\RequestCategoryTypeList; //process.py script: replaced namespace by ::class: added use line for classname=RequestCategoryTypeList
-
-
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
-
-
 use App\TranslationalResearchBundle\Entity\SpecialtyList; //process.py script: replaced namespace by ::class: added use line for classname=SpecialtyList
-
-
 use App\TranslationalResearchBundle\Entity\TransResRequest; //process.py script: replaced namespace by ::class: added use line for classname=TransResRequest
-
-
 use App\TranslationalResearchBundle\Entity\OrderableStatusList; //process.py script: replaced namespace by ::class: added use line for classname=OrderableStatusList
-
-
-
 
 use App\TranslationalResearchBundle\Entity\Product;
 //use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
@@ -5008,8 +4993,8 @@ class TransResRequestUtil
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
 
-        //show only with $fee (not zero and not null) for this price list.
-        if(1) {
+        //show only with $fee (zero, but not null) for this price list.
+        if(0) {
             if ($project) {
                 $priceList = $project->getPriceList();
                 $feeRestriction = "(list.fee IS NOT NULL)";
@@ -5032,16 +5017,56 @@ class TransResRequestUtil
 
         //show all products or services, even with zero or null $fee
         if(0) {
+            if ($project) {
+                $priceList = $project->getPriceList();
+                $feeRestriction = "";
+                //$feeRestriction = "(list.fee IS NOT NULL OR prices.fee <> '0')";
+                if ($priceList) {
+                    $priceListId = $priceList->getId();
+                    if ($priceListId) {
+                        $dql->leftJoin('list.prices','prices');
+                        $dql->leftJoin('prices.priceList','priceList');
+                        //$specificFeeRestriction = "(priceList.id = $priceListId AND (prices.fee IS NOT NULL OR prices.fee <> '0'))";
+                        //$specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
+                        $specificFeeRestriction = "(priceList.id = $priceListId)";
+                        //$feeRestriction = $feeRestriction . " OR ";
+                        $feeRestriction = $feeRestriction . $specificFeeRestriction;
+                        //echo $this->priceList.": feeRestriction = $feeRestriction<br>";
+                    }
+                }
+                $dql->andWhere($feeRestriction);
+            }
+        }
+
+        //don't filter if select project's price list is not set
+        // => (product/service's default fees will be shown).
+        //filter if project's price list is set and product/service's specific pricelist is set and they are equal
+        // => (product/service's specific fees will be shown).
+
+        //Note:
+        //0001 - default(null), internal($7,$6)
+        //0002 - default($5)
+        //1001 - default(null)
+        //1003 - default($1.53), internal($6.43,$2.31)
+        //LOGIC NOT ALLOWED: Case project APCP3361 - price list external => 0002(5), 1001(0)
+        //external is the default price list => disable it and not allow to set as project's price list
+        //Project price list can be set to only specific price lists (but not default!)
+        if(1) {
             if( $project ) {
                 $priceList = $project->getPriceList();
-                //$feeRestriction = "(list.fee IS NOT NULL)";
+                //filter if project's price list is set
                 if( $priceList ) {
                     $priceListId = $priceList->getId();
                     if( $priceListId ) {
-                        $dql->leftJoin('list.prices','prices');
-                        $dql->leftJoin('prices.priceList','priceList');
-                        $specificFeeRestriction = "(priceList.id = $priceListId AND prices.fee IS NOT NULL)";
-                        $dql->andWhere($specificFeeRestriction);
+                        $dql->leftJoin('list.prices', 'prices');
+                        $dql->leftJoin('prices.priceList', 'priceList');
+                        $feeRestriction =
+                            "(".
+                            "(priceList IS NULL)".
+                            " OR ".
+                            "(priceList IS NOT NULL AND priceList.id = $priceListId)".
+                            ")";
+                        $dql->andWhere($feeRestriction);
                     }
                 }
             }

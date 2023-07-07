@@ -1250,8 +1250,8 @@
         <div id="prices" class="panel-collapse collapse {{ collapsein }}">
             <div class="panel-body">
 
-                {#Select: External Pricing#}
-                {{ formmacros.simplefield("Utilize the following specific price list:",["External Pricing"],"combobox","disabled") }}
+                {#Select: External Pricing => Default Pricing#}
+                {{ formmacros.simplefield("Utilize the following specific price list:",["Default Pricing"],"combobox","disabled") }}
                 {% if form.fee is defined %}
                     {{ formmacros.field(form.fee) }}
                 {% endif %}

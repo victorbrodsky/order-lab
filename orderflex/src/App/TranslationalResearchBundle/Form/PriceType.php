@@ -61,7 +61,6 @@ class PriceType extends AbstractType
 
 
         $builder->add('priceList', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
             'class' => PriceTypeList::class,
             'choice_label' => 'name',
             'label' => 'Utilize the following specific price list:',

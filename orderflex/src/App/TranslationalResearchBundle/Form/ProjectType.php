@@ -186,7 +186,6 @@ class ProjectType extends AbstractType
                 //if( $this->params['cycle'] == "new" ) {
                 if (1) {
                     $builder->add('priceList', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
                         'class' => PriceTypeList::class,
                         'choice_label' => 'name',
                         'label' => 'Utilize the following specific price list:',
@@ -207,7 +206,6 @@ class ProjectType extends AbstractType
                     ));
                 } else {
                     $builder->add('priceList', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:PriceTypeList'] by [PriceTypeList::class]
                         'class' => PriceTypeList::class,
                         'choice_label' => 'name',
                         'label' => 'Utilize the following specific price list:',

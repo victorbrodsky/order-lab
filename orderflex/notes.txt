@@ -1591,5 +1591,12 @@ Check: 'data_class' => 'App\OrderformBundle\Entity\EncounterDate'
 $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-
+Check:
+for project APCP3648-i with internal price list, TRP-0002 with external price list not shown
+function getProductServiceByProjectSpecialty
+0001 - default(null), internal(7,6)
+0002 - default(5)
+1001 - default(null)
+1003 - default(1.53), internal(6.43,2.31)
+LOGIC NOT ALLOWED: Case project APCP3361 - price list external => 0002(5), 1001(0)
 
