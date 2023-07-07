@@ -5047,11 +5047,13 @@ class TransResRequestUtil
         //0001 - default(null), internal($7,$6)
         //0002 - default($5)
         //1001 - default(null)
-        //1003 - default($1.53), internal($6.43,$2.31)
-        //LOGIC NOT ALLOWED: Case project APCP3361 - price list external => 0002(5), 1001(0)
-        //external is the default price list => disable it and not allow to set as project's price list
-        //Project price list can be set to only specific price lists (but not default!)
-        if(1) {
+        //1003 - default($10.53), internal($6.43,$2.31)
+        //Case1 project APCP3364-REQ20486 - price list not set => 0001(0), 0002(5), 1001(0), 1003(10.53)
+        //Case2 project APCP3379-REQ20484 - price list is internal => 0001(7,6), 0002(5), 1001(0), 1003(6.43,2.31)
+        //LOGIC NOT ALLOWED: Case3 project APCP3361-REQ20485 - price list external and it does not exist => 0001(0), 0002(5), 1001(0), 1003(10.53)
+        //If project's price list does not match the product/service's specific pricelist => show with default fees
+        //Therefore, all product/service should be shown, however, the fees are shown and calculated according to the project's price list
+        if(0) {
             if( $project ) {
                 $priceList = $project->getPriceList();
                 //filter if project's price list is set
@@ -5085,7 +5087,7 @@ class TransResRequestUtil
         if( $projectSpecialty ) {
             //$projectSpecialtyId = $projectSpecialty->getId();
             foreach( $fees as $fee ) {
-                $feeSpecialties = $fee->getProjectSpecialties();
+                $feeSpecialties = $fee->getProjectSpecialties(); //Reverse association: don't show for this specialties
                 //echo "specialties=".$fee->getProductId()." ".$fee->getProjectSpecialtiesStr()."<br>";
                 if( !$feeSpecialties->contains($projectSpecialty) ) {
                     //echo "specialties=".$fee->getProductId()." ".$fee->getProjectSpecialtiesStr()."<br>";
