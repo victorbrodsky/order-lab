@@ -78,7 +78,8 @@ f_install_postgresql14 () {
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	#sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
 	#After repository has been added, list available repositories, update system and reboot
 	echo @### List available repositories, update system ###	
