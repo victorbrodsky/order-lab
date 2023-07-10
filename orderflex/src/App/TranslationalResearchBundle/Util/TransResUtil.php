@@ -8712,7 +8712,7 @@ WHERE
                 )
             ";
 
-            $res = $conn->executeQuery($dql)->fetchAll(\PDO::FETCH_COLUMN,0);
+            $res = $conn->executeQuery($dql)->fetchAll(\PDO::FETCH_COLUMN);
             dump($res);
             exit('111');
         }
