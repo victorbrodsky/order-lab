@@ -219,9 +219,10 @@ f_install_util () {
 	yum history sync
 	
 	echo -e ${COLOR} Install wkhtmltopdf ${NC}
-	#old url: wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
-	wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
-	sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	#https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
+	wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+	#sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
 	
 	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
 	sudo yum install -y xorg-x11-server-Xvfb
