@@ -271,8 +271,8 @@ echo "*** Creating droplet ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
-TESTING=true
-#TESTING=false
+#TESTING=true
+TESTING=false
 if [ "$TESTING" = false ] ; then 
 #not testing
 
