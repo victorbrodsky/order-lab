@@ -72,34 +72,37 @@ f_install_apache () {
     sleep 1
 }
 
-f_install_postgresql14 () {
+f_install_postgresql15 () {
+	#https://computingforgeeks.com/install-postgresql-server-on-rocky-almalinux/?expand_article=1
     ########## INSTALL Postgresql ##########
-    echo -e "${COLOR} Installing Postgresql 14 ... ${NC}"
+    echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
 	#sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
 	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
+	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
+	sudo dnf -qy module disable postgresql
+	
 	#After repository has been added, list available repositories, update system and reboot
-	echo @### List available repositories, update system ###	
-	sudo dnf repolist -y
-	sudo dnf -y update 
+	#echo @### List available repositories, update system ###	
+	#sudo dnf repolist -y
+	#sudo dnf -y update 
 	#sudo systemctl reboot
 	
-	echo @### Install postgresql 14 ###	
-	dnf install -y postgresql14
-	dnf install -y postgresql14-server
+	echo @### Install postgresql 15 ###	
+	sudo dnf install -y postgresql15-server
 
-	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
+	#echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
 	#sudo yum install -y oidentd
-	sudo dnf install -y authd
-	sudo dnf install -y xinetd
+	#sudo dnf install -y authd
+	#sudo dnf install -y xinetd
 
 	echo @### Optionally initialize the database and enable automatic start ###	
-	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
-	sudo systemctl enable postgresql-14
-	sudo systemctl start postgresql-14
+	sudo /usr/pgsql-15/bin/postgresql-15-setup initdb
+	sudo systemctl enable postgresql-15
+	sudo systemctl start postgresql-15
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
@@ -107,27 +110,27 @@ f_install_postgresql14 () {
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
-	#Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
-	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/14/data/postgresql.conf
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/15/data/postgresql.conf
 	
 	echo -e ${COLOR} Set port ${NC}
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/14/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/15/data/postgresql.conf
 		
-	sudo systemctl restart postgresql-14
+	sudo systemctl restart postgresql-15
 	
 	echo ""
     sleep 1
@@ -374,7 +377,7 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-f_install_postgresql14
+f_install_postgresql15
 f_install_php82
 #f_install_util
 #f_install_python3
