@@ -3398,7 +3398,7 @@ class RequestController extends OrderAbstractController
                       AND b.specialtylist_id IN ($specialtiesStr)
                     )
                 ";
-                $filteredIds = $conn->executeQuery($subDql)->fetchAll(\PDO::FETCH_COLUMN,0);
+                $filteredIds = $conn->executeQuery($subDql)->fetchAll(\PDO::FETCH_COLUMN); //fetchAll(\PDO::FETCH_COLUMN,0)
 
                 //2) use these ids to filter the list
                 $whereFilteredIds = "list.id IN (:filteredIds)";
