@@ -1,5 +1,5 @@
 #!/bin/bash
-# alma8 installation script (alma8, PHP, Postgresql)
+# alma9 installation script (alma9, PHP, Postgresql)
 echo @### Get bash_dbuser bash_dbpass ###
 #bashdbuser=$1
 #bashdbpass=$2
@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 
 # Function update os
 f_update_os () {
-    echo -e ${COLOR} Starting update os alma8 ... ${NC}
+    echo -e ${COLOR} Starting update os alma9 ... ${NC}
 	#echo -e ${COLOR} @### Test Color 1 ### ${NC}	
 	#echo -e "${COLOR}" @### Test Color 2 ### "${NC}"	
 	#exit 0
@@ -52,6 +52,7 @@ f_update_os () {
 
 # Function install LAMP stack
 # https://linux.how2shout.com/how-to-install-apache-on-almalinux-8-rocky-linux-8/
+# https://idroot.us/install-apache-web-server-almalinux-9/
 f_install_apache () {
     ########## INSTALL APACHE ##########
     echo -e "${COLOR} Installing apache ... ${NC}"
@@ -62,7 +63,7 @@ f_install_apache () {
 	sudo systemctl start httpd.service
 	sudo systemctl status httpd.service
 	
-	echo -e "${COLOR} Allow port 80 in Firewall on AlmaLinux/Rocky 8 ${NC}"
+	echo -e "${COLOR} Allow port 80 and 443 in Firewall ${NC}"
 	sudo firewall-cmd --zone=public --permanent --add-port=80/tcp
 	sudo firewall-cmd --zone=public --permanent --add-port=443/tcp
 	sudo firewall-cmd --reload
@@ -72,23 +73,16 @@ f_install_apache () {
 }
 
 f_install_postgresql15 () {
-	#https://computingforgeeks.com/install-postgresql-server-on-rocky-almalinux/?expand_article=1
+	#https://computingforgeeks.com/install-postgresql-on-rocky-almalinux-9/
     ########## INSTALL Postgresql ##########
     echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	#sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
-	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
 	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
 	sudo dnf -qy module disable postgresql
-	
-	#After repository has been added, list available repositories, update system and reboot
-	#echo @### List available repositories, update system ###	
-	#sudo dnf repolist -y
-	#sudo dnf -y update 
-	#sudo systemctl reboot
 	
 	echo @### Install postgresql 15 ###	
 	sudo dnf install -y postgresql15-server
@@ -137,15 +131,18 @@ f_install_postgresql15 () {
 
 f_install_php82 () {
     ########## INSTALL PHP 8.2 ##########
-	#https://www.linkedin.com/pulse/how-install-php-82-alma-linux-8-spin-servers/
+	#https://linuxgenie.net/how-to-install-php-8-2-on-almalinux-8-9/
     echo "Installing PHP 8.2 ..."
     sleep 1
 
 	echo @### Install yum-utils and epel repository ###
-	sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-	sudo dnf -y install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+	#sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+	#sudo dnf -y install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+	#sudo dnf -y install epel-release
+	sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+	sudo dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
 
-	echo @### PHP: update DNF cache ###
+	#echo @### PHP: update DNF cache ###
 	sudo dnf makecache -y
 
 	echo @### PHP: List the repositories to ensure they are installed using the command below ###
@@ -155,7 +152,7 @@ f_install_php82 () {
 	sudo dnf module reset php -y
 	
 	echo @### PHP: Enable the PHP 8.2 REMI module ###
-	sudo dnf module install php:remi-8.2 -y
+	sudo dnf -y module install php:remi-8.2
 	
 	echo @### PHP: Install PHP 8.2 ###
 	sudo dnf -y install php 
@@ -168,15 +165,9 @@ f_install_php82 () {
 	
 	echo @### PHP: Install PHP modules ###
 	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	#sudo dnf -y install php82-php-mcrypt php82-php-gd php82-curl php82-php-ldap php82-php-zip 
-	#sudo dnf -y install php82-php-fileinfo php82-php-opcache php82-php-fpm php82-php-mbstring php82-php-xml php82-php-json
 	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
-	#sudo dnf -y install php82-php-pgsql php82-php-xmlreader php82-php-pdo php82-php-dom php82-php-intl
-	#sudo dnf -y install php82-php-devel php82-php-pear php82-php-bcmath
-	#sudo dnf -y install php82-php-common
 	
 	#dnf -y install php82-syspaths
-	
 	#dnf -y --enablerepo=remi install php82-php
 	
 	#echo -e  ${COLOR} export PATH ${NC}

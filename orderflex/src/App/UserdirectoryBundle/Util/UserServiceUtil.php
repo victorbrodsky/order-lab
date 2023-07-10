@@ -969,15 +969,15 @@ class UserServiceUtil {
                 </p>
 
                 <p>
-                    Designers: Victor Brodsky, App Ivanov
+                    Designers: Victor Brodsky, Oleg Ivanov
                 </p>
 
                 <p>
-                    Developer: App Ivanov
+                    Developer: Oleg Ivanov
                 </p>
 
                 <p>
-                    Quality Assurance Testers: App Ivanov, Steven Bowe, Emilio Madrigal
+                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
                 </p>
 
                 <p>
