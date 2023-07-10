@@ -311,6 +311,9 @@ f_install_order () {
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
+	echo -e ${COLOR} Fixing detected dubious ownership in repository ${NC}
+	git config --global --add safe.directory /usr/local/bin/order-lab
+	
 	echo ""
     sleep 1
 }
