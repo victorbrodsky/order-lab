@@ -138,11 +138,12 @@ f_install_postgresql15 () {
 
 f_install_php82 () {
     ########## INSTALL PHP 8.2 ##########
+	#https://www.linkedin.com/pulse/how-install-php-82-alma-linux-8-spin-servers/
     echo "Installing PHP 8.2 ..."
     sleep 1
 
 	echo @### Install yum-utils and epel repository ###
-	sudo sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+	sudo dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 	sudo dnf -y install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
 
 	echo @### PHP: update DNF cache ###
@@ -167,9 +168,10 @@ f_install_php82 () {
 	php -m
 	
 	echo @### PHP: Install PHP modules ###
-	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm}
+	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
 	#sudo dnf -y install php82-php-mcrypt php82-php-gd php82-curl php82-php-ldap php82-php-zip 
 	#sudo dnf -y install php82-php-fileinfo php82-php-opcache php82-php-fpm php82-php-mbstring php82-php-xml php82-php-json
+	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	#sudo dnf -y install php82-php-pgsql php82-php-xmlreader php82-php-pdo php82-php-dom php82-php-intl
 	#sudo dnf -y install php82-php-devel php82-php-pear php82-php-bcmath
 	#sudo dnf -y install php82-php-common
@@ -341,9 +343,11 @@ f_install_prepare () {
 	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
 	##cp /etc/php.ini /etc/php_ORIG.ini
 	
-	echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
-	cp /etc/opt/remi/php81/php.ini /etc/opt/remi/php81/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php81/
+	echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/ ${NC}
+	#cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
+	cp /etc/php.ini /etc/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
