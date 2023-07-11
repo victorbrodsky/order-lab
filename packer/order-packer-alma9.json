@@ -5,13 +5,11 @@
   },	
 
   "builders": [{
-	"name": "almalinux-s-1vcpu-2gb-nyc3-01",  
-    "type": "digitalocean",
+	"type": "digitalocean",
     "api_token": "api_token_bash_value",
     "region": "nyc3",
-    "size": "s-1vcpu-2gb",
-    "image": "almalinux-9-x64",
-	"vpc_uuid":"994258bc-dc84-11e8-80bc-3cfdfea9fba1",
+    "size": "2gb",
+    "image": "packer-1689084820",
     "ssh_username": "{{user `ssh_name`}}"  
   }],
 

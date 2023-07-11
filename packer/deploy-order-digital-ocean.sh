@@ -160,12 +160,15 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
+#almalinux-8-x64
+#almalinux-9-x64
+
 if [ "$os" = "alma8" ]
   then 	
 	ORDERPACKERJSON="order-packer-alma8.json"
 fi
 if [ "$os" = "alma9" ]
-  then 	
+  then  
 	ORDERPACKERJSON="order-packer-alma9.json"
 fi
 if [ "$os" = "centos" ]
