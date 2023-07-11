@@ -219,9 +219,12 @@ f_install_util () {
 	yum history sync
 	
 	echo -e ${COLOR} Install wkhtmltopdf ${NC}
-	#https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
-	wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
-	sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+	###https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
+	###wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+	###sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+	#https://docs.faveohelpdesk.com/docs/installation/providers/enterprise/wkhtmltopdf/
+	wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
+	sudo dnf install -y ./wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
 	
 	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
 	sudo yum install -y xorg-x11-server-Xvfb
@@ -380,7 +383,7 @@ f_install_prepare () {
     sleep 1
 }	
 
-#f_update_os
+f_update_os
 #f_install_apache
 #f_install_postgresql15
 #f_install_php82
