@@ -21,7 +21,7 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
-        "script": "alma8_install.sh"
+        "script": "alma9_install.sh"
     },
 	
 	{
@@ -42,7 +42,7 @@
         "inline": [ 
 		   "echo @### Check SELinux status ###",	
 		   "sestatus",
-           "echo @### PostgreSQL Version after alma8_install ###",		
+           "echo @### PostgreSQL Version after alma9_install ###",		
 		   "psql --version"
          ]
 	},

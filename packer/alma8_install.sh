@@ -168,15 +168,9 @@ f_install_php82 () {
 	
 	echo @### PHP: Install PHP modules ###
 	sudo dnf -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	#sudo dnf -y install php82-php-mcrypt php82-php-gd php82-curl php82-php-ldap php82-php-zip 
-	#sudo dnf -y install php82-php-fileinfo php82-php-opcache php82-php-fpm php82-php-mbstring php82-php-xml php82-php-json
 	sudo dnf -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
-	#sudo dnf -y install php82-php-pgsql php82-php-xmlreader php82-php-pdo php82-php-dom php82-php-intl
-	#sudo dnf -y install php82-php-devel php82-php-pear php82-php-bcmath
-	#sudo dnf -y install php82-php-common
 	
 	#dnf -y install php82-syspaths
-	
 	#dnf -y --enablerepo=remi install php82-php
 	
 	#echo -e  ${COLOR} export PATH ${NC}
@@ -290,8 +284,6 @@ f_install_order () {
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
 	cd /usr/local/bin/
 	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-	#git clone --single-branch --branch master https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-	#git clone --single-branch --branch sf4-php7 https://github.com/victorbrodsky/order-lab.git
 	
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab
@@ -300,15 +292,8 @@ f_install_order () {
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
 	
-	#echo -e ${COLOR} sudo chown -R www-data:www-data /usr/local/bin/order-lab ${NC}
-	#sudo chown -R www-data:www-data /usr/local/bin/order-lab
-	#sudo chown -R nobody:nobody /usr/local/bin/order-lab 
-	
 	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
 	sudo chown -R apache:apache /usr/local/bin/order-lab
-	
-	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
-	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
 	
 	echo -e ${COLOR} Fixing detected dubious ownership in repository ${NC}
 	git config --global --add safe.directory /usr/local/bin/order-lab
@@ -334,21 +319,8 @@ f_install_prepare () {
 	echo -e ${COLOR} Copy env.test ${NC}
 	cp /usr/local/bin/order-lab/packer/.env.test /usr/local/bin/order-lab/orderflex/
 	
-	#echo @### Copy php.ini to /etc/opt/remi/php72/ ###
-	#/etc/opt/remi/php72/ or /etc/
-	#cp /etc/opt/remi/php72/php.ini /etc/opt/remi/php72/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php72/
-	
-	#echo -e ${COLOR} PHP 7.4: Copy php.ini to /etc/ ${NC}
-	#cp /etc/php.ini /etc/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
-	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
-	##cp /etc/php.ini /etc/php_ORIG.ini
-	
 	echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/ ${NC}
-	#cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
 	cp /etc/php.ini /etc/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
