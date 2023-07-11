@@ -9,21 +9,8 @@
     "api_token": "api_token_bash_value",
     "region": "nyc3",
     "size": "2gb",
-    "image": "rockylinux-9-x64",
+    "image": "almalinux-8-x64",
     "ssh_username": "{{user `ssh_name`}}"  
-  }],
-
-  "provisioners": [
-  
-	{
-        "type": "shell",
-		"environment_vars": [
-			"bashdbuser=bash_dbuser",
-			"bashdbpass=bash_dbpass"
-		],
-        "script": "alma9_install.sh"
-    }
-      
-   ]
+  }]
 
 }
