@@ -129,6 +129,7 @@
 		this.setDaysOfWeekDisabled(this.o.daysOfWeekDisabled);
 		this.setDaysOfWeekHighlighted(this.o.daysOfWeekHighlighted);
 		this.setDatesDisabled(this.o.datesDisabled);
+		//this.setMultidateRemoveDuplicate(this.o.multidateRemoveDuplicate);
 
 		this.fillDow();
 		this.fillMonths();
@@ -653,6 +654,13 @@
 			this.update();
 			this.updateNavArrows();
 		},
+
+		//https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
+		// setMultidateRemoveDuplicate: function (multidateRemoveDuplicate) {
+		// 	this._process_options({ multidateRemoveDuplicate: multidateRemoveDuplicate });
+		// 	this.update();
+		// 	this.updateNavArrows();
+		// },
 
 		place: function(){
 			if (this.isInline)
@@ -1220,6 +1228,18 @@
 					this.dates.remove(0);
 		},
 
+		_toggle_multidate_CUSTOM: function(date){
+			var ix = this.dates.contains(date);
+			if (!date){
+				this.dates.clear();
+			}
+			else if (ix !== -1){ if (this.o.multidateRemoveDuplicate) {
+				this.dates.remove(ix);} }
+			else {this.dates.push(date);}
+			if (typeof this.o.multidate === 'number')
+				while (this.dates.length > this.o.multidate)
+					this.dates.remove(0);},
+
 		_setDate: function(date, which){
 			if (!which || which === 'date')
 				this._toggle_multidate(date && new Date(date));
@@ -1634,6 +1654,7 @@
 		minViewMode: 0,
 		maxViewMode: 2,
 		multidate: false,
+		//multidateRemoveDuplicate: false,
 		multidateSeparator: ',',
 		orientation: "auto",
 		rtl: false,

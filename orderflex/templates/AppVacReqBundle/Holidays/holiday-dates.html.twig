@@ -222,6 +222,7 @@
                     //maxViewMode: "years",
                     startView: "years",
                     multidate: true,
+                    multidateRemoveDuplicate: true,
                     multidateSeparator: " "
                 });
 
@@ -241,9 +242,26 @@
                 //$(target).datepicker('setDate', new Date());
                 //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
 
-                //datefilter.data('datepicker').setDates(["2022","2023"]);
-                datefilter.datepicker('update', new Date());
+                datefilter.data('datepicker').setDates(["2022","2023"]);
+                //datefilter.datepicker('update', new Date());
                 //datefilter.datepicker('update');
+
+                //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
+//                datefilter.on('changeDate', function(e){
+//                    // extra
+//                    var sdate = e.date.getFullYear();
+//                    console.log('sdate='+sdate);
+//                    $('#filter_years').val(sdate);
+//                    //$('p').html(sdate);
+//                    //window.location.href = 'events.html?date='+sdate;
+//                });
+
+                //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
+//                setMultidateRemoveDuplicate: function (multidateRemoveDuplicate) {
+//                    this._process_options({ multidateRemoveDuplicate: multidateRemoveDuplicate });
+//                    this.update();
+//                    this.updateNavArrows();
+//                },
             }
 
         });
