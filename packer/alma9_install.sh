@@ -11,6 +11,14 @@ if [ -z "$bashdbpass" ]
   then 	
     bashdbpass=$2
 fi
+
+if [ -f "$bashdbuser" ]; then
+    bashdbuser='symfony'
+fi
+if [ -f "$bashdbpass" ]; then
+    bashdbpass='symfony'
+fi
+
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 
