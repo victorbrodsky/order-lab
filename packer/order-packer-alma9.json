@@ -10,7 +10,7 @@
     "region": "nyc3",
     "size": "2gb",
     "image": "almalinux-9-x64",
-    "ssh_username": "root",
+    "ssh_username": "{{user `ssh_name`}}",
 	"ssh_timeout": "10m"	
   }],
 
