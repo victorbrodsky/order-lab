@@ -239,6 +239,7 @@ packer build "$ORDERPACKERJSON" | tee buildpacker.log
 
 
 #--> digitalocean: A snapshot was created: 'packer-1642782038' (ID: 100353988) in regions 'nyc3'
+#Use Packer v1.7.0 or later
 echo "*** Building VM image from packer=[$ORDERPACKERJSON] ... ***"
 LASTLINE=$(tail -1 buildpacker.log)
 echo "*** Packer LASTLINE=$LASTLINE ***"
