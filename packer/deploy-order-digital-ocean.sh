@@ -278,8 +278,8 @@ echo "*** Creating droplet ... ***"
 DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --region nyc3 --wait | tail -1)
 
 
-#TESTING=true
-TESTING=false
+TESTING=true
+#TESTING=false
 if [ "$TESTING" = false ] ; then 
 #not testing
 
@@ -288,6 +288,7 @@ dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
 echo "droplet IP=$DROPLETIP"
 
+echo "*** Sleep for 120 sec ***"
 sleep 120
 
 #DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
