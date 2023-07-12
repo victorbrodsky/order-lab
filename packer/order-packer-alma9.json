@@ -9,8 +9,9 @@
     "api_token": "api_token_bash_value",
     "region": "nyc3",
     "size": "2gb",
-    "image": "almalinux9-s-1vcpu-1gb-nyc3-01-1689178240115",
-    "ssh_username": "{{user `ssh_name`}}"  
+    "image": "almalinux-9-x64",
+    "ssh_username": "root",
+	"ssh_timeout": "10m"	
   }],
 
   "provisioners": [
