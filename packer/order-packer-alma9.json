@@ -8,8 +8,8 @@
 	"type": "digitalocean",
     "api_token": "api_token_bash_value",
     "region": "nyc3",
-    "size": "2gb",
-    "image": "AlmaLinux-9-GenericCloud-9.2-20230513.x86_64.qcow2",
+    "size": "s-1vcpu-1gb",
+    "image": "almalinux-9-x64",
     "ssh_username": "{{user `ssh_name`}}"  
   }],
 
