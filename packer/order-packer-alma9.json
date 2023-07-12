@@ -7,7 +7,7 @@
   "builders": [{
 	"type": "digitalocean",
     "api_token": "api_token_bash_value",
-    "region": "nyc2",
+    "region": "nyc1",
     "size": "2gb",
     "image": "almalinux-9-x64",
     "ssh_username": "{{user `ssh_name`}}"	

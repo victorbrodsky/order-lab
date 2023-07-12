@@ -1605,3 +1605,17 @@ LOGIC NOT ALLOWED: Case2 project APCP3361-REQ20485 - price list external and it 
         //If project's price list does not match the product/service's specific pricelist => show with default fees
         //Therefore, all product/service should be shown, however, the fees are shown and calculated according to the project's price list
 
+DigitalOcean:
+==> digitalocean: Waiting for SSH to become available...
+==> digitalocean: Error waiting for SSH: Packer experienced an authentication error when trying to connect via SSH. This can happen if your username/password are wrong. You may want to double-check your credentials as part of your debugging process. original error: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+==> digitalocean: Destroying droplet...
+==> digitalocean: Deleting temporary ssh key...
+Build 'digitalocean' errored: Packer experienced an authentication error when trying to connect via SSH. This can happen if your username/password are wrong. You may want to double-check your credentials as part of your debugging process. original error: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+
+==> Some builds didn't complete successfully and had errors:
+--> digitalocean: Packer experienced an authentication error when trying to connect via SSH. This can happen if your username/password are wrong. You may want to double-check your credentials as part of your debugging process. original error: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+
+==> Builds finished but no artifacts were created.
+
+
+
