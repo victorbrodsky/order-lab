@@ -1616,5 +1616,8 @@ original error: ssh: handshake failed: ssh: unable to authenticate, attempted me
 
 ==> Builds finished but no artifacts were created.
 
+https://developer.hashicorp.com/packer/plugins/builders/digitalocean
+Packer: > v1.7.0
+
 
 
