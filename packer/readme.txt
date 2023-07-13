@@ -15,3 +15,16 @@ centos-without-composer 	order-packer-centos-without-composer.json => centos_ins
 ubuntu				order-packer-ubuntu.json
 
 
+##############################
+Packer: > v1.7.0
+
+1) Install new packer 1.9.1: scoop install packer
+Packer 1.9.1: /c/Users/ch3/scoop/shims/packer
+
+2) Convert json to order-packer-alma9.json.pkr.hcl:
+packer hcl2_upgrade order-packer-alma9.json
+
+3) Install digitalocean plugin: packer init order-packer-alma9.json.pkr.hcl
+
+4) run order-packer-alma9.json as usual
+##############################
