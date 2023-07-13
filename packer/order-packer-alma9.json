@@ -4,13 +4,6 @@
         "ssh_name": "root"
   },
 
-  "required_plugins": [{
- 	"digitalocean": {
- 	 "source": "github.com/digitalocean/digitalocean",
- 	 "version": ">=1.1.1"
- 	}
-  }],  
-
   "builders": [{
 	"type": "digitalocean",
     "api_token": "api_token_bash_value",
