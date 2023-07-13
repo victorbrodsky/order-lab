@@ -1622,6 +1622,6 @@ Packer 1.9.1:
 Error: Failed to initialize build "digitalocean"
 error initializing builder 'digitalocean': Unknown builder digitalocean
 
-
+Packer 1.9.1: /c/Users/ch3/scoop/shims/packer
 
 
