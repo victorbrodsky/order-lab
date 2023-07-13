@@ -17,6 +17,7 @@
   
      {
         "type": "shell",
+		"expect_disconnect": "true",
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
@@ -31,20 +32,8 @@
            "echo @### Disable SELinux again ###",
 		   "sudo setenforce 0",
 		   "echo @### Reboot Server ###",
-		   "sudo shutdown -r now"
+		   "sudo reboot -f"
          ]    
-	},
-	
-	{
-        "type": "shell",
-		"expect_disconnect": "true",
-		"pause_before": "60s",
-        "inline": [ 
-		   "echo @### Check SELinux status ###",	
-		   "sestatus",
-           "echo @### PostgreSQL Version after centos7_install ###",		
-		   "psql --version"
-         ]
 	},
 	
 	{
@@ -79,14 +68,6 @@
           "source": "bash_sslprivatekey",
           "destination": "/usr/local/bin/order-lab/ssl/apache2.key"         
        },
-	   
-	   {
-        "type": "shell",
-        "inline": [ 
-           "echo @### PostgreSQL Version before final step ###",		
-		   "psql --version"
-         ]    
-	   },
 	  
 	  {
         "type": "shell",
@@ -106,10 +87,7 @@
 		   "echo @### PostgreSQL Version after composer install ###",		
 		   "psql --version",
 		   "echo @### Install yarn package.json ###",
-		   "sudo yarn install --frozen-lockfile",
-		   "echo @### Check OS Info after yarn ###",
-		   "sudo hostnamectl",		   
-           "git rev-parse HEAD",		   
+		   "sudo yarn install --frozen-lockfile",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
 		   "echo @### Check OS Info before deploy_prod.sh ###",
 		   "sudo hostnamectl",

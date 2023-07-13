@@ -21,25 +21,21 @@ NC='\033[0m' # No Color
 # Function update os
 f_update_os () {
     echo -e ${COLOR} Starting update os ubuntu 22 ... ${NC}
-	#echo -e ${COLOR} @### Test Color 1 ### ${NC}	
-	#echo -e "${COLOR}" @### Test Color 2 ### "${NC}"	
-	#exit 0
-    sleep 1
+	
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+	
+	sleep 1
 
-	echo -e ${COLOR} sudo yum update -y ${NC}
-    sudo yum update -y
+	echo -e ${COLOR} update ${NC}
+    sudo apt update
+	sudo apt -y full-upgrade
 	
-	echo -e ${COLOR} sudo yum upgrade -y ${NC}
-    sudo yum upgrade -y
+	echo -e ${COLOR} system reboot  ${NC}
+	[ -f /var/run/reboot-required ] && sudo reboot -f
 	
-	echo -e ${COLOR} Disable SELinux ${NC}
-	#Set "sudo setenforce 0" for now to complete composer later
-	sudo setenforce 0
-	sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+	echo -e ${COLOR} Install the necessary packages  ${NC}
+	sudo apt install -y vim curl wget gpg gnupg2 software-properties-common apt-transport-https lsb-release ca-certificates
 	
-	echo -e ${COLOR} Check SELinux Status ${NC}
-	sestatus
-
     echo ""
     sleep 1
 }
@@ -47,13 +43,20 @@ f_update_os () {
 # Function install LAMP stack
 f_install_apache () {
     ########## INSTALL APACHE ##########
-    echo -e "${COLOR} Installing apache ... ${NC}"
-    sleep 1
+    echo -e ${COLOR} install apache ${NC}
+	sudo apt install -y apache2
 
-	sudo yum install httpd -y
-	sudo systemctl enable httpd.service
-	sudo systemctl start httpd.service
-	sudo systemctl status httpd.service
+	sudo yum install -y httpd
+	
+	echo -e ${COLOR} List the ufw application profiles ${NC}
+	sudo ufw app list
+	
+	echo -e ${COLOR} List the ufw application profiles ${NC}
+	sudo ufw allow 'Apache'
+	sudo ufw status
+	
+	echo -e ${COLOR} Make sure the service is active ${NC}
+	sudo systemctl status apache2
 	
 	echo ""
     sleep 1
@@ -64,56 +67,40 @@ f_install_postgresql14 () {
     echo -e "${COLOR} Installing Postgresql 14 ... ${NC}"
     sleep 1
 
-	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
-	sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm -y
+	#https://computingforgeeks.com/install-postgresql-14-on-ubuntu-jammy-jellyfish/?expand_article=1
+	echo -e ${COLOR} import GPG key used in signing packages ${NC}		
+	curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
 	
-	#After repository has been added, list available repositories, update system and reboot
-	echo @### List available repositories, update system ###	
-	sudo yum repolist -y
-	sudo yum -y update 
-	#sudo systemctl reboot
+	echo -e ${COLOR} Add the PostgreSQL repository ${NC}	
+	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 	
-	echo @### Install postgresql 14 ###	
-	yum install -y postgresql14
-	yum install -y postgresql14-server
+	echo -e ${COLOR} Inform the system about the newly added repository ${NC}
+	sudo apt update
+	
+	echo -e ${COLOR} Repo metadata sync should be successful for newly added repository ${NC}
+	Hit:1 http://apt.postgresql.org/pub/repos/apt jammy-pgdg InRelease
+	
+	echo -e ${COLOR} install PostgreSQL 14 ${NC}
+	sudo apt install -y postgresql-14
+	
+	echo @### Restart and enable PostgreSQL ###	
+	sudo systemctl restart postgresql
+	sudo systemctl enable postgresql
+	
+	echo @### Check install version of PostgreSQL ###	
+	sudo -u postgres psql -c "SELECT version();"
 
-	#echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
-	#sudo yum install -y oidentd
-	#sudo yum install -y authd
-	#sudo yum install -y xinetd
-
-	echo @### Optionally initialize the database and enable automatic start ###	
-	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
-	sudo systemctl enable postgresql-14
-	sudo systemctl start postgresql-14
+	echo @### Check install version of PostgreSQL ###	
+	sudo -u postgres psql
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
 	sudo -Hiu postgres psql -c "CREATE USER $bashdbuser WITH PASSWORD '$bashdbpass'"
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
-	
-	#Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5" ${NC}
-	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
-	
-	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
-	
-	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/14/data/pg_hba.conf
-	
-	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
-	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/14/data/pg_hba.conf
-	
-	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/14/data/postgresql.conf
-	
-	echo -e ${COLOR} Set port ${NC}
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/14/data/postgresql.conf
 		
-	sudo systemctl restart postgresql-14
+	sudo systemctl restart postgresql
+	sudo systemctl enable postgresql
 	
 	echo ""
     sleep 1
@@ -124,14 +111,12 @@ f_install_php81 () {
     echo "Installing apache 8.1 ..."
     sleep 1
 
-	echo @### Install yum-utils and epel repository ###
-	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-	sudo yum -y install https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+	echo @### Install required dependencies ###
+	sudo apt install -y lsb-release ca-certificates apt-transport-https software-properties-common
 
-	echo @### PHP1: install yum-utils -y ###
-	sudo yum -y install yum-utils
-	sudo yum-config-manager --disable 'remi-php*'
-	sudo yum-config-manager --enable remi-php81
+	echo @### Set up PHP repository ###
+	sudo add-apt-repository ppa:ondrej/php
+
 
 	echo @### PHP2: sudo yum-config-manager --enable remi-php81 ###
 	sudo yum -y update
@@ -140,28 +125,23 @@ f_install_php81 () {
 	#sudo yum search php81 | more
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
-	echo @### PHP3: Install PHP 8.1 ###
-	sudo yum -y install php81 php81-php-cli
+	echo @### PHP3: Install PHP ###
+	sudo apt install -y php8.2
 	
-	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
-	sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
-	sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
-	sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
-	sudo yum -y install php81-php-common
+	echo @### PHP: list of all the installable PHP modules ###
+	php -m
 	
-	yum -y install php81-syspaths
+	echo @### PHP: Install PHP modules ###
+	sudo apt install -y install php8.2-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo apt install -y install php8.2-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
-	yum -y --enablerepo=remi install php81-php
-	
-	echo -e  ${COLOR} export PATH ${NC}
-	export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	sudo apt install -y php8.2-syspaths
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
 	
 	# Restart Apache
-    sudo systemctl restart httpd.service
+    sudo systemctl restart postgresql
 	
 	echo ""
     sleep 1
