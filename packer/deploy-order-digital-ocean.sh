@@ -175,9 +175,9 @@ if [ "$os" = "alma9hcl" ]
   then  
 	ORDERPACKERJSON="order-packer-alma9.json.pkr.hcl"
 fi
-if [ "$os" = "centos" ]
+if [ "$os" = "centos7" ]
   then 	
-	ORDERPACKERJSON="order-packer-centos.json"
+	ORDERPACKERJSON="order-packer-centos7.json"
 fi
 
 #Optional OS

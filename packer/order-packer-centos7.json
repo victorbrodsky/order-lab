@@ -21,7 +21,7 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
-        "script": "centos_install.sh"
+        "script": "centos7_install.sh"
     },
 	
 	{
@@ -42,7 +42,7 @@
         "inline": [ 
 		   "echo @### Check SELinux status ###",	
 		   "sestatus",
-           "echo @### PostgreSQL Version after centos_install ###",		
+           "echo @### PostgreSQL Version after centos7_install ###",		
 		   "psql --version"
          ]
 	},
