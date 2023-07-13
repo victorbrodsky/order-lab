@@ -1591,31 +1591,6 @@ Check: 'data_class' => 'App\OrderformBundle\Entity\EncounterDate'
 $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-Check:
-for project APCP3648-i with internal price list, TRP-0002 with external price list not shown
-function getProductServiceByProjectSpecialty
-0001 - default(null), internal(7,6)
-0002 - default(5)
-1001 - default(null)
-1003 - default(10.53), internal(6.43,2.31)
-Case1 project APCP3364-REQ20486 - price list not set => 0001(0), 0002(5), 1001(0), 1003(10.53)
-LOGIC NOT ALLOWED: Case2 project APCP3361-REQ20485 - price list external and it does not exist => 0001(0), 0002(5), 1001(0), 1003(10.53)
-        //Case3 project APCP3364-REQ20486 - price list not set => 0001(0), 0002(5), 1001(0), 1003(10.53)
-        //Case4 project APCP3379-REQ20484 - price list is internal => 0001(7,6), 0002(5), 1001(0), 1003(6.43,2.31)
-        //If project's price list does not match the product/service's specific pricelist => show with default fees
-        //Therefore, all product/service should be shown, however, the fees are shown and calculated according to the project's price list
-
-DigitalOcean:
-==> digitalocean: Waiting for SSH to become available...
-==> digitalocean: Error waiting for SSH: Packer experienced an authentication error when trying to connect via SSH.
-This can happen if your username/password are wrong. You may want to double-check your credentials as part of your debugging process.
-original error: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
-==> digitalocean: Destroying droplet...
-==> Some builds didn't complete successfully and had errors:
---> digitalocean: Packer experienced an authentication error when trying to connect via SSH. This can happen if your username/password are wrong. You may want to double-check your credentials as part of your debugging process. original error: ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
-
-==> Builds finished but no artifacts were created.
-
 https://developer.hashicorp.com/packer/plugins/builders/digitalocean
 Packer: > v1.7.0
 Packer 1.9.1:

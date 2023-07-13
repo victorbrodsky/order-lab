@@ -29,6 +29,7 @@
 #sslcertificate=$7
 #sslprivatekey=$8
 
+#Available images: https://do-community.github.io/available-images/
 
 
 #$ bash deploy_test.sh --token apitoken --os centos --parameters parameters.yml --dbuser symfony --dbpass symfony --protocol http --domainname domainname --sslcertificate localhost.crt --sslprivatekey localhost.key
@@ -160,8 +161,6 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-#almalinux-8-x64
-#almalinux-9-x64
 
 if [ "$os" = "alma8" ]
   then 	
@@ -171,13 +170,13 @@ if [ "$os" = "alma9" ]
   then  
 	ORDERPACKERJSON="order-packer-alma9.json"
 fi
-if [ "$os" = "alma9hcl" ]
-  then  
-	ORDERPACKERJSON="order-packer-alma9.json.pkr.hcl"
-fi
 if [ "$os" = "centos7" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos7.json"
+fi
+if [ "$os" = "ubuntu22" ]
+  then 	
+	ORDERPACKERJSON="order-packer-ubuntu22.json"
 fi
 
 #Optional OS
@@ -188,6 +187,10 @@ fi
 if [ "$os" = "alma9basiconly" ]
   then 	
 	ORDERPACKERJSON="order-packer-alma9-basic-only.json"
+fi
+if [ "$os" = "alma9hcl" ]
+  then  
+	ORDERPACKERJSON="order-packer-alma9.json.pkr.hcl"
 fi
 if [ "$os" = "centosonly" ]
   then 	
@@ -202,10 +205,7 @@ if [ "$os" = "centos-without-composer" ]
 	ORDERPACKERJSON="order-packer-centos-without-composer.json"
 fi
 
-if [ "$os" = "ubuntu" ]
-  then 	
-	ORDERPACKERJSON="order-packer-ubuntu.json"
-fi
+
 
 #if [ -z "$ORDERPACKERJSON" ]
 #then
