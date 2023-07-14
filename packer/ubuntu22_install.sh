@@ -49,7 +49,7 @@ f_install_apache () {
     echo -e ${COLOR} install apache ${NC}
 	sudo apt install -y apache2
 
-	sudo yum install -y httpd
+	#sudo apt install -y httpd
 	
 	echo -e ${COLOR} List the ufw application profiles ${NC}
 	sudo ufw app list
@@ -80,8 +80,8 @@ f_install_postgresql14 () {
 	echo -e ${COLOR} Inform the system about the newly added repository ${NC}
 	sudo apt update
 	
-	echo -e ${COLOR} Repo metadata sync should be successful for newly added repository ${NC}
-	Hit:1 http://apt.postgresql.org/pub/repos/apt jammy-pgdg InRelease
+	#echo -e ${COLOR} Repo metadata sync should be successful for newly added repository ${NC}
+	#Hit:1 http://apt.postgresql.org/pub/repos/apt jammy-pgdg InRelease
 	
 	echo -e ${COLOR} install PostgreSQL 14 ${NC}
 	sudo apt install -y postgresql-14
@@ -93,8 +93,8 @@ f_install_postgresql14 () {
 	echo @### Check install version of PostgreSQL ###	
 	sudo -u postgres psql -c "SELECT version();"
 
-	echo @### Check install version of PostgreSQL ###	
-	sudo -u postgres psql
+	#echo @### Check install version of PostgreSQL ###	
+	#sudo -u postgres psql
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
@@ -121,24 +121,24 @@ f_install_php82 () {
 	sudo add-apt-repository ppa:ondrej/php
 
 
-	echo @### PHP2: sudo yum-config-manager --enable remi-php81 ###
-	sudo yum -y update
+	echo @### PHP2: sudo update ###
+	sudo apt -y update
 
 	#echo @### PHP3: Search for PHP 8.1 packages ###
 	#sudo yum search php81 | more
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
 	echo @### PHP3: Install PHP ###
-	sudo apt install -y php8.2
+	sudo apt install -y php
 	
 	echo @### PHP: list of all the installable PHP modules ###
 	php -m
 	
 	echo @### PHP: Install PHP modules ###
-	sudo apt install -y install php8.2-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	sudo apt install -y install php8.2-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	sudo apt install -y php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
-	sudo apt install -y php8.2-syspaths
+	sudo apt install -y php-syspaths
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
@@ -156,69 +156,71 @@ f_install_util () {
     sleep 1
 
 	echo -e ${COLOR} Install Git ${NC}		
-	sudo yum install -y git	
+	sudo apt install -y git	
 	
 	echo -e ${COLOR} Install libreoffice, ghostscript, pdftk ${NC}
-	#sudo yum update
-	#disable for testing: sudo yum install -y xvfb libfontconfig	
-	sudo yum install -y libreoffice	
-	sudo yum install -y ghostscript
-	#sudo yum install -y pdftk  
+	#sudo apt update
+	#disable for testing: sudo apt install -y xvfb libfontconfig	
+	sudo apt install -y libreoffice	
+	sudo apt install -y ghostscript
+	sudo apt install -y pdftk  
 
-	sudo yum install -y wget unzip
+	sudo apt install -y wget unzip
 	
-	echo -e ${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}
-	yum install -y xorg-x11-fonts-75dpi
-	yum install -y xorg-x11-fonts-Type1
-	yum install xz
+	#echo -e ${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}
+	#apt install -y xorg-x11-fonts-75dpi
+	#apt install -y xorg-x11-fonts-Type1
+	#apt install xz
 	
-	echo -e ${COLOR} synchronize the rpm & yumdb databases ${NC}
-	yum history sync
+	#echo -e ${COLOR} synchronize the rpm & yumdb databases ${NC}
+	#apt history sync
 	
 	echo -e ${COLOR} Install wkhtmltopdf ${NC}
 	#wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox-0.12.5-1.centos7.x86_64.rpm
-	sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	#sudo rpm -Uvh wkhtmltox-0.12.5-1.centos7.x86_64.rpm
+	sudo apt install -y wkhtmltopdf
 	
-	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
-	sudo yum install -y xorg-x11-server-Xvfb
+	#echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
+	#sudo apt install -y xorg-x11-server-Xvfb
 	
 	echo -e ${COLOR} Get version wkhtmltopdf ${NC}
-	/usr/bin/xvfb-run wkhtmltopdf --version
+	#/usr/bin/xvfb-run wkhtmltopdf --version
+	wkhtmltopdf --version
 	
 	#http://bashworkz.com/installing-pdftk-on-centos-5-and-6-pdf-management-utility-tool/
 	#echo -e ${COLOR} Install pdftk ${NC}
-	#sudo yum install -y libgcj
-	#yum install -y https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm
+	#sudo apt install -y libgcj
+	#apt install -y https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm
 	#pdftk --help | more
 	
 	#https://github.com/documentcloud/docsplit/issues/123
-	echo -e ${COLOR} Install pdftk ${NC}
-	sudo wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
-	sudo wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
-	sudo yum install -y pdftk
+	#echo -e ${COLOR} Install pdftk ${NC}
+	#sudo wget https://copr.fedorainfracloud.org/coprs/robert/gcj/repo/epel-7/robert-gcj-epel-7.repo -P /etc/yum.repos.d
+	#sudo wget https://copr.fedorainfracloud.org/coprs/robert/pdftk/repo/epel-7/robert-pdftk-epel-7.repo -P /etc/yum.repos.d
+	#sudo apt install -y pdftk
 	
 	#http://www.vassox.com/linux-general/installing-phantomjs-on-centos-7-rhel/
 	echo -e ${COLOR} Install PhantomJS ${NC}
-	sudo yum install -y dnf
-	sudo dnf install -y glibc fontconfig
-	sudo yum install -y lbzip2
-	sudo yum install -y fontconfig
-	sudo yum install -y freetype
-	sudo yum install -y wget
-	sudo yum install -y bzip2
+	sudo apt install -y dnf
+	#sudo dnf install -y glibc fontconfig
+	sudo apt install -y lbzip2
+	sudo apt install -y fontconfig
+	#sudo apt install -y freetype
+	sudo apt install -y wget
+	sudo apt install -y bzip2
 	cd /opt
 	sudo wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
 	sudo tar -xvf phantomjs-2.1.1-linux-x86_64.tar.bz2
 	ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs phantomjs --version
 	
 	#Install pdftotext: https://github.com/spatie/pdf-to-text
-	sudo yum install -y poppler-utils
+	sudo apt install -y poppler-utils
 	
 	#Expected version ">=14". Got "12.22.12"
 	echo -e ${COLOR} Install Yarn ${NC}
 	curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
 	curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
-	sudo yum install -y yarn
+	sudo apt install -y yarn
 	yarn --version
 	echo ""
     sleep 1
@@ -227,8 +229,8 @@ f_install_util () {
 f_install_python3 () {
     ########## INSTALL PYTHON for server health monitor ##########
 	echo -e "${COLOR} Installing python3 ..."
-	sudo yum install -y python3
-	sudo yum install -y python3-pip
+	sudo apt install -y python3
+	sudo apt install -y python3-pip
 	sudo pip3 install requests
 	python3 -V
 }
@@ -239,7 +241,7 @@ f_install_order () {
     sleep 1
 	
 	echo @### Install Git ###		
-	sudo yum install -y git	
+	sudo apt install -y git	
 
 	echo -e ${COLOR} Clone ORDER and copy config and php.ini files, install composer ${NC}
 	ssh-keyscan github.com >> ~/.ssh/known_hosts
