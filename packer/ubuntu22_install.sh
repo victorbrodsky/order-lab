@@ -304,7 +304,7 @@ f_install_prepare () {
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
 	
 	#sudo service apache2 restart
-	sudo systemctl restart httpd.service
+	sudo systemctl restart apache2.service
 	
 	echo -e ${COLOR} Install composer ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
