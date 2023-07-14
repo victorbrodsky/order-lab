@@ -153,8 +153,8 @@ f_install_php82 () {
 	#sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
 	#sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
 	#sudo yum -y install php81-php-common
-	sudo yum -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	sudo yum -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	sudo yum -y install php82-php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo yum -y install php82-php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
 	yum -y install php82-syspaths
 	
