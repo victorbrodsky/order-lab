@@ -1,5 +1,5 @@
 #!/bin/bash
-# CentOs installation script (Rhel 7, PHP 7.2, Postgresql)
+# CentOs installation script (Apache, PHP, Postgresql)
 echo @### Get bash_dbuser bash_dbpass ###
 #bashdbuser=$1
 #bashdbpass=$2
@@ -18,7 +18,6 @@ echo bashdbpass=$bashdbpass
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-#https://gitlab.com/Danny_Pham/WriteBash.com/blob/master/Install/06-Script_install_LAMP_PHP_7.2_on_CentOS_7.sh
 # Function update os
 f_update_os () {
     echo -e ${COLOR} Starting update os centos 7 ... ${NC}
@@ -60,9 +59,9 @@ f_install_apache () {
     sleep 1
 }
 
-f_install_postgresql14 () {
+f_install_postgresql15 () {
     ########## INSTALL Postgresql ##########
-    echo -e "${COLOR} Installing Postgresql 14 ... ${NC}"
+    echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
 	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
@@ -74,9 +73,9 @@ f_install_postgresql14 () {
 	sudo yum -y update 
 	#sudo systemctl reboot
 	
-	echo @### Install postgresql 14 ###	
-	yum install -y postgresql14
-	yum install -y postgresql14-server
+	echo @### Install postgresql 15 ###	
+	yum install -y postgresql15
+	yum install -y postgresql15-server
 
 	echo -e ${COLOR} Install an Ident server on Red Hat 7.x or CentOS 7.x by installing the authd and xinetd packages ${NC}
 	#sudo yum install -y oidentd
@@ -84,9 +83,9 @@ f_install_postgresql14 () {
 	sudo yum install -y xinetd
 
 	echo @### Optionally initialize the database and enable automatic start ###	
-	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
-	sudo systemctl enable postgresql-14
-	sudo systemctl start postgresql-14
+	sudo /usr/pgsql-15/bin/postgresql-15-setup initdb
+	sudo systemctl enable postgresql-15
+	sudo systemctl start postgresql-15
 
 	echo @### Create DB and create user $bashdbuser with password $bashdbpass###
 	sudo -Hiu postgres createdb scanorder
@@ -95,26 +94,26 @@ f_install_postgresql14 () {
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/14/data to replace "ident" to "md5" ${NC}
+	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5" ${NC}
 	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-	sed -i -e "s/peer/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "s/peer/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
-	sed -i -e "s/ident/md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "s/ident/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
-	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i -e "\$aTEXTTOEND" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
-	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/14/data/pg_hba.conf
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
-	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/14/data/postgresql.conf
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/15/data/postgresql.conf
 	
 	echo -e ${COLOR} Set port ${NC}
-	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/14/data/postgresql.conf
+	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/15/data/postgresql.conf
 		
-	sudo systemctl restart postgresql-14
+	sudo systemctl restart postgresql-15
 	
 	echo ""
     sleep 1
@@ -356,7 +355,7 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-f_install_postgresql14
+f_install_postgresql15
 f_install_php82
 f_install_util
 f_install_python3
