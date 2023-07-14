@@ -65,12 +65,11 @@ f_install_apache () {
     sleep 1
 }
 
-f_install_postgresql14 () {
+f_install_postgresql15 () {
     ########## INSTALL Postgresql ##########
-    echo -e "${COLOR} Installing Postgresql 14 ... ${NC}"
+    echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
-	#https://computingforgeeks.com/install-postgresql-14-on-ubuntu-jammy-jellyfish/?expand_article=1
 	echo -e ${COLOR} import GPG key used in signing packages ${NC}		
 	curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
 	
@@ -83,15 +82,16 @@ f_install_postgresql14 () {
 	#echo -e ${COLOR} Repo metadata sync should be successful for newly added repository ${NC}
 	#Hit:1 http://apt.postgresql.org/pub/repos/apt jammy-pgdg InRelease
 	
-	echo -e ${COLOR} install PostgreSQL 14 ${NC}
-	sudo apt install -y postgresql-14
+	echo -e ${COLOR} install PostgreSQL 15 ${NC}
+	sudo apt install -y postgresql
 	
 	echo @### Restart and enable PostgreSQL ###	
 	sudo systemctl restart postgresql
 	sudo systemctl enable postgresql
 	
 	echo @### Check install version of PostgreSQL ###	
-	sudo -u postgres psql -c "SELECT version();"
+	#sudo -u postgres psql -c "SELECT version();"
+	psql --version
 
 	#echo @### Check install version of PostgreSQL ###	
 	#sudo -u postgres psql
@@ -111,7 +111,7 @@ f_install_postgresql14 () {
 
 f_install_php82 () {
     ########## INSTALL APACHE 8.1 ##########
-    echo "Installing apache 8.1 ..."
+    echo "Installing apache 8.2, but only php 8.1.7 available now ..."
     sleep 1
 
 	echo @### Install required dependencies ###
@@ -300,8 +300,8 @@ f_install_prepare () {
 	##cp /etc/php.ini /etc/php_ORIG.ini
 	
 	echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
-	cp /etc/opt/remi/php81/php.ini /etc/opt/remi/php81/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php81/
+	cp /etc/php/8.1/apache2/php.ini /etc/php/8.1/apache2/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
@@ -335,7 +335,7 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-f_install_postgresql14
+f_install_postgresql15
 f_install_php82
 f_install_util
 f_install_python3

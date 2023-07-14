@@ -120,9 +120,9 @@ f_install_postgresql14 () {
     sleep 1
 }
 
-f_install_php81 () {
-    ########## INSTALL APACHE 8.1 ##########
-    echo "Installing apache 8.1 ..."
+f_install_php82 () {
+    ########## INSTALL APACHE 8.2 ##########
+    echo "Installing apache 8.2 ..."
     sleep 1
 
 	echo @### Install yum-utils and epel repository ###
@@ -132,31 +132,33 @@ f_install_php81 () {
 	echo @### PHP1: install yum-utils -y ###
 	sudo yum -y install yum-utils
 	sudo yum-config-manager --disable 'remi-php*'
-	sudo yum-config-manager --enable remi-php81
+	sudo yum-config-manager --enable remi-php82
 
-	echo @### PHP2: sudo yum-config-manager --enable remi-php81 ###
+	echo @### PHP2: sudo yum-config-manager --enable remi-php82 ###
 	sudo yum -y update
 
 	#echo @### PHP3: Search for PHP 8.1 packages ###
 	#sudo yum search php81 | more
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
-	echo @### PHP3: Install PHP 8.1 ###
-	sudo yum -y install php81 php81-php-cli
+	echo @### PHP3: Install PHP 8.2 ###
+	sudo yum -y install php82 php82-php-cli
 	
 	echo @### PHP4: Install PHP packages ###
-	sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
-	sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
-	sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
-	sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
-	sudo yum -y install php81-php-common
+	#sudo yum -y install php81-php-mcrypt php81-php-gd php81-curl php81-php-ldap php81-php-zip 
+	#sudo yum -y install php81-php-fileinfo php81-php-opcache php81-php-fpm php81-php-mbstring php81-php-xml php81-php-json
+	#sudo yum -y install php81-php-pgsql php81-php-xmlreader php81-php-pdo php81-php-dom php81-php-intl
+	#sudo yum -y install php81-php-devel php81-php-pear php81-php-bcmath
+	#sudo yum -y install php81-php-common
+	sudo yum -y install php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo yum -y install php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
 	
-	yum -y install php81-syspaths
+	yum -y install php82-syspaths
 	
-	yum -y --enablerepo=remi install php81-php
+	yum -y --enablerepo=remi install php82-php
 	
 	echo -e  ${COLOR} export PATH ${NC}
-	export PATH=/opt/remi/php81/root/usr/bin:/opt/remi/php81/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+	export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
@@ -318,9 +320,9 @@ f_install_prepare () {
 	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
 	##cp /etc/php.ini /etc/php_ORIG.ini
 	
-	echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
-	cp /etc/opt/remi/php81/php.ini /etc/opt/remi/php81/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php81/
+	echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/opt/remi/php82/ ${NC}
+	cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
@@ -355,7 +357,7 @@ f_install_prepare () {
 f_update_os
 f_install_apache
 f_install_postgresql14
-f_install_php81
+f_install_php82
 f_install_util
 f_install_python3
 f_install_order
