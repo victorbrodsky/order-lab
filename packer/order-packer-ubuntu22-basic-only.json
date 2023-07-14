@@ -1,0 +1,30 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },	
+
+  "builders": [{
+    "type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "ubuntu-22-10-x64",
+    "ssh_username": "{{user `ssh_name`}}"  
+  }],
+
+  "provisioners": [
+  
+     {
+        "type": "shell",
+		"expect_disconnect": "true",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass"
+		],
+        "script": "ubuntu22_install.sh"
+    } 
+      
+   ]
+
+}

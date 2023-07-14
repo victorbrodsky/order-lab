@@ -31,7 +31,10 @@ f_update_os () {
 	sudo apt -y full-upgrade
 	
 	echo -e ${COLOR} system reboot  ${NC}
-	[ -f /var/run/reboot-required ] && sudo reboot -f
+	#[ -f /var/run/reboot-required ] && sudo reboot -f
+	#sudo reboot -f
+	sudo systemctl reboot
+	#sudo shutdown -r now
 	
 	echo -e ${COLOR} Install the necessary packages  ${NC}
 	sudo apt install -y vim curl wget gpg gnupg2 software-properties-common apt-transport-https lsb-release ca-certificates
@@ -106,7 +109,7 @@ f_install_postgresql14 () {
     sleep 1
 }
 
-f_install_php81 () {
+f_install_php82 () {
     ########## INSTALL APACHE 8.1 ##########
     echo "Installing apache 8.1 ..."
     sleep 1
@@ -329,13 +332,13 @@ f_install_prepare () {
 }	
 
 f_update_os
-f_install_apache
-f_install_postgresql14
-f_install_php81
-f_install_util
-f_install_python3
-f_install_order
-f_install_prepare
+#f_install_apache
+#f_install_postgresql14
+#f_install_php82
+#f_install_util
+#f_install_python3
+#f_install_order
+#f_install_prepare
 		   
 
 

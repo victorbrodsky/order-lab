@@ -204,6 +204,10 @@ if [ "$os" = "centos-without-composer" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos-without-composer.json"
 fi
+if [ "$os" = "ubuntu22basiconly" ]
+  then 	
+	ORDERPACKERJSON="order-packer-ubuntu22-basic-only.json"
+fi
 
 
 
