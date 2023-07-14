@@ -87,7 +87,9 @@ class TimeZoneUtil {
     //Use in twig as {{ time_zone_util.ago(lastImportTimestamp) }}
     public function pluralize( $count, $text )
     {
-        return $count . ( ( $count == 1 ) ? ( " $text" ) : ( " ${text}s" ) );
+        //return $count . ( ( $count == 1 ) ? ( " $text" ) : ( " ${text}s" ) );
+        //Deprecated: Using ${var} in strings is deprecated, use {$var} instead in /usr/local/bin/order-lab/orderflex/src/App/UserdirectoryBundle/Util/TimeZoneUtil.php on line 90
+        return $count . ( ( $count == 1 ) ? ( " $text" ) : ( " {$text}s" ) );
     }
     function ago( $datetime )
     {
