@@ -161,22 +161,27 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
+TESTING=true
 
 if [ "$os" = "alma8" ]
   then 	
 	ORDERPACKERJSON="order-packer-alma8.json"
+	TESTING=false
 fi
 if [ "$os" = "alma9" ]
   then  
 	ORDERPACKERJSON="order-packer-alma9.json"
+	TESTING=false
 fi
 if [ "$os" = "centos7" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos7.json"
+	TESTING=false
 fi
 if [ "$os" = "ubuntu22" ]
   then 	
 	ORDERPACKERJSON="order-packer-ubuntu22.json"
+	TESTING=false
 fi
 
 #Optional OS
@@ -288,7 +293,7 @@ DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --
 
 
 #TESTING=true
-TESTING=false
+#TESTING=false
 if [ "$TESTING" = false ] ; then 
 #not testing
 
