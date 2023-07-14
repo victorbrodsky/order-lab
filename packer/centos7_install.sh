@@ -61,6 +61,7 @@ f_install_apache () {
 
 f_install_postgresql15 () {
     ########## INSTALL Postgresql ##########
+	#https://computingforgeeks.com/how-to-install-postgresql-on-centos-rhel-7/?expand_article=1
     echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
@@ -72,6 +73,9 @@ f_install_postgresql15 () {
 	sudo yum repolist -y
 	sudo yum -y update 
 	#sudo systemctl reboot
+	
+	echo @### add EPEL repository which has dependencies required by PostgreSQL 15 ###	
+	sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 	
 	echo @### Install postgresql 15 ###	
 	yum install -y postgresql15
@@ -355,12 +359,12 @@ f_install_prepare () {
 
 f_update_os
 f_install_apache
-#f_install_postgresql15
-#f_install_php82
-#f_install_util
-#f_install_python3
-#f_install_order
-#f_install_prepare
+f_install_postgresql15
+f_install_php82
+f_install_util
+f_install_python3
+f_install_order
+f_install_prepare
 		   
 
 
