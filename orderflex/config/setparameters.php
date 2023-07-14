@@ -135,8 +135,8 @@ if( $conn ) {
     //$table = 'user_siteParameters';
     $table = 'user_siteparameters';
 
-    //$schemaManager = $conn->getSchemaManager();
-    $schemaManager = $conn->createSchemaManager();
+    $schemaManager = $conn->getSchemaManager();
+    //$schemaManager = $conn->createSchemaManager();
 //exit("3");
 
     if ($conn && $schemaManager->tablesExist(array($table)) == true) {

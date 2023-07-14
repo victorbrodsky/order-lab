@@ -323,9 +323,11 @@ f_install_prepare () {
 	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
 	##cp /etc/php.ini /etc/php_ORIG.ini
 	
-	echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/opt/remi/php82/ ${NC}
-	cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	echo -e ${COLOR} PHP 8.2 Copy php.ini ${NC}
+	#cp /etc/opt/remi/php82/php.ini /etc/opt/remi/php82/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	cp /etc/php.ini /etc/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
