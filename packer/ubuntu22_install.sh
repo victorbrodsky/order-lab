@@ -32,8 +32,8 @@ f_update_os () {
 	
 	echo -e ${COLOR} system reboot  ${NC}
 	#[ -f /var/run/reboot-required ] && sudo reboot -f
-	#sudo reboot -f
-	sudo systemctl reboot
+	sudo reboot -f
+	#sudo systemctl reboot
 	#sudo shutdown -r now
 	
 	echo -e ${COLOR} Install the necessary packages  ${NC}
@@ -332,13 +332,13 @@ f_install_prepare () {
 }	
 
 f_update_os
-#f_install_apache
-#f_install_postgresql14
-#f_install_php82
-#f_install_util
-#f_install_python3
-#f_install_order
-#f_install_prepare
+f_install_apache
+f_install_postgresql14
+f_install_php82
+f_install_util
+f_install_python3
+f_install_order
+f_install_prepare
 		   
 
 
