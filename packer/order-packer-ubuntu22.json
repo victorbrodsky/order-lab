@@ -27,17 +27,6 @@
 	
 	{
         "type": "shell",
-		"expect_disconnect": "true",
-        "inline": [ 
-           "echo @### Disable SELinux again ###",
-		   "sudo setenforce 0",
-		   "echo @### Reboot Server ###",
-		   "sudo reboot -f"
-         ]    
-	},
-	
-	{
-        "type": "shell",
         "inline": [ 
            "echo @### Copy parameters file [parameters_bash_file] to [/usr/local/bin/order-lab/orderflex/config/parameters_bash_file] ###"
          ]    
