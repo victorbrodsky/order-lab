@@ -31,8 +31,8 @@ f_update_os () {
 	sudo apt -y full-upgrade
 	
 	echo -e ${COLOR} Ubuntu 22 system reboot  ${NC}
-	#[ -f /var/run/reboot-required ] && sudo reboot -f
-	sudo reboot -f
+	[ -f /var/run/reboot-required ] && sudo reboot -f
+	#sudo reboot -f
 	#sudo systemctl reboot
 	#sudo shutdown -r now
 	
