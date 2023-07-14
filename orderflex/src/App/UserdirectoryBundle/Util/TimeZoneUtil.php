@@ -94,7 +94,7 @@ class TimeZoneUtil {
     function ago( $datetime )
     {
         if( !$datetime ) {
-            return "Invalid import datetime";
+            return "N/A"; //"Invalid import datetime";
         }
 
         $interval = date_create('now')->diff( $datetime );
