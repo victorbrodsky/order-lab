@@ -294,6 +294,7 @@ DROPLET=$(doctl compute droplet create $IMAGENAME --size 2gb --image $IMAGEID --
 
 #TESTING=true
 #TESTING=false
+echo "TESTING=$TESTING"
 if [ "$TESTING" = false ] ; then 
 #not testing
 
