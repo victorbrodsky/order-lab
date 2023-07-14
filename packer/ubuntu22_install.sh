@@ -26,17 +26,17 @@ f_update_os () {
 	
 	sleep 1
 
-	echo -e ${COLOR} update ${NC}
+	echo -e ${COLOR} Ubuntu 22 update ${NC}
     sudo apt update
 	sudo apt -y full-upgrade
 	
-	echo -e ${COLOR} system reboot  ${NC}
+	echo -e ${COLOR} Ubuntu 22 system reboot  ${NC}
 	#[ -f /var/run/reboot-required ] && sudo reboot -f
 	sudo reboot -f
 	#sudo systemctl reboot
 	#sudo shutdown -r now
 	
-	echo -e ${COLOR} Install the necessary packages  ${NC}
+	echo -e ${COLOR} Ubuntu 22 Install the necessary packages  ${NC}
 	sudo apt install -y vim curl wget gpg gnupg2 software-properties-common apt-transport-https lsb-release ca-certificates
 	
     echo ""
@@ -46,7 +46,7 @@ f_update_os () {
 # Function install LAMP stack
 f_install_apache () {
     ########## INSTALL APACHE ##########
-    echo -e ${COLOR} install apache ${NC}
+    echo -e ${COLOR} Ubuntu 22 install apache ${NC}
 	sudo apt install -y apache2
 
 	#sudo apt install -y httpd
