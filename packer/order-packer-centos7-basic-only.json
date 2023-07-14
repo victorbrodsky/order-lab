@@ -21,7 +21,7 @@
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass"
 		],
-        "script": "centos_install_basic.sh"
+        "script": "centos7_install.sh"
     }
       
    ]
