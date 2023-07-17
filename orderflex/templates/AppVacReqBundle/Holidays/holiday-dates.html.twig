@@ -197,13 +197,14 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-            if(1) {
+            if(0) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
                     format: " yyyy",
                     viewMode: "years",
                     minViewMode: "years",
                     orientation: 'auto', //'auto top'
+                    //multidateSeparator: " ",
                     multidate: true,
                     clearBtn: true
                 });
@@ -215,15 +216,16 @@
 //            date.setMonth(0);
 //            date.setDate(1);
                 var datefilter = $(target).datepicker({
+                    autoclose: true,
                     format: "yyyy",
-                    inline: false,
+                    //inline: false,
                     viewMode: "years",
                     minViewMode: "years",
-                    //maxViewMode: "years",
                     startView: "years",
                     multidate: true,
-                    multidateRemoveDuplicate: true,
-                    multidateSeparator: " "
+                    clearBtn: true
+                    //multidateRemoveDuplicate: true,
+                    //multidateSeparator: " "
                 });
 
 //            var datefilter = $(target).datepicker({
@@ -242,17 +244,22 @@
                 //$(target).datepicker('setDate', new Date());
                 //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
 
-                datefilter.data('datepicker').setDates(["2022","2023"]);
+                //datefilter.data('datepicker').setDates(["2022","2023"]);
+                //datefilter.datepicker('update', new Date());
                 //datefilter.datepicker('update', new Date());
                 //datefilter.datepicker('update');
+
+                datefilter.data({date: '2022-08-08'});
+                datefilter.datepicker('update');
+                datefilter.datepicker().children('input').val('2022-08-08');
 
                 //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
                 datefilter.on('changeDate', function(e){
                     // extra
-                    var sdate = e.date.getFullYear();
+                    var sdate = e.date; //.getFullYear();
                     console.log('sdate='+sdate);
                     //$('#filter_years').val(sdate);
-                    $('#filter_years').val(sdate);
+                    //$('#filter_years').val(sdate);
                     //window.location.href = 'events.html?date='+sdate;
                 });
 

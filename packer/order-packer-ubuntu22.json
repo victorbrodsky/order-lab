@@ -60,11 +60,15 @@
 	  
 	  {
         "type": "shell",
-        "inline": [ 		   
+        "inline": [ 
+		   "echo @### Restart apache ###",
+		   "sudo systemctl restart apache2",
+		   "echo @### Restart postgresql ###",
+		   "sudo systemctl restart postgresql",
 		   "echo @### Composer and deploy using orderflex ###",
            "cd /usr/local/bin/order-lab/orderflex",					   
 		   "composer self-update",   
-           "composer install",
+           "yes | composer update",
 		   "echo @### Install yarn package.json ###",
 		   "sudo yarn install --frozen-lockfile",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",

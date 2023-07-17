@@ -214,8 +214,8 @@ class CalendarController extends OrderAbstractController
         }
 
         $filterParams = $request->query->all();
-        //$testing = true;
-        $testing = false;
+        $testing = true;
+        //$testing = false;
         if( !$testing && count($filterParams) == 0 ) {
             $thisYear = date("Y");
             $nextYear = (int)$thisYear + 1;
@@ -321,6 +321,7 @@ class CalendarController extends OrderAbstractController
         if( $years ) {
             //dump($years); exit('111');
             $yearsArr = explode(",",$years);
+            //$yearsArr = explode(" ",$years);
             $yearWhereArr = array();
             foreach($yearsArr as $year) {
                 $yearWhereArr[] = "(YEAR(holiday.holidayDate) = $year)";

@@ -58,7 +58,11 @@ f_install_apache () {
 	sudo ufw allow 'Apache'
 	sudo ufw status
 	
+	echo -e ${COLOR} Install mod_rewrite module ${NC}
+	sudo a2enmod rewrite
+	
 	echo -e ${COLOR} Make sure the service is active ${NC}
+	sudo systemctl restart apache2
 	sudo systemctl status apache2
 	
 	echo ""
@@ -102,8 +106,31 @@ f_install_postgresql15 () {
 	sudo -Hiu postgres psql -c "ALTER USER $bashdbuser WITH SUPERUSER"
 	sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE scanorder to $bashdbuser"
 		
+		
+	#Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5"
+	echo -e ${COLOR} Modify pg_hba.conf in /etc/postgresql/15/main to replace "ident" to "md5" ${NC}
+	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+	sed -i -e "s/peer/md5/g" /etc/postgresql/15/main/pg_hba.conf
+	
+	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
+	sed -i -e "s/ident/md5/g" /etc/postgresql/15/main/pg_hba.conf
+	
+	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
+	sed -i -e "\$aTEXTTOEND" /etc/postgresql/15/main/pg_hba.conf
+	
+	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
+	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /etc/postgresql/15/main/pg_hba.conf
+	
+	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /etc/postgresql/15/main/postgresql.conf
+	
+	echo -e ${COLOR} Set port ${NC}
+	sed -i -e "s/#port/port = 5432 #port/g" /etc/postgresql/15/main/postgresql.conf	
+		
+		
 	sudo systemctl restart postgresql
 	sudo systemctl enable postgresql
+	sudo systemctl restart apache2
 	
 	echo ""
     sleep 1
@@ -123,28 +150,42 @@ f_install_php82 () {
 
 	echo @### PHP2: sudo update ###
 	sudo apt -y update
+	
+	#mcrypt moved to PECL https://computingforgeeks.com/install-php-mcrypt-extension-on-ubuntu/
+	#echo @### Install Development tools on Ubuntu ###
+	#sudo apt install -y build-essential
 
 	#echo @### PHP3: Search for PHP 8.1 packages ###
 	#sudo yum search php81 | more
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
 	echo @### PHP3: Install PHP ###
-	sudo apt install -y php
+	sudo apt install -y php php-pear php-dev libmcrypt-dev
+	
+	#echo @### Update PECL channels ###
+	#sudo pecl channel-update pecl.php.net
+	#sudo pecl update-channels
 	
 	echo @### PHP: list of all the installable PHP modules ###
 	php -m
 	
 	echo @### PHP: Install PHP modules ###
-	sudo apt install -y php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	#sudo apt install -y php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo apt install -y php-{cli,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	#sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,pear,bcmath,common}
 	
-	sudo apt install -y php-syspaths
+	#echo @### PHP: Install mcrypt ###
+	#"\n" | sudo pecl install mcrypt
+	
+	#sudo apt install -y php-syspaths
 	
 	echo -e  ${COLOR} Check PHP version: php -v ${NC}
 	php -v
 	
 	# Restart Apache
     sudo systemctl restart postgresql
+	sudo systemctl restart apache2
 	
 	echo ""
     sleep 1
@@ -309,6 +350,7 @@ f_install_prepare () {
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
 	
 	#sudo service apache2 restart
+	sudo systemctl restart apache2
 	sudo systemctl status apache2
 	
 	#Job for apache2.service failed because the control process exited with error code.
