@@ -281,11 +281,11 @@ f_install_prepare () {
 
 	echo -e ${COLOR} Copy 000-default.conf to the server ${NC}
 	#cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
-	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available
+	yes | cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available
 	
 	echo -e ${COLOR} Copy default-ssl.conf to the server ${NC}
 	#cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
-	cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available
+	yes | cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-available
 	
 	echo -e ${COLOR} Copy env ${NC}
 	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
