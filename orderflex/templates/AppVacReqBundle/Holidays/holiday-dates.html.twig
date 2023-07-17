@@ -197,7 +197,7 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-            if(0) {
+            if(1) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
                     format: " yyyy",
@@ -252,7 +252,7 @@
                     var sdate = e.date.getFullYear();
                     console.log('sdate='+sdate);
                     //$('#filter_years').val(sdate);
-                    //$('p').html(sdate);
+                    $('#filter_years').val(sdate);
                     //window.location.href = 'events.html?date='+sdate;
                 });
 
