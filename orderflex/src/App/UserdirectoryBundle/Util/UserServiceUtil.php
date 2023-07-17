@@ -1593,10 +1593,10 @@ Pathology and Laboratory Medicine",
         }
 
         //OS name and version
-        $res = "OS: " . php_uname();
+        $res = "OS: " . php_uname('s');
 
         if( $apacheVersion ) {
-            $res = $res . "<br>" . "Apache: " . $apacheVersion;
+            $res = $res . "<br>" . "Apache: " . $apacheVersion . ", " . PHP_OS;
         }
 
         $phpVersion = phpversion();
