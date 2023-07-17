@@ -331,8 +331,8 @@ f_install_prepare () {
 	echo -e ${COLOR} Check Postgresql version: psql --version ${NC}
 	psql --version
 	
-	echo -e ${COLOR} Check SELinux Status ${NC}
-	sestatus
+	#echo -e ${COLOR} Check SELinux Status ${NC}
+	#sestatus
 	
 	echo ""
     sleep 1
