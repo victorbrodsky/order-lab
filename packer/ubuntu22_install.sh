@@ -253,7 +253,7 @@ f_install_order () {
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls /usr/local/bin/order-lab
 	
-	#chown -R apache:apache /var/www
+	#chown -R www-data:www-data /var/www
 	echo -e ${COLOR} sudo chmod a+x /usr/local/bin/order-lab ${NC}
 	sudo chmod a+x /usr/local/bin/order-lab
 	
@@ -261,8 +261,8 @@ f_install_order () {
 	#sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	#sudo chown -R nobody:nobody /usr/local/bin/order-lab 
 	
-	echo -e ${COLOR} sudo chown -R apache:apache /usr/local/bin/order-lab ${NC}
-	sudo chown -R apache:apache /usr/local/bin/order-lab
+	echo -e ${COLOR} sudo chown -R apache user for /usr/local/bin/order-lab ${NC}
+	sudo chown -R www-data:www-data /usr/local/bin/order-lab
 	
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/cache
 	#chown -R apache:apache /usr/local/bin/order-lab/Scanorders2/var/logs
@@ -309,7 +309,10 @@ f_install_prepare () {
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
 	
 	#sudo service apache2 restart
-	sudo systemctl restart apache2.service
+	sudo systemctl status apache2
+	
+	#Job for apache2.service failed because the control process exited with error code.
+	#See "systemctl status apache2.service" and "journalctl -xeu apache2.service" for details.
 	
 	echo -e ${COLOR} Install composer ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 

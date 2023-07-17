@@ -197,7 +197,7 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-            if(1) {
+            if(0) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
                     format: " yyyy",
@@ -247,14 +247,14 @@
                 //datefilter.datepicker('update');
 
                 //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
-//                datefilter.on('changeDate', function(e){
-//                    // extra
-//                    var sdate = e.date.getFullYear();
-//                    console.log('sdate='+sdate);
-//                    $('#filter_years').val(sdate);
-//                    //$('p').html(sdate);
-//                    //window.location.href = 'events.html?date='+sdate;
-//                });
+                datefilter.on('changeDate', function(e){
+                    // extra
+                    var sdate = e.date.getFullYear();
+                    console.log('sdate='+sdate);
+                    //$('#filter_years').val(sdate);
+                    //$('p').html(sdate);
+                    //window.location.href = 'events.html?date='+sdate;
+                });
 
                 //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
 //                setMultidateRemoveDuplicate: function (multidateRemoveDuplicate) {
