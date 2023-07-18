@@ -200,22 +200,22 @@
             if(1) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
-                    format: " yyyy",
+                    //format: " yyyy",
+                    format: "yyyy",
                     viewMode: "years",
                     minViewMode: "years",
-                    orientation: 'auto', //'auto top'
-                    //multidateSeparator: " ",
+                    startView: "years",
                     multidate: true,
-                    clearBtn: true
+                    clearBtn: true,
+                    multidateSeparator: ", "
                 });
-
 
                 datefilter.on('changeDate', function(e){
                     var newyear = e.date.getFullYear();
                     newyear = newyear.toString();
-                    newyear = newyear.trim();
+                    //newyear = newyear.trim();
                     var years = $('#filter_years').val();
-                    years = years.trim();
+                    //years = years.trim();
                     console.log('newyear=['+newyear+"], years=["+years+"]");
                     var yearsArr = years.split(',');
                     console.log("original yearsArr=",yearsArr);

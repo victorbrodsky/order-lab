@@ -221,7 +221,7 @@ class CalendarController extends OrderAbstractController
             $nextYear = (int)$thisYear + 1;
             //$endYear = date("Y+1");
             //$defaultYears = array('2023','2024');
-            $defaultYears = "$thisYear,$nextYear";
+            $defaultYears = "$thisYear, $nextYear";
             return $this->redirect( $this->generateUrl('vacreq_manage_holiday_dates',
                 array(
                     'filter[years]' => $defaultYears, //$currentYear,
