@@ -198,46 +198,48 @@
 
             var target = ".datepicker-only-year";
             if(1) {
+                //Show as "2024, 2023, 2025"
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
-                    //format: " yyyy",
-                    format: "yyyy",
+                    format: " yyyy",
                     viewMode: "years",
                     minViewMode: "years",
                     startView: "years",
                     multidate: true,
                     clearBtn: true,
-                    multidateSeparator: ", "
+                    multidateSeparator: ","
                 });
 
                 datefilter.on('changeDate', function(e){
                     var newyear = e.date.getFullYear();
                     newyear = newyear.toString();
-                    //newyear = newyear.trim();
+                    newyear = newyear.trim();
                     var years = $('#filter_years').val();
-                    //years = years.trim();
-                    console.log('newyear=['+newyear+"], years=["+years+"]");
+                    years = years.trim();
+                    years = years.replace(/ /g, '');
+                    //console.log('newyear=['+newyear+"], years=["+years+"]");
                     var yearsArr = years.split(',');
-                    console.log("original yearsArr=",yearsArr);
+                    //console.log("original yearsArr=",yearsArr);
                     var count = utilGetOccurrences(years,newyear);
-                    console.log("count="+count);
+                    //console.log("count="+count);
                     if( count == 2 ) {
                         //remove newyear from yearsArr
                         years = utilRemoveItemAll(yearsArr,newyear);
-                        console.log("after remove all years=",years);
+                        //console.log("after remove all years=",years);
                     } else {
                         //remove duplicate
                         years = utilGetUniqArr(yearsArr);
-                        console.log("unique years=",years);
+                        //console.log("unique years=",years);
                     }
 
-                    console.log("new years=",years);
+                    //console.log("new years=",years);
                     $('#filter_years').val(years);
                     datefilter.datepicker('update');
-                    //datefilter.data('datepicker').setDates(years);
                 });
 
-            } else {
+            }
+            else
+            {
                 //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
                 var datefilter = $(target).datepicker({
                     autoclose: true,
