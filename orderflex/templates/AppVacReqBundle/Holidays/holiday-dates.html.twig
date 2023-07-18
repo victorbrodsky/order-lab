@@ -254,13 +254,36 @@
                 datefilter.datepicker().children('input').val('2022-08-08');
 
                 //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
+//                datefilter.on('changeDate', function(e){
+//                    // extra
+//                    var sdate = e.date; //.getFullYear();
+//                    console.log('sdate='+sdate);
+//                    //$('#filter_years').val(sdate);
+//                    //$('#filter_years').val(sdate);
+//                    //window.location.href = 'events.html?date='+sdate;
+//                });
+
                 datefilter.on('changeDate', function(e){
-                    // extra
-                    var sdate = e.date; //.getFullYear();
-                    console.log('sdate='+sdate);
-                    //$('#filter_years').val(sdate);
-                    //$('#filter_years').val(sdate);
-                    //window.location.href = 'events.html?date='+sdate;
+                    var newyear = e.date.getFullYear();
+                    var years = $('#mydate').val();
+                    console.log('newyear='+newyear+", years="+years);
+                    if( years.includes(newyear) ) {
+                        console.log("remove newyear");
+                        var yearsArr = years.split(' ');
+                        var newYearsArr = [];
+                        for (var i = 0; i < yearsArr.length; i++) {
+                            var thisYear = yearsArr[i];
+                            console.log(yearsArr[i]);
+                            if( thisYear != newyear ) {
+                                newYearsArr[] = thisYear;
+                            }
+                        }
+                        years = newYearsArr.toString(", ");
+                    } else {
+                        console.log("add newyear");
+                        years = years + ", " + newyear;
+                    }
+                    $('#mydate').val(years);
                 });
 
                 //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
