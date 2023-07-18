@@ -165,6 +165,7 @@
 {% block additionaljs %}
 
     <script src="{{ asset('orderassets/AppVacReqBundle/form/js/holidayDays.js') }}"></script>
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-datepicker-years.js') }}"></script>#}
 
     <script language="Javascript">
 
@@ -182,6 +183,8 @@
                 multidate: true,
                 clearBtn: true
             });
+
+            //userInitDatepickerYears('#filter_years');
         });
 
 //        function saveObservedHolidays() {

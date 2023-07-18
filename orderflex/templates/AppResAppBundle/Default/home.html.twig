@@ -1402,6 +1402,8 @@
     <script src="{{ asset('orderassets/AppResAppBundle/form/js/status-notification-modal.js') }}"></script>
     <script src="{{ asset('orderassets/AppResAppBundle/form/js/send-notification-emails.js') }}"></script>
 
+    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-datepicker-years.js') }}"></script>#}
+
     <script language="Javascript">
 
         $(document).ready(function() {
@@ -1418,6 +1420,11 @@
                 multidate: true,
                 clearBtn: true
             });
+            //userUtilChangeDateListner(datefilter,'#filter_applicationSeasonStartDates');
+            //userUtilChangeDateListner(datefilter,'#filter_startDates');
+
+            //userInitDatepickerYears('#filter_applicationSeasonStartDates');
+            //userInitDatepickerYears('#filter_startDates');
 
             attachTitleToScores();
 

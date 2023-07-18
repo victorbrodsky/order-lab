@@ -186,6 +186,7 @@
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/rank-modal.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/status-notification-modal.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/send-notification-emails.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-datepicker-years.js') }}"></script>
 
     <script language="Javascript">
 
@@ -196,10 +197,13 @@
 
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
+            userInitDatepickerYears('#filter_years');
+
+        if(0) {
             var target = ".datepicker-only-year";
-            if(1) {
+            if (1) {
                 //Show as "2024, 2023, 2025"
-                var datefilter = $(target).datepicker( {
+                var datefilter = $(target).datepicker({
                     autoclose: true,
                     format: " yyyy",
                     viewMode: "years",
@@ -210,7 +214,7 @@
                     multidateSeparator: ","
                 });
 
-                datefilter.on('changeDate', function(e){
+                datefilter.on('changeDate', function (e) {
                     var newyear = e.date.getFullYear();
                     newyear = newyear.toString();
                     newyear = newyear.trim();
@@ -220,11 +224,11 @@
                     //console.log('newyear=['+newyear+"], years=["+years+"]");
                     var yearsArr = years.split(',');
                     //console.log("original yearsArr=",yearsArr);
-                    var count = utilGetOccurrences(years,newyear);
+                    var count = utilGetOccurrences(years, newyear);
                     //console.log("count="+count);
-                    if( count == 2 ) {
+                    if (count == 2) {
                         //remove newyear from yearsArr
-                        years = utilRemoveItemAll(yearsArr,newyear);
+                        years = utilRemoveItemAll(yearsArr, newyear);
                         //console.log("after remove all years=",years);
                     } else {
                         //remove duplicate
@@ -238,8 +242,7 @@
                 });
 
             }
-            else
-            {
+            else {
                 //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
                 var datefilter = $(target).datepicker({
                     autoclose: true,
@@ -272,28 +275,28 @@
                 //remove if newyear=[2025], years=[2023,2024,2025,2025]
                 //remove duplicate newyear=[2026], years=[2023,2024,2025,2026]
 
-                datefilter.on('changeDate', function(e){
+                datefilter.on('changeDate', function (e) {
                     var newyear = e.date.getFullYear();
                     newyear = newyear.toString();
                     newyear = newyear.trim();
                     var years = $('#filter_years').val();
                     years = years.trim();
-                    console.log('newyear=['+newyear+"], years=["+years+"]");
+                    console.log('newyear=[' + newyear + "], years=[" + years + "]");
                     var yearsArr = years.split(',');
-                    console.log("original yearsArr=",yearsArr);
-                    var count = utilGetOccurrences(years,newyear);
-                    console.log("count="+count);
-                    if( count == 2 ) {
+                    console.log("original yearsArr=", yearsArr);
+                    var count = utilGetOccurrences(years, newyear);
+                    console.log("count=" + count);
+                    if (count == 2) {
                         //remove newyear from yearsArr
-                        years = utilRemoveItemAll(yearsArr,newyear);
-                        console.log("after remove all years=",years);
+                        years = utilRemoveItemAll(yearsArr, newyear);
+                        console.log("after remove all years=", years);
                     } else {
                         //remove duplicate
                         years = utilGetUniqArr(yearsArr);
-                        console.log("unique years=",years);
+                        console.log("unique years=", years);
                     }
 
-                    console.log("new years=",years);
+                    console.log("new years=", years);
                     $('#filter_years').val(years);
                     datefilter.datepicker('update');
                     //datefilter.data('datepicker').setDates(years);
@@ -306,6 +309,8 @@
 //                    this.updateNavArrows();
 //                },
             }
+
+        }
 
         });
 
