@@ -23,9 +23,9 @@
 
 ##### Constants #####
 
-PROJECT_NAME='ScanOrder Symfony2 Project'
+PROJECT_NAME='ScanOrder Symfony Project'
 
-# The location of the Symfony2 project you want to Deploy.
+# The location of the Symfony project you want to Deploy.
 PROJECT_LOCAL_PATH=.
 
 
