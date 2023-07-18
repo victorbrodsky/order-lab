@@ -266,23 +266,25 @@
                 datefilter.on('changeDate', function(e){
                     var newyear = e.date.getFullYear();
                     var years = $('#mydate').val();
-                    console.log('newyear='+newyear+", years="+years);
+                    console.log('newyear=['+newyear+"], years=["+years+"]");
                     if( years.includes(newyear) ) {
-                        console.log("remove newyear");
-                        var yearsArr = years.split(' ');
+                        console.log("remove dublicate");
+                        var yearsArr = years.split(', ');
                         var newYearsArr = [];
                         for (var i = 0; i < yearsArr.length; i++) {
-                            var thisYear = yearsArr[i];
-                            console.log(yearsArr[i]);
+                            var thisYear = yearsArr[i].trim();
+                            console.log("thisYear=["+thisYear+"]");
                             if( thisYear != newyear ) {
-                                newYearsArr[] = thisYear;
+                                newYearsArr.push(thisYear);
                             }
                         }
-                        years = newYearsArr.toString(", ");
+                        years = newYearsArr.toString("; ");
+                        console.log("new years="+years);
                     } else {
                         console.log("add newyear");
                         years = years + ", " + newyear;
                     }
+
                     $('#mydate').val(years);
                 });
 

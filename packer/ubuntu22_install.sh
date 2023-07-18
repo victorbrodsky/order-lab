@@ -260,10 +260,14 @@ f_install_util () {
 	#Something wrong with yarn --version
 	#Expected version ">=14". Got "12.22.12"
 	echo -e ${COLOR} Install Yarn ${NC}
-	curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
-	curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
+	#curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
+	#curl --silent --location https://rpm.nodesource.com/setup_16.x | sudo bash -
+	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+	sudo apt update
 	sudo apt install -y yarn
 	yarn --version
+	
 	echo ""
     sleep 1
 }
