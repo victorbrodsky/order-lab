@@ -197,7 +197,7 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-            if(0) {
+            if(1) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
                     format: " yyyy",
@@ -208,6 +208,35 @@
                     multidate: true,
                     clearBtn: true
                 });
+
+
+                datefilter.on('changeDate', function(e){
+                    var newyear = e.date.getFullYear();
+                    newyear = newyear.toString();
+                    newyear = newyear.trim();
+                    var years = $('#filter_years').val();
+                    years = years.trim();
+                    console.log('newyear=['+newyear+"], years=["+years+"]");
+                    var yearsArr = years.split(',');
+                    console.log("original yearsArr=",yearsArr);
+                    var count = utilGetOccurrences(years,newyear);
+                    console.log("count="+count);
+                    if( count == 2 ) {
+                        //remove newyear from yearsArr
+                        years = utilRemoveItemAll(yearsArr,newyear);
+                        console.log("after remove all years=",years);
+                    } else {
+                        //remove duplicate
+                        years = utilGetUniqArr(yearsArr);
+                        console.log("unique years=",years);
+                    }
+
+                    console.log("new years=",years);
+                    $('#filter_years').val(years);
+                    datefilter.datepicker('update');
+                    //datefilter.data('datepicker').setDates(years);
+                });
+
             } else {
                 //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
                 var datefilter = $(target).datepicker({
@@ -218,7 +247,7 @@
                     minViewMode: "years",
                     startView: "years",
                     multidate: true,
-                    clearBtn: true
+                    clearBtn: true,
                     //multidateRemoveDuplicate: true,
                     //multidateSeparator: " "
                 });
@@ -250,33 +279,17 @@
                     console.log('newyear=['+newyear+"], years=["+years+"]");
                     var yearsArr = years.split(',');
                     console.log("original yearsArr=",yearsArr);
-                    var count = occurrences(years,newyear);
+                    var count = utilGetOccurrences(years,newyear);
                     console.log("count="+count);
                     if( count == 2 ) {
                         //remove newyear from yearsArr
-                        years = removeItemAll(yearsArr,newyear);
+                        years = utilRemoveItemAll(yearsArr,newyear);
                         console.log("after remove all years=",years);
                     } else {
                         //remove duplicate
-                        years = getUniqArr(yearsArr);
+                        years = utilGetUniqArr(yearsArr);
                         console.log("unique years=",years);
                     }
-
-//                    if( years.includes(newyear) ) {
-//                        years = years.trim();
-//                        console.log("remove dublicate years="+years);
-//                        var yearsArr = years.split(',');
-//                        console.log("original yearsArr=",yearsArr);
-//                        //years = [...new Set(yearsArr)];
-//                        //years = eliminateDuplicates(yearsArr);
-//                        years = getUniqArr(yearsArr);
-//                        console.log("unique years=",years);
-//                        //years = newYearsArr.toString(", ");
-//                        //console.log("new years="+years);
-//                    } else {
-//                        //console.log("add newyear");
-//                        //years = years + ", " + newyear;
-//                    }
 
                     console.log("new years=",years);
                     $('#filter_years').val(years);
@@ -294,7 +307,7 @@
 
         });
 
-        function getUniqArr(a) {
+        function utilGetUniqArr(a) {
             var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
 
             return a.filter(function(item) {
@@ -315,7 +328,7 @@
          * @see Unit Test https://jsfiddle.net/Victornpb/5axuh96u/
          * @see https://stackoverflow.com/a/7924240/938822
          */
-        function occurrences(string, subString, allowOverlapping) {
+        function utilGetOccurrences(string, subString, allowOverlapping) {
 
             string += "";
             subString += "";
@@ -334,7 +347,7 @@
             }
             return n;
         }
-        function removeItemAll(arr, value) {
+        function utilRemoveItemAll(arr, value) {
             var i = 0;
             while (i < arr.length) {
                 if (arr[i] === value) {

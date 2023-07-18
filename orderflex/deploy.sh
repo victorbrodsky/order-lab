@@ -28,6 +28,23 @@ PROJECT_NAME='ScanOrder Symfony Project'
 # The location of the Symfony project you want to Deploy.
 PROJECT_LOCAL_PATH=.
 
+WEB_USER='apache:apache'
+
+if [id -u apache]
+then
+  echo "apache user exists"
+  WEB_USER='apache:apache'
+else
+  echo "apache user does not exist"
+fi
+
+if [id -u www-data]
+then
+  echo "www-data user exists"
+  WEB_USER='www-data:www-data'
+else
+  echo "www-data user does not exist"
+fi
 
 ##### Functions #####
 function prep()
@@ -36,7 +53,8 @@ function prep()
 
     #try to set permission
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
-    chown -R apache:apache $PROJECT_LOCAL_PATH/public
+    #chown -R apache:apache $PROJECT_LOCAL_PATH/public
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
 
     #for production: git remote update, git pull
     #echo "*** Pull code from git repository ***"
@@ -94,10 +112,15 @@ function prep()
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/log
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
 
-    chown -R apache:apache $PROJECT_LOCAL_PATH/var/cache
-    chown -R apache:apache $PROJECT_LOCAL_PATH/var/log
-    chown -R apache:apache $PROJECT_LOCAL_PATH/public
-    chown -R apache:apache $PROJECT_LOCAL_PATH/../backup
+    #chown -R apache:apache $PROJECT_LOCAL_PATH/var/cache
+    #chown -R apache:apache $PROJECT_LOCAL_PATH/var/log
+    #chown -R apache:apache $PROJECT_LOCAL_PATH/public
+    #chown -R apache:apache $PROJECT_LOCAL_PATH/../backup
+
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/cache
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/log
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../backup
 }
 
 
