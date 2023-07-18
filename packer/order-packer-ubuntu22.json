@@ -68,7 +68,7 @@
 		   "echo @### Go to orderflex folder  ###",
            "cd /usr/local/bin/order-lab/orderflex",			   
 		   "echo @### Populate DB  ###",
-		   "php -d memory_limit=1024M bin/console doctrine:schema:update --force"		   
+		   "php -d memory_limit=1024M bin/console doctrine:schema:update --force",		   
 		   "echo @### Composer and deploy using orderflex ###",				   
 		   "composer self-update",   
            "yes | composer update",
