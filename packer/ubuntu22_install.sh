@@ -257,6 +257,7 @@ f_install_util () {
 	#Install pdftotext: https://github.com/spatie/pdf-to-text
 	sudo apt install -y poppler-utils
 	
+	#Something wrong with yarn --version
 	#Expected version ">=14". Got "12.22.12"
 	echo -e ${COLOR} Install Yarn ${NC}
 	curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo
