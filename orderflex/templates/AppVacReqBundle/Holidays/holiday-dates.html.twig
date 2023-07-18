@@ -197,7 +197,7 @@
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
             var target = ".datepicker-only-year";
-            if(1) {
+            if(0) {
                 var datefilter = $(target).datepicker( {
                     autoclose: true,
                     format: " yyyy",
@@ -209,12 +209,7 @@
                     clearBtn: true
                 });
             } else {
-
                 //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
-//            var date = new Date();
-//            date.setFullYear(date.getFullYear() - 10);
-//            date.setMonth(0);
-//            date.setDate(1);
                 var datefilter = $(target).datepicker({
                     autoclose: true,
                     format: "yyyy",
@@ -228,18 +223,6 @@
                     //multidateSeparator: " "
                 });
 
-//            var datefilter = $(target).datepicker({
-//                autoclose: true,
-//                format: "yyyy",
-//                viewMode: "years",
-//                minViewMode: "years",
-//                updateViewDate: true,
-//                changeYear: true,
-//                multidate: true,
-//                clearBtn: true
-//                //defaultViewDate: {year: '2014'}
-//            });
-
                 //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
                 //$(target).datepicker('setDate', new Date());
                 //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
@@ -249,43 +232,56 @@
                 //datefilter.datepicker('update', new Date());
                 //datefilter.datepicker('update');
 
-                datefilter.data({date: '2022-08-08'});
-                datefilter.datepicker('update');
-                datefilter.datepicker().children('input').val('2022-08-08');
+                //datefilter.data({date: '2022-08-08'});
+                //datefilter.datepicker('update');
+                //datefilter.datepicker().children('input').val('2022-08-08');
 
                 //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
-//                datefilter.on('changeDate', function(e){
-//                    // extra
-//                    var sdate = e.date; //.getFullYear();
-//                    console.log('sdate='+sdate);
-//                    //$('#filter_years').val(sdate);
-//                    //$('#filter_years').val(sdate);
-//                    //window.location.href = 'events.html?date='+sdate;
-//                });
+
+                //remove if newyear=[2025], years=[2023,2024,2025,2025]
+                //remove duplicate newyear=[2026], years=[2023,2024,2025,2026]
 
                 datefilter.on('changeDate', function(e){
                     var newyear = e.date.getFullYear();
-                    var years = $('#mydate').val();
+                    newyear = newyear.toString();
+                    newyear = newyear.trim();
+                    var years = $('#filter_years').val();
+                    years = years.trim();
                     console.log('newyear=['+newyear+"], years=["+years+"]");
-                    if( years.includes(newyear) ) {
-                        console.log("remove dublicate");
-                        var yearsArr = years.split(', ');
-                        var newYearsArr = [];
-                        for (var i = 0; i < yearsArr.length; i++) {
-                            var thisYear = yearsArr[i].trim();
-                            console.log("thisYear=["+thisYear+"]");
-                            if( thisYear != newyear ) {
-                                newYearsArr.push(thisYear);
-                            }
-                        }
-                        years = newYearsArr.toString("; ");
-                        console.log("new years="+years);
+                    var yearsArr = years.split(',');
+                    console.log("original yearsArr=",yearsArr);
+                    var count = occurrences(years,newyear);
+                    console.log("count="+count);
+                    if( count == 2 ) {
+                        //remove newyear from yearsArr
+                        years = removeItemAll(yearsArr,newyear);
+                        console.log("after remove all years=",years);
                     } else {
-                        console.log("add newyear");
-                        years = years + ", " + newyear;
+                        //remove duplicate
+                        years = getUniqArr(yearsArr);
+                        console.log("unique years=",years);
                     }
 
-                    $('#mydate').val(years);
+//                    if( years.includes(newyear) ) {
+//                        years = years.trim();
+//                        console.log("remove dublicate years="+years);
+//                        var yearsArr = years.split(',');
+//                        console.log("original yearsArr=",yearsArr);
+//                        //years = [...new Set(yearsArr)];
+//                        //years = eliminateDuplicates(yearsArr);
+//                        years = getUniqArr(yearsArr);
+//                        console.log("unique years=",years);
+//                        //years = newYearsArr.toString(", ");
+//                        //console.log("new years="+years);
+//                    } else {
+//                        //console.log("add newyear");
+//                        //years = years + ", " + newyear;
+//                    }
+
+                    console.log("new years=",years);
+                    $('#filter_years').val(years);
+                    datefilter.datepicker('update');
+                    //datefilter.data('datepicker').setDates(years);
                 });
 
                 //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
@@ -297,6 +293,58 @@
             }
 
         });
+
+        function getUniqArr(a) {
+            var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
+
+            return a.filter(function(item) {
+                var type = typeof item;
+                if(type in prims)
+                    return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
+                else
+                    return objs.indexOf(item) >= 0 ? false : objs.push(item);
+            });
+        }
+        //https://stackoverflow.com/questions/4009756/how-to-count-string-occurrence-in-string
+        /** Function that count occurrences of a substring in a string;
+         * @param {String} string               The string
+         * @param {String} subString            The sub string to search for
+         * @param {Boolean} [allowOverlapping]  Optional. (Default:false)
+         *
+         * @author Vitim.us https://gist.github.com/victornpb/7736865
+         * @see Unit Test https://jsfiddle.net/Victornpb/5axuh96u/
+         * @see https://stackoverflow.com/a/7924240/938822
+         */
+        function occurrences(string, subString, allowOverlapping) {
+
+            string += "";
+            subString += "";
+            if (subString.length <= 0) return (string.length + 1);
+
+            var n = 0,
+                    pos = 0,
+                    step = allowOverlapping ? 1 : subString.length;
+
+            while (true) {
+                pos = string.indexOf(subString, pos);
+                if (pos >= 0) {
+                    ++n;
+                    pos += step;
+                } else break;
+            }
+            return n;
+        }
+        function removeItemAll(arr, value) {
+            var i = 0;
+            while (i < arr.length) {
+                if (arr[i] === value) {
+                    arr.splice(i, 1);
+                } else {
+                    ++i;
+                }
+            }
+            return arr;
+        }
 
     </script>
 

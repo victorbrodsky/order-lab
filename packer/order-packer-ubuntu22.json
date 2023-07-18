@@ -69,7 +69,7 @@
            "cd /usr/local/bin/order-lab/orderflex",			   		   
 		   "echo @### Composer and deploy using orderflex ###",				   
 		   "composer self-update",   
-           "yes | composer update",
+           "yes | composer install",
 		   "echo @### Install yarn package.json ###",
 		   "sudo yarn install --frozen-lockfile",		   
 	       "sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh",
