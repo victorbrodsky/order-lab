@@ -1608,3 +1608,14 @@ packer hcl2_upgrade order-packer-alma9.json
 4) run json as usual
 
 
+"scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-update-cmd": [
+            "@auto-scripts"
+        ],
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+
