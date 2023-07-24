@@ -1608,6 +1608,14 @@ Pathology and Laboratory Medicine",
         $dbInfo = $this->getDbVersion();
         $res = $res . "<br>" . "DB: ".$dbInfo;
 
+        $host= gethostname();
+        $ip = gethostbyname($host);
+        $serverAddr = $_SERVER['SERVER_ADDR'];
+        if( $ip != $serverAddr ) {
+            $ip = $ip . " (". $serverAddr . ")";
+        }
+        $res = $res . "<br>" . "IP: " . $ip;
+
         return $res;
     }
 
