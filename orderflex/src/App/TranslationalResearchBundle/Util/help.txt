@@ -8,3 +8,12 @@ will receive a notification email only when the work request is canceled or comp
 
 Of course, there are all kind of internal emails send to the TRP admins, project's reviewers and technicians.
 
+We have the workflow diagram shown here https://view.med.cornell.edu/translational-research/workflow/project-requests. In order to have a final approval, the project must pass 4 project's stages in this order:
+IRB Review -> Admin Review -> Committee Review -> Final Review
+There is only one exception for admins - Admin can skip all stages and provide the final approval ("Approve project request" button on the action menu).
+
+You can review the project only on the review page by clicking the "Approve", "Reject", "Request additional information" buttons.
+The project moves to the next stage only if "Approve" button is clicked.
+Also, as MISI admin, you can provide a final approval for the project and skip all stages by clicking the "Approve project request".
+In this case only the project's associated users (submitter, PIs, contacts) will receive the notification email.
+All reviewers for skipped stages will not receive the notification emails.
