@@ -1,0 +1,9 @@
+All users associated with the project (project's submitter, all types of investigators, pathologists involved, contacts)
+will receive a notification email when the project is created, content updated, or status changed.
+These project's PIs and billing contact are automatically pre-populated on the new work request creation page; however, they can be modified by the submitter.
+
+Work request's submitter will receive all emails associated with this work request (all updates or all status changes).
+Work request's principal investigators for the project and billing contact
+will receive a notification email only when the work request is canceled or completed.
+
+Of course, there are all kind of internal emails send to the TRP admins, project's reviewers and technicians.
