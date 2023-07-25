@@ -7,7 +7,7 @@
 {% endblock %}
 
 
-
+{#NOT USED#}
 {% block content %}
     <h4 class="text-info" align="center">
         {{ title }} {{ holidayUrl|raw }}
@@ -209,6 +209,7 @@
 
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
+//            NOT USED
             var target = ".datepicker-only-year";
             var datefilter = $(target).datepicker( {
                 autoclose: true,
@@ -219,6 +220,8 @@
                 multidate: true,
                 clearBtn: true
             });
+
+            //userInitDatepickerYears('#filter_years');
         });
 
 //        function saveObservedHolidays() {
