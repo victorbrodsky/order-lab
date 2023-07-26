@@ -1619,3 +1619,5 @@ packer hcl2_upgrade order-packer-alma9.json
         "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
     },
 
+Check: Deprecated: Creation of dynamic property
+

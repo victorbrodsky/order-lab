@@ -416,6 +416,8 @@ f_install_python3
 f_install_order
 f_install_prepare
 		   
+		   
+#Centos apache log: /var/log/httpd	   
 
 
 

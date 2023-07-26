@@ -62,6 +62,7 @@ class PdfUtil {
     protected $container;
     //protected $session;
     protected $uploadDir;
+    protected $uploadPath;
 
 
     //public function __construct( EntityManagerInterface $em, ContainerInterface $container, Session $session ) {
