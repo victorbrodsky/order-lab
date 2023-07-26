@@ -451,7 +451,7 @@ if( $conn ) {
                 $database_password_pacsvendor = getDBParameter($row, $database_password_pacsvendor, 'pacsvendorSlideManagerDBPassword');
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
-                //echo "connection_channel=[".$connection_channel."]\n";
+                echo "connection_channel=[".$connection_channel."]\n";
 
                 /////////////////// mailer_dsn ///////////////////
                 //Moved to the EmailUtil->getSmtpTransport()

@@ -51,6 +51,10 @@ f_install_apache () {
     sleep 1
 
 	sudo yum install httpd -y
+
+	#echo -e  ${COLOR} export APACHE_LOG_DIR ${NC}
+	#export APACHE_LOG_DIR=/var/log/httpd
+
 	sudo systemctl enable httpd.service
 	sudo systemctl start httpd.service
 	sudo systemctl status httpd.service
@@ -416,8 +420,12 @@ f_install_python3
 f_install_order
 f_install_prepare
 		   
-		   
-#Centos apache log: /var/log/httpd	   
+#https://www.digitalocean.com/community/tutorials/apache-configuration-error-ah00558-could-not-reliably-determine-the-server-s-fully-qualified-domain-name
+#sudo apachectl configtest		   
+#sudo systemctl restart httpd.service
+#sudo systemctl restart postgresql-15		   
+#Centos apache log: /var/log/httpd	
+#postfresql log: /var/lib/pgsql/15/data/log/   
 
 
 
