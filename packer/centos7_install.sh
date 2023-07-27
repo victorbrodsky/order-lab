@@ -385,6 +385,7 @@ f_install_prepare () {
 	
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
+	sudo systemctl status httpd.service
 	
 	echo -e ${COLOR} Install composer ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
