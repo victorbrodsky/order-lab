@@ -168,17 +168,17 @@ if [ "$os" = "alma8" ]
 	ORDERPACKERJSON="order-packer-alma8.json"
 	TESTING=false
 fi
-if [ "$os" = "alma9" ]
+if [ "$os" = "alma9" ] || [ "$os" = "alma" ]
   then  
 	ORDERPACKERJSON="order-packer-alma9.json"
 	TESTING=false
 fi
-if [ "$os" = "centos7" ]
+if [ "$os" = "centos7" ] || [ "$os" = "centos" ]
   then 	
 	ORDERPACKERJSON="order-packer-centos7.json"
 	TESTING=false
 fi
-if [ "$os" = "ubuntu22" ]
+if [ "$os" = "ubuntu22" ] || [ "$os" = "ubuntu" ]
   then 	
 	ORDERPACKERJSON="order-packer-ubuntu22.json"
 	TESTING=false
