@@ -158,22 +158,13 @@ if( $conn ) {
             $continue = false;
             //exit('!params');
         }
-//    if(is_array($params)) {
-//    } else {
-//        //it is not array even if DB exists
-//        $continue = false;
-//        exit('!is_array($params)');
-//    }
+
         if ($continue && (is_object($params) || is_array($params))) {
         } else {
             $continue = false;
             //exit('!is_object($params)');
         }
-//    if( $continue && (is_object($params) || is_array($params)) && count($params) >= 1 ) {
-//    } else {
-//        $continue = false;
-//        //exit('!count($params) >= 1)');
-//    }
+
         $row = $params->fetch();
         if ($continue && (is_object($row) || is_array($row)) && count($row) == 0) {
             $continue = false;
@@ -272,54 +263,14 @@ if( $conn ) {
 //                $ldapExeFilename = $row['ldapExeFilename'];
 //            }
 
-                //if( array_key_exists('smtpServerAddress', $row) ) {
-//            if( $param = getDBParameter($row,'wkhtmltopdfpath') ) {
-//                $smtpServerAddress = $param;
-//            }
                 $smtpServerAddress = getDBParameter($row, $smtpServerAddress, 'wkhtmltopdfpath');
-
-                //if( array_key_exists('siteEmail', $row) )
-//            if( $param = getDBParameter($row,'siteEmail') ) {
-//                $defaultSiteEmail = $param;
-//            }
                 $defaultSiteEmail = getDBParameter($row, $defaultSiteEmail, 'siteEmail');
-
-                //if( array_key_exists('institutionurl', $row) )
-//            if( $param = getDBParameter($row,'institutionurl') ) {
-//                $institution_url = $param;
-//            }
                 $institution_url = getDBParameter($row, $institution_url, 'institutionurl');
-
-                //if( array_key_exists('institutionname', $row) )
-//            if( $param = getDBParameter($row,'institutionname') ) {
-//                $institution_name = $param;
-//            }
                 $institution_name = getDBParameter($row, $institution_name, 'institutionname');
-
-                //if( array_key_exists('subinstitutionurl', $row) )
-//            if( $param = getDBParameter($row,'subinstitutionurl') ) {
-//                $subinstitution_url = $param;
-//            }
                 $subinstitution_url = getDBParameter($row, $subinstitution_url, 'subinstitutionurl');
-
-                //if( array_key_exists('subinstitutionname', $row) )
-//            if( $param = getDBParameter($row,'subinstitutionname') ) {
-//                $subinstitution_name = $param;
-//            }
                 $subinstitution_name = getDBParameter($row, $subinstitution_name, 'subinstitutionname');
-
-                //if( array_key_exists('departmenturl', $row) )
-                //if( $param = getDBParameter($row,$department_url,'departmenturl') ) {
-                //    $department_url = $param;
-                //}
                 $department_url = getDBParameter($row, $department_url, 'departmenturl');
-
-//            if( array_key_exists('departmentname', $row) )
-//                $department_name = $row['departmentname'];
                 $department_name = getDBParameter($row, $department_name, 'departmentname');
-
-//            if( array_key_exists('showCopyrightOnFooter', $row) )
-//                $showcopyrightonfooter = $row['showCopyrightOnFooter'];
                 $showcopyrightonfooter = getDBParameter($row, $showcopyrightonfooter, 'showCopyrightOnFooter');
 
                 //third party software html to pdf
@@ -327,48 +278,29 @@ if( $conn ) {
                 //echo "EOF wkhtmltopdfpathLinux=".getDBParameter($row,'wkhtmltopdfpathLinux')."<br>";
                 if (isWindows()) {
                     //Windows
-//                if( $param = getDBParameter($row,'wkhtmltopdfpath') ) {
-//                    $wkhtmltopdfpath = $param;
-//                }
                     $wkhtmltopdfpath = getDBParameter($row, $wkhtmltopdfpath, 'wkhtmltopdfpath');
                 } else {
                     //Linux
-//                if( $param = getDBParameter($row,'wkhtmltopdfpathLinux') ) {
-//                    $wkhtmltopdfpath = $param;
-//                }
                     $wkhtmltopdfpath = getDBParameter($row, $wkhtmltopdfpath, 'wkhtmltopdfpathLinux');
                 }
 
                 //employees
-                //$employeesuploadpath = $row['employeesuploadpath'];
                 $employeesuploadpath = getDBParameter($row, $employeesuploadpath, 'employeesuploadpath');
-
-                //$employeesavataruploadpath = $row['avataruploadpath'];
                 $employeesavataruploadpath = getDBParameter($row, $employeesavataruploadpath, 'avataruploadpath');
 
                 //scan
-                //$scanuploadpath = $row['scanuploadpath'];
                 $scanuploadpath = getDBParameter($row, $scanuploadpath, 'scanuploadpath');
 
                 //fellapp
-//            if (array_key_exists('fellappuploadpath', $row)) {
-//                $fellappuploadpath = $row['fellappuploadpath'];
-//            }
                 $fellappuploadpath = getDBParameter($row, $fellappuploadpath, 'fellappuploadpath');
 
                 //resapp
                 $resappuploadpath = getDBParameter($row, $resappuploadpath, 'resappuploadpath');
 
                 //vacreq
-//            if (array_key_exists('vacrequploadpath', $row)) {
-//                $vacrequploadpath = $row['vacrequploadpath'];
-//            }
                 $vacrequploadpath = getDBParameter($row, $vacrequploadpath, 'vacrequploadpath');
 
                 //transres
-//            if (array_key_exists('transresuploadpath', $row)) {
-//                $transresuploadpath = $row['transresuploadpath'];
-//            }
                 $transresuploadpath = getDBParameter($row, $transresuploadpath, 'transresuploadpath');
 
                 $callloguploadpath = getDBParameter($row, $callloguploadpath, 'callloguploadpath');
@@ -378,24 +310,10 @@ if( $conn ) {
                 $dashboarduploadpath = getDBParameter($row, $dashboarduploadpath, 'dashboarduploadpath');
 
                 //titles
-//            if( array_key_exists('mainHomeTitle', $row) )
-//                $mainhome_title = $row['mainHomeTitle'];
                 $mainhome_title = getDBParameter($row, $mainhome_title, 'mainHomeTitle');
-
-//            if( array_key_exists('listManagerTitle', $row) )
-//                $listmanager_title = $row['listManagerTitle'];
                 $listmanager_title = getDBParameter($row, $listmanager_title, 'listManagerTitle');
-
-//            if( array_key_exists('eventLogTitle', $row) )
-//                $eventlog_title = $row['eventLogTitle'];
                 $eventlog_title = getDBParameter($row, $eventlog_title, 'eventLogTitle');
-
-//            if( array_key_exists('siteSettingsTitle', $row) )
-//                $sitesettings_title = $row['siteSettingsTitle'];
                 $sitesettings_title = getDBParameter($row, $sitesettings_title, 'siteSettingsTitle');
-
-//            if( array_key_exists('contentAboutPage', $row) )
-//                $contentabout_page = $row['contentAboutPage'];
                 $contentabout_page = getDBParameter($row, $contentabout_page, 'contentAboutPage');
 
                 //$underlogin_msg_user = $row['underLoginMsgUser'];
@@ -409,91 +327,64 @@ if( $conn ) {
                 //echo "department_url=".$department_url."<br>";
 
                 //Symfony DB
-//            if( array_key_exists('dbServerAddress', $row) )
-//                $database_host = $row['dbServerAddress'];
                 $database_host = getDBParameter($row, $database_host, 'dbServerAddress');
-
-//            if( array_key_exists('dbServerPort', $row) )
-//                $database_port = $row['dbServerPort'];
                 $database_port = getDBParameter($row, $database_port, 'dbServerPort');
-
-//            if( array_key_exists('dbDatabaseName', $row) )
-//                $database_name = $row['dbDatabaseName'];
                 $database_name = getDBParameter($row, $database_name, 'dbDatabaseName');
-
-//            if( array_key_exists('dbServerAccountUserName', $row) )
-//                $database_user = $row['dbServerAccountUserName'];
                 $database_user = getDBParameter($row, $database_user, 'dbServerAccountUserName');
-
-//            if( array_key_exists('dbServerAccountPassword', $row) )
-//                $database_password = $row['dbServerAccountPassword'];
                 $database_password = getDBParameter($row, $database_password, 'dbServerAccountPassword');
 
                 //pacsvendor DB
-//            if( array_key_exists('pacsvendorSlideManagerDBServerAddress', $row) )
-//                $database_host_pacsvendor = $row['pacsvendorSlideManagerDBServerAddress'];
                 $database_host_pacsvendor = getDBParameter($row, $database_host_pacsvendor, 'pacsvendorSlideManagerDBServerAddress');
-
-//            if( array_key_exists('pacsvendorSlideManagerDBServerPort', $row) )
-//                $database_port_pacsvendor = $row['pacsvendorSlideManagerDBServerPort'];
                 $database_port_pacsvendor = getDBParameter($row, $database_port_pacsvendor, 'pacsvendorSlideManagerDBServerPort');
-
-//            if( array_key_exists('pacsvendorSlideManagerDBName', $row) )
-//                $database_name_pacsvendor = $row['pacsvendorSlideManagerDBName'];
                 $database_name_pacsvendor = getDBParameter($row, $database_name_pacsvendor, 'pacsvendorSlideManagerDBName');
-
-//            if( array_key_exists('pacsvendorSlideManagerDBUserName', $row) )
-//                $database_user_pacsvendor = $row['pacsvendorSlideManagerDBUserName'];
                 $database_user_pacsvendor = getDBParameter($row, $database_user_pacsvendor, 'pacsvendorSlideManagerDBUserName');
-
-//            if( array_key_exists('pacsvendorSlideManagerDBPassword', $row) )
-//                $database_password_pacsvendor = $row['pacsvendorSlideManagerDBPassword'];
                 $database_password_pacsvendor = getDBParameter($row, $database_password_pacsvendor, 'pacsvendorSlideManagerDBPassword');
 
                 $connection_channel = getDBParameter($row, $connection_channel, 'connectionChannel');
                 //$connection_channel = 'http'; //testing
-                echo "connection_channel=[".$connection_channel."]\n"; //testing
+                //echo "connection_channel=[".$connection_channel."]\n"; //testing
 
-                /////////////////// mailer_dsn ///////////////////
-                //Moved to the EmailUtil->getSmtpTransport()
-                if(0) {
-                    $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
-                    $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
-                    $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
-                    $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
-
-                    if (!$mailer_port) {
-                        $mailer_port = '25';
-                    }
-
-                    $mailer_user_param = "";
-                    if ($mailer_user && $mailer_password) {
-                        $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
-                    }
-
-                    //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
-                    //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
-                    //$mailparams = 'verify_peer_name=0';
-                    //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
-                    //$mailparams = '';
-
-                    //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
-                    //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
-                    //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
-                    $mailer_dsn = 'smtp://' . $mailer_host . ':' . $mailer_port;
-
-                    if ($mailer_user_param) {
-                        $mailer_dsn = 'smtp://' . $mailer_user_param . $mailer_host . ':' . $mailer_port;
-                    }
-
-                    //$mailer_dsn = 'sendmail://default';
-                    //echo "mailer_dsn=".$mailer_dsn."<br>";
-                    $container->setParameter('mailer_dsn', $mailer_dsn);
-                }
-                /////////////////// EOF mailer_dsn ///////////////////
+//                /////////////////// mailer_dsn ///////////////////
+//                //Moved to the EmailUtil->getSmtpTransport()
+//                if(0) {
+//                    $mailer_host = getDBParameter($row, $mailer_host, 'smtpServerAddress');
+//                    $mailer_password = getDBParameter($row, $mailer_password, 'mailerPassword');
+//                    $mailer_user = getDBParameter($row, $mailer_user, 'mailerUser');
+//                    $mailer_port = getDBParameter($row, $mailer_port, 'mailerPort');
+//
+//                    if (!$mailer_port) {
+//                        $mailer_port = '25';
+//                    }
+//
+//                    $mailer_user_param = "";
+//                    if ($mailer_user && $mailer_password) {
+//                        $mailer_user_param = $mailer_user . ':' . $mailer_password . '@';
+//                    }
+//
+//                    //$mailparams = 'allow_self_signed=true&verify_peer=false&verify_peer_name=false';
+//                    //$mailparams = 'allow_self_signed=1&verify_peer=0&verify_peer_name=0';
+//                    //$mailparams = 'verify_peer_name=0';
+//                    //$mailparams = 'encryption=ssl&stream_options[ssl][verify_peer]=false&stream_options[ssl][verify_peer_name]=false&stream_options[ssl][allow_self_signed]=true';
+//                    //$mailparams = '';
+//
+//                    //$mailer_dsn = 'smtp://smtp.med.cornell.edu:25'.'/?'.$mailparams;
+//                    //$mailer_dsn = 'smtp://'.$mailer_user_param.'smtp.med.cornell.edu:'.$mailer_port.'/?'.$mailparams;
+//                    //$mailer_dsn = 'smtp://'.$mailer_user_param.$mailer_host.':'.$mailer_port;
+//                    $mailer_dsn = 'smtp://' . $mailer_host . ':' . $mailer_port;
+//
+//                    if ($mailer_user_param) {
+//                        $mailer_dsn = 'smtp://' . $mailer_user_param . $mailer_host . ':' . $mailer_port;
+//                    }
+//
+//                    //$mailer_dsn = 'sendmail://default';
+//                    //echo "mailer_dsn=".$mailer_dsn."<br>";
+//                    $container->setParameter('mailer_dsn', $mailer_dsn);
+//                }
+//                /////////////////// EOF mailer_dsn ///////////////////
 
             }//if $row
 
+            echo "connection_channel=[".$connection_channel."]\n"; //testing
             $container->setParameter('connection_channel', $connection_channel);
 
             $container->setParameter('mailer_host', $smtpServerAddress);
