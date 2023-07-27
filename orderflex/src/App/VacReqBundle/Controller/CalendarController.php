@@ -407,6 +407,8 @@ class CalendarController extends OrderAbstractController
     }
 
     /**
+     * NOT USED
+     *
      * @Route("/observed-holidays-list/", name="vacreq_observed_holidays_list", methods={"GET"})
      * @Template("AppVacReqBundle/Holidays/observed-holidays.html.twig")
      */
@@ -735,7 +737,7 @@ class CalendarController extends OrderAbstractController
             //$previousYear = (int)$thisYear - 1;
             $nextYear = (int)$thisYear + 1;
             //$defaultYears = "$previousYear,$thisYear,$nextYear";
-            $defaultYears = "$thisYear,$nextYear";
+            $defaultYears = "$thisYear, $nextYear";
             return $this->redirect( $this->generateUrl(
                 'vacreq_show_observed_holidays',
                 array(

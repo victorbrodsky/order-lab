@@ -105,6 +105,7 @@
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/rank-modal.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/status-notification-modal.js') }}"></script>#}
     {#<script src="{{ asset('orderassets/AppFellAppBundle/form/js/send-notification-emails.js') }}"></script>#}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-datepicker-years.js') }}"></script>
 
     <script language="Javascript">
 
@@ -112,17 +113,20 @@
 
             $('[data-toggle="tooltip"]').tooltip({html: true});
 
-            var target = ".datepicker-only-year";
-            var datefilter = $(target).datepicker( {
-                autoclose: true,
-                format: " yyyy",
-                viewMode: "years",
-                minViewMode: "years",
-                orientation: 'auto', //'auto top'
-                multidate: true,
-                clearBtn: true
-            });
+//            var target = ".datepicker-only-year";
+//            var datefilter = $(target).datepicker( {
+//                autoclose: true,
+//                format: " yyyy",
+//                viewMode: "years",
+//                minViewMode: "years",
+//                orientation: 'auto', //'auto top'
+//                multidate: true,
+//                clearBtn: true
+//            });
+
+            userInitDatepickerYears('#filter_years');
         });
+
 
     </script>
 

@@ -199,118 +199,118 @@
 
             userInitDatepickerYears('#filter_years');
 
-        if(0) {
-            var target = ".datepicker-only-year";
-            if (1) {
-                //Show as "2024, 2023, 2025"
-                var datefilter = $(target).datepicker({
-                    autoclose: true,
-                    format: " yyyy",
-                    viewMode: "years",
-                    minViewMode: "years",
-                    startView: "years",
-                    multidate: true,
-                    clearBtn: true,
-                    multidateSeparator: ","
-                });
-
-                datefilter.on('changeDate', function (e) {
-                    var newyear = e.date.getFullYear();
-                    newyear = newyear.toString();
-                    newyear = newyear.trim();
-                    var years = $('#filter_years').val();
-                    years = years.trim();
-                    years = years.replace(/ /g, '');
-                    //console.log('newyear=['+newyear+"], years=["+years+"]");
-                    var yearsArr = years.split(',');
-                    //console.log("original yearsArr=",yearsArr);
-                    var count = utilGetOccurrences(years, newyear);
-                    //console.log("count="+count);
-                    if (count == 2) {
-                        //remove newyear from yearsArr
-                        years = utilRemoveItemAll(yearsArr, newyear);
-                        //console.log("after remove all years=",years);
-                    } else {
-                        //remove duplicate
-                        years = utilGetUniqArr(yearsArr);
-                        //console.log("unique years=",years);
-                    }
-
-                    //console.log("new years=",years);
-                    $('#filter_years').val(years);
-                    datefilter.datepicker('update');
-                });
-
-            }
-            else {
-                //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
-                var datefilter = $(target).datepicker({
-                    autoclose: true,
-                    format: "yyyy",
-                    //inline: false,
-                    viewMode: "years",
-                    minViewMode: "years",
-                    startView: "years",
-                    multidate: true,
-                    clearBtn: true,
-                    //multidateRemoveDuplicate: true,
-                    //multidateSeparator: " "
-                });
-
-                //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
-                //$(target).datepicker('setDate', new Date());
-                //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
-
-                //datefilter.data('datepicker').setDates(["2022","2023"]);
-                //datefilter.datepicker('update', new Date());
-                //datefilter.datepicker('update', new Date());
-                //datefilter.datepicker('update');
-
-                //datefilter.data({date: '2022-08-08'});
-                //datefilter.datepicker('update');
-                //datefilter.datepicker().children('input').val('2022-08-08');
-
-                //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
-
-                //remove if newyear=[2025], years=[2023,2024,2025,2025]
-                //remove duplicate newyear=[2026], years=[2023,2024,2025,2026]
-
-                datefilter.on('changeDate', function (e) {
-                    var newyear = e.date.getFullYear();
-                    newyear = newyear.toString();
-                    newyear = newyear.trim();
-                    var years = $('#filter_years').val();
-                    years = years.trim();
-                    console.log('newyear=[' + newyear + "], years=[" + years + "]");
-                    var yearsArr = years.split(',');
-                    console.log("original yearsArr=", yearsArr);
-                    var count = utilGetOccurrences(years, newyear);
-                    console.log("count=" + count);
-                    if (count == 2) {
-                        //remove newyear from yearsArr
-                        years = utilRemoveItemAll(yearsArr, newyear);
-                        console.log("after remove all years=", years);
-                    } else {
-                        //remove duplicate
-                        years = utilGetUniqArr(yearsArr);
-                        console.log("unique years=", years);
-                    }
-
-                    console.log("new years=", years);
-                    $('#filter_years').val(years);
-                    datefilter.datepicker('update');
-                    //datefilter.data('datepicker').setDates(years);
-                });
-
-                //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
-//                setMultidateRemoveDuplicate: function (multidateRemoveDuplicate) {
-//                    this._process_options({ multidateRemoveDuplicate: multidateRemoveDuplicate });
-//                    this.update();
-//                    this.updateNavArrows();
-//                },
-            }
-
-        }
+//        if(0) {
+//            var target = ".datepicker-only-year";
+//            if (1) {
+//                //Show as "2024, 2023, 2025"
+//                var datefilter = $(target).datepicker({
+//                    autoclose: true,
+//                    format: " yyyy",
+//                    viewMode: "years",
+//                    minViewMode: "years",
+//                    startView: "years",
+//                    multidate: true,
+//                    clearBtn: true,
+//                    multidateSeparator: ","
+//                });
+//
+//                datefilter.on('changeDate', function (e) {
+//                    var newyear = e.date.getFullYear();
+//                    newyear = newyear.toString();
+//                    newyear = newyear.trim();
+//                    var years = $('#filter_years').val();
+//                    years = years.trim();
+//                    years = years.replace(/ /g, '');
+//                    //console.log('newyear=['+newyear+"], years=["+years+"]");
+//                    var yearsArr = years.split(',');
+//                    //console.log("original yearsArr=",yearsArr);
+//                    var count = utilGetOccurrences(years, newyear);
+//                    //console.log("count="+count);
+//                    if (count == 2) {
+//                        //remove newyear from yearsArr
+//                        years = utilRemoveItemAll(yearsArr, newyear);
+//                        //console.log("after remove all years=",years);
+//                    } else {
+//                        //remove duplicate
+//                        years = utilGetUniqArr(yearsArr);
+//                        //console.log("unique years=",years);
+//                    }
+//
+//                    //console.log("new years=",years);
+//                    $('#filter_years').val(years);
+//                    datefilter.datepicker('update');
+//                });
+//
+//            }
+//            else {
+//                //https://bootstrap-datepicker.readthedocs.io/en/v1.5.0/options.html
+//                var datefilter = $(target).datepicker({
+//                    autoclose: true,
+//                    format: "yyyy",
+//                    //inline: false,
+//                    viewMode: "years",
+//                    minViewMode: "years",
+//                    startView: "years",
+//                    multidate: true,
+//                    clearBtn: true,
+//                    //multidateRemoveDuplicate: true,
+//                    //multidateSeparator: " "
+//                });
+//
+//                //https://stackoverflow.com/questions/15423467/bootstrap-datepicker-today-as-default
+//                //$(target).datepicker('setDate', new Date());
+//                //https://stackoverflow.com/questions/50662814/how-to-have-datepicker-set-default-year
+//
+//                //datefilter.data('datepicker').setDates(["2022","2023"]);
+//                //datefilter.datepicker('update', new Date());
+//                //datefilter.datepicker('update', new Date());
+//                //datefilter.datepicker('update');
+//
+//                //datefilter.data({date: '2022-08-08'});
+//                //datefilter.datepicker('update');
+//                //datefilter.datepicker().children('input').val('2022-08-08');
+//
+//                //https://stackoverflow.com/questions/29314465/bootstrap-datepicker-duplication-when-using-options-and-methods
+//
+//                //remove if newyear=[2025], years=[2023,2024,2025,2025]
+//                //remove duplicate newyear=[2026], years=[2023,2024,2025,2026]
+//
+//                datefilter.on('changeDate', function (e) {
+//                    var newyear = e.date.getFullYear();
+//                    newyear = newyear.toString();
+//                    newyear = newyear.trim();
+//                    var years = $('#filter_years').val();
+//                    years = years.trim();
+//                    console.log('newyear=[' + newyear + "], years=[" + years + "]");
+//                    var yearsArr = years.split(',');
+//                    console.log("original yearsArr=", yearsArr);
+//                    var count = utilGetOccurrences(years, newyear);
+//                    console.log("count=" + count);
+//                    if (count == 2) {
+//                        //remove newyear from yearsArr
+//                        years = utilRemoveItemAll(yearsArr, newyear);
+//                        console.log("after remove all years=", years);
+//                    } else {
+//                        //remove duplicate
+//                        years = utilGetUniqArr(yearsArr);
+//                        console.log("unique years=", years);
+//                    }
+//
+//                    console.log("new years=", years);
+//                    $('#filter_years').val(years);
+//                    datefilter.datepicker('update');
+//                    //datefilter.data('datepicker').setDates(years);
+//                });
+//
+//                //https://pushkarkinikar.wordpress.com/2014/10/27/re-selecting-same-date-in-datepicker-from-boot-strap/
+////                setMultidateRemoveDuplicate: function (multidateRemoveDuplicate) {
+////                    this._process_options({ multidateRemoveDuplicate: multidateRemoveDuplicate });
+////                    this.update();
+////                    this.updateNavArrows();
+////                },
+//            }
+//
+//        }
 
         });
 
