@@ -1610,8 +1610,11 @@ Pathology and Laboratory Medicine",
 
         $host= gethostname();
         $ip = gethostbyname($host);
-        $serverAddr = $_SERVER['SERVER_ADDR'];
-        if( $ip != $serverAddr ) {
+        $serverAddr = null;
+        if( isset($_SERVER['SERVER_ADDR']) ) {
+            $serverAddr = $_SERVER['SERVER_ADDR'];
+        }
+        if( $serverAddr && $ip != $serverAddr ) {
             $ip = $ip . " (". $serverAddr . ")";
         }
         $res = $res . "<br>" . "IP: " . $ip;
