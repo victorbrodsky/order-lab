@@ -3,7 +3,8 @@
  */
 
 function userInitDatepickerYears( inputSelect ) {
-    var target = ".datepicker-only-year";
+    //var target = ".datepicker-only-year";
+    var target = inputSelect;
 
     //Show as "2024, 2023, 2025"
     var datefilter = $(target).datepicker( {
@@ -19,37 +20,13 @@ function userInitDatepickerYears( inputSelect ) {
     });
 
     userUtilChangeDateListner(datefilter,inputSelect);
-
-    // datefilter.on('changeDate', function(e){
-    //     var newyear = e.date.getFullYear();
-    //     newyear = newyear.toString();
-    //     newyear = newyear.trim();
-    //     var years = $(inputSelect).val();
-    //     years = years.trim();
-    //     years = years.replace(/ /g, '');
-    //     //console.log('newyear=['+newyear+"], years=["+years+"]");
-    //     var yearsArr = years.split(',');
-    //     //console.log("original yearsArr=",yearsArr);
-    //     var count = userUtilGetOccurrences(years,newyear);
-    //     //console.log("count="+count);
-    //     if( count == 2 ) {
-    //         //remove newyear from yearsArr
-    //         years = userUtilRemoveItemAll(yearsArr,newyear);
-    //         //console.log("after remove all years=",years);
-    //     } else {
-    //         //remove duplicate
-    //         years = userUtilGetUniqArr(yearsArr);
-    //         //console.log("unique years=",years);
-    //     }
-    //
-    //     //console.log("new years=",years);
-    //     $(inputSelect).val(years);
-    //     datefilter.datepicker('update');
-    // });
 }
 
 function userUtilChangeDateListner( datefilter, inputSelect ) {
     datefilter.on('changeDate', function(e){
+        if( e == null || e.date == null ) {
+            return null;
+        }
         var newyear = e.date.getFullYear();
         newyear = newyear.toString();
         newyear = newyear.trim();
