@@ -50,6 +50,8 @@ f_install_apache () {
 	sudo apt install -y apache2
 
 	#sudo apt install -y httpd
+	echo -e  ${COLOR} install mod_ssl ${NC}
+	sudo apt install -y mod_ssl
 	
 	echo -e ${COLOR} List the ufw application profiles ${NC}
 	sudo ufw app list

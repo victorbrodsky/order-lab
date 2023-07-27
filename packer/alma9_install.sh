@@ -67,6 +67,10 @@ f_install_apache () {
     sleep 1
 
 	sudo dnf install httpd -y
+	
+	echo -e  ${COLOR} install mod_ssl ${NC}
+	sudo dnf -y install mod_ssl
+	
 	sudo systemctl enable httpd.service
 	sudo systemctl start httpd.service
 	sudo systemctl status httpd.service

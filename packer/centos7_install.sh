@@ -52,6 +52,9 @@ f_install_apache () {
 
 	sudo yum install httpd -y
 
+	echo -e  ${COLOR} install mod_ssl ${NC}
+	sudo yum -y install mod_ssl
+
 	#echo -e  ${COLOR} export APACHE_LOG_DIR ${NC}
 	#export APACHE_LOG_DIR=/var/log/httpd
 
