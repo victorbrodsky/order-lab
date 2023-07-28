@@ -48,6 +48,20 @@ fi
 
 echo WEB_USER="$WEB_USER"
 
+if id "apache" >/dev/null 2>&1; then
+    echo 'user found'
+else
+    echo 'user not found'
+fi
+
+if id "www-data" >/dev/null 2>&1; then
+    echo 'user found'
+else
+    echo 'user not found'
+fi
+
+
+
 ##### Functions #####
 function prep()
 {
