@@ -61,10 +61,12 @@
 	  {
         "type": "shell",
         "inline": [ 
-		   "echo @### Restart apache ###",
-		   "sudo systemctl restart apache2",
+		   "echo @### Restart apache in the final step ###",
+		   "sudo systemctl restart apache2.service",
+		   "sudo systemctl status apache2.service",
 		   "echo @### Restart postgresql ###",
-		   "sudo systemctl restart postgresql",		   
+		   "sudo systemctl restart postgresql",	
+		   "sudo systemctl status postgresql",			   
 		   "echo @### Go to orderflex folder  ###",
            "cd /usr/local/bin/order-lab/orderflex",			   		   
 		   "echo @### Composer and deploy using orderflex ###",				   

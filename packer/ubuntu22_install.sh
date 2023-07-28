@@ -65,8 +65,9 @@ f_install_apache () {
 	sudo a2enmod rewrite
 	
 	echo -e ${COLOR} Make sure the service is active ${NC}
-	sudo systemctl restart apache2
-	sudo systemctl status apache2
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
+	#sudo journalctl -xeu apache2.service
 	
 	echo ""
     sleep 1
@@ -133,7 +134,8 @@ f_install_postgresql15 () {
 		
 	sudo systemctl restart postgresql
 	sudo systemctl enable postgresql
-	sudo systemctl restart apache2
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
 	
 	echo ""
     sleep 1
@@ -188,7 +190,8 @@ f_install_php82 () {
 	
 	# Restart Apache
     sudo systemctl restart postgresql
-	sudo systemctl restart apache2
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
 	
 	echo ""
     sleep 1
@@ -357,8 +360,10 @@ f_install_prepare () {
 	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
 	
 	#sudo service apache2 restart
-	sudo systemctl restart apache2
-	sudo systemctl status apache2
+	echo -e ${COLOR} PHP 8.1 Restart apache ${NC}
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
+	sudo journalctl -xeu apache2.service
 	
 	#Job for apache2.service failed because the control process exited with error code.
 	#See "systemctl status apache2.service" and "journalctl -xeu apache2.service" for details.
