@@ -51,7 +51,8 @@ f_install_apache () {
 
 	#sudo apt install -y httpd
 	echo -e  ${COLOR} install mod_ssl ${NC}
-	sudo apt install -y mod_ssl
+	#sudo apt install -y mod_ssl
+	sudo a2enmod ssl
 	
 	echo -e ${COLOR} List the ufw application profiles ${NC}
 	sudo ufw app list
@@ -328,7 +329,7 @@ f_install_prepare () {
 	#put your custom configuration into /etc/apache2/conf.d or /etc/apache2/sites-available
 	# There are 000-default.conf and default-ssl.conf in /etc/apache2/sites-available
 
-	echo -e ${COLOR} Copy 000-default.conf to the server ${NC}
+	echo -e ${COLOR} Copy 000-default.conf to the server, Ubuntu:  /etc/apache2/sites-enabled ${NC}
 	#cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
 	yes | cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-available
 	
@@ -401,7 +402,7 @@ f_install_order
 f_install_prepare
 		   
 
-
+#Log: /var/log/apache2
 
 
 
