@@ -46,6 +46,8 @@ else
   echo "www-data user does not exist"
 fi
 
+echo WEB_USER="$WEB_USER"
+
 ##### Functions #####
 function prep()
 {
