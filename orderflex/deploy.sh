@@ -30,22 +30,6 @@ PROJECT_LOCAL_PATH=.
 
 WEB_USER='apache:apache'
 
-#if [id -u apache]
-#then
-#  echo "apache user exists"
-#  WEB_USER='apache:apache'
-#else
-#  echo "apache user does not exist"
-#fi
-#
-#if [id -u www-data]
-#then
-#  echo "www-data user exists"
-#  WEB_USER='www-data:www-data'
-#else
-#  echo "www-data user does not exist"
-#fi
-
 if id "apache" >/dev/null 2>&1; then
     echo 'apache user found'
     WEB_USER='apache:apache'
