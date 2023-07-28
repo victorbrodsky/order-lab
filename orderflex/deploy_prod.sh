@@ -73,21 +73,21 @@ PROJECT_LOCAL_PATH=.
 
 WEB_USER='apache:apache'
 
-if [id -u apache]
-then
-  echo "apache user exists"
-  WEB_USER='apache:apache'
+if id "apache" >/dev/null 2>&1; then
+    echo 'apache user found'
+    WEB_USER='apache:apache'
 else
-  echo "apache user does not exist"
+    echo 'apache user not found'
 fi
 
-if [id -u www-data]
-then
-  echo "www-data user exists"
-  WEB_USER='www-data:www-data'
+if id "www-data" >/dev/null 2>&1; then
+    echo 'www-data user found'
+    WEB_USER='www-data:www-data'
 else
-  echo "www-data user does not exist"
+    echo 'www-data user not found'
 fi
+
+echo WEB_USER="$WEB_USER"
 
 ##### Functions #####
 function prep(){
