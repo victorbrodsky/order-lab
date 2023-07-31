@@ -1,0 +1,30 @@
+Upgrade PHP 8.2 (https://computingforgeeks.com/how-to-install-php-8-2-on-centos-rhel-7/?expand_article=1)
+#1) Prepare PHP 8.2
+#sudo yum update -y
+#sudo reboot
+sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+sudo yum-config-manager --enable remi-php82
+#2) Remove old PHP
+#sudo yum -y install php
+sudo yum-config-manager --disable remi-php74
+sudo yum-config-manager --disable remi-php81
+#sudo yum remove -y php81*
+#sudo yum update
+#3) Install new PHP 8.2
+sudo yum -y install php82
+sudo yum -y install php82-php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+sudo yum -y install php82-php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+yum install php81-syspaths
+#4) Update php path
+export PATH=/opt/remi/php82/root/usr/bin:/opt/remi/php82/root/usr/sbin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+#5) Enable Apache php 8.2
+cp /opt/remi/php82/enable /etc/profile.d/rh-php82.sh
+source /opt/remi/php82/enable
+yum --enablerepo=remi install php82-php
+systemctl restart httpd.service
+#php -v
+#Done PHP 8.2
+
+
+

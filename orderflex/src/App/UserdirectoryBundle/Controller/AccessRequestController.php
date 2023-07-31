@@ -65,6 +65,7 @@ class AccessRequestController extends OrderAbstractController
     protected $roleBanned;
     protected $roleUser;
     protected $roleUnapproved;
+    protected $roleEditor;
 
     public function __construct() {
         $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->getParameter('employees.sitename');

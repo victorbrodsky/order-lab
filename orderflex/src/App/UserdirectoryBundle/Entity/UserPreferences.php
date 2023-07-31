@@ -111,7 +111,7 @@ class UserPreferences {
     public function __construct() {
         $this->languages = new ArrayCollection();
         $this->showToInstitutions = new ArrayCollection();
-        $this->roles = array();
+        //$this->roles = array();
     }
 
     /**
