@@ -398,11 +398,11 @@ f_install_prepare () {
 	#put your custom configuration into /etc/apache2/conf.d or /etc/apache2/sites-available
 	echo -e ${COLOR} Copy 000-default.conf to the server, Ubuntu:  /etc/apache2/sites-enabled ${NC}
 	#cp /usr/local/bin/order-lab/packer/000-default.conf /etc/httpd/conf.d
-	yes | cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-enabled
+	cp /usr/local/bin/order-lab/packer/000-default.conf /etc/apache2/sites-enabled
 	
 	echo -e ${COLOR} Copy default-ssl.conf to the server ${NC}
 	#cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/httpd/conf.d
-	yes | cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-enabled
+	cp /usr/local/bin/order-lab/packer/default-ssl.conf /etc/apache2/sites-enabled
 	
 	echo -e ${COLOR} Copy env ${NC}
 	cp /usr/local/bin/order-lab/packer/.env /usr/local/bin/order-lab/orderflex/
@@ -433,7 +433,7 @@ f_install_prepare () {
 	echo -e ${COLOR} Restart apache ${NC}
 	sudo systemctl restart apache2.service
 	sudo systemctl status apache2.service
-	sudo journalctl -xeu apache2.service
+	#sudo journalctl -xeu apache2.service
 	
 	#Job for apache2.service failed because the control process exited with error code.
 	#See "systemctl status apache2.service" and "journalctl -xeu apache2.service" for details.
