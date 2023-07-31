@@ -34,6 +34,7 @@ class ResearchLabTransformer implements DataTransformerInterface
 {
     private $em;
     private $user;
+    private $className;
     
     public function __construct(EntityManagerInterface $em=null, $user=null, $className=null)
     {

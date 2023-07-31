@@ -34,8 +34,8 @@ class VacReqRequestBaseType extends AbstractType
 {
 
     protected $params;
-
     protected $requestTypeName;
+    protected $numberOfDaysLabelPrefix;
 
     public function formConstructor( $params=null )
     {
