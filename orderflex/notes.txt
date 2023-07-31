@@ -1607,3 +1607,6 @@ packer hcl2_upgrade order-packer-alma9.json
 
 4) run json as usual
 
+Upgrade Rhel 7 to 8:
+In-place upgrade
+Clean install

@@ -168,7 +168,8 @@ f_install_php82 () {
 	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
 	
 	echo @### PHP3: Install PHP 8.2 ###
-	sudo apt install -y php8.2 php8.2-pear php8.2-dev libmcrypt-dev
+	sudo apt install -y php8.2 
+	sudo apt install -y php8.2-pear php8.2-dev libmcrypt-dev
 	
 	#echo @### Update PECL channels ###
 	#sudo pecl channel-update pecl.php.net
@@ -179,9 +180,15 @@ f_install_php82 () {
 	
 	echo @### PHP: Install PHP modules ###
 	#sudo apt install -y php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
-	sudo apt install -y php8.2-{cli,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	#sudo apt install -y php8.2-{cli,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	#json - Package 'php8.2-json' has no installation candidate
+	sudo apt install -y php8.2-{cli,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml}
 	#sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
-	sudo apt install -y php8.2-{pgsql,xmlreader,pdo,dom,intl,pear,bcmath,common}
+	#sudo apt install -y php8.2-{pgsql,xmlreader,pdo,dom,intl,pear,bcmath,common}
+	#Unable to locate package php8.2-pear, Couldn't find any package by glob 'php8.2-pear'
+	sudo apt install -y php8.2-{pgsql,xmlreader,pdo,dom,intl,bcmath,common}
+	sudo apt-get install -y php-pear
+	sudo apt-get install -y php-json
 	
 	#echo @### PHP: Install mcrypt ###
 	#"\n" | sudo pecl install mcrypt
