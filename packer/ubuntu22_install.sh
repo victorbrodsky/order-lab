@@ -142,6 +142,65 @@ f_install_postgresql15 () {
 }
 
 f_install_php82 () {
+	#https://www.kubuntuforums.net/forum/currently-supported-releases/kubuntu-22-10/software-support-be/668281-php-8-2-cannot-be-installed-on-kubuntu-22-10
+	#php 8.2 cannot be installed on Kubuntu 22.10. Use ubuntu-22-04-x64 
+	
+    ########## INSTALL APACHE 8.2 ##########
+    echo "Installing apache 8.2"
+    sleep 1
+
+	echo @### Install required dependencies ###
+	sudo apt install -y lsb-release ca-certificates apt-transport-https software-properties-common
+
+	echo @### Set up PHP repository ###
+	sudo add-apt-repository ppa:ondrej/php -y
+
+
+	echo @### PHP2: sudo update ###
+	sudo apt -y update
+	
+	#mcrypt moved to PECL https://computingforgeeks.com/install-php-mcrypt-extension-on-ubuntu/
+	#echo @### Install Development tools on Ubuntu ###
+	#sudo apt install -y build-essential
+
+	#echo @### PHP3: Search for PHP 8.1 packages ###
+	#sudo yum search php81 | more
+	#sudo yum search php81 | egrep 'fpm|gd|mysql|memcache'
+	
+	echo @### PHP3: Install PHP 8.2 ###
+	sudo apt install -y php8.2 php8.2-pear php8.2-dev libmcrypt-dev
+	
+	#echo @### Update PECL channels ###
+	#sudo pecl channel-update pecl.php.net
+	#sudo pecl update-channels
+	
+	echo @### PHP: list of all the installable PHP modules ###
+	php -m
+	
+	echo @### PHP: Install PHP modules ###
+	#sudo apt install -y php-{cli,mcrypt,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	sudo apt install -y php8.2-{cli,gd,curl,ldap,zip,fileinfo,opcache,fpm,mbstring,xml,json}
+	#sudo apt install -y php-{pgsql,xmlreader,pdo,dom,intl,devel,pear,bcmath,common}
+	sudo apt install -y php8.2-{pgsql,xmlreader,pdo,dom,intl,pear,bcmath,common}
+	
+	#echo @### PHP: Install mcrypt ###
+	#"\n" | sudo pecl install mcrypt
+	
+	#sudo apt install -y php-syspaths
+	
+	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	php -v
+	
+	# Restart Apache
+    sudo systemctl restart postgresql
+	sudo systemctl restart apache2.service
+	sudo systemctl status apache2.service
+	
+	echo ""
+    sleep 1
+}
+f_install_php81 () {
+	#Remove php: sudo apt remove --autoremove php8.1 libapache2-mod-php8.1 php8.1-*
     ########## INSTALL APACHE 8.1 ##########
     echo "Installing apache 8.2, but only php 8.1.7 available now ..."
     sleep 1
@@ -355,12 +414,16 @@ f_install_prepare () {
 	##Rhel7: /etc/opt/rh/rh-php56/php.ini /opt/rh/rh-php56/register.content/etc/opt/rh/rh-php56/php.ini
 	##cp /etc/php.ini /etc/php_ORIG.ini
 	
-	echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
-	cp /etc/php/8.1/apache2/php.ini /etc/php/8.1/apache2/php_ORIG.ini
-	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
+	#echo -e ${COLOR} PHP 8.1 Copy php.ini to /etc/opt/remi/php81/ ${NC}
+	#cp /etc/php/8.1/apache2/php.ini /etc/php/8.1/apache2/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.1/apache2/
+	
+	echo -e ${COLOR} Prepare: Copy php.ini to /etc/opt/remi/php82/ ${NC}
+	cp /etc/php/8.2/apache2/php.ini /etc/php/8.2/apache2/php_ORIG.ini
+	yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/php/8.2/apache2/
 	
 	#sudo service apache2 restart
-	echo -e ${COLOR} PHP 8.1 Restart apache ${NC}
+	echo -e ${COLOR} Restart apache ${NC}
 	sudo systemctl restart apache2.service
 	sudo systemctl status apache2.service
 	sudo journalctl -xeu apache2.service
