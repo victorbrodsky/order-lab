@@ -108,6 +108,7 @@ class GenericListType extends AbstractType
 
     protected $params;
     protected $mapper;
+    protected $were;
 
 
     public function formConstructor( $params, $mapper )
@@ -245,11 +246,11 @@ class GenericListType extends AbstractType
         //TODO: make it as institutional tree?
         if( method_exists($this->params['entity'],'getInstitution') ) {
 
-            $thisWhere = "list.type = :typedef OR list.type = :typeadd";
+            $this->where = "list.type = :typedef OR list.type = :typeadd";
 
             //FellowshipSubspecialty
             if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
-                $thisWhere = "(list.type = :typedef OR list.type = :typeadd) AND list.level=1";
+                $this->where = "(list.type = :typedef OR list.type = :typeadd) AND list.level=1";
             }
 
             //echo "show institution<br>";
@@ -275,7 +276,7 @@ class GenericListType extends AbstractType
                         return $er->createQueryBuilder('list')
                             ->leftJoin("list.children","children")
                             //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
-                            ->where($thisWhere)
+                            ->where($this->where)
                             ->orderBy("list.orderinlist","ASC")
                             ->setParameters( array(
                                 'typedef' => 'default',
