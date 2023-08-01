@@ -329,6 +329,16 @@ f_install_util () {
 	#Install pdftotext: https://github.com/spatie/pdf-to-text
 	sudo apt install -y poppler-utils
 	
+	echo -e ${COLOR} Install Nodejs ${NC}
+	cd ~
+	curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
+	sudo bash nodesource_setup.sh
+	echo -e ${COLOR} Autoremove no longer required packages libc-ares2 libjs-highlight.js libnode72 ${NC}
+	sudo apt autoremove -y
+	sudo apt install nodejs -y
+	echo -e ${COLOR} Check version Nodejs and Yarn ${NC}
+	node -v
+	
 	#Something wrong with yarn --version
 	#Expected version ">=14". Got "12.22.12"
 	#error react-router-dom@6.4.5: The engine "node" is incompatible with this module. Expected version ">=14". Got "12.22.9"
@@ -340,17 +350,7 @@ f_install_util () {
 	sudo apt update
 	sudo apt install -y yarn
 	yarn --version
-	
-	echo -e ${COLOR} Install Nodejs ${NC}
-	cd ~
-	curl -sL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
-	sudo bash nodesource_setup.sh
-	echo -e ${COLOR} Autoremove no longer required packages libc-ares2 libjs-highlight.js libnode72 ${NC}
-	sudo apt autoremove -y
-	sudo apt install nodejs -y
-	echo -e ${COLOR} Check version Nodejs and Yarn ${NC}
-	node -v
-	yarn -v
+	#yarn -v
 	
 	echo ""
     sleep 1
