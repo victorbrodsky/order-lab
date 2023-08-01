@@ -76,7 +76,7 @@ function prep()
     #echo "*** Install yarn package.json based on yarn.lock ***"
     #yarn install --frozen-lockfile
     echo "*** Create a production build for Encore Webpack ***"
-    yarn encore production
+    #Testing: yarn encore production
 
     echo "********* Prepare development/testing *********"
 

@@ -118,7 +118,7 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/bin/console jrk:levenshtein:install
 
     echo "*** Create a production build for Encore Webpack ***"
-    yarn encore production
+    #Testing: yarn encore production
 
     echo "*** Install assets ***"
     #php bin/console assets:install public
