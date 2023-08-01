@@ -108,7 +108,7 @@ class GenericListType extends AbstractType
 
     protected $params;
     protected $mapper;
-    protected $were;
+    protected $where;
 
 
     public function formConstructor( $params, $mapper )
