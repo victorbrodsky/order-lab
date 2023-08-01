@@ -336,7 +336,7 @@ f_install_util () {
 	echo -e ${COLOR} Autoremove no longer required packages libc-ares2 libjs-highlight.js libnode72 ${NC}
 	sudo apt autoremove -y
 	sudo apt install nodejs -y
-	echo -e ${COLOR} Check version Nodejs and Yarn ${NC}
+	echo -e ${COLOR} Check version Nodejs ${NC}
 	node -v
 	
 	#Something wrong with yarn --version
@@ -349,8 +349,22 @@ f_install_util () {
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 	sudo apt update
 	sudo apt install -y yarn
+	echo -e ${COLOR} Yarn version ${NC}
 	yarn --version
-	#yarn -v
+	echo -e ${COLOR} Nodejs version ${NC}
+	node -v
+	
+	#If above Nodejs is not working:
+	#sudo apt remove libnode72
+	#sudo apt remove libnode-dev
+	#sudo dpkg --remove --force-remove-reinstreq libnode-dev
+	#sudo dpkg --remove --force-remove-reinstreq libnode72:amd64
+	#sudo dpkg -i --force-overwrite /var/cache/apt/archives/nodejs_*
+	#sudo apt -f install
+	#sudo apt update
+	#sudo apt dist-upgrade
+	#curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+	#sudo apt-get install nodejs
 	
 	echo ""
     sleep 1
