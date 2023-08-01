@@ -1653,3 +1653,22 @@ dnf update php\*
 Upgrade Rhel 7 to 8:
 In-place upgrade
 Clean install
+
+
+## Run `sudo apt-get install -y nodejs` to install Node.js 18.x and npm
+## You may also need development tools to build native addons:
+     sudo apt-get install gcc g++ make
+## To install the Yarn package manager, run:
+     curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/yarnkey.gpg >/dev/null
+     echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+     sudo apt-get update && sudo apt-get install yarn
+
+Unpacking nodejs (18.17.0-deb-1nodesource1) ...
+dpkg: error processing archive /var/cache/apt/archives/nodejs_18.17.0-deb-1nodesource1_amd64.deb (--unpack):
+ trying to overwrite '/usr/share/systemtap/tapset/node.stp', which is also in package libnode72:amd64 12.22.9~dfsg-1ubuntu3
+Errors were encountered while processing:
+ /var/cache/apt/archives/nodejs_18.17.0-deb-1nodesource1_amd64.deb
+
+The following packages were automatically installed and are no longer required:
+  libc-ares2 libjs-highlight.js libnode72
+sudo apt autoremove
