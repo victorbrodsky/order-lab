@@ -43,7 +43,6 @@ sudo hostnamectl
 psql --version
 php -version
 
-
 echo -e ${COLOR} Copy parameters file parameters.yml to /usr/local/bin/order-lab/orderflex/config/ ${NC}
 cp /usr/local/bin/order-lab/packer/parameters.yml /usr/local/bin/order-lab/orderflex/config/
 
