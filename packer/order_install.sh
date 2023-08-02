@@ -6,7 +6,7 @@
 #	sudo dnf install git
 #2) git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 #3) cd /usr/local/bin/order-lab/packer
-#4) bash order_install.sh symfony symfony alma9_install.sh | tee install.log
+#4) bash order_install.sh symfony symfony alma9 | tee install.log
 #5) Open webbrowser: http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/
 
 COLOR='\033[1;36m'
@@ -36,16 +36,33 @@ if [ -f "$bashdbpass" ]; then
     bashdbpass='symfony'
 fi
 if [ -f "$os" ]; then
-    os='alma9_install.sh'
+    os='alma9'
+fi
+
+if [ "$os" = "alma8" ]
+  then 	
+	script='alma8_install.sh'
+fi
+if [ "$os" = "alma9" ] || [ "$os" = "alma" ]
+  then  
+	script='alma9_install.sh'
+fi
+if [ "$os" = "centos7" ] || [ "$os" = "centos" ]
+  then 	
+	script='centos7_install.sh'
+fi
+if [ "$os" = "ubuntu22" ] || [ "$os" = "ubuntu" ]
+  then 	
+	script='ubuntu22_install.sh'
 fi
 
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
-echo os=$os
+echo script=$script
 
 #Install OS, Apache, PHP, DB, Utils, Python, Order, Prepare
 echo -e ${COLOR} Install OS, Apache, PHP, DB, Utils, Order ... ${NC}
-/bin/bash /usr/local/bin/order-lab/packer/"$os" "$bashdbuser" "$bashdbpass"
+/bin/bash /usr/local/bin/order-lab/packer/"$script" "$bashdbuser" "$bashdbpass"
 
 echo -e ${COLOR} Check OS, Apache, PHP, DB ${NC}
 sudo hostnamectl
