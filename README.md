@@ -581,7 +581,7 @@ Symfony 4.4 with PHP 7.4:
         bash deploy_prod.sh (via details in step 5 (a) above)
 
 
-# Automatic installation script on fresh OS 
+# Automatic installation script on a clean OS 
 1) Install git (here use syntaxis Alma9 as an example):
 
       sudo dnf update -y
