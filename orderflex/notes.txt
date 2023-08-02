@@ -533,7 +533,9 @@ Get system usage: htop, top, glances
 7 processes BESClient take 0.8% memory each and 2% CPU usage in total
 
 alias command:
-Bash – ~/.bashrc
+vim ~/.bashrc
+alias lsl="ls -lrt"
+source ~/.bashrc
 
 Mount:
 findmnt

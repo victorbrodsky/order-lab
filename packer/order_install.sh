@@ -48,9 +48,15 @@ echo -e ${COLOR} Install OS, Apache, PHP, DB, Utils, Order ... ${NC}
 
 echo -e ${COLOR} Check OS, Apache, PHP, DB ${NC}
 sudo hostnamectl
-sudo systemctl status httpd.service --no-pager		   
+sudo systemctl status httpd.service --no-pager
+sudo systemctl status postgresql-15 --no-pager	   
 psql --version
 php -version
+
+echo -e ${COLOR} Create alias lsl="ls -lrt" ${NC}
+sed -i -e "\$aNEWALIAS" ~/.bashrc
+sed -i "s/NEWALIAS/alias lsl=\"ls -lrt\"/g" ~/.bashrc
+source ~/.bashrc
 
 echo -e ${COLOR} Copy parameters file parameters.yml to /usr/local/bin/order-lab/orderflex/config/ ${NC}
 cp /usr/local/bin/order-lab/packer/parameters.yml /usr/local/bin/order-lab/orderflex/config/
