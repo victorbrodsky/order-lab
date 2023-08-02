@@ -50,6 +50,11 @@ echo -e ${COLOR} Replace user and password for parameters.yml ${NC}
 sed -i -e "s/bash_dbuser/$bashdbuser/g" /usr/local/bin/order-lab/orderflex/config/parameters.yml
 sed -i -e "s/bash_dbpass/$bashdbpass/g" /usr/local/bin/order-lab/orderflex/config/parameters.yml
 
+echo -e ${COLOR} Create ssl ${NC}
+sudo mkdir /usr/local/bin/order-lab/ssl
+cp /usr/local/bin/order-lab/packer/localhost.crt /usr/local/bin/order-lab/ssl/apache2.crt
+cp /usr/local/bin/order-lab/packer/localhost.key /usr/local/bin/order-lab/ssl/apache2.key
+
 echo -e ${COLOR} Composer and deploy using orderflex ${NC}
 cd /usr/local/bin/order-lab/orderflex					
 composer self-update
@@ -61,8 +66,10 @@ sudo yarn install --frozen-lockfile
 echo -e ${COLOR} Deploy ${NC}
 sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh
 bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb
+#sudo chown -R apache:apache /usr/local/bin/order-lab
+#sudo chown -R apache:apache /usr/local/bin/order-lab/.git/
 
-
+#Open init http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/
 
 
 
