@@ -74,7 +74,7 @@ f_install_apache () {
 	
 	sudo systemctl enable httpd.service
 	sudo systemctl start httpd.service
-	sudo systemctl status httpd.service
+	sudo systemctl status httpd.service --no-pager
 	
 	echo -e "${COLOR} Allow port 80 and 443 in Firewall ${NC}"
 	sudo firewall-cmd --zone=public --permanent --add-port=80/tcp

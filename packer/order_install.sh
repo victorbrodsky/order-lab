@@ -6,7 +6,7 @@
 #	sudo dnf install git
 #2) git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
 #3) cd /usr/local/bin/order-lab/packer
-#4) bash alma9_install.sh symfony symfony alma9_install.sh | tee buildpacker.log
+#4) bash order_install.sh symfony symfony alma9_install.sh | tee install.log
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -46,8 +46,9 @@ echo os=$os
 echo -e ${COLOR} Install OS, Apache, PHP, DB, Utils, Order ... ${NC}
 #/bin/bash /usr/local/bin/order-lab/packer/"$os" "$bashdbuser" "$bashdbpass"
 
-echo -e ${COLOR} Check OS, PHP, Apache, DB ${NC}
-sudo hostnamectl		   
+echo -e ${COLOR} Check OS, Apache, PHP, DB ${NC}
+sudo hostnamectl
+sudo systemctl status httpd.service --no-pager		   
 psql --version
 php -version
 
@@ -59,7 +60,7 @@ sed -i -e "s/bash_dbuser/$bashdbuser/g" /usr/local/bin/order-lab/orderflex/confi
 sed -i -e "s/bash_dbpass/$bashdbpass/g" /usr/local/bin/order-lab/orderflex/config/parameters.yml
 
 echo -e ${COLOR} Create ssl ${NC}
-sudo mkdir /usr/local/bin/order-lab/ssl
+sudo mkdir /usr/local/bin/order-lab/ssl/
 cp /usr/local/bin/order-lab/packer/localhost.crt /usr/local/bin/order-lab/ssl/apache2.crt
 cp /usr/local/bin/order-lab/packer/localhost.key /usr/local/bin/order-lab/ssl/apache2.key
 
