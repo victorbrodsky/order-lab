@@ -47,8 +47,8 @@ echo -e ${COLOR} Copy parameters file parameters.yml to /usr/local/bin/order-lab
 cp /usr/local/bin/order-lab/packer/parameters.yml /usr/local/bin/order-lab/orderflex/config/
 
 echo -e ${COLOR} Replace user and password for parameters.yml ${NC}
-sed -i -e "s/bash_dbuser/$bashdbuser/g" parameters.yml
-sed -i -e "s/bash_dbpass/$bashdbpass/g" parameters.yml
+sed -i -e "s/bash_dbuser/$bashdbuser/g" /usr/local/bin/order-lab/orderflex/config/parameters.yml
+sed -i -e "s/bash_dbpass/$bashdbpass/g" /usr/local/bin/order-lab/orderflex/config/parameters.yml
 
 echo -e ${COLOR} Composer and deploy using orderflex ${NC}
 cd /usr/local/bin/order-lab/orderflex					
