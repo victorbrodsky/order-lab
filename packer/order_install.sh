@@ -4,9 +4,9 @@
 #1) Install git
 #	sudo dnf update -y
 #	sudo dnf install git
-#2) run: git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
-#3) go to /usr/local/bin/order-lab/packer
-#4) run: bash alma9_install.sh symfony symfony alma9_install.sh
+#2) git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+#3) cd /usr/local/bin/order-lab/packer
+#4) bash alma9_install.sh symfony symfony alma9_install.sh | tee buildpacker.log
 
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
@@ -44,7 +44,7 @@ echo os=$os
 
 #Install OS, Apache, PHP, DB, Utils, Python, Order, Prepare
 echo -e ${COLOR} Install OS, Apache, PHP, DB, Utils, Order ... ${NC}
-/bin/bash /usr/local/bin/order-lab/packer/"$os" "$bashdbuser" "$bashdbpass"
+#/bin/bash /usr/local/bin/order-lab/packer/"$os" "$bashdbuser" "$bashdbpass"
 
 echo -e ${COLOR} Check OS, PHP, Apache, DB ${NC}
 sudo hostnamectl		   
