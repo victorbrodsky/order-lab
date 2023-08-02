@@ -593,7 +593,8 @@ Symfony 4.4 with PHP 7.4:
 	
 3) Run installation script order_install.sh with 3 parameters: DB username, DB password, OS name (alma8, alma9, centos7, ubuntu22):
 
-     cd /usr/local/bin/order-lab/packer	
+     cd /usr/local/bin/order-lab/packer
+	 
      bash order_install.sh symfony symfony alma9
 
 4) Initializing ORDER by opening web browser: http://serverip/order/directory/admin/first-time-login-generation-init/
