@@ -60,7 +60,7 @@ sudo yarn install --frozen-lockfile
 
 echo -e ${COLOR} Deploy ${NC}
 sudo chmod +x /usr/local/bin/order-lab/orderflex/deploy_prod.sh
-bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb",
+bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb
 
 
 
