@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#Standalone:
+#1) Install git
+#	sudo dnf update -y
+#	sudo dnf install git
+#2) run: git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab
+#3) go to /usr/local/bin/order-lab/packer
+#4) run: bash alma9_install.sh symfony symfony alma9_install.sh
+
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
