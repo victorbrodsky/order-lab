@@ -102,6 +102,10 @@ bash /usr/local/bin/order-lab/orderflex/deploy_prod.sh -withdb
 #sudo chown -R apache:apache /usr/local/bin/order-lab
 #sudo chown -R apache:apache /usr/local/bin/order-lab/.git/
 
+echo -e ${COLOR} Restart Apache and Postgresql ${NC}
+sudo systemctl restart httpd.service
+sudo systemctl restart postgresql-15
+
 #Open init http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/
 
 
