@@ -582,22 +582,26 @@ Symfony 4.4 with PHP 7.4:
 
 
 # Automatic installation script on fresh OS 
-1) Install git (here use syntaxis Alma9 as an example)
-	sudo dnf update -y
-	sudo dnf install git
+1) Install git (here use syntaxis Alma9 as an example):
+
+	 sudo dnf update -y
+	 sudo dnf install git
 	
-2) Clone remote repository
-	git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab	
+2) Clone remote repository:
+
+	 git clone https://github.com/victorbrodsky/order-lab.git /usr/local/bin/order-lab	
 	
-3) Run installation script order_install.sh with 3 parameters: DB username, DB password, OS name (alma8, alma9, centos7, ubuntu22)
-	cd /usr/local/bin/order-lab/packer	
-	bash order_install.sh symfony symfony alma9
+3) Run installation script order_install.sh with 3 parameters: DB username, DB password, OS name (alma8, alma9, centos7, ubuntu22):
+
+	 cd /usr/local/bin/order-lab/packer	
+	 bash order_install.sh symfony symfony alma9
 
 4) Initializing ORDER by opening web browser: http://serverip/order/directory/admin/first-time-login-generation-init/
 
 
 
-## Developer Notes
+
+# Developer Notes
 
 ### Test server links (accessible on the intranet only):
 
