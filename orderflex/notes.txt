@@ -1656,3 +1656,14 @@ Upgrade Rhel 7 to 8:
 In-place upgrade
 Clean install
 
+https://getrector.com/blog/how-to-upgrade-annotations-to-attributes
+"php": "^7.4 || ^8.1",
+
+Composer: timeout
+php composer.php install --prefer-dist --no-dev
+composer config --global process-timeout 2000
+
+Composer: When working with _public_ GitHub repositories only
+Get token: https://github.com/settings/tokens/new?scopes=&description=Composer+on+Admin+2023-08-03+1928
+composer.phar config --global --auth github-oauth.github.com mytoken
+C:\Users\ch3\AppData\Roaming\Composer\auth.json

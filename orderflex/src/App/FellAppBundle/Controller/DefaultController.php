@@ -306,7 +306,7 @@ class DefaultController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         echo "$wcmc=$wcmc <br>";
-        exit('111');
+        //exit('111');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

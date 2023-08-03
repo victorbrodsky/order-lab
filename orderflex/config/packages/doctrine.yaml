@@ -24,6 +24,8 @@
 
 #with doctrine/orm 3.0, annotations will no longer be supported
 #https://github.com/rectorphp/rector
+#https://github.com/rectorphp/rector/blob/main/docs/rector_rules_overview.md#annotationtoattributerector
+#https://getrector.com/blog/how-to-upgrade-annotations-to-attributes
 
 doctrine:
     dbal:
