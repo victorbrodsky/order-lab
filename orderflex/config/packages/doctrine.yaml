@@ -23,6 +23,7 @@
 #                alias: App
 
 #with doctrine/orm 3.0, annotations will no longer be supported
+#https://github.com/rectorphp/rector
 
 doctrine:
     dbal:
