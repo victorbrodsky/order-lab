@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4 || ^8.1",
+        "php": "^8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "asimlqt/php-google-spreadsheet-client": "^3.0",

@@ -8,10 +8,11 @@ use Rector\Config\RectorConfig;
 
 return function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
+        //SymfonySetList::SYMFONY_62,
         DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
         SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
         //NetteSetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SensiolabsSetList::FRAMEWORK_EXTRA_61,
+        //SensiolabsSetList::FRAMEWORK_EXTRA_61,
     ]);
 };
 

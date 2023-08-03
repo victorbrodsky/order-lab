@@ -1657,7 +1657,7 @@ In-place upgrade
 Clean install
 
 https://getrector.com/blog/how-to-upgrade-annotations-to-attributes
-"php": "^7.4 || ^8.1",
+"php": "^7.4 || ^8.1", => "php": "^8.0"
 
 Composer: timeout
 php composer.php install --prefer-dist --no-dev
