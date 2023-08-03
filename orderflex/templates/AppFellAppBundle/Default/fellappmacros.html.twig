@@ -45,11 +45,11 @@
                 {#</a>#}
 
                 {% set embedPdf = fellapp_util.getEmbedPdfByInterview(forminterview.vars.value) %}
-                <a
-                        general-data-confirm="Are you sure you want to invite {{ forminterview.vars.value.interviewer }} to rate this applicant? {{ embedPdf }}"
-                        href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
+                {% set interviwerName = forminterview.vars.value.interviewer.getDisplayName() %}
+                <a general-data-confirm="Are you sure you want to invite {{ interviwerName }} to rate this applicant? {{ embedPdf }}"
+                   href="{{ path('fellapp_invite_single_interviewer_to_rate',{interviewId:forminterview.vars.value.id}) }}"
                 >
-                    Send an email to {{ forminterview.vars.value.interviewer }} to rate this application.<br>
+                    Send an email to {{ interviwerName }} to rate this application.<br>
                 </a>
             {% endif %}
         {% endif %}
