@@ -430,6 +430,8 @@ class DataBackupManagementController extends OrderAbstractController
             return null;
         }
 
+        //echo "networkDrivePath=$networkDrivePath <br>";
+
         $file0 = array("id"=>null,"name"=>"");
 //        $file1 = array("id"=>1,"name"=>"file 1");
 //        $file2 = array("id"=>2,"name"=>"file 2");
@@ -437,12 +439,16 @@ class DataBackupManagementController extends OrderAbstractController
 
         $backupFiles = array($file0);
 
-        //$files = scandir($networkDrivePath); //with dots
-        $files = array_diff(scandir($networkDrivePath), array('..', '.'));
+        $files = scandir($networkDrivePath); //with dots
+        //dump($files);
+        //exit('111');
 
-        foreach( $files as $file ) {
-            $fileOption = array("id"=>$file,"name"=>$file);
-            $backupFiles[] = $fileOption;
+        if( $files && is_array($files) ) {
+            $files = array_diff($files, array('..', '.'));
+            foreach( $files as $file ) {
+                $fileOption = array("id"=>$file,"name"=>$file);
+                $backupFiles[] = $fileOption;
+            }
         }
 
         return $backupFiles;
@@ -614,6 +620,7 @@ class DataBackupManagementController extends OrderAbstractController
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
+        //$sql = "SELECT id FROM crn_crntask";
         echo "FULL sql=".$sql."<br>";
 
 //        $sql = "
@@ -626,9 +633,10 @@ class DataBackupManagementController extends OrderAbstractController
         $query = $em->getConnection()->prepare($sql);
         //$res = $query->execute($params);
         $res = $query->execute();
-        echo "res=".$res."<br>";
-        $results = $query->fetchAll();
-        dump($results);
+        //echo "res=".$res."<br>";
+
+        //$results = $query->fetchAll();
+        //dump($results);
 
         //$query = $em->createQuery($sql);
         //$res = $query->getResult();
